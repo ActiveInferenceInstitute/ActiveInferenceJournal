@@ -4,3 +4,6 @@ Content of the Active Inference Journal
 
 Learn more at:
 https://www.activeinference.org/research/journal
+
+Journal Utilities:
+https://github.com/ActiveInferenceInstitute/Journal-Utilities
