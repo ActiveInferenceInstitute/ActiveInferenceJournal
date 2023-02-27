@@ -1,4 +1,8 @@
 # Livestream #051.0
+## 10/26/2022
+## https://youtu.be/ZASG-rtkXDk
+### Speakers:
+Daniel Friedman
 
 00:28 _Friedman:_
 
