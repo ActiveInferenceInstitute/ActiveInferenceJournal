@@ -3,7 +3,7 @@
 
 Key all right, hello everyone.
 Welcome.
-This is activem live stream number 51.1.
+This is active inference live stream number 51.1.
 We are in the second discussion of our this paper canonical neural networks perform active inference.
 Welcome to the active inference institute.
 
