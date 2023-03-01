@@ -3,7 +3,7 @@
 
 Hello and welcome.
 It's February 28, 2023.
-It's ActInf lab GuestStream number 37.1.
+It's ActInf GuestStream number 37.1.
 And we're here with Baba Brinkman.
 This should be a great discussion and emergence.
 
