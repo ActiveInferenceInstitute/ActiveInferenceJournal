@@ -16,7 +16,7 @@ We'll be following video etiquette for live streams, head over active inference.
 00:49 We're here in Acdam stream number 53.0, and our goal is to learn and discuss a pair of papers.
 The first paper is Snakes and Ladders in Paleoanthropology from Cognitive Surprise to Skillfulness a Million Years Ago by Hector Manrique, Carl Friston and Michael Walker.
 The article was posted to Sci Archive in 2022 and the second paper is to copy or not to copy, that is the question from Chimpanzees to the foundation of Human Technological Culture.
-This paper is with Menrique and Walker as authors.
+This paper is with Henrique and Walker as authors.
 Fristenless it was also uploaded to Psy Archive.
 
 01:35 And recently, as we have been delighted to discover, the paper has been accepted in Physics of Life reviews.
