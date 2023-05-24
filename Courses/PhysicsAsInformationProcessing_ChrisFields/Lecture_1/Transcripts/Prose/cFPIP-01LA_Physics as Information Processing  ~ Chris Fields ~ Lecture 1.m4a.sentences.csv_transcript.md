@@ -2,8 +2,6 @@
 
 ## Lecture 1, Historical perspective: How Physics became a theory of communication (17 May 2023)
 
-
-
 ### Introductions
 
 00:05 _Daniel:_
