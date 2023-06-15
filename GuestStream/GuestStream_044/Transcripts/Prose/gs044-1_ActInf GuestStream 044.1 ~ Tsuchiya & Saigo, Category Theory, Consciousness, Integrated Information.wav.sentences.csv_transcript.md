@@ -288,10 +288,10 @@ So this is one of the slides that I didn't show today.
 But what Hayato was talking about is kind of explaining this figure.
 Like the way you experience red is related to with the other experience, not only color but shape and also sound and so on in a very complicated way.
 And then we can actually measure how similar they are by asking the people and then you can also do that for the other people.
-And then these two similarity metrics can be directly compared with our new method of this unsupervised running.
-And also IIT, for example, may allow us in the future to go back and forth between this quoria structure and the information structure.
+And then these two similarity metrics can be directly compared with our new method of this unsupervised learning.
+And also IIT, for example, may allow us in the future to go back and forth between this qualia structure and the information structure.
 Mathematically, we believe that the information structure to information structure should be potentially translatable in some way.
-And if that is possible in some way, eventually we may be able to say, okay, so the way you are experienced red is same or different in this way or that way.
+And if that is possible in some way, eventually we may be able to say: ah, okay, so the way you are experienced red is same or different in this way or that way.
 That's sort of the idea.
 
 34:18 _Daniel:_
@@ -304,7 +304,7 @@ Right.
 Awesome.
 So for the top arrow, if we're kind of just exploring, what might it mean that IIT is going back and forth and also that active inference is going back and forth.
 So what exactly does the edge between C and D represent in IIT?
-Is that a quantitative evaluation like the five variable or what is being accounted for with that arrow?
+Is that a quantitative evaluation like the Phi variable, or what is being accounted for with that arrow?
 
 35:00 _Nao:_
 Do you want to say something?
@@ -313,17 +313,15 @@ Do you want to say something?
 Yeah.
 There is various possibilities actually.
 For example, the sameness or difference.
-So if you have some kind of gradation with sameness, sameness gradation but to formulate the gradation of sameness, you have to move on the enriched category.
+So if you have some kind of gradation with sameness, yeah, sameness gradation. But to formulate the gradation of sameness, you have to move on the enriched category.
 Not a simple kind of category, but it's a generalized kind of category called enriched category.
-In that case, for example, the simplest example for enriched category is generalized generalized metric space.
-Metric.
-In metric space, for example, the point P and P itself has a distance zero of course, and kind of P two Q, two R is there is a triangular inequality or something.
+In that case, for example, the simplest example for enriched category is generalized metric space.
+In metric space, for example, the point P and P itself has a distance zero of course, and kind of P to Q, Q to R is there is a triangular inequality or something.
 Then it can be considered as a generalized kind of compositional structure called enriched category.
 It is a typical kind of enriched category, but symmetry does not always hold or something.
-So this is one, how to say, one small step to grasp our Korea structure.
-Because like now pointed out, North Korea China distance and the China North Korea distance is in general different or something.
-So almost all studies assume that some symmetry.
-But we need to go beyond that.
+So this is one, how to say, one small step to grasp our Qualia structure.
+Because like Nao pointed out, North Korea - China distance and the China - North Korea distance is in general different or something.
+So almost all studies assume that some symmetry, but we need to go beyond that.
 And then maybe the one number or something is too poor to represent everything.
 So you have to go more and more richer structure, like not just numbers but some kind of projection operator or something.
 Then you enter into the quantum region.
@@ -332,59 +330,55 @@ So our approach is step by step and you can choose the many arrows to study some
 And this is just for the speculation but this kind of quantum theoretical like as a mathematical framework do not need to the kind of physics but the kind of mathematics can you use unify these kind things.
 
 38:30 _Daniel:_
-Awesome.
-Just a few comments on that.
+Awesome, just a few comments on that.
 When we're doing free energy minimization, we use the KL divergence which is very importantly not a distance because a distance would have the symmetry characteristic.
-And so the KL is chosen because it's easy to fit optimization on these variational distributions, but it's almost like it's a feature, not a bug, that the KL divergence between Q and p is not the same as P and q, because it turns out that that kind of a divergence based quantification actually has some advantages over a distance measure.
-And then the mapping between observables and hidden states and the cognitive operators that we bring to bear on that kind of mapping problem.
-Those are some of the most fundamental pieces of the partially observable Markov decision processes that are used in the active inference generative model, which is first the mapping between observables and hidden states and then how do hidden states change through time and how does action selection, policy selection influence how hidden states unfold through time?
-So this mapping between hidden states and observables and between hidden states and the hidden state at the next time point and again how action influences that.
-If you understand those operations, then it's like a game of chess and the ball just rolls downhill and the variational distribution works exceedingly well.
+And so the KL is chosen because it's easy to fit optimization on these variational distributions, but it's almost like it's a feature, not a bug, that the KL divergence between Q and P is not the same as P and Q, because it turns out that that kind of a divergence-based quantification actually has some advantages over a distance measure.
+And then the mapping between observables and hidden states and the cognitive operators that we bring to bear on that kind of mapping problem -- Those are some of the most fundamental pieces of the partially observable Markov decision processes that are used in the active inference generative model, which is: first the mapping between observables and hidden states, and then how do hidden states change through time and how does action selection, policy selection influence how hidden states unfold through time?
+So this mapping between hidden states and observables and between hidden states and the hidden state at the next time point, and again how action influences that -- if you understand those operations, then it's like a game of chess and the ball just rolls downhill and the variational distribution works exceedingly well.
 But when those are off base, then you're fitting your way like right off a cliff.
 
 40:34 _Nao:_
 So maybe then I'll just add one more point.
 So you asked in the original like five minutes ago what each of these points or arrow correspond to in the case of the IIT and so on.
 And then this is kind of related to all these ideas.
-But one of the fundamental insights from IIT but also from philosophy, especially some kind of philosophy called the process theory is it is important to really understand that the process of flow or movement is really fundamentally important kind of aspect of things.
-And then that may be really distinguishing some kind of static set or the thing in the static world when they start to interact.
-And when the process emerge then something starts to potentially generate or support subjective quality like protocol kind of thing.
-And in the case of the IAT, it is deeply kind of entrenched in this formation of the transition probability matrix of an entity like how this thing neuron or logic gate, it might have come from the previous state and it may go into the next state.
+But one of the fundamental insights from IIT but also from philosophy, especially some kind of philosophy called the process theory -- it is important to really understand that the process of flow or movement is really fundamentally important kind of aspect of things.
+And then that may be really distinguishing some kind of static sets, or the thing in the static world. 
+When they start to interact, and when the process emerge, then something starts to potentially generate or support subjective quality like qualia kind of thing.
+And in the case of the IIT, it is deeply kind of entrenched in this formation of the transition probability matrix of an entity like how this thing, neuron or logic gate, it might have come from the previous state and it may go into the next state.
 So any kind of a moment is already embedding the possible previous and the possible future.
-There is some kind of a with us in the moment because it's a process.
-And when the process is considered, then as I have said, that this kind of dot is a very kind of two thing kind of structure to think about.
+There is some kind of a widths in the moment because it's a process.
+And when the process is considered, then as I have said, that this kind of dot is a very kind of two-thing kind of structure to think about.
 So we need a more elaborated structure of a dot itself.
 But the category theory is great in the sense that each dot can itself contain complicated structure.
 It's just represented as a single dot but it can contain something more.
-Right?
 So in an upshot, one dot could correspond to a collection of the neuronal states and the connectivity pattern and things like that, which can go from one to the other.
-And then this kind of movement may correspond to something like we see redness or whatever in this way but that's also with respect to other kind of arrows as well.
-And that's the sort of wave of the relationship that we are trying to characterize both in the domain but qualia, but also brain is also the wave of the relationship, gigantic ones, right?
-And as you said, that transition from one state to the another state that's pretty much like dynamical system like approach and then the simple idea called a monoid is applicable to this kind of dynamical system approach.
+And then this kind of movement may correspond to something like we see redness or whatever in this way - but that's also with respect to other kind of arrows as well.
+And that's the sort of way of the relationship that we are trying to characterize both in the domain but qualia, but also brain is also the way of the relationship, gigantic ones, right?
+And as you said, that transition from one state to the another state that's pretty much like dynamical system-like approach and then the simple idea called a monoid is applicable to this kind of dynamical system approach.
 Correct me Hayato, if I'm saying something out of the bounds of my comfort zone, but any kind of state can transition into another state and then this transition itself can be represented by the arrow.
 The combination of that particular kind of arrow composition may correspond to one experience.
 So that's one thing I wanted to say.
 The other thing that I had also mentioned about observable state and why we are interested in a quantum framework, quantum theory, by the way, it's not a quantum brain hypothesis.
 We are not saying that quantum phenomena in the brain is critical for consciousness, but it's just a mathematical structure of the quantum theory that is important to understand the qualia.
-And the essence is most likely to be this noncommutativity any kind of process that you do, like cooking, putting the water and then model is different from model and then putting water.
+And the essence is most likely to be this noncommutativity.
+Any kind of process that you do, like cooking, putting the water, and then muddle, is different from muddle and then putting water.
 Right?
 And so any kind of process we do, there is some kind of temporal dependency that commutativity doesn't hold and that's also probably the case for the qualia.
 And if that's the case, then for you maybe it's a bit surprising, but Bayesian kind of statistics and Bayesian probability may not work as you might wish.
 
 45:44 _Hayato:_
 Yes.
-So in other words, using the Kanam mathematics there is a quite good generalization of Bayesian.
-Innovation kind of inference.
+So in other words, using the Quantum mathematics there is a quite good generalization of Bayesian innovation, or Bayesian kind of inference.
 Yes, actually the one step generalization is called a projection in kind of mathematics.
-Then there is more generalization called instrument.
+Then there is more generalization called "instrument".
 So instrument is general notion of measurements like a system and environment interacting.
-Then more precisely, the measurement is something like the interaction feature has some probe over the apparatus.
-So probe is some kind of the apparatus is some very small tips or something which can be considered as a quantum that this quantum system and this probe system interacting quantumly, then we can measure this probe by the macro side of the apparatus.
-So this is a very general kind of measurement which is identified mathematically with the notion of instrument originated by the Davis and Lewis and Ozawar, one of our collaborators.
-We begin in the collaboration, but Ozawar, who is also famous for the Ozawa's inequality, Ozawa inequality as a generalization of Heisen belt universally valid version of Heisen magazine inequality.
+Then more precisely, the measurement is something like the interaction feature has some probe of the apparatus.
+So probe is some kind of the apparatus is some very small tips or something which can be considered as a quantum, that this quantum system and this probe system interacting quantumly, then we can measure this probe by the macro side of the apparatus.
+So this is a very general kind of measurement which is identified mathematically with the notion of instrument originated by the Davis and Lewis and Ozawa, one of our collaborators.
+We begin in the collaboration, but Ozawa, who is also famous for the Ozawa's inequality, Ozawa inequality as a generalization of Heisenberg's Inequality, a valid version of Heisenberg Onequality.
 But he identified this general notion measurement and instrument called a completely positive instrument in mathematics.
 But this CP completely positive instrument is quite general and generalizing very beautifully the Bayesian inference into the quantum side.
-So I think focusing this kind of instrument kind of concept is the key maybe to bridge the active inference side on our side and quantum side or something.
+So I think using, focusing this kind of instrument kind of concept, is the key maybe to bridge the active inference side on our side and quantum side or something.
 So, yeah, it is my speculation, but I think it is very fruitful direction.
 
 48:45 _Daniel:_
@@ -392,32 +386,31 @@ It's awesome.
 Just one comment on that.
 The probe with the instrument or the quantum reference frame, I believe, as Chris Fields might describe it, is an experimenter's choice.
 And so the way that we could talk about policy selection and inference on which experiment to run would be in terms of which sequence of observations is going to minimize expected free energy.
-So which sequence of observations is going to have high pragmatic value and epistemic value that's the expected free energy functional.
+So which sequence of observations is going to have high pragmatic value and epistemic value -- that's the expected free energy functional.
 Now, as researchers, we might seek out the most informative experiments and not prefer to see a certain measurement.
 So we can say, well, all measurements are a priori equally pragmatically valuable to us.
-So now expected free energy is going to be driven by information maximization just by pure learning.
+So now expected free energy is going to be driven by information maximization, just by pure learning.
 But this recognition that action is woven into the process of reducing uncertainty about other systems across blankets.
 It's absolutely fundamental, because if you don't have the constraint that you need to actively select which experiments to run and to probe and to interfere in this quantum way, this way described by quantum mathematics, you're kind of in a delusional alternative world where you get information from photons, but you don't have a sensor.
 So it's not an empirically tractable world unless we take on this constraint.
 And then once we do, our mathematics are the quantum mathematics.
 And again, it's kind of a subtle point.
-This isn't the ORC or this isn't necessarily taking a stance one way or the other on what kinds of electronic scale quantum phenomena exists in any system, but rather just sees quantum mathematics as fundamental to decision making and uncertainty, which is quite a change from how it's been discussed for 100 years.
+This isn't the Orch-OR or this isn't necessarily taking a stance one way or the other on what kinds of electronic scale quantum phenomena exist in any system, but rather just sees quantum mathematics as fundamental to decision making and uncertainty, which is quite a change from how it's been discussed for 100 years.
 
 51:11 _Hayato:_
-Actually, as now said, we are not dependent on the hypothesis.
+Actually, as Nao said, we are not dependent on the hypothesis.
 Like there is a quantum physical process behind the qualia.
 But why we can use the quantum mathematic is very simple reason.
 Because conventional probability theory, classical probability theory depend on the probability space.
 Classical one is too narrow to capture, for example, order effect or something.
 But you can generalize it.
-So quantum mathematics is just generalized the Crasco mathematics.
-And I believe that why quantum mathematics is found for quantum physics is a very simple reason because in Crasco physics, some kind of determinism.
-Determinism is very universal and the probability only comes from some kind of ignorance of us.
+So quantum mathematics is just generalized the classical mathematics.
+And I believe that why quantum mathematics is found for quantum physics is a very simple reason because in classical physics, some kind of determinism.
+Classical Determinism is very universal and the probability only comes from some kind of ignorance of us.
 But in quantum physical context there is some kind of very fundamental randomness.
 The fundamental accidents or something is found and they are all surprised because if you go into the microsite, the determinism should be stronger and stronger they sold.
-But actually there needs some kind they found fundamental noncommutativity and microside.
-But who?
-Isabel Bohr and Heisenberg some people pointed out that Evening Grascow or Evening sorry, a macroscopic side.
+But actually there needs some kind, they found fundamental noncommutativity and microside.
+For example Bohr and Heisenberg, some people pointed out that even Classical, or even sorry, on the macroscopic side.
 But this kind of the importance of noncommutativity is very universal, not especially in microsite, but it is a historical reason that we first find in mathematics in the microsite.
 But there is many, many phenomena which cannot be captured by the determinism or the classical probability theory.
 So I think the qualia or something is just some kind of.
@@ -441,20 +434,18 @@ So the quantum consciousness has been used to imply this quantum brain hypothesi
 What's funny, I'm thinking of the classic qualia question what is it like to be a bat?
 And it's like, what if the like is interpreted as a metaphor?
 What if there's a metaphorical mapping to bat which is an observer dependent mapping amongst spaces?
-Because we've moved the focus from the objective standalone experience of the bat to considering mappings amongst cognitive systems, one critical, one being, for example, whoever's listening to the question and a bat who's the one who actually answers that question.
+Because we've moved the focus from the objective standalone experience of the bat to considering mappings amongst cognitive systems -- one critical, one being, for example, whoever's listening to the question and a bat who's the one who actually answers that question.
 
 55:31 _Nao:_
 Okay, so you asked also about the inspiration from the category theory relevant to the issue of the metaphor, right?
 And also communication.
-Now, it's a bit far from this quantum corey and they jump back to another topic.
-Metaphor is something that the Hiato has been working on.
+Now, it's a bit far from this quantum qualia and they jump back to another topic.
+Metaphor is something that the Hayato has been working on.
 So yeah, but the other part, which is this communication.
 And that's something that we also wrote together last year and using this concept called adjunction in category theory, which may be also interesting to discuss.
 So in 2016 paper we already mentioned that category theory is very promising for the study of consciousness precisely because it provides different levels of sameness.
-When I heard this from Hayato, I was like what do you mean?
-But as simultaneously it makes a lot of sense and in fact many controversy or confusion among the field of consciousness.
-But not only for consciousness.
-Other fields like ecology as well like classification of the animal species and things like that all depends on this.
+When I heard this from Hayato, I was like what do you mean!?
+But as simultaneously it makes a lot of sense and in fact many controversy or confusion among the field of consciousness, but not only for consciousness, other fields like ecology as well, like classification of the animal species and things like that all depends on this.
 What do you mean by the same?
 Right?
 And this is something that also relates to what you are talking about a moment ago, which is observer dependence, right?
@@ -463,27 +454,26 @@ Equivalence or adjunction is a particularly interesting kind of situation where,
 But in terms of the relationship, if you start to think about the relationship, there is some kind of one to one correspondence between them.
 And also Hayato's book, also written in Japanese, but recently I did read it and one of the interesting example is also multiplication and exponentiation at the level of object or number it doesn't match, right?
 But there is a very nice relationship between them that is very fundamental and something like this apparently completely different thing but finding really meaningful relationship that's very fundamental.
-In communication we are talking different kind of language with different kind of meaning, but because when I say something, you reply and then there is some kind of systematic difference between what I expect and what I hear.
+In communication, we are talking different kind of language with different kind of meaning, but because when I say something, you reply and then there is some kind of systematic difference between what I expect and what I hear.
 That's the kind of prediction error, right?
 I think the prediction error may not need to be minimized in fact, but as long as it's consistent and systematic then it actually works as a very nice translational kind of device.
 After living like 20 years, more than 20 years of living outside of Japan, I still have very strong English accent, either in Japanese or Japanese, living in Australia or US.
 I can't minimize this prediction error.
 But because I have this systematic prediction error for you, you totally understand me, right?
-Something like this is the interesting thing about that junction.
+Something like this is the interesting thing about adjunction.
 
 59:47 _Daniel:_
 This makes me think about nested reference frames in communication.
-And let's just say that the expected free energy or maybe even the integrated information content is such and such a level, but it varies within some range.
-It's 100 plus or minus ten.
+And let's just say that the expected free energy or maybe even the integrated information content is such and such a level, but it varies within some range. It's 100 plus or minus ten.
 Instead of just trying to naively minimize that to zero, we can create a nested model such that we expect that to be 100 plus or minus ten, at which point the non zero value is stabilized or buffered.
-And so then that becomes the kind of stabilizes or wraps the fact that we're not perfectly transmitting information but we can be perfectly aligned, that we're not perfectly transmitting information.
-And also our language understanding for fluent speakers we're able to map the phonemes a little bit deeper.
+And so then that becomes the kind of, stabilizes or wraps the fact that we're not perfectly transmitting information but we can be perfectly aligned, that we're not perfectly transmitting information.
+And also our language understanding, for fluent speakers, we're able to map the phonemes a little bit deeper.
 We're able to read between the lines or listen between the phonemes.
 So that people who say words differently map to the exact same syntax, let alone the semantics.
 The sound gets kind of abstracted out, but it influences our qualia.
 So something is being passed forward with tonality and the timing.
-And I wonder about with of course large language models how much context they're able to garner from the string of tokens when for our experience sending and receiving natural language communication it's all about the timing and the tone and the setting.
-And so finding ways that we can describe that type of information, the category theory capacity for the different levels of sameness seems like exactly the tool that we need.
+And I wonder about with of course large language models how much context they're able to garner from the string of tokens when for our experience, sending and receiving natural language communication, it's all about the timing and the tone and the setting.
+And so finding ways that we can describe that type of information, the category theory capacity for the different levels of sameness, seems like exactly the tool that we need.
 
 1:02:18 _Nao:_
 Do you want to add anything?
@@ -495,15 +485,14 @@ Yeah, I'm thinking about but.
 About the multilevel kind of free energy minima.
 I actually have a question to you actually.
 So I recently discussed with roboticist in Japan, Jun Tani, do you know his work?
-Yes is using this predictive coding kind of scheme for constructing the set of autonomous robot and he thinks this intermingle of the top down prediction and the bottom up prediction error is the place that Korea emerges and things like that.
+He is using this predictive coding kind of scheme for constructing the set of autonomous robot and he thinks this intermingle of the top-down prediction and the bottom-up prediction error is the place that Qualia emerges and things like that.
 But one of his most interesting aspect of his model to me is that he has this different timescale for his neural system.
 The most peripheral motor level and sensory level has a very fast time scale.
 So that tries to match with what's happening outside and then what they want to do towards outside.
 And the intermediate level has a slightly longer kind of time scale.
 So there is some kind of inertia and an even higher level has a much much longer timescale.
-In the probably neural system there is also different level of the timescale and also different levels of the mechanism acting at the same time like change in the activity state in spiking or not and also release of the snaptick neurotransmitters that could increase or decrease over the time and also even the new neurons emerging and going out.
-So.
-The minimization, when you are talking about minimization, probably that kind of minimization is actually happening independently and also coherent tree potentially or contradictory across different levels and also regions.
+In the probably neural system there is also different level of the timescale and also different levels of the mechanism acting at the same time like change in the activity state in spiking or not and also release of the syanptic neurotransmitters that could increase or decrease over the time and also even the new neurons emerging and going out.
+So - the minimization, when you are talking about minimization, probably that kind of minimization is actually happening independently and also coherently potentially or contradictory across different levels and also regions.
 And there may be some kind of effort or whatever to also coordinate these kind of contradictory demands of the minimization.
 What do you think about this issue?
 Do you still think it's a useful way to think about or use the term minimization in this situation?
@@ -511,22 +500,21 @@ Do you still think it's a useful way to think about or use the term minimization
 1:05:01 _Daniel:_
 That's a great question.
 Well, one thing that stood out to me was you described the slower moving levels as having inertia and from the Bayesian mechanics perspective that's exactly how we would model it.
-They're slower moving, they have more inertia, and they move more like classical objects, whereas the faster timescales are moving more like lighter particles, more like that quantum probe in the limit and then the sort of center or the highest nested model would be like the most cognitively massive, potentially the slowest, potentially integrating information over the longest time window.
-And certainly this is underlaned by these multiple timescales of mechanism spiking neurons from a few hundred milliseconds timescale neuromodulatory processes over seconds and minutes, synaptic plasticity even neurogenesis and the development of our brain.
-So what does it really mean that minimization is occurring when we have this heterarchy where we have similar types of free energy minimizing units or active inference units within a level like Cortical columns or grid cell units and then also we have these nested models that are optimizing across spatial temporarily separated scales.
-Well, one paper that looked at this was Our Livestream 42 on the Slam simultaneous localization and mapping also in robotics.
-And so they had a two nested model with two steps and the lower level was like the tactics and that was where you had the motor and the sensors and then the nested model was slower that was like where do I want to be?
-That was more like the strategy and you can create an expected free energy functional that sums across those two levels how you tune the parameters is going to matter because how do you wait this comes up with preference learning.
-If you have left or turn and right turn and your preference vector is like two and one versus 2 million and 1 million, then the ratio of the preference is the same, but the amplitude of the preference is a lot different, which is going to swing the model towards Valuing pragmatic outcomes.
-Whereas if you had zero two and zero one, the ratio of the preference would still be the same.
-But it's such a small amplitude preference.
+They're slower moving, they have more inertia, and they move more like classical objects, whereas the faster timescales are moving more like lighter particles, more like that quantum probe in the limit, and then the sort of center or the highest nested model would be like the most cognitively massive, potentially the slowest, potentially integrating information over the longest time window.
+And certainly this is underlained by these multiple timescales of mechanism spiking neurons from a few hundred milliseconds timescale, neuromodulatory processes over seconds and minutes, synaptic plasticity even neurogenesis and the development of our brain.
+So what does it really mean that minimization is occurring when we have this heterarchy where we have similar types of free energy minimizing units or active inference units within a level like cortical columns or grid cell units, and then also we have these nested models that are optimizing across spatial temporarily separated scales.
+Well, one paper that looked at this was Our Livestream 42 on the SLAM, simultaneous localization and mapping, also in robotics.
+And so they had a two nested model with two steps and the lower level was like the tactics and that was where you had the motor and the sensors, and then the nested model was slower that was like where do I want to be?, that was more like the strategy
+And you can create an expected free energy functional that sums across those two levels.
+How you tune the parameters is going to matter because - this comes up with preference learning.
+If you have left or turn and right turn and your preference vector is like two and one versus 2 million and 1 million, then the ratio of the preference is the same, but the amplitude of the preference is a lot different, which is going to swing the model towards valuing pragmatic outcomes.
+Whereas if you had 0.2 and 0.1, the ratio of the preference would still be the same, but it's such a small amplitude preference.
 And so similarly, with expected free energy minimization you could make it so that the joint minimization was driven by just the top level of the model.
 And then the sort of contradictions or even increases in expected free energy of the lower sensory model would basically always be accepted in service of the top model or vice versa.
-And it seems like biological systems with their sort of precarious or self organized criticality operations they're poised where you can have propagations where small changes in the bottom up model can propagate and induce phase changes of higher levels and vice versa.
+And it seems like biological systems with their sort of precarious or self organized criticality operations, they're poised where you can have propagations where small changes in the bottom up model can propagate and induce phase changes of higher levels and vice versa.
 So they're certainly poised parametrically at a special place where the composition of the faster sensory motor models and the slower like cognitive or narrative or metacognitive levels it's all poised in a very integrated way, potentially even one that is where the IIT measures tell us something useful.
-But yes, the contradictory demands of subunits within a level of collective behavior and across levels.
-As a biologist I think we just point to ecology, evolution and development and just distributed systems that don't exist at an adaptive point or implement adaptive dynamics amidst uncertainty.
-They just fail to exist and so the complex biological systems that we observe today do manage that trade off.
+But yes, the contradictory demands of subunits within a level of collective behavior and across levels -- as a biologist I think we just point to ecology, evolution and development and just distributed systems that don't exist at an adaptive point or implement adaptive dynamics amidst uncertainty, they just fail to exist. 
+And so the complex biological systems that we observe today do manage that trade off.
 And then in robotics, they have this unique challenge of developing systems with one shot or with Iterated development that do have some of those properties.
 But for sure, there's no reason to think that just by laying out a nested active inference model that you would actually get, like, a more adaptive decision making agent.
 In fact, as you nest models, the state space of these models becomes vast.
@@ -535,43 +523,43 @@ And by the time we collected that many observations, maybe the causal structure 
 
 1:11:03 _Nao:_
 Yeah, that could be quite a huge difference between probably IIT and free energy.
-I think the IIT explicitly states that this time scale that matters, but in this case, it's just about quaria is a particular time scale that maximize integrated information and that corresponds to the timescale of our experience.
-Tannis model, the lowest timescale is like, on the order of 100 seconds or something like that.
+I think the IIT explicitly states that this time scale that matters, but in this case, it's just about qualia is a particular time scale that maximize integrated information and that corresponds to the timescale of our experience.
+In Tani's model, the slowest timescale is like, on the order of 100 milliseconds or something like that.
 And also new synaptic plasticity is on the order of hours.
 And most likely spiking neurons seems to be more mattering with respect to our particular experience at each moment.
 Right.
-And why it is the case that the provisional answer provided by IIT is that because at that particular time scale, integrated information is much larger and across the scale and across the regions.
+And why it is the case that the provisional answer provided by IIT is that because at that particular time scale, integrated information is maximized, across the scale and across the regions.
 But this is a huge conjecture, and nobody knows whether this is true or not.
 And when we use the Fly model, we weren't able to sort of confirm any kind of a clear peak in the integrated information using a different time scale.
 So it's still something that I'm very interested in looking, but still not clear whether this is the case.
 I don't know if Hayato has some idea or insight into the appropriate time scale for consciousness or something from the physics point of view.
 
 1:12:53 _Hayato:_
-Yeah, I have some thoughts, but maybe it becomes a long story and also connects to the observer dependence program.
-So I was thinking about how to explain these very important things in one thread, and I found that first, the very simple fact that there comes no identically same two events.
+Yeah, I have some thoughts, but maybe it becomes a long story, so, and also connects to the observer dependence problem.
+So I was thinking about how to explain these very important things in one thread, and I found that first, the very simple fact that there comes no identically-same two events.
 Every event is different in some respect.
-But to do science, or more generous, some recognition of law, we need some criterion of sameness.
+But to do science, or more generally, some recognition of law, we need some criterion of sameness.
 For example, you want to know how to heal the disease?
 You should identify the different persons, people as the same kind of samples or something.
 Of course, there is no identical persons, but you have to identify in the members of the same group something.
 So all the scientific studies depend on some choice of the sameness.
 And so in that sense, all the science depends on this kind of choice of the sameness as you both pointed out and I think that there is no canonical choice of the sameness.
-You can choose sameness but if you choose some sameness, then you can talk about observables.
+You can choose sameness. But if you choose some sameness, then you can talk about observables.
 Observables means some kind of quantities.
-You can observe something, maybe it randomly change the value or no value like a count of case.
+You can observe something, maybe it randomly change the value or no value like a quantum case.
 But by measuring process it become half the value or something.
 There may be indefinite nature of such kind of quantities, but anyway we can imagine that the quantities has some kind of structure between the quantities.
 So in mathematical terms it will be some algebra of the observables.
-Then how to connect this idea theoretical idea to the experimental thing is the key is expectation value.
+Then how to connect this idea, theoretical idea to the experimental thing, is the key is expectation value.
 So theory provides expectation value of something and we can connect theory and experiments by comparing the theoretical expectation value and the average of samples.
-So all the quantitative science depends on this structure like algebra, observables and some mapping from the observables algebra to the sum number system.
+So all the quantitative science depends on this structure like algebra, observables, and some mapping from the observables algebra to some number system.
 So this is called a state in mathematics and algebra.
 And state is something like the mapping of quantities of random variables or observables into its expectation value.
 So this mapping of expectation is technically called state.
 So if you start from observer algebra and state, this is a starting point of noncommutative probability theory.
 That is if this algebra is commutative, then the conventional probability theory can reconstruct from this commutative algebra and state.
-But if this is noncommutative as now pointed out, if the process is essential, then these algebra should be noncommutative.
-Then we have the noncommutativity probability space features which I code intuitively the counter mathematics or something.
+But if this is noncommutative as Nao pointed out, if the process is essential, then these algebra should be noncommutative.
+Then we have the noncommutativity probability space features which I call intuitively the quantum mathematics or something.
 So in this case the observable dependence is described.
 The other kind of observable dependence can be described because you can't have the classical probability space for all the observable.
 But if you choose one observable, one observable like position or momentum, you can choose this.
@@ -581,11 +569,10 @@ So context you can have the classical kind of reality.
 So this kind of observer with dependence is well formulated by using noncommutative probability space.
 So I think this multilayered observable observer dependence can be described by using noncommutative probability.
 And the last thing I would say is the connection of the category theory and noncommutativity probability.
-Very interestingly,
-if the category is given like a causal system causal system give us some category.
+Very interestingly, if the category is given like a causal system -- causal system give us some category.
 Like a causaliation is arrow, and the composition is A is cause of B, B causes C.
 Then indirectly of course at least the A causes C or something, so it becomes can be considered as a category.
-There is many kind of category. But if the category is given, then the algebra refracting this categorical structure is necessarily noncommutative if there is a nontrivial arrow between two objects.
+There is many kind of category. But if the category is given, then the algebra reflecting this categorical structure is necessarily noncommutative if there is a nontrivial arrow between two objects.
 So actually the category theory and the noncommutative probability is from the mathematical point of view, it's kind of the two aspects of the same thing, like the fundamental observer dependence or contextual dependence or something.
 And this contextuality, like in topos theory, actually, this choosing concepts and the transformation between the contexts can be formulated in terms of topos, which is a very powerful kind of category.
 So sorry for the too-long explanation! But without that, this very fundamental question cannot be organized.
@@ -602,7 +589,7 @@ They're overwhelmed by the complexity.
 Recently, the inverted U that shows this relation seems to have become scarce, leading to undue confusion.
 Have IIT people abandoned the idea that there is a bounded sweet zone for consciousness?
 Can a system be either too simple or too complex to act consciously?
-So is IIT lead us to a kind of monotonic consciousness concept, or could there be a U shaped relationship with information integration and qualia?
+So does IIT lead us to a kind of monotonic consciousness concept, or could there be a U shaped relationship with information integration and qualia?
 
 1:22:07 _Nao:_
 I see.
@@ -611,12 +598,11 @@ I can also see that comment here.
 In the end, the question is, can the system be either too simple or too complex to act consciously?
 
 1:22:37 _Daniel:_
-Right.
+Yeah.
 
 1:22:38 _Nao:_
-In the sense yeah, from an IAT point of view, there are several things that needs to be said, but inverted U is still there in a sense.
-And here this person seems to be confusing between the axis of the kind of complexity and the axis of the connectedness. In IIT original formulation -
-and it's still true for the IIT 4.0, which is the latest one - when the system is too connected, let's say if you have hundred neurons and each of them are connected to everybody in a uniform way, then IIT predicts that it doesn't have much complexity or compositionality or uniqueness to arrive from that kind of system.
+In the sense yeah, from an IIT point of view, there are several things that needs to be said, but inverted U is still there in a sense.
+And here this person seems to be confusing between the axis of the kind of complexity and the axis of the connectedness. In IIT original formulation - and it's still true for the IIT 4.0, which is the latest one - when the system is too connected, let's say if you have hundred neurons and each of them are connected to everybody in a uniform way, then IIT predicts that it doesn't have much complexity or compositionality or uniqueness to arrive from that kind of system.
 And even if you cut the system, it doesn't matter much.
 And so that would lead to, most likely, very low level of consciousness.
 I think that's what… [Reads viewer’s note] Yes. I should have typed “connectivity.”
@@ -633,14 +619,14 @@ It's a kind of a situation where you are interested right, in a sense like ant c
 Even though it looks extremely small, the number of the neurons they have is more than one million, right?
 
 1:24:54 _Daniel:_
-I think in that order, yes.
+In that order, yes.
 Around a million.
 
 1:24:57 _Nao:_
 Yeah.
-So IIT would naturally predict that the causal connection or integrated information arising from this 1 million neurons within “I Am” are going to be really massive.
+So IIT would naturally predict that the causal connection or integrated information arising from this 1 million neurons within the ant are going to be really massive.
 It's very difficult to disconnect in any way, in any meaningful way.
-However, interaction between a single ant to the another ant has a much less direct causal relationship. And therefore the local minima or local maxima of the PHI value is going to be very huge within each ant.
+However, interaction between a single ant to the another ant has a much less direct causal relationship. And therefore the local minima or local maxima of the Phi value is going to be very huge within each ant.
 But when you combine or when you treat all these lots of ants, it definitely does bring some kind of intelligent and complex kind of behavior.
 But phenomenality is not there at that level.
 Phenomenality, consciousness, lives within this maximum level of integrated information, pretty much like what we talked about in timescale stuff.
@@ -654,13 +640,12 @@ So you still have emergent intelligence at the colony level, but that doesn't ne
 Exactly.
 
 1:26:49 _Daniel:_
-Very.
+Very cool.
 
 1:26:50 _Nao:_
 IIT predicts that the intelligence and the consciousness – qualia - is completely dissociable.
-And that leads to the commentary about large language model.
-Probably right.
-Large language model is probably structurally built to be very simple, almost like probably Cerebellum in the human brain, which accounts roughly like 80% of our neurons in the brain.
+And that leads to the commentary about large language model, probably, right.
+Large language model is probably structurally built to be very simple, almost like probably cerebellum in the human brain, which accounts roughly like 80% of our neurons in the brain.
 Out of ten to the eleven neurons in the brain, 80% are in the cerebellum.
 But even if you remove it or lose it or are born without it, it seems consciousness is not that different.
 And the simple kind of prediction that cerebellum is doing, maybe something similar to the large neural[?] model is doing. It's very modular, it's parallel, it's not integrated, does a lot of intelligent things, but nothing to do with the consciousness.
@@ -680,36 +665,34 @@ Yeah, I'm thinking, “How would we know?”
 Okay, then from my end I used to have difficulty in thinking about active inference or Markov blanket and things like that.
 But by broadening my perspective and so becoming more generous, I started to feel like more maybe some aspects of the thinking and also formulation can be relevant at least for the explanation of the biological systems in various domain.
 And if it's also useful to explain intelligence or construct intelligence, that would be great.
-And from our work of the quantum quarry of hypothesis, if quarry is something that is influenced by its measurement, then that aspect may be emphasizing this.
-Usually Corey of consciousness is kind of considered a passive construct.
-Like at a given moment what I'm experiencing static passive.
-But now I'm more thinking about because of this collaboration with the hat on the other people.
+And from our work of the quantum qualia of hypothesis, if qualia is something that is influenced by its measurement, then that aspect may be emphasizing this - Usually qualia of consciousness is kind of considered a passive construct.
+Like at a given moment what I'm experiencing, static, passive.
+But now I'm more thinking about because of this collaboration with the other people.
 That can be the case.
 And it's more to do with the process.
-And the process it may not be the kind of the level of the active inference that you are thinking like not the level of the acting on the world, but more to do with this state itself, influencing itself might be some kind of important insight to understand the quality.
+And the process it may not be the kind of the level of the active inference that you are thinking like not the level of the acting on the world, but more to do with this state itself, influencing itself might be some kind of important insight to understand the qualia.
 
 1:30:24 _Hayato:_
-Okay, my comment is it is related to the concept of states again because expectation value I pointed out the importance of expectation value but for example what is the expectation value for example the strength of causality or something.
+Okay, my comment is - it is related to the concept of states again, because expectation value I pointed out the importance of expectation value. But for example what is the expectation value for example the strength of causality or something?
 Then the problem of time scale is very important.
 So you can cause grain for example the brain activity for one time, scale another timescale.
 So I think if IIT is correct there is a good timescale which is of importance great importance of choosing this structure.
-Then I think the brain information or something causal structure should be the good category and you can construct a non competitive algebra and the state is defined or something.
+Then I think the brain information or something causal structure should be the good category and you can construct a noncommuntative algebra and the state is defined or something.
 So the timescale is quite fundamental.
 And on the other hand the state on the category that is state on the category algebra can be represented by some kind of weight on arrows, the positive kind of weight on arrows.
 So the changing the state is the change in the weight of these arrows.
 The positive definite function.
 I think the transition or the weighting of this arrow is very at least mathematically very interesting to compare the active inference as a mathematical point of view.
-So good weight weight to the better weight or something is very how to say interesting to compare.
+So good weight, to the better weight, or something is very how to say interesting to compare.
 I don't have much knowledge about active inference but it seems to me it is quite useful to connect this level the state change or something.
-So yeah it is very interesting for me and other thing is I forgot to the sad point but yeah so yeah yes, as now already okay point out I talked about measurements instruments but the point of this notion is probe system.
+So yeah it is very interesting for me.
+And other thing, is I forgot the third point, but yeah so yeah yes, as now already okay point out I talked about measurements instruments but the point of this notion is probe system.
 So measurement is always often considered as a very direct kind of interaction like the system and the environment.
 But environment has some kind of probe into the system then the interaction is occurred with this probe and this system.
-I think it is very analogous to the quoria the case of so of course the outer world is relating to the brain inside of course at least process or the historical or developmental.
+I think it is very analogous to the qualia the case of - so of course the outer world is relating to the brain inside of course at least process, or the historical or developmental.
 But I think through perception or something the brain has its probe over the world.
-For example this interaction is very hard to say.
-Interesting.
-So measurement, the analogy to the measurement theory may be some physically within the.
-Brain, but some kind of probe of the outer system under this qualiaa is interacting.
+For example this interaction is very hard to say, interesting.
+So measurement, the analogy to the measurement theory may be some physically within the brain, but some kind of probe of the outer system under this qualia is interacting.
 So I think it unifies picture, I think.
 What do you think now, for example?
 
@@ -721,7 +704,7 @@ Yeah.
 
 1:35:01 _Nao:_
 So I was reading this Ozawa paper that describes the instrument, and I'm getting better understanding what it means.
-But what he says is that every observable a of a system S is identified with the observable a tensor with the instrument I over system S plus S prime.
+But what he says is that every observable a of a system S is identified with the observable A tensor with the instrument I over system S plus S prime.
 So S here is the original system, and S prime is the one that with any system external to S.
 And what Hayato was meaning is that this S prime is probe system, which is a part of the environment.
 Right?
@@ -732,11 +715,11 @@ Yeah.
 1:35:51 _Nao:_
 And so here what this quantum, in this case, quantum kind of system description.
 But it's also true for the quantum cognition.
-And in my case, it is also true for the quantum coria hypothesis, is that some kind of qualia experiencing system is interacting with the wired, but through the sort of membrane, or sort of that like a mark of branch like thing is already filtering interaction as a sensory input and out tension.
+And in my case, it is also true for the quantum qualia hypothesis, is that some kind of qualia experiencing system is interacting with the world, but through the sort of membrane, or sort of that like a Markov blanket like thing is already filtering interaction as a sensory input and out tension.
 And this part itself is kind of interacting with itself.
 These arrows are the critical part.
-And then if we translate that other way to in our case, this correspond to every coil a of a coil experiencing system S, which is, in the case of IAT, it's called a complex observer, a times instrument of a system s prime, S prime.
-And this S prime here, I think, will include all the neural net processes that support the underlying qualiaography, but it doesn't really necessarily directly include the external environment.
+And then if we translate that other way to in our case, this correspond to every qualia of a qualia-experiencing system S, which is, in the case of IIT, it's called a complex observer, a times instrument of a system s prime, S prime.
+And this S prime here, I think, will include all the neuronal processes that support the underlying qualia, but it doesn't really necessarily directly include the external environment.
 Many people start to do that, but if you do that, then suddenly hallucination or dreaming and things like that becomes very difficult to explain, including too much.
 I think that corresponds to what you wanted to say, right?
 
@@ -757,12 +740,11 @@ I also enjoyed and it was also good for me to formulate my thoughts as well.
 
 1:37:53 _Hayato:_
 Yeah, I'm very surprised.
-Yeah.
-Surprised me.
+Yeah, surprised me.
 The how consistent our thoughts are.
 It was just a surprise for me, maybe.
-The conversation often goes, how to say, diverge.
-But our conversation has a very surprisingly conversion.
+The conversation often goes, how to say, to diverge.
+But our conversation has a very surprisingly convergence.
 So I think it's quite interesting in itself.
 I learned much from this conversation.
 Thank you for inviting us.
