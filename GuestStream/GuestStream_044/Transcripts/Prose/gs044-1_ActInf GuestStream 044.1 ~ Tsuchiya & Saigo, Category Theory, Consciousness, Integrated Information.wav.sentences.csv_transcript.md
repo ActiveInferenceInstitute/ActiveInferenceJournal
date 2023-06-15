@@ -8,7 +8,7 @@ I'll make sure it's going.
 It's all good.
 All right, welcome to both.
 It is June 13 at zero UTC.
-We're here in active guest stream number 44.1 with Hayata Saigo and Nasugu Suchiya.
+We're here in active guest stream number 44.1 with Hayato Saigo and Naotsugu Tsuchiya.
 So we're looking forward to this presentation and discussion.
 Hayato, please say hello, and then we'll continue with Nasuku's presentation.
 
@@ -19,71 +19,70 @@ I'm a mathematician and a mathematical physicist also interested in consciousnes
 00:54 _Nao:_
 All right. So, my name is Nao Tsuchiya.
 I'm a professor in Monash University and also having a lab in ATR in Japan.
-And as a sort of introduction to this today's session, I will give a brief talk on our recent project called the Choreo Structure, which Ayaton and I will be collaborating and also a little bit on the quantum quality hypothesis.
+And as a sort of introduction to this today's session, I will give a brief talk on our recent project called the Qualia Structure, which Hayato and I will be collaborating and also a little bit on the Quantum Qualia hypothesis.
 Both of them are hopefully relevant to active inference issue.
-So the Quota Structure project is the Japanese funding that we received recently, and it's going to continue for five years.
-This will be to establish a super interdisciplinary research program to tackle the program of consciousness, especially qualia through the interdisciplinary research.
+So the Qualia Structure project is the Japanese funding that we received recently, and it's going to continue for five years.
+This will be to establish a super interdisciplinary research program to tackle the problem of consciousness, especially qualia through the interdisciplinary research.
 We are planning to also host summer school for two to three weeks every year.
 And here's the fantastic members for this grant.
-And Hayato is basically working with me in the part of the mathematical approach to the consciousness and aquaria.
+And Hayato is basically working with me in the part of the mathematical approach to the consciousness and qualia.
 One of the problems, for example, we want to address is, for example, when you see this square, Daniel, what do you see here?
 
 02:26 _Daniel:_
 Blue.
 
 02:27 _Nao:_
-Yeah, so you say blue, and I say maybe owl in Japanese, and the Haito may say sunny in Russian.
-But we could mean the same experience quadria.
+Yeah, so you say blue, and I say maybe "ao" in Japanese, and the Haito may say "siniy" in Russian.
+But we could mean the same experience qualia.
 But how do we know that we are actually experiencing the same thing?
 And I'm actually curious whether this kind of question is something that free energy or active inference kind of style approach can ever tackle.
 And my approach is to go into the category theory kind of inspired direction.
 And here's the first study that published.
-We published in a few years ago with Ayato and the Shigeru, together with also the another category theorist, the Steve Phillips, that in the category theory.
-There is an interesting lemma called the Yona Dilemma that proves that all the relationship characterize its internal intrinsic property.
-And we are using that idea to study the Chore.
+We published in a few years ago with Hayato and Shigeru, together with also the another category theorist, Steve Phillips, that in the category theory.
+There is an interesting lemma called the Yoneda Dilemma that proves that all the relationship characterize its internal intrinsic property.
+And we are using that idea to study the Qualia.
 That's the kind of inspiration of our approach.
-So instead of trying to characterize what the blue is or red is, we are trying to characterize all the relationship between a particular color or particular quota to other exhaustive.
+So instead of trying to characterize what the blue is or red is, we are trying to characterize all the relationship between a particular color or particular qualia to others, exhaustively.
 And then by finding the correspondence of this relationship, we try to identify what the actual blue is.
 So if you say blue is similar to green but also similar to red, then that's going to be very different from my blue.
 And that's the way how we detect this blueness, it's same or different.
-And one recent application of this kind of idea is this unsupervised alignment that we are using with another collaborator, Masafumi Oism in University Tokyo.
+And one recent application of this kind of idea is this unsupervised alignment that we are using with another collaborator, Masafumi Oizumi in University Tokyo.
 And I'll skip the detail, but basically what we are doing is to do some kind of experiment and then collect lots of data to obtain so called similarity matrix between all the colors and then without really knowing what color maps onto what we try to use on the relationship to predict what we are seeing.
 So in a sense, this is a pure category theoretical kind of approach to the problem of consciousness.
 Then I'll just skip the details here.
-So we are doing this kind of approach on other types of aquaria and then this is the thing that we are planning to do for next five years.
+So we are doing this kind of approach on other types of qualia and then this is the thing that we are planning to do for next five years.
 And then another just brief kind of introduction.
 If you have some other question, we can come back later.
 So this is potentially more to do with an active inference aspect of our approach in a sense.
-And this is called the Quantum Courier hypothesis.
+And this is called the Quantum Qualia hypothesis.
 We published this preprint really recently and so you can access it later.
-So one of the there are many programs in the current models of our chore or consciousness where we tend to think that experience or consciousness is like one point in the high dimensional space.
-And we use that kind of idea for our previous alignment experiment approach, but it lacks dynamics and it also lacks the effects that we tend to experience where the observation or report or introspection itself sometimes change our chore, right?
+So one of the - there are many programs in the current models of our qualia or consciousness where we tend to think that experience or consciousness is like one point in the high dimensional space.
+And we use that kind of idea for our previous alignment experiment approach, but it lacks dynamics and it also lacks the effects that we tend to experience where the observation or report or introspection itself sometimes change our qualia, right?
 And that's sort of the active inference aspect that I'm talking about.
 Attention or introspection changes experience.
-But traditional approach is very difficult to deal with this and one way to deal with that is this quantum formalism that we think is appropriate.
-So here we think that there is some kind of chorea experiencing system that is defined as this blue boundary.
-You can consider that as sort of the Markov blanket like thing in the free energy kind of idea.
-And then we consider particular type of the quail like redness or blueness itself as an observable.
+But the traditional approach is very difficult to deal with this. And one way to deal with that is this quantum formalism that we think is appropriate.
+So here we think that there is some kind of qualia experiencing system that is defined as this blue boundary.
+You can consider that as sort of the Markov blanket-like thing, in the free energy kind of idea.
+And then we consider particular type of the quale like redness or blueness itself as an observable.
 It's a terminology in quantum theory.
-Something that in principle can be observed within this quarry.
-And then we consider this measurement as a process that probe this quadrilateral observable.
-And unlike classical theoretical thinking, we think that the measurement or probing of this observable through it's called a state, changes its state and also observable itself.
-And that's something that we can actually formalize mathematically using a concept called a very general concept of this conditional probability called instrument.
+Something that in principle can be observed within this qualia.
+And then we consider this measurement as a process that probe this qualia observable.
+And unlike classical theoretical thinking, we think that the measurement or probing of this observable, through, it's called a state, changes its state and also observable itself.
+And that's something that we can actually formalize mathematically using a concept called, a very general concept, of this conditional probability called instrument.
 It's very technical for the quick talk, so I'll leave it.
-But this is a modern quantum theoretical idea that captures both how we can affect on the world and the quota itself can be affected by that measurement.
-And then using this we think that we can explain probably quota in a much more reasonable way with the mathematics mathematical formalism, and so far, it's just a kind of theory, but we already think that it's probably better than the existing kind of a model of, for example, attention and the consciousness.
+But this is a modern quantum theoretical idea that captures both how we can affect on the world and the qualia itself can be affected by that measurement.
+And then using this we think that we can explain probably qualia in a much more reasonable way with the mathematics mathematical formalism, and so far, it's just a kind of theory, but we already think that it's probably better than the existing kind of a model of, for example, attention and the consciousness.
 And also it also provides some kind of prediction and the explanation of why some of the two concepts or two experience can feel different depending on the order that you experience.
 So this is just like conceptual kind of example.
 But if I ask you, Daniel, that is China similar to North Korea?
-Then you might say probably no.
-Right.
+Then you might say probably no, right?
 
 09:11 _Daniel:_
 I don't even know the reference point.
 
 09:14 _Nao:_
 Yeah, okay.
-But let's say just subjectively, china doesn't feel similar to North Korea.
+But let's say just subjectively, China doesn't feel similar to North Korea.
 
 09:19 _Daniel:_
 Okay.
@@ -99,109 +98,98 @@ Is it about the order that primes people to respond differently?
 09:44 _Nao:_
 Yeah, so many people have already came up with many different kind of ideas to explain this kind of individual aspects of this order effect.
 But as we mentioned, we are actually computing or measuring these kind of order effects systematically through all combination of the colors, for example.
-Then it's hard to systematically explain why this order effect emerges in one cases but not the other, and in which direction.
+Then it's hard to systematically explain why this order effect emerges in one case but not the other, and in which direction.
 Right, but that's what we found, basically.
 And but using this in a quantum cognition kind of framework, we can explain it really nicely.
-In this case, it's just a projection postrate, but we are probably going to extend much more in the more instrument like framework in the future.
+In this case, it's just a projection postulate, but we are probably going to extend much more in the more instrument-like framework in the future.
 Yeah.
-And also we are also predicting that there may be some kind of.
-Violation.
-Of inequality like situation in perception.
-And if we can confirm that, that also gives a credence to our proposal that the quality needs to be framed or explained in the quantum framework.
+And also we are also predicting that there may be some kind of, violation of Bell's inequality in perception.
+And if we can confirm that, that also gives a credence to our proposal that the qualia needs to be framed or explained in the quantum framework.
 So I think that's probably enough to start up the conversation, I guess.
 
 11:13 _Daniel:_
 Awesome.
-Okay, great lot to jump into.
-
-11:21 _Hayato:_
-I'll.
-
-11:25 _Daniel:_
-Share my screen so we can take some notes.
+Okay, great. 
+Lot to jump into.
+I'll... Share my screen so we can take some notes.
 Okay.
-Hato, do you want to give a first remark or I'm happy to, but do you have a first remark or what parts of the work do you want to reflect on first?
+Hayato, do you want to give a first remark or I'm happy to, but do you have a first remark or what parts of the work do you want to reflect on first?
 
 11:53 _Hayato:_
-I think maybe the Categorical approach.
-The importance of Categorical approach is one issue to talk with you, I think, because you first pointed out that paper with Shiger Tabuchi 2016.
-So I'm interested in why you and your colleague are interested in that paper from the active inference side.
+I think maybe the Categorical approach -- the importance of Categorical approach is one issue to talk with you, I think, because you first pointed out that paper with Tsuchiya in 2016.
+So I'm interested in why you and your colleagues are interested in that paper from the active inference side.
 So can you explain some feeling?
 
 12:35 _Daniel:_
 Yes.
 So this is using category theory to assess the relationship between consciousness and integrated information theory with the two of you and Taguchi from 2016.
-So I've long been interested in scale free or scale independent ways to describe systems and information theory has been recognized as one of those approaches.
-And information theory has been proposed to not just play, of course, a central role in the functionality of information systems, but with IIT and related theorems to also strike at the heart of the most quintessential aspect of our conscious experience.
-So that seems like an incredible synthesis of the functionality of systems that don't necessarily seem to have anything qualia like at all merely performing calculations like a super fast abacus basically.
+So I've long been interested in scale-free or scale-independent ways to describe systems and information theory has been recognized as one of those approaches.
+And information theory has been proposed to not just play, of course, a central role in the functionality of information systems, but with IIT and related theorems, to also strike at the heart of the most quintessential aspect of our conscious experience.
+So that seems like an incredible synthesis of the functionality of systems that don't necessarily seem to have anything qualia-like at all, merely performing calculations, like a super fast abacus basically.
 And so I am curious and feel free to address either of these things.
 When we describe information systems, what is it that would or could or is experienced?
-Are they experiencing their information, what they are processing or what is it about?
-Information integration would grant a system the ability to move beyond a behavioral functionality into again strike at the heart of one of the most ineffable questions that the mind can really consider.
+Are they experiencing their information, what they are processing or what is it about information integration that would grant a system the ability to move beyond a behavioral functionality into, again, strike at the heart of one of the most ineffable questions that the mind can really consider.
 
 14:41 _Hayato:_
 Okay, interesting actually the category itself in mathematics originated created in mid 20th century to bridge the two different fields, that is geometry and algebra, more specifically the topology.
-You know something about topology maybe which is a very general kind of mathematical mesos to capture the essence of the figures like a circle or complicated figures.
-And the fundamental problem of the topology is can you identify the two different figures?
-Essentially that means can you transform continuously to the other figures or not?
+You know something about topology maybe, which is a very general kind of mathematical mesos to capture the essence of the figures like a circle or complicated figures.
+And the fundamental problem of the topology is: can you identify the two different figures?
+Essentially that means, can you transform continuously to the other figures or not?
 So if the one figure goes to another figure with a continuous transformation and back then it is viewed as essentially the same.
-But to determine the two figures same is a very difficult question.
-So like great mathematician figured out the utility of the algebraic method that like making the one figure to the other from the figure you can construct the algebra system like groups or something and then the transform the program into the algebra region.
-Then the point is very essential point is taking one figure to constructing one algebra from the one figure is not sufficient.
-The point is the relation should be transformed the other regions.
-So one region here, other regions here but one to one correspondence of object is not sufficiently but the relations if you can transform the order relations into the other regions then you can prove something from one region to another region.
+But to determine the two figures as the same is a very difficult question.
+So like great mathematician Poincaré figured out the utility of the algebraic method that like making the one figure to the other from the figure you can construct the algebra system like groups or something and then the transform the problem into the algebra region.
+Then the point is, very essential point, is taking one figure to constructing one algebra from the one figure is not sufficient. The point is the relation should be transformed the other regions.
+So one region here, other regions here but one to one correspondence of object is not sufficient. But the relations if you can transform the order relations into the other regions, then you can prove something from one region to another region.
 Because this is a notion of the function like the region intuitively I talked about using term the region.
 It is mathematically called category.
 Category consists of objects and arrows, arrows or morphism which is a generate kind of relationship between these objects.
-So topological region is some kind of category of topology like a top that objects topological space and continuous functions, continuous mapping is ro or something.
-There are other regions, for example RGB region like groups and group homophism or the module vector space or something.
-So something RJ rack and the relationship between them.
-So category is defined to formulate the intuitive concept of bridging something functor.
-So first the Island Bag and Macbrain defined category to define this notion of functor by the bridging to region.
-Then, if this is established, then you can infer about the topological region category by using the algebra relation or something.
-So we that is now Shiger and me talked about the possible application of this kind of argument into the consciousness study that it is just a program of bridging different kind of regions like physically testable region and our role experience itself or something so it is apolia it seems apolia it is too difficult question too hard problem to connect to these regions but if you only focus on the object but the relationship if you can compare the relationship then you can infer something about you cannot directly touch or you directly manipulate.
+So a topological region is some kind of category of topology like a top that projects topological space and continuous functions, continuous mapping is arrow or something.
+There are other regions, for example algebraic regions like groups and group homophism or the module vector space or something.
+So something algebraic and the relationship between them.
+So category is defined to formulate the intuitive concept of bridging something -- functor.
+So first [?names?] defined category to define this notion of functor by the bridging to region.
+Then, if this is established, then you can infer about the topological region category by using the algebraic relation or something.
+So we that is Nao, Shigeru, and me talked about the possible application of this kind of argument into the consciousness study -- it is just a program of bridging different kind of regions like physically testable region and our role, experience itself or something. So it is qualia, it seems qualia it is too difficult question too hard problem to connect to these regions if you only focus on the object. But the relationship, if you can compare the relationship then you can infer something about you cannot directly touch or you directly manipulate.
 So this is the idea.
 
 19:47 _Nao:_
 Maybe I'll just add a little bit.
-As Hyatt said, you are taking really diligent notes.
-So that may be quite a good but from my end.
-So this paper was inspired by really talking to Hayato Shigaru and the meeting in this summer school on consciousness.
+As Hayato said, you are taking really diligent notes.
+So that may be quite good 
+But from my end -- So this paper was inspired by really talking to Hayato Shigaru and the meeting in this summer school on consciousness.
 And there I encountered in this category theory for the first time.
-And there were several shocking kind of concepts that I learned from this first encounter.
-One is that there isn't a way to compare two completely different things and then extract common structure between them.
+And there were several shocking concepts that I learned from this first encounter.
+One is that there is a way to compare two completely different things and then extract common structure between them.
 And Hayato first introduced me this very strange paper which I didn't understand at all, but was so interesting that I could read for hours and hours.
-It's called the Rosetta Stone.
-It points out commonality between the topology, quantum physics, logic and computation.
+It's called the "Rosetta Stone".
+It points out commonality between the topology, quantum physics, logic, and computation.
 That was the title.
-And then I didn't understand what the.
-Heck is this in a paper, but that uses this category theory.
+And then I didn't understand what the heck is this in a paper, but that uses this category theory.
 And as a whole, I feel like I see.
 So maybe if we understand the structure behind each of this concrete example, we may be able to find a commonality or explanation at that level.
-And that naturally applied to my program at the time, which is how to bridge the gap between the quotia and the information structure derived from neural activity.
-This looks also completely different.
-But if there is any possibility to bridge the gap, it must be some kind of structural mathematics, and that is category theory.
+And that naturally applied to my program at the time, which is how to bridge the gap between the qualia and the information structure derived from neural activity.
+This looks also completely different. But if there is any possibility to bridge the gap, it must be some kind of structural mathematics, and that is category theory.
 
 21:58 _Hayato:_
-Another point is that I think you can get the ideas of functions by breathing the two regions.
+One other point is, that I think you can get the ideas of functors by bridging the two regions.
 Then the really interesting thing, another really interesting concept is called natural transformation.
-Natural transformation is the kind of deformation or transformation between transformation.
-So you imagine some theory bridge some addition to the another region.
-So there is one meta level arrow code but another theory predicts another thing or something.
+Natural transformation is the kind of deformation or transformation between transformations.
+So you imagine some theory bridge some region to the another region.
+So there is one meta level arrow, but another theory predicts another thing or something.
 But can you connect these theories or models?
-This is a problem of natural transformation so one representation, one theory or something may map the one region to another region but there may be another various kind of mappings factors so the problem is to compare or to unite to connect this transformation function is called natural transformation.
-If the function is naturally isomorphic, that means there is a reversible natural transformation between functions.
+This is a problem of natural transformation. 
+So one representation, one theory or something may map the one region to another region but there may be another, various kind of mappings functors so the problem is to compare or to unite to connect this transformation function is called natural transformation.
+If the functor is naturally isomorphic, that means there is a reversible natural transformation between functors.
 Then these theories seems different but essentially same.
 So kind of natural transformation is maybe the hint to connect the various theories on consciousness or something.
 And also our consciousness experience itself will be connected to the concept of natural transformation.
-Because I see something that the different thing, something.
-But there is no divided discrete kind of structure, but there is some continuous or relating something.
-So this is this view is something like function.
-Another view is something like function, but there is no division.
+Because I see something that the different thing, something, but there is no divided discrete kind of structure, but there is some continuous or relating something.
+So this is this view is something like functor.
+Another view is something like functor, but there is no division.
 There is some relationship.
 So our experience maybe itself a kind of product of a natural transformation.
-Like, maybe now you can explain, like a periphery or maybe no, you are muted.
-Muted.
+Like, maybe Nao you can explain, like a periphery.
+Or maybe Nao, you are muted, muted.
 
 24:49 _Nao:_
 Is it all right if I draw some kind of figure?
@@ -233,7 +221,7 @@ Looks good.
 Yeah.
 
 25:19 _Nao:_
-So just to kind of recap, what Hyatt was talking about is that we tend to think about something like a category, and then another category is there.
+So just to kind of recap, what Hayato was talking about is that we tend to think about something like a category, and then another category is there.
 And then there is some kind of object which could be quite abstract.
 And then it's related by arrow like this.
 And then if this category C is somehow possible to map onto this category D while kind of preserving this arrow.
@@ -242,11 +230,12 @@ And then each object is also preserved.
 Then it's much more than the usual kind of idea of a function between the sets.
 Right.
 Because it also impose the correspondence between the relationship.
-And in our idea, basically, if this is, let's say, Claudia of the category, and if this is a neuronal activity or maybe information domain, and then maybe we can have a back and forth of the factor, that would be great.
+And in our idea, basically, if this is, let's say, qualia of the category, and if this is a neuronal activity or maybe information domain, and then maybe we can have a back and forth of the functor, that would be great.
 Usually most of the mathematical theory of consciousness tries to go from here to here, right?
-Let's say in the case of IIT arrow here, and then what Hyatt was kind of talking in a way as natural transformation is this kind of secondary level arrow.
+Let's say in the case of IIT - arrow here. 
+And then what Hayato was kind of talking in a way as natural transformation, is this kind of secondary level arrow.
 Let's say.
-I don't know whether free energy or active inference can count as a prediction from neural activity to the particular quadria, but let's say if there is something like that, and then maybe there is some kind of a translation between these two theories.
+I don't know whether free energy or active inference can count as a prediction from neural activity to the particular qualia, but let's say if there is something like that, and then maybe there is some kind of a translation between these two theories.
 Yeah.
 If that exists, that's called a natural transformation.
 
@@ -256,35 +245,37 @@ A few comments on this.
 The idea of mapping the maps between the spaces is so important.
 It reminds me of metaphor where we're conveying relationships and saying, well, it's like a hammer, or it is a hammer.
 For this other situation.
-So that's how we get few shot learning and applicability and how we grasp concepts is perhaps developmentally or from an evolutionary perspective in a large extent by generalizing our spatial and embodied understandings and then certainly communication.
+So that's how we get few shot learning and applicability and how we grasp concepts, is perhaps developmentally or from an evolutionary perspective, in a large extent by generalizing our spatial and embodied understandings.
+And then certainly communication!
 If you want to have some semantics that are being communicated across minds, through an interface, through a classical interface, then certainly you want the structure to be preserved.
-And then I think the one that you have here is one of the most provocative for those empirically studying consciousness because it's kind of like this side is empirical and let's just say we don't know what the Q side is for now, but let's just say it's another space that isn't that.
-And then if there is a certain landscape that neural activity patterns flow through like some kind of winnerless competition or you get some sort of limit cycle and you find that there's a limit cycle of neural activity and then there's also that is being paralleled by experiential cycles, then that is not just an accounting system.
-That's a very strong finding about potentially the real underlying causal system, especially because it can suggest unique other explanations or manipulations to make right.
+And then I think the one that you have here is one of the most provocative for those empirically studying consciousness because it's kind of like, this side is empirical and let's just say we don't know what the Q side is for now, but let's just say it's another space that isn't that.
+And then if there is a certain landscape that neural activity patterns flow through like some kind of winnerless competition or you get some sort of limit cycle and you find that there's a limit cycle of neural activity and then there's also -- that is being paralleled by experiential cycles, then that is not just an accounting system.
+That's a very strong finding about potentially the real underlying causal system, especially because it can suggest unique other explanations or manipulations to make.
 
 29:28 _Nao:_
+Right.
 Do you want to mention anything about the metaphor?
 
 29:32 _Hayato:_
-Yeah, before that very hard to say.
+Yeah, before that, very hard to say.
 The technical remark is that for the original problem that connects topology and algebra, then in that case the algebra is more concrete, more manipulative in that case.
 And the topology is something mysterious in this case.
-So in general the function is a kind of generalization mapping in sets.
-So there's something mysterious into something concrete.
-So now picture C and D should be switched maybe in that case.
-But of course there is a back and maybe back and forth.
-So the idea is your brew and my brew program is for example, you can prove that your brew and my brew is different.
-If there's something, informational or something, the detectable structure is completely different, then your brew and my brew is different.
-Of course you cannot prove the sameness between your brew and my brew if there is no how to say the back and forth function.
-But even if you don't have the backwards function, at least you can demonstrate that your brew and my brew is different, seems to be different if the correspondence is functional or something.
-So it is a big step from the experience side and with me and colleagues do such a thing.
-So this is not by focusing your brew, my brew only, but your brew read something or you don't have to say, even do not have to say the name of something.
-So just how to say no labeling for example, but the relationship you can teach the relationship these things.
+So in general the functor is a kind of generalization of mapping in sets.
+So there's something mysterious, into something concrete.
+So Nao's picture C and D should be switched maybe in that case.
+But of course there is a back and maybe, back and forth.
+So the idea is your blue and my blue program is for example, you can prove that your blue and my blue is different.
+If there's something, informational or something, the detectable structure is completely different, then your blue and my blue is different.
+Of course you cannot prove the sameness between your blue and my blue if there is no, how to say, the back and forth functor.
+But even if you don't have the backwards functor, at least you can demonstrate that your blue and my blue is different, seems to be different if the correspondence is functorial or something.
+So it is a big step from the experience side, and me and colleagues do such a thing.
+So this is not by focusing your blue, my blue only, but your blue red something or you don't have to say, even do not have to say the name of something.
+So just, how to say, no labeling for example, but the relationship you can teach the relationship these things.
 You can teach the relationship these things.
-So then compare that so very interestingly.
-In general the structure is surprisingly coherent between persons.
-It is very nice and also maybe it's suggesting that the known isomorphic case, then your brew and my brew is something different or something.
-So I think this approach is very interesting even if there's no BioDirection or only one direction, but even that case it is useful.
+So then compare that. 
+So very interestingly, in general the structure is surprisingly coherent between persons.
+It is very nice and also maybe it's suggesting that the known isomorphic case, then your blue and my blue is something different or something.
+So I think this approach is very interesting even if there's no bidirectionality or only one direction, but even that case it is useful.
 Yeah, it is my remark.
 
 32:57 _Daniel:_
@@ -294,7 +285,7 @@ And then I'll have a question about your drawing.
 33:01 _Nao:_
 Right.
 So this is one of the slides that I didn't show today.
-But what Hyatt was talking about is kind of explaining this figure.
+But what Hayato was talking about is kind of explaining this figure.
 Like the way you experience red is related to with the other experience, not only color but shape and also sound and so on in a very complicated way.
 And then we can actually measure how similar they are by asking the people and then you can also do that for the other people.
 And then these two similarity metrics can be directly compared with our new method of this unsupervised running.
@@ -368,16 +359,16 @@ It's just represented as a single dot but it can contain something more.
 Right?
 So in an upshot, one dot could correspond to a collection of the neuronal states and the connectivity pattern and things like that, which can go from one to the other.
 And then this kind of movement may correspond to something like we see redness or whatever in this way but that's also with respect to other kind of arrows as well.
-And that's the sort of wave of the relationship that we are trying to characterize both in the domain but aquaria, but also brain is also the wave of the relationship, gigantic ones, right?
+And that's the sort of wave of the relationship that we are trying to characterize both in the domain but qualia, but also brain is also the wave of the relationship, gigantic ones, right?
 And as you said, that transition from one state to the another state that's pretty much like dynamical system like approach and then the simple idea called a monoid is applicable to this kind of dynamical system approach.
 Correct me Hayato, if I'm saying something out of the bounds of my comfort zone, but any kind of state can transition into another state and then this transition itself can be represented by the arrow.
 The combination of that particular kind of arrow composition may correspond to one experience.
 So that's one thing I wanted to say.
 The other thing that I had also mentioned about observable state and why we are interested in a quantum framework, quantum theory, by the way, it's not a quantum brain hypothesis.
-We are not saying that quantum phenomena in the brain is critical for consciousness, but it's just a mathematical structure of the quantum theory that is important to understand the quota.
+We are not saying that quantum phenomena in the brain is critical for consciousness, but it's just a mathematical structure of the quantum theory that is important to understand the qualia.
 And the essence is most likely to be this noncommutativity any kind of process that you do, like cooking, putting the water and then model is different from model and then putting water.
 Right?
-And so any kind of process we do, there is some kind of temporal dependency that commutativity doesn't hold and that's also probably the case for the quota.
+And so any kind of process we do, there is some kind of temporal dependency that commutativity doesn't hold and that's also probably the case for the qualia.
 And if that's the case, then for you maybe it's a bit surprising, but Bayesian kind of statistics and Bayesian probability may not work as you might wish.
 
 45:44 _Hayato:_
@@ -414,7 +405,7 @@ This isn't the ORC or this isn't necessarily taking a stance one way or the othe
 
 51:11 _Hayato:_
 Actually, as now said, we are not dependent on the hypothesis.
-Like there is a quantum physical process behind the courier.
+Like there is a quantum physical process behind the qualia.
 But why we can use the quantum mathematic is very simple reason.
 Because conventional probability theory, classical probability theory depend on the probability space.
 Classical one is too narrow to capture, for example, order effect or something.
@@ -429,7 +420,7 @@ But who?
 Isabel Bohr and Heisenberg some people pointed out that Evening Grascow or Evening sorry, a macroscopic side.
 But this kind of the importance of noncommutativity is very universal, not especially in microsite, but it is a historical reason that we first find in mathematics in the microsite.
 But there is many, many phenomena which cannot be captured by the determinism or the classical probability theory.
-So I think the courier or something is just some kind of.
+So I think the qualia or something is just some kind of.
 
 53:57 _Nao:_
 Example.
@@ -438,7 +429,7 @@ Example.
 Yeah, example, yes.
 
 54:00 _Nao:_
-By the way, maybe Daniel, can you replace this quantum consciousness with the quantum quadria?
+By the way, maybe Daniel, can you replace this quantum consciousness with the quantum qualia?
 
 54:07 _Daniel:_
 Yes.
@@ -718,7 +709,7 @@ But I think through perception or something the brain has its probe over the wor
 For example this interaction is very hard to say.
 Interesting.
 So measurement, the analogy to the measurement theory may be some physically within the.
-Brain, but some kind of probe of the outer system under this chorea is interacting.
+Brain, but some kind of probe of the outer system under this qualiaa is interacting.
 So I think it unifies picture, I think.
 What do you think now, for example?
 
@@ -741,11 +732,11 @@ Yeah.
 1:35:51 _Nao:_
 And so here what this quantum, in this case, quantum kind of system description.
 But it's also true for the quantum cognition.
-And in my case, it is also true for the quantum coria hypothesis, is that some kind of chore experiencing system is interacting with the wired, but through the sort of membrane, or sort of that like a mark of branch like thing is already filtering interaction as a sensory input and out tension.
+And in my case, it is also true for the quantum coria hypothesis, is that some kind of qualia experiencing system is interacting with the wired, but through the sort of membrane, or sort of that like a mark of branch like thing is already filtering interaction as a sensory input and out tension.
 And this part itself is kind of interacting with itself.
 These arrows are the critical part.
 And then if we translate that other way to in our case, this correspond to every coil a of a coil experiencing system S, which is, in the case of IAT, it's called a complex observer, a times instrument of a system s prime, S prime.
-And this S prime here, I think, will include all the neural net processes that support the underlying choreography, but it doesn't really necessarily directly include the external environment.
+And this S prime here, I think, will include all the neural net processes that support the underlying qualiaography, but it doesn't really necessarily directly include the external environment.
 Many people start to do that, but if you do that, then suddenly hallucination or dreaming and things like that becomes very difficult to explain, including too much.
 I think that corresponds to what you wanted to say, right?
 
