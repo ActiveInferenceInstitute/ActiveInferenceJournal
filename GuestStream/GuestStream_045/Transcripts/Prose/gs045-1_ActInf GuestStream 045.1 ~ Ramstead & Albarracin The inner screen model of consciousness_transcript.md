@@ -11,49 +11,47 @@ Maxwell.
 
 00:37 _MAXWELL RAMSTEAD:_
 Excellent.
-
 Well, maybe now and I can just briefly reintroduce ourselves for those of us watching at home.
 So, hey, folks, my name is Maxwell Ramstead.
-I am the director of Research versus AI.
+I am the director of Research at Verses AI.
 I am a scholar in the tradition of active inference and an expert on the Free Energy Principle.
 Yeah.
-And Mahault,
-would you please?
+And Mahault, would you please?
 
 01:05 _MAHAULT ALBARRACIN:_
 Sure.
 
 So, my name is Mahault Albarracin.
-I work at Versus with Maxwell.
-I'm Director of Product for Research and development, but I'm also doing a PhD in cognitive computing.
+I work at Verses with Maxwell.
+I'm Director of Product for Research and Development, but I'm also doing a PhD in cognitive computing.
 I worked in social sciences and in artificial intelligence in the artificial intelligence field.
 And I've specifically tried to apply active inference to more socially grounded questions and sometimes more abstract and representational questions, diving all the way down to the philosophy that can be attached to it.
 
 01:43 _Maxwell:_
-Thank you, Mal.
+Thank you, Mahault.
 So, yeah, I'm very pleased to present this work.
-Today, Mao and I will be discussing our new preprint called the Inner Screen Model of Consciousness.
+Today, Mahault and I will be discussing our new preprint called the Inner Screen Model of Consciousness.
 And it is about basically an application of the Free Energy Principle to the problem, the conundrum of consciousness.
-So just to give a little bit of background and now I'll just be walking through the slides, if at any point you want to jump in and add complete correct, please feel free to do so.
+So just to give a little bit of background and now I'll just be walking through the slides, if at any point you want to jump in and add, complete, correct, please feel free to do so.
 This is work that started in late last year and continued throughout the year.
 It's preoccupied us quite a bit, actually, over the last while.
-Mao and I are the lead authors on this, what has now become a series of papers, with one more preprint coming out, hopefully before the end of the month, and another in the works, hopefully before the end of the year, with the same core group of authors.
-So obviously Mao, as well as Adam Saffron, Alex Keefer, Brendan Klein, Chris Fields and Karl Friston.
+Mahault and I are the lead authors on this, what has now become a series of papers, with one more preprint coming out, hopefully before the end of the month, and another in the works, hopefully before the end of the year, with the same core group of authors.
+So obviously Mao, as well as Adam Safron, Alex Kiefer, Brendan Klein, Chris Fields and Karl Friston.
 And the follow up papers include a bunch of other authors.
 So we've been working with some pretty cool folks on this, folks listed here and others.
 Yeah.
 So the overall aim across the two or three papers is to present something like a minimal, unifying model of consciousness premised on the Free Energy Principle.
 In the paper that we're discussing today, we are presenting, as I was intimating a moment ago, a model of consciousness that follows directly from applying the Free Energy Principle to well understood human neurophysiology.
-The take home message of today's talk is that, well, let me take one step back.
+The take home message of today's talk is that -- well, let me take one step back.
 There has been a lot of discussion in the literature over the last decade about whether the Free Energy Principle has anything unique to teach us about consciousness.
 And there have been responses pro and contra.
 And I think that the question up until recently was just unsettled.
 We would like to suggest a positive response to that question.
-And as such, one of the take home messages is that actually, yes, a model of consciousness can be directly derived from the Free Energy Principle applied to explain known neuroanatomy.
-And I guess the kind of technical message, the technical part of the takeaway is that consciousness has or is isomorphic to a nested holographic mathematical structure.
+And as such, one of the take home messages is that actually, yes, a model of consciousness can be directly derived from the Free Energy Principle and applied to explain known neuroanatomy.
+And I guess the kind of technical message, the technical part of the takeaway is that consciousness has, or is isomorphic to, a nested holographic mathematical structure.
 So this sounds like a mouthful, might sound a little crazy.
 We are going to unpack this presently.
-Now, did you want to add anything to that?
+Mahault, did you want to add anything to that?
 
 04:49 _Mahault:_
 No, all good.
@@ -64,19 +62,19 @@ So the original paper that we wrote turned into, like a 24,000 word monstrosity 
 What we're trying to do is in some sense, identify a parsimonious mathematical structure that underwrites the different accounts of consciousness that have been developed based on the Free Energy Principle.
 I'll spare you the original paper structure.
 I said a moment ago that we were developing a minimal unifying model.
-This is a notion that was proposed by our friend and colleague Vanya Visa, I believe, a few years ago now, in 2020.
-And Vanya at the time was noticing, well, the field of consciousness studies is replete with a bunch of different models and theories, and there seems to be no end in sight to the multiplication of these theories.
+This is a notion that was proposed by our friend and colleague Wanja Wiese, I believe, a few years ago now, in 2020.
+And Wanja at the time was noticing, well, the field of consciousness studies is replete with a bunch of different models and theories, and there seems to be no end in sight to the multiplication of these theories.
 And the idea is maybe what the field needs is not one additional N plus one theory of consciousness, but rather a minimal unifying model by which Vanya means a model that specifies only necessary properties of consciousness.
 So this doesn't come with, like, a strong sufficiency claim, really, like, what are the kind of rudimentary building blocks that are necessary for consciousness in general.
 This model would have determinable descriptions that can be made more specific.
 So it's kind of a base model that can be expanded to cover different varieties of conscious experience.
 And finally, that it's minimal and unifying in the sense that it integrates current approaches to consciousness in no small part by highlighting their common assumptions.
 So kind of pointing to a least common denominator of all existing accounts.
-And so what we have tried to do in this paper is to well, in this series of papers is to engage in this analysis and this mummy analysis, if you will, for theories of consciousness premised on the Free Energy Principle directly.
+And so what we have tried to do in this paper is to well, in this series of papers is to engage in this analysis and this MUM-y analysis, if you will, for theories of consciousness premised on the Free Energy Principle directly.
 So it's worth quickly discussing the Free Energy Principle.
 I'm almost embarrassed to do this at the Active Inference Institute, but it's always worth going through this very quickly.
 So there's a standard distinction in physics that one can leverage between dynamics, mechanics and principles.
-The Free Energy Principle, as it says on the tin is a principle.
+The Free Energy Principle, as it says on the tin, is a principle.
 So principles are kind of the foundation of a hierarchy of theory building in science, as it were.
 Top of the hierarchy are formal descriptions of behavior what are known as dynamics.
 So if you're applying dynamical systems theory to understand the time evolution of some system, you're in the realm of dynamics.
@@ -84,22 +82,18 @@ Arguably, folks like Kepler and Galileo were also in the realm of dynamics.
 So I see some empirical phenomenon and I produce a formal description of that behavior.
 Mechanics comes into play when we move from Kepler and Galileo to Newton, when we move from merely describing some behavior to providing equations of motion that allow us to explain why that behavior has the particular shape that it does.
 So classical mechanics, for example, gives us an account of gravitational force and explains why orbits are shaped the way they do.
-So if galileo and kepler just noticed the shape of orbits and provided a formal description of them, newton explains where that shape comes from in some sense, and principles, in turn, explain where mechanics come from.
+So if Galileo and Kepler just noticed the shape of orbits and provided a formal description of them, newton explains where that shape comes from in some sense, and principles, in turn, explain where mechanics come from.
 So classical mechanics come from the principle of least action or stationary action, which, very roughly speaking, is the principle according to which no more or no less energy is used than necessary to perform some physical movements.
-That kinetic.
-And potential energies balance out such that the true paths of a system through its state space are those for which that balance equals zero.
-The principle of least action explains where classical mechanics comes from.
-In some sense.
-And similarly, the Free Energy Principle is at the basis of another kind of mechanics that is becoming known as Bayesian mechanics.
+That kinetic and potential energies balance out such that the true paths of a system through its state space are those for which that balance equals zero.
+The principle of least action explains where classical mechanics comes from, in some sense.
+And similarly, the Free Energy Principle is at the basis of another kind of mechanics that is becoming known as Bayesian Mechanics.
 You can think of the Free Energy Principle as having the same relation to Bayesian mechanics as the principle of least action has to classical mechanics.
 And Bayesian mechanics is the physics of probabilistic beliefs.
 So it's a physics that connects the properties of the system that you're considering the physical properties of the system.
 In particular, the information entropy of states of a system to the connects the thermodynamic entropy of the states of a system to the information entropy of the beliefs that a system has about the systems to which it is coupled.
-Here.
-A probabilistic belief means a probability density in a very general sense.
+Here, a probabilistic belief means a probability density in a very general sense.
 We're not assuming some kind of contentful motion of belief like you might find in philosophy.
-Really.
-This is about kind of a tracking relation.
+Really, this is about kind of a tracking relation.
 But we'll get that to that in actually, just a few slides.
 There are two main formulations of the Free Energy Principle in the literature.
 The classical and the quantum.
@@ -115,7 +109,7 @@ And in this context, a generative model is used to encode the relations of depen
 So this is important and I've been kind of making this point maybe ad nauseam for the last, I guess, half decade.
 But the generative model is not a model that you have in your head.
 It is a statistical model that represents the conditional dependence structure of the entire system that you're considering.
-So this is an environment agent system in the broadest sense.
+So this is an environment-agent system in the broadest sense.
 And the Free Energy Principle says that if a specific sparseness structure obtains so if things are disconnected in a special way, then it'll look as if the subsets that are disconnected are tracking each other.
 So more technically, we partition our system into particles.
 Particles are basically internal states shrouded behind their Markov blanket, where the Markov blanket is composed of sensory states and active states.
@@ -131,8 +125,8 @@ This kind of tracking relationship, formally speaking, is approximate daisy and 
 So basically, in a nutshell, the Free Energy Principle says in our physical universe as we understand it, with the usual mechanics running in the background, right?
 Classical relativistic, quantum and statistical, if boundaries exist in the physical system, then the bulk across the boundary is going to be tracking whatever is beyond the boundary.
 So in a nutshell, this is what the Free Energy Principle says.
-Now, I noticed you put some stuff in the chat.
-Would you mind using your voice to compliment.
+Mahault, I noticed you put some stuff in the chat.
+Would you mind using your voice to complement.
 
 15:11 _Mahault:_
 Yeah, I was just saying that this part that you were just explaining often seems kind of esoteric to people.
@@ -141,13 +135,12 @@ And if you have perspective, you also have the capacity to assess causality star
 And this is true from any so that's what I wanted to add.
 
 15:44 _Maxwell:_
-Thank you, Mala.
+Thank you, Mahault.
 I think that's useful addition.
 Yeah.
 So this is the classical formulation of the Free Energy Principle.
-There is a new hip funky formulation that has become available over the last half decade due to Chris Fields, Jim Glazebrook and their colleagues, the so called quantum information theoretic formulation of the FEP.
-Fear not.
-This doesn't appeal directly to quantum mechanics.
+There is a new hip funky formulation that has become available over the last half decade due to Chris Fields, Jim Glazebrook, and their colleagues, the so called quantum information theoretic formulation of the FEP.
+Fear not, this doesn't appeal directly to quantum mechanics.
 Rather, it appeals to the tools that have been used to extend information theory in the context of quantum mechanics, which allow you to calculate like all sorts of funky wave equations and propagation operators and all that.
 We don't have to get into the details.
 Basically, it's just a way to reframe what I just said.
@@ -176,7 +169,7 @@ That's not the sense of Hologram that's at stake.
 Although maybe so we'll get to why, but we'll focus on the Hologram theoretic formulation.
 So, to summarize, in the Holographic principle version of the Free Energy Principle, the quantum information theoretic version of the principle, all of the classical information that I need as an external observer to characterize the coupling between two subsystems of a larger system exist on the boundary.
 And that's a pretty remarkable physical fact.
-And a few years ago, Chris Fields, Jim Glazebrook and Mike Levin proposed that maybe this kind of information concentrating bottleneck architecture also has application to consciousness in the form of an internal screen.
+And a few years ago, Chris Fields, Jim Glazebrook, and Mike Levin proposed that maybe this kind of information concentrating bottleneck architecture also has application to consciousness in the form of an internal screen.
 So the idea was that the information that I bring to bear, to parse my sensory stream and make sense of what is constantly bombarding me, it has to live somewhere.
 And so the idea is, well, it lives in this inner screen.
 So you basically have an external Markov blanket, which is a Markov blanket just in the usual sense.
@@ -187,7 +180,7 @@ Minimal physicalism internal awareness requires internal boundaries.
 And there's this interesting connection to integrated information theory I am agnostic with respect to IIT, so we're not going to go there today.
 But for those of you who are interested, this kind of inner loop mechanism seems to generate positive integrated information.
 So there's an interesting connection there.
-Before I move on to Neurophysiology, I'll hand things over to Mao.
+Before I move on to Neurophysiology, I'll hand things over to Mahault.
 If you wanted to add anything.
 
 21:33 _Mahault:_
@@ -195,28 +188,25 @@ Yeah, actually I was literally about to type something that this is actually als
 So maybe this is something worth digging into a little later in the talk.
 
 21:52 _Maxwell:_
-Awesome.
-Then we shall.
+Awesome, then we shall.
 And I believe that Ali is also a co author on the paper and we have him.
 So congratulations, by the way, on the preprint.
-I saw it released and Mao has told me about it.
+I saw it released and Mahault has told me about it.
 I'm really happy to see such serious philosophical work being done with the Free Energy Principle as the basis.
 I think you should be very happy with the end result and proud.
 But now let me get back to my monologue.
-So rather our Mao and my diet.
-It's not really a dialogue.
+So rather our Mahault and my dia -- It's not really a dialogue.
 It's sort of like I don't know how to call it.
 Anyway, I'm thinking in French.
 I have the words in French, I promise.
 So now that we've, you know, reviewed in a very much too short, way too brutally fast fashion the Free Energy Principle and its core formulations, we're now going to derive a model of consciousness by applying it to the known neurophysiology of the brain.
-Are you ready?
-You buckled up?
+Are you ready? You buckled up?
 Okay, good.
 So we have just said that the FEP can be used to model things that have boundaries.
 I submit to you that the brain is a thing with boundaries and importantly, a lot, many, several internal boundaries.
 So in particular, we know that the brain has a very sparse structure.
 So if you think of just the raw numbers, right?
-There are roughly on the order of 100 and 5160 billion neurons in the brain.
+There are roughly on the order of 100 billion neurons in the brain.
 But each neuron only makes about something like, I want to say five figures, because I've spent so long, ten to the five connections, right?
 My neurophysiology is a bit far behind me, but it's something on the order of a few thousand to maybe tens of thousands of connections per neuron.
 So obviously, if you just think about it, most neurons are not connected to each other, not directly.
@@ -230,9 +220,8 @@ What we're talking about is a regular sparse pattern of connectivity, where I on
 What I want to suggest now is that you can understand the sparseness as a set of nested Markov blankets, and that's going to do a lot of heavy lifting for us.
 So the discussions here are based on two papers.
 One by Fields and colleagues called neurons as hierarchies of quantum reference frames.
-It's really cool.
-I recommend it.
-And also a paper by Inesh Ipolito, myself and our colleagues on Markov blankets in the brain.
+It's really cool, I recommend it.
+And also a paper by Ines Hipolito, myself and our colleagues on Markov blankets in the brain.
 So this is going to be a much too short summary of those discussions, but basically, you can start with individual neurons and then talk about their Markov blankets to bring it back to something that I was saying earlier, but that I didn't emphasize while we were going through the slides.
 The Markov blanket identifies dynamical dependencies, not necessarily physical boundaries.
 So it's a statistical boundary it's not necessarily like the boundaries of a wall, like a cell.
@@ -294,10 +283,9 @@ Thank you.
 So, yeah, to summarize then, there are basically two, right, only layers.
 As you ascend the layers which are successively coarse graining each other, there is an irreducible screen that can't further be coarse grained.
 We believe that this corresponds to something like a naturalized Homunculus.
-And we're calling this perspective (with an intentional provocation) -
-"we're calling this perspective ""Neocartesian,"" in the sense that we may have in some sense identified the processes that make it seem as if there was something like a Homunculus."
-Obviously we're not - or maybe not
-obviously! It's worth saying we are not falling into the Homunculus fallacy because we're not claiming that the topmost layers perceive themselves.
+And we're calling this perspective (with an intentional provocation) -- we're calling this perspective "Neocartesian," in the sense that we may have in some sense identified the processes that make it seem as if there was something like a Homunculus.
+Obviously we're not - or maybe not obviously! 
+It's worth saying we are not falling into the Homunculus fallacy because we're not claiming that the topmost layers perceive themselves.
 So the buck stops with the top layers and the top layers can only perceive themselves vicariously by acting through other layers.
 And we associate this action of layers of internal Markov blankets on each other with attention in particular and other neuromodulatory effects.
 So I mean the overall picture is one where consciousness is intrinsically related to overt and covert actions, to the overt acting and sensing associated with the external Markov blanket and with the covert actions that are being deployed within the stack and in particular that are issued by the very top set of levels.
@@ -319,11 +307,10 @@ Thank you.
 Yeah, I would agree.
 So thank you all for your attention.
 Thank you in particular, Dan, for the invitation.
-It's always great to be at the A-Double-I! And yeah, we [were] looking forward to this discussion.
+It's always great to be at the A-Double-I! And yeah, we're looking forward to this discussion.
 
 36:14 _Mahault:_
-I think Daniel said he wasn't going to do too much animation, so if
-people have…
+I think Daniel said he wasn't going to do too much animation, so if people have…
 
 36:27 _Maxwell:_
 Are you going to do any facilitation at all, Dan?
@@ -343,12 +330,11 @@ I mean, do you think the type of nested Holographic structure described by the m
 And regardless of the answer, would you think that it generalizes to larger systems comprising these systems, like populations and colonies and so on?
 
 37:27 _Maxwell:_
-Maybe I can take
-a quick stab at that.
-So we think that the Free Energy Principle itself commits you to a kind of I don't know what the right word is.
+Maybe I can take a quick stab at that.
+So we think that the Free Energy Principle itself commits you to, a kind of I don't know what the right word is.
 We're writing a paper now.
-We're struggling with the exact coinage, but it's not quite a pen psychism.
-It's a pen representationalism or a pen tracking ism, if you'll allow me, the absolutely disgusting neologism.
+We're struggling with the exact coinage, but it's not quite a panpsychism.
+It's a pan-representationalism or a pan-tracking-ism, if you'll allow me, the absolutely disgusting neologism.
 Basically what the FEP implies is that anything that has a boundary, it looks as if it's tracking what's beyond the boundary.
 So at a very basic level, the FEP kind of licenses this talk about anything.
 So anything whatsoever looks as if it's tracking what's across the boundary by virtue of existing.
@@ -362,10 +348,10 @@ What we've tried to do in this paper is to start spelling out more explicitly wh
 Like, what is the special kind of structure that you need to add to the Markov blanket?
 And what you'll notice is that you get consciousness by making the overall structure more sparse.
 So as you make more of the connectivity zero, you get all of these weird things that pop up, one of which is we think like this consciousness structure.
-Mao has thought about this maybe more than I have, so I'd be curious to get her perspective.
+Mahault has thought about this maybe more than I have, so I'd be curious to get her perspective.
 
 39:37 _Mahault:_
-Well, so I know that people are a little bit wary of panpsychism, so we usually add the term proto in front of it.
+Well, so I know that people are a little bit wary of panpsychism, so we usually add the term proto- in front of it.
 And so the idea is that we have to deconceptualize what consciousness means.
 And oftentimes what we mean is something that resembles what humans do.
 And we have to be a little bit if we take our formalism consciousness can become emergent at the scales where humans are.
@@ -384,8 +370,7 @@ I'm sharing my screen here.
 This is from a paper on path integrals, particular kinds and strange particles.
 So it is a typology of different kinds of Markov blankets and different kinds of particles.
 So something like a rock, it still has a Markov blanket, but its Markov blanket is not partitioned into sensory and active states.
-There are no states that have this property that active states have that they affect the external world that are not affected by it.
-In return.
+There are no states that have this property that active states have that they affect the external world that are not affected by it in return.
 A rock just has sensory states.
 If I kick a rock, unless it's radioactive, it's not going to act on me.
 It only has the inference part of active inference.
@@ -404,9 +389,8 @@ And you can think of the topmost structure that we were describing as an instanc
 And therefore, it kind of has to go through the entire bulk of the system to infer itself into existence.
 
 43:55 _Mahault:_
-So there's a few hands up there on Google where you can see the people who share hand.
-Okay.
-So, Ali, I think you raised your hand first.
+So there's a few hands up there where you can see the people who share hand.
+Okay. So, Ali, I think you raised your hand first.
 
 44:10 _Ali:_
 Yes.
@@ -424,10 +408,10 @@ The only two constructs that are at play here are the generative model and the v
 That's it.
 So it is not the case that the FEP is about how the generative models the generative process.
 A lot of this language comes from previous Bayesian approaches and in particular, the helmholtz machine.
-In the helmholtz machine.
-So helmholtz machines are some of the earlier predictive coding machines.
-And in the helmholtz machine, basically you have a forward pass that connects the sensory end to basically the top of the predictive hierarchy and then a backwards pass connecting top of the model back to the sensory end.
-And in a helmholtz machine, you would call the forward pass a recognition model and the backwards pass a generative model.
+In the Helmholtz machine.
+So Helmholtz machines are some of the earlier predictive coding machines.
+And in the Helmholtz machine, basically you have a forward pass that connects the sensory end to basically the top of the predictive hierarchy and then a backwards pass connecting top of the model back to the sensory end.
+And in a Helmholtz machine, you would call the forward pass a recognition model and the backwards pass a generative model.
 The forwards passes a recognition model because you're inputting some data and then basically by the time the information trickles up to the top, you have recognized what caused the data.
 And the backwards pass is called a generative model for the reasons that are sometimes invoked in the predictive coding literature where you're basically generating possible sensoria given a certain configuration of states.
 So we don't use recognition and generative in that sense anymore.
@@ -490,8 +474,7 @@ I'm a professor at the State University of Minas Gerais.
 I'm a philosopher, cognitive scientist, psychologist.
 So I work mainly on reasoning.
 But by reading your paper, what strikes me as most promising is the possibility of solving the hard problem of consciousness, if this goes right in progressing this model.
-But maybe an important part of that depends on exactly what is meant by holograms, and exactly what this brings into a theory as an explanation,
-right?
+But maybe an important part of that depends on exactly what is meant by holograms, and exactly what this brings into a theory as an explanation, right?
 So during your presentation, you were talking something about that there's a difference between holography in the sense of bringing light to something to make a projection; but you said that might be related as well.
 So I'm quite curious about how to use this concept and how to understand it in a more folk-psychology sense; and also like where it comes from, because I'm not a physicist.
 So does it depend on string theory to be correct?
@@ -504,7 +487,7 @@ Mahault, I think this is more a “you” question.
 So for the holographic screen theory.
 So basically, remember, Maxwell really gave a good explanation.
 I kind of thought I had answered your question, but I'm going to give a little bit.
-So the boundary between any two mutually separation systems, a and B, is the holographic screen that encodes the eigenvalues of the interaction that couples A and B.
+So the boundary between any two mutually separation systems, A and B, is the holographic screen that encodes the eigenvalues of the interaction that couples A and B.
 So this is very similar to how a hologram encodes information about 3D objects onto a 2D surface.
 So A hologram stores information about the phase and the amplitude of light reflected from an object, and this allows the reconstruction of a 3D image from a 2D surface.
 And so here, similarly, the holographic screen encodes information about a system's interaction with its environment, which allows for the prediction and control of the system's behavior.
@@ -550,8 +533,8 @@ But this is still, like, super far off, and I wouldn't have the pretension to cl
 
 58:58 _Samuel:_
 Yeah, I get what you're saying now.
-Different patterns can make different quality.
-You don't need different magic to have different quality.
+Different patterns can make different qualia.
+You don't need different magic to have different qualia.
 But yeah, I was wondering how that related to the holograms, but okay.
 It's something in development, as you're saying.
 Maybe I should let someone go and then I'll go back to these consciousness questions.
@@ -563,14 +546,13 @@ So, Thales.
 59:34 _Thales:_
 Well, thank you all.
 It was a great presentation and great test, by the way.
-IMAX.
 Thank you.
 Hi, everyone.
 I'm sorry, you guys are facing like a black screen right now.
 My camera is off.
 Sorry.
 Okay.
-I'm an anthropologist psychologist, so I'm kind of an outsider in here.
+I'm an anthropologist and psychologist, so I'm kind of an outsider in here.
 I'm not from the Active Inference Lab too. So I study it, but I'm not a specialist in it.
 So my questions are kind of broad and they're actually really simple.
 But I think that I'm only allowed to make one question right per row.
@@ -582,7 +564,7 @@ And with that in mind, I would like to know, could you speculate a little bit on
 
 1:00:56 _Maxwell:_
 That's a great set of questions.
-I gave a version of this talk to Luis Pasoa's group at the Neuroscience and Philosophy Salon, and Anna Shaunika asked a similar question.
+I gave a version of this talk to Luis Pessoa's group at the Neuroscience and Philosophy Salon, and Anna Ciaunica asked a similar question.
 Mahault probably has a better response.
 I would point you in the direction of the work of Anna Shaunika.
 She has some really cool work on co embodiment and cohomeostasis and pregnancy and this kind of thing.
@@ -616,14 +598,12 @@ Like expertise has more to do with understanding what is not connected to what t
 And so, yeah, there is probably a kind of developmental course whereby the model becomes sparser and sparser and sparser and sparser and more and more precise.
 But this is a very cool direction for exploration.
 I don't know if I have anything more cogent to say at this time about it.
-Pleasure.
 
 1:05:14 _Mahault:_
 So I know Ali wanted a second go, and so did Samuel.
 Does anybody else have other questions?
 Because no other hands are raised at this time.
-So we have one more hand, I
-think.
+So we have one more hand, I think.
 
 1:05:34 _Ali:_
 Actually, you basically answered my other questions, so thank you so much.
@@ -636,7 +616,7 @@ So Thales first,
 I suppose.
 
 1:05:54 _Thales:_
-I don't know guys like to Maria first, because I just know.
+I don't know guys, like to Maria first, because I just know.
 
 1:06:02 _Mahault:_
 Sure, go ahead, Maria.
@@ -648,7 +628,7 @@ And it's not really a question.
 I would just like to understand better what is memory in your inner mother, because I understand the information passing and the middle layers or levels that contain the information.
 But how exactly do we construct, for example, the narrative self or something that we remember from a long time, or episodic memory?
 I didn't understand it very well in the paper.
-So if you could just shed some.
+So if you could just shed some light.
 
 1:07:01 _Maxwell:_
 It's a computer science processing, information processing notion of memory.
@@ -707,14 +687,14 @@ Thank you.
 
 1:12:49 _Mahault:_
 Awesome.
-… Sure, go ahead, Samuel.
+Sure, go ahead, Samuel.
 
 1:12:56 _Samuel:_
-Yeah, about the going back to the Band psychiatrist problem and how you describe consciousness, I think it's very well, it's old in the literature that you can have information processing which is not conscious, but it's mental in some sense in other animals or the beings which are not biological beings.
+Yeah, about the going back to the blind psychiatrist problem and how you describe consciousness, I think it's very well, it's old in the literature that you can have information processing which is not conscious, but it's mental in some sense in other animals or the beings which are not biological beings.
 But when you describe your models, I know you have this level also but you also have a level of phenomenal awareness or phenomenal consciousness which you are describing.
 And I think that's the most particularly important part of the model, the phenomenal awareness part.
 And it's the part of the model that can contribute to something new to me in a sense that wasn't described.
-So I'm glad you mentioned Matzinger because Matsinger is one of the few who have described consciousness as a virtual reality.
+So I'm glad you mentioned Metzinger because Metzinger is one of the few who have described consciousness as a virtual reality.
 And what I think is interesting about describing consciousness as a virtual reality is that it makes a difference between mental information processing or unconscious information processing and those processes that are conscious because they are simulated somehow.
 So an interesting thing of having a different language to speak of conscious events is that we can then explain why they are different.
 We can explain why we have images in our head or something like that, and why these images seem to have causal powers, if they have at all.
@@ -733,15 +713,15 @@ So I would like you guys to comment on that.
 
 1:17:09 _Maxwell:_
 That's really interesting.
-We draw on medsinger's work, on opacity and transparency.
-So in medsinger's work, just for the audience, there are two kinds of cognitive processes.
+We draw on Metzinger's work, on opacity and transparency.
+So in Metzinger's work, just for the audience, there are two kinds of cognitive processes.
 There are transparent processes that we are not aware of as cognitive processes per se, and then there are opaque processes which we are.
 So, for instance, the metaphor comes from a transparent or opaque window.
 And most of the time, the window just lets you see through it towards whatever is on the other side, but sometimes it's a bit grimy, and then you see the window itself.
 And so, similarly, there are some processes that mainly deliver things in the world, and then there are other processes that deliver mental processes to us as kind of the object of our perception in some sense.
 So these are processes like attention or attentional processing, or paying attention to your own attentional state.
 These processes make other processes opaque.
-"Terrence Deacon, the anthropologist, also talks about similar phenomena in terms of, like, absent absence and what he calls ""absential phenomena."""
+Terrence Deacon, the anthropologist, also talks about similar phenomena in terms of, like, absent absence and what he calls "absential phenomena."
 So there's a sense in which this top layer, what it does is implement opacification.
 So the top layer can only be about other layers in the stack.
 And this kind of reversal of the flow of information is, we think, the key to understanding the way that mental processes are made available for introspection at all.
@@ -766,25 +746,25 @@ Could you repeat the last thing?
 You broke up pretty bad on my.
 
 1:19:51 _Thales:_
-Sorry, my laptop is really okay.
+Sorry, my laptop is really, really....
 The article seems to align itself to a more modular account of the central nervous system.
-But in contrast to modeler accounts, there are some dynamic distributor approaches that suggest that there are no parts of the brain with dedicated functions, right?
+But in contrast to moduler accounts, there are some dynamic distributed approaches that suggest that there are no parts of the brain with dedicated functions, right?
 But regions with various capacities present in software assembled test specific coalitions.
 So these coalitions sometimes are termed like transiently assembled local neuronal subsystems, right?
 
 1:20:22 _Maxwell:_
-Yeah, we're big fans of big fans.
+Yeah, we're big fans of Michael Anderson. 
 
 1:20:26 _Thales:_
 Yeah, exactly.
 So these approaches specialism is only a functional footprint and brain functions never the result of fixed networks implementing specific processes, but the result of high order relations between regions.
 So my question with that in mind, knowing that you guys know these kind of approaches, right?
-Do I think that the level erco structure implied by the model could be cash out in terms of transient collisions built on the flight, such as flow talents?
+Do I think that the level structure implied by the model could be cash out in terms of transient collisions built on the flight, such as flow talents?
 
 1:20:55 _Maxwell:_
 Yes.
 I mean, we have a paper doing that from 2020.
-It's called neural and phenotypic representations under the Free Energy Principle.
+It's called Neural and Phenotypic representations under the Free Energy Principle.
 And it is one of our lesser known papers.
 Let me just put it in the chat quickly.
 And so what we show in this paper is that it's possible to simulate the transient formation of Markov blankets that basically track stimulus features.
@@ -803,13 +783,13 @@ And basically the idea is that this anatomical segregation of pathways correspon
 Where you are and what you are are independent.
 You could be here.
 You could be here.
-I think I've tried to yeah.
+I think I've tried to, yeah.
 
 1:23:26 _Mahault:_
 So that was a really good answer.
 I'm going to try and say it a little bit differently and see what sticks to the wall.
 So each hierarchical level of the brain has markup blankets, right?
-So remember, these things are nested and they exchange with other levels according to the dependency structures of the mark of blankets.
+So remember, these things are nested and they exchange with other levels according to the dependency structures of the Markov blankets.
 And so this is like hierarchical predictive coding, right?
 So ascending prediction errors can be read as active states, while descending can constitute sensory states from the point of view of a given level.
 So using this factorization that Maxwell just mentioned, some brain regions become specialized to encode distinct probability factors that are statistically independent.
@@ -844,9 +824,9 @@ Thank you.
 Yeah, I just wanted to make a couple of comments about the notion of self evidencing or self modeling that's just been discussed.
 Because, you see, sometimes in philosophical literature, the sensibility of secondary properties are usually they're divided into the sensibility of things in itself and sensibility of things for itself.
 But under these conditions, some philosophers believe that real sensation would not be possible.
-Or as Arthur Rimbo famously put it, I is an other.
+Or as Arthur Rimbaud famously put it, "I is another".
 Right.
-But in some recent developments, particularly in process materialism, through the work of people like Thomas Neal, Emmanuel Delanden, Karen Broad, they've tried to somehow overcome this issue, this philosophical distinction between in itself and for itself, by introducing the notion of self receptivity, or, in other words, a capacity to be affected and to affect at the same time.
+But in some recent developments, particularly in process materialism, through the work of people like Thomas Nail, Manuel Delanda, Karen Barad, they've tried to somehow overcome this issue, this philosophical distinction between in itself and for itself, by introducing the notion of self receptivity, or, in other words, a capacity to be affected and to affect at the same time.
 Because by introducing self receptivity, then the sensation of each sensed point in the flow can become itself as an other to itself.
 So basically, that distinction between in itself and for itself would be dismantled effectively.
 And that's why it can provide more reliable way to discuss the notion of real sensation, or real even subjectivity, as a flow that just folds on itself and comprises both in itself and by itself.
@@ -872,7 +852,7 @@ So, yeah, does that help kind of flesh out this idea of folding onto itself and 
 I think this question was for Ali or Maxwell, so one of you has.
 
 1:31:13 _Maxwell:_
-To decide whether I thought it was for Ally.
+To decide whether I thought it was for Ali.
 
 1:31:16 _Ali:_
 That was great.
@@ -890,13 +870,7 @@ So, Samuel, I think you have a question.
 
 1:31:27 _Samuel:_
 Yes, my final question, I was mostly talking about the hard problem, of course, because I also buy the predictive processing story, and I agree with what you guys are saying.
-But one issue that I have with the predictive processing story is that.
-
-1:31:53 _Maxwell:_
-We.
-
-1:31:53 _Samuel:_
-Can apply it to explanations in various ways.
+But one issue that I have with the predictive processing story is that we can apply it to explanations in various ways.
 So sometimes, like, sometimes you can it seems we can tell any story with the same theory, and it's hard to know which one is true if you can tell multiple stories.
 So I think that's a problem with predictive processing in general.
 And you can explain, for instance, autism in different ways, and I think people have tried that for your model unconsciousness.
@@ -905,18 +879,13 @@ How empirical is it?
 And during the talk, you guys mentioned something that you were going to test something based on this, which was very promising, and I would like you to comment on that.
 
 1:32:52 _Mahault:_
-So Maxwell, he has a really cool paper on the map territory fallacy policy, which I think is part of the answer here.
+So Maxwell, he has a really cool paper on the map territory fallacy fallacy, which I think is part of the answer here.
 And we've also written some.
 So I'll let Maxwell dig into it.
 Probably was.
 Going to be a very fleshed out answer.
 So I'll give a very small answer which he's going to blow out of the water afterwards.
-
-1:33:14 _Maria:_
-But.
-
-1:33:17 _Mahault:_
-There are some things we can do to test whether the predictions made by our model actually come to fruition.
+But there are some things we can do to test whether the predictions made by our model actually come to fruition.
 So that's one way to test the empirical validity of a model.
 But to keep in mind a model is just a model.
 And so since you have multiple realizability effectively, what really only matters is whether your model actually has any predictive power.
@@ -962,7 +931,7 @@ I feel like I might expose a flank that's not ready to be exposed.
 
 1:38:24 _Samuel:_
 Perfect.
-Thanks for that pleasure.
+Thanks for that answer.
 
 1:38:28 _Maxwell:_
 And that brings us to the end.
@@ -997,7 +966,7 @@ Correct.
 So we've done a lot of work in simulating large scale systems, right?
 So we've simulated niche, we've simulated interaction between one, two, or more actors, what it means for belief sharing, propagation, the formation of mark of blankets, et cetera.
 And so I think the true question would be how transient are the mark of blankets at the level of superstructures and how does it enable those structures to be able to encode information at the level of the interaction between different scales?
-"So I do think that given our model you can assume that a system is conscious by virtue of having nested parts which can read and write where a superordinate entity level of the structure is ""write only"" and the lower level is also ""write only."""
+So I do think that given our model you can assume that a system is conscious by virtue of having nested parts which can read and write where a superordinate entity level of the structure is ""write only"" and the lower level is also ""write only.
 And through this sort of boundary of the entity and the interactions between the parts of the entity you have what resembles a conscious process at which you have some degree of perception.
 The really interesting question there becomes what becomes the irreducible parts?
 So if you could be understood a little bit like a cell if you as a human, your irreducibility is that your cell as a part of a larger system,
@@ -1031,8 +1000,7 @@ One thing that I like to think about is the only way you're ever going to experi
 So if you've ever been part of what a mob or if you are on Twitter and you see people piling on to something and then you talk to them and they're like, I kind of blacked out, I don't know what happened.
 Because you can't at this part of the hierarchy compute the entirety of what happened.
 All you can do is understand sort of your path that was part of a larger network of web of paths which themselves, given the priors of the superstructures you're embedded in are kind of sort of going somewhere and represent.
-the
-error push of all the people that share a similar type of model that therefore constitutes a cultural direction.
+the error push of all the people that share a similar type of model that therefore constitutes a cultural direction.
 So that’s the best way I think we can understand hyper-priors as a function of what it might be like to be a city sort of thing.
 But that's as far as I can take this metaphor for now.
 
@@ -1047,7 +1015,7 @@ I just want to say that the hard problem is really hard and it's called like tha
 I think we're hopefully moving in the direction of making this less mysterious.
 But all of this should be taken as very preliminary investigations, really trying to sketch out the bare bones of an explanation.
 And yeah, there is far more work ahead of us than behind us, I think.
-Now, any final thoughts?
+Mahault, any final thoughts?
 
 1:47:37 _Mahault:_
 I like to think about it in the opposite terms.
@@ -1063,11 +1031,11 @@ Ali? Thales?
 
 1:48:11 _Thales:_
 Yeah, quick one.
-So any prediction on when the other two preference will come out?
+So any prediction on when the other two papers will come out?
 I'm really interested in it.
 
 1:48:25 _Maxwell:_
-Inshallah the Mum paper will be released early July right now, reasonably, and then the other one has to do with extending outwards and that might be like another year.
+Inshallah the MUM paper will be released early July right now, reasonably, and then the other one has to do with extending outwards and that might be like another year.
 I don't think that's coming soon, but hopefully revisions to this paper will be coming out also over the summer and yeah, I would anticipate July.
 Hopefully. We'll see.
 There's a lot going on right now!
@@ -1100,13 +1068,13 @@ All right, I'll just give a few comments.
 All right, so first, yes, congratulations to all for the recent papers.
 It's really exciting to see a kind of continuum and integration with all these different threads.
 The way that we think of physics and the physics of information and the history and the philosophy of the physics of information.
-That kind of a gradient might be reimagined such that there's a clearer understanding of when it's the firmware or the kernel of in the tradition of as I see you at all writing sometimes in versus interpretations and that's maybe situational but that's a gray area.
-Reminds me of the instrumentalist realism debates of 2021.
-Your with the map and the territory which has been developed out so much further and just the ability, especially in a situation in a model specific way to separate out the intelligence or information structure or the behavior from any kind of qualia type discussion.
-The recent developments with Chris Fields at all and the waste energy and where free energy goes and the kind of saying like one has forgotten more than someone else has learned.
-So just the idea that to have awareness, there has to be that discardle and then that might be related to the irreversibility and the time consciousness that also you've been developing the Eco Evo devo components and just multiscale
-biology, connecting it to traditions of thought and work in biology, which is big, but that's kind of how we retro Grandparent back into biology.
-Promisingly with the ways that multiscale systems are already considered and then also just the recent developments in category theory and the primacy of the relational and the physics as information processing and then the way that that enables very knowledgeable individuals like you all to come from a lot of the philosophy and the history and all these other threads to come together with the actual modeling in a very satisfying way.
+That kind of a gradient might be reimagined such that there's a clearer understanding of when it's the firmware or the kernel of in the tradition of as I see you at all writing sometimes in versus interpretations, and that's maybe situational, but that's a gray area.
+Reminds me of the instrumentalist-realism debates of 2021.
+You're with the map and the territory which has been developed out so much further and just the ability, especially in a situation in a model specific way to separate out the intelligence or information structure or the behavior from any kind of qualia type discussion.
+The recent developments with Chris Fields et al. and the waste energy and where free energy goes and the kind of saying like one has forgotten more than someone else has learned.
+So just the idea that to have awareness, there has to be that discardle and then that might be related to the irreversibility and the time consciousness that also you've been developing the EcoEvoDevo components and just multiscale
+biology, connecting it to traditions of thought and work in biology, which is big, but that's kind of how we retro-grandparent back into biology.
+Promisingly with the ways that multiscale systems are already considered, and then also just the recent developments in category theory, and the primacy of the relational and the physics as information processing, and then the way that that enables very knowledgeable individuals like you all to come from a lot of the philosophy and the history and all these other threads to come together with the actual modeling in a very satisfying way.
 So thank you all for the stream and really looking forward to next steps.
 Bye.
 
