@@ -58,7 +58,7 @@ we have spatial domains, and everything within any space can be locatable
 and programmable within this new network.
 And it's just extending the protocol that we have now, right?
 So same internet, just more capabilities.
-Now, Dr. Carl J. Friston and the Verses AI white paper,
+Now, Dr. Karl J. Friston and the Verses AI white paper,
 and I'm sure a lot of you are familiar with him,
 the father of Active Inference and the Free Energy Principle.
 Now, so Verses with Dr. Friston has developed a new type of AI
@@ -352,12 +352,12 @@ So you can put boundaries around your particular data, but still be able to acce
 AI now for your proprietary data because it can take that small amount of data and make it smart.
 So this is a game changer for, you know, access to AI for any systems in any databases.
 So embodied AI.
-Active Inference is mimics biological design.
-And it's so it's like embodied AI with the ability to take action.
+Active Inference mimics biological design.
+And it's like embodied AI with the ability to take action.
 And this is the core engine of the Spatial Web.
 So what makes Active Inference so accurate?
 Active Inference is so accurate because it continually looks outward into the world, measuring the world in real time through a global network of sensors, IoT devices, cameras, robots, drones, anything that's connected within the Spatial Web, the digital twin network of the world.
-H.S.M.L. informs the AI with precise data, extracts the signal from the noise, minimizing the prediction error.
+HSML informs the AI with precise data, extracts the signal from the noise, minimizing the prediction error.
 And this mimics the way humans and animals make decisions.
 So the perception of the world in the Spatial Web, Active Inference, AI, you know, create this creates a cybernetic feedback loop of perception of the world and it updates the model of the world with the belief of what it knows to be true, gaining the understanding of the intricacies and inner workings of the world.
 So that it can make decisions and take action.
@@ -393,7 +393,7 @@ And then you also have programmable intelligence. So versus refers to this as co
 So the act of correcting a machine occurs within the code within the computational architecture of versus AI system, human law can now be transformed into computable law that AI can comprehend, abide by, and then act accordingly within its decision making process.
 This is a process which is fully auditable, knowable, and it updates in real time. And versus has been proving this concept in a program called Flying Forward 2020.
 And this is a European drone project.
-The conducted with the European Union. And, you know, there's eight or 12 different countries involved. I'm, I'm not sure. But basically, what they've proven is that they can take the the Spatial Web protocol, the HSTP and HML.
+The conducted with the European Union. And, you know, there's eight or 12 different countries involved. I'm, I'm not sure. But basically, what they've proven is that they can take the the Spatial Web protocol, the HSTP and HSML.
 And they can translate human laws, all the laws around like the airspace laws, and you know, laws, how how they shift crossing country boundaries, different things like that.
 They can take those laws, put them in a programmable, you know, code through the protocol that the AI within the drone can understand, and then abide by.
 So they've, they've met with great success through this project. And they've, they've proven that, you know, these drones can deliver medical supplies, you know, to a hospital crossing borders into various air state airspaces, you know, understanding no fly zones versus fly zones, all of these things.
@@ -461,7 +461,7 @@ Awesome. Thank you.
 Thank you, Daniel.
 
 54:00 _Daniel:_
-All right. I'm going to come back on video and then?
+All right. I'm going to come back on video and then....
 All right.
 Well, thank you for the amazing presentation.
 There's many places to begin, many ways to do it.
@@ -472,7 +472,7 @@ My pleasure!
 
 54:26 _Daniel:_
 I'll start by just asking the live stream viewers if they want to ask anything, just put it in a live chat.
-And then perhaps? just there were so many topics that you brought up that perhaps I can just reflect on a few of the topics and just kind of
+And then perhaps -- just there were so many topics that you brought up that perhaps I can just reflect on a few of the topics and just kind of
 summarize it as as I heard it, especially where it's different from what we've heard in terms of framings on other streams where we go way more into the technical.
 But but there are just so many great ways that you had of framing what was happening.
 OK, so good?
@@ -499,14 +499,12 @@ What brought you to this presentation? Like what was your way into the Spatial W
 
 56:36 _Denise:_
 Well, so Dan Mapes, who's one of the co-founders, he's a longtime friend of mine.
-And, you know, so I knew when he and his co-founder, Gabriel Ren?, who's the CEO of Verses, when they were starting Verses back in 2016, 2017 -
-so, you know, I knew what I knew what was coming.
+And, you know, so I knew when he and his co-founder, Gabriel Rene, who's the CEO of Verses, when they were starting Verses back in 2016, 2017 - so, you know, I knew what I knew what was coming.
 And I've been kind of watching it unfold over the last, like, you know, handful of years.
 And so then last summer, you know, it became really clear to me that, you know, Verses was getting close to launching to the public.
 You know, they've been working over the past, you know, couple of years with like Fortune 500 companies, with, you know, governments and smart city development all over the globe.
 They've been involved in this Flying Forward project.
-You know, they've been deep into the supply chain -
-one of the first apps they created was an app called Wayfinder, which is specifically built for, you know, the supply chain.
+You know, they've been deep into the supply chain - one of the first apps they created was an app called Wayfinder, which is specifically built for, you know, the supply chain.
 And so, you know, watching all of that, but then knowing it's coming to later this year, I was like, okay, there's a transition.
 And, you know, people need to understand what's coming, because, you know, I've been involved in like, you know, blockchain and Web3 for the last, you know, handful of years.
 And so you see all these amazing technologies being built and all these awesome projects.
@@ -518,8 +516,10 @@ So I knew there was a learning curve.
 So that's really what I set out to do, was to kind of break down that learning curve and really start to educate people about the protocol, about the AI and about what to expect.
 
 59:14 _Daniel:_
-All right. Great. Um, few more questions. Again, we're just starting to explore this.
-And so whatever you do or don't know is all good. How will the open source nature of the web and the ecosystem around Active Inference related technologies be secured?
+All right. Great. Um, few more questions. 
+Again, we're just starting to explore this.
+And so whatever you do or don't know is all good. 
+How will the open source nature of the web and the ecosystem around Active Inference related technologies be secured?
 
 59:34 _Denise:_
 Well, so, so basically, you know, you have to think of the COSM operating system as that's, that's literally the operating system that is going to enable people to easily build with build these intelligent agents within the Spatial Web network, right?
@@ -543,28 +543,28 @@ What about when there's different concepts of authority and ownership and justic
 Right. So, well, so that's, that's one of the, it's one of the beauties of the world is that, you know, we all have our own unique understandings, our own unique beliefs, our own unique cultural traditions.
 And the differing governing bodies and types of government, right?
 So the protocol needed to be built to be able to preserve all of that?
-"You know, you don't want there to be this next evolution of technology that includes AI that becomes this dictatorship of, you know, ""This is the way the world's going to be,"
-"and this is how everybody has to operate!"""
+"You know, you don't want there to be this next evolution of technology that includes AI that becomes this dictatorship of, you know, "This is the way the world's going to be,"
+"and this is how everybody has to operate!"
 This preserves the uniqueness and the individuality of everybody in any area.
 So really the way this plays out, it's going to be able to be customized for region, for, you know, cultures, belief systems, you know.
 So it's like this socio-technical ability to, you know, safeguard and preserve traditions and different things and mindsets.
 So, you know, really it's, it's, it's, you know, it's not going to be a hindrance as much as it is going to be something that, you know, kind of preserves the beauty of individuality.
 And so when you're talking about systems like that, like you were talking about, you know, it's pretty much going to be similar to where it is today.
 You know, like, you know, people have the right to? the right of refusal, right? [Laughs]
-"You know, even in a restaurant, you know, ""no shirt, no shirt, shoes, no service,"" you know!"
+"You know, even in a restaurant, you know, "no shirt, no shoes, no service," you know!
 So, you know, there's not going to be a lot of difference with that, you know.
 And then, so when you're talking about things like drone delivery and things like that, then you're going to have other standards bodies that are making those decisions to, you know, make things more inclusive rather than, you know, kind of silliness of, you know, denying people for whatever reason.
 
 1:03:48 _Daniel:_
 Wow! All right.
 I'll ask a question from the live chat.
-"Bert asks, ""Thank you for the presentation."
+Bert asks, "Thank you for the presentation.
 What is the limitation of implementing this vision?
-"Is it getting people to use the hyperspatial language or getting Active Inference working right?"""
+Is it getting people to use the hyperspatial language or getting Active Inference working right?"
 Or I'll add a secret third thing.
 
 1:04:11 _Denise:_
-"Well, so, so, you know, I've had people say that, you know, ask that with me saying, you know, ""Well, what's the guarantee that anybody's going to, you know, you know, take part in this new Spatial Web?"""
+Well, so, so, you know, I've had people say that, you know, ask that with me saying, you know, "Well, what's the guarantee that anybody's going to, you know, you know, take part in this new Spatial Web?""
 And it's you have to think of the way the Internet has evolved, right?
 This isn't just like this whole separate network that you're going to try to bring everybody on to.
 It's the same network we're already on, and it's just evolving the capabilities within that network.
@@ -588,7 +588,7 @@ So it's going to be a natural progression for people to come, you know, tp take 
 So, you know, the World Wide Web is like 40 billion computers!
 Now we're evolving from just computers to spaces and objects and everything within there.
 So, you know, it's not going to be a matter of people? getting people to do that.
-"It's, you know, people are going to go, ""Wow, I can do that!"""
+It's, you know, people are going to go, "Wow, I can do that!"
 And, you know, it's going to be a natural progression.
 As far as the Active Inference AI, it's going to start working within the network, and it's just going to grow.
 So the more people are engaging on, you know, within the Spatial Web network, and the more people that are building these AI apps?
@@ -605,7 +605,7 @@ That's a beautiful thing.
 I'll ask another question.
 Your answer led perfectly to it.
 Bert asked again in the chat:
-"""Also, is there a resource where we can learn more about how to build a hyperSpatial Website?"""
+"Also, is there a resource where we can learn more about how to build a hyperSpatial Website?"
 
 1:08:18 _Denise:_
 So, I don't think there? I don't think those resources are out yet.
@@ -625,13 +625,12 @@ So I don't think there's going to be a huge learning curve when it comes to that
 
 1:09:59 _Daniel:_
 Wow. All right! I'll go to another question. Dave asked in the chat,
-"""Does Verses plan eventually to expand the inventory of Element types (beyond the 12 mentioned in today's presentation)?"
-"People negotiate concerns that don't seem to fit easily in this framework."""
+"Does Verses plan eventually to expand the inventory of Element types (beyond the 12 mentioned in today's presentation)?
+People negotiate concerns that don't seem to fit easily in this framework."
 
 1:10:19 _Denise:_
 Yeah. So I don't know. I don't know if I can really answer that.
-And the reason why is because I don't?
-I don't? my technical knowledge of what's happening behind the scenes is very limited.
+And the reason why is because I don't, I don't -- my technical knowledge of what's happening behind the scenes is very limited.
 So the answer could be yes; it could be it's already there.
 I mean, the reality is, is those those 12 aspects are just, you know, kind of a generalized idea of what you can program.
 But when you're talking about, you know, HSTP being multidimensional, you know, and you can program in everything from like, you know, temperature to, you know, pressure to, you know, you can... you can... you can?
@@ -640,7 +639,7 @@ So, you know, in that respect, it's it's pretty unlimited, except for that limit
 
 1:11:30 _Daniel:_
 I'll try to restate that, just how I heard it, because I think it's a really important point.
-The 12 (again, this can be totally off base if I don't have any information), but the 12 components shown are kind of like fully? one way of fully showing your work.
+The 12 (again, this can be totally off base, if I don't have any information), but the 12 components shown are kind of like fully one way of fully showing your work.
 But when you really get down to the last mile and the shoes on the ground, you're in the realm of the particulars and the specific measurements, at which point complex cultural topics will be playing out through the minute particulars, not necessarily inheriting some stringency from a top-down ontology.
 If that's fair, I just want to kind of say it that way.
 
