@@ -48,6 +48,7 @@ I'm so sorry.
 I have to let him out of the park.
 Sorry about that.
 So the next evolution of the internet.
+
 Now, you know, as I said, World Wide Web, a library of pages, documents,
 you know, everything is static.
 The Spatial Web protocol, HSTP, hyperspace transaction protocol,
