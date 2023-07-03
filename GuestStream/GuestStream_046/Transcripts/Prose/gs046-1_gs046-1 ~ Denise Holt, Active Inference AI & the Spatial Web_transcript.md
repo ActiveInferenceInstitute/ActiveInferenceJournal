@@ -101,6 +101,7 @@ sensing and perceiving continuously evolving environments,
 making sense of changes, updating their mental model
 and what they know to be true, and then acting on the new information
 they receive.
+
 And in the white paper, it's also discussing a network
 of distributed intelligence.
 So this enables a cognitive architecture made up of the collective
@@ -147,6 +148,7 @@ Making Bayesian inferences about the world, the brain minimizes free energy
 by optimizing perception, so through hypothesizing and observation.
 In other words, the brain models the environment better,
 improving the perception.
+
 Now, the Active Inference part minimizes the free energy
 by acting on the environment.
 So acting on the environment to reduce the surprises,
@@ -237,6 +239,7 @@ you're talking about authority or domains or users or assets.
 So all of these contextual elements can affect the expression of the shared information by and between anything.
 So belief updating through context and sensors.
 So HSML is a cipher for context.
+
 The Spatial Web, which is web 3.0, the next evolution of the internet,
 is a library of spaces that contain objects, people, places, and things.
 These objects do things and change over time.
@@ -307,7 +310,7 @@ producing a model for data normalization.
 So by programming context into everything in any space, it creates this digital twin of the space.
 So the Spatial Web becomes a digital twin of everything from the planet to every single system,
 every single object within it that's on the network.
-So.
+
 The contingencies and changing details, inherent qualities, circumstances for all objects and situations can now be measured and computed,
 providing a basis for the AI perception affecting all entities and their interrelationships to each other.
 So you're talking about adaptive intelligence automation, security through geo encoded governance,
@@ -333,6 +336,7 @@ Now, the way that the Spatial Web works with the Active Inference AI is you have
 You know, small amounts of data can now be made smart because you have context informing the AI and you have sensors that are giving it real time data inputs to let it kind of look outward and see what's happening in the world now.
 Not, you know, referencing historical data.
 So this leads to minimizing complexity.
+
 So when you're talking about the machine learning versus the Active Inference for efficiency and accuracy.
 The more complex a system is, the more energy it consumes.
 So that's what I was just referring to with all this big data approach on these machine models.
@@ -387,6 +391,7 @@ Now, one of the interesting things, you know, with this call for, you know, putt
 So, you know, the only options have been to, you know, either, you know, regulate the the companies that are developing these, you know, these tools, or to just let the free market reign. Now, letting free market reign is a little bit tricky with AI, because that can really lead to like this AI arms race kind of a thing, you know, for AI domination.
 And that, that that has some risks to, you know, like the human nature, right. So, and then the other problem with regulating the companies that are developing these tools is that you're asking them, you're basing those regulations off them being able to do things like, you know, explain how the results are coming, you know, to fruition through their tools, or holding them accountable for, you know,
 for outputs that are, you know, false, or, you know, causing harm to anybody, or, you know, different things like that, which you really can't do that either. Because what's happening within these tools is not controllable. It's not auditable, it's not controllable. So there's a real issue with governance around these machine model AIs.
+
 Now, with Active Inference AI, it is completely explainable, auditable, transparent. And when you're talking about the the self report, you know, Active Inference AI is capable of introspection.
 So this enables the intelligent agents to access and analyze their own internal states and decision making processes. So we get better understanding of their decision making process. And they have the ability to report on themselves to basically report on how they arrived at their decisions.
 Beliefs and belief updating are known. So this, this dissolves the explainability problem of the conventional AI.
@@ -427,6 +432,7 @@ Active Inference AI inside of the versus AI QASM operating system has access to 
 This AI becomes an ecosystem of intelligent agents that are all interoperable over HSTP.
 So what does this mean for the planet?
 Active Inference AI can run the planet.
+
 Dan Mapes, who's one of the co-founders of versus, he describes the Spatial Web with Active Inference AI as a nervous system for the planet.
 Together, these technologies enable the only AI in the world that can run critical operations for systems, infrastructures, smart cities and the planet.
 So when you're thinking of climate or traffic control or smart cities or advanced education or hospitals or airports, all of these are critical systems that need accurate functioning of the AI.
