@@ -8,10 +8,10 @@
 
 Hello and welcome, everyone, to the Active Inference Institute.
 This is session one of the course "Physics as Information Processing" with Chris Fields.
-First we'll have Ander Aguirre and Chris Fields introduce themselves.
+First, we'll have Ander Aguirre and Chris Fields introduce themselves.
 
 00:20 And then we'll carry on with the first lecture, here.
-Check out the video description for a link to the course course overview website, where you can ask questions that will be answered asynchronously; register to participate in the discussions, which happen about two weeks after each of the six lecture sessions; and just learn more about this area.
+Check out the video description for a link to the course overview website, where you can ask questions that will be answered asynchronously; register to participate in the discussions, which happen about two weeks after each of the six lecture sessions; and just learn more about this area.
 So thank you both so much for joining into this adventure.
 We are starting now.
 
@@ -32,14 +32,14 @@ So, yeah, just here to learn myself.
 
 Thank you, Ander.
 And thank you, Daniel.
-I'm Chris Fields. And I'll be presenting this course in six sessions; and Ander will be organizing discussion sessions after each of those.
+I'm Chris Fields. And I'll be presenting this course in six sessions, and Ander will be organizing discussion sessions after each of those.
 And all of this is explained on the course website.
 So let's start.
 
 ### Quantum Information Processing
 
-01:49 This is a course on physics as information processing, and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
-And I'll just start with a few quotations that span the middle of the 20th century from **[Ludwig] Wittgenstein** in 1920s saying, "The world is all that is the case."
+01:49 This is a course on physics as information processing, and this first session will be a historical perspective on the idea that physics is or is about, information processing.
+And I'll just start with a few quotations that span the middle of the 20th century from **[Ludwig] Wittgenstein** in the 1920s saying: "The world is all that is the case."
 So defining the world in terms of *facts*, not objects.
 **[Rolf] Landauer** in the early 60s proclaiming that "Information is physical."
 And then **John Archibald Wheeler**, who in many ways is the grandfather of this era recently, stating it is "**it from bit**."
@@ -49,19 +49,19 @@ So things come from information, i.e. **bitstrings**.
 02:48 And if nothing else, this shows that formulations of this idea get pithier as the 20th century rolls on!
 But the history goes back farther, clearly, than the 20th century.
 But I'm only going to really talk about a piece of it. And the timeline that I'll actually discuss today,
-the most relevant history of this idea, goes back to the mid 19th century.
+the most relevant history of this idea, goes back to the mid-19th century.
 
 03:24 And the first specific thing I'll talk about is **[Rudolf] Clausius**'s definition of entropy.
 But with the beginning of the understanding of thermodynamics and the role of information in thermodynamics, you get this very interesting multidisciplinary progression of ideas that incorporates the beginning of quantum theory.
 
 03:52 And the beginning of quantum theory can kind of be dated to the first [Fifth?] Solvay conference in 1928  [1927?] and the famous debate between **[Nils] Bohr** and **[Albert] Einstein** over whether quantum theory is about knowledge, information; or objects, things.
 But it incorporates a lot of work in computer science and logic and mathematics.
-So, interestingly, computer science was born effectively in the mid 30s with the work of **[Alonzo] Church** and **[Alan] Turing**, which very rapidly converged with the work in physics.
+So, interestingly, computer science was born effectively in the mid-30s with the work of **[Alonzo] Church** and **[Alan] Turing**, which very rapidly converged with the work in physics.
 So today we'll be talking about both computer science and physics.
 
 04:40 And then in the second half of the 20th century, this just exploded into a huge area.
 
-And in consequence of that mid 20th century development, we're beginning to see a new idea about physics which is roughly encapsulated in quantum information theory.
+And in consequence of that mid-20th century development, we're beginning to see a new idea about physics which is roughly encapsulated in quantum information theory.
 And the new idea is this.
 It's that what physics is actually about is information transfer across boundaries. And {the information} we can represent the information transfer like this.
 And this is a convention I'll use.
@@ -69,8 +69,8 @@ And this is a convention I'll use.
 05:24 A **boundary** is always a blue ellipse.
 And the agents that are exchanging information across this boundary are conventionally called **Alice and Bob**, which is just a more polite way of saying A and B.
 And when you think about this picture, it becomes clear that what physics is really about is communication.
-And this is a wild redescription of the idea of what physics is compared to the ideas of **Isaac Newton** or **[Pierre-Simon] Laplace** or even the 19th century ideas.
-And it's very different from the idea that's been preserved in 20th century physics in the lineage of Einstein and others who viewed classical physics as, in a sense, either as completely fundamental or as a fundamental adjunct to quantum theory.
+And this is a wild redescription of the idea of what physics is compared to the ideas of **Isaac Newton** or **[Pierre-Simon] Laplace** or even 19th-century ideas.
+And it's very different from the idea that's been preserved in 20th-century physics in the lineage of Einstein and others who viewed classical physics as, in a sense, either as completely fundamental or as a fundamental adjunct to quantum theory.
 
 So this way of thinking about physics is a very deeply quantum-theoretic way of thinking about physics.
 
@@ -88,7 +88,7 @@ So this is what I mean by multiple communication channels.
 And this is one of the most *important* aspects, I think, of quantum information theory.
 
 It provides us with a way of viewing spacetime as an **emergent** phenomenon, that communication is what is *fundamental* in some ontological sense; and the *box* in which it happens, spacetime, is *not*.
-So the final session in October we'll talk about applications to biology via the Free Energy Principle, and future directions both in physics and biology and elsewhere.
+So the final session in October we'll talk about applications to biology via the Free Energy Principle and future directions both in physics and biology and elsewhere.
 
 08:44 So it's going to be an interesting ride!
 I'm keeping formalism to a minimum because we're directing this toward the broad array of people who are interested in Active Inference and who are involved with the Active Inference Institute.
@@ -96,15 +96,15 @@ And I would ask you to hold questions (because we have a lot to get through in a
 
 09:14 So I hope I explain things well enough that all of the concepts will be understandable.
 If not, **Wikipedia** is actually a wonderful resource in this area for just definitions of terms.
-So if there's anything that just a term that is a trip-up, try Wikipedia.
+So if there's anything {that just a term} that is a trip-up, try Wikipedia.
 It's probably a very good source for what these terms mean.
 
 ### Quantum entropy from the 19th century
 
 09:41 So let's start. Our story, as I said, begins in the 19th century.
 
-And in the mid 19th century, lots of physicists were devoting their efforts to figuring out how to make better **steam engines**.
-And one question that arises when you're trying to design a steam engine is, "What happens, physically, when you add **heat** to a system at constant **temperature**?"
+And in the mid-19th century, lots of physicists were devoting their efforts to figuring out how to make better **steam engines**.
+And one question that arises when you're trying to design a steam engine is: "What happens, physically, when you add **heat** to a system at constant **temperature**?"
 So if you're building a steam engine, you've got a boiler, because you need to make steam.
 And as you turn up the heat to your boiler, you get more steam, but the temperature doesn't change.
 So this is a mystery.
@@ -113,11 +113,11 @@ What is the heat actually adding to the boiler that is *not* increasing the temp
 
 10:36 And Clausius responded to this question in a way that's sort of typical for a physicist or a mathematician.
 Since he didn't know what the answer was, he just *invented a new name* for whatever it was, and gave it a formal **definition**.
-So he called it "**entropy**," which is a made-up word that, if it was translated from the Greek, would roughly mean "**transformation content**" - "*en-tropy*."
+So he called it "**entropy**," which is a made-up word that, if it was translated from Greek, would roughly mean "**transformation content**" - "*en-tropy*."
 And he represented it by a simple equation that the change in this new concept, entropy, which is always called "**S**," is just equal to the change in heat, "**Q**," at constant temperature "**T**." So obviously, this equation just reformulates the question in declarative form, saying, "Whatever this *stuff* is, {its} *changes* in this *stuff* are just *changes in heat at constant temperature*."
 
 11:40 Well, heat is energy.
-And this wasn't completely recognized in the mid 19th century. But the way you'll see this equation in a current textbook, is "*d*S" is the "change in *energy* at constant temperature."
+And this wasn't completely recognized in the mid-19th century. But the way you'll see this equation in a current textbook is "*d*S" is the "change in *energy* at a constant temperature."
 So even more commonly, you would see it written as "the change in energy is equal to the temperature times the change in entropy."
 It's the most common sort of textbook way of saying this.
 
@@ -146,7 +146,7 @@ And if you think about the **Uncertainty Principle** in quantum theory, the core
 So to actually *act on* a system requires energy.
 
 And that's what you have to do to get information.
-So here's Boltzmann, basically inventing quantum theory!
+So here's Boltzmann, basically inventing quantum theory! <stopped here!>
 
 14:47 So we're going to fast forward by another 15 years, to 1900.
 And in 1900, **[Max] Planck** solved this problem called the "**blackbody radiation** problem," which was basically, "How much heat does your hot boiler give off into the air?"
