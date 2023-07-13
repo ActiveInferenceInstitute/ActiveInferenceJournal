@@ -313,16 +313,16 @@ And that's what makes practical programming possible.
 So in a sense, Gödel birthed not only computer science but practical computing, by showing us that virtualization is just the way the world works.
 
 31:32 So now let's go back to physics, where these ideas were replicated, basically reintroduced, reinvented by **[Richard] Feynman** in developing his **path integral** formulation of quantum theory.
-And basically what Feyman realized was that in any physical process, the observer Alice prepares some state that she's interested in.
+And basically what Feynman realized was that in any physical process, the observer Alice prepares some state that she's interested in.
 
-She prepares some input to an experiment.
+She prepares some input for an experiment.
 Then she lets something happen, and then she sees what the result of the experiment is.
 And the canonical experiment in physics is scattering.
 You fire two protons at each other, and they intersect someplace, and stuff comes out, and you measure the stuff that comes out.
-And what you can measure is momentum and spin, energy, things like that, position.
+And what you can measure is momentum and spin, energy, things like that, position...
 
 32:33 So these processes conserve the total values of the things you can measure.
-So in particular, they preserve momentum and angular momentum, and they preserve other things that are harder to measure and are only approximately conserved anyway, like lepton number.
+So in particular, they preserve momentum and angular momentum, and they preserve other things that are harder to measure and are only approximately conserved anyway, like the lepton number.
 But Feynman's contribution to this way of thinking about experiments was to say, look, if you want to understand the output, you have to *sum over all of the possible processes* that could have produced the output from the input, no matter how improbable they are.
 33:17 So the famous idea from **Feynman diagrams** is, if you have an electron that's scattering off an atom, you measure the initial state of the electron that you've generated with an accelerator or something, and you measure the final state, which involves momentum and spin and so forth.
 
@@ -349,8 +349,8 @@ But I'll just give the answer here.
 
 35:40 The answer is that the total entropy of the black hole is its area divided by four, and the area in this equation has to be computed in **Planck units**, which are units where Planck's constant and the speed of light and Boltzmann's constant and other interesting things are all set equal to one.
 So one Planck area is the Planck length squared, which turns out to be about ten to the minus 70th meter squared.
-So this is that black holes are the most entropic entities we know of.
-36:19 So a black hole about this big [gestures], with a radius of about a meter, has an entropy of about ten to the 70th, which is, of course, an astonishingly big number. And a black hole with the area of the sun (so a moderate sized cosmological black hole, a real thing that we can observe with a gravity wave telescope or something), has an entropy of about ten to the 79th.
+So this is why black holes are the most entropic entities we know of.
+36:19 So a black hole about this big [gestures], with a radius of about a meter, has an entropy of about ten to the 70th, which is, of course, an astonishingly big number. And a black hole with the area of the sun (so a moderate-sized cosmological black hole, a real thing that we can observe with a gravity wave telescope or something), has an entropy of about ten to the 79th.
 
 And really big black holes, which are bigger than the entire solar system, have entropies into the ten to the 80th, ten to the 85th, something.
 So these are enormously entropic entities.
@@ -361,7 +361,7 @@ And this is what he told us.
 
 You can compute entropy in bits just by using logs base two (instead of logs based e, natural logs).
 And that's just multiplying the natural log by about 1.4.
-So we can write the entropy of black hole, of black hole in units of bits, and it's about A over six.
+So we can write the entropy of a black hole{, of black hole} in units of bits, and it's about A over six.
 So what does this mean, to say that we can think of the entropy in terms of bits?
 What it says is that we can think of the interface in terms of a bit array, and we can think of all of these bits as encoded on this interface at a density of one bit every roughly six Planck lengths squared, six plank areas.
 
