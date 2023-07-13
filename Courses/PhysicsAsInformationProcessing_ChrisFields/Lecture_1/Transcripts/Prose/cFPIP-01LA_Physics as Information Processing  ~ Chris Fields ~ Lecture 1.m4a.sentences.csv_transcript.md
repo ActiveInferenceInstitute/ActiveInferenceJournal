@@ -146,7 +146,7 @@ And if you think about the **Uncertainty Principle** in quantum theory, the core
 So to actually *act on* a system requires energy.
 
 And that's what you have to do to get information.
-So here's Boltzmann, basically inventing quantum theory! <stopped here!>
+So here's Boltzmann, basically inventing quantum theory! 
 
 14:47 So we're going to fast forward by another 15 years, to 1900.
 And in 1900, **[Max] Planck** solved this problem called the "**blackbody radiation** problem," which was basically, "How much heat does your hot boiler give off into the air?"
@@ -174,7 +174,7 @@ So it's quantized.
 
 16:27 And this is widely recognized as the birth of quantum theory.
 But of course, we should have known this already, if we just thought a little bit, right?
-We know that changes of energy are proportional to changes in entropy by temperature.
+We know that changes in energy are proportional to changes in entropy by temperature.
 
 And we know that entropy is a measure of the number of states, and numbers of states are just numbers.
 You can have one state, two states, three states, 10 million states, 100 billion states, but they're all just a number - one, up.
@@ -192,7 +192,7 @@ People still debate the meaning of quantum theory.
 17:52 But another thing we *could* have known in 1900, was something *very* important, and it's that this quantum of action, Planck's constant, which has units of action, which is energy times time, is intimately related to Boltzmann's constant. And Boltzmann's constant has units of energy over temperature.
 
 18:21 But this wasn't actually understood until the 1950s.
-No one really figured that this out.
+No one really figured this out.
 There was this relation until the 1950s.
 And when it was figured out, it was figured out by a guy named **Gian-Carlo Wick**.
 And he introduced this notion of the **Wick rotation** by realizing that if you have an equation in classical physics, and in it, there's the term one over KT, you can always replace that one over KT with this other expression, "*it* over h bar" (H bar is just h divided by two pi), and you'll get an equation that's valid in quantum theory.
@@ -229,7 +229,7 @@ So this tells us something very interesting, which is that what the Wick rotatio
 It's a **geometrical** equation.
 And in July, we'll come back to this and really probe what this Wick rotation *means*, physically.
 
-22:04 But as I said, this wasn't understood to the 1950s. And by the 1950s, a lot had happened.
+22:04 But as I said, this wasn't understood until the 1950s. And by the 1950s, a lot had happened.
 So quantum theory had been developed.
 Bohr and Einstein had had their debate.
 Particle accelerators had been built.
@@ -242,14 +242,14 @@ Quantum theory was highly developed.
 People were starting to think about quantum field theory before they made this simple realization that's formulated in the Wick rotation.
 So this is a harboring of things to come.
 
-### Goedel's Theorem and the incompleteness of mathematics
+### Gödel's Theorem and the Incompleteness of Mathematics
 
-22:43 But before we continue in physics, we need to backtrack in time a little bit, and look at what the mathematicians were doing.
+22:43 But before we continue in physics, we need to backtrack in time a little bit and look at what the mathematicians were doing.
 
-So across the hall in the math department (one year after the Solvay conference), in 1929 [?] Kurt Goedel proved his famous first incompleteness theorem.
+So across the hall in the math department (one year after the Solvay conference), in 1929 [?] Kurt Gödel proved his famous first incompleteness theorem.
 And the theorem states that "No formal system that contains arithmetic can be both **consistent** and **complete**."
 And that means that either there are true statements that aren't provable in the formal system, or there are false statements that *are* provable, or, of course, both.
-And Goedel's proof is actually extremely simple.
+And Gödel's proof is actually extremely simple.
 Almost all of the work in the proof is setting up all of the notation and procedures and so forth to formulate within arithmetic the sentence, "This sentence is not provable."
 
 23:49 And once you have that sentence formulated within arithmetic, then the conclusion of the proof is obvious.
@@ -257,22 +257,22 @@ If you can prove the sentence, "this sentence is not provable," then you've prov
 And if you can't prove it, then there are sentences that you can't prove in arithmetic.
 So this was incredibly bad news for mathematicians, who thought that **finite discrete operations**, which is what proofs are and also what computations are, can exhaustively enumerate the facts.
 
-And this was the assumption behind Wittgenstein's claim that "the world is all that is the case," the world is a collection of facts. And optimistically, he thought that first order logic would allow us to enumerate all those facts and we'd be done: dreams of a final theory, again.
+And this was the assumption behind Wittgenstein's claim that "the world is all that is the case," the world is a collection of facts. And optimistically, he thought that first-order logic would allow us to enumerate all those facts and we'd be done: dreams of a final theory, again.
 
-24:45 So Goedel's Theorem means that no system with finite capabilities, no system that can just do finite discrete operations, can fully describe its environment.
+24:45 So Gödel's Theorem means that no system with finite capabilities, no system that can just do finite discrete operations, can fully describe its environment.
 It will always be in an environment where there are true things that aren't provable or false things that are provable.
 But I think more relative to a discussion of agents is that it means that no *agent* can describe itself.
-Any agent's theory of itself will either contain true statements that it can't derive, or false statements; or it will either miss true statements that it can't derive, or will wind up deriving things that are false about itself.
+Any agent's theory of itself will either contain true statements that it can't derive or false statements, or it will either miss true statements that it can't derive, or will wind up deriving things that are false about itself.
 Of course, we see this in psychology all the time.
 
-25:33 So an immediate consequence of Goedel's Theorem was an *intense* investigation of what computation actually is, what it *meant* to talk about finite discrete operations.
-And two leaders of this were, of course, Church and Turing. And here's a picture of a **Turing machine**, which is just a little device with a couple of tapes and a tape reader and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
+25:33 So an immediate consequence of Gödel's Theorem was an *intense* investigation of what computation actually is, what it *meant* to talk about finite discrete operations.
+And two leaders of this were, of course, Church and Turing. And here's a picture of a **Turing machine**, which is just a little device with a couple of tapes and a tape reader, and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
 And they defined a computation as a process that can be implemented in finite time by such a machine, or by Church's lambda calculus, or by any of the now hundreds of other methods that are provably equivalent to a Turing machine.
 26:16 So what does *this* mean? It means that computation is a *physical process* that can be mechanized, and it turns out, mechanized in any one of a huge array of ways.
 It means that many different implementations of any computation are possible.
 So I can do it on a Turing machine, I can do it on my laptop, I can do it on my head, et cetera.
-The most important things it means is that there are questions with no computable answer.
-This is "the Revenge of Goedel's theorem."
+The most important thing it means is that there are questions with no computable answer.
+This is "the Revenge of Gödel's theorem."
 
 26:48 And two of the most famous questions of this kind are, 
 
@@ -309,8 +309,8 @@ And this allows us to build multilevel architectures.
 It means that we can architect computers where no layer of the computation has any idea what's going on below or above it, and doesn't need to.
 
 And that's what makes practical programming possible.
-31:01 So from these **no-go theorems** that tell you what you *can't* do, you actually get an enormous boost into it **[?]** and use to probe the world and develop theories and on and on and on.
-So in a sense, Goedel birthed not only computer science, but practical computing, by showing us that virtualization is just the way the world works.
+31:01 So from these **no-go theorems** that tell you what you *can't* do, you actually get an enormous boost into {it and use to} probe the world and develop theories and on and on and on.
+So in a sense, Gödel birthed not only computer science but practical computing, by showing us that virtualization is just the way the world works.
 
 31:32 So now let's go back to physics, where these ideas were replicated, basically reintroduced, reinvented by **[Richard] Feynman** in developing his **path integral** formulation of quantum theory.
 And basically what Feyman realized was that in any physical process, the observer Alice prepares some state that she's interested in.
