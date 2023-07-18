@@ -1,0 +1,1007 @@
+start	end	speaker	sentiment	confidence	text
+5390	6514	A	0.872096598148346	Hello and welcome.
+6712	10290	A	0.9134750962257385	This is model stream number 7.2.
+10440	13778	A	0.911108136177063	It's the 18 January 2023.
+13944	18290	A	0.7847800850868225	We're back in our second session on Pi MDP.
+18630	20478	A	0.9302229285240173	Welcome back, Conor.
+20574	21986	A	0.9765106439590454	Thanks for joining again.
+22088	28774	A	0.6385337114334106	And off to you for a presentation that you will weave together with some some code examples.
+28902	32054	A	0.9154893755912781	And the notebook that we'll use is in the video description.
+32102	33318	A	0.9192497134208679	So thanks again, Conor.
+33414	34380	A	0.6221094131469727	Off to you.
+35710	36074	B	0.7671424746513367	Great.
+36112	36934	B	0.8880262970924377	Thank you, Daniel.
+36982	38522	B	0.9895517230033875	It's great to be back here again.
+38576	40586	B	0.8981025218963623	I think I've been here maybe four or five times now.
+40608	43214	B	0.9875219464302063	So it's always a pleasure to be with you all.
+43332	54030	B	0.8145613670349121	So, yeah, as Daniel said, this is the second model stream in a two part series where we'll be discussing implementing active inference with PMDP.
+55590	65694	B	0.9061912894248962	There is some background that I'm assuming you either know from your own research into active inference and palm DPS in particular, or because you've watched the first part of the series.
+65742	68226	B	0.7592852711677551	So I'll just say that to start with.
+68248	79066	B	0.7729548215866089	Like, if you want background, I would encourage you to go watch the first part where we talk about PMDP, the motivation for the package, what you can do with it in kind of sweeping terms.
+79248	93950	B	0.8272586464881897	And then today we're actually going to go in and use it to code up an active inference agent performing a task, like a reinforcement learning style task that's very similar to classic active inference tasks that you can find in the literature.
+94850	95214	B	0.5491447448730469	Yeah.
+95252	99562	B	0.8873438239097595	So as Daniel said, I'm going to step through the slides.
+99626	107454	B	0.8072585463523865	I have pauses for questions and stuff, but we also have pauses for code live coding or side by side coding.
+107502	113454	B	0.9022061228752136	So I'll take a pause from the slides and I'll go over to the Collab notebook.
+113582	121730	B	0.9076873064041138	The link is in the description of the YouTube video, and we'll kind of code up this agent based on things that we discuss in the slides.
+121890	123734	B	0.7179997563362122	It's not that I'll be actually writing code.
+123772	125910	B	0.7648659944534302	I'll just be running cell blocks.
+127950	134742	B	0.7072691917419434	If anyone who's viewing wants to do it themselves, you can open the Co Lab notebook.
+134806	136620	B	0.7693281769752502	Actually, let's start by doing that.
+139630	145360	B	0.7549237012863159	So this should be the Collab notebook that you get brought to when you click on the link.
+146050	147594	B	0.6128647923469543	And this is one caveat.
+147642	152494	B	0.7694141268730164	You need to have a Google account to use this because co op is linked to your Google drive of your Google account.
+152612	158274	B	0.8373162150382996	So if you're doing this on your own, this is a shared link.
+158312	161058	B	0.5470077395439148	But it's not you can't edit it.
+161064	161906	B	0.5585435628890991	You can't write to it.
+161928	165810	B	0.883216381072998	So what you have to do is go to file up here and then save a copy and drive.
+165960	169602	B	0.8796784281730652	And then you'll get your own personal, private copy of the notebook.
+169666	175446	B	0.71220862865448	And I'll do that right now because I'll create a run copy where we can manipulate it all together in real time.
+175628	176774	B	0.7577416896820068	So I'll just call it run.
+176812	177590	B	0.5241391062736511	Copy.
+180270	184890	B	0.7583972811698914	And I'll start by just installing Hinton, this colab environment.
+185470	186438	B	0.7515500783920288	Pi MDP.
+186534	189238	B	0.8736653327941895	So Colab is kind of like Jupiter's notebooks.
+189254	195920	B	0.5790886282920837	It's an interactive cloud hosted notebook for running different kinds of code, but mainly Python code.
+196690	201870	B	0.8364119529724121	So while that's installing, and I'll run that as well, we can start with the slides.
+202530	215198	B	0.885809600353241	Okay, so I'll just start with a quick review from last time, and again, go back to the video if you want to see the full picture of what we discussed.
+215214	223750	B	0.8965005874633789	So the generative models, the kind of brains of the agents that will be constructing are these partially observed Markov decision processes or palm DPS.
+224650	228038	B	0.830743670463562	They have various parameters, and it's kind of up to you how to parameterize them.
+228044	232278	B	0.8950306177139282	But under active inference, we typically have these four main components.
+232374	237770	B	0.8586559295654297	There's fifth and 6th, depending on how complicated of a model you want to create.
+237920	242846	B	0.8301476240158081	But these components kind of represents the agent's beliefs about the world that it's operating in.
+242868	252814	B	0.8939146995544434	So these are usually hand designed or at least generally structured on a case by case basis, encoding to the behavioral task that you're trying to model.
+252932	263474	B	0.8904913067817688	So we have the A matrix or A array, which encodes the agent's beliefs about how hidden states of the world that it's doing coherence about relate to the observations that it gets.
+263592	270274	B	0.8801706433296204	You have the B array, which encoding beliefs about transitions or beliefs about dynamics.
+270322	273000	B	0.8753730654716492	So how do hidden states relate to each other over time?
+273690	281382	B	0.9024987816810608	You have the C vector or C array, which encodes agents prior preferences for seeing certain sorts of sensations.
+281446	295614	B	0.8109086155891418	So this kind of plays the role of a quasi reward function, and it has the effect of biasing agents action selection such that it's more likely to visit states of affairs that a priority, expects to see I e.
+295732	296874	B	0.7063198685646057	Goal directed behavior.
+296922	298938	B	0.7484723329544067	It wants to achieve some goal.
+299034	311778	B	0.8758561015129089	And then we have the D vector, which is kind of a baseline prior about what is the state of the world before I get any observations, like what do I believe the hidden state distribution is?
+311944	317590	B	0.5001910924911499	And again, I'm glossing over this because I assume that you know about things like categorical distinctions.
+320250	324760	B	0.8917515873908997	All the details of these different arrays are explained more in the first video.
+326650	333190	B	0.8968246579170227	And just again, to show the graphical model, we have the A array relating hidden states in red to observations in Bleu.
+333350	338794	B	0.8894013166427612	We have the B matrix or B array that relate hidden states to themselves over time.
+338832	340960	B	0.7642260789871216	So how does the world chance?
+341730	351440	B	0.8553891181945801	And then we have policies Pi, which are sequences or collections of actions that affect transitions and thereby change the state of the world.
+351890	358798	B	0.8545840978622437	And then you have this critical quasi pseudovalue function to active inference in palmdp's.
+358974	361810	B	0.8293454647064209	Active inference in general, which is the expected free energy.
+361960	368546	B	0.7044143676757812	And the expected free energy is the thing you try to minimize as you optimize your beliefs about policies.
+368658	382038	B	0.9052929282188416	So the best policies are those that minimize expected free energy and that has a bunch of interesting terms that lend active inference all of its interesting, curious, information seeking behavior.
+382134	388410	B	0.8849900960922241	And then this prior over observations factors into the computation of that expected free energy.
+388560	401760	B	0.8723915815353394	So if you have a particular prior preference to see some observations that will affect which policies get more or less expected free energy, and then you use that to actually choose a policy.
+402370	408340	B	0.8730884790420532	And then of course, we have the D vector, which parameterizes the initial beliefs about his and states.
+409750	419302	B	0.7368177175521851	So today we're going to actually dive in and write out our own ABCs and DS for particular generative model.
+419356	424914	B	0.6748132109642029	We don't have to worry about writing out our own functions that do inference or do planning.
+424962	431820	B	0.8927406668663025	All of that will be handled by the abstractions provided by prime VP, particularly in the agent class.
+432350	435354	B	0.8962830305099487	So the agent class takes the components of the generative model.
+435392	442090	B	0.5981225967407227	It gives you this very kind of black box API that you can just use to perform active inference.
+443790	446794	B	0.8574116826057434	In the last video, we talked about different levels of abstraction.
+446842	458830	B	0.8139187693595886	This is like the top level of abstraction in Pi MDP, where you're just passing a generative model to an agent and then kind of pressing go on the agent having to interact with the task environment.
+458910	463874	B	0.8715648651123047	So typically this is another class, like an environment class or a task class.
+463992	473510	B	0.8642616868019104	And then you just kind of string the two together in an action perception loop and you get a simulation of behavior under active inference.
+474890	481606	B	0.8421115875244141	And this is a standard thing you'll see in like OpenAI gym or other reinforcement learning packages.
+481718	487302	B	0.8948505520820618	You'll have usually like an environment class and an agent class, and they exchange actions and observations in a loop.
+487366	493280	B	0.8004305362701416	So we designed the API of Pymdp, very much inspired by that.
+495330	507198	B	0.8203617334365845	Okay, so before we start writing down the generative model so that A-B-C and D, I want to spend a little bit of time exploring the idea of factorized state spaces.
+507374	527142	B	0.762024998664856	And this is important because not only the model we're working today, it's important to understand factorization in both observations and hidden states, but for almost all the most interesting palmdp models you're going to want to build, it's going to be really crucial to factorize your system in some way.
+527276	538860	B	0.656990647315979	Not only because it becomes easier to reason about and work with when things are factorized, but also it handles a lot of computational explosions that happen if you don't factorize your state space.
+542030	548986	B	0.5849103927612305	So it's often useful to categorically separate observations into different modalities and hidden states into different factors.
+549098	558258	B	0.8823972940444946	So what this means is that when we get an observation, we're actually getting a collection of different observations, one coming from each distinct sensory modality or channel.
+558424	566802	B	0.8667579293251038	So similarly for hidden states, at any given time, the hidden states are described by a distinct set of different features, or what we call hidden state factors.
+566946	578874	B	0.8685234189033508	And so we refer to this as a factorized representation because the different modalities are independent of each other, and the different hidden states are also independent of each other.
+578912	584694	B	0.8717619776725769	Their dynamics are so they evolve in time without affecting the other hidden state factors.
+584822	587446	B	0.9091842770576477	So that's formally written down as follows.
+587478	592654	B	0.7984442114830017	Like the modalities are conditionally independent of each other.
+592692	596880	B	0.8637818694114685	Given the hidden states, that's what this factorization of the likelihood looks like.
+599010	610814	B	0.8415877223014832	So you can think of the different modalities as different sensory channels like vision, audition, somata sensation, and they provide their own distinct type of information which are then integrated together during coherence.
+610942	624818	B	0.8365408778190613	And factorizing the hidden states is like the idea that any given time the world can be described by independent features, like an object being described by both its location and space, as well as its identity and factorizing.
+624834	629942	B	0.5496023893356323	The state's representations of the model in this way allows for a few different distinct advantages.
+630006	635690	B	0.6362974047660828	One is computational efficiency, both in terms of memory and CPU.
+636190	642150	B	0.5490250587463379	It simplifies the structure of generative model itself, so it lends it a bit of interpretability and transparency.
+642230	648202	B	0.8718591928482056	So there's only certain sets of variables that represent the agent's beliefs about one feature of the environment, for instance.
+648346	654362	B	0.8843473792076111	And then finally, some would argue it has a degree of neuronal or biological plausibility.
+654506	661166	B	0.7811070680618286	And it's consistent with the idea of factorized what others would call modular representations in the brain.
+661198	672680	B	0.8908181190490723	So this group of neuronal populations deals with representing where something is in space, and this group of neuronal populations deals with representing the identity or what the thing is.
+673450	676470	B	0.8677361011505127	So that's kind of the reason we do this factorization.
+679710	698720	B	0.678605854511261	So one of the most classic examples of the early examples we do in Pinevp, and this can be found on the documentation and on the main page is this grid world example where the agent is kind of navigating in a 2D grid world space.
+699090	703714	B	0.8927223086357117	In the notebooks online, we do like three by three grid world.
+703752	705490	B	0.8796072602272034	So there's nine total locations.
+705830	718662	B	0.8624873757362366	And in a fully unfactorized or what we call an enumerated state space representation, every location in grid world has its own particular identity or state.
+718716	723862	B	0.7741184234619141	So we just arbitrary can label them like location zero all the way to location eight.
+723916	727910	B	0.8002945184707642	And that covers all nine levels of gridworld.
+728750	733866	B	0.7030455470085144	This is fine, but especially for a small state space like a three by three grid world.
+733968	748734	B	0.5251080989837646	But it kind of taxes our memory and our interpretability a little bit because we have to remember exactly how our nine indices map to the different places in grid world.
+748772	761070	B	0.7967174053192139	So if I'm in the middle of the grid, I need to have some kind of look up table to say, okay, location four is like zero or one comma one I e, the middle location in the grid.
+761230	769074	B	0.8903428912162781	In a factorized representation, the grid could be represented as two orthogonal or independent hidden state factors.
+769122	777750	B	0.878967821598053	One is something like the x displacement or the horizontal displacement, which now just takes three values like which column of grid world are you in?
+777900	784700	B	0.8834426999092102	And then vertical displacement or y position, which is something like which row of grid world M-I-N.
+785070	794218	B	0.8189293742179871	And so now each hidden state is not a single nine dimensional vector, but it's actually a combination or a pair of two hidden states factors.
+794314	797390	B	0.8264575004577637	So two, three vectors instead of a single nine vector.
+798370	804878	B	0.8720950484275818	And then a given hidden states itself is picked out by a coincidence of these two hidden states factors.
+804974	814674	B	0.8709216117858887	So if the x position is one and the y position is two, then it means I'm in one comma two.
+814712	818200	B	0.7230560183525085	So like the middle bottom up the grid world.
+819610	828006	B	0.8818105459213257	And then once you do this, so once we have a factorized hidden state representation, it has implication for the way we construct the generative model.
+828108	843374	B	0.8925502896308899	So in a kind of simple generative model, you would just have one B array that in the original grid world example just is like nine possible hidden states, the nine possible locations of where I just was that maps to the nine possible subsequent hidden states.
+843412	846030	B	0.9181367754936218	So the nine possible locations I could be going to.
+846180	850698	B	0.8529751300811768	And then you'd have that nine by nine matrix conditioned on the different actions.
+850874	859154	B	0.9152323603630066	So in the grid world demo, the actions are typically local like move up, move left, move down, move right.
+859352	863262	B	0.8381315469741821	But once you factorize things, you're going to actually now have a collection of B matrices.
+863326	869958	B	0.9001004695892334	And this is a consequence of the factorization across the transition models that we discussed a few slides ago.
+870044	875986	B	0.9216164350509644	So you're going to have one B matrix or one set of B arrays for the X displacement.
+876018	879502	B	0.9042401909828186	So how does the agent move in the X direction?
+879666	887414	B	0.9145457744598389	These are what each of these X displacement B matrices look like, cognition on different actions.
+887462	892074	B	0.8354136347770691	So this is what it looks like for moving left, this is what the B matrix looks like for moving right.
+892192	893886	B	0.8037020564079285	And this is what it looks like for stay.
+893988	902010	B	0.8847882151603699	And then similarly you have another B matrix that encodes the agent's abilities to move in the vertical direction or y displacement.
+902090	915806	B	0.7090892195701599	And similarly they actually look identical because the world is like rotation and translation and variant and you'll have another smaller B array just for y movement.
+915918	917170	B	0.6917363405227661	This is a very simple example.
+917240	928390	B	0.6302740573883057	We're not going to actually do this in code because it's kind of trivial, but it's just an example of how instead of having a location fully enumerated representation, you can split that up into basically a y axis and an X axis.
+929130	940910	B	0.8233001232147217	So now we're not going to simulate an active inference agent, but we're just going to play around with these data structures to get you used to the idea of factorized representations and how that manifests in the code.
+941060	942990	B	0.8491191864013672	So now we'll go over to Colab.
+943650	949470	B	0.79265296459198	So if you've been running this on your own, disk should all be downloaded.
+949970	957950	B	0.8120285868644714	So you've installed interactively PMDP, that's the whole name of the package that's now in your environment.
+958030	964690	B	0.81541907787323	And then you should also run this some basic imports like NumPy and pimedp, which is now in the environment.
+966150	966514	B	0.7123861908912659	Okay?
+966552	976626	B	0.8570226430892944	And so the basic variables that you'll see are things like there's a few variables that are almost always part of any time DP workflow.
+976658	981290	B	0.7128674387931824	And this is very much mirrored on how it's done in SPM in the Dem tool box.
+981360	990166	B	0.8848639130592346	So typically you'll have a list that specifies the dimensionalities or the number of different levels of each hidden state factor.
+990198	999674	B	0.9018886685371399	So for our three by three grid world nine possible states, we have one x factor of three levels and one y factor of three levels.
+999802	1004126	B	0.8228330016136169	And then the length of that list tells us the total number of hidden state factors.
+1004238	1007806	B	0.7340471148490906	So in this case, we have two hidden state factors.
+1007918	1015602	B	0.8465905785560608	And then similarly you have hidden states are factorized, and then similarly you factorize your control states.
+1015736	1019522	B	0.7745842337608337	So for every hidden state factor, there's also going to be a control state factor.
+1019666	1028670	B	0.8842417597770691	And the fact that these are also three dimension each just basically means that the agent has three possible action in the x axis and three possible actions in the y axis.
+1028770	1033180	B	0.8033918738365173	And then the number of control factors is also going to be two in that case.
+1034190	1045066	B	0.7938962578773499	And so we have some nice utility functions that can quickly build a brain given the two things that are necessary, the numb states and NUM controls variables.
+1045178	1064260	B	0.7853750586509705	So you just do initialize empty B NUM states and NUM controls, and then you'll have a B matrix that has the correct shapes and stuff.
+1065290	1071746	B	0.9177886247634888	So three rows, three columns, and three possible actions for the x direction and similarly for the y direction.
+1071778	1074630	B	0.6403800249099731	So this is just basic setting up your variables.
+1078510	1086300	B	0.801398754119873	And often we'll have these solution cells that are hidden underneath each little quasiexercise, so that's something you can do as well.
+1088110	1088666	B	0.7123861908912659	Okay?
+1088768	1092206	B	0.5489189028739929	And so that's just initializing and empty array, right?
+1092228	1112610	B	0.8080689907073975	So we don't actually know what those contingencies are that we saw in the slides, but if we want to populate this thing, so this is what each factor specific V array looks like, then we have to go into these matrices and actually fill out the rows, columns and third order slices with numbers.
+1112760	1118178	B	0.8926107883453369	So for instance, this loop where we loop over factors and we fill out the different entries of the B array.
+1118274	1128466	B	0.8862664103507996	What this will do is just encode those local actions like move left, move right for the x factor, and then move up, move down for the y factor.
+1128578	1134282	B	0.7253029346466064	And so once you've run that code, you've basically filled out all the numbers in that big empty B array that you started.
+1134416	1144426	B	0.8891687989234924	And then you can use things like the plot likelihood function to plot these likelihood distributions, action conditioned likelihood distributions as matrices.
+1144458	1146222	B	0.787483811378479	So this is move left.
+1146276	1165460	B	0.865135133266449	For instance, if we're in the x hidden state factor, and if we change this to a one, we've changed the action index, then this is move right, and then similarly if we change this, this is move down if we're doing action one here.
+1171170	1180070	B	0.8498953580856323	So darker colors, whether it's grayscale or red, or whatever, almost unanimously in prime DP, the darker colors represent more probability.
+1183770	1187640	B	0.6313579678535461	So instead of having to display numbers, we'll just show darker numbers.
+1188250	1193446	B	0.8820960521697998	Okay, so now let's go back to the slides and talk about the A arrays.
+1193638	1205194	B	0.8483179211616516	So in our unfactorized, fully enumerated grid world example, and again, I'll refer you to the documentation of prime VP if you want to play around with that example.
+1205392	1220026	B	0.8875168561935425	The hidden state factors, which are just these nine kind of Arbitrarily labeled locations map to an observation modality, which is like the agent's sensation of its own position, kind of appropriate GPS modality.
+1220058	1223618	B	0.8644025325775146	You could think of it as like they're sensing where they are at any given time.
+1223784	1227074	B	0.822622537612915	And so there are various ways you could encode that.
+1227112	1236742	B	0.7694096565246582	But let's just pretend that they have a very high fidelity GPS, so they're getting precise GPS readouts of where they are at any given time.
+1236796	1243094	B	0.8533117771148682	So in a fully enumerated world, that a matrix, that likelihood modality would look like this.
+1243292	1255126	B	0.8808217644691467	When we start factorizing things or splitting up the hidden state factors into an X factor and a Y factor, that choice not only manifests in the B arrays, but it also manifests in the structure of the arrays.
+1255158	1272862	B	0.6344342231750488	And I think this is one of the most key things to understand, because when it comes to coding these things up yourself, understanding how these arrays are structured is really important to getting things working successfully, basically getting used to multidimensional indexing.
+1273006	1291826	B	0.7938723564147949	So briefly, in summary, when you have multiple hidden state factors that manifests as extra Lagging dimensions or extra higher order dimensions in your, in your A array, so it's not really an A matrix anymore, it's an A tensor.
+1291938	1296542	B	0.7106739282608032	So that means if you have two hidden state factors, the number of Lagging dimensions, ie.
+1296626	1300714	B	0.809777021408081	Excluding rows, that's what I mean when I say Lagging dimensions will be two.
+1300752	1303846	B	0.8417587876319885	So you have columns and slices in addition to rows.
+1303958	1310762	B	0.6411615610122681	So this is really important to understand when either using SPM or Pymdp to do palm DP based active inference.
+1310906	1319418	B	0.7544856667518616	And another way of saying this is for each additional random variable that we're conditioning our observations on, we have an additional Lagging dimension in our array.
+1319514	1327566	B	0.8947122097015381	So this is the same principle as with the B matrices because we condition the next state both on the past state and the past action.
+1327598	1329710	B	0.861835777759552	That's why the B arrays are also tensors.
+1329790	1335762	B	0.8828173279762268	So we have two extra dimensions in the B array, one for each conditioning variable, past state and past action.
+1335906	1354570	B	0.8647043108940125	So now in the X and Y factorized grid world, we have two Lagging dimensions where the first Lagging dimension, the columns in Bleu, index a particular X location, and the second Lagging dimension, the slices, if you will, index a particular Y location.
+1354730	1360270	B	0.6632611751556396	So now what I'm going to do is unwrap these slices of the multi dimension A matrix.
+1363890	1374466	B	0.887627899646759	And so you can see that each slice of the A matrix, so that each purple indexed third order slice corresponds to conditioning on a particular setting of Y.
+1374568	1381638	B	0.9031528234481812	So a particular conditional distribution over observations for the three settings of X for a fixed value of Y.
+1381724	1391014	B	0.8901631236076355	So each slice is exactly this conditional distribution, where we're looking at the conditional distributions over observations for each setting of X.
+1391052	1398042	B	0.8906200528144836	So those are the columns indexed by the Bleu numbers at the bottom, but we're fixing to one value of Y.
+1398096	1402890	B	0.8541967272758484	So that's the conditional distribution over observations zero, one and two.
+1402960	1410686	B	0.8314923048019409	So being in the top row, given that we're in the first row, y equals zero for the three possible settings of X.
+1410788	1419220	B	0.7365186214447021	And then we move down to the next set of observations and the next slice of Y, and it looks like that and then finally like that.
+1420870	1427954	B	0.6553789973258972	So this is the case where our GPS is noiseless and high fidelity, right?
+1427992	1442870	B	0.7833545207977295	That's why we have like hyper dark cells and then everything else is white, is because the agent believes that its observations are high fidelity signals of the actual hidden state, namely the X comma y location.
+1443390	1465418	B	0.896456778049469	So then when we pat these back together, we see how this full a matrix or set of conditional distributions will be represented by a nine by three by three tensor, where again, each Lagrange dimension exists to encode the conditional dependencies between that particular hidden state factor indexed by the Lagging dimension and the observations for this modality.
+1465594	1484280	B	0.8822597861289978	So when I index into the Ith column and the Jth slice of this a matrix or a tensor, I'm basically slicing out a particular conditional distribution over observations where I'm deciding what settings of the conditional distributions or the conditional random variables I'm interested in.
+1486970	1487382	B	0.7123861908912659	Okay?
+1487436	1496520	B	0.5354881286621094	So yeah, that's a kind of critical concept and to just make it more tangible and clear.
+1496890	1509274	B	0.7997116446495056	And to be clear, this isn't the only way to encode conditional dependencies in categorical distributions, but it's just the way that was originally used in SPM to encode these dependencies.
+1509322	1513338	B	0.6999459266662598	And then we just borrowed that convention when building Pine VP.
+1513434	1527730	B	0.9261438250541687	And it's pretty useful because it makes generating things like conditional expectations pretty straightforward using linear algebra operations like higher order dot products and stuff like that.
+1527880	1538870	B	0.848629891872406	So we have this kind of unwrapped representation of the Ara here, and we can use this to refer back to when we're building our Ara.
+1540090	1547622	B	0.7289353013038635	One thing I didn't mention that is also important is that in the same way we can factorize hidden states, we can factorize modalities.
+1547686	1549898	B	0.8693536520004272	So we'll talk about that in a second.
+1550064	1557338	B	0.8734071850776672	But just for now, let's assume we have one single GPS sensing modality of nine possible levels where I am in grid world.
+1557424	1563838	B	0.8448688983917236	So it's just a list of one number nine, and then the number of modalities will trivially be one the length of that list.
+1564004	1582406	B	0.8754811882972717	And then we can use similarly this utils initialized MTA array, which takes the number of observation modalities, their dimensions, and the number of hidden states and then it creates the A array with the proper dimensions and everything.
+1582588	1593590	B	0.8826586008071899	So I've also created this combined list called a location dims, which is a combination of the number of observation modality dimensions and the number of hidden state factor dimensions.
+1593670	1596538	B	0.8815322518348694	So that's, as we said, going to be nine, three, three.
+1596704	1608670	B	0.8470448851585388	And so then we can populate the entry of our first modality in the A matrix, which is trivially here, the only modality with a matrix of zeros.
+1609490	1612334	B	0.6506996750831604	This is actually what's happening under the hood in this thing.
+1612372	1613920	B	0.6649481654167175	So we don't need to do it here.
+1614290	1621490	B	0.8460068702697754	But then if we just run that, then we'll see that the shape of a zero is the same as a location dibs.
+1624870	1626706	B	0.7395011186599731	Okay, so that's just initializing it.
+1626728	1633510	B	0.9041157364845276	So we now have one A array that has one modality whose shape is nine by three by three.
+1633580	1636758	B	0.8023704886436462	And then we just go and fill it out like we saw up here.
+1636924	1643042	B	0.7722765207290649	So I'm filling it out under the assumption of this noiseless high, high quality GPS sensor.
+1643186	1650838	B	0.8846451640129089	So you can see when I'm indexing into the Lagging dimension here, the the Y dimension, which is the third dimension of the tensor.
+1650934	1658686	B	0.7731271982192993	I'm saying for this particular value of Y, which is when Y is zero, we're in the first row of grid world.
+1658788	1666154	B	0.8523447513580322	Then the conditional distribution over the three settings of the GPS, given all the settings of X, is just an identity matrix.
+1666202	1669266	B	0.8450258374214172	So I'm just coding that, that little chunk right there.
+1669368	1673140	B	0.8740686178207397	And then we can go through each of the slices iteratively and do that.
+1674310	1690226	B	0.6212353110313416	So, yeah, one of the things I think is a disadvantage currently of both Pine DP and the SPM is I think we need better ways to make people not have to do these multi dimension indexing operations to encode a particular conditional independency structure.
+1690258	1700250	B	0.5038594007492065	And I've thought of ways to do that, but it's actually pretty hard to do that in a generic flexible way where people can just come to the table with their own semantics and then all this gets done for them.
+1700320	1706570	B	0.8921510577201843	So for now, you still have to kind of do this by hand or write some algorithmic way to do it that's specific to your task.
+1707390	1709440	B	0.700273334980011	But yeah, that's just something to mention.
+1710130	1716560	B	0.6010839343070984	It's not ideal that we have users doing this, but at the moment I can't really think of a better way to do it.
+1717810	1723730	B	0.8834143877029419	And then once we've encoded that, we can look at our little conditional distributions given different settings of Y.
+1723880	1724846	B	0.599830150604248	And that's just one choice.
+1724878	1731080	B	0.8516695499420166	We could also condition on X and look ant for all settings of Y, x equals zero.
+1733770	1736440	B	0.6860947012901306	Like you can slice this up however you want, right?
+1738090	1741270	B	0.6982293128967285	That's just a visualization choice.
+1746760	1752630	B	0.8361179828643799	And these are our three collections of conditional distributions, one for each setting of Y.
+1754200	1759320	B	0.774138867855072	Okay, now let's go back to the slides.
+1761100	1761464	B	0.46103888750076294	Yes.
+1761502	1768596	B	0.6237041354179382	So one thing I didn't mention, or I said I would mention, is we just had a single observation modality.
+1768628	1775484	B	0.8196791410446167	But just as for hidden states, we can factorize and we don't have to fully enumerate our observation space.
+1775602	1780648	B	0.9017692804336548	So we could separate the grid GPS observations into an X and a Y GPS.
+1780824	1786384	B	0.8903126120567322	So now you're observing a pair of different observations at any given time, one X observation and one Y.
+1786502	1794684	B	0.8734896779060364	So just like we had a separate B array for each hidden state factor, similarly we now have a separate A array for each observation modality.
+1794812	1801712	B	0.8898516893386841	So we would populate one big A object array with these different modality specific A arrays.
+1801856	1808096	B	0.8855504989624023	So in this case, if we had X observations and Y observations, we would have two A sub arrays.
+1808208	1818040	B	0.9014201760292053	Each one would have size three by three by three because three observations and then for the two possible states of the hidden states factors.
+1819420	1831576	B	0.8728877305984497	So, yeah, that wraps up the slides I had on multifactor multimodality factorized representations and how that affects A and B arrays.
+1831768	1847510	B	0.5256490111351013	So before we move on to the contextual multi arm bandit, let's open it up for questions or comments if anything was unclear and someone wants to contribute their own way of explaining something, happy to talk about that now.
+1849720	1850324	A	0.9184247851371765	Awesome.
+1850442	1851216	A	0.5160813331604004	Yakup.
+1851328	1853910	A	0.8073974847793579	Ben, adam and Karl, if you'd like.
+1856040	1859652	C	0.9800235033035278	Yeah, thanks a lot for the great overview.
+1859716	1863572	C	0.7842789888381958	I had a question on initializing the B matrix.
+1863716	1873390	C	0.8552027940750122	So in this case, we initialized it with the simplest policy, just all of the available actions the agent has.
+1876320	1885548	C	0.8880401253700256	Would there be any particular use case in the grid world example where we would want to initialize it with a sequence of policies?
+1885644	1890720	C	0.8952088356018066	And is that needed if we want to do planning of different temporal depth?
+1892980	1897110	B	0.7942724227905273	So when you say sequence of policies, can you give me an example.
+1899240	1914440	C	0.783877968788147	Instead of conditioning it on, just move up, you would move up and down fixed sequences of actions.
+1915740	1916600	B	0.6017550230026245	Right, right.
+1916670	1917208	B	0.9033102989196777	That's interesting.
+1917294	1930104	B	0.8499029278755188	Okay, so that's so, yes, typically when we are building these cognition likelihoods, this is more of a consequence of the fact that it's a palm pom DP with an emphasis on the M, so it's Markov.
+1930232	1943036	B	0.8662058711051941	So if you want to encode something like what is the predicted next hidden state given I did move up and move down in the last two time steps?
+1943228	1952656	B	0.8098951578140259	If I'm understanding correctly, you're like saying condition my B matrix, my next hidden state on a sequence of two possible past actions.
+1952848	1966504	B	0.757009744644165	Then we're breaking the Markov property of the dynamics because we're saying the next hidden states not just depends on what I did at the last time step and the state, but it depends on also what I did two time steps ago.
+1966622	1974990	B	0.7479502558708191	So now you have a higher order temporal dependence, like a semi Markov model or yeah, really, just not a Markov model, but a higher order model.
+1975520	1979272	B	0.7109919786453247	And that's not something that's currently supported in Pamdp.
+1979336	1983490	B	0.7830502986907959	The natural way you get around that is by building a hierarchical model.
+1983940	1986850	B	0.6907238364219666	So at each individual.
+1988580	2000240	B	0.8696343898773193	Level of the hierarchical you have a palm DP, but then when you look at a single layer, like the bottom layer of this hierarchical model, it is a semi Markov model or non Markovian.
+2000320	2009752	B	0.5348666310310364	If you take into account what all the other layers are doing, but that's not currently supported at the level of a single Markov model.
+2009806	2015690	B	0.5347452163696289	Like you can't Bull a B matrix that's dependent on more than what happened at the last time step.
+2017100	2023230	B	0.5526784062385559	You can't have an extra lagging dimension that encodes also what were they doing two time steps ago?
+2025120	2037040	B	0.8224949836730957	So that's one interpretation of when you say policy like up down, I think of two actions that happened in sequence.
+2037620	2052336	B	0.7971125245094299	But maybe another thing, and correct me if I'm reading too deeply into your question, another thing would be can I have actions in a different control state factor affect the dynamics of a particular hidden states factor?
+2052368	2063956	B	0.851698100566864	So say I had one hidden state factor which is move up, and another factor which is Y displacement, another factor that's X displacement.
+2064068	2070460	B	0.9100790619850159	Can I have the dynamics of the Y factor not just depend on my Y action, but also on my X action?
+2071520	2081310	B	0.6018723845481873	So that's the idea of basically breaking this independence property.
+2081920	2082576	B	0.7380964756011963	Where is it?
+2082598	2086128	B	0.7281061410903931	Here, let me find it.
+2086214	2086850	B	0.571090042591095	Here.
+2088420	2101764	B	0.8834599852561951	So if you allowed the lower right shows that the state of one factor over time only depends on the state of that factor ant the previous time step.
+2101882	2117210	B	0.9140370488166809	But if you said I could also make this conditionally dependent on not just factor F, but say factor I or Q at T minus one.
+2117900	2131036	B	0.6230295300483704	This is something that's also not currently supported, but I think is an interesting idea, which is you would actually have interactions between maybe pairs of hidden states factors in in hidden states space.
+2131218	2135736	B	0.6320707201957703	This actually can be accommodated under PMDP.
+2135928	2142064	B	0.7094771265983582	Like mathematically I haven't built in the functionality to do it, but I think there's nothing that stops you in principle from doing this.
+2142102	2150820	B	0.8749173879623413	So this would be as if I can have actions from different control factors all influencing the next state of one hidden state factor.
+2152120	2162020	B	0.6007952690124512	And that is something that will probably make the message passing a little bit more, maybe not more complicated, but maybe its convergence properties wouldn't be as guaranteed.
+2162100	2169832	B	0.5465367436408997	I don't know what it looks because you're introducing weird loops in your graph, but in the factory graph that represents the generative model.
+2169966	2173236	B	0.5397879481315613	But that's something in theory could be entertained.
+2173268	2175484	B	0.6534098982810974	But I don't know if that's actually what you had in mind.
+2175522	2180670	B	0.5644219517707825	Maybe you had more in mind of breaking the Markov property when you say conditioning on.
+2181360	2185040	C	0.875657320022583	Yeah, thank you for the answer.
+2185110	2200180	C	0.8911776542663574	It was more of a clarification also on the mathematical notation because pi is interpreted as policy, which I guess can mean both individual actions and sequences of actions.
+2201080	2203476	C	0.7815579771995544	So just wanted to clarify that.
+2203658	2204724	B	0.9276529550552368	Yeah, that's a good point.
+2204762	2216936	B	0.8817788362503052	So when I said pi up here, if pi was a sequence of ActInf lab.
+2216958	2225884	B	0.8689769506454468	Any given time, the B matrix that you're indexing out is conditioned on the action that's entailed by the policy at that particular time.
+2226002	2230860	B	0.6054239869117737	But the B matrix will never be entailed on what's going on in the full policy.
+2231010	2241888	B	0.8469811677932739	But just by okay, at time T, I take out this slice of the B matrix because at time T, this is the action entailed by this policy of sequence length h or something.
+2242054	2243376	B	0.920316755771637	But yeah, that's a good point.
+2243398	2254100	B	0.7231667041778564	So in a trivial case, policy length is one and it's just one action that's the policy is just an action that comes down to slice out the B matrix.
+2255880	2258964	A	0.5510697960853577	Thanks yakub adam, anything you like to add?
+2259002	2259880	A	0.4859412908554077	Go for it.
+2260030	2261396	D	0.7603996396064758	Yeah, a couple of follow ups.
+2261508	2263604	D	0.9784451127052307	Thank you for this very clear presentation, Conor.
+2263652	2282456	D	0.890376091003418	So first, just to follow on what Yakup just asked, it seems like another potential way if you wanted to do this sort of two times step model would be to actually condense or kind of permute those two time steps into a single variable.
+2282648	2292736	D	0.8602541089057922	The same way that you could condense the row and column into a single nine dimension nine row vector, or you can break it down into two.
+2292838	2302950	D	0.9065018892288208	Could you similarly Brea down the last two moves and sort of combine them into a permutation of all possibilities of the last two moves and have those be the hidden states?
+2303560	2305892	B	0.7605252265930176	Yeah, you could do that as well.
+2306026	2308580	B	0.6406185030937195	I haven't seen that actually done in practice.
+2308740	2327404	B	0.6645951271057129	The only thing is you'd actually have to somehow change the scheduling, I guess, of the message passing and the action to accommodate the fact that before I determine what my last hidden state was, I need to wait two.
+2327442	2334050	B	0.7355242371559143	Time steps so I can get not only the proximal action I did, but also have this memory of the action two time steps ago.
+2334740	2348470	D	0.8726449012756348	Yeah, I was imagining that you'd have some special case for the first move where it's like undefined and then the last move, then after that you'd have the last two moves, a separate matrix for those or something.
+2349240	2352964	B	0.7770958542823792	Yeah, like a moving window kind of so it's always remembering the last.
+2353002	2355430	B	0.5156161785125732	Yeah, I could see that working.
+2356120	2372460	B	0.8147998452186584	I think kind of the canonical active inference answer to that is instead of having to kind of manufacture this special way of basically baking memory into a Markovian system, the classical way to handle that is just to build a hierarchical model.
+2372530	2395600	B	0.713173508644104	Because the hierarchical model handles that memory easily by just having nested Markovian processes where if you were to look at a single process, it looks like it has memory, but that's just because its priors for its own Markovian process are evolving as a function of another palm DP that's operating at a slower timescale.
+2395940	2405600	B	0.7082780003547668	So I could imagine doing that exact thing that you're talking about if you had a low level palm DP that was moving twice as fast as the top level palm DP.
+2405680	2419352	B	0.8707221746444702	And so basically, what the top level palm DP is doing is setting an initial prior over one action that then allows this low level palm DP to condition whatever it does next on a belief that whatever I do next.
+2419406	2425484	B	0.796947181224823	I know that I just took this action two time steps ago, but you don't actually have to handcraft that.
+2425522	2430940	B	0.8159881830215454	It's just by building one palm DP, like, within another palm DP.
+2431440	2436850	B	0.5033578872680664	But I don't see that there's anything in principle going against what you're describing as well.
+2438020	2439730	D	0.9419896602630615	I like your approach a lot better.
+2440340	2441090	B	0.5491447448730469	Yeah.
+2441860	2460520	B	0.6921442151069641	Essentially what I learned from working with Karl was that anytime you're trying to imbue a system with more complex non Markovian memory, full dynamics or higher order dependencies, that's when it's the natural move, is to go to a hierarchical model because it kind of handles it all naturally.
+2462060	2475340	D	0.8594858646392822	So my next question is about what you were sort of tweaking in that formula just a couple of minutes ago, where you were suggesting the possibility that there could be feedback loops between the hidden states.
+2475490	2482124	D	0.6298304796218872	In theory, but as currently implemented, if I understood correctly, that's not the case.
+2482162	2489170	D	0.8019503355026245	The state of one of the hidden variables or the state of one of the hidden states depends only on.
+2490980	2491296	B	0.5665541291236877	The.
+2491318	2496336	D	0.8018293380737305	Previous state of that hidden state as currently hidden factor.
+2496368	2510840	D	0.8131870031356812	What I want to make sure I understand is that is that also something about the Markovian assumption, or is that just sort of an implementation or design decision completely separate from the Markov?
+2511900	2513992	B	0.8559015393257141	Yeah, that's a good question.
+2514046	2518612	B	0.8524845838546753	That's separate from the Markov separate from the Markovian assumption.
+2518676	2531420	B	0.8928455710411072	So that's something having to do with kind of just how the graph that represents the generative model, which you could think of as like a Bayesian graph, like a bunch of nodes that affect a layer of observations.
+2532020	2543212	B	0.8159393668174744	So you say a bunch of hidden states nodes, that all the observation nodes conditionally depend on the state of all the hidden states factor nodes.
+2543356	2557910	B	0.6462516188621521	By constructing it this way, you basically have a graph that it's very easy to do coherence on that has like, stationary fixed points, so the inference does not depend on individual conditions of the posteriors and things like that.
+2561160	2572488	B	0.8239377737045288	The way the generative model is set up right now is like a bipartite graph that resembles a classic model for machine learning called like a restricted Bellman machine.
+2572584	2589996	B	0.6798102259635925	So this is where all the hidden states can all affect one observation modality, but there's no interactions between the observation layers, so there's no lines going between observations within one modality, and there's also no lines going between hidden state factors.
+2590108	2607796	B	0.6005402207374573	So that's kind of one of the advantages of this assumption, is when you have the hidden state factors be only dependent on their own past state and their own past action within that control factor, then you're not introducing these loops in the graph that make inference a little bit harder.
+2607908	2623800	B	0.4844295084476471	So you'll see this structure when people are using like restricted Bellman machines or other or even deep neural networks, it's very hard to get fixed point solutions for the posteriors when you have interactions between nodes in a single layer.
+2623960	2638530	B	0.6954047083854675	So it's not quite the same thing as yeah, it's just not the same thing as the Markov property has more having to do with generating an acyclic graph so you can do a fast, efficient and fixed point coherence on it.
+2638900	2642240	B	0.8718166947364807	That's my general answer to that.
+2642310	2647236	B	0.7637674808502197	Because if you actually draw out the factor graph for these things, it looks like that.
+2647258	2651350	B	0.6407126188278198	But there might be another reason this is done that I'm actually not aware of.
+2652040	2657270	B	0.8463484644889832	Maybe that's something that Karl would know or someone else.
+2661740	2668308	A	0.9217280149459839	If you want to add anything, Karl, otherwise and then after this we'll head into the script.
+2668404	2669156	A	0.7057705521583557	Go for it, Karl.
+2669188	2669930	A	0.8529649972915649	Thank you.
+2671120	2676060	E	0.55217045545578	Yeah, I think everything that needs to be said has already been said very clearly and very usefully.
+2676400	2678830	E	0.7569418549537659	But yes, Conor, Heins absolutely right.
+2679360	2691052	E	0.8565309643745422	So I look at this in terms of the overall architecture of the graphical model you bring to the table and it can only have a number of different attributes.
+2691196	2692240	E	0.8096691370010376	How deep is it?
+2692310	2694096	E	0.8518636226654053	How many levels does it have?
+2694278	2708932	E	0.6492676138877869	We're not in this presentation talking about deep MDP or Joy to models based upon hierarchically composed Markov decision processes.
+2709076	2721852	E	0.8312501311302185	But generally you would think of any one level in the context of the level above and the level below, and that lends this attribute of depth to any given generative model.
+2721986	2728232	E	0.7129507660865784	But probably more important, certainly from the point of view of the current discussion is the breadth.
+2728376	2732860	E	0.8153824210166931	And the breadth basically the number of conditional independent factors.
+2733440	2736560	E	0.8634083867073059	In physics, this is simply known as the mean field approximation.
+2737220	2740156	E	0.8171488046646118	It's just a factorization of a joint distribution.
+2740268	2745136	E	0.8940737843513489	In this instance, what we're aiming for is an approximate post state distribution.
+2745168	2760036	E	0.5848721265792847	But it's a factorization into conditionally independent factors that incidentally, also induces certain Markov blanket and resolves all of the message passing and means that sort of variational iterations are more robust.
+2760148	2764264	E	0.7021278738975525	But from the point of view of why do you do that?
+2764302	2774844	E	0.7714777588844299	Well, you do that because to maximize the marginal likelihood of the evidence for your generative model, you have to carve the nature out there at its joints in the right kind of way.
+2774882	2788640	E	0.8623395562171936	So if the world you're trying to navigate or exchange with or explain does have this factorization, these conditional independences, it is carved in this way, then your model has to comply in order to have the maximum evidence.
+2788980	2806884	E	0.8385448455810547	So when learning that particular factorization or that structure, you would normally apply a process of basic model selection or structure learning to get the number of factors right, and that is getting the right kind of meanwhile approximation ant for this world and these data.
+2807002	2819144	E	0.8075864315032959	And the right factorization will simply minimize the variation of free energy and therefore minimize the computational complexity and also the computational complexity expressed in terms of thermodynamics for example.
+2819262	2821548	E	0.7483330368995667	So it's a really important sort of thing.
+2821714	2825580	E	0.7564922571182251	Just a couple of little endorsement comments.
+2827840	2835128	E	0.6748222708702087	Conditioning any one state with any one factor on states and other factors destroys that particular factorization.
+2835224	2838400	E	0.648320734500885	So you don't have to worry about introducing loops and things.
+2838550	2847964	E	0.49178367853164673	All you're doing is saying that particular factorization has gone away, you've coarse grained and you now have to lump together all the elements of one factor and the other factor into one bigger factor.
+2848012	2864472	E	0.533960223197937	And now you've got a more coarse grained factorization and a more mathematically complex model because you haven't done as many carvings to leverage the conditional independences that you're trying to model.
+2864606	2877100	E	0.5508524179458618	And the first question about the policies, that was an interesting one, and I suspect it may be an artifact of the way that we condition everything on pie without sort of forewarning people.
+2877170	2879580	E	0.703393816947937	Pi is actually quite a complicated variable.
+2880320	2887888	E	0.76764976978302	First of all, it's basically an index or a name for quite a complicated combination of things.
+2887974	2900336	E	0.8899905681610107	So not only is it a sequence of actions upon which you condition each individual transition at any point in time, over time, so it's a sequence of action.
+2900368	2915220	E	0.85885089635849	So in answer to Yakub's question, the whole point of the expenditure energy is exploring lots and lots of different sequences as you roll out into the future, but also induced by the factorization.
+2915380	2927304	E	0.8733393549919128	As Conor was saying, that pie actually has to now entail an action for every factor of a fixed combination.
+2927432	2934848	E	0.843852162361145	So if you change the combination of action, the two factors, you now have a different policy even at one time step, even for one step ahead.
+2934934	2944252	E	0.8946967720985413	So the notion of a policy as a combination of actions is still in play when you have a factorized.
+2944316	2958404	E	0.8619726300239563	Meanwhile, approximation of the hidden states, it's a subtle point, usually would resolve it by actually explicitly writing down, using the variable U, the thing that you're conditioning the state transitions on.
+2958522	2965690	E	0.8193730115890503	And then U comes from a family of combinations of use over factors and over time.
+2966140	2971960	E	0.509052038192749	So you can have deep and shallow policies, but you've got very shallow policies one step ahead and one look ahead policies.
+2972040	2976152	E	0.853542149066925	There's still a subset of communication of actions.
+2976296	2994320	E	0.7564038634300232	So it could be that you can either only move up or down sorry, up or to the left, but you can't move diagonally, for example, and that will be placed in terms of priors over pi, namely combinations of actions.
+2996420	3006550	E	0.6311342120170593	So one final, just for Adam's benefit, that notion of putting semimarkovian dynamics and Collins absolutely right.
+3009800	3015752	E	0.7982550859451294	As a physicist, the way you do that is by appealing to the depth of the hierarchical model, which always entails time.
+3015806	3018788	E	0.541498601436615	And that's an absolutely crucial observation.
+3018964	3027432	E	0.5269148945808411	There's no point in adding depth to a generative model unless you are mindful it is introducing a separation temporal time skills.
+3027576	3035520	E	0.5670715570449829	I think that's a profound sort of structural insight into the nature of generative models and has all sorts of implications.
+3036180	3047300	E	0.6723235845565796	But then you're just speaking to this notion of having combinations or little histories or little caches of legacy states as if you like a superstate.
+3047640	3054064	E	0.6755226850509644	Strictly speaking, that is exactly what is done effectively in continuous state space model with Kalman filters.
+3054112	3060132	E	0.8516268730163574	So you actually have now two kinds of random variables the position and the velocity.
+3060276	3063444	E	0.7997769117355347	So you've now got a sort of dual representation.
+3063572	3066600	E	0.7691457271575928	And if you generalize that, you get to generalize quantum motion.
+3068940	3078190	E	0.8454878330230713	And technically when you're doing variational message passing, you now use something called a chef, a free energy as opposed to which is a variant of variation free energy.
+3079120	3092092	E	0.7943000793457031	However, when you move to discrete state spaces, those generalized coordinates now actually are replaced just by having states that unfold in time over the probability transition matrix.
+3092236	3095444	E	0.5759921669960022	So that you shouldn't in principle ever need to do that.
+3095482	3116360	E	0.8534387946128845	But you can now regard the little local history, the little packet or trajectory orbit the path that you're taking at this point at this temporal scale as sufficiently discrete and Clark brain with the different probability transition Atreides and then at the slower tank scale, then it's a succession of initial states.
+3116510	3139010	E	0.6338757872581482	That's normally how we would think about that, but it's an interesting game to think about Hohwy what kinds of structures in these discrete states based models echo the equivalent moves would have to make in continuous state space modeling and thinking here, particularly of generalized filtering and Bayesian smoothing and basic filtering and the like.
+3142340	3143392	B	0.7961216568946838	Yeah, thank you.
+3143526	3152550	B	0.9125374555587769	It's really nice to have those afterthought because that clarifies, I think, and justifies a lot of the preceding slides, what Karl just said.
+3153960	3154710	B	0.5491447448730469	Yeah.
+3155640	3158528	B	0.8597629070281982	So you can kind of map the depths of the hierarchy.
+3158704	3166600	B	0.8715829253196716	Think of the depths of the hierarchy as a discretion of what is smoothly handled with generalized filtering and generalized coordinates of motion.
+3167500	3181820	B	0.7019451260566711	So states evolving at this palm DP are kind of like a quasi velocity variable because they are evolving slower than the position variable, which is like the low level, quicker clock palm DP.
+3183060	3212090	A	0.8519415259361267	One just tiny footnote there is it relates to the continuum and differentiable free energy landscape and the inclination that is required on Modern digital hardware around sampling and the inclination problem on a continuous but hidden function and the approaches that we have to take to discretize the continuous nature of time especially.
+3219180	3227180	B	0.6939172744750977	Okay, so I think we should proceed to the multi armed bandit.
+3228880	3229388	B	0.584351658821106	Okay.
+3229474	3241868	B	0.882689893245697	So now, having discussed these kind of factorized representations, we're in a position to build our multi factor generative model for what I'm calling a contextual two armed bandit or contextual multi armed bandit.
+3241964	3245728	B	0.8702998757362366	This is coming from the reinforcement learning literature.
+3245824	3261188	B	0.8830054402351379	This term counterfactuals, but it's based directly on a kind of gambling task that was introduced in Ryan Smith, Christopher White, Carls Friston's, step by step tutorial and active inference.
+3261284	3263828	B	0.8679215312004089	So you basically have a multi arm bandit, two arm bandit.
+3263844	3274328	B	0.8554219603538513	But you have to first find a clue or forage information to figure out which of the two slot machines or arms of the bandit is more favorable.
+3274424	3281560	B	0.8532212972640991	And this is echoed as well in the original T Maze example where you have a rat that has to choose between two arms.
+3281720	3285016	B	0.5020549297332764	One is more rewarding than the other, but you don't know which one is rewarding.
+3285048	3292364	B	0.5108163952827454	So you have to visit an informative Q state first that tells you the left one is rewarding right now or the right one is rewarding.
+3292412	3303750	B	0.753886342048645	So I'm just kind of gathering all these things into the term contextual bandit because that's kind of the analogous term for this problem that you'll find in reinforcement learning world.
+3305160	3316696	B	0.8253399133682251	Okay, so in the multi arm bandit or two armed bandit task, an agent has to play, choose to play one of two slot machines and they can only play one at a time.
+3316798	3321928	B	0.6355062127113342	So one of the slot machines gives more reward than the other, but the agent doesn't know which is the better one.
+3322014	3322536	B	0.817285418510437	So Anthony G.
+3322558	3325656	B	0.8227629661560059	Chen time the agent can choose to play the left or the right machine.
+3325688	3327036	B	0.8019769787788391	That's what we'll call them.
+3327218	3329580	B	0.844393253326416	Or it can choose to ask for a hint.
+3329920	3337424	B	0.7420324683189392	And if it chooses to ask for a hint, instead of playing the machine, it receives information about which of the two slot machines is better.
+3337542	3344076	B	0.5258249044418335	So this already sets up the basic dilemma of tasks like this, the so called Explore explore dilemma.
+3344188	3359368	B	0.7116771340370178	So you first forage for information that will ultimately lead to getting more reward or do you gamble immediately in order to get reward sooner, but at the risk of not having enough information to know which slot machine I should actually play.
+3359534	3367876	B	0.9040057063102722	So to encode this task structure into a generative models for a Palm DP, we equip the agent with three observation modalities.
+3367988	3373832	B	0.8920822739601135	First, we have this hint modality which is the sensory channel the agent uses to perceive the hint.
+3373896	3375800	B	0.7667875289916992	So just what is the state of the hint?
+3375960	3381752	B	0.8326340317726135	Then there's a reward modality which tells the agent whether it won or lost at the selected machine.
+3381896	3389120	B	0.8145449161529541	And then finally there's a choice modality which is just the agent's proprioceptive conversation of its own choice.
+3389540	3394320	B	0.8647715449333191	This is equivalent to the GPS modality that we were working with in gridworld.
+3395220	3403190	B	0.6807966828346252	In terms of hidden state factors, we first have a context factor which is a binary variable encoding which slot machine is the more rewarding one.
+3403720	3406964	B	0.5139902830123901	Either the left machine is better or the right machine is better.
+3407002	3409792	B	0.8419623970985413	So those are the names of the two context variables.
+3409936	3414536	B	0.8574655652046204	You could just arbitrary enable them like context A, context B or something like that.
+3414638	3421020	B	0.8317021727561951	And then we have a choice hidden state factor which is simply encoding the choice state that the agent currently occupies.
+3422000	3428344	B	0.8751877546310425	And finally, as Karl was just explaining, for each hidden state factor, you also have a control factor.
+3428472	3446300	B	0.7130084037780762	So we'll have a context control factor, which as we'll see, is trivial since the agent can't control the context in this particular simulation and a choice control factor which is the control factor that allows the agent to model its own actions or choices.
+3446460	3454560	B	0.8474094867706299	So even for a shallow policy horizon, as Karl was explaining, a policy will still be comprised of two actions.
+3454640	3457600	B	0.8779782652854919	So there'll be a context action and a choice action.
+3457680	3466324	B	0.7983527183532715	But as we'll see, the context action will always be to do nothing or basically to not be able to interfere in the dynamics of the context hidden state factors.
+3466372	3474936	B	0.7844946980476379	So basically action selection comes down to just choosing the state of the choice control factor that you choice variable.
+3475048	3478940	B	0.8868427276611328	So now we're going to look at the different levels of the hidden states factors.
+3479520	3485432	B	0.8852691054344177	So as we said, the context one is a binary or you could think of it as like a Bernoulli variable.
+3485496	3494764	B	0.7418209910392761	So it's either left better, right better, it's a distribution over these two states of the context and this is just the unchanging state of the world for a particular trial.
+3494812	3498928	B	0.709445059299469	Either left machine has a better payoff probability or the right one does.
+3499094	3505156	B	0.8898941874504089	And then the choice hidden state factor has four levels which correspond to the four possible choice states that the agent can be in.
+3505258	3518356	B	0.875782310962677	So this can either be the neutral starting location, the hint state which is the location they occupy when they're acquiring the hint, or they can be playing the left machine or they can be playing the right machine.
+3518468	3520760	B	0.768774151802063	And so now for the control state factors.
+3521660	3524940	B	0.8170251250267029	The control state factor for the context only has one level.
+3525090	3532940	B	0.7766499519348145	You can call it do nothing or it's just a trivial one dimensional variable and the agent will always take this action with 100% probability.
+3533300	3546140	B	0.6980709433555603	So in other words, the agent has no control over the state of the context and then the choice control state has four levels corresponding to the decision to change the S choice.
+3546220	3550932	B	0.8892185091972351	The hidden states factor for the choice state in one of four different ways.
+3550986	3558636	B	0.8580068945884705	Either it can move to the start location, it can move to the hint location, it can play the left machine or it can play the right machine.
+3558768	3568840	B	0.858528196811676	So what choice state the agent is in is kind of obviously under the agent's control which is encoded by the fact that this u choice variable has four levels.
+3569600	3591520	B	0.856522262096405	So optimizing a posterior distribution over this choice control state factor, that's what action selection and planning boils down to is basically choosing what level of you choice or inferring what the distribution over you choices and then sampling or taking the arg max of that distribution to actually make an action.
+3592340	3595868	B	0.8547555208206177	Okay, so now let's review the observation modalities and their different levels.
+3595964	3605604	B	0.4976862967014313	The first modality is the hint modality which can either give the outcomes of null like I'm not at the hint state so I'm getting no sensory information from that channel.
+3605802	3620200	B	0.7296217679977417	A left is better hint hint left or a right is better hint and they're just named that because we'll see in the A matrix how seeing that observation relates to seeing the, to the state of the context.
+3621980	3630488	B	0.7686553597450256	We have the no observation because as I said, if the agent isn't in the choice state of getting a hint, it still needs to receive some information from that modality.
+3630584	3646380	B	0.6461784243583679	So that's why we often have in both the SPM and the Pine VP implementations we have this null observation that just encodes an observation that has no information about hidden states within some particular factor.
+3646540	3658176	B	0.7911491990089417	And then we have a reward modality which similarly has a null observation for when the agent isn't playing either slot machine and then two possible reward observations, either a loss or a reward.
+3658288	3662616	B	0.8385146856307983	But this is a choice that can depends on what you're trying to do.
+3662638	3668004	B	0.6523482799530029	You could also make O reward have like ten different reward levels that have different magnitudes of reward.
+3668052	3671592	B	0.7021682262420654	It's just a choice to call these like loss and reward.
+3671736	3674990	B	0.7650075554847717	The point being that one is preferred relative to the other.
+3675360	3682796	B	0.7779009938240051	And then finally we have the choice modality which just allows the agent to unambiguously infer what choice state it's in.
+3682818	3686448	B	0.7635819911956787	So it just allows it to infer what it's doing.
+3686534	3690972	B	0.6904549598693848	And this is important because remember active inference lab, everything has to be inferred.
+3691116	3703844	B	0.7303541302680969	Everything is in the game of minimizing free energy and coming up with posteriors approximate beliefs about the state of the world, including your own choice state.
+3703882	3709860	B	0.8590338230133057	So that's why we often equip agent with a proprietive sense of where I am like a GPS.
+3713880	3715552	B	0.808950662612915	That's the three observation by.
+3715626	3717252	B	0.7702763080596924	We've done the hidden states and the controls.
+3717316	3721800	B	0.7154691219329834	So now we're in a position to start building the arrays for this agent's generative model.
+3721950	3730680	B	0.9062824249267578	So for each modality specific array we're going to have as many rows as there are levels of that modality and then two columns and four slices.
+3730840	3732872	B	0.7141963243484497	And so why is it two columns, four slices?
+3732936	3742124	B	0.8862905502319336	Because each column corresponds to a setting of the context hidden state factor and each third order slice corresponds to a setting of the choice state hidden state factor.
+3742252	3751120	B	0.798514723777771	And these lagging dimension of two columns, four slices will be the same for every single A matrix, not the values in them, but that shape.
+3751200	3760468	B	0.8824260234832764	So the only thing that will change across modalities, the A modality specific A arrays is the number of rows, which is the number of observation levels.
+3760644	3772504	B	0.8907474875450134	So for the hint modality, each slice of this A matrix tells us the mapping between the two possible context states and the observations in the hint modality for a fixed choice state that the agent could be in.
+3772622	3793008	B	0.5407485365867615	So, for instance, if the agent is in the start choice state, what we're seeing now regardless of whether the left or the right mission is better, the agent will always get the null observation, which has zero information about the state of the context, as you can see, because given an observation of the null observation in the hint modality, you have no idea whether the left is better or the right is better.
+3793174	3802800	B	0.855043351650238	However, if the agent is in the visit a hint state or acquire a hint state, then the mapping between the concept state and the two hint observations will be informative.
+3802960	3812004	B	0.7005259394645691	And when I say informative, I just mean that the columns of this matrix will be independent from each other and they will be low entropy.
+3812052	3818324	B	0.7545264959335327	So another way of saying that is that they'll be low entropy in the observation conditioned rows of the matrix.
+3818452	3832504	B	0.7614648938179016	So briefly what we're seeing here, where grayscale darker colors means more probability, if the slot less machine is better that's the context, then the agent is more likely to see the hint left observation.
+3832552	3837516	B	0.521962583065033	And if the right machine is better, they're more likely to see the hint to right observation.
+3837628	3842508	B	0.8612390756607056	So this slice of the a matrix is what gives those observation levels their meaning.
+3842604	3850064	B	0.8512071967124939	The very reason they're called hint left and hint right is just because of the kind of diagonal structure in this slice of the matrix.
+3850192	3859240	B	0.725426971912384	And then finally for the other states, if I'm playing the left or the right machine, I'm never getting any informative observations from this modality.
+3861420	3861784	B	0.7123861908912659	Okay?
+3861822	3864420	B	0.8571848273277283	And then we move on to the reward modality.
+3864500	3868100	B	0.8442102074623108	So again, two columns and four slices like for all the arrays.
+3868180	3873076	B	0.9056462049484253	But now we're looking at the mapping between the two context and the reward observation levels.
+3873188	3877756	B	0.5423018336296082	So Bull lost reward for each possible choice state the agent could be in.
+3877858	3888284	B	0.627025306224823	So as we can see if the agent is in starting location or getting the hint, they're not getting any reward conversation, they get the trivial, meaningless null observation.
+3888332	3900304	B	0.7971307039260864	However, if the agent is playing the left or the right machine, there's a probabilistic mapping between the context, the left machine or the right machine being better and the expected reward.
+3900352	3907700	B	0.6744749546051025	So if the context is left is better, then the agent is more likely to see the reward if and only if they're playing the left machine.
+3908620	3913112	B	0.7761868834495544	Likewise, if they're playing the right machine, this matrix is the same.
+3913166	3916164	B	0.5820643901824951	So if you're playing right, then you're more likely to see reward.
+3916292	3932540	B	0.8389062881469727	So this submatrix within this big a tensor is what determines the payoff structure of the task or the agent's beliefs about that payoff structure, I should say, because this is the array, it's not the actual rules of the game.
+3932690	3945200	B	0.8593448996543884	So now we're finally up to the choice modality which again is just their observation of their own choice state which you can see only depends on the state of the choice that they're making.
+3945270	3946848	B	0.7607523798942566	It doesn't depend on the context.
+3946944	3956180	B	0.7797794938087463	So it just means that they'll always unambiguously infer whether they're playing the right machine or they're in the start state or whatnot.
+3956520	3961112	B	0.8708845973014832	So this is just an example of going through those slices and really seeing how that looks.
+3961246	3964040	B	0.7504884004592896	So now we can code this up in Colab.
+3964460	3973084	B	0.7607020139694214	And again, we won't be doing it by hand, we'll just be running some predefined code.
+3973202	3982456	B	0.5093563199043274	So one useful thing to do often with control factors and observation modalities is get some semantic labels like create a list of strings for instance.
+3982568	3988896	B	0.8577622175216675	So the context names will have these two states left better, right, better choice names will have these four possible states.
+3988998	4001456	B	0.8858352303504944	And then we can automatically create these lists of dimensions that are needed to create your A and B matrices just by looking at things like the length of this list of strings or the length of this list of choice names.
+4001568	4012904	B	0.8926210403442383	So if you run this, then we'll have our NUM states variable, which will be 24 two possible contexts and four possible choice states.
+4012942	4024248	B	0.8927924036979675	And then you'll have numbs, which will be three possible hints, three possible rewards and four proprioceptive location or choice state observations.
+4024344	4034780	B	0.8795066475868225	And then we can use this function to initialize our empty A matrix and then the next few chunks of code basically just fill out these A matrices like we saw in the slides.
+4036240	4040796	B	0.6539435982704163	So one thing we'll do is we'll have two parameters and this is again arbitrary.
+4040828	4042640	B	0.7840264439582825	You can choose to do this however you want.
+4042710	4061668	B	0.8843498826026917	We'll prioritize the A matrix with a probability of hint or a hint accuracy which will effectively just fill out that slice of the hint modality array that corresponds to how accurately the hint signal indicates the concept or lends evidence to the concept.
+4061764	4073244	B	0.6403409838676453	So if the Hinton is 1.0, p hint is 1.0, it means whenever they visit the hint state, they immediately know, okay, the left arm is better, but this doesn't have to be 100% right?
+4073282	4076652	B	0.663601279258728	The hint itself could have some noise or uncertainty associated with it.
+4076706	4078940	B	0.8760411143302917	So we'll parameterize that just with this probability.
+4080640	4086912	B	0.8843753337860107	So this is the probability of the two hint types for the two game states.
+4086966	4095452	B	0.6909230947494507	And you see the null has zero probability and then hint left has more probably when the context is left indicated by the column.
+4095516	4098630	B	0.7041075825691223	And then hint right has more probability when the context is right.
+4099320	4103172	B	0.7799728512763977	And then we'll just go through and fill out this chance stuff.
+4103306	4107184	B	0.8929891586303711	Oh, the reward modality will have a similar thing of P reward.
+4107232	4111876	B	0.9025099277496338	So this will determine the payoff structure of both bandit arms.
+4111988	4122328	B	0.5888470411300659	So if P reward is high, it means if the context is left is better and you're playing the left slot machine, you'll have an 80% chance of getting the reward.
+4122504	4130190	B	0.6086069941520691	And this thing itself can be changed to determine basically how how rewarding the bandits are.
+4133200	4138876	B	0.9152944087982178	So this is the payoff structure if you're playing the left arm, the payoff structure for the two contexts.
+4138908	4140800	B	0.5714499950408936	And there's an inverseness that I didn't discuss.
+4140870	4156976	B	0.707548201084137	So if I'm playing the left arm but the right arm is better, then I'm also more likely symmetrically to get punishment or negative reward with the same probability that I would get positive reward if I was playing the right on so that's also a choice but just to make this a single parameter.
+4157008	4159096	B	0.8099130392074585	That's how we did it here.
+4159278	4166040	B	0.8568406701087952	And then finally the choice observation by that is just filling out that GPS high fidelity GPS sensor.
+4169580	4177308	B	0.7642728686332703	If you slice it along any context hidden states factor, since it doesn't depend on context, this could be a zero or a one.
+4177474	4184480	B	0.8604258894920349	Then we'll get an identity mapping which just allows them to infer their choice state and then we wrap this all into one function.
+4184550	4193200	B	0.7134904265403748	So we just have two parameters p Hinton, p reward and then we can see once we start doing simulations how manipulating those things messes with their behavior.
+4194980	4197040	B	0.8010896444320679	So now we'll move on to the B arrays.
+4198280	4201664	B	0.844317615032196	Oh yeah, so let me go here and talk through some slides.
+4201712	4202324	B	0.5510485768318176	This will be quick.
+4202362	4206852	B	0.5751397013664246	The brain are pretty simple so we're going to mess with this later.
+4206906	4224300	B	0.8196628093719482	But we're going to start by saying that the context hidden states factor is stationary over time so they can't change that hidden state factor and even in the absence of their ambiguity to intervene, it stays in the same state over time.
+4224370	4234772	B	0.8040624260902405	So we parameterize this with like a p change probability that just fills out the diagonal of this kind of trivial transition matrix with 100% probability.
+4234856	4238176	B	0.6574996113777161	But later on we can mess with that parameter and decrease it.
+4238198	4242370	B	0.7742615342140198	So they believe that the concept can actually change with some stochasticity over time.
+4243860	4256548	B	0.5491412878036499	But for now we just assume they don't believe the context changes and then this is their ability to so unlike Grid World where you have local actions, they can only move up, down, left, right here.
+4256634	4259112	B	0.7362293004989624	They can move from any other state to any other state.
+4259166	4265464	B	0.8950775861740112	So this is like a signature or thing if you want a controllable hidden state space.
+4265502	4275160	B	0.9039925336837769	So the agent can go anywhere from any other place that will manifest as these dark bands in your b matrix or bands of 100% probability.
+4275320	4281500	B	0.755336582660675	So this is another way of saying that the transition graph is fully connected, that you can get anywhere from anywhere.
+4282560	4288576	B	0.5506340265274048	But that's also not sure we could have made it such that once they leave the start state they can't return there.
+4288678	4293970	B	0.8244414925575256	So that would correspond to having the absence of one of these.
+4295460	4306310	B	0.5547975897789001	Like basically the start state is a source but it can't also be a sync or there's no in arrows going to it so that would affect the structure of this.
+4307420	4310250	B	0.7611889839172363	Okay and then we can quickly code that up.
+4314620	4330604	B	0.8788599967956543	So b zero is the concept hidden states which as we said is just going to be stationarity and then the choice hidden states is fully controllable and then we will parameterize this all as a create B function which will for now have this p change thing.
+4330642	4336620	B	0.8822450041770935	So we can make the agent belief about the stationary of the context different.
+4336690	4346530	B	0.7593186497688293	Like if the context is likely to change, but for now, by setting it to zero, it just means that they believe the context is fixed for a given trial or set of time points.
+4346980	4348496	B	0.7236593961715698	And then finally, very basic.
+4348528	4349108	B	0.5322141051292419	Stuff.
+4349274	4353776	B	0.8331124186515808	This is just how we establish the semantics of the reward modality.
+4353888	4358172	B	0.8131438493728638	So the reward modality is, as we said, the null, the loss and the reward.
+4358336	4370420	B	0.8674683570861816	And we can encode the C vector, which is kind of like the reward function, the prior preferences or prior over observations directly in terms of relative log probabilities.
+4370500	4382620	B	0.6321154236793518	So we can encode punishment by having the prior expectation about loss be much lower in relative log in natural log units.
+4382960	4383372	B	0.6463708877563477	Much.
+4383426	4386424	B	0.7399104833602905	Lower than the reward observation within that modality.
+4386472	4390400	B	0.7051279544830322	And then the other ones are just going to be uniform distribution, so you can leave them empty.
+4391940	4397380	B	0.6438481211662292	And this is just what allows them to want to see reward as opposed to loss or punishment.
+4399880	4401830	B	0.8678660988807678	I think we discussed this last time.
+4402200	4403924	B	0.8403652906417847	Daphne had a question about that.
+4403962	4410464	B	0.6138578653335571	So why do we encode things in relative log probabilities rather than sheer probabilities?
+4410512	4416948	B	0.5272126197814941	It's just more analogous to the reward construct from reinforcement learning that's one benefit and they're unbounded.
+4417124	4419016	B	0.7466060519218445	They don't have to be bounded between zero and one.
+4419038	4430156	B	0.5498961210250854	So if you just encode them that way, it becomes easier to kind of make one thing x times more rewarding or punish or aversive than another thing.
+4430258	4441676	B	0.8357287645339966	And that directly relates to how kind of reward is calculated in our expected utility of the expected free energy is because it's always kind of an expected it's kind of like an entropy or a cross entropy.
+4441708	4446950	B	0.8329907059669495	So its units are in natural log space.
+4448520	4449270	B	0.584351658821106	Okay.
+4450360	4451696	B	0.74631267786026	And then the D vector.
+4451808	4455300	B	0.7891430258750916	Again, they can have prior beliefs about which context is better.
+4455450	4468280	B	0.7821311950683594	So that will also be a collection of vectors, one over the context factor and one over the initial state of where they are, which we can make it start, but it doesn't really matter because they have precise observations.
+4468940	4471560	B	0.7528083920478821	And then that's very easy to do in prime DP.
+4472400	4480750	B	0.7172693014144897	We'll just create some functions that parameterize how rewarding the reward observation is and how punishing the punishment observation is.
+4481440	4485490	B	0.8838201761245728	Then we can plot those and this could be ten.
+4486020	4500944	B	0.5270914435386658	Then the reward is much more is much better than the punishment, or the punishment could be very bad, in which case the punishment is much, much lower than both the null and the reward.
+4500992	4505552	B	0.8320342302322388	And here I'm showing the prior directly in terms of probabilities.
+4505696	4510570	B	0.7887131571769714	So when you convert the log probabilities to probabilities, these things will become bounded between zero and one.
+4512460	4513016	B	0.7123861908912659	Okay?
+4513118	4521480	B	0.7134796977043152	And then the D vector simulator will just create a quick function that parameterizes how much they believe the left is better.
+4521550	4524504	B	0.8240135312080383	Context is true at the beginning of the simulation.
+4524632	4531340	B	0.6314741969108582	And if you just set that to 0.5, it means they have flat, unbiased, uninformed prior beliefs about the concept.
+4535060	4535712	B	0.46103888750076294	Yes.
+4535846	4536530	B	0.584351658821106	Okay.
+4541860	4547808	B	0.7979024052619934	All right, so now I think we are good to actually do this after all the build up.
+4547974	4552244	B	0.8475680351257324	So, like 95% of the work is encoding the generative model.
+4552282	4554260	B	0.8188443779945374	And this is something Karl will tell you as well.
+4554330	4557872	B	0.5812336206436157	SPM most of the work is not actually running active inference.
+4557936	4565416	B	0.810880720615387	Maybe computation wise it is, but in terms of the time and the intellectual energy spent, it all comes down to the generative model.
+4565438	4566840	B	0.8279064297676086	That's where all the information is.
+4566910	4569370	B	0.5726290941238403	The rest is just optimization, basically.
+4570140	4577432	B	0.8829360604286194	So we've written down our ABCs and DS, then we just basically plug them into this agent API from Pinedp.
+4577576	4593116	B	0.8721107244491577	And then we create an environment class which could be as something as ad hoc as I'm getting a list of observations from some API that's talking to the Internet or from a robot sensors.
+4593228	4601060	B	0.8306021094322205	Or you can actually write down an environment class that generates observations like another agent, for instance.
+4602120	4607520	B	0.8574464917182922	And then you plug the observations from the environment into the infer states function you do infer policies.
+4607600	4613530	B	0.9090692400932312	And then you sample an action according to the expected free energy stuff that we talked about last time.
+4614460	4618776	B	0.7261895537376404	Okay, so now we're actually going to do this.
+4618958	4623548	B	0.9088611006736755	So we have our nice nifty functions for creating A-B-C and D.
+4623634	4630110	B	0.8846745491027832	We can just run those with desired levels of P hint and P reward and then create our agent.
+4630480	4637516	B	0.8280704617500305	And this is something we discussed last time, but an important distinctions is the generative model versus the generative process or the environment.
+4637628	4652160	B	0.8156967759132385	So the things we're putting in A and B right now and C are just the agent's beliefs about, for instance, the hint accuracy or the payoff matrix of reward that can be arbitrarily different from the actual structure of the environment.
+4652320	4656272	B	0.8647620677947998	And we'll see how later we'll see how you can adjust.
+4656336	4660680	B	0.6156370043754578	The agent can actually learn the correct reward statistics through a process of learning.
+4660750	4669450	B	0.6036856174468994	So even if they start out with the wrong generative model, they can adapt their generative model online so that they match the generative process better.
+4671020	4678540	B	0.8842254281044006	Okay, and then we'll define this quick class, the two arm bandit, which will be the generative process, the real world for our agent.
+4678690	4681964	B	0.7869953513145447	We're not going to step through the code, but the link is available.
+4682002	4686192	B	0.49334263801574707	So if anyone wants to look at this, this is basically just encoding the rules of the game.
+4686246	4694524	B	0.9153553247451782	So when the agent is in the left arm, they'll get reward or Costa, depending on the P reward and P hint values.
+4694572	4700580	B	0.7951493859291077	And as we said, these values can be different than the agent's beliefs about them, which will be in their A matrix.
+4701320	4709540	B	0.883678138256073	So this is the generative process, the actual reward, and then the generative models are the parameters you give to the A Constructor.
+4712220	4717076	B	0.8777601718902588	And then we'll just have a function here that runs the active inference loop.
+4717188	4725900	B	0.5463206171989441	It looks a little bit more complicated than those three lines I showed on the slide, but that's just because I'm storing things like the history of their choices, the history of their beliefs.
+4726720	4733020	B	0.8616166710853577	I'm having optional plotting of beliefs things like that and plotting of actions.
+4734020	4744896	B	0.8535308837890625	But this function basically the key things are you get an observation from the you start with an observation, which it will be from the generative process.
+4745078	4750164	B	0.8705663084983826	You do hidden state inference using that observation to get your posterior over hidden states.
+4750362	4754068	B	0.8196337223052979	And this you can return if you want to plot it, but you don't have to.
+4754234	4756708	B	0.656281054019928	And then you'll do inference about policy.
+4756794	4770516	B	0.8869831562042236	So this is optimization of a posterior over policies, which then gets translated into marginal posterior over control states or action that you sample from and you sample from them if this next line with sample action.
+4770548	4784016	B	0.8744158744812012	So the main three lines of any active coherence process are inference about states, coherence about policies, and then action selection, which can be either deterministic or stochastic depending on your application.
+4784198	4794240	B	0.7863857746124268	And then the rest is just basically code that converts observations from the generative process into the terms that the agent can understand and vice versa.
+4795380	4803750	B	0.865472137928009	And then we have this helper function that plots the history of choices and beliefs and the true context over time.
+4804600	4812810	B	0.634952962398529	So, yeah, I just blaze through that quickly because it's not very important, but if anyone has questions, we can go back and dissect that code a little more.
+4814380	4818804	B	0.7690145969390869	So now all we have to do is define the yako.
+4818852	4820584	B	0.7771119475364685	You have your hand up, you'll ask.
+4820622	4835390	C	0.6266331076622009	Something, yeah, maybe this is better suited for the end, but in time DP, there's also modules that are adjacent to the agent class.
+4836160	4838220	C	0.8246046900749207	So I was just wondering.
+4841220	4841728	B	0.7135298252105713	How we.
+4841734	4860620	C	0.752947986125946	Could make use of the different modules in the action perception loop, because I haven't seen many examples of using, for instance, the inference module or the learning module and how that would augment the run active infrastructure.
+4860640	4862424	B	0.8799397349357605	Yeah, that's a great question.
+4862542	4870324	B	0.6239393949508667	So I have another demo that we can maybe do another time that's building a hierarchical model in PMDP.
+4870372	4872008	B	0.8020591139793396	So building a two layer model.
+4872174	4877628	B	0.8940585255622864	It's a visual foraging hierarchical model based on a paper that we did back in 2018, 2019.
+4877634	4887084	B	0.8521730303764343	And there you're in this inner loop over time, you're making use of these sub module functions.
+4887212	4893410	B	0.8472031950950623	So say you wanted to do some special kind of inference that's not just the standard infer states.
+4894260	4899540	B	0.675655722618103	You could actually say, okay, I want to do this particular weird thing that's specific to this inference process.
+4899690	4915140	B	0.8358483910560608	And you would just add lines here like, I want to take a function from the inference module and run like, I don't know, a different kind of message passing on it, like run MMP or something inference.
+4915220	4919188	B	0.9117813110351562	Or there's an Algos module too that has different message passing algorithms.
+4919364	4932190	B	0.8024192452430725	And then you could optimize your hidden state belief, updating that message passing algorithm, and then set them equal to the special thing you did just with that.
+4935440	4943970	B	0.5177748203277588	So, yeah, there's no examples here, but I haven't done that here, but it's definitely something that can be done.
+4946260	4960710	B	0.8539332151412964	Or yeah, there's another example I did, like simulating an active inference equivalent of an evidence accumulation drift diffusion style task where the policy selection was done in a particular way, where you're only using certain components of the expected free energy.
+4961160	4977308	B	0.722571849822998	And yes, so basically there's other demos where you can, like, zoom in and not use the Agent class and use sub modules, but I haven't written those in a publicly accessible way yet, but the hierarchical one I can just easily make public.
+4977394	4979692	B	0.5046006441116333	I just haven't had time to put it on the dock yet.
+4979826	4987490	B	0.6617129445075989	But yeah, that's a good question because you're right, most of the stuff right now is just the highest level implementation with the Agent.
+4989620	4990370	B	0.7123861908912659	Okay?
+4991940	5008496	B	0.8503745198249817	And now that to just run the active inference process, I've made a distinction between generative process parameters, like how accurate the hint is, how the payoff structure is, and then generative model parameters which are used when creating the a matrix.
+5008528	5013844	B	0.8636320233345032	So the p hint end is the true hint accuracy p reward end is the true payoff.
+5013972	5021240	B	0.8931703567504883	And then just choose some time horizon and run the active inference soup with that time horizon and then plot the history of beliefs.
+5022060	5023710	B	0.7221260070800781	Okay, so here's an example.
+5026160	5029640	B	0.7927493453025818	The top plot shows the Agent's behavior.
+5029720	5034924	B	0.9057460427284241	So white squares indicate what it was doing at any given time.
+5034962	5036264	B	0.8518386483192444	So time is on the x axis.
+5036312	5037872	B	0.8314077258110046	So you can see it start in the start state.
+5037926	5041040	B	0.8725997805595398	Then it gathered information at the hint.
+5042580	5047024	B	0.5514382123947144	And the reason this wasn't immediate is because its beliefs about accuracy were only 0.7.
+5047062	5051748	B	0.792530357837677	So it needs to actually do some evidence accumulation before it's sure what active states is.
+5051834	5053190	B	0.5026600360870361	Then it played right.
+5053560	5056292	B	0.7235167622566223	But as soon as it played right, because that's what the hint was telling it.
+5056346	5071864	B	0.518877387046814	As soon as it played right, it probably had a loss observation, which then messed up its inference and made it go back to the hint to accumulate evidence again before being okay, the hint is really suggesting that I should go, right?
+5071902	5083164	B	0.9093950986862183	So then it goes back, revisits the right arm, and then over time, you see here, the red dot is the actual true context, and the gray scale indicates the Agent's beliefs about the hidden states.
+5083362	5090130	B	0.7320097088813782	So here, the hidden states beliefs are now converging to believing that the right arm is better.
+5090740	5097920	B	0.7739372253417969	And I know I said hit the beginning that all probability would be darker means higher probability, but it's actually the opposite here, so sorry, that's confusing.
+5098360	5099412	B	0.6036154627799988	So yeah, right.
+5099466	5104772	B	0.709998607635498	Better is higher probability, and their beliefs get more and more competent as they play.
+5104906	5108436	B	0.7172043919563293	So this is the exact same thing you'll see with the teammates, right?
+5108458	5114808	B	0.8779399394989014	They first forage for information that's driven by this epistemic value component to the expected free energy.
+5114974	5128856	B	0.5818248987197876	As their posterior over hidden states becomes more precise, epistemic value goes down, and then the expected utility component goes up, which is bolstered by the fact that they now have confident beliefs about the context.
+5128968	5131070	B	0.6103351712226868	And then that drives them to forge information.
+5134320	5146924	B	0.5976598858833313	And then so the kind of exercise that I would have people do if this was like in a classroom context is start messing with the bandit probabilities and also mess with the agent's sensitivity to punishment.
+5146972	5154976	B	0.7015077471733093	So up here, we made them have plus two relative nats in their reward function and minus four for punishment.
+5155088	5160330	B	0.511562705039978	But if you made this even lower, let's say you made it negative six, what would happen?
+5161340	5171656	B	0.57524573802948	So now, because they're more risk Andersen the risk of getting a loss observation, if I was to play, immediately becomes higher.
+5171758	5186876	B	0.488536536693573	So now the agent basically requires more confidence before it's willing to actually play the left arm, because the risk of getting it wrong and getting a loss is too great because their reward function is now shaped more risk aversely.
+5187068	5196000	B	0.7965052127838135	And then if I decrease this even more down to negative eight, you can see that they never even go for playing.
+5196340	5210376	B	0.5405494570732117	Because even once they're very certain that the left arm is better, it's still too risky, given their beliefs about the payoff structure because their beliefs about the payoff structure are such that they believe that there's still a 20% chance that they'll get.
+5210398	5210964	B	0.6540378332138062	Costa.
+5211092	5219130	B	0.7969816327095032	But if we change this and said what if their p reward was 1.0 or, say, zero point 99?
+5223360	5240850	B	0.5462675094604492	Then they're willing, even despite the great risk of being punished because the expected reward given, you know, the context is high enough, they will still end up risking it and they acquire the hint for some time and then they start risking it.
+5241620	5257360	B	0.7399894595146179	But the observations will, because peer is so high, their beliefs about the payoff structure, their beliefs will kind of oscillate as the observations actually change, because the true observations are generated much more stochastically, because this is the P reward of the bandit.
+5257520	5259604	B	0.6837717890739441	So you can mess around with this.
+5259642	5272350	B	0.646563708782196	And I would encourage, if anyone listening now or afterwards wants to mess with these parameters, I would encourage you to just go crazy and mess with parameters and see what different kinds of behavior you can get.
+5276240	5282140	B	0.7910406589508057	Okay, so that pretty much wraps up the main brunt of the entorhinal.
+5283040	5295840	B	0.561068594455719	Let's pause there for questions because I have additional material about learning parameters that we discussed last time would be good to get into because that's something that's really underdocumented right now with PMDP.
+5296200	5298388	B	0.7077517509460449	So we can move into that.
+5298394	5300550	B	0.8504173159599304	But I think we should first break for some questions.
+5303080	5303924	A	0.9184247851371765	Awesome.
+5304122	5305076	A	0.8529649972915649	Thank you.
+5305258	5308092	A	0.6931451559066772	Jacob if you ant to ask or Karl.
+5308256	5310810	A	0.9043146371841431	Otherwise, I'm happy to hear about learning.
+5312380	5313130	B	0.84200119972229	Cool.
+5318020	5322370	A	0.677419126033783	Let's do learning and then we'll have and closing questions at the end.
+5323240	5323990	B	0.7672419548034668	Perfect.
+5326760	5329664	B	0.7493512630462646	Okay, I'll have some quick slides.
+5329712	5338776	B	0.8945347666740417	So learning under active inference is cast as updating beliefs about the generative model parameters itself.
+5338958	5341384	B	0.723730742931366	So inference is one thing.
+5341422	5350940	B	0.8546665906906128	Inference is saying, given my generative models, so my beliefs about the way the world works, what is the best explanation in the sense of posterior over hidden states?
+5351010	5354252	B	0.8464288711547852	And policies that explains my actual data.
+5354306	5357116	B	0.6828509569168091	And you get that by minimizing variational free energy.
+5357218	5371472	B	0.8342188596725464	Learning becomes much more complex but also more interesting in the sense that if the agent's generative model itself is wrong, they can change the generative model to also optimize variational free energy.
+5371526	5381412	B	0.8484693765640259	So learning and inference can kind of cooperate or sometimes interfere with each other as we'll see to minimize variational free energy.
+5381546	5386128	B	0.7843401432037354	So the way we have to start by doing this is now treating the parameters themselves.
+5386234	5400780	B	0.869989275932312	So the parameters of the A array which are categorical likelihood parameters, b array, D array, CRA those themselves now become random variables over which we can have priors and of course variational posteriors.
+5402240	5407480	B	0.8537535071372986	So we can go back to our original A or palm DP representation.
+5407640	5419584	B	0.8804595470428467	So now what we see is in this third column next to A-B-C and D we have parameters that are priors over the categorical parameters of the A-B-C and D.
+5419702	5431344	B	0.9148644208908081	So a natural prior for these sorts of categorical variables is called the deer schley distribution which is basically a conjugate prior for a categorical likelihood distribution.
+5431392	5440360	B	0.9819804430007935	That's why it's very nice and also the values of its parameters have a very nice intuitive feeling and interpretability to them.
+5440430	5445770	B	0.8742605447769165	So now the agents will have priors which are updated by this p of Phi at the top.
+5447100	5450904	B	0.5696138143539429	And phi is just a collection of all these deer schleich hyper parameters.
+5450952	5461070	B	0.889840841293335	They're also called or prior parameters and these are parameters or priors over random variables that themselves are the likelihood distinctions and priors of the generative model.
+5461600	5465472	B	0.7020642161369324	So we're just going to do a few instances of learning today.
+5465526	5467920	B	0.6018601059913635	I don't know if we'll have time to do B or D learning.
+5467990	5473072	B	0.8731260299682617	We'll start with a matrix learning but the principle applies the same.
+5473126	5478064	B	0.9131475687026978	So here's an example of the deer slate prior distribution over some categorical parameters.
+5478192	5482752	B	0.8223926424980164	So let's say our a matrix or A array, let's just say it's a matrix.
+5482896	5487636	B	0.8531362414360046	So now the random variable itself are the entries of the A matrix.
+5487828	5496424	B	0.7976689338684082	A prior over those entries is something called a deer schley distribution which is just a vector of positive real numbers.
+5496542	5500784	B	0.8196313977241516	And here we've reshaped it so that it has the shape of an array.
+5500852	5505304	B	0.9199038743972778	So let's say this array represents like the payoff matrix in our bandit task.
+5505432	5513600	B	0.8010374903678894	So the two columns or two possible hidden states are context one, context two and then the two observations are punishment and reward.
+5514100	5530928	B	0.8950945734977722	So if this is our prior which is measured by these deer schley parameters, the likelihood distribution that they parameterisation also you can express this as the expected value of the deer sleigh distribution is a categorical with these values.
+5531104	5548836	B	0.9229171276092529	So what you can see is that the deer Shlay counts like the kind of scalar magnitude of the deer slate parameters kind of represent a prior coherence about the probability of of the different contingencies encoded in the A matrix.
+5548948	5561004	B	0.8777267336845398	So I made these, these very simple here like the the deer slate priors are nine counts for seeing punishment given context and one count for seeing reward given context one.
+5561122	5564160	B	0.7058643102645874	But you can change those to very high numbers.
+5564230	5575348	B	0.8708927631378174	So for instance, if that nine on the left was changed to a 10,000, then on the right the probabilities would become like 0.99 to .00,001.
+5575434	5597224	B	0.8922440409660339	So the scale of the deer schley, also known as pseudo count parameters, encodes something like a belief about how many times that particular coincidence of observation and hidden state has been observed, which you can also think of as like a prior confidence about that contingency and the expectation to create your A matrix via this.
+5597342	5608396	B	0.7232939600944519	Going from a deer slate to an A array is very simple because you just take each deer slate count and divide it by the column wise sum, which is this a not variable on the lower right.
+5608498	5615520	B	0.8687012195587158	So it's just that particular value of the A array and divided by the sum of the counts.
+5616180	5625532	B	0.8796722888946533	So that's how you go from a deer slate prior over a categorical likelihood distribution through the expectation and then inference.
+5625596	5629620	B	0.751200258731842	And I'm not going to guide into the variational posterior, but it's very simple.
+5629770	5653544	B	0.8432268500328064	So when you're doing learning and you're trying to actually update these Deer parameters as a function of observations, what essentially you have is a new posterior that's now not over hidden states of the world, but you have a variational posterior over the parameters the categorical or rather a variational posterior over the deer distribution, the deer slay distinctions that parameterizes your a matrix.
+5653672	5655708	B	0.8806565999984741	So that's what's representing the lower right.
+5655794	5661196	B	0.8568315505981445	So let's assume that our beliefs about the deer shay parameters were as it is now.
+5661218	5672960	B	0.8470290303230286	So your beliefs about the A matrix and then we get an observation and let's say that we saw the conversation of punishment and that can be represented by this one hot vector.
+5673780	5683652	B	0.8333759903907776	Now we want to update our beliefs about the A matrix given the observation, but to do that, what you also need is a hidden state or a belief about hidden states.
+5683786	5689450	B	0.5148828625679016	And let's say that the agent was very confident that the hidden state was concept one.
+5689980	5714620	B	0.8885653018951416	What ends up happening to the resulting posterior over the A matrix is a very simple associative, quasi associative learning rule where the update to the deer schley represented by this bold a SUBQ becomes the prior over the deer sleigh parameters plus the outer product between the observation vector and the hidden state belief vector.
+5714780	5726768	B	0.8804054856300354	So this is kind of like a form of coincidence detection where you just see what parts of the hidden states line up with what parts of the observations and you increment your beliefs about the A matrix accordingly.
+5726864	5739130	B	0.7446010112762451	So in this case, if I really believe the concept was one and I saw a punishment, then my belief about that particular contingency seeing punishment under context one would just be incremented by a plus one.
+5740300	5743524	B	0.8222006559371948	And that's what this outer product at the lower right calculates.
+5743572	5748948	B	0.8983508348464966	It computes a matrix that is the increment to your beliefs about the A matrix.
+5749044	5754104	B	0.8882160186767578	So in this case, the matrix would be have one in the upper left and then zeros in the other three entries.
+5754232	5758460	B	0.8743659257888794	And you use that to kind of increment your A matrix.
+5758960	5769920	B	0.8281465172767639	Technically you're incrementing a deer schley kind of conjugate prior over your A matrix, but it's really a variational deer schley posterior.
+5770260	5774476	B	0.5460058450698853	But you can imagine if your hidden states are also contaminated with uncertainty.
+5774508	5780004	B	0.8628577589988708	So say you had 50%, you were 50 50, whether it was concept one or context two.
+5780122	5789184	B	0.9127508997917175	Then similarly with this a matrix update, the update would then be spread over the two possible contingencies.
+5789312	5803230	B	0.6955082416534424	So if you saw an observation but you weren't sure what the hidden state was, then both just the overall probability of seeing punishment under your generative model would go up because you would increment that entire row of the A matrix within this case 0.5.
+5803680	5822176	B	0.7316423058509827	So that's just an important thing to note is that uncertainty in your own hidden state beliefs will bleed into the updates to the deer sleigh parameters and oftentimes alongside, I mean optimally alongside a matrix learning or parameter learning.
+5822358	5828356	B	0.5223512649536133	You're also going to be augmenting your expected free energy because your generative models now different.
+5828378	5834496	B	0.8780910968780518	So you have these new priors and posteriors with a so called parameter information gain term or a novelty term.
+5834608	5849932	B	0.7101273536682129	So while you're pursuing learning, it also makes sense to choose your policies such that you'll maximize the information you get based on the consequences of your policies about the parameters of the generative model.
+5850066	5859960	B	0.6933194994926453	So this expected KL divergence exactly quantifies how much a given policy will lead to a good Bayesian update of your parameter beliefs.
+5860120	5870508	B	0.8930712938308716	So intuitively this quantity might be described as how much do I expect the consequences of my actions will update my beliefs about parameters.
+5870604	5881220	B	0.8392925262451172	So consequences of actions is represented by that Q of O given pi, the thing that the KL divergence is taken under expectation of.
+5881370	5891936	B	0.8035930395126343	And then the actual KL divergence is saying how much surprise will I get given these observations relative to my current beliefs about the parameters of the generative model?
+5891978	5904100	B	0.5930689573287964	So this is what's called in the literature of the novelty term and it's very easy to experimentally turn off or on this novelty term using simple flags in the agent class.
+5904190	5908044	B	0.8912820816040039	And this goes for the other components of the variation or the expected free energy as well.
+5908082	5913496	B	0.7508925199508667	You can kind of turn on flags that say do I want to use this novelty or parameter information gain?
+5913608	5921452	B	0.8756038546562195	Do I want to use the state info gain which is the same as the epistemic value or the Bayesian surprise and then do I want to use the utility?
+5921516	5928230	B	0.8248159885406494	So for the learning simulations, it makes sense if you're doing learning to make sure that this parameter is turned on.
+5930760	5931556	B	0.6652952432632446	Okay, so.
+5931658	5934628	B	0.6851652264595032	That's the kind of slides on learning.
+5934714	5937940	B	0.6588733196258545	And now we can actually get into implementing this in Pinevp.
+5941340	5953820	B	0.6452447175979614	So we first will create an A matrix and we'll let the agent have very slight positive beliefs about the reward contingencies.
+5954240	5956536	B	0.6781265735626221	And I'll explain later why this helps.
+5956568	5962696	B	0.703777015209198	It helps with learning if they don't have total ignorance about the reward probabilities but they have some bias in some direction.
+5962728	5965570	B	0.8273735642433167	It doesn't actually have to be zero point 51, it could be the other way.
+5966340	5975056	B	0.8596727252006531	And then there's utility functions that allow you to create deer schley variables that have the same shape as some base A array.
+5975248	5988676	B	0.8944961428642273	So here this PA variable is basically the prior that bold a SUBP variable that represents the agent's deer schleich prior over the A matrix.
+5988788	5995076	B	0.9218839406967163	So this is now a new variable that we're going to pass in to the agent Constructor.
+5995108	6009000	B	0.8939436674118042	So if our A matrix is like let's look at the reward contingency, reward modality.
+6009080	6010156	B	0.5833307504653931	So that's a one.
+6010258	6014464	B	0.8454842567443848	So this is the agent's current beliefs about the payoff structure, right?
+6014502	6018864	B	0.8000009655952454	So under choose left and choose right.
+6018902	6020268	B	0.7895087003707886	Those are the two contingencies.
+6020364	6032656	B	0.8510593175888062	Given the two hidden states, PA will have the same structure except that it'll have those contingencies encoded in terms of deer sleigh pseudo counts.
+6032688	6044490	B	0.6029656529426575	So if I made them made the pseudo count scale ten, then they're very relatively confident that the payoff probabilities look like this.
+6045020	6052024	B	0.8245337009429932	But again, these are not probabilities, they're deer slate parameters that parameterize a categorical likelihood.
+6052072	6060220	B	0.8981670141220093	So you can use the normalized distribution function to actually then visualize the deer slate distribution in terms of actual categorical parameters.
+6061280	6063436	B	0.7995361089706421	So taking the expectation I e.
+6063458	6067810	B	0.8245249390602112	The normalization of the deer slay prior will give you exactly this.
+6069860	6072384	B	0.8137056827545166	So if I say are these two things the same?
+6072422	6073650	B	0.654478907585144	They should be the same.
+6074280	6077670	B	0.7205588221549988	Okay, maybe down to numerical differences, they're not.
+6082200	6082756	B	0.7123861908912659	Okay?
+6082858	6084356	B	0.7893077731132507	So yeah, that's how you parameterize that.
+6084378	6089748	B	0.5023510456085205	So we'll create this is an important point that's also used in SPM.
+6089924	6093976	B	0.6368726491928101	Often we want certain contingencies to be unavailable to learning.
+6094078	6099304	B	0.5409060120582581	So we assume these are contingencies that are baked into the agent's beliefs about the world and thus not adaptable.
+6099432	6114624	B	0.8280466794967651	So one way, and this is just barred from the SPM way of doing it, to encode that is to bake in a kind of really precise confidence or very high confidence that certain contingencies are the case.
+6114742	6118780	B	0.8771197199821472	And you can just do that by adjusting the scale parameter for particular indices.
+6118940	6129620	B	0.5271866321563721	For instance, by doing this I'm just telling the agent that it essentially doesn't learn the contingencies related to the null modality.
+6131160	6140372	B	0.49759170413017273	So for instance, if you're in the start state it believes with really high confidence that you'll always get the null observation.
+6140516	6150140	B	0.8699142932891846	And we just operationalize that by creating very high pseudo count or deer sleigh priors over that particular slice of the A matrix.
+6151440	6153790	B	0.49155303835868835	So that's an important point to do.
+6154480	6156204	B	0.6423614025115967	And then we'll just write all this stuff.
+6156242	6164448	B	0.9122980833053589	So this prior count about the Bull observations and then the scale that determines their general confidence outside of this null thing.
+6164534	6168370	B	0.891526460647583	We'll write that all into a function so that we can then parameterize our PA.
+6169380	6182740	B	0.899917721748352	And then we now write a new active inference with learning loop where instead of just storing the history of choices and beliefs, we also store the history of their beliefs about the Dean Shlay parameters.
+6184040	6192228	B	0.7684628367424011	And an important thing that you can also do in PMDP, which is nice, is you can say I only want to learn particular modalities.
+6192324	6201290	B	0.5306983590126038	So when you're creating the agent class, there's a bunch of arguments you can pass in, but one of them is I only want to be learning the reward payoff modality right now.
+6201660	6202524	B	0.6701027154922485	And this can change.
+6202562	6205964	B	0.8548014760017395	You could have them learn the hint accuracy as well.
+6206082	6218896	B	0.6633360385894775	But by passing in a list of which of the modality indices that you want them to learn, you turn off learning on all the other modalities, which normally in SPM or what we used to have to do in pi MDP is.
+6218918	6225410	B	0.708641529083252	You just have to turn up those deer slay pseudo counts super high on all the modalities that you don't want to learn.
+6225860	6235140	B	0.6688656806945801	But if there are other modalities that you don't want to learn now you can just pass in this list of modalities that you want to learn and it'll only focus learning onto that.
+6235290	6248890	B	0.9096988439559937	So now I'm setting up an agent that has these particular beliefs about the world via A and now has a prior that is going to update through doing variational inference or learning.
+6249260	6263224	B	0.8181600570678711	And then so we'll create the generative model here, including this new prior over A and then we'll run the active inference loop with learning which involves creating an agent that can only do learning on the payoff structure modality.
+6263272	6273640	B	0.6911095380783081	So we want the agent to now learn which arm is best basically because it doesn't know the payoffs and then also to use parameter information gain to motivate its decision.
+6273820	6287648	B	0.7034357786178589	And there's another thing I forgot to mention, which is the learning rate, which is how much they increment their beliefs about the posterior or about the A matrix using this update rule.
+6287664	6289064	B	0.5357993245124817	So there's something I didn't mention.
+6289102	6297476	B	0.5724756717681885	There's often a learning rate that's added here that basically scales how big this update is so that you can experiment.
+6297508	6302910	B	0.7930532693862915	It depends on the application, what the scale of that is going to be, but the default is one.
+6305120	6311230	B	0.8596970438957214	Okay, so in this example, the agent gets the hint for one time step.
+6313380	6322636	B	0.7691532373428345	It's got the standard like negative four punishment and then it goes straight to the right because it believes the hint is accurate.
+6322668	6331990	B	0.7834874987602234	So it gets a reward is right, then it goes and starts playing the right arm and you see it's posterior beliefs instantly go to right.
+6332440	6352460	B	0.8335165977478027	And now since what we've also spit out of this active coherence group is the beliefs about the A matrix in this QA posterior over A history we can plot its beliefs about the A matrix probability over the contingency of seeing reward given that I was in the right arm.
+6353840	6367708	B	0.7528892159461975	And what you see is that even though they start with basically 50 50 beliefs as they gather observations, their beliefs about that posterior probability over that particular energy of the A matrix get bigger and bigger.
+6367884	6376710	B	0.5045419931411743	An interesting consequence of this is their beliefs about the left arm contingencies don't change because they don't ever experience that state of the world.
+6377640	6383430	B	0.7591152787208557	So that's like an interesting, what you might call in machine learning.
+6384920	6390036	B	0.6529788970947266	It's not really a bad bootstrap but it's the idea of selective sampling.
+6390068	6406216	B	0.49582329392433167	So you only learn those contingencies that are selective to the part of the world that you're sampling so the agent doesn't know what that other slice of the A matrix looks like because it's never experienced what it's like to be in the left is better context and playing the left arm.
+6406248	6418130	B	0.8197837471961975	So it's posterior beliefs about that part of the A matrix remain the same but you can see that over time its beliefs start to converge to zero eight which is what we set in the generative model.
+6418820	6420944	B	0.6841398477554321	This is just basic statistical learning, right?
+6420982	6432752	B	0.8195974826812744	It's just getting reward observations over time and as it gets a sequence of reward and punishment through this very associative basic mechanism, it's just incrementing its deer slay beliefs.
+6432816	6434832	B	0.6936487555503845	And what I'm showing is the normalized IED.
+6434896	6436804	B	0.8350909352302551	Expectation of those beliefs over time.
+6436842	6447690	B	0.8334135413169861	So you get something that's 0.8 but the actual deer slay parameters themselves will be growing like linearly in time effectively depending on the observations they get.
+6449260	6451980	B	0.7410895228385925	Yeah, so that is just the basic learning.
+6452130	6457560	B	0.6355326771736145	And then there's another thing you can do which is take advantage of this change probability.
+6457640	6478772	B	0.637923538684845	So now we allow the context to change and this is one way to get them to actually be able to explore and learn more about both reward probabilities in the landscape is allow them to have not only to make the environment change, but they also entertain beliefs in their B matrix that the environment can change.
+6478826	6486692	B	0.8292942047119141	So you could use this to do B matrix learning as well by defining like a PB variable but here we're just going to have a matrix learning as we were doing before.
+6486826	6493204	B	0.6656070351600647	I've changed a little bit the parameters to make things a little more stable because sometimes you get weird behavior.
+6493252	6495288	B	0.7985813021659851	I mean that's something we can play around with too.
+6495374	6502124	B	0.6879301071166992	So now they allow the environment itself can change and they also in their B matrix they think the environment can change.
+6502322	6508152	B	0.7696086168289185	And then I'll plot the history of beliefs and choices.
+6508296	6513884	B	0.8096438050270081	So now they instantly go for playing the arms.
+6513932	6515072	B	0.5429240465164185	They kind of risk it.
+6515206	6520300	B	0.7308657765388489	The parameter information gain actually outweighs the epistemic or state information gain.
+6520380	6532340	B	0.5168138742446899	They start playing, they gather observations but they're not very confident about what the state of the world is because they only are getting information about the hidden states from the actual sequence of rewards and losses.
+6532840	6542196	B	0.779586672782898	And then eventually they go to the hint because probably the utility becomes low because they don't know what their reward probabilities are and they're building their own beliefs.
+6542308	6543444	B	0.6634578108787537	Then they get the hint.
+6543572	6545076	B	0.641877293586731	Then the hint is accurate.
+6545108	6550436	B	0.7264575958251953	So they have very precise beliefs about the hidden states of the world and then the world actually switches.
+6550468	6553864	B	0.7919324636459351	So you see the red dot is the actual switching statistics of the bandit.
+6553992	6561500	B	0.8897562026977539	And now they've kind of explored both bandit arms while also updating their beliefs about the bandits.
+6562160	6573810	B	0.8147081136703491	And you see that their beliefs about the left arm are kind of bad because it seems like they've probably mostly gotten generative data while they're in the left arm and they didn't explore it very much.
+6576420	6583350	B	0.7331709265708923	Or no, I guess at the end they're exploring it quite a bit, but their beliefs about to go down because they have, I guess, a bad experience with it.
+6585080	6587172	B	0.8459599018096924	Yeah, that's the left arm, that's the right arm.
+6587316	6595160	B	0.6872398257255554	But you can keep trying this and mess around with different parameters and you'll get different sorts of beliefs.
+6599180	6602780	B	0.8033477067947388	So here in this example, there's some switching going on.
+6602850	6611960	B	0.4922892153263092	Their posteriors aren't tracking very well until they actually visit the hint and then their posteriors start getting much more, much more precise.
+6612120	6615532	B	0.7885578274726868	And then at that point they can start making more precise beliefs.
+6615676	6625364	B	0.8217154741287231	In this case, they ended up kind of doing poorly on learning on both of them because the true reward probabilities are P eight.
+6625402	6625990	B	0.5491447448730469	Yeah.
+6627720	6636976	B	0.5339460968971252	So everything I've talked about so far is an example where learning can often lead to suboptimal outcomes because it's done in an online fashion.
+6637168	6646324	B	0.611483633518219	So this is an interesting point of departure between SPM and PMDP, but you can do all the same things in SPM that you can do in Pimdp.
+6646452	6650900	B	0.8927624821662903	So here what I'm doing is I'm updating the A matrix every time I get an observation.
+6651060	6666380	B	0.8762484788894653	So they do hidden state coherence, they select policies, they select actions, and then given the last observation and the last hidden state belief, they do one step of parameter inference and then they use the next A matrix.
+6666540	6670736	B	0.9000194668769836	That's what's handled in this update, a function of the agent class.
+6670918	6675570	B	0.9358153939247131	They update their beliefs about the A matrix and they use that for inference at the next time step.
+6676020	6690356	B	0.8876022100448608	Another way you could do this is you could do an entire trial and then update your A matrix at the very end of all the time steps of action selection and observation sampling and then use that A matrix for another trial.
+6690468	6710204	B	0.8555223345756531	So this is kind of the difference between a more em separation of timescales em or expectation maximization approach where given a set of observations, then I update my model and then I go back and I do more trials without updating my model but using the same fixed one.
+6710322	6720380	B	0.8564731478691101	And then you can kind of do that in epochs and that's typically how it's done in SPM because you only do parameter learning basically this part outside this time loop.
+6720460	6725460	B	0.8287637829780579	So you do it like down here, but then what you do is you run multiple trials.
+6725800	6735424	B	0.5490781664848328	And the nice thing about that is it kind of makes the A matrix updates less likely to in the moment bias your action selection.
+6735472	6745560	B	0.691420316696167	So for a given set of time steps, you're locked into what your A matrix beliefs are and you don't do the update until a set of time steps has elapsed.
+6746620	6750056	B	0.8777347207069397	For the purposes of this entorhinal, I just did this online learning thing.
+6750158	6756990	B	0.8663219809532166	But as you can see, that can lead to actually weirdly suboptimal behavior where they don't learn the true reward statistics very well.
+6757920	6760830	B	0.8024486303329468	And it depends on a bunch of things too, like the learning rate.
+6762560	6769036	B	0.7524713277816772	I haven't explored this demo as much as I would like, but there's a lot of interesting kind of side effects.
+6769068	6773932	B	0.6949127316474915	Like here they're actually learning very weird statistics about the bandit landscape.
+6773996	6780404	B	0.6312313079833984	They start kind of learning it well, but then as their observations keep going, they don't actually learn very well here.
+6780442	6783860	B	0.9355103373527527	They just avoid playing because they have a bad early experience.
+6784010	6786240	B	0.8747638463973999	So this is an example of like a bad bootstrap.
+6786320	6795610	B	0.6118733286857605	And then they go and just play the hint because they're too scared of anything else, even though their hidden states inference is perfect because the hint perfectly tracks the hidden state.
+6795980	6802350	B	0.5896754264831543	So, yeah, this is just kind of meant to be an example of what you can do with learning.
+6803520	6810990	B	0.5294182896614075	But there's going to be examples where learning actually causes suboptimal behavior, but in an interesting way.
+6811600	6815916	B	0.7224811315536499	So here's an example where they actually kind of are learning the correct reward statistics.
+6816028	6822976	B	0.6361318826675415	Things are starting to converge to .8 for both bandit arms, but it's very stochastic, as you can see.
+6822998	6827344	B	0.8724074959754944	And I also chose action selection to be stochastic with deterministic.
+6827392	6828790	B	0.8260949850082397	I wonder what you would get.
+6831160	6835344	B	0.8558523654937744	Yeah, you're there just arc maxing the expected free energy or Marco mining.
+6835392	6841480	B	0.6376763582229614	So hint is always the most safest option given their history of observations.
+6846740	6872180	A	0.6762472987174988	If I can make one remark on that kind of diversity of behaviors that we're seeing, pymdp and active inference are providing us a space and and approach to composable generative model construction that we can then sift through and coevolve with to find different strategies and behaviors.
+6872260	6876940	A	0.8444101214408875	Active inference lab or even any specified generative model.
+6877090	6879320	A	0.48885107040405273	It's not an answer or a solution.
+6879400	6882168	A	0.8440991044044495	For example, to the explore explore dilemma.
+6882264	6885068	A	0.845119059085846	We see this like empirically right now.
+6885154	6888716	A	0.8025887608528137	Active inference is not in general, resolving Explore exploit.
+6888828	6898400	A	0.5846942663192749	Any GM in general is not resolving Explore exploit any parameterization is not resolving Explore exploit even for one environment.
+6898740	6906628	A	0.6808663010597229	It just is equivalent to saying like, well, we have a linear model of healthcare data, so we've resolved the health care issue.
+6906794	6922024	A	0.8410717248916626	And this really shows the space that we build in and what remains to be built is so open yeah, absolutely.
+6922142	6922520	B	0.5491447448730469	Yeah.
+6922590	6930764	B	0.6444629430770874	Because optimality is not really a function of what the generative model is or what the algorithm is.
+6930962	6937320	B	0.7021452784538269	It's more guaranteed to be optimal based on how analogous the generative model and the generative process are.
+6937410	6947010	B	0.7049294114112854	So if the generative model is a perfect model of the generative process, then doing Bayesian inference with respect to that generative model, that is optimal for everything.
+6948740	6952464	B	0.8371831774711609	But how you learn the generative model, that's what we're seeing here.
+6952502	6957684	B	0.4787890315055847	If you learn the generative model in an online fashion, it's not guaranteed to learn the right generative model.
+6957722	6959588	B	0.7583647966384888	In many cases, it learns the wrong one.
+6959754	6963168	B	0.7816981673240662	And this is something that a lot of people in active inference world have explore.
+6963184	6974120	B	0.8458367586135864	For instance, it's North Sajid, who's also a student of Carl's, has explored a lot the limitations and the boundaries of parameter learning and things like preference learning.
+6974190	6976120	B	0.8456121683120728	Like what if you were learning the C vector itself?
+6976190	6979610	B	0.8309906721115112	How can that be learned online in an adaptive way?
+6980620	6985672	B	0.8838723301887512	Yeah, and also Alec Chance has that paper action Oriented models where they're learning the B matrix.
+6985816	6993730	B	0.838295042514801	And in that thing they're showing how the agent learns kind of suboptimal strategies depending on its exploration of parameter space.
+6994660	7002064	B	0.8709871768951416	But that also actually is kind of one of the benefits of active inference that paper shows.
+7002102	7009556	B	0.4982246160507202	Because it shows if you have an agent that does have epistemic value, the model it learns of the world is like better than agents that don't have epistemic value.
+7009658	7012208	B	0.7792978286743164	But again, the models are always action oriented.
+7012224	7017240	B	0.8568397164344788	They're always based on what parts of the full state space is the agent driven to sample.
+7021470	7022026	A	0.9184247851371765	Awesome.
+7022128	7022614	A	0.5160813331604004	Yakup.
+7022662	7027420	A	0.7992656826972961	Any closing comments and then all the closing comment and then Conor with the last word.
+7029330	7037210	C	0.9851493835449219	Yeah, well, thank you very much for the great overview.
+7037370	7067290	C	0.8809418082237244	What particularly I found particularly interesting was both how you touched on how it could be modified with the action perception loop, could be modified with the other modules, even though, as you mentioned, there would be more opportunities to go deeper in that, but also on the learning the dershleigh parameters.
+7067630	7089890	C	0.8663137555122375	And I would be interested to see how that also influences planning if you would do kind of pseudo update of your dirsh lay parameters when you're calculating your expected free energy.
+7089960	7110102	C	0.8945733904838562	As in what would I'm calculating my expected free energy whilst also taking into account that my B would change on each step and how that changes like the optimality of the temporal depths that we do planning with.
+7110236	7119130	C	0.9902008175849915	I think super interesting and really looking forward to hopefully another model stream.
+7125950	7127386	B	0.8569270372390747	Is it okay if I quickly respond?
+7127418	7128160	E	0.5299543142318726	Yeah, please.
+7129250	7129758	B	0.5491447448730469	Yeah.
+7129844	7137050	B	0.9335407614707947	That's a very interesting point that you just made about this fictive or imagined update.
+7137130	7153246	B	0.8244489431381226	Whereas this slide so that term, that novelty term in theory that does culture exactly what you're saying, yakub, is that this thing says how would my Dean sleep parameters update if I was to take this policy pile?
+7153358	7157094	B	0.8840651512145996	And then I use that term to actually choose where to explore next.
+7157212	7169030	B	0.6109647750854492	So if I turn on the parameter information gain term in the agent class, they'll much more quickly skip the hint and go directly to sampling the bandits because they're driven by novelty.
+7169110	7172614	B	0.7159548401832581	I want to know what the reward probabilities are, so I'm going to go explore.
+7172742	7190174	B	0.6009727120399475	However, what it doesn't do and what I think you're intimating with your comment is that if I did like multi step planning two time steps in the future, will I be able to do my planning given how I think I updated my parameters at the first time step?
+7190292	7202626	B	0.840570867061615	So that's what the equivalent of sophisticated inference, sophisticated inference is saying, how would I plan ant time step three given how I think my beliefs would update up to time step two?
+7202808	7205286	B	0.8204593062400818	And that's done right now for hidden states.
+7205468	7207762	B	0.6199811100959778	But I haven't seen that done for parameters.
+7207826	7220780	B	0.8431729674339294	And I think there's someone like a student of Ryan Smith's is working on that now is like this propagation of counterfactual beliefs about how my parameter beliefs would change in the future.
+7221150	7225206	B	0.6153338551521301	And that's like a really cutting edge, I think, active inference.
+7225238	7240094	B	0.5462645888328552	It's like not only novelty but how would my perspective sophistication about how your own parameter beliefs will have evolved by time point T and then using that to do planning for time point T plus one, that's like really sophisticated stuff.
+7240212	7249554	B	0.8940198421478271	I think getting just even bare Ronen sophisticated inference with hidden state counterfactual stuff in pinevp, that would be a huge accomplishment too.
+7249592	7257158	B	0.8267439603805542	And then of course incorporating it to be more with the parameter sophistication as well.
+7257244	7269320	B	0.7341369986534119	And then another quick thing is I can quickly show you an example of one of those other let's see.
+7271290	7278910	A	0.8095629811286926	Just while you're finding it, that last discussion on sophisticated planning.
+7279410	7283470	A	0.7755944728851318	It's something that at the semantic level we engage with every day.
+7283620	7299790	A	0.6401914358139038	What courses should I take this quarter so that I can learn what I don't know today so that next quarter I'll be able to make a better plan for which classes to take so that in three years when I graduate DAG DA DA dot.
+7299870	7312918	A	0.7245367765426636	But it's already phrased at the semantic granularity that these models are rapidly converging towards and they're not converging towards it by scaling is all you need.
+7313084	7320330	A	0.9730666279792786	They're converging towards it with a factorized actually semantic approach which is very exciting.
+7320910	7322810	B	0.921764612197876	Yeah, that's a great analogy.
+7324110	7332666	B	0.6149716377258301	If you were a naive active inference agent without sophistication you would never plan with, like, a ten time step planning horizon.
+7332778	7336442	B	0.6217472553253174	You would never plan to take, or let's say, a three semester plans horizon.
+7336506	7354878	B	0.46080002188682556	You never plan to take multivariate calculus in your third semester because you would not have anticipated by the second semester I now have enough linear algebra to take I know that by the time I finish the second semester, I will now know linear algebra, so I'll be well suited to take multivariable calculus.
+7354974	7357906	B	0.8293757438659668	Whereas what we as humans do is we do have that parameter.
+7357938	7369914	B	0.8236991167068481	Sophistication I can plan as a freshman, as a first year to take in my third or fourth semester some high advanced physics because I know by that time I will have the requisite multivariable calculus or whatever.
+7370032	7375740	B	0.9272655844688416	So that's a really nice analogy that I never I think that's a good example.
+7376670	7378540	A	0.7922386527061462	Welcome to active you.
+7379250	7380160	B	0.5121256113052368	Yeah, exactly.
+7382530	7389982	B	0.8311454653739929	So here I just wanted to show you yakub, here's an example of a hierarchical hierarchical active inference demo.
+7390036	7391118	B	0.6165232062339783	I can share this too.
+7391204	7397262	B	0.8843095302581787	It's another collab notebook where we're exactly doing we're composing two palm DPS.
+7397326	7401918	B	0.8684419989585876	So there's like a high level palm DP and then there's a low level palm DP.
+7402094	7416502	B	0.8769388794898987	And for example, when you're doing a step of updating the empirical priors at the high level before you pass them down to be empirical priors at the low level, we use the control module, for example, to do get expected states.
+7416636	7426714	B	0.8776289224624634	We use the high level beliefs, the high level B matrix and then the high level chosen action to propagate forward the next postered beliefs at the high level.
+7426832	7434254	B	0.7956587672233582	And then those things themselves parameterize a low level empirical prior for this faster palm VP that's going on at the low level.
+7434372	7447410	B	0.8418101668357849	So this is an example where you're composing like agent class calls like this, but you're composing them with functions that are built from sub modules and adjacent modules of PMDP.
+7448470	7451058	B	0.7724462151527405	So that's an example of the thing you were talking about.
+7451144	7452850	B	0.7225462794303894	But yeah, that's very brief.
+7452930	7455240	B	0.8444526791572571	We can get into that later on.
+7457050	7459400	B	0.8166199922561646	Ant a different stream or something like that.
+7460330	7461030	A	0.9184247851371765	Awesome.
+7461180	7461880	A	0.46103888750076294	Yes.
+7462490	7468970	A	0.7894728779792786	Dot three, whenever the time is right, I'll just give two closing areas.
+7469390	7477082	A	0.9693372845649719	Again, really appreciate coming back on and sharing this development in progress.
+7477146	7487198	A	0.9093464016914368	Already it feels more powerful and documented than when we were in the dot one just a few weeks or months ago.
+7487364	7497170	A	0.975707471370697	I think two areas that are going to be really exciting to discuss and see how they're implemented and also the plurality of ways that they're implemented.
+7497670	7503686	A	0.8371039032936096	The first area is structure learning on cognitive models from the outside.
+7503868	7521830	A	0.8869649767875671	So as an ethologist, as a behavioral researcher, how do we do structure learning on cognitive models for systems that we actually know about their cognitive architecture or not, but also the view from the inside in terms of structure learning and metacognition.
+7521990	7530762	A	0.7451897263526917	Like how should I change the dimensionality of my B matrix or should I turn on that flag to engage in this kind of sophisticated inference?
+7530826	7543966	A	0.901314377784729	So structure learning on cognitive models, view from the outside, view from the inside is one exciting area and the second more experimental area is statistical power analysis.
+7544158	7558600	A	0.7976416945457458	Pre and post hoc statistical power analysis along the lines of the design matrix in SPM so that you put 15 time steps and zero 8.2 and punishment is four.
+7559050	7563606	A	0.6306779980659485	And then you could sweep across parameters and learn about how well it did.
+7563788	7585440	A	0.7647950053215027	But if there was certain interfaces, analytical or numerical approaches to be like, yes, with 25 time steps, we have this much of an expectation of convergence, or this differentiate in rewards should be resolvable by an adaptive agent over this long.
+7585970	7590994	A	0.8156609535217285	And just understand, how long should these experiments be?
+7591192	7607298	A	0.8230345249176025	Because there are such interesting results with one shot learning and with being able to generate someone's voice from just 10 seconds of them talking, or make a video of somebody as a deep fake with just a still image.
+7607474	7611720	A	0.7347350120544434	And so it seems like it's possible to learn a lot from a little.
+7612730	7620460	A	0.9108172059059143	And if we can learn a lot from a little and have a semantic cognitive model, that would be quite great.
+7622510	7623066	B	0.4650449752807617	Absolutely.
+7623168	7623820	B	0.5491447448730469	Yeah.
+7625390	7630042	B	0.781106173992157	It's almost like hyper parameter optimization on the landscape of active inference models.
+7630106	7633886	B	0.7757420539855957	Like, how do I choose the parameters of an active inference model?
+7633908	7635120	B	0.7465196847915649	In a smart way?
+7635730	7641150	B	0.7426880598068237	Yeah, there's several methods for doing that that we could definitely explore.
+7641990	7649410	B	0.6553426384925842	Data efficiency is the main thing, like you said, making it so you don't have to train it on a trillion images, like with a deep neural network.
+7651910	7652660	A	0.7672419548034668	Perfect.
+7653350	7656260	A	0.7085099816322327	End seven, two.
+7656630	7667450	A	0.8593514561653137	And whenever you want to join, you and any colleagues are always welcome to share the next spiral in Pi MDP development.
+7668430	7668890	B	0.9184247851371765	Awesome.
+7668960	7672806	B	0.9897634983062744	Thank you so much again for letting me come on and listening.
+7672998	7674390	B	0.9281412363052368	I hope it was helpful.
+7674550	7676170	B	0.9127293825149536	Yeah, and I'm glad that it's recorded.
+7676240	7679754	B	0.9875439405441284	It's really an amazing resource that you guys are developing here.
+7679792	7681020	B	0.8881668448448181	So thanks again.
+7681950	7682602	A	0.8529649972915649	Thank you.
+7682656	7683450	A	0.6996942758560181	Till next time.
+7683520	7683750	B	0.5137446522712708	Bye.
