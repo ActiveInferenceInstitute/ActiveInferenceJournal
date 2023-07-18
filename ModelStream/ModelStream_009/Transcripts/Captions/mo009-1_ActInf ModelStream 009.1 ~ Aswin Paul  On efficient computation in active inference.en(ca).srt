@@ -1,0 +1,5109 @@
+1
+00:00:07,210 --> 00:00:09,802
+Hello and welcome, everyone. It's July
+
+2
+00:00:09,866 --> 00:00:13,630
+15, 2023. We're here
+
+3
+00:00:13,780 --> 00:00:16,750
+in active inference model stream number
+
+4
+00:00:16,820 --> 00:00:19,934
+9.1 with Aspen Paul. Today we're going
+
+5
+00:00:19,972 --> 00:00:22,650
+to have a presentation and a discussion
+
+6
+00:00:22,810 --> 00:00:25,658
+on efficient computation in active
+
+7
+00:00:25,674 --> 00:00:27,670
+inference. So if you're watching along
+
+8
+00:00:27,740 --> 00:00:29,874
+live, please feel free to add comments
+
+9
+00:00:29,922 --> 00:00:32,002
+or questions in the chat. Otherwise,
+
+10
+00:00:32,066 --> 00:00:35,510
+Aswin, thanks so much for joining today.
+
+11
+00:00:35,660 --> 00:00:37,720
+Really looking forward to your talk.
+
+12
+00:00:38,810 --> 00:00:40,662
+Thank you, Daniel. Thank you so much.
+
+13
+00:00:40,796 --> 00:00:42,794
+So, as mentioned today, I'm here to talk
+
+14
+00:00:42,832 --> 00:00:44,598
+about efficient computation and active
+
+15
+00:00:44,614 --> 00:00:46,460
+inference. And yeah, let's get started.
+
+16
+00:00:46,830 --> 00:00:49,434
+So we are all familiar with this idea of
+
+17
+00:00:49,472 --> 00:00:51,274
+the free energy principle, which is also
+
+18
+00:00:51,312 --> 00:00:53,646
+known as active inference, right? So the
+
+19
+00:00:53,668 --> 00:00:55,790
+central concept is that an agent
+
+20
+00:00:55,940 --> 00:00:58,974
+minimizes entropy of its observation to
+
+21
+00:00:59,012 --> 00:01:00,974
+maintain homeostasis or survive in its
+
+22
+00:01:01,012 --> 00:01:03,646
+environment. And here the entropy is
+
+23
+00:01:03,668 --> 00:01:05,486
+defined in the information theoretic
+
+24
+00:01:05,518 --> 00:01:08,386
+sense, right? So if an observation is
+
+25
+00:01:08,408 --> 00:01:10,114
+highly probabilistic, that is less
+
+26
+00:01:10,152 --> 00:01:12,514
+entropic or less surprising because it
+
+27
+00:01:12,552 --> 00:01:14,130
+was high probability and we were
+
+28
+00:01:14,200 --> 00:01:15,300
+expecting it,
+
+29
+00:01:17,270 --> 00:01:19,062
+that's the idea, then that's the base
+
+30
+00:01:19,116 --> 00:01:21,186
+that we build this framework of active
+
+31
+00:01:21,218 --> 00:01:24,002
+inference on. And this idea of Marco
+
+32
+00:01:24,066 --> 00:01:27,782
+blanket, it gives us a systematic way of
+
+33
+00:01:27,836 --> 00:01:30,666
+surprising or systematic way of
+
+34
+00:01:30,688 --> 00:01:33,654
+separating an agent from its environment
+
+35
+00:01:33,782 --> 00:01:36,266
+and model purposeful behavior. Right?
+
+36
+00:01:36,368 --> 00:01:38,106
+So let's focus on this idea of
+
+37
+00:01:38,128 --> 00:01:40,522
+minimizing entropy. So how does an agent
+
+38
+00:01:40,576 --> 00:01:42,506
+minimize entropy or know which
+
+39
+00:01:42,608 --> 00:01:44,654
+observation is highly probabilistic and
+
+40
+00:01:44,692 --> 00:01:47,806
+vice versa? So that is by maintaining a
+
+41
+00:01:47,828 --> 00:01:49,754
+generative model. And the generative
+
+42
+00:01:49,802 --> 00:01:51,566
+model is basically a toy model of the
+
+43
+00:01:51,588 --> 00:01:54,046
+environment which the agent builds in
+
+44
+00:01:54,068 --> 00:01:57,134
+its brain and that is built
+
+45
+00:01:57,252 --> 00:01:59,474
+using only the observation that it gets
+
+46
+00:01:59,512 --> 00:02:00,914
+from the environment. So it has no
+
+47
+00:02:00,952 --> 00:02:03,726
+access to the real states or the hidden
+
+48
+00:02:03,758 --> 00:02:05,122
+states of the environment. It's building
+
+49
+00:02:05,176 --> 00:02:08,550
+the toy model. And given this toy model,
+
+50
+00:02:08,620 --> 00:02:12,370
+it has scope or ability to compute
+
+51
+00:02:12,450 --> 00:02:14,310
+the probability of an observation and
+
+52
+00:02:14,380 --> 00:02:16,466
+hence try to minimize the entropy.
+
+53
+00:02:16,498 --> 00:02:19,642
+Right? So that's the idea.
+
+54
+00:02:19,696 --> 00:02:23,542
+But it has a problem of cursive
+
+55
+00:02:23,686 --> 00:02:25,974
+dimensionality. Like, given a generative
+
+56
+00:02:26,022 --> 00:02:28,554
+model, it may not be possible always to
+
+57
+00:02:28,592 --> 00:02:30,438
+calculate or marginalize the probability
+
+58
+00:02:30,534 --> 00:02:32,846
+of observations out of it because the
+
+59
+00:02:32,868 --> 00:02:34,574
+state space can quickly become
+
+60
+00:02:34,692 --> 00:02:37,214
+intractable. But the idea is that you
+
+61
+00:02:37,252 --> 00:02:39,274
+define an upper bound on the surprise
+
+62
+00:02:39,402 --> 00:02:42,174
+using Jensen's inequality. And you may
+
+63
+00:02:42,212 --> 00:02:45,934
+also define a new term called Q,
+
+64
+00:02:46,052 --> 00:02:49,006
+which is the hidden belief or the belief
+
+65
+00:02:49,038 --> 00:02:51,746
+about the hidden states. And this Q is
+
+66
+00:02:51,768 --> 00:02:53,086
+going to be the focus of decision
+
+67
+00:02:53,118 --> 00:02:55,806
+making, right? So if you have a noisy
+
+68
+00:02:55,838 --> 00:02:58,066
+queue and you have no idea what's in the
+
+69
+00:02:58,088 --> 00:03:00,054
+environment, then you can't make or hope
+
+70
+00:03:00,092 --> 00:03:01,574
+to make decisions to control that
+
+71
+00:03:01,612 --> 00:03:04,374
+environment. And it is this belief about
+
+72
+00:03:04,412 --> 00:03:06,422
+the hidden states that you use and that
+
+73
+00:03:06,476 --> 00:03:08,438
+becomes useful to take decisions. And
+
+74
+00:03:08,524 --> 00:03:10,774
+this whole quantity is of course called
+
+75
+00:03:10,812 --> 00:03:13,398
+the free energy. And the variational
+
+76
+00:03:13,414 --> 00:03:16,874
+free energy F can be interpreted in
+
+77
+00:03:16,912 --> 00:03:18,954
+multiple ways. So the first or the most
+
+78
+00:03:18,992 --> 00:03:20,714
+common is the machine learning way of
+
+79
+00:03:20,832 --> 00:03:24,166
+how it is trying to minimize
+
+80
+00:03:24,198 --> 00:03:26,366
+the complexity of the model at the same
+
+81
+00:03:26,388 --> 00:03:28,158
+time trying to maximize the accuracy of
+
+82
+00:03:28,164 --> 00:03:29,342
+it. So that's the machine learning
+
+83
+00:03:29,396 --> 00:03:30,874
+interpretation of minimizing various
+
+84
+00:03:30,922 --> 00:03:33,360
+free energy. You may also try to
+
+85
+00:03:34,770 --> 00:03:36,426
+interpret free energy in the physics
+
+86
+00:03:36,458 --> 00:03:38,946
+term where you at the same time try to
+
+87
+00:03:38,968 --> 00:03:41,474
+minimize the energy of your model, but
+
+88
+00:03:41,512 --> 00:03:42,978
+at the same time trying to maximize the
+
+89
+00:03:42,984 --> 00:03:46,850
+entropy. But the focus of today or
+
+90
+00:03:46,920 --> 00:03:49,154
+decision making is always on this belief
+
+91
+00:03:49,202 --> 00:03:51,606
+that you have after you do the
+
+92
+00:03:51,628 --> 00:03:55,046
+perception in active inference. So how
+
+93
+00:03:55,068 --> 00:03:57,078
+do you do vanilla decision making? Or
+
+94
+00:03:57,164 --> 00:03:58,806
+what is the most discussed idea of
+
+95
+00:03:58,828 --> 00:04:00,566
+decision making in classical active
+
+96
+00:04:00,598 --> 00:04:03,386
+inference? So, if you are in an
+
+97
+00:04:03,408 --> 00:04:05,766
+environment and if you're an agent who's
+
+98
+00:04:05,798 --> 00:04:09,722
+trying to make decisions, then you have
+
+99
+00:04:09,776 --> 00:04:12,894
+a space of available actions, right? So
+
+100
+00:04:12,932 --> 00:04:15,182
+in this toy model, you have three
+
+101
+00:04:15,236 --> 00:04:18,240
+available actions run, jump or stay.
+
+102
+00:04:18,690 --> 00:04:21,886
+And given these actions, you can hope
+
+103
+00:04:21,908 --> 00:04:24,526
+to define a policy pi, small pi, which
+
+104
+00:04:24,548 --> 00:04:27,762
+is a sequence of actions in time and
+
+105
+00:04:27,896 --> 00:04:29,666
+capital T is the time horizon of
+
+106
+00:04:29,688 --> 00:04:32,260
+planning. Or that's the length of your
+
+107
+00:04:32,950 --> 00:04:36,514
+policy. And you have a policy space with
+
+108
+00:04:36,552 --> 00:04:39,222
+many such policies, small pi. So given
+
+109
+00:04:39,276 --> 00:04:42,022
+this bigger small C space, you can
+
+110
+00:04:42,076 --> 00:04:45,734
+attempt to evaluate the expected free
+
+111
+00:04:45,772 --> 00:04:48,086
+energy based on the beliefs that you
+
+112
+00:04:48,108 --> 00:04:49,746
+accumulated. So here you are not
+
+113
+00:04:49,788 --> 00:04:51,786
+minimizing anything. You already have a
+
+114
+00:04:51,808 --> 00:04:54,346
+belief from variation free energy and
+
+115
+00:04:54,448 --> 00:04:56,742
+you are just calculating or evaluating
+
+116
+00:04:56,806 --> 00:04:58,406
+the expected free energy corresponding
+
+117
+00:04:58,438 --> 00:05:01,322
+to many small policies that you can
+
+118
+00:05:01,456 --> 00:05:05,294
+define. And after you evaluate it for
+
+119
+00:05:05,332 --> 00:05:07,166
+all policies, then you know which is the
+
+120
+00:05:07,188 --> 00:05:09,006
+optimal policy to take. And that's the
+
+121
+00:05:09,028 --> 00:05:11,006
+classical active inference idea of
+
+122
+00:05:11,028 --> 00:05:14,254
+decision making, right? And this
+
+123
+00:05:14,292 --> 00:05:16,818
+expected free energy is really useful in
+
+124
+00:05:16,824 --> 00:05:19,554
+the sense that it is goal directed. So
+
+125
+00:05:19,592 --> 00:05:22,402
+the risk term is goal directed and then
+
+126
+00:05:22,456 --> 00:05:24,206
+you have this expected ambiguity term
+
+127
+00:05:24,238 --> 00:05:27,266
+that forces you to explore as well. But
+
+128
+00:05:27,288 --> 00:05:28,818
+there is a problem that this policy
+
+129
+00:05:28,904 --> 00:05:31,206
+space can quickly turn interactable and
+
+130
+00:05:31,228 --> 00:05:33,970
+that has always stayed as a bottleneck
+
+131
+00:05:34,130 --> 00:05:38,386
+in scaling active inference to commonly
+
+132
+00:05:38,418 --> 00:05:41,046
+seen environments. But let's see how it
+
+133
+00:05:41,068 --> 00:05:43,514
+becomes quickly intractable. So how many
+
+134
+00:05:43,552 --> 00:05:46,074
+policies can be defined, say, for a time
+
+135
+00:05:46,112 --> 00:05:47,898
+horizon of 15, right? So if you are
+
+136
+00:05:47,904 --> 00:05:50,826
+playing, say, supermago, you might want
+
+137
+00:05:50,848 --> 00:05:52,598
+to plan at least say, ten times steps
+
+138
+00:05:52,614 --> 00:05:56,190
+ahead. So the first policy could be
+
+139
+00:05:56,340 --> 00:06:00,190
+the same action run, stacked for
+
+140
+00:06:00,260 --> 00:06:03,486
+15 timesteps and you can basically
+
+141
+00:06:03,588 --> 00:06:05,970
+define several combinations of such
+
+142
+00:06:06,120 --> 00:06:09,650
+actions. And the policy space is simply
+
+143
+00:06:10,150 --> 00:06:13,826
+intractable. It becomes too huge for
+
+144
+00:06:13,848 --> 00:06:16,562
+you to evaluate the expected free energy
+
+145
+00:06:16,616 --> 00:06:19,238
+for all such policies. And in a
+
+146
+00:06:19,244 --> 00:06:22,374
+stochastic problem setting where the
+
+147
+00:06:22,412 --> 00:06:24,498
+environment itself is noisy, you don't
+
+148
+00:06:24,514 --> 00:06:27,394
+really have a method to choose a subset
+
+149
+00:06:27,442 --> 00:06:29,202
+of this policy space and do classical
+
+150
+00:06:29,266 --> 00:06:31,178
+active inference. And this is clearly a
+
+151
+00:06:31,184 --> 00:06:32,826
+computational intractable problem. And
+
+152
+00:06:32,848 --> 00:06:34,890
+that's why in literature we always see
+
+153
+00:06:34,960 --> 00:06:37,786
+small grids or small environments when
+
+154
+00:06:37,808 --> 00:06:39,558
+you discuss decision making in active
+
+155
+00:06:39,574 --> 00:06:43,280
+inference. But recently, a new idea was
+
+156
+00:06:43,890 --> 00:06:45,470
+proposed, which is called the
+
+157
+00:06:45,540 --> 00:06:47,726
+sophisticated inference. And in
+
+158
+00:06:47,748 --> 00:06:49,214
+sophisticated inference, it is not
+
+159
+00:06:49,252 --> 00:06:51,566
+really the policy space. You are
+
+160
+00:06:51,588 --> 00:06:55,598
+actually real time trying to think
+
+161
+00:06:55,684 --> 00:06:58,094
+what to do. So if you have a belief,
+
+162
+00:06:58,142 --> 00:07:01,474
+then you are trying to evaluate the
+
+163
+00:07:01,512 --> 00:07:03,646
+actions based on that. So here we don't
+
+164
+00:07:03,678 --> 00:07:06,562
+have a sequence of policies or things
+
+165
+00:07:06,616 --> 00:07:09,670
+that becomes intractable. Here we are
+
+166
+00:07:09,740 --> 00:07:12,134
+doing basically tree search in the sense
+
+167
+00:07:12,172 --> 00:07:13,986
+that you are trying to evaluate expected
+
+168
+00:07:14,018 --> 00:07:17,366
+free energy of this
+
+169
+00:07:17,548 --> 00:07:19,574
+joint distribution of actions and
+
+170
+00:07:19,692 --> 00:07:21,798
+observations and to evaluate the
+
+171
+00:07:21,804 --> 00:07:24,042
+expected free energy at some time small
+
+172
+00:07:24,096 --> 00:07:26,394
+T, you will also need the expected free
+
+173
+00:07:26,432 --> 00:07:28,874
+energy at the next time step. And to
+
+174
+00:07:28,912 --> 00:07:30,794
+evaluate that, you will need the
+
+175
+00:07:30,832 --> 00:07:32,426
+expected free energy of time T plus two.
+
+176
+00:07:32,448 --> 00:07:34,214
+And this basically becomes a tree search
+
+177
+00:07:34,272 --> 00:07:37,866
+that rolls out in time and it's
+
+178
+00:07:37,898 --> 00:07:41,502
+a recursive relation. And here
+
+179
+00:07:41,556 --> 00:07:43,422
+it's fundamentally different from the
+
+180
+00:07:43,476 --> 00:07:45,454
+policy space that we saw in the last
+
+181
+00:07:45,492 --> 00:07:48,814
+slide, right? And is it computationally
+
+182
+00:07:48,862 --> 00:07:50,674
+better in the sense that if you have to
+
+183
+00:07:50,712 --> 00:07:52,962
+plan, say, ten times steps ahead?
+
+184
+00:07:53,096 --> 00:07:55,726
+Comprehensively? In classical active
+
+185
+00:07:55,758 --> 00:07:57,110
+inference, we saw that the policy
+
+186
+00:07:57,180 --> 00:08:01,186
+spaces, the cardinality of the action
+
+187
+00:08:01,218 --> 00:08:03,558
+space raised to t, so that is the
+
+188
+00:08:03,564 --> 00:08:05,880
+computational bottleneck. If you have to
+
+189
+00:08:06,570 --> 00:08:09,626
+consider all possibilities. But in
+
+190
+00:08:09,648 --> 00:08:10,954
+sophisticated inference, it's even
+
+191
+00:08:10,992 --> 00:08:13,766
+worse, because you are considering
+
+192
+00:08:13,878 --> 00:08:16,506
+combination of state and actions. So it
+
+193
+00:08:16,528 --> 00:08:20,186
+is computationally worse in fact. But a
+
+194
+00:08:20,208 --> 00:08:21,546
+solution was proposed in the
+
+195
+00:08:21,568 --> 00:08:23,358
+sophisticated inference paper that we
+
+196
+00:08:23,364 --> 00:08:26,206
+can do pruning of this research, that we
+
+197
+00:08:26,228 --> 00:08:29,646
+can avoid some states and actions when
+
+198
+00:08:29,668 --> 00:08:31,386
+you do this research and that becomes
+
+199
+00:08:31,418 --> 00:08:33,914
+computationally very tractable. So let's
+
+200
+00:08:33,962 --> 00:08:36,494
+see how pruning works in sophisticated
+
+201
+00:08:36,542 --> 00:08:39,378
+inference. So this grid was discussed in
+
+202
+00:08:39,384 --> 00:08:40,846
+the original sophisticated inference
+
+203
+00:08:40,878 --> 00:08:44,194
+paper and say, for this grid, given that
+
+204
+00:08:44,232 --> 00:08:47,006
+you have this kind of prior preference
+
+205
+00:08:47,038 --> 00:08:50,018
+distribution, so this white square,
+
+206
+00:08:50,104 --> 00:08:51,622
+which is the gold state, is the most
+
+207
+00:08:51,676 --> 00:08:53,800
+preferred state. And you have a
+
+208
+00:08:55,450 --> 00:08:58,086
+uniformly decreasing preference for
+
+209
+00:08:58,108 --> 00:09:00,726
+states that is far away from that goal
+
+210
+00:09:00,758 --> 00:09:03,126
+state, then basically if you observe
+
+211
+00:09:03,158 --> 00:09:05,818
+yourself at some observation at Time T,
+
+212
+00:09:05,984 --> 00:09:07,498
+then basically what you're doing is
+
+213
+00:09:07,504 --> 00:09:09,850
+you're considering the consequence of
+
+214
+00:09:10,000 --> 00:09:12,254
+available actions from that
+
+215
+00:09:12,292 --> 00:09:15,806
+observations. And basically you can use
+
+216
+00:09:15,988 --> 00:09:19,694
+the projection of your belief and set
+
+217
+00:09:19,732 --> 00:09:21,774
+a threshold for those beliefs to kind of
+
+218
+00:09:21,812 --> 00:09:24,358
+maybe ignore some actions and ignore
+
+219
+00:09:24,394 --> 00:09:26,866
+some observations. And what you will
+
+220
+00:09:26,888 --> 00:09:29,918
+find is that it's no longer a tree
+
+221
+00:09:29,934 --> 00:09:32,482
+search, it's a subset of tree search and
+
+222
+00:09:32,616 --> 00:09:36,050
+it's computationally way efficient than
+
+223
+00:09:36,120 --> 00:09:38,070
+doing the whole tree search, right? So
+
+224
+00:09:38,220 --> 00:09:40,166
+here you have avoided a lot of
+
+225
+00:09:40,188 --> 00:09:41,606
+combinations and this becomes a
+
+226
+00:09:41,628 --> 00:09:43,766
+computationally tractable problem. This
+
+227
+00:09:43,788 --> 00:09:46,514
+is because you have decided to avoid
+
+228
+00:09:46,562 --> 00:09:48,726
+some actions and observations. So you
+
+229
+00:09:48,748 --> 00:09:50,842
+are essentially compromising on that
+
+230
+00:09:50,896 --> 00:09:53,386
+possibilities which might give you a
+
+231
+00:09:53,408 --> 00:09:55,114
+higher reward or which might be more
+
+232
+00:09:55,152 --> 00:09:57,626
+optimal than the consequence of this
+
+233
+00:09:57,728 --> 00:10:01,114
+partial research. But this works. So
+
+234
+00:10:01,152 --> 00:10:04,398
+this simulation was presented in the
+
+235
+00:10:04,404 --> 00:10:07,822
+paper and it works. The agent kind of
+
+236
+00:10:07,876 --> 00:10:10,990
+learns to do what needs to be done
+
+237
+00:10:11,060 --> 00:10:13,326
+if it plans in this forward direction of
+
+238
+00:10:13,348 --> 00:10:16,100
+planning in a pruned way.
+
+239
+00:10:19,190 --> 00:10:20,766
+And basically you can computationally
+
+240
+00:10:20,798 --> 00:10:23,442
+show that even for a small search
+
+241
+00:10:23,496 --> 00:10:26,926
+threshold, you can drastically decrease
+
+242
+00:10:26,958 --> 00:10:29,046
+the computational complexity. So if you
+
+243
+00:10:29,148 --> 00:10:32,006
+decide to do the whole research with the
+
+244
+00:10:32,028 --> 00:10:34,166
+planning depth, the computational time
+
+245
+00:10:34,188 --> 00:10:36,486
+is exponential and quickly you can't do
+
+246
+00:10:36,508 --> 00:10:39,414
+much about it. But if you decide a
+
+247
+00:10:39,452 --> 00:10:41,162
+search threshold which is even very
+
+248
+00:10:41,216 --> 00:10:43,450
+small, you can see that this problem
+
+249
+00:10:43,520 --> 00:10:45,366
+becomes computationally attractable.
+
+250
+00:10:45,558 --> 00:10:48,454
+And this demo on sophisticated
+
+251
+00:10:48,502 --> 00:10:50,026
+inferences available in my version of
+
+252
+00:10:50,048 --> 00:10:52,526
+PMDP and it's going to be integrated to
+
+253
+00:10:52,548 --> 00:10:54,240
+the original PMDP soon.
+
+254
+00:10:56,690 --> 00:10:59,038
+But the key point is that the pruning of
+
+255
+00:10:59,044 --> 00:11:02,094
+the tree search requires us a well
+
+256
+00:11:02,132 --> 00:11:04,366
+informed prior preference like this in
+
+257
+00:11:04,388 --> 00:11:06,286
+the sense that here the agent is aware
+
+258
+00:11:06,318 --> 00:11:09,810
+of how desirable are neighboring states,
+
+259
+00:11:09,960 --> 00:11:12,046
+it not only knows about the final goal
+
+260
+00:11:12,078 --> 00:11:13,794
+state, it also knows about its
+
+261
+00:11:13,912 --> 00:11:16,098
+neighboring state. And given such a
+
+262
+00:11:16,104 --> 00:11:18,326
+prior preference, we can see that for a
+
+263
+00:11:18,348 --> 00:11:20,294
+planning depth of three, the agent is
+
+264
+00:11:20,332 --> 00:11:23,400
+getting stuck basically in this local
+
+265
+00:11:23,850 --> 00:11:27,110
+maxima of prior preference. But with
+
+266
+00:11:27,260 --> 00:11:30,634
+sufficient planning depth it is able
+
+267
+00:11:30,672 --> 00:11:33,306
+to overcome this barrier and reach the
+
+268
+00:11:33,328 --> 00:11:36,218
+goal state in in this great problem.
+
+269
+00:11:36,384 --> 00:11:39,178
+And the question is that what if the
+
+270
+00:11:39,184 --> 00:11:42,106
+agent only knows this final state? It
+
+271
+00:11:42,128 --> 00:11:44,846
+has no other knowledge about what to do.
+
+272
+00:11:44,948 --> 00:11:47,182
+And in this case, what does the agent
+
+273
+00:11:47,236 --> 00:11:49,966
+do? So this is the problem that we are
+
+274
+00:11:49,988 --> 00:11:52,640
+trying to address and in the absence of
+
+275
+00:11:53,330 --> 00:11:55,858
+a meaningful trip reference like this,
+
+276
+00:11:55,944 --> 00:11:58,258
+the agent has basically no way of
+
+277
+00:11:58,344 --> 00:12:01,474
+reaching the goal state other than by
+
+278
+00:12:01,512 --> 00:12:04,146
+random exploration. It has no way of
+
+279
+00:12:04,168 --> 00:12:07,006
+planning because it cannot do planning
+
+280
+00:12:07,038 --> 00:12:09,106
+eight times steps ahead, because it's
+
+281
+00:12:09,138 --> 00:12:11,526
+computationally intractable. If it
+
+282
+00:12:11,548 --> 00:12:14,502
+chooses to do the full tree search,
+
+283
+00:12:14,556 --> 00:12:15,160
+right?
+
+284
+00:12:18,970 --> 00:12:21,338
+For a grid like this, what do you do if
+
+285
+00:12:21,344 --> 00:12:23,226
+you get a sparse trip reference which is
+
+286
+00:12:23,248 --> 00:12:26,934
+not well informed and as highlighted
+
+287
+00:12:27,062 --> 00:12:29,226
+in the previous slide, your research is
+
+288
+00:12:29,248 --> 00:12:32,006
+now blind, you have no way of pruning
+
+289
+00:12:32,038 --> 00:12:33,498
+the tree search, and you have to do the
+
+290
+00:12:33,504 --> 00:12:36,026
+full tree search in this scenario.
+
+291
+00:12:36,218 --> 00:12:39,166
+So, as you might have thought, there are
+
+292
+00:12:39,188 --> 00:12:41,326
+two solutions to this. Either you have
+
+293
+00:12:41,348 --> 00:12:43,914
+to find out a way to do the full depth
+
+294
+00:12:43,962 --> 00:12:48,606
+planning with
+
+295
+00:12:48,628 --> 00:12:50,754
+this past prior preference or you have
+
+296
+00:12:50,792 --> 00:12:53,214
+to learn a meaningful prior preference
+
+297
+00:12:53,262 --> 00:12:55,854
+which will enable you to do this pruned
+
+298
+00:12:55,902 --> 00:12:57,830
+research. So we are going to discuss
+
+299
+00:12:57,900 --> 00:13:01,010
+these two solutions in this presentation
+
+300
+00:13:01,170 --> 00:13:04,246
+for a given scenario like this. So, the
+
+301
+00:13:04,268 --> 00:13:07,062
+first solution to do full research is
+
+302
+00:13:07,116 --> 00:13:09,314
+basically using dynamic programming.
+
+303
+00:13:09,442 --> 00:13:11,686
+And dynamic programming is a well known
+
+304
+00:13:11,718 --> 00:13:13,866
+idea in operation research and
+
+305
+00:13:13,888 --> 00:13:16,486
+industrial engineering and many branches
+
+306
+00:13:16,518 --> 00:13:18,746
+of engineering. And the basic idea is
+
+307
+00:13:18,768 --> 00:13:21,746
+that you solve the subparts of a bigger
+
+308
+00:13:21,798 --> 00:13:23,486
+problem first and then later try to
+
+309
+00:13:23,508 --> 00:13:25,854
+integrate the solutions of these sub
+
+310
+00:13:25,892 --> 00:13:29,886
+problems to do optimal decision making.
+
+311
+00:13:30,068 --> 00:13:34,714
+So in this scenario, imagine that you're
+
+312
+00:13:34,762 --> 00:13:37,938
+trying to plan for the last action. So
+
+313
+00:13:38,024 --> 00:13:39,682
+earlier we started from the first
+
+314
+00:13:39,736 --> 00:13:41,954
+action, we started from the present and
+
+315
+00:13:41,992 --> 00:13:44,018
+tried to predict what is happening in
+
+316
+00:13:44,024 --> 00:13:46,306
+the future. So your direction of
+
+317
+00:13:46,328 --> 00:13:48,146
+planning was basically forward in time.
+
+318
+00:13:48,248 --> 00:13:50,014
+But imagine that you are trying to plan
+
+319
+00:13:50,072 --> 00:13:51,846
+only for the last time step where you
+
+320
+00:13:51,868 --> 00:13:55,686
+are just near the goal state and right
+
+321
+00:13:55,788 --> 00:13:57,478
+going to that goal state. Right. So you
+
+322
+00:13:57,484 --> 00:13:59,570
+are trying to make a decision for that
+
+323
+00:13:59,660 --> 00:14:01,702
+last time step, which is capital T minus
+
+324
+00:14:01,766 --> 00:14:05,146
+one, and your projections to
+
+325
+00:14:05,168 --> 00:14:07,046
+the next time step or the last goal
+
+326
+00:14:07,078 --> 00:14:10,554
+state can be done
+
+327
+00:14:10,592 --> 00:14:12,378
+because you have access to this model of
+
+328
+00:14:12,384 --> 00:14:15,146
+the world using this transient dynamics
+
+329
+00:14:15,178 --> 00:14:17,390
+or the B matrix in active inference. So
+
+330
+00:14:17,460 --> 00:14:19,278
+for this single time step, which is a
+
+331
+00:14:19,284 --> 00:14:21,802
+sub problem, you are actually evaluating
+
+332
+00:14:21,866 --> 00:14:24,974
+a table of expected free energy that
+
+333
+00:14:25,012 --> 00:14:26,506
+tells you if you are in, say, this
+
+334
+00:14:26,548 --> 00:14:28,866
+observation, what is to be done, which
+
+335
+00:14:28,888 --> 00:14:32,610
+is for the last time step. And basically
+
+336
+00:14:32,760 --> 00:14:34,786
+you can do this in state space or
+
+337
+00:14:34,808 --> 00:14:37,170
+observation space. So this can be done
+
+338
+00:14:37,320 --> 00:14:39,522
+using the A matrix and B matrix
+
+339
+00:14:39,586 --> 00:14:42,162
+together, where you can do planning
+
+340
+00:14:42,226 --> 00:14:44,966
+either way. Right. So the question is
+
+341
+00:14:44,988 --> 00:14:48,326
+that if you know what to do in the
+
+342
+00:14:48,348 --> 00:14:51,706
+last time steps, that you might be
+
+343
+00:14:51,728 --> 00:14:52,858
+thinking, how do I know that I'm in the
+
+344
+00:14:52,864 --> 00:14:55,034
+last time step? It is all about
+
+345
+00:14:55,152 --> 00:14:56,250
+imagining.
+
+346
+00:15:09,720 --> 00:15:12,964
+Sorry, last thing we heard for a second
+
+347
+00:15:13,002 --> 00:15:15,080
+was it's all about imagining.
+
+348
+00:15:15,580 --> 00:15:17,828
+Yeah. So just pick up from there. It's
+
+349
+00:15:17,844 --> 00:15:21,256
+all about imagining. Okay, so there was
+
+350
+00:15:21,278 --> 00:15:23,016
+a connection issue. Yeah, just for a few
+
+351
+00:15:23,038 --> 00:15:25,560
+seconds. It's all good then now. Oh,
+
+352
+00:15:25,630 --> 00:15:29,108
+sorry about that. So what I'm trying
+
+353
+00:15:29,134 --> 00:15:31,976
+to say is that you are trying to imagine
+
+354
+00:15:32,088 --> 00:15:34,172
+what you will do if you are in time
+
+355
+00:15:34,306 --> 00:15:36,396
+capital T minus one, which is the last
+
+356
+00:15:36,498 --> 00:15:39,096
+time step for your planning horizon.
+
+357
+00:15:39,208 --> 00:15:40,976
+And if you are in that time step, what
+
+358
+00:15:40,998 --> 00:15:43,344
+do I do? So this table represents all
+
+359
+00:15:43,382 --> 00:15:46,416
+such scenarios that if I am, say, at
+
+360
+00:15:46,438 --> 00:15:49,456
+observation three, at time T
+
+361
+00:15:49,478 --> 00:15:51,524
+minus one, what do I do? And this
+
+362
+00:15:51,562 --> 00:15:53,956
+quantity here, I'm only considering the
+
+363
+00:15:53,978 --> 00:15:57,270
+risk term or the purposeful term, and
+
+364
+00:15:57,880 --> 00:16:01,110
+this term represents that policy. And
+
+365
+00:16:01,560 --> 00:16:04,976
+what if I do this backwards till time
+
+366
+00:16:05,018 --> 00:16:07,864
+T minus one? So if I know what to do at
+
+367
+00:16:07,902 --> 00:16:10,984
+time capital T minus one,
+
+368
+00:16:11,102 --> 00:16:13,400
+then this table can inform what to do at
+
+369
+00:16:13,470 --> 00:16:15,644
+capital T minus two. So rather than
+
+370
+00:16:15,682 --> 00:16:17,964
+planning forward in time, what I'm doing
+
+371
+00:16:18,002 --> 00:16:19,896
+is basically stacking many tables
+
+372
+00:16:19,928 --> 00:16:22,876
+together just by fixing a capital T of
+
+373
+00:16:22,898 --> 00:16:26,700
+planning. And given that I have all
+
+374
+00:16:26,850 --> 00:16:30,496
+such stacked tables, then basically what
+
+375
+00:16:30,518 --> 00:16:32,524
+I can do is use them to take decisions
+
+376
+00:16:32,572 --> 00:16:34,256
+forward in time. And what we have
+
+377
+00:16:34,278 --> 00:16:38,816
+observed is that this idea works, that I
+
+378
+00:16:38,838 --> 00:16:40,640
+can calculate the expected free energy
+
+379
+00:16:40,710 --> 00:16:43,264
+backwards step by step,
+
+380
+00:16:43,382 --> 00:16:46,070
+considering them as sub problems. And
+
+381
+00:16:46,840 --> 00:16:48,964
+the fundamental difference is that in
+
+382
+00:16:49,002 --> 00:16:51,796
+sophisticated inference to calculate the
+
+383
+00:16:51,818 --> 00:16:55,060
+expected free energy at time small T,
+
+384
+00:16:55,130 --> 00:16:57,544
+you don't know what is the expected free
+
+385
+00:16:57,582 --> 00:16:59,816
+energy at time T plus one. So this
+
+386
+00:16:59,838 --> 00:17:01,976
+becomes a research so that you have to
+
+387
+00:17:01,998 --> 00:17:04,244
+calculate this first and to calculate
+
+388
+00:17:04,292 --> 00:17:06,456
+for T plus one you need t plus two and
+
+389
+00:17:06,478 --> 00:17:08,216
+so on. But here because you're
+
+390
+00:17:08,248 --> 00:17:09,884
+calculating it backwards in time. You
+
+391
+00:17:09,922 --> 00:17:12,876
+already know what is the expected free
+
+392
+00:17:12,898 --> 00:17:15,416
+energy for T plus one. And it's
+
+393
+00:17:15,448 --> 00:17:17,036
+basically the same equation. It's just
+
+394
+00:17:17,058 --> 00:17:19,232
+that you're doing it backwards in time
+
+395
+00:17:19,366 --> 00:17:22,972
+and pictorially in sophisticated
+
+396
+00:17:23,036 --> 00:17:24,348
+inference. You are trying to do a tree
+
+397
+00:17:24,364 --> 00:17:26,476
+search. But in the dynamic programming
+
+398
+00:17:26,508 --> 00:17:28,636
+algorithm, you are doing your planning
+
+399
+00:17:28,668 --> 00:17:32,196
+backwards, using tables. And given your
+
+400
+00:17:32,218 --> 00:17:34,212
+planning horizon is sufficient enough
+
+401
+00:17:34,266 --> 00:17:36,820
+for a problem, what we have seen is that
+
+402
+00:17:36,970 --> 00:17:39,136
+the agent will be able to take optimal
+
+403
+00:17:39,168 --> 00:17:43,316
+actions forward in time. So in
+
+404
+00:17:43,338 --> 00:17:45,560
+the paper we are also proposing one
+
+405
+00:17:45,630 --> 00:17:48,392
+algorithm for sequential palm DPS using
+
+406
+00:17:48,526 --> 00:17:50,616
+this backward planning in time and we
+
+407
+00:17:50,638 --> 00:17:53,320
+were able to scale up simulations for
+
+408
+00:17:53,470 --> 00:17:55,604
+grid spaces which was previously
+
+409
+00:17:55,652 --> 00:17:59,404
+intractable without neural networks. So
+
+410
+00:17:59,442 --> 00:18:01,388
+that was the first solution. So the
+
+411
+00:18:01,394 --> 00:18:04,764
+second solution is that so in the first
+
+412
+00:18:04,802 --> 00:18:07,004
+solution it was fixed that you only get
+
+413
+00:18:07,042 --> 00:18:08,764
+a sparse prior preference, you don't get
+
+414
+00:18:08,802 --> 00:18:10,864
+any other information, you only get your
+
+415
+00:18:10,902 --> 00:18:12,800
+information about the final goal state
+
+416
+00:18:12,950 --> 00:18:15,056
+and all you get is the model of the
+
+417
+00:18:15,078 --> 00:18:18,064
+environment which you learn and you
+
+418
+00:18:18,102 --> 00:18:20,512
+basically have to take decisions. But
+
+419
+00:18:20,646 --> 00:18:22,608
+the second solution of course is that if
+
+420
+00:18:22,614 --> 00:18:24,372
+you're allowed, you can attempt to learn
+
+421
+00:18:24,426 --> 00:18:26,240
+a pride preference which is meaningful
+
+422
+00:18:26,320 --> 00:18:28,704
+like the one we saw in the previous
+
+423
+00:18:28,752 --> 00:18:31,732
+slides, which has the information about
+
+424
+00:18:31,786 --> 00:18:33,896
+the other states also. But how do you
+
+425
+00:18:33,918 --> 00:18:36,564
+learn it? Right? So there is a seminal
+
+426
+00:18:36,612 --> 00:18:39,524
+work from optimal control literature
+
+427
+00:18:39,652 --> 00:18:41,796
+that talks about efficient computation
+
+428
+00:18:41,988 --> 00:18:44,648
+of optimal actions and in that work
+
+429
+00:18:44,734 --> 00:18:46,996
+there is a quantity similar to our prior
+
+430
+00:18:47,028 --> 00:18:47,996
+preference which is called the
+
+431
+00:18:48,018 --> 00:18:50,124
+Desirability function. So for example,
+
+432
+00:18:50,322 --> 00:18:53,416
+in this grid world here darker colors
+
+433
+00:18:53,448 --> 00:18:55,256
+are more preferred. So if this crosses
+
+434
+00:18:55,288 --> 00:18:57,788
+your final gold state, what the agent in
+
+435
+00:18:57,794 --> 00:19:00,608
+this paper is trying to do or the said
+
+436
+00:19:00,694 --> 00:19:02,656
+learning method in this paper is trying
+
+437
+00:19:02,678 --> 00:19:05,580
+to do, is learn this Desirability
+
+438
+00:19:05,660 --> 00:19:07,904
+function as optimally as possible. And
+
+439
+00:19:07,942 --> 00:19:09,456
+what has been shown in this paper is
+
+440
+00:19:09,478 --> 00:19:12,596
+that if you try to learn the
+
+441
+00:19:12,618 --> 00:19:15,156
+Desirability function using a particular
+
+442
+00:19:15,258 --> 00:19:18,004
+learning rule, it is computationally far
+
+443
+00:19:18,042 --> 00:19:20,228
+more efficient than even Q learning
+
+444
+00:19:20,314 --> 00:19:22,816
+which is a well known reinforcement
+
+445
+00:19:22,848 --> 00:19:24,808
+learning algorithm. So Q learning is a
+
+446
+00:19:24,814 --> 00:19:27,076
+well known computationally optimal
+
+447
+00:19:27,108 --> 00:19:29,304
+algorithm but in this paper that
+
+448
+00:19:29,342 --> 00:19:31,032
+particular learning rule for learning
+
+449
+00:19:31,086 --> 00:19:32,872
+this kind of a Desirability function is
+
+450
+00:19:32,926 --> 00:19:35,736
+way faster and this approximate error
+
+451
+00:19:35,768 --> 00:19:38,236
+represents how different it is from the
+
+452
+00:19:38,258 --> 00:19:40,364
+optimal Desirability function. So this
+
+453
+00:19:40,402 --> 00:19:42,364
+Desirability function is nothing but our
+
+454
+00:19:42,402 --> 00:19:46,268
+prior preference and as mentioned
+
+455
+00:19:46,434 --> 00:19:48,948
+learning set is borders of magnitude
+
+456
+00:19:48,984 --> 00:19:50,432
+efficient than learning the Q function
+
+457
+00:19:50,486 --> 00:19:54,370
+in Q learning. So this is the particular
+
+458
+00:19:54,900 --> 00:19:56,924
+learning rule depending upon the reward
+
+459
+00:19:56,972 --> 00:19:59,424
+that it gets from the environment and in
+
+460
+00:19:59,462 --> 00:20:01,260
+this particular grid world environment
+
+461
+00:20:01,340 --> 00:20:03,252
+we are only giving it reward at the last
+
+462
+00:20:03,306 --> 00:20:04,928
+step which is similar to the sparse
+
+463
+00:20:04,944 --> 00:20:07,156
+parent preference, the agent basically
+
+464
+00:20:07,258 --> 00:20:10,784
+gets no reward until it reaches
+
+465
+00:20:10,832 --> 00:20:14,024
+that final goal state. And with this
+
+466
+00:20:14,062 --> 00:20:17,108
+learning rule which has a parameter ETA
+
+467
+00:20:17,204 --> 00:20:20,632
+that controls how fast or slow this
+
+468
+00:20:20,686 --> 00:20:23,160
+learning happens. So basically we tried
+
+469
+00:20:23,230 --> 00:20:26,444
+to study the effect of this
+
+470
+00:20:26,482 --> 00:20:28,716
+learning parameter ETA, but what we
+
+471
+00:20:28,738 --> 00:20:30,844
+observed is that it's very robust, it
+
+472
+00:20:30,882 --> 00:20:33,816
+can learn the prior preference reliably
+
+473
+00:20:33,928 --> 00:20:37,470
+even with variable values of this
+
+474
+00:20:38,080 --> 00:20:41,136
+learning parameter. And what we see is
+
+475
+00:20:41,158 --> 00:20:43,056
+that the agent is able to learn a
+
+476
+00:20:43,078 --> 00:20:44,880
+meaningful prior preference over time
+
+477
+00:20:44,950 --> 00:20:48,204
+very fast and using such a meaningful
+
+478
+00:20:48,252 --> 00:20:50,328
+prior preference, then the agent don't
+
+479
+00:20:50,364 --> 00:20:52,836
+have to plan a lot, it can manage
+
+480
+00:20:52,938 --> 00:20:55,632
+optimal behavior or purposeful behavior
+
+481
+00:20:55,776 --> 00:20:58,112
+with very low time horizons of planning.
+
+482
+00:20:58,256 --> 00:21:02,004
+And given these two solutions, we could
+
+483
+00:21:02,042 --> 00:21:04,664
+scale up active inference algorithm for
+
+484
+00:21:04,702 --> 00:21:07,816
+decision making and talking about the
+
+485
+00:21:07,838 --> 00:21:11,320
+computational efficiency, we saw that
+
+486
+00:21:11,390 --> 00:21:13,304
+the dynamic programming method could
+
+487
+00:21:13,342 --> 00:21:16,572
+plan 30 timesteps into the future with
+
+488
+00:21:16,626 --> 00:21:18,556
+only say a computational complexity of
+
+489
+00:21:18,578 --> 00:21:21,148
+thousand when compared to say ten to the
+
+490
+00:21:21,154 --> 00:21:23,800
+power 68 for sophisticated inference.
+
+491
+00:21:23,880 --> 00:21:26,796
+And the second method which learns the
+
+492
+00:21:26,818 --> 00:21:29,496
+prior preference which we call active
+
+493
+00:21:29,528 --> 00:21:32,336
+inference and it only needs to plan one
+
+494
+00:21:32,358 --> 00:21:34,624
+time step ahead, so it is way more
+
+495
+00:21:34,662 --> 00:21:36,930
+computationally efficient in that sense,
+
+496
+00:21:37,380 --> 00:21:39,676
+but it has to learn. So in the Dpsv
+
+497
+00:21:39,708 --> 00:21:41,504
+method we are not learning, we are using
+
+498
+00:21:41,542 --> 00:21:43,516
+the sparse sprite preference and doing
+
+499
+00:21:43,558 --> 00:21:46,228
+the whole depth of planning and in the
+
+500
+00:21:46,234 --> 00:21:47,812
+other method we are letting the agent
+
+501
+00:21:47,866 --> 00:21:49,684
+learn this prior preference but then we
+
+502
+00:21:49,722 --> 00:21:52,716
+can save planning a lot because it knows
+
+503
+00:21:52,768 --> 00:21:55,464
+a lot of what to do in time, right?
+
+504
+00:21:55,662 --> 00:22:00,456
+So graphically we can see that the
+
+505
+00:22:00,478 --> 00:22:02,388
+Dpfe method is really computationally
+
+506
+00:22:02,404 --> 00:22:05,240
+efficient and when plotted against time
+
+507
+00:22:05,390 --> 00:22:08,924
+in the AI t equal to one method, it is
+
+508
+00:22:08,962 --> 00:22:12,540
+basically computationally way cheaper.
+
+509
+00:22:13,840 --> 00:22:17,790
+So it scales very fascinatingly well
+
+510
+00:22:18,100 --> 00:22:22,396
+with higher and higher complexity
+
+511
+00:22:22,428 --> 00:22:26,112
+of the environment. So we tested these
+
+512
+00:22:26,166 --> 00:22:29,964
+methods in very huge state spaces
+
+513
+00:22:30,012 --> 00:22:34,292
+like say 900 states compared to state
+
+514
+00:22:34,346 --> 00:22:36,564
+spaces which has dimension of say five
+
+515
+00:22:36,602 --> 00:22:38,528
+or ten in the usually seen active
+
+516
+00:22:38,544 --> 00:22:41,764
+inference literature. So I want to
+
+517
+00:22:41,882 --> 00:22:43,624
+kind of emphasize that we are not using
+
+518
+00:22:43,662 --> 00:22:45,770
+any neural networks here, we are using
+
+519
+00:22:47,100 --> 00:22:49,210
+explainable active inference agents
+
+520
+00:22:49,580 --> 00:22:52,164
+doing all necessary matrix
+
+521
+00:22:52,212 --> 00:22:53,928
+multiplication so that we have access
+
+522
+00:22:54,014 --> 00:22:57,764
+and explainability to every
+
+523
+00:22:57,822 --> 00:22:59,788
+computation that is taking place in
+
+524
+00:22:59,794 --> 00:23:01,964
+these algorithms. And when tested on
+
+525
+00:23:02,002 --> 00:23:04,316
+these grids first, we validated this on
+
+526
+00:23:04,338 --> 00:23:06,444
+a smaller grid with hundred states. And
+
+527
+00:23:06,482 --> 00:23:09,856
+we observed is that when compared to
+
+528
+00:23:09,958 --> 00:23:11,344
+benchmark reinforcement learning
+
+529
+00:23:11,382 --> 00:23:13,436
+algorithms like Q learning and Dynaq,
+
+530
+00:23:13,548 --> 00:23:15,436
+dynaq is a model based reinforcement
+
+531
+00:23:15,468 --> 00:23:18,304
+learning algorithm. And we compared our
+
+532
+00:23:18,342 --> 00:23:21,076
+newly proposed agents, which is Dpfe and
+
+533
+00:23:21,098 --> 00:23:25,328
+AIF, and we saw really good performance
+
+534
+00:23:25,504 --> 00:23:28,276
+and AIF agent is slightly worse. And
+
+535
+00:23:28,298 --> 00:23:29,684
+that's because it's only planning one
+
+536
+00:23:29,722 --> 00:23:32,304
+time step ahead, right? But the Dpfe
+
+537
+00:23:32,352 --> 00:23:35,264
+agent who does full time planning, it's
+
+538
+00:23:35,312 --> 00:23:36,992
+performing as good as benchmark
+
+539
+00:23:37,056 --> 00:23:39,096
+reinforcement learning algorithms. And
+
+540
+00:23:39,118 --> 00:23:42,116
+we tested it with bigger and bigger
+
+541
+00:23:42,148 --> 00:23:45,344
+grids. And when we introduced
+
+542
+00:23:45,412 --> 00:23:48,156
+Stochasticity in the goal state, in the
+
+543
+00:23:48,178 --> 00:23:50,956
+sense that when the agent had to
+
+544
+00:23:51,138 --> 00:23:55,096
+navigate to Stochastic
+
+545
+00:23:55,128 --> 00:23:56,648
+goal state. So we changed the goal
+
+546
+00:23:56,664 --> 00:23:59,528
+states at every ten episodes. And what
+
+547
+00:23:59,554 --> 00:24:01,792
+we observed is that the Dynaq took more
+
+548
+00:24:01,846 --> 00:24:05,200
+time than our Dpfe agent to kind of
+
+549
+00:24:05,350 --> 00:24:07,856
+recover and do well. So Dpfe agent in
+
+550
+00:24:07,878 --> 00:24:09,516
+this Stochastic environment performed
+
+551
+00:24:09,548 --> 00:24:11,836
+really well, even better than the Dynaq
+
+552
+00:24:11,868 --> 00:24:13,876
+agent, and we could also see that the
+
+553
+00:24:13,898 --> 00:24:17,104
+AIF agent is recovering faster
+
+554
+00:24:17,152 --> 00:24:20,292
+but not as good as the other agents. So
+
+555
+00:24:20,346 --> 00:24:23,048
+basically that was the result in the
+
+556
+00:24:23,054 --> 00:24:25,784
+paper and the methods. So, yeah, thank
+
+557
+00:24:25,822 --> 00:24:27,864
+you for listening, and I'm open for
+
+558
+00:24:27,902 --> 00:24:28,680
+discussions.
+
+559
+00:24:32,210 --> 00:24:35,520
+All right. Awesome. Wow.
+
+560
+00:24:36,390 --> 00:24:39,538
+Very cool. Thank you.
+
+561
+00:24:39,704 --> 00:24:43,154
+Okay, well, just as we start the
+
+562
+00:24:43,192 --> 00:24:46,354
+discussion, if anyone wants to add
+
+563
+00:24:46,392 --> 00:24:49,138
+anything first, just how did you come to
+
+564
+00:24:49,224 --> 00:24:52,354
+work on this project? Were you studying
+
+565
+00:24:52,402 --> 00:24:54,262
+active inference and you came to this
+
+566
+00:24:54,316 --> 00:24:57,446
+question as being interesting, or were
+
+567
+00:24:57,468 --> 00:24:59,766
+you working on the planning and came to
+
+568
+00:24:59,788 --> 00:25:01,510
+active inference as a method?
+
+569
+00:25:02,750 --> 00:25:05,114
+Yeah, so little bit background about
+
+570
+00:25:05,152 --> 00:25:08,234
+myself. So I studied physics both in my
+
+571
+00:25:08,272 --> 00:25:11,226
+undergrad and postgrad, and towards the
+
+572
+00:25:11,248 --> 00:25:12,954
+end of my post graduation, I got
+
+573
+00:25:12,992 --> 00:25:15,014
+interested in things like game theory
+
+574
+00:25:15,062 --> 00:25:17,526
+and reinforcement learning, and I joined
+
+575
+00:25:17,638 --> 00:25:20,918
+for a joint PhD with Professor Adela
+
+576
+00:25:20,934 --> 00:25:23,066
+and Professor Manoj. And so Professor
+
+577
+00:25:23,098 --> 00:25:24,942
+Manoj is a control theory person, and
+
+578
+00:25:24,996 --> 00:25:27,954
+Adela is a neuroscientist. And in the
+
+579
+00:25:27,992 --> 00:25:30,494
+beginning of my PhD, I started reading
+
+580
+00:25:30,542 --> 00:25:33,666
+active inference literature, and I
+
+581
+00:25:33,688 --> 00:25:36,418
+wanted to implement that in problems.
+
+582
+00:25:36,504 --> 00:25:38,386
+And I was always fascinated with
+
+583
+00:25:38,488 --> 00:25:42,046
+explainable active inference about this
+
+584
+00:25:42,088 --> 00:25:44,246
+idea of expected free energy, trying to
+
+585
+00:25:44,268 --> 00:25:46,066
+minimize risk as well as expected
+
+586
+00:25:46,098 --> 00:25:48,614
+ambiguity. Just so not just making the
+
+587
+00:25:48,652 --> 00:25:50,790
+agents work, but also being able to tell
+
+588
+00:25:50,860 --> 00:25:53,146
+how they work is what fascinated me in
+
+589
+00:25:53,168 --> 00:25:55,674
+active inference. And initially, I tried
+
+590
+00:25:55,712 --> 00:25:58,010
+to implement them, and there is a
+
+591
+00:25:58,080 --> 00:26:00,666
+conference paper which we published in
+
+592
+00:26:00,688 --> 00:26:04,786
+which we compared it for a similar grid
+
+593
+00:26:04,838 --> 00:26:06,894
+world task. And then I faced this
+
+594
+00:26:06,932 --> 00:26:08,938
+problem of scaling active inference,
+
+595
+00:26:09,114 --> 00:26:10,606
+and then I started working on
+
+596
+00:26:10,628 --> 00:26:13,182
+sophisticated inference. Yeah, so
+
+597
+00:26:13,236 --> 00:26:15,998
+basically these methods came out of the
+
+598
+00:26:16,004 --> 00:26:18,718
+need that I wanted to scale the map up.
+
+599
+00:26:18,884 --> 00:26:22,514
+And I always had was skeptical in using
+
+600
+00:26:22,712 --> 00:26:26,354
+deep active inference because I
+
+601
+00:26:26,392 --> 00:26:28,594
+didn't want to use neural networks to do
+
+602
+00:26:28,712 --> 00:26:30,946
+planning, because deep reinforcement
+
+603
+00:26:30,978 --> 00:26:33,400
+learning in itself is a huge field. And
+
+604
+00:26:34,570 --> 00:26:37,218
+if you're about just scaling active
+
+605
+00:26:37,234 --> 00:26:39,106
+inference, then maybe just do deep
+
+606
+00:26:39,138 --> 00:26:41,622
+reinforcement learning. That's what I
+
+607
+00:26:41,676 --> 00:26:43,738
+thought. Yeah. So that's basically the
+
+608
+00:26:43,744 --> 00:26:46,874
+background, and that's how it came
+
+609
+00:26:46,912 --> 00:26:50,138
+about. All right, I'll go first to a
+
+610
+00:26:50,144 --> 00:26:51,686
+question in the live chat, and we'll
+
+611
+00:26:51,718 --> 00:26:54,586
+just probably discuss various aspects
+
+612
+00:26:54,618 --> 00:26:55,582
+because there was a lot in your
+
+613
+00:26:55,636 --> 00:26:59,978
+presentation. So ML. Don writes,
+
+614
+00:27:00,154 --> 00:27:02,814
+I wonder, when it comes to computing the
+
+615
+00:27:02,852 --> 00:27:05,102
+expected free energy over a time
+
+616
+00:27:05,156 --> 00:27:07,778
+horizon, what kind of mean field
+
+617
+00:27:07,864 --> 00:27:11,042
+approximation was used to factorize Q of
+
+618
+00:27:11,096 --> 00:27:13,860
+S? Sure.
+
+619
+00:27:19,920 --> 00:27:23,070
+So I assume that the question is about
+
+620
+00:27:24,340 --> 00:27:29,104
+the expected free energy in Dpfe, and to
+
+621
+00:27:29,142 --> 00:27:32,864
+calculate this, basically. So in
+
+622
+00:27:32,902 --> 00:27:35,852
+my simulations, I use belief propagation
+
+623
+00:27:35,916 --> 00:27:40,116
+for this belief cube and you
+
+624
+00:27:40,138 --> 00:27:42,224
+can also use variation message passing
+
+625
+00:27:42,272 --> 00:27:43,876
+or marginal message passing. That's not
+
+626
+00:27:43,898 --> 00:27:44,630
+a problem.
+
+627
+00:27:48,040 --> 00:27:50,180
+Once you have this belief queue,
+
+628
+00:27:51,020 --> 00:27:52,490
+what do you do? Right?
+
+629
+00:27:57,100 --> 00:28:00,856
+Yeah. So when I say
+
+630
+00:28:00,958 --> 00:28:03,836
+you imagine Q for a time,
+
+631
+00:28:03,938 --> 00:28:06,652
+then what I use mostly is one hot
+
+632
+00:28:06,706 --> 00:28:09,804
+vector. So to take decisions, you use
+
+633
+00:28:09,842 --> 00:28:12,476
+the belief that you get out of your
+
+634
+00:28:12,498 --> 00:28:14,420
+perception step in active inference.
+
+635
+00:28:14,520 --> 00:28:17,916
+But for imagining, these are hard tables
+
+636
+00:28:17,948 --> 00:28:20,912
+where they are one hot vector. So given,
+
+637
+00:28:20,966 --> 00:28:23,824
+say, in your generative model has ten
+
+638
+00:28:23,862 --> 00:28:27,570
+states. The queues that you use are
+
+639
+00:28:29,140 --> 00:28:32,096
+precise queues for planning. But for
+
+640
+00:28:32,118 --> 00:28:34,588
+decision making you use the imprecise
+
+641
+00:28:34,684 --> 00:28:36,516
+mean field approximation queue that you
+
+642
+00:28:36,538 --> 00:28:38,688
+get from the perception step. So I don't
+
+643
+00:28:38,704 --> 00:28:42,312
+know if that answers the question, but
+
+644
+00:28:42,366 --> 00:28:46,344
+maybe I also need to think about more
+
+645
+00:28:46,382 --> 00:28:48,504
+about the approximation that may be
+
+646
+00:28:48,542 --> 00:28:51,368
+there in steps. Cool.
+
+647
+00:28:51,454 --> 00:28:54,830
+Yeah, they can write more if they want.
+
+648
+00:28:55,360 --> 00:28:57,560
+Let's talk a little bit more generally
+
+649
+00:28:57,640 --> 00:29:01,276
+about preference learning. So in the
+
+650
+00:29:01,298 --> 00:29:02,936
+context of the active inference
+
+651
+00:29:02,968 --> 00:29:06,568
+generative model, we have a mediating
+
+652
+00:29:06,664 --> 00:29:08,432
+between observations and hidden states
+
+653
+00:29:08,486 --> 00:29:11,516
+and learning makes a lot of sense. It's
+
+654
+00:29:11,548 --> 00:29:13,120
+about learning the mapping between
+
+655
+00:29:13,190 --> 00:29:14,608
+observations and hidden states of the
+
+656
+00:29:14,614 --> 00:29:16,524
+world. And then we have B learning,
+
+657
+00:29:16,662 --> 00:29:18,980
+learning the consequences of action and
+
+658
+00:29:19,050 --> 00:29:21,684
+how things change through time. And
+
+659
+00:29:21,722 --> 00:29:24,870
+preference learning is learning on C.
+
+660
+00:29:25,400 --> 00:29:28,196
+And you've highlighted that this is a
+
+661
+00:29:28,218 --> 00:29:32,100
+very interesting
+
+662
+00:29:32,250 --> 00:29:35,620
+variable to learn. And I'm curious,
+
+663
+00:29:36,140 --> 00:29:39,272
+how do we learn to learn the right
+
+664
+00:29:39,326 --> 00:29:41,664
+thing? How do we know that we're
+
+665
+00:29:41,732 --> 00:29:44,716
+learning in adaptive preference? And
+
+666
+00:29:44,738 --> 00:29:46,508
+then how does that preference learning
+
+667
+00:29:46,594 --> 00:29:48,604
+reduce cognitive overhead or
+
+668
+00:29:48,642 --> 00:29:51,724
+computational complexity? Yeah,
+
+669
+00:29:51,922 --> 00:29:55,872
+great. So if you are
+
+670
+00:29:55,926 --> 00:29:57,532
+trying to learn a prior preference,
+
+671
+00:29:57,596 --> 00:30:00,064
+then that assumes that there is
+
+672
+00:30:00,102 --> 00:30:01,888
+something to chase or there is something
+
+673
+00:30:01,974 --> 00:30:06,096
+to maximize, like a reward. So in
+
+674
+00:30:06,118 --> 00:30:07,536
+a reinforcement learning setting, there
+
+675
+00:30:07,558 --> 00:30:09,076
+is clear reward that's coming from the
+
+676
+00:30:09,098 --> 00:30:10,196
+environment that you're trying to
+
+677
+00:30:10,218 --> 00:30:13,956
+maximize. And say for this grid, you get
+
+678
+00:30:13,978 --> 00:30:15,830
+that reward only in the last step.
+
+679
+00:30:17,160 --> 00:30:18,964
+That's what makes this problem hard. So
+
+680
+00:30:19,002 --> 00:30:22,424
+if you are getting rewards at every time
+
+681
+00:30:22,462 --> 00:30:25,240
+step, then basically you know what to do
+
+682
+00:30:25,310 --> 00:30:27,892
+that I just have to pursue that reward
+
+683
+00:30:27,956 --> 00:30:30,216
+at every time step. Right? But here you
+
+684
+00:30:30,238 --> 00:30:32,776
+might have to take say, 15 time steps
+
+685
+00:30:32,808 --> 00:30:35,804
+ahead to get that one reward and that
+
+686
+00:30:35,842 --> 00:30:38,990
+basically is hard to do. So here,
+
+687
+00:30:40,320 --> 00:30:41,896
+because I'm trying to learn a prior
+
+688
+00:30:41,928 --> 00:30:44,232
+preference, there should be a reward
+
+689
+00:30:44,296 --> 00:30:47,516
+structure that exists in the
+
+690
+00:30:47,538 --> 00:30:49,516
+environment. If the environment doesn't
+
+691
+00:30:49,548 --> 00:30:51,356
+care about what I do or if I can't
+
+692
+00:30:51,388 --> 00:30:54,016
+define what is good or bad, then there
+
+693
+00:30:54,038 --> 00:30:55,436
+is no meaning in learning the prior
+
+694
+00:30:55,468 --> 00:30:58,336
+preference. Right? So here the reward is
+
+695
+00:30:58,358 --> 00:31:00,096
+what controls the learning of this prior
+
+696
+00:31:00,128 --> 00:31:02,484
+preference. And the good thing is that
+
+697
+00:31:02,522 --> 00:31:04,756
+even if only I get the reward at the
+
+698
+00:31:04,778 --> 00:31:08,160
+last time step, I have my B matrix
+
+699
+00:31:08,240 --> 00:31:11,076
+and I have experience of transitioning
+
+700
+00:31:11,108 --> 00:31:13,684
+from different states, which I reached
+
+701
+00:31:13,732 --> 00:31:17,512
+this final goal state. And this
+
+702
+00:31:17,646 --> 00:31:19,336
+algorithm that we are using, or the
+
+703
+00:31:19,358 --> 00:31:21,384
+learning rule that we are using, is
+
+704
+00:31:21,422 --> 00:31:23,884
+precisely learning a similar thing in
+
+705
+00:31:24,002 --> 00:31:26,344
+optimal control. That paper I introduced
+
+706
+00:31:26,392 --> 00:31:27,512
+which is called the desirability
+
+707
+00:31:27,576 --> 00:31:30,444
+function. And given that you have this
+
+708
+00:31:30,482 --> 00:31:32,716
+desirability function so imagine that
+
+709
+00:31:32,738 --> 00:31:34,590
+maybe I'm starting from this state,
+
+710
+00:31:35,060 --> 00:31:37,836
+then I just have to look at my nearest
+
+711
+00:31:37,868 --> 00:31:42,128
+neighbors to take a decision. If the
+
+712
+00:31:42,294 --> 00:31:46,240
+state at state below the state is
+
+713
+00:31:46,310 --> 00:31:48,640
+more preferred, then I only have to plan
+
+714
+00:31:48,710 --> 00:31:50,808
+one times ahead and that's the optimal
+
+715
+00:31:50,844 --> 00:31:53,172
+decision I have to take. So learning
+
+716
+00:31:53,226 --> 00:31:54,628
+this prior preference reduces the
+
+717
+00:31:54,634 --> 00:31:56,368
+cognitive load in the sense that I'm
+
+718
+00:31:56,384 --> 00:31:58,240
+only now looking at nearest neighbors,
+
+719
+00:31:58,320 --> 00:32:00,136
+I don't have to plan all the way up to
+
+720
+00:32:00,158 --> 00:32:03,192
+this final goal state. And I will learn
+
+721
+00:32:03,246 --> 00:32:05,352
+this as efficiently as possible because
+
+722
+00:32:05,406 --> 00:32:08,664
+one, it is a guaranteed algorithm, we
+
+723
+00:32:08,702 --> 00:32:12,684
+tested its robustness and it is also
+
+724
+00:32:12,722 --> 00:32:14,316
+informed by the reward that I get from
+
+725
+00:32:14,338 --> 00:32:17,836
+the environment. If there is
+
+726
+00:32:17,858 --> 00:32:21,484
+some way to kind of define what is
+
+727
+00:32:21,522 --> 00:32:23,996
+preferred then you are guaranteed to
+
+728
+00:32:24,018 --> 00:32:25,356
+learn a pride preference that's
+
+729
+00:32:25,388 --> 00:32:28,080
+meaningful by this algorithm.
+
+730
+00:32:28,580 --> 00:32:32,048
+So if only nearest neighbors and
+
+731
+00:32:32,134 --> 00:32:34,736
+one time step inference is being used,
+
+732
+00:32:34,838 --> 00:32:37,316
+then what prevents this kind of
+
+733
+00:32:37,338 --> 00:32:39,284
+preference learning agent from being
+
+734
+00:32:39,322 --> 00:32:41,460
+stuck in a local optima?
+
+735
+00:32:43,880 --> 00:32:47,424
+Yeah, so there won't be local optimas
+
+736
+00:32:47,472 --> 00:32:49,270
+here. That's the point.
+
+737
+00:32:50,220 --> 00:32:53,128
+Why would there be a local optima if I
+
+738
+00:32:53,134 --> 00:32:56,360
+am learning it using rewards?
+
+739
+00:32:57,500 --> 00:33:00,200
+Yeah. So if there is local optima, then
+
+740
+00:33:00,270 --> 00:33:02,152
+it will be getting stuck in the local
+
+741
+00:33:02,206 --> 00:33:05,576
+optima. But there won't be one if you're
+
+742
+00:33:05,608 --> 00:33:07,656
+learning us this way because you're
+
+743
+00:33:07,688 --> 00:33:09,788
+learning it from your own experience and
+
+744
+00:33:09,954 --> 00:33:13,176
+how you got the reward at time sometime.
+
+745
+00:33:13,288 --> 00:33:16,530
+And what we observed is that it's very
+
+746
+00:33:17,860 --> 00:33:20,336
+gradual and there is no glitches or
+
+747
+00:33:20,358 --> 00:33:22,448
+local optimus when you learn such a
+
+748
+00:33:22,454 --> 00:33:27,160
+practical. So it's kind of backfilling
+
+749
+00:33:27,340 --> 00:33:30,964
+a preference so that
+
+750
+00:33:31,002 --> 00:33:34,996
+there can be a smooth path to the
+
+751
+00:33:35,018 --> 00:33:38,912
+distal goal. Yes. So the animation
+
+752
+00:33:38,976 --> 00:33:41,076
+kind of makes it look like a backfilling
+
+753
+00:33:41,188 --> 00:33:43,768
+but you're actually learning it from
+
+754
+00:33:43,854 --> 00:33:47,624
+your experience forward in time.
+
+755
+00:33:47,662 --> 00:33:50,536
+Right. So I observed a reward when I
+
+756
+00:33:50,558 --> 00:33:51,896
+transition from this state to this
+
+757
+00:33:51,918 --> 00:33:55,176
+state. So this must be good. Then in the
+
+758
+00:33:55,198 --> 00:33:57,532
+next time step I say, okay, this state
+
+759
+00:33:57,586 --> 00:33:59,436
+is responsible for taking me there. So
+
+760
+00:33:59,458 --> 00:34:01,756
+this might be good also, but not as good
+
+761
+00:34:01,778 --> 00:34:04,136
+as the other one. So it looks like it's
+
+762
+00:34:04,168 --> 00:34:05,680
+learning backwards, but it's actually
+
+763
+00:34:05,750 --> 00:34:09,250
+learning from the real t to T plus one
+
+764
+00:34:09,780 --> 00:34:10,530
+experience.
+
+765
+00:34:13,540 --> 00:34:17,616
+Okay. So in that way you
+
+766
+00:34:17,638 --> 00:34:22,596
+can't have local maximas because this
+
+767
+00:34:22,618 --> 00:34:24,836
+is the learning rule that does that. I
+
+768
+00:34:24,858 --> 00:34:26,036
+don't know how to answer it more
+
+769
+00:34:26,058 --> 00:34:28,950
+systematically. Yeah.
+
+770
+00:34:30,120 --> 00:34:33,224
+What real world situations or what
+
+771
+00:34:33,262 --> 00:34:35,640
+real life situations do you kind of see
+
+772
+00:34:35,710 --> 00:34:37,448
+this kind of preference learning
+
+773
+00:34:37,534 --> 00:34:38,650
+happening in?
+
+774
+00:34:39,900 --> 00:34:42,730
+Yeah, great question. So,
+
+775
+00:34:43,040 --> 00:34:45,884
+so there is one paper that came out from
+
+776
+00:34:45,922 --> 00:34:48,600
+our lab where neurons are laying
+
+777
+00:34:48,680 --> 00:34:50,700
+learning the game of poem.
+
+778
+00:34:52,000 --> 00:34:54,556
+So it's a paper is called Dish Brain and
+
+779
+00:34:54,578 --> 00:34:56,272
+the device is called Dish. Brain. And
+
+780
+00:34:56,326 --> 00:34:58,192
+what they have accomplished is that they
+
+781
+00:34:58,246 --> 00:35:01,244
+managed to culture neurons on a silicon
+
+782
+00:35:01,292 --> 00:35:05,024
+chip and they gave it
+
+783
+00:35:05,142 --> 00:35:08,788
+a good feedback signal when it
+
+784
+00:35:08,874 --> 00:35:12,176
+successfully tackled the ball or played
+
+785
+00:35:12,208 --> 00:35:15,396
+the game well and gave it a shock when
+
+786
+00:35:15,578 --> 00:35:18,036
+it made mistakes. And what we saw is
+
+787
+00:35:18,058 --> 00:35:21,736
+that in the paper, what we see is that
+
+788
+00:35:21,838 --> 00:35:23,720
+it learns to play the game over time.
+
+789
+00:35:23,790 --> 00:35:27,124
+Right. And in such a scenario, imagine
+
+790
+00:35:27,172 --> 00:35:29,364
+that if I encounter, say, a positive
+
+791
+00:35:29,412 --> 00:35:31,576
+thing in the world, then I might
+
+792
+00:35:31,678 --> 00:35:34,924
+associate what is good with the
+
+793
+00:35:34,962 --> 00:35:36,924
+states I observed in the past and so on.
+
+794
+00:35:36,962 --> 00:35:40,492
+Right. So I learned step by step
+
+795
+00:35:40,546 --> 00:35:42,972
+what is good or bad, and that's a
+
+796
+00:35:43,106 --> 00:35:47,536
+reasonable hypothesis to make. So if
+
+797
+00:35:47,558 --> 00:35:50,896
+I want to say, get fitter, then I
+
+798
+00:35:50,918 --> 00:35:54,944
+might associate going to gym as
+
+799
+00:35:54,982 --> 00:35:56,784
+a good thing. Then I might also
+
+800
+00:35:56,822 --> 00:35:58,916
+associate walking to the gym as a good
+
+801
+00:35:58,938 --> 00:36:01,124
+thing. Then I might associate, say,
+
+802
+00:36:01,162 --> 00:36:03,190
+wearing my shoes as a good thing. So
+
+803
+00:36:05,000 --> 00:36:06,884
+learning prior preference that way makes
+
+804
+00:36:06,922 --> 00:36:10,216
+sense, I would say. But yeah, this is a
+
+805
+00:36:10,238 --> 00:36:13,960
+computational solution to the problem
+
+806
+00:36:14,030 --> 00:36:16,516
+of cursive dimensionality. But testing
+
+807
+00:36:16,548 --> 00:36:18,410
+this on the real world is definitely
+
+808
+00:36:18,860 --> 00:36:22,556
+what we should do. And yeah, I also look
+
+809
+00:36:22,578 --> 00:36:24,670
+forward to doing that.
+
+810
+00:36:25,840 --> 00:36:27,900
+Okay, let me try to run a real world
+
+811
+00:36:27,970 --> 00:36:30,348
+situation by you and see if this
+
+812
+00:36:30,434 --> 00:36:35,036
+connects. So we're
+
+813
+00:36:35,068 --> 00:36:38,144
+rewarded by turning in an essay that
+
+814
+00:36:38,182 --> 00:36:41,472
+gets a high grade. And so there's many
+
+815
+00:36:41,526 --> 00:36:44,496
+steps between starting the idea of the
+
+816
+00:36:44,518 --> 00:36:48,252
+essay and seeing that preferred sparse
+
+817
+00:36:48,316 --> 00:36:50,420
+outcome, which is the grade,
+
+818
+00:36:51,480 --> 00:36:53,636
+and we do all kinds of things, and then
+
+819
+00:36:53,658 --> 00:36:56,068
+we learn, okay, well, this one where I
+
+820
+00:36:56,074 --> 00:36:58,404
+did get a good grade, it was well
+
+821
+00:36:58,442 --> 00:37:01,876
+formatted. And then now
+
+822
+00:37:01,898 --> 00:37:04,904
+you sort of expand the umbrella of your
+
+823
+00:37:04,942 --> 00:37:06,504
+preference out, and then you go, well,
+
+824
+00:37:06,542 --> 00:37:08,152
+what brought me to getting it well
+
+825
+00:37:08,206 --> 00:37:10,856
+formatted? Well, I did it on time. And
+
+826
+00:37:10,878 --> 00:37:12,908
+then you kind of work all the way to the
+
+827
+00:37:12,914 --> 00:37:16,590
+ideation phase so that in the future
+
+828
+00:37:17,040 --> 00:37:20,860
+you can do one step inference exactly.
+
+829
+00:37:20,930 --> 00:37:23,116
+And just take it step by step as a
+
+830
+00:37:23,138 --> 00:37:27,056
+skill, instead of needing to do a 15
+
+831
+00:37:27,158 --> 00:37:30,672
+time step inference over all the
+
+832
+00:37:30,726 --> 00:37:33,696
+possible tree structures. So you've kind
+
+833
+00:37:33,718 --> 00:37:37,680
+of used your embodied learnings
+
+834
+00:37:37,840 --> 00:37:39,796
+to simplify the structure of the
+
+835
+00:37:39,818 --> 00:37:42,150
+problem. Exactly, yeah.
+
+836
+00:37:43,560 --> 00:37:45,616
+And can we look at the computational
+
+837
+00:37:45,728 --> 00:37:49,430
+complexities again of all them?
+
+838
+00:37:51,260 --> 00:37:54,404
+So here, CIF stands for the classical
+
+839
+00:37:54,452 --> 00:37:56,680
+active inference. And to do the full
+
+840
+00:37:56,750 --> 00:37:59,736
+horizon of planning, it's around ten to
+
+841
+00:37:59,758 --> 00:38:01,784
+the Power 18. So this is for this
+
+842
+00:38:01,822 --> 00:38:04,940
+particular grid example with hundred
+
+843
+00:38:05,010 --> 00:38:08,040
+states and four available actions.
+
+844
+00:38:08,200 --> 00:38:10,316
+So this is for a special case, and I
+
+845
+00:38:10,338 --> 00:38:12,284
+just wanted to put numbers to put things
+
+846
+00:38:12,322 --> 00:38:14,588
+in perspective. So for this particular
+
+847
+00:38:14,674 --> 00:38:16,816
+example, if you are trying to do it with
+
+848
+00:38:16,838 --> 00:38:19,616
+the policy space thing, you will have to
+
+849
+00:38:19,638 --> 00:38:22,384
+do ten to the Power 18 computations for
+
+850
+00:38:22,422 --> 00:38:26,872
+one step of planning or in one instance,
+
+851
+00:38:27,036 --> 00:38:28,644
+in sophisticated inference, it's even
+
+852
+00:38:28,682 --> 00:38:31,764
+worse because the state space also
+
+853
+00:38:31,802 --> 00:38:35,060
+matters. And that won't work.
+
+854
+00:38:35,130 --> 00:38:37,796
+So this third line was supposed to kind
+
+855
+00:38:37,818 --> 00:38:40,996
+of show that even for a time horizon
+
+856
+00:38:41,028 --> 00:38:42,856
+of two, it's really hard to do
+
+857
+00:38:42,878 --> 00:38:44,568
+sophisticated inference if you have to
+
+858
+00:38:44,574 --> 00:38:47,716
+do the full planning. But with dynamic
+
+859
+00:38:47,748 --> 00:38:48,884
+programming, when you're planning
+
+860
+00:38:48,932 --> 00:38:52,268
+backwards, you can attempt to do the
+
+861
+00:38:52,274 --> 00:38:55,708
+full horizon of planning and that's only
+
+862
+00:38:55,874 --> 00:38:58,620
+1000 computations. But with learning
+
+863
+00:38:58,690 --> 00:39:01,116
+prior preference, it's even low when you
+
+864
+00:39:01,138 --> 00:39:03,150
+do it just one time step ahead.
+
+865
+00:39:04,820 --> 00:39:09,628
+Wow, this is quite stark.
+
+866
+00:39:09,804 --> 00:39:12,588
+And in the branching time active
+
+867
+00:39:12,604 --> 00:39:15,952
+inference work. In a previous model
+
+868
+00:39:16,006 --> 00:39:18,368
+stream, we also saw some computational
+
+869
+00:39:18,464 --> 00:39:20,244
+complexity estimates. But I think these
+
+870
+00:39:20,282 --> 00:39:23,396
+are really clear. First thing it made
+
+871
+00:39:23,418 --> 00:39:25,844
+me think of is no one said
+
+872
+00:39:25,882 --> 00:39:27,700
+sophistication was cheap.
+
+873
+00:39:29,320 --> 00:39:33,144
+I mean, it's astronomical how costly it
+
+874
+00:39:33,182 --> 00:39:36,744
+is for maybe even only at two
+
+875
+00:39:36,782 --> 00:39:39,540
+or three or four or five potentially
+
+876
+00:39:39,620 --> 00:39:42,568
+starting to get up to so it's increasing
+
+877
+00:39:42,664 --> 00:39:47,260
+the complexity of planning radically.
+
+878
+00:39:48,000 --> 00:39:53,740
+So it's very interesting pedagogically
+
+879
+00:39:54,180 --> 00:39:57,200
+as we think about like, as we imagine
+
+880
+00:39:57,780 --> 00:39:59,932
+active inference, intelligence
+
+881
+00:39:59,996 --> 00:40:04,944
+architectures, but this
+
+882
+00:40:04,982 --> 00:40:07,044
+makes it pretty clear that it's not
+
+883
+00:40:07,082 --> 00:40:09,200
+something that you can just enumerate
+
+884
+00:40:09,280 --> 00:40:14,224
+over. And so I think it's very creative
+
+885
+00:40:14,272 --> 00:40:16,468
+and important what you've done by
+
+886
+00:40:16,634 --> 00:40:20,564
+connecting this to principled
+
+887
+00:40:20,612 --> 00:40:23,060
+methods of computational complexity
+
+888
+00:40:23,140 --> 00:40:26,440
+reduction rather than potentially
+
+889
+00:40:26,780 --> 00:40:29,480
+effective but ad hoc methods of
+
+890
+00:40:29,550 --> 00:40:31,316
+complexity reduction, like neural
+
+891
+00:40:31,348 --> 00:40:33,084
+networks, which might work when they
+
+892
+00:40:33,122 --> 00:40:34,956
+work, but then once those start to get
+
+893
+00:40:34,978 --> 00:40:38,540
+bloated, now you have no principles and
+
+894
+00:40:38,610 --> 00:40:42,044
+no efficacy. Exactly, yeah. And
+
+895
+00:40:42,082 --> 00:40:43,736
+sophisticated inference, I must note,
+
+896
+00:40:43,768 --> 00:40:45,596
+that has its own benefits when compared
+
+897
+00:40:45,628 --> 00:40:47,952
+to dynamic programming, in the sense
+
+898
+00:40:48,006 --> 00:40:50,336
+that when you're planning forward, you
+
+899
+00:40:50,358 --> 00:40:52,896
+are taking into consideration all the
+
+900
+00:40:52,918 --> 00:40:54,748
+possibilities. Right. But when you're
+
+901
+00:40:54,764 --> 00:40:56,768
+planning backwards, say, for example,
+
+902
+00:40:56,854 --> 00:40:59,280
+like queue based exploration,
+
+903
+00:41:00,020 --> 00:41:02,276
+like if you have to go somewhere, get a
+
+904
+00:41:02,298 --> 00:41:03,856
+queue and then navigate to the goal
+
+905
+00:41:03,888 --> 00:41:05,604
+state, then planning backwards might not
+
+906
+00:41:05,642 --> 00:41:08,084
+work. So this was one feedback I got
+
+907
+00:41:08,202 --> 00:41:12,264
+when I discussed the work with some
+
+908
+00:41:12,302 --> 00:41:15,476
+people. So that's a thing to note
+
+909
+00:41:15,508 --> 00:41:17,576
+about dynamic programming. But the other
+
+910
+00:41:17,678 --> 00:41:19,444
+place where you learn prior preference,
+
+911
+00:41:19,492 --> 00:41:21,652
+I believe it's not a problem, but yeah,
+
+912
+00:41:21,726 --> 00:41:23,128
+dynamic programming is computationally
+
+913
+00:41:23,144 --> 00:41:25,260
+cheap, but it also come with its own
+
+914
+00:41:25,410 --> 00:41:27,390
+limitations, I must note. There,
+
+915
+00:41:28,560 --> 00:41:31,064
+just to restate, that in dynamic
+
+916
+00:41:31,112 --> 00:41:33,928
+programming, with a bellman optimality,
+
+917
+00:41:34,024 --> 00:41:36,188
+we're solving backwards. And so it's
+
+918
+00:41:36,204 --> 00:41:38,096
+kind of like the checkmate is what we
+
+919
+00:41:38,118 --> 00:41:40,124
+want and so now we're working backwards
+
+920
+00:41:40,172 --> 00:41:42,560
+to the present, but we end up not
+
+921
+00:41:42,630 --> 00:41:47,676
+exploring counterfactual endpoints.
+
+922
+00:41:47,788 --> 00:41:50,340
+We don't work back to the present to
+
+923
+00:41:50,410 --> 00:41:52,836
+endpoints that we're not interested in.
+
+924
+00:41:53,018 --> 00:41:55,728
+Exactly. So that's why it's so ruthless.
+
+925
+00:41:55,904 --> 00:41:58,228
+But on the other hand, it's a much more
+
+926
+00:41:58,314 --> 00:42:03,270
+constrained search.
+
+927
+00:42:03,800 --> 00:42:07,044
+Yes. So what I'm thinking about
+
+928
+00:42:07,082 --> 00:42:09,016
+these cases that we should also consider
+
+929
+00:42:09,198 --> 00:42:12,444
+combinations of these two where I can
+
+930
+00:42:12,482 --> 00:42:14,796
+afford to kind of ignore such
+
+931
+00:42:14,898 --> 00:42:18,204
+counterfactual things. There I can do
+
+932
+00:42:18,242 --> 00:42:20,652
+dynamic programming and maybe I can do
+
+933
+00:42:20,706 --> 00:42:24,044
+as two steps of planning. So if
+
+934
+00:42:24,082 --> 00:42:26,960
+it's a queue based exploration, say
+
+935
+00:42:27,030 --> 00:42:30,736
+reaching Q is one task and
+
+936
+00:42:30,838 --> 00:42:33,100
+from Q to the reward is the other task.
+
+937
+00:42:33,180 --> 00:42:35,104
+So I can separate these two and use
+
+938
+00:42:35,142 --> 00:42:39,024
+dynamic programming for them and that's
+
+939
+00:42:39,072 --> 00:42:40,708
+computationally cheaper, but also kind
+
+940
+00:42:40,714 --> 00:42:43,716
+of preserves this idea of having to do
+
+941
+00:42:43,738 --> 00:42:45,828
+it. Yeah, but these are all future
+
+942
+00:42:45,914 --> 00:42:48,896
+things I am thinking about. Cool. I'll
+
+943
+00:42:48,928 --> 00:42:52,532
+ask another question from the chat Alex
+
+944
+00:42:52,676 --> 00:42:56,392
+wrote. Do you have ideas or
+
+945
+00:42:56,446 --> 00:42:59,112
+developments on nested models where
+
+946
+00:42:59,166 --> 00:43:01,610
+different scales could have different
+
+947
+00:43:03,840 --> 00:43:06,444
+one time step ahead and speed of
+
+948
+00:43:06,482 --> 00:43:09,516
+execution? So how does this model play
+
+949
+00:43:09,538 --> 00:43:12,988
+out in nested models? And how do
+
+950
+00:43:12,994 --> 00:43:14,268
+we think about this forwards and
+
+951
+00:43:14,274 --> 00:43:16,576
+backwards in time in the speed of
+
+952
+00:43:16,598 --> 00:43:20,000
+execution and nested models? Okay,
+
+953
+00:43:20,070 --> 00:43:22,172
+so I might need a little more context
+
+954
+00:43:22,236 --> 00:43:25,676
+here. Like when you say nested models,
+
+955
+00:43:25,788 --> 00:43:28,150
+do you mean hierarchical models? Yeah.
+
+956
+00:43:28,840 --> 00:43:32,470
+So maybe something like
+
+957
+00:43:32,920 --> 00:43:35,892
+there is an observation. I get on a fast
+
+958
+00:43:35,946 --> 00:43:39,328
+pace and I do some inference on
+
+959
+00:43:39,354 --> 00:43:42,584
+that, but then I use this inference to
+
+960
+00:43:42,622 --> 00:43:47,096
+kind of do and
+
+961
+00:43:47,198 --> 00:43:48,728
+basically this inference becomes the
+
+962
+00:43:48,734 --> 00:43:51,076
+observation for the next state. That's
+
+963
+00:43:51,108 --> 00:43:54,332
+what nested models mean, right? Yes.
+
+964
+00:43:54,386 --> 00:43:56,972
+So I might have to actually think about
+
+965
+00:43:57,026 --> 00:43:59,644
+that in terms of a task and then think
+
+966
+00:43:59,682 --> 00:44:02,060
+about it. But honestly, I haven't
+
+967
+00:44:02,880 --> 00:44:04,736
+thought how this might work in that
+
+968
+00:44:04,758 --> 00:44:08,080
+context, but say, for a task.
+
+969
+00:44:11,300 --> 00:44:13,184
+So in terms of navigation, if you think
+
+970
+00:44:13,222 --> 00:44:14,770
+about it, you can think about,
+
+971
+00:44:15,860 --> 00:44:20,096
+say, rooms environment. So that's
+
+972
+00:44:20,128 --> 00:44:21,988
+one of the examples I can think about
+
+973
+00:44:22,154 --> 00:44:24,064
+where you can apply this. So imagine
+
+974
+00:44:24,112 --> 00:44:27,684
+maybe you have a collection of rooms and
+
+975
+00:44:27,882 --> 00:44:29,936
+as an agent, you have to first figure
+
+976
+00:44:29,978 --> 00:44:32,136
+out which room to go and then you have
+
+977
+00:44:32,158 --> 00:44:34,952
+to navigate inside that room. And
+
+978
+00:44:35,086 --> 00:44:38,424
+basically you can do inference in two
+
+979
+00:44:38,462 --> 00:44:40,600
+stages or decision making in two stages.
+
+980
+00:44:41,100 --> 00:44:43,108
+And you will have to separate your
+
+981
+00:44:43,134 --> 00:44:45,916
+decisions in those stages inside the
+
+982
+00:44:45,938 --> 00:44:47,416
+room. You can do, say, dynamic
+
+983
+00:44:47,448 --> 00:44:49,384
+programming to navigate your optimal
+
+984
+00:44:49,512 --> 00:44:52,716
+path, but you will always have to kind
+
+985
+00:44:52,738 --> 00:44:55,760
+of have two stages of decision making
+
+986
+00:44:55,830 --> 00:45:00,000
+and maybe different methods work better
+
+987
+00:45:00,070 --> 00:45:03,410
+at different stages. But this would be
+
+988
+00:45:04,100 --> 00:45:07,152
+better, this discussion would be better
+
+989
+00:45:07,206 --> 00:45:10,676
+to better in
+
+990
+00:45:10,698 --> 00:45:13,908
+a well thought out task, I would say.
+
+991
+00:45:13,994 --> 00:45:17,030
+I don't have an answer that might be
+
+992
+00:45:17,400 --> 00:45:20,410
+fitting for everything. But yeah,
+
+993
+00:45:21,740 --> 00:45:24,728
+we've seen almost exactly that kind of
+
+994
+00:45:24,894 --> 00:45:28,132
+hierarchical simultaneous localization
+
+995
+00:45:28,196 --> 00:45:31,112
+and mapping slam in a robotics case.
+
+996
+00:45:31,166 --> 00:45:32,808
+There have been active inference models
+
+997
+00:45:32,824 --> 00:45:36,572
+on that. Would it be possible to
+
+998
+00:45:36,626 --> 00:45:40,396
+sort of do one
+
+999
+00:45:40,418 --> 00:45:44,216
+of these methods at one level of the
+
+1000
+00:45:44,258 --> 00:45:46,530
+nested model and then have another
+
+1001
+00:45:46,980 --> 00:45:49,650
+computational method applied to another?
+
+1002
+00:45:50,100 --> 00:45:52,832
+Or if you wanted the advantages of one
+
+1003
+00:45:52,886 --> 00:45:56,064
+in one place, can you mix and match with
+
+1004
+00:45:56,102 --> 00:45:58,276
+these different methods even within one
+
+1005
+00:45:58,378 --> 00:46:00,950
+simulation? Yeah,
+
+1006
+00:46:01,800 --> 00:46:04,070
+I definitely think that's possible,
+
+1007
+00:46:04,600 --> 00:46:07,430
+but we'll have to maybe try.
+
+1008
+00:46:09,080 --> 00:46:12,068
+So all my methods are one stage. It's
+
+1009
+00:46:12,084 --> 00:46:16,104
+not a hierarchical model, but I
+
+1010
+00:46:16,142 --> 00:46:17,656
+strongly believe that it would also work
+
+1011
+00:46:17,678 --> 00:46:20,090
+in an estate model where you can have
+
+1012
+00:46:20,540 --> 00:46:22,604
+two methods of decision making working
+
+1013
+00:46:22,642 --> 00:46:25,196
+together in, say, for a room example. I
+
+1014
+00:46:25,218 --> 00:46:28,156
+just mentioned. Cool. Could you go to
+
+1015
+00:46:28,178 --> 00:46:29,870
+the slide on Z learning?
+
+1016
+00:46:32,480 --> 00:46:33,230
+Yeah.
+
+1017
+00:46:35,540 --> 00:46:38,864
+Cool. Yeah. So I noticed here and in the
+
+1018
+00:46:38,902 --> 00:46:41,980
+great paper that you had several totorov
+
+1019
+00:46:42,060 --> 00:46:45,724
+citations. Yes. And this introduction
+
+1020
+00:46:45,772 --> 00:46:48,644
+of the Z learning is a novelty with
+
+1021
+00:46:48,682 --> 00:46:50,628
+respect to the active inference field.
+
+1022
+00:46:50,714 --> 00:46:54,212
+So could you explain a little more what
+
+1023
+00:46:54,266 --> 00:46:57,860
+is the Z and what is it that
+
+1024
+00:46:57,930 --> 00:47:04,228
+enables such a rapid improvement
+
+1025
+00:47:04,324 --> 00:47:07,624
+in the Z with respect to the Q? Yeah.
+
+1026
+00:47:07,662 --> 00:47:11,352
+Okay. So to give some context about
+
+1027
+00:47:11,406 --> 00:47:12,270
+this paper,
+
+1028
+00:47:14,160 --> 00:47:17,676
+it talks about a linear method of
+
+1029
+00:47:17,698 --> 00:47:20,508
+decision making in a particular class of
+
+1030
+00:47:20,514 --> 00:47:22,796
+MDP. So given that you are having a
+
+1031
+00:47:22,818 --> 00:47:25,132
+markout decision process where your
+
+1032
+00:47:25,186 --> 00:47:28,224
+actions can be based on states and not
+
+1033
+00:47:28,262 --> 00:47:29,884
+actions. So when you think about actions
+
+1034
+00:47:29,932 --> 00:47:31,936
+in a, say in, for example, a grid world
+
+1035
+00:47:31,958 --> 00:47:34,770
+task, you think about left right and
+
+1036
+00:47:35,220 --> 00:47:37,616
+north south right? So if I take a north,
+
+1037
+00:47:37,728 --> 00:47:41,204
+then that has a consequence on state
+
+1038
+00:47:41,242 --> 00:47:44,656
+space. But in this paper, they're
+
+1039
+00:47:44,688 --> 00:47:46,964
+introducing a class of MDP where
+
+1040
+00:47:47,082 --> 00:47:49,350
+decision is itself in terms of states.
+
+1041
+00:47:49,880 --> 00:47:53,784
+So if I am, say, in state s one, my
+
+1042
+00:47:53,822 --> 00:47:57,576
+decision will be depending upon the
+
+1043
+00:47:57,598 --> 00:47:59,256
+other states. So my decision will be
+
+1044
+00:47:59,278 --> 00:48:00,856
+based on the other states I want to be
+
+1045
+00:48:00,878 --> 00:48:04,376
+in the next time step. So it's
+
+1046
+00:48:04,408 --> 00:48:07,404
+a redefinition of decision making in
+
+1047
+00:48:07,442 --> 00:48:09,532
+terms of the state space rather than
+
+1048
+00:48:09,666 --> 00:48:12,012
+decisions being something else like left
+
+1049
+00:48:12,066 --> 00:48:15,584
+right and down up. So given that such
+
+1050
+00:48:15,622 --> 00:48:18,236
+an MDP exists where I can take decisions
+
+1051
+00:48:18,268 --> 00:48:19,810
+in terms of states,
+
+1052
+00:48:21,700 --> 00:48:23,884
+they have showed that computationally
+
+1053
+00:48:24,012 --> 00:48:26,924
+you can take decisions in linear
+
+1054
+00:48:26,972 --> 00:48:30,070
+complexity, however big the problem is.
+
+1055
+00:48:30,760 --> 00:48:33,876
+So for that to enable decision making in
+
+1056
+00:48:33,898 --> 00:48:35,924
+terms of states, you should have a sense
+
+1057
+00:48:35,962 --> 00:48:39,248
+of what is good and bad for the states.
+
+1058
+00:48:39,434 --> 00:48:43,384
+So in this grid word example, you have
+
+1059
+00:48:43,422 --> 00:48:46,344
+a desirability function which is C. So C
+
+1060
+00:48:46,382 --> 00:48:49,236
+is the desirability function which talks
+
+1061
+00:48:49,268 --> 00:48:52,056
+about how desirable is this tip? And if
+
+1062
+00:48:52,078 --> 00:48:54,764
+I have a C function, then what they have
+
+1063
+00:48:54,802 --> 00:48:58,536
+showed is that I can take decisions
+
+1064
+00:48:58,568 --> 00:49:00,684
+with linear computational complexity for
+
+1065
+00:49:00,722 --> 00:49:02,780
+this particular class of MDP. So if my
+
+1066
+00:49:02,850 --> 00:49:05,424
+MDP allows me to take decisions in terms
+
+1067
+00:49:05,462 --> 00:49:09,388
+of states, it's only linear
+
+1068
+00:49:09,484 --> 00:49:12,992
+complexity for that thing. So this
+
+1069
+00:49:13,046 --> 00:49:15,568
+graph is basically comparing how you can
+
+1070
+00:49:15,654 --> 00:49:19,940
+learn desirability better or
+
+1071
+00:49:20,010 --> 00:49:22,016
+faster, right? So Q learning, if you're
+
+1072
+00:49:22,048 --> 00:49:23,780
+familiar with Q learning, it's basically
+
+1073
+00:49:23,850 --> 00:49:27,830
+a table based method where you have
+
+1074
+00:49:28,600 --> 00:49:30,952
+desirability of actions given a state.
+
+1075
+00:49:31,086 --> 00:49:32,952
+So given a state, you know what to do.
+
+1076
+00:49:33,006 --> 00:49:35,576
+That's basically the Q matrix. But in
+
+1077
+00:49:35,598 --> 00:49:39,224
+terms of C or the C
+
+1078
+00:49:39,262 --> 00:49:41,290
+learning method, it's only about states.
+
+1079
+00:49:41,660 --> 00:49:43,516
+You're only learning how desirable a
+
+1080
+00:49:43,538 --> 00:49:45,784
+state is. There is no concept of action
+
+1081
+00:49:45,832 --> 00:49:49,196
+states. And this is exactly what our
+
+1082
+00:49:49,218 --> 00:49:52,008
+prior preference is in active inference,
+
+1083
+00:49:52,104 --> 00:49:53,900
+where it is a distribution that
+
+1084
+00:49:53,970 --> 00:49:55,688
+quantifies how desirable or non
+
+1085
+00:49:55,704 --> 00:49:57,230
+desirable states are.
+
+1086
+00:49:58,580 --> 00:50:01,996
+So given that they have shown
+
+1087
+00:50:02,028 --> 00:50:04,716
+that you can learn the C matrix faster
+
+1088
+00:50:04,748 --> 00:50:07,676
+and that's optimal and it's way faster
+
+1089
+00:50:07,708 --> 00:50:09,444
+than even Q learning, then I thought,
+
+1090
+00:50:09,482 --> 00:50:12,372
+okay, why not try to learn C the same
+
+1091
+00:50:12,426 --> 00:50:15,830
+way as C is learned in this paper and
+
+1092
+00:50:16,680 --> 00:50:19,140
+using this. So there is a similar
+
+1093
+00:50:19,210 --> 00:50:21,716
+learning rule for learning C, which is
+
+1094
+00:50:21,738 --> 00:50:23,992
+called set learning in that paper. And
+
+1095
+00:50:24,046 --> 00:50:25,748
+when I attempted to learn C, what I've
+
+1096
+00:50:25,764 --> 00:50:28,024
+seen is that it learns really fast a
+
+1097
+00:50:28,062 --> 00:50:30,504
+useful prior preference that lets me
+
+1098
+00:50:30,542 --> 00:50:32,408
+take decisions or let the active
+
+1099
+00:50:32,424 --> 00:50:35,628
+inference agent take decisions only by
+
+1100
+00:50:35,714 --> 00:50:37,900
+say, one time step of planning.
+
+1101
+00:50:39,360 --> 00:50:41,150
+So basically that's a story.
+
+1102
+00:50:43,440 --> 00:50:47,360
+This idea of C being easily learnable is
+
+1103
+00:50:47,430 --> 00:50:50,610
+in that paper, the Tarot paper.
+
+1104
+00:50:52,100 --> 00:50:54,848
+Okay, let me try to restate that since I
+
+1105
+00:50:54,854 --> 00:50:56,210
+think it's a very interesting
+
+1106
+00:50:56,600 --> 00:50:59,348
+augmentation of active inference. So
+
+1107
+00:50:59,514 --> 00:51:02,804
+we're going to be learning C for all
+
+1108
+00:51:02,842 --> 00:51:06,256
+the reasons we discussed earlier.
+
+1109
+00:51:06,448 --> 00:51:10,644
+We're going to learn C analogously
+
+1110
+00:51:10,692 --> 00:51:14,650
+to how Todorov presented Z learning.
+
+1111
+00:51:15,260 --> 00:51:17,210
+And in the Z learning,
+
+1112
+00:51:18,620 --> 00:51:21,716
+instead of learning, for example,
+
+1113
+00:51:21,838 --> 00:51:24,524
+updated posterior probabilities on
+
+1114
+00:51:24,562 --> 00:51:27,996
+actions and then using actions to
+
+1115
+00:51:28,018 --> 00:51:30,472
+navigate amongst states that emit
+
+1116
+00:51:30,536 --> 00:51:33,724
+observations, we're going to
+
+1117
+00:51:33,762 --> 00:51:37,792
+kind of bake the action into
+
+1118
+00:51:37,846 --> 00:51:40,796
+the states. So that really we're
+
+1119
+00:51:40,828 --> 00:51:43,650
+learning transitions amongst states
+
+1120
+00:51:44,340 --> 00:51:45,440
+directly.
+
+1121
+00:51:51,510 --> 00:51:54,130
+And to connect this to the free energy
+
+1122
+00:51:54,200 --> 00:51:56,770
+principle and how it is playing out with
+
+1123
+00:51:56,840 --> 00:51:58,340
+active inference here,
+
+1124
+00:52:00,710 --> 00:52:03,694
+C is not just our desirability function,
+
+1125
+00:52:03,752 --> 00:52:05,254
+that's one way of thinking about it.
+
+1126
+00:52:05,292 --> 00:52:07,414
+That's why we call it preference. But
+
+1127
+00:52:07,452 --> 00:52:11,030
+also C is our expectation. And so
+
+1128
+00:52:11,100 --> 00:52:13,586
+that is what allows us to, on one hand
+
+1129
+00:52:13,708 --> 00:52:16,794
+use the language familiar to reward and
+
+1130
+00:52:16,832 --> 00:52:18,986
+preference learning. Like the agent is
+
+1131
+00:52:19,008 --> 00:52:21,980
+ending up where it likes to be, but also
+
+1132
+00:52:22,350 --> 00:52:26,534
+the expectation based definition
+
+1133
+00:52:26,582 --> 00:52:28,846
+of C. These are the same thing allows us
+
+1134
+00:52:28,868 --> 00:52:30,750
+to talk about that as a path of least
+
+1135
+00:52:30,820 --> 00:52:34,794
+action or as the most likely outcome
+
+1136
+00:52:34,922 --> 00:52:37,902
+or the least surprising outcome. And
+
+1137
+00:52:37,956 --> 00:52:41,218
+because we've defined it what we want
+
+1138
+00:52:41,384 --> 00:52:45,026
+as the least surprising outcome, then we
+
+1139
+00:52:45,048 --> 00:52:48,382
+can use variational free energy to bound
+
+1140
+00:52:48,446 --> 00:52:51,926
+surprise, whereas you can't use simply a
+
+1141
+00:52:51,948 --> 00:52:54,982
+variational method to bound or even
+
+1142
+00:52:55,036 --> 00:52:58,120
+necessarily approximate reward itself.
+
+1143
+00:52:58,890 --> 00:53:02,486
+But if you say I prefer what
+
+1144
+00:53:02,508 --> 00:53:06,710
+I expect and what I expect reduces
+
+1145
+00:53:06,790 --> 00:53:08,614
+my surprise and I'm going to bounce
+
+1146
+00:53:08,662 --> 00:53:12,010
+surprise, then you get both
+
+1147
+00:53:12,080 --> 00:53:15,930
+that sort of behavioral reward seeking
+
+1148
+00:53:17,250 --> 00:53:20,762
+couched in a surprise bounding
+
+1149
+00:53:20,826 --> 00:53:23,790
+surprise minimizing physics framework.
+
+1150
+00:53:27,010 --> 00:53:28,778
+Yeah, that's a beautiful way of saying
+
+1151
+00:53:28,804 --> 00:53:30,100
+it. Yeah. Thank you.
+
+1152
+00:53:31,590 --> 00:53:36,130
+Well, what are your next exciting
+
+1153
+00:53:36,790 --> 00:53:39,426
+steps or directions or what ways do you
+
+1154
+00:53:39,448 --> 00:53:42,600
+want to take this work? Yeah, great. So
+
+1155
+00:53:43,130 --> 00:53:45,560
+if you are talking about only this work,
+
+1156
+00:53:46,010 --> 00:53:50,982
+what I want to do next is think
+
+1157
+00:53:51,036 --> 00:53:53,378
+about queue based exploration tasks.
+
+1158
+00:53:53,554 --> 00:53:55,386
+First of all, address the limitations of
+
+1159
+00:53:55,408 --> 00:53:58,794
+dynamic programming. So if you
+
+1160
+00:53:58,832 --> 00:54:00,634
+have, say, a queue to explore in this
+
+1161
+00:54:00,672 --> 00:54:03,306
+grid first and that's more optimal, I
+
+1162
+00:54:03,328 --> 00:54:06,434
+want to see how the expected ambiguity
+
+1163
+00:54:06,502 --> 00:54:09,790
+term in the expected free energy is
+
+1164
+00:54:09,860 --> 00:54:11,758
+useful and should be made use in the
+
+1165
+00:54:11,764 --> 00:54:14,094
+dynamic programming strictly in that
+
+1166
+00:54:14,132 --> 00:54:17,002
+sense. But more generally,
+
+1167
+00:54:17,146 --> 00:54:19,630
+I'm also looking at other ways of making
+
+1168
+00:54:19,700 --> 00:54:22,386
+decisions in active instance. Like there
+
+1169
+00:54:22,408 --> 00:54:26,062
+are works from professor Isamura
+
+1170
+00:54:26,206 --> 00:54:29,620
+from CBS Reckon, he talks about
+
+1171
+00:54:30,470 --> 00:54:32,978
+how neural networks are doing active
+
+1172
+00:54:32,994 --> 00:54:35,222
+inference and basically decision making
+
+1173
+00:54:35,276 --> 00:54:38,834
+there is really more efficient
+
+1174
+00:54:38,962 --> 00:54:41,046
+in the sense that it's like Q learning.
+
+1175
+00:54:41,228 --> 00:54:44,778
+So there he's making clever use of the
+
+1176
+00:54:44,784 --> 00:54:47,402
+variation free energy to learn good
+
+1177
+00:54:47,456 --> 00:54:50,794
+state action mappings and it's a very
+
+1178
+00:54:50,832 --> 00:54:54,554
+drastic change to what we are used to
+
+1179
+00:54:54,672 --> 00:54:56,266
+in terms of expected free energy. So
+
+1180
+00:54:56,288 --> 00:54:57,946
+there is no concept of expected free
+
+1181
+00:54:57,968 --> 00:55:01,006
+energy in that work. It's all
+
+1182
+00:55:01,028 --> 00:55:02,670
+about learning what is good and bad
+
+1183
+00:55:02,740 --> 00:55:04,542
+directly from variation of free energy.
+
+1184
+00:55:04,596 --> 00:55:07,486
+So I find that also fascinating. I want
+
+1185
+00:55:07,508 --> 00:55:10,722
+to kind of explore that more and see how
+
+1186
+00:55:10,776 --> 00:55:14,402
+decision making in this way is
+
+1187
+00:55:14,456 --> 00:55:16,674
+better or worse or should be thought
+
+1188
+00:55:16,712 --> 00:55:19,634
+about. Should we even reconsider ways of
+
+1189
+00:55:19,672 --> 00:55:21,198
+decision making? Because active
+
+1190
+00:55:21,214 --> 00:55:22,750
+inference only talks about variation of
+
+1191
+00:55:22,760 --> 00:55:24,034
+free energy and that's the central
+
+1192
+00:55:24,082 --> 00:55:26,390
+tenet. Everything else is your
+
+1193
+00:55:26,460 --> 00:55:28,200
+interpretation of that. Right,
+
+1194
+00:55:31,290 --> 00:55:33,560
+that's another direction I want to work.
+
+1195
+00:55:35,790 --> 00:55:38,346
+Interesting way to say it. Definitely
+
+1196
+00:55:38,528 --> 00:55:42,154
+the variational free energy, which is
+
+1197
+00:55:42,192 --> 00:55:45,270
+a functional of our variational
+
+1198
+00:55:45,430 --> 00:55:48,300
+distribution Q and the data y,
+
+1199
+00:55:48,610 --> 00:55:50,958
+the variational free energy is kind of
+
+1200
+00:55:50,964 --> 00:55:55,082
+like the real time homeostasis,
+
+1201
+00:55:55,226 --> 00:55:58,590
+like how are things making sense given
+
+1202
+00:55:58,660 --> 00:56:00,900
+what I believe and the incoming data.
+
+1203
+00:56:01,590 --> 00:56:04,962
+And then to extend that kind of a sense
+
+1204
+00:56:05,016 --> 00:56:07,700
+making framework into decision making,
+
+1205
+00:56:08,070 --> 00:56:10,766
+we've seen a lot of different methods.
+
+1206
+00:56:10,878 --> 00:56:14,390
+Expected free energy is a common
+
+1207
+00:56:14,460 --> 00:56:17,430
+one, but for example, there's been free
+
+1208
+00:56:17,500 --> 00:56:21,926
+energy of the expected future and
+
+1209
+00:56:21,948 --> 00:56:25,802
+there's other constructions that
+
+1210
+00:56:25,856 --> 00:56:28,730
+have different methods.
+
+1211
+00:56:29,550 --> 00:56:31,814
+And then you pointed also to Professor
+
+1212
+00:56:31,862 --> 00:56:35,820
+Samura's work with the sort of
+
+1213
+00:56:37,070 --> 00:56:39,206
+relationship between the variational
+
+1214
+00:56:39,238 --> 00:56:41,246
+free energy on the base graph and the
+
+1215
+00:56:41,268 --> 00:56:43,566
+loss function in a neural network and
+
+1216
+00:56:43,588 --> 00:56:45,390
+all those relationships. That's very
+
+1217
+00:56:45,460 --> 00:56:46,800
+exciting work too,
+
+1218
+00:56:49,090 --> 00:56:51,538
+I guess kind of in closing, just as a
+
+1219
+00:56:51,544 --> 00:56:54,162
+last question or thought, you're coming
+
+1220
+00:56:54,216 --> 00:56:58,050
+close to the end of your PhD. So just
+
+1221
+00:56:58,120 --> 00:57:00,942
+in the time that you've been a PhD
+
+1222
+00:57:01,006 --> 00:57:04,866
+student, how have you seen active
+
+1223
+00:57:04,898 --> 00:57:10,760
+inference develop or what
+
+1224
+00:57:11,290 --> 00:57:14,186
+feels different to you today near the
+
+1225
+00:57:14,208 --> 00:57:18,374
+end than when you were fresh
+
+1226
+00:57:18,422 --> 00:57:20,780
+eyed and excited several years ago?
+
+1227
+00:57:21,150 --> 00:57:24,346
+Yeah, that's a really great question and
+
+1228
+00:57:24,528 --> 00:57:26,714
+I am also very excited of how the field
+
+1229
+00:57:26,752 --> 00:57:30,014
+has evolved. And frankly, I started from
+
+1230
+00:57:30,052 --> 00:57:31,514
+this reinforcement learning background
+
+1231
+00:57:31,562 --> 00:57:33,854
+and the physics background, and when I
+
+1232
+00:57:33,892 --> 00:57:35,486
+started reading, it was only, say, one
+
+1233
+00:57:35,508 --> 00:57:38,062
+or two papers and I did not quite
+
+1234
+00:57:38,116 --> 00:57:40,766
+understand much of it. It was only when
+
+1235
+00:57:40,788 --> 00:57:44,030
+I started implementing it using Carl's
+
+1236
+00:57:44,470 --> 00:57:46,894
+MATLAB scripts, I kind of understood,
+
+1237
+00:57:46,942 --> 00:57:49,202
+okay, this makes sense and I like it.
+
+1238
+00:57:49,336 --> 00:57:52,078
+But within, say, one or two years, I saw
+
+1239
+00:57:52,184 --> 00:57:54,982
+a lot of papers coming in from different
+
+1240
+00:57:55,036 --> 00:57:56,806
+directions and people also starting to
+
+1241
+00:57:56,828 --> 00:57:59,426
+use neural networks and all this scaling
+
+1242
+00:57:59,458 --> 00:58:03,094
+up came. And at some point I also
+
+1243
+00:58:03,132 --> 00:58:05,430
+questioned the need of active inference
+
+1244
+00:58:05,770 --> 00:58:08,086
+because if you have deep reinforcement
+
+1245
+00:58:08,118 --> 00:58:10,106
+learning, which can do many things, and
+
+1246
+00:58:10,128 --> 00:58:12,886
+why deep active inference? And that's
+
+1247
+00:58:12,918 --> 00:58:15,210
+the reason why I did not get into that.
+
+1248
+00:58:15,280 --> 00:58:17,786
+But I still find it fascinating. I want
+
+1249
+00:58:17,808 --> 00:58:19,386
+to kind of understand deep, active
+
+1250
+00:58:19,418 --> 00:58:21,600
+inference more than what I know now,
+
+1251
+00:58:22,050 --> 00:58:23,854
+but I've seen the field growing, like
+
+1252
+00:58:23,892 --> 00:58:27,182
+anything in two or three years, and many
+
+1253
+00:58:27,236 --> 00:58:29,954
+cohorts of people starting to work. And
+
+1254
+00:58:30,072 --> 00:58:33,330
+in no time, it was a seriously taken
+
+1255
+00:58:33,400 --> 00:58:36,514
+field other than a field with,
+
+1256
+00:58:36,552 --> 00:58:39,090
+say, two papers with nobody actually
+
+1257
+00:58:39,160 --> 00:58:41,246
+knowing what it is. So it's really
+
+1258
+00:58:41,288 --> 00:58:43,526
+exciting. Yeah. So I really look forward
+
+1259
+00:58:43,628 --> 00:58:46,360
+how the field evolves in time and also
+
+1260
+00:58:47,130 --> 00:58:50,326
+what I can do after my PhD and so
+
+1261
+00:58:50,348 --> 00:58:54,090
+on. Cool. Forward in time,
+
+1262
+00:58:54,160 --> 00:58:56,746
+backward in time, what we prefer, what
+
+1263
+00:58:56,768 --> 00:58:59,260
+we expect. Yes.
+
+1264
+00:59:02,430 --> 00:59:05,466
+Any other comments or anything else you
+
+1265
+00:59:05,488 --> 00:59:08,894
+want to add? Yeah, so please let me
+
+1266
+00:59:08,932 --> 00:59:11,246
+know what you think about the paper and
+
+1267
+00:59:11,348 --> 00:59:13,454
+what you think about these ideas. Feel
+
+1268
+00:59:13,492 --> 00:59:15,566
+free to let me know. I really look
+
+1269
+00:59:15,588 --> 00:59:18,430
+forward to the feedback and yeah.
+
+1270
+00:59:18,580 --> 00:59:20,174
+Thanks so much for this opportunity,
+
+1271
+00:59:20,292 --> 00:59:23,646
+Daniel, and thank you for your time. It
+
+1272
+00:59:23,668 --> 00:59:26,446
+was amazing. I hope people check out the
+
+1273
+00:59:26,468 --> 00:59:28,846
+paper and get in touch and replicate the
+
+1274
+00:59:28,868 --> 00:59:31,630
+code and take it their own direction.
+
+1275
+00:59:32,250 --> 00:59:35,046
+Thank you. See you next time. See you
+
+1276
+00:59:35,068 --> 00:59:37,126
+next time. Thank you so much. Bye. Have
+
+1277
+00:59:37,148 --> 00:59:37,654
+a good day.
+
+
