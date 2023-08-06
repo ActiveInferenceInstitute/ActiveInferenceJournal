@@ -1,9 +1,9 @@
 00:07 _Daniel Friedman:_
 Hello and welcome.
 It's July 26, 2023.
-We're here in active inference Livestream 49.1 with Megan Peters and Nora Bradford.
+We're here in Active Inference Livestream 49.1 with Megan Peters and Nora Bradford.
 So thank you both for joining.
-We're looking forward to a presentation followed by a discussion on clickbait consciousness science and responsible journalism.
+We're looking forward to a presentation followed by a discussion on clickbait, consciousness science, and responsible journalism.
 So, Megan, to you.
 
 00:32 _Megan Peters:_
@@ -16,10 +16,12 @@ It's very in the media.
 It's really in response to the way the media has been covering consciousness science just in the past few weeks.
 So here we go.
 I'll have a few things to share with you.
+
 Okay, so since we're talking about consciousness science, let's start with a provocative question.
 So you are conscious.
 How is this possible?
 How is it possible that your brain creates the conscious experience of you?
+
 And so this is a captivating, and it's a stimulating kind of crazy question.
 It's a really huge question.
 It borders on the religious and spiritual in many ways.
@@ -31,55 +33,58 @@ They are the people who are interested in this question, and that's probably a l
 So it's actually really quite easy, I think, to get swept up in the sensational nature of this question.
 Consciousness science is a really big deal.
 It touches on so many aspects of our everyday experience.
+
 And so this kind of leads us to another version of this question, which is, is this even really science?
 Is this something that can be even studied scientifically?
 Or does it transcend beyond scientific inquiry?
 Do consciousness scientists do something that can be characterized really as science?
 Or maybe they're studying something that's a little bit more on the border, like, I don't know, telepathy or panpsychism, like maybe rocks and trees are also conscious.
 Wouldn't that be crazy?
-Or maybe the vibrations of the mean that the universe is conscious.
+Or maybe the vibrations of brain the mean that the universe is conscious.
 So it kind of quickly starts to feel a little fuzzy, a little less scientific.
 And that's what I want to talk about today, is that perception and how that is kind of exacerbated by the way that this field is portrayed in the media and maybe what we can do about it.
-Okay?
+
 And so all this means that consciousness science is really difficult, not just to do scientifically, and it is really difficult, I promise you, but it's also really difficult from a social perspective.
 So more than for some other fields, those of us who do consciousness science and who study this scientifically, we have a really crucial and difficult responsibility, which is to accurately and precisely communicate the state of our field and its methods and its discoveries and how it relates to other fields, from physics to medicine and beyond.
 And it's in fact, so difficult that our field has actually written a number of papers about just how difficult it is.
-So this is a fairly recent paper TS colleagues, including many others.
+So this is a fairly recent paper from [?] colleagues, including many others.
 This is just from a few years ago.
 And these papers, and this one in particular, really highlight why our field in specific has kind of an uphill battle compared to a lot of other areas of study, especially when it comes to potential misrepresentation in the media.
 So I thought that maybe in order to drive this point home, I could actually give you some examples of how consciousness science has been misrepresented in the media so that we can get a handle on this, we can see it concretely.
 And as I'm giving you some of these examples, I want you to try to imagine how it would sound if the same kinds of statements, the same kind of sweeping claims were made about discoveries in biology or chemistry, neuroscience, climate science, engineering, that kind of thing.
 All right, let's do some examples.
+
 Here is the first one.
 Okay, this is an example which is actually 13 years old at this point.
 As I think you'll see, maybe it hasn't gotten so much better over the past 13 years.
-But in this example, the title Sizing of Consciousness by its bits, we have Christoph Coke, who is an expert on consciousness science at Caltech, being quoted as saying, I love his ideas.
-It's the only real promising fundamental theory.
-And here, deciding to present just this one scientist's opinion as fact without challenging it at all, without presenting any other opinions at all, I'll point out that this opinion was actually not representative of the consensus in the field at that time.
+But in this example, the title "Sizing of Consciousness by its bits", we have Christoph Koch, who is an expert on consciousness science at Caltech, being quoted as saying, "I love his ideas.
+It's the only real promising fundamental theory".
+And here [?], deciding to present just this one scientist's opinion as fact without challenging it at all, without presenting any other opinions at all, I'll point out that this opinion was actually not representative of the consensus in the field at that time.
 It was this one scientist's point of view, and it's not actually representative of the consensus in the field now either.
 And so I want you to take this quote, but I want you to replace consciousness with curing cancer.
 So this opinion presented as fact is akin to writing that one scientist theory about a cure for cancer is the only really promising fundamental theory for curing cancer.
 And without presenting any other possibilities that maybe more work needs to be done or more experiments need to be run.
 This is really hyperbolic.
 And it seems like maybe this kind of hyperbole would be hopefully at least a little less likely to happen in biomedicine, or at least would receive more pushback if it were presented this way.
+
 So here's another example, and this one's a bit more recent.
 So this one's from 2018.
-The Is.
+[?]
 Okay, so the electrical activity that moves across neurons is sought by some scientists to contribute to human consciousness.
 This is like a perfectly reasonable statement, right?
 Like totally fine, totally legit.
 But then the the journalist goes on to say, if electrical activity is being disrupted by anesthetic and plants too, causing them to lose consciousness, does that mean in some way that they are conscious?
 Okay, so first of all, these statements are pretty vague.
 That's not really super surprising from a popular science piece.
-And it's not really the primary problem here, saying that electricity that moves across neurons thought to from disruption of electrical activity to plants being conscious.
+And it's not really the primary problem here, saying that electricity that moves across neurons is thought to from [?] disruption of electrical activity to [?] plants being conscious.
 And this is pretty sensational, kind of to the extreme.
 And it makes this fuzzy border between consciousness science and pseudoscience, which is this border that we are trying so hard to delete all the time.
 It makes it even fuzzier.
 It gives us an even harder problem to fight against as consciousness.
-And this isn't just happening 13 years ago, five years ago.
+And this isn't just happening 13 years ago, five years ago, it's still happening. 
 It's still why we're talking.
-Just last month, there was this project which was held in conjunction with the association for the Scientific Study of Consciousness annual meeting, which was in New York City.
-And at this public event, Christophe Coke, who you can see here on the right, and Dave Chalmers here's on the left, they presented their 25 year old bet about whether the neural correlates of consciousness, the ones that go up and down with consciousness goes up and down, would be found.
+Just last month, there was this project which was held in conjunction with the association for the Association Scientific Study of Consciousness annual meeting, which was in New York City.
+And at this public event, Christophe Koch, who you can see here on the right, and Dave Chalmers here's on the left, they presented their 25 year old bet about whether the neural correlates of consciousness, the ones that go up and down with consciousness goes up and down, would be found [?] 25 years later.
 And during this public event, some new results were unveiled for the very first time from one of the ongoing projects, which was designed to challenge two of the many theories about how consciousness arises in the brain.
 And those two theories are called the global neuronal workspace theory and the integrated information theory.
 And the hot off the press results that were shown in this event, they actually ended up challenging both theories.
@@ -87,17 +92,18 @@ They showed that the neural correlates of consciousness are still unknown, that 
 But that's not the story.
 That's not exciting.
 And so that's not the story that the press told.
+
 And so here is what the media actually said.
 Okay, so first we're going to start with Nature.
 Nature, the journalism side of this flagship scientific journal.
-You'd hope that they would be pretty careful about their scientific journalism, but instead they write taglines like this, like Christophe Wagered Dave, 25 years ago that researchers would learn how the brain achieves consciousness by now, but the quest continues.
+You'd hope that they would be pretty careful about their scientific journalism, but instead they write taglines like this, like "Christophe Wagered Dave, 25 years ago that researchers would learn how the brain achieves consciousness by now, but the quest continues".
 But this is actually not what the bet was about.
 The bet was about the neural correlates, not the causal mechanisms, not the generative production of consciousness.
-And remember as good are not the same thing.
-And there's always a relevant Xkcd.
+And remember as good are not the same thing. Correlation is not causation. 
+And there's always a relevant XKCD [comic].
 And so I direct you to this one here, but it gets worse.
-So here's what science had to say.
-Advocates of the losing idea are not conceding yet.
+So here's what Science had to say.
+"Advocates of the losing idea are not conceding yet."
 So again, neither idea lost, remember?
 Or rather both of them lost.
 Neither one of them won.
@@ -109,15 +115,16 @@ And so it kind of makes you wonder, are they like trying to drive clicks?
 Or what is the point here of sensationalizing quite to this degree?
 It seems like a bad idea.
 It seems like oversimplification that actually changes the meaning of what was presented.
+
 So here's another example.
-This is from the economist.
-This article largely reported on a different event that was actually part of the ASSC like primary meeting.
+This is from The Economist.
+This article largely reported on a different event that was actually part of the ASSC primary meeting.
 But it still capitalized on the buzz that this public event, this evening event created.
 And it opens with this really kind of terrible twist of the actual experimental design.
-So The Economist article says top of the bill was the announcement of the result of a so called adversarial collaboration between proponents of two hypotheses about the nature of consciousness.
+So The Economist article says "top of the bill was the announcement of the result of a so called adversarial collaboration between proponents of two hypotheses about the nature of consciousness."
 Again, not what the bet was about.
 It wasn't about the nature of consciousness.
-But anyway, this involved running a series of experiments begun in 2020 to determine which, if either of them is correct.
+But anyway, "this involved running a series of experiments begun in 2020 to determine which, if either of them is correct."
 But again, that's not what the collaboration was designed to do, right?
 In science, you can never prove anything.
 You can never show you're correct.
@@ -125,6 +132,7 @@ You can only show that you are not wrong or that you are wrong.
 That's it.
 That's what you get in science.
 Okay?
+
 So moreover, all of these articles, the three that I've shown you and a number of others, they also contained essentially no discussion of whether these two theories global Neuronal Workspace Theory and Integrated Information Theory, one of which was losing, apparently, whether they were the only ones worth considering.
 So the articles didn't really discuss anything else, any other possible theories.
 In fact, the articles called these two theories leading by the media.
@@ -132,17 +140,17 @@ But the truth is that they're leading only in number of publications, not in amo
 They just have a lot of publications out there.
 There's no discussion in these articles beyond a trivial passing mention that there are any other theories out there at all.
 And especially that whether they are viable or not, whether they're empirically supported.
-So here's some.
+
+So here's some [showing image on slide].
 This isn't all of the empirically supported theories of consciousness out there.
 There's a really nice article here by Anil Seth and Tim Bain that came out last year that discusses a bunch of these.
 And there's a really nice article here by this group also saying they actually looked at the empirical support for different theories of consciousness.
 How many papers are out there that actually challenge versus support each theory?
 And so this landscape is the one that should be the one to evaluate all of the results that were presented at this event.
-In it means that even if one of the two theories that this one project was looking at, if one of them didn't make the cut, that doesn't mean the other one wins.
-And is right.
+In it means that even if one of the two theories that this one project was looking at, if one of them didn't make the cut, that doesn't mean the other one wins, and is right.
 It just means that one of them maybe lost.
 And it didn't even lose, remember?
-In fact.
+
 So in addition to these really nice papers, there's also a whole series of these adversarial collaborations from the same funding agency as the one that was shown in this public event that are designed to actually pit these theories against each other in a pairwise fashion, in a Thunderdome style.
 For all you Mad Max fans out there, I love old school Sci-Fi.
 And the idea here is that two theories enter and one theory leaves.
