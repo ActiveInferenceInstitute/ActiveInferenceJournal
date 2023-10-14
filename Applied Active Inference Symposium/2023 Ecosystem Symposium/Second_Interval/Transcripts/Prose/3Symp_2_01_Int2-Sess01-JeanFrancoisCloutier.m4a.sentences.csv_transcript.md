@@ -1,0 +1,641 @@
+
+00:07 _Daniel:_
+Hello and welcome, everyone.
+Welcome back.
+This is the second interval of the third applied active inference symposium at the active inference institute on August 22, 2023.
+This is going to be another packed and exciting interval, and we're kicking it off with Jean Francois Cloutier, a Collective of theorizers First Steps.
+
+00:35 So, JF, thank you for joining and to you for this presentation.
+And if anybody has questions for this presentation or any of the others, please just put it in the live chat and I'll do it.
+I can.
+So thanks, JF.
+
+00:49 To you.
+
+00:54 _JF:_
+Thank you, Daniel.
+I'm a software engineer at a company called Smart Rent, where I write software for smart home systems.
+I also work on a research project at the Active Inference Institute called the Robotics and Embodied Project.
+My current focus is unsupervised learning in active inference agents.
+In my presentation today, which is titled A Collective of theorizers First Steps, I'll first start with a brief recap of the project, then dive into recent progress, and then I'll conclude with what I see as the next steps of the project.
+
+01:43 Well, since 2017, I've been experimenting with Lego robots and models of cognition.
+I do this for my own education, because, like I think most of us, I understand something better when I build it.
+
+02:02 What you see here is my latest robot model.
+It's a rover.
+It has a whole bunch of sensors and a number of effectors actuators.
+
+02:15 As a matter of fact, those sensors and actuators can be understood as forming the marker blanket of my robot.
+
+02:26 Last year, I presented at the symposium about the history of the project, its then status, and its ambitions.
+I presented a cognitive model that implemented predictive processing from an active inference perspective.
+So there were generative models, there was predictions, there was prediction errors.
+And these generative models animated the robots so that they would roam, avoid obstacles, observe their companion, and also, in a very simplistic way, build a theory of mind of the other robot.
+
+03:07 They could from observations infer that the other robot had detected food, food being presented here as a sheet of paper on the floor, and then would kind of try to track the other robot to also get to the food and fun stuff like this.
+
+03:27 The implementation combined multi processing and functional computing.
+There was nothing probabilistic in the implementation.
+
+03:40 I thought maybe we'd see them in action.
+That's what's presented last year.
+But just to get a sense of what they do, I have two robots here, one named Karl and Andy.
+I named them before I knew I was going to present at the conference.
+So they benefited from a number of training sessions.
+
+04:03 They learned how to find which policies would achieve their goals better than others.
+
+04:13 And one here on the left.
+Found the food rather right away but got closer to the pedestal where the beacon is that simulates the scent of food feared was getting into a collision and then backs off in a hurry as we'll see the other robot observes all this, sees the robot backing off as being in a panic and decides to share this emotion and backs up as well.
+So fun stuff.
+
+04:58 From the beginning I've implemented different cognition models but they all have in common the fact that they implement a society of mind.
+So what is a society of mind?
+A society of mind is a concept by which the mind is not a monolithic structure but a composition of simple actors, independent actors that interact with each other in simple ways.
+
+05:28 That view of the mind was put forth by Marvin Minsky 50 years ago.
+So this is not recent.
+
+05:40 Again, what I presented last year was a society of mind containing a hierarchy of, I call them cognition actors.
+Each cognition actor is an independent process, each one has a scope, a level of abstraction as well.
+So for example, you would have a cognition actor that's concerned with the location of food and it would have beliefs and perceptions about food location and these would feed into a higher level cognition actor, let's say food approach which is concerned about getting closer to the food and so forth and so on.
+These cognition actors communicate again in simple ways.
+This is the society of mind and they communicate by emitting predictions, predictions about the beliefs of other cognition actors and they communicate by emitting prediction errors.
+
+06:38 When predictions made about their beliefs by others are inaccurate that leads to connection actors processing these prediction errors and combining them with their own predictions to create an updated set of perceptions that are synthesized into beliefs.
+And these beliefs lead to actions in order to eliminate negative beliefs or validate positive beliefs.
+Now it's from the interactions of all these kung fu actors that seemingly purposeful behaviors emerge.
+So that was successful but learning was very limited.
+This hierarchy of cognition actors was given, was predefined and the only learning that a robot would do was to discover which action policies tended to be more effective.
+
+07:49 So clearly my robots are not monolithic active inference agents.
+So the question is why would I use a society of mind architecture?
+Well, because I subscribe to the notion that all intelligence is collective intelligence.
+This paper makes the argument quite cogently and I'm going to cite a number of papers which were important to the evolution of my thinking.
+This is one of them.
+
+08:30 This paper sees intelligence as a process, not a property.
+It's a process enacted by the interacting parts as opposed to again, a property of individuals.
+So society of mind is basically that it's actually a number of interacting processes that together from which emerge apparently intelligent behaviors.
+
+09:00 Now my own personal current definition of intelligence is self sustaining, inactive sense making.
+Sense making is really important by autonomous agent system in a dissipative and dynamic environment and this guides all the work I do in this project.
+
+09:27 Now, if you want a description, a detailed description of where my project stood a year ago, there's a paper that was published that I published on Xenodo, which you can look up.
+
+09:47 Now, over the last year, I wanted to move away from a pre built a given society of mind and toward a learned society of mind.
+I wanted to see if I could program an autonomous robot to evolve its society of mind through its interactions with its environment.
+
+10:11 Now, one might think that programming autonomy is an oxymoron would be a good point, but I don't think it is.
+If if the program I write and install my robot imparts constitutive autonomy, which is enable the robot to constitute its own identity, and if it imparts adaptivity, which enable the robot to modify itself from its interactions with the environment, then I think that the robot will be truly autonomous.
+Now, for autonomy to exist inherently in the robot, something in the robot must be at stake.
+
+11:04 And in this case, it's the survival of the robot society of mind.
+Now, the physical structure of the robot is not at stake.
+
+11:17 Its survival is not at stake, unless, of course, it falls off a shelf.
+But as I intend to have my robot develop its society of mind from experiences, I also expect that if it fails, that this society of mine will perish in its attempt to grow and sustain itself.
+So that's what's at stake going forward in this project is the survival of the robot society of mind.
+
+11:51 This survival would be an expression of being.
+By doing, the robot will need to act and interact in its environment in order to survive.
+Now, whatever sense it's going to make of its environment will then be grounded in this survival imperative.
+In essence, the robot society of mine will have skin in the game.
+If this weren't the case, then sense making would actually reside somewhere else.
+
+12:21 It would reside in in the mind of the programmer, in my mind as I observe the robots.
+But I would like the sense making to be grounded in the survival of the robot's mind itself.
+So that's key.
+Now, what do I mean by an evolving and growing society of mind?
+So instead of the given society of mind, which I showed earlier, I want the cognition actors to be created to connect with each other dynamically through interactions with the environment.
+
+13:03 So I want an active, self organizing, self optimizing collective of cognition actors.
+Now, is this feasible?
+Well, that's a big question.
+
+13:15 In trying to answer this question, I'll be also answering questions like what must be given a priori and what can be discovered?
+
+13:26 Well, I already have elements of an answer.
+I know that the sensors and the effectors and the primitive cognition actors that wrap them will be given.
+This will be like what you're born with, basically.
+And there might be a metacognition actor which role will be to oversee and guide the evolution of all other cognition actors.
+
+13:55 But that's my hypothesis.
+
+14:00 I can imagine a test environment for my robot that will test its ability to survive.
+I can imagine, for example, that as the robot moves around or computes, it uses a limited store of energy it's stimulated.
+And that store of energy is replenished when the robot consumes food.
+And that would be by being on top of pieces of paper, colored pieces of paper on the floor.
+
+14:34 And I'm going to make sure that it needs two sources of food in order to survive.
+
+14:38 That would be represented by a yellow paper and a green paper, for example.
+So that to prevent the robot from just simply finding one source of food and just stationing itself over it.
+So the environment will also contain obstacles.
+So the robot will need to learn how to navigate, avoid obstacles, locate different sources of food, get to them, and make sure that it alternate between various sources of food in order to survive.
+And the society of mind that will evolve, will hopefully evolve to successfully do this.
+
+15:17 Else if it doesn't, then it will shrink as resources disappear and essentially die.
+So that's what it's at stake for this robot.
+
+15:33 Now, this effort employs a number of frameworks, and by framework, I mean a useful system of concept and constraints that guide the implementation.
+
+15:47 Well, there's obviously the free energy principle and the Active inference framework.
+
+15:55 However, I see this, the Acactive Inference, as an as if framework.
+It describes the what what must be achieved in this case, reduction of the agents, variational, free energy.
+But it doesn't guide me as to the implementation, how to build the robot.
+For this, I need as is frameworks.
+And I'll be using two frameworks, one which I've been using since the beginning of the project, which is the Actor model.
+
+16:34 The Actor model views computation as a diversity of processes, processes that are independent, have their own private internal state, and who communicate with one another strictly through messages.
+
+16:51 Yesterday in Enterprise One, Keith Duggar presented on the Actor model and made the case that we should use the actor model to implement active inference agents.
+Well, I wholeheartedly agree with them.
+The other framework that I'm going to be using is a special case of symbolic AI called the App Perception Engine.
+And much of the presentation will be about the App Perception Engine and its implementation.
+
+17:24 So here's where we are is the project is located at the intersection of Active Inference as a domain, the Wet and Society of Mind as an architecture, and symbolic AI as a form of computing.
+So that's where the project is, at this intersection.
+
+17:49 So where to begin?
+So I want to dive into a more extensive form of learning.
+
+17:58 And the first step, logically, is to learn how to predict.
+So I want to enable a single cognition actor.
+We'll start with a single cognition actor to learn how to make sense of its local environment, its so called unvelt.
+
+18:19 And making sense implies, at a minimum, to be able to predict incoming sensations.
+So it needs to learn to predict.
+
+18:36 So what will be given to a cognition actor?
+Well, there will be a history of sensations broken into discrete units of time.
+So time n minus three and N minus two, n minus one time n, which is the present moment.
+
+19:00 So these would be remembered observations.
+And then what we want to get out of this is the ability to predict the next incoming set of sensations at time t equals n plus one, n plus two.
+And for this, to be able to predict future observations, we need some kind of predictor function that is learned from the remembered observation.
+Now, this predictive capability can be built in two very general ways.
+One is from statistics, so doing pattern analysis and being able to predict what's most probable, which is the standard current machine learning approach.
+
+19:48 Or we could predict from an understanding of the observations by developing a causal model of what produced these sensations, and from this understanding, predict what rationally should be observed next.
+
+20:16 So this is all about sense making.
+And now what is sense making?
+How do I understand sense making?
+
+20:27 Well, to rationally predict incoming sensory inputs, one must make sense of them.
+That's what making sense means to me.
+And to make sense of sensory inputs means to derive meaningful experiences from them.
+It's not just data, it's not just pieces of data.
+There must be meaningful experiences.
+
+20:48 And by experience, I mean a conceptualization of the sensations and a unification of them in time and space.
+So making sense of these inputs will mean to produce meaningful experiences that are conceptualizations and unifications of the sensations.
+Now, an experience is meaningful if it is underwritten by a causal model.
+
+21:17 So the experience is perceived as the consequences of a latent generative model, generative process that we have modeled.
+And I want meaning to be inherent to the agent.
+
+21:34 And that only happens if the agent is truly autonomous and if this meaning is grounded in the survival imperative, as discussed earlier.
+
+21:46 So how does experiencing work?
+How can that be put into computer code?
+Surprisingly for this, we refer to the philosophy of Emmanuel Kant.
+Emmanuel Kant took a reverse engineering approach, asking himself what must entities do to achieve experience?
+This is akin to the free energy principles high Road, which can be paraphrased as what must organisms do to maintain their existence?
+
+22:17 So Emmanuel Kong tried to reverse engineer cognition, asking himself what's the minimal cognitive apparatus needed by an entity to have experiences?
+
+22:35 And that he documented in his critique of pure reason.
+Just a little parenthesis.
+The meaning of the title Critique of Pure Reason is not what I thought it was.
+It actually translates more closely to the case for April.
+
+22:55 Cognition critique is a legal term is where you make your case and pure reason we translate nowadays.
+April cognition.
+So his work wanted to establish what must happen to create an experience that's coherent, that is unified in time and space, and to reverse engineer cognition as a system that is both complete and essential, that is minimal.
+
+23:31 Okay, so I'm going to try to give you the postage stamp version of Emmanuel Kant's theory focusing on the Synthetic Unity of Apperception.
+
+23:47 Well, first of all, there's the real world, which is outside of our direct experience.
+It's the pneumonia.
+It's forever hidden from us as an as is reality, but it impinges on our sensorium.
+And then so we have a number of intuitions, sight, sound, touch, smell that are initially separate, and then we need to network them, connect them both in time and in space.
+
+24:23 In space is sound.
+And the sight describing a single thing is one thing behind or inside another.
+And in time, is this happening before, after something else?
+And then at a higher level, meaning is given to these networked, intuitions, sensations via concepts and judgments, rules which are generalizations as to what can and cannot be.
+
+25:05 And this is what we experience.
+
+25:12 Now, it turns out that synthetic Unity of Apperception is a blueprint for automating sense making.
+
+25:25 It's kind of interesting, I think, that 18th century philosophy would be relevant to 21st century technology development.
+And this is what happened and was published by Richard Evans and all in the paper Making Sense of Sensory Input, where they developed the App Perception Engine.
+They took synthetic Unity of Apperception as software requirements and successfully implemented them into a piece of software, the App Perception Engine, and applied it to a number of exercises where they got a very good result.
+
+26:10 So the App Session Engine is in an instance of machine learning.
+It's unsupervised machine learning, and it operates on very small data sets and generates human readable generative models.
+
+26:27 When I read the paper, I realized, well, that's exactly what my robot needed.
+So what does an app perception engine do?
+Well, given a sequence of observed states, it finds a generative model that can recreate past states but most importantly, predict future states.
+And the state is defined as a set of simultaneous observations, sensations, intuitions.
+
+27:07 So an apperception engine searches for a causal theory that can recreate observations.
+
+27:16 I say searches because this causal theory is not determined by the observations.
+It has to be found.
+It has to be discovered.
+But once it is found, then it can be validated against the observations and see if it can recreate them and augment them into the future as well as into the past.
+
+27:47 So what is a causal theory?
+A causal theory is a logic program that has a number of components.
+
+27:59 In the causal theory, there will be the objects and the predicates from the observed relations.
+So from the observations, we can extract what objects were observed and what properties of these objects were observed and maybe what relationships these objects were observed.
+
+28:17 That's the start.
+Then we have latent object types, objects and predicates.
+So we may want to imagine causal theory, imagines hidden objects, maybe hidden types of objects and maybe hidden properties and relationships between objects, latent meaning unobserved.
+
+28:38 And given both the observed and unobserved objects and predicates, it derives rules, first of all constraints on those predicates, what's permissible.
+So for example, being in front of A cannot be in front of B and at the same time behind B.
+So an object cannot be in front of another and behind it.
+So there are constraints on predicates and then there are rules that apply to any simultaneous sets of observations, what they must conform to.
+
+29:19 Then there are rules that given a state, will infer the next state and then maybe some initial state from which we can run the causal theory.
+
+29:33 So what makes a causal theory unified?
+Well, first of all it needs to be unified in order to make sense of the observation.
+There are various dimensions.
+So if a causal theory involves a number of objects, all these objects must be directly or indirectly related.
+There's no object that just floats in space totally independent of the other objects, so they must all be related.
+
+29:56 So they're spatially unified.
+All predicates that make up the causal theory, like on, off, behind, in front, they must be constrained so that, for example, in front cannot be at the same time as behind or that a light cannot be both turned on and turned off.
+
+30:20 So there's some restrictions on the predicates and that creates conceptual unity.
+And then there's static unity where all simultaneous relations must satisfy the static rules, and temporal unity, where all the states must be sequenced by causal rules.
+We'll see examples.
+
+30:43 So let's start with an example here of a set of observations.
+What we are observing are two lights and the lights can either be at any discrete moment in time, either on or off.
+So here we have a sequence of observations and one moment in time.
+The first light was off and the second light was on.
+Then the first light was on, the second light was off, then both were on, et cetera.
+
+31:25 And I put the gray bars there to show that maybe the observations are incomplete.
+So at one stage we can only see the second light or there may be other lights or other objects that we do not see, but that's what we observe.
+
+31:42 So you feed these observations in discrete time into the apperception engine and the perception engine searches for a causal theory that when applied to an initial condition, let's say that light A is off and light B is on.
+It will create a trace of recreated observations.
+That cover is a superset, matches the initial observations.
+And if this happens, then our causal theory is a good one.
+
+32:25 Now, the causal theory may infer the existence of hidden objects, hidden relations, and whatnot it may actually need to.
+
+32:38 So here's an example of a causal theory that is generated by my own implementation of the App perception engine.
+Because I re implemented the App perception engine as described in the paper by Richard Evans and all, and I ran it on the set of observations about lights on two lights, one on, one off at any point in time.
+And it came up with it found a result.
+It found the result in 64 seconds.
+It was a perfect match.
+
+33:15 And it actually invented a relationship, which it called thread One, which we can let's imagine that it actually means connects to.
+
+33:29 And it found a static rule and a causal rule.
+It said that a light is on at any moment in time.
+A light is on if a light that connects to it is off.
+And it found a causal rule that said a light turns off if it connects to another light that was also off.
+
+33:55 So that's how the lights change over time, the status of on and off.
+And it came up with initial conditions that said that, well, A connects to, first of all, that there's an object one, a light called object one that we don't see, but is there, we imagine is there, that A connects to it.
+The light object one connects to B, and the light B connects to object one.
+So that's the causal rule that it discovered.
+
+34:27 Now, if we run this causal rule, we produce a trace.
+
+34:33 And as you can see, the trace matches the observation.
+It adds a new object.
+So the coverage being excellent, being perfect in this case, and our causal theory is a good one.
+It's actually a perfect one.
+
+34:49 It's not necessarily the only one, though.
+
+34:54 So is this causal theory unified?
+So going back to Dr.
+Kant's requirement of synthetic unity, of Apperception, not every causal theory will do, though it may predict correctly, it may not be meaningful unless it is unified.
+
+35:17 Well, we saw the four dimensions of unification.
+Is it spatially unified?
+Well, all our objects are connected directly or indirectly to each other.
+That's good.
+
+35:34 So we have spatial unification.
+
+35:37 Do we have conceptual unification?
+So we have this new predicate.
+We have two predicates, right?
+Pred One, which we translate to, connects to, and then the predicate that says whether the light is on or off.
+Well, we have a constraint that says that a light can only be connected to one other light.
+
+35:59 So pred one has a constraint on it that says it's exclusive.
+So an object cannot pred one to two objects cannot connect to two objects.
+That's a constraint that was discovered and part of the causal theory.
+And also implicitly, the on relation of the predicate has the value on or off, and it cannot be both at the same time.
+So it's conceptually unified.
+
+36:35 Is it statically unified?
+Are the static rules obeyed.
+Well, for example, the static rule would say that given that B connects to A, if B is off, then A must be on.
+So if you look at any place where B is off, a is going to be on.
+And you could do that for every other light and relationships between lights.
+
+37:03 So they all obey the static rule.
+And the causal rule says, for example, here, that if B connects to A, then if A was off, then B must turn off.
+So if you look at B, let's say B was off.
+
+37:25 Yeah, I'm sorry, if B connects to A, and yes, and if A was off, B must be off.
+
+37:39 So if A was off, B becomes off the next step.
+So that's correct as well.
+So statistically we are true, and temporarily we are true.
+We are unified.
+
+37:55 And of course, that we get a thumbs up from Dr.
+Kant, our causal theory is unified.
+Thus it makes sense of the observations of the sensory inputs.
+Now, it's no accident that Kant would be would figure in an active inference project.
+There is a link between active inference and Kant, and it runs through the celebrated 19th century German engineer Herman von Hemholz.
+
+38:31 He was a disciple of Kant and he developed the theory of visual perception that operationalized Kant's epistemology.
+And in fact, it anticipates predictive processing.
+
+38:42 In 1995, Peter Day and Jeff Hinton developed the Helmholtz machine.
+Name is in his hunter.
+It is a type of artificial neural network that's trained to create a generative model from an original set of data.
+
+38:58 And it can account for the hidden structure of the data.
+So as you see, there's a link which is discussed and elaborated in this paper, which is very interesting paper.
+All right, so close parentheses.
+So we've looked at the App Perception engine from the perspective of philosophy.
+So now let's look at it through the lens of machine learning.
+
+39:29 The observations constitute a training set.
+It's a very small one.
+And the Appetition engine is the learning algorithm.
+And what is learned, the output is a causal theory.
+
+39:46 So the learning process is unsupervised logical inferencing, and the output is a human readable logic program.
+
+39:58 So we see here that there's some profound differences with the more popular form of machine learning in that the training set is really small, that the product of the learning is actually a human readable artifact, in this case, a logic program.
+
+40:25 So this is the training set.
+As inputted lights led, a turned off at time one, b turned on at time one, a turned on at time two, b turned off at time two, et cetera, et cetera.
+
+40:47 So that's the training set and you feed this into the perception engine's algorithm and out comes a causal theory.
+So in a little bit more details what the algorithm is and does.
+First, it extracts the observed object extent objects, the object types and predicates from the observations.
+
+41:17 So we have on, we have object A, object B.
+We have led as an object type.
+So that's all part of the observations and that becomes part of the extent vocabulary.
+Then the application engine imagines unobserved objects, types and predicates for the relationships and properties, and that becomes a latent vocabulary.
+So there's a step of imagination.
+
+41:46 Then, using the combined vocabulary, both the extent and latent vocabulary combined, it looks for a unified causal theory, a set of constraints, rules and initial conditions that obey the constraints of synthetic unity of apperception.
+
+42:12 Once it has this causal theory and with initial conditions, it applies the causal theory to these conditions and produces a trace.
+It recreates observations if you want and augments them and extends them into the future.
+Now it looks at this trace and compares it with the initial observations for coverage and decides if this is a good causal theory or not.
+Then it also looks at the causal theory complexity, how many rules, how complex are the rules, et cetera, and measures for complexity.
+
+42:44 So if we have a choice between two causal theories of equivalent coverage, the App Perception Engine will select the least complex one using Occam's Razor.
+Now, if you look at this algorithm, you'll see that the boxes in green are not deterministic.
+This is where search happens.
+We can posit different kinds of objects.
+We can find different kinds of rules.
+
+43:14 So this is where search happens.
+Now, app perception is implemented using logic inference.
+Actually, it uses three forms of logic inference.
+There's the one that we're more familiar with, which is deduction, where given rules and causes, we infer the effects.
+Then there's induction.
+
+43:39 Where given causes and effect, we look for the rules.
+This is what science does, right?
+Looking for rules that would account for effects given the causes.
+Then there's abduction, where given the rules and given what we observe the effects, we're looking for the causes.
+In this case, we're looking for the latent objects, the latent relationships between these objects.
+
+44:02 And then you can combine both abduction and induction, where you're given effects, essentially observations, and you're looking for both causes and rules, which is what the App Perception Engine does.
+
+44:15 And this is where in the algorithm, these kinds of inferences are at play.
+So positing latent objects, that's a form of abduction, imagining causes, finding the rules, well, that's clearly a form of induction.
+And then applying the rules of a causal theory to some initial conditions to create a trace, well, that's deduction.
+We have the causes, the initial conditions, we have the rules, causal theory, and then we produce a trace, the effects.
+
+44:50 So that's deduction.
+So the App Perception Engine uses all forms of logical inference.
+Now, just a reminder that the output of the App Perception Engine, that is what is learned is actually human readable.
+You may want to compare that to a large array of floating points produced by traditional, the more popular form.
+
+45:20 Of machine learning nowadays.
+
+45:22 So here, this is what's actually produced by the app reception engine.
+As it runs on a set of observations, it produces a logic program that is human readable.
+When you look at it, the only thing you need to kind of guess is what is meant by pred one.
+And if you think, well, maybe it means connects to maybe the lights are connected underneath a board out of sight of the observer.
+
+45:54 But finding a unified causal theory is hard.
+So we have to guess what the latent objects and predicates are.
+What are the hidden lights, what are the hidden relationships between lights?
+And we have to discover what constraints might apply on the predicates and what are the initial conditions from which we want to recreate a trace.
+What are the static rules that apply to simultaneous observations?
+
+46:22 And then what are the causal rules that given observations at time T will predict observations at time T plus one?
+This is hard.
+As a matter of fact, it's non polynomially hard.
+The search space grows exponentially with the size of the input, which is the size of the extent and latent vocabulary.
+So just like in chess, you can't predict to the end the consequence of a move because of common turbo explosion.
+
+46:57 With the app perception engine, you cannot systematically traverse the entire space of possible causal theories to find a good one because it's impossibly large.
+
+47:09 So the job of the apperception engine is to find a causal theory in a ridiculously large haystack.
+How to do this?
+In my implementation, I follow the recommendations and I follow also the implementation in Richard Evans'paper by breaking the search space into chunks.
+
+47:36 First there's a region and the region says so how many latent object types, objects and predicates will we allow?
+So what is the limit of imagination of the cognition actors that is trying to apperceive a causal theory?
+
+47:53 What are the limits of its imagination?
+And within that region of bounded imagination, we carve it into templates where we say, okay, we're going to use these latent objects types, these latent objects.
+And so basically, what vocabulary, specific vocabulary we're going to be using?
+We're going to use object one.
+We're going to use object pred one on top of the observed on predicate and observed A and B lights.
+
+48:28 And we're going to set the maximum complexity on the rules and see if we can find causal theories that fit this template.
+
+48:36 So this is a carving up of the search space and having broken the search space into regions and templates, we have scopes in which to apply Heuristics.
+Now.
+Why heuristics?
+Because the systematic traversal cannot be done in reasonable time.
+
+48:58 There's just too many candidate causal theories to look at to find a good one.
+So we use Heuristics.
+We find ways of maybe getting to a good solution faster at the risk of missing it.
+But at least we'll have an answer or no answer in a reasonable amount of time.
+And there's a number of heuristics that I've implemented in my implementation of the app assetron engine.
+
+49:27 Well, there's time boxing.
+At some point, you'd spend no more than this amount of time looking into a region or into a template.
+There's multitasking.
+
+49:37 Well, the problem is actually, as they say, embarrassingly parallel.
+You can explore multiple regions and multiple templates in parallel and so make good use of a multicore computer.
+
+49:49 You want to make sure you don't repeat yourself.
+So you don't want to traverse the same region twice or look at the same causal theory twice.
+You want to satisfy maybe a good enough theory is just fine.
+We don't want to look for the perfect one necessarily.
+We may not have time.
+
+50:08 You want to fail early.
+If you're in a region where nothing good is found, you may want to leave it quite quickly at the risk of maybe not finding a good one that is just over the horizon.
+But you want to be impatient.
+You want to throw the dice.
+You may want to kind of mix it up so that every time you run the app Perception Engine on the same problem, you may find a different solution first.
+
+50:37 You want to go for the simpler solution first.
+You may not want to try everything, just sample some.
+You want to start with the easiest part of the search base first, be judicious and so forth and so on.
+And most importantly, be selective.
+So reject any causal theory that would fail the constraints of unity of apperception.
+
+51:02 With all these in place, my implementation of the app Perception Engine gives pretty good results.
+So here I did a run.
+This is not cherry picked.
+I decided to do one series of seven runs and collect the data and show it.
+And in this run, I set up the apparition engine to only accept a perfect causal theory, one that would produce a trace that totally covers the observation.
+
+51:34 And I did seven runs.
+The first one succeeded, found it in 4 seconds.
+
+51:41 The second one, it took 102 seconds.
+So there's some randomization in the order in which things have searched if luck is involved.
+As I said, the third one, 1 second, that was pretty cool.
+
+51:55 The fourth one, well, took 204 seconds, then 90, 612, 99.
+So quite a good distribution here.
+Now, I said, okay, I'm going to run the app Perception Engine again on the same training set that I showed earlier, those two lights.
+But this time I said, I'm going to accept the theory that has 85% or more coverage.
+So it recreates the observations well enough, but not perfectly.
+
+52:33 And I time boxed it to 30 seconds.
+So you have 30 seconds to find it.
+Go.
+The first run, it find a causal theory with 75% accuracy immediately.
+
+52:47 Then the same accuracy, same coverage.
+
+52:50 10 seconds.
+11 seconds.
+It hit 29 seconds.
+It found a perfect one.
+Then eleven, it found 87% coverage and stopped right there.
+
+53:00 That's good enough.
+75 again, 100% is the first one it found above 85 in 18 seconds and 75% 0 second.
+So a good distribution again, so we're getting into reasonable times.
+We're not talking about hours here, we're talking about seconds.
+And I'm hoping to do further optimizations and bring it down to something even smaller so that a cognition actor can say, I want to make sense of these observations, query the apperception engine, and get an answer, a causal theory within maybe a couple of seconds.
+
+53:37 That's my hope.
+Now, something interesting here.
+It so happens that what makes it hard for the app perception engine to find a good causal theory is formally equivalent to what makes cognitive science as a whole hard.
+
+53:52 And this paper here makes the case and proves the case quite cogently.
+So cognizant science wants to find models, functions or algorithms that explain, account for situated behaviors.
+
+54:14 So you feed into the cognitive science machine pairs of situations and behaviors, and you want to come out of it a model, an explanation, a function, or an algorithm that accounts for it.
+Well, the paper makes the case that if the explanation is to be bounded in size, then the problem is computable, but it's not tractable in the sense meaning that it's combinatorially explosive.
+But once you have a solution, it is computable and tractable to verify that the solution is good, that it accounts for the data that you're trying to understand.
+
+55:03 Well, this is equivalent, formally equivalent to what the app perception engine is doing.
+
+55:11 My implementation was done in prologue.
+I will not go into the details.
+It's about 1000 lines of prologue.
+I'll just say that prologue is a programming language that use deductive inference as its model of computation with backtracking.
+So essentially it searches for a solution and will backtrack if it took the wrong branch if you want.
+
+55:40 And we'll look for a different way of satisfying a line of the program.
+So let's just say that it makes traversing a search space.
+We get traversing a search brains for free when we program in prologue.
+I won't go into any more details, but you can see some prologue code here.
+And the fun thing is that a prologue program is akin to a logical description of the problem it's trying to solve.
+
+56:12 I think it's very cool.
+And prologue environment was augmented by something called constraint handling rules, which is an extension to prologue that adds abductive reasoning.
+So basically in the program, you can say, assume this is true until proven otherwise, and the CHR rules are there to verify if it can be proven otherwise.
+So, again, I'm not asking you to understand this code at all, but I want you to realize that this code is the code that actually executes a causal theory, both the static and causal rules to build traces.
+It is that small.
+
+56:56 It's very powerful.
+So combining prologue and CHR, I found extraordinarily powerful.
+I'm very excited about it.
+I'm a programmer.
+Next steps.
+
+57:08 Well, next steps, now that we've solved individual learning by cognitive actors, well, I want to move to beliefs from sensations and to policies to validate or eliminate beliefs.
+
+57:31 A lot of these beliefs actually fall out of our perception.
+Latent objects and latent relationships and properties can be considered as beliefs.
+Then there are other kinds of beliefs that can be obtained from what's been perceived.
+There will be introspective beliefs that communicate how the cognition actor is doing in terms of competence, predictionary rates, how well its apperception is doing, and whether it is engaging with other cognition actors.
+Is it relevant?
+
+58:13 I will have feelings which will provide normativity to these beliefs.
+So if feelings are signals of risk to homeostasis, loss of resources, physical damage, too many prediction errors so that's anger, pain, and fear and feelings will taint beliefs over time and tainted beliefs, good beliefs, bad beliefs will want to be eliminated or validated through policies that will be synthesized by the cognition actor.
+
+58:51 And each cognition actor will make available to others its API.
+What predictions can be made about the beliefs of this cognition actor?
+What actions are available to others to be asked of the cognition actor?
+
+59:12 And then as cognition actors connect to one another, as the conjunction actors form the umbelt of other cognition actors, then a conjunction actor will be able to predict the beliefs of others, will be able to compose policies made out of actions that are implemented by other cognition actors.
+And eventually, we'll have a society of mind, which is a bunch of intersecting boom belts.
+So that's it.
+
+59:51 So I see the society of mine is a complex system of collective theorizers.
+And I'm going to try going further with this project to answer the question if collective theorizers can self organize to actively sustain itself.
+
+1:00:10 So thank you to the Active Inference Institute for inviting me to present and for providing a home for this project and for the constant support and encouragement.
+I'll see you later on Discord.
+Thank you.
+
+1:00:25 _Daniel:_
+Awesome.
+Thank you, JF.
+
+1:00:27 Just to conclude the session, I'll read two questions and let's maybe address them in an upcoming Robotics and embodied meeting.
+So if you're excited about this project, certainly we all are and about symbolic active inference, join the Discord and participate in the Robotics and Embodied.
+But I'll drop these two questions from David Williams in the Chat, who wrote, one, how important is conducting this work in real world versus simulation?
+And two, what tools or components are missing in the robotics toolkit to make this research easier and better?
+I know those are things that you have a lot of thoughts on, so I'll look forward to discussing with you more.
+
+1:01:08 Thank you, JF.
+
+1:01:11 _JF:_
+Thank you.
+
+1:01:12 _Daniel:_
+Peace.
+
+1:01:15 _JF:_
+All right.
+
+1:01:19 _Daniel:_
+See you.
