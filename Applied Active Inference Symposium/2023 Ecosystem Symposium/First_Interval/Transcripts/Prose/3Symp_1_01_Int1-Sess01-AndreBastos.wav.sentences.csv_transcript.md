@@ -1,6 +1,6 @@
 
 00:06 _Daniel:_
-[[start:6720][end:8350]]Hello and welcome, everyone.
+[[start:6720][end:8350]] Hello and welcome, everyone.
 [[start:8720][end:14376]]This is the third applied active inference symposium enacting ecosystems of shared intelligence.
 [[start:14488][end:17564]]It is August 22, 2023.
 [[start:17762][end:26456]]We have a lot of really awesome presentations and sessions coming up in the first interval and in the second interval.
