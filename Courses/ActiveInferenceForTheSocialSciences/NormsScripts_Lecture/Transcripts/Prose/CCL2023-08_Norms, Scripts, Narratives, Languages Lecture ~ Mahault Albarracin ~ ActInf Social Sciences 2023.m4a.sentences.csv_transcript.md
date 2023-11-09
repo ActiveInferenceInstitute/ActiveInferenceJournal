@@ -2,8 +2,8 @@
 00:08 _Daniel:_
 [[start:8450][end:9598]] Hello and welcome.
 [[start:9684][end:12590]] It's September 20, 2023.
-[[start:12740][end:25706]] We're at the Active Inference Institute in the course, active Inference for the social Sciences, and here with Mahault Albarracin, who will be presenting today on norm scripts and linguistics under active inference.
-[[start:25738][end:27840]] So thank you, Mao, to you.
+[[start:12740][end:25706]] We're at the Active Inference Institute in the course, Active Inference for the Social Sciences, and here with Mahault Albarracin, who will be presenting today on norm scripts and linguistics under Active Inference.
+[[start:25738][end:27840]] So thank you, Mahault, to you.
 
 00:29 _Mahault:_
 [[start:29090][end:29598]] Awesome.
@@ -12,28 +12,28 @@
 [[start:30468][end:38594]] In as last time, there was a presentation on semiotics and semantics.
 [[start:38642][end:43820]] I won't dig too far into linguistics, but I'll touch on it at the end of the course.
 [[start:44750][end:48950]] So what are we going to do in this module?
-[[start:49030][end:55798]] We're going to explore the concept of active inference and its relevance to social norms and human decision making.
+[[start:49030][end:55798]] We're going to explore the concept of Active Inference and its relevance to social norms and human decision making.
 
-00:55 [[start:55984][end:70034]] As you will have seen in the previous classes, active inference is a theoretical framework that seeks to explain how organisms, including humans, engage with their environment to minimize uncertainty and maintain their internal states.
+00:55 [[start:55984][end:70034]] As you will have seen in the previous classes, Active Inference is a theoretical framework that seeks to explain how organisms, including humans, engage with their environment to minimize uncertainty and maintain their internal states.
 [[start:70152][end:78014]] We're not going to dig into these concepts too, too much, because I assume they have been previously explained.
 [[start:78062][end:82786]] At length, however, I will explain how they connect to social phenomena.
 [[start:82978][end:95340]] So this framework has significant implications for understanding social behavior, as it can help explain how individuals conform to social norms and make decisions based on the expectations of others.
 
-01:35 [[start:95870][end:110880]] We'll delve into the role of active inference in human societies, emphasizing how humans and other organisms constantly seek to minimize their uncertainty about the world by updating their beliefs and taking actions to maintain a stable internal state.
+01:35 [[start:95870][end:110880]] We'll delve into the role of Active Inference in human societies, emphasizing how humans and other organisms constantly seek to minimize their uncertainty about the world by updating their beliefs and taking actions to maintain a stable internal state.
 
 01:52 [[start:112050][end:114762]] This is a crucial process for survival.
 [[start:114826][end:117926]] It allows individuals to predict and adapt to their environment.
-[[start:118058][end:132850]] In the context of human societies, active inference plays a critical role in explaining how individuals navigate complex social situations, conform to social expectations, and make decisions that align with their beliefs and values.
-[[start:133590][end:144730]] Furthermore, we'll explore the concept of deontic value within active inference, which refers to the value attributed to actions based on their adherence to social norms and expectations.
+[[start:118058][end:132850]] In the context of human societies, Active Inference plays a critical role in explaining how individuals navigate complex social situations, conform to social expectations, and make decisions that align with their beliefs and values.
+[[start:133590][end:144730]] Furthermore, we'll explore the concept of deontic value within Active Inference, which refers to the value attributed to actions based on their adherence to social norms and expectations.
 
 02:27 [[start:147390][end:158190]] By adhering to social norms, individuals can minimize the uncertainty associated with their actions and maintain a sense of predictability and stability in their social environment.
 
-02:38 [[start:158530][end:168080]] So, together, all these insights will provide you with a comprehensive understanding of the complex interplay between active inference, social norms, and human decision making.
+02:38 [[start:158530][end:168080]] So, together, all these insights will provide you with a comprehensive understanding of the complex interplay between Active Inference, social norms, and human decision making.
 [[start:168710][end:170274]] So let's dive in.
 [[start:170472][end:173310]] We'll start by introducing a philosophical framework.
-[[start:173470][end:182642]] Building on the framework of active inference in activism offers us a complementary lens to understand the dynamic and contextual nature of social cognition.
+[[start:173470][end:182642]] Building on the framework of Active Inference in activism offers us a complementary lens to understand the dynamic and contextual nature of social cognition.
 
-03:02 [[start:182786][end:193342]] So, while active inference provides the computational underpinnings for understanding social norms and decision making, we still need to anchor ourselves within a larger theoretical framework.
+03:02 [[start:182786][end:193342]] So, while Active Inference provides the computational underpinnings for understanding social norms and decision making, we still need to anchor ourselves within a larger theoretical framework.
 [[start:193506][end:201050]] Enactivism enriches this perspective by emphasizing the practical and developmental aspects of social understanding.
 [[start:202830][end:207134]] So what is inactivism if it hasn't been introduced before?
 [[start:207332][end:221490]] Enactivism is a philosophical stance that extends beyond traditional theories of cognition, emphasizing the role of interactions and relational dynamics in shaping both individual and social cognition.
@@ -61,13 +61,13 @@
 [[start:385770][end:395370]] One of the key criticism is that current articulations of inactivism are not yet up to the task when it comes to explaining complex social interactions.
 
 06:37 [[start:397470][end:406160]] Despite these criticisms, inactivism provides a consistent epistemology for a psychology that is intrinsically social.
-[[start:407810][end:416090]] Looking forward, the field of inactivism and social cognition is ripe for exploration and would benefit from a deeper connection to active inference.
-[[start:416170][end:429810]] There has been such research, so researchers like Maxwell Ramstead has developed a concept of enactive inference, which offers a promising avenue for integrating inactivism and active inference.
+[[start:407810][end:416090]] Looking forward, the field of inactivism and social cognition is ripe for exploration and would benefit from a deeper connection to Active Inference.
+[[start:416170][end:429810]] There has been such research, so researchers like Maxwell Ramstead has developed a concept of enactive inference, which offers a promising avenue for integrating inactivism and Active Inference.
 
 07:10 [[start:430410][end:439350]] His research aligns with folk psychology and suggests that these frameworks can coexist and enrich our understandings of social cognition.
 [[start:440490][end:449734]] Future other directions could involve, for instance, integrating inactivism with other cognitive theories and exploring its applicability in real world social scenarios.
 
-07:29 [[start:449862][end:454890]] Through its connection to active inference, we can make accurate and testable predictions.
+07:29 [[start:449862][end:454890]] Through its connection to Active Inference, we can make accurate and testable predictions.
 [[start:456450][end:473182]] So while inactivism now provides us with a foundational understanding of cognition and social interaction, the concept of agency further enriches this understanding by introducing more philosophical perspectives that align with or diverge from inactivism.
 [[start:473246][end:478050]] So we can build on top of inactivism through the notion of agency.
 
@@ -81,9 +81,9 @@
 08:35 [[start:515890][end:529250]] One prominent approach is the enactive affordance based perspective, which underscores the centrality of the I can notion in shaping both cognitive processes and behavioral outcomes.
 [[start:529830][end:537750]] So Maxwell Ramstead again substantiates this perspective and resonates with the research conducted by Bruineberg in 2018.
 [[start:538330][end:548330]] It posits, for instance, that agency is far from being a mere passive state rather, it involves active, dynamic engagement with the environment.
-[[start:550110][end:566110]] Current investigations in this domain are being, for instance, continued by researchers like Riddhi Pitliya, who is working on connecting properly the psychological phenomenon of agency in active inference modeling.
+[[start:550110][end:566110]] Current investigations in this domain are being, for instance, continued by researchers like Riddhi Pitliya, who is working on connecting properly the psychological phenomenon of agency in Active Inference modeling.
 
-09:26 [[start:566850][end:575090]] In parallel, Tom Helmholtzian Bayesian models conceptualize active inference as a Bayesian process aimed at minimizing prediction error.
+09:26 [[start:566850][end:575090]] In parallel, Tom Helmholtzian Bayesian models conceptualize Active Inference as a Bayesian process aimed at minimizing prediction error.
 
 09:35 [[start:575910][end:590630]] This model finds support in the work of Kalan Kopp and suggests that agency is an active endeavor who aligns sensory inputs with internal predictions, thereby fostering a sense of control and self efficacy.
 [[start:591930][end:599370]] The cybernetic interpretations offers a more mechanistic lens, focusing on control mechanism in homeostasis.
@@ -100,7 +100,7 @@
 [[start:669726][end:675240]] Both focus on the minimization of uncertainty and the optimization of decision making.
 [[start:676090][end:692810]] Deep temporal models provide a computational framework that can model the complex time dependent patterns of behavior and cognition, offering insights into how agency is exercised in dynamic social contexts.
 
-11:33 [[start:693630][end:714210]] In the context of our overall goal of understanding scripts through active inference, combining deep temporal models with theories of agency allows us to create more nuanced and predictive models of how individuals navigate social norms and make decisions through goal directed actions across different scales of concern.
+11:33 [[start:693630][end:714210]] In the context of our overall goal of understanding scripts through Active Inference, combining deep temporal models with theories of agency allows us to create more nuanced and predictive models of how individuals navigate social norms and make decisions through goal directed actions across different scales of concern.
 
 11:55 [[start:715190][end:730360]] In social cognition, deep temporal models help individuals anticipate and adapt to changes in their social environment across timescales that go beyond what would be considered simply reactive, thereby reducing uncertainty and enhancing decision making.
 [[start:732350][end:737100]] An individual can plan and extend agency beyond the current moment.
@@ -113,7 +113,7 @@
 [[start:774650][end:784730]] Deep temporal models thus serve as a computational again, bridge between the neural mechanisms of action understanding and the cognitive processes that give rise to agency.
 
 13:06 [[start:786750][end:798750]] So what might be potentially a neural mechanism that allows us to connect deep temporal models to social interactions?
-[[start:799330][end:804030]] This is where we bring in the insights from mirror neuron systems and active inference.
+[[start:799330][end:804030]] This is where we bring in the insights from mirror neuron systems and Active Inference.
 [[start:804450][end:812290]] This way, we can have a more comprehensive models that not only predicts but explains how individuals exercise agency in complex social landscapes.
 
 13:34 [[start:814390][end:826760]] Here, mirror neurons serve as a neural cornerstone for social cognition, firing not only during the execution of an action, but also during the observation of that same action performed by another.
@@ -146,12 +146,12 @@
 
 17:08 [[start:1028038][end:1033850]] It means we need more research to make sure that they are in fact related to action understanding.
 [[start:1034670][end:1044880]] The functional properties of the mirror neuron system indicates that action understanding may primarily be based on the motor cognition that underpins one's own capacity to act.
-[[start:1045490][end:1052930]] So we will now consider how these neural mechanisms can be integrated into broader frameworks like extended and optimized active inference.
+[[start:1045490][end:1052930]] So we will now consider how these neural mechanisms can be integrated into broader frameworks like extended and optimized Active Inference.
 
 17:33 [[start:1053430][end:1065350]] So by doing so, we can leverage generative models to provide a more nuanced understanding of action perception, prediction, social cognition, and adapting behaviors to lead us to scripts, gender perspectives, and cultural affordances.
 [[start:1067290][end:1069560]] We have expanded in time.
 [[start:1070090][end:1072380]] Now let's expand in space.
-[[start:1073790][end:1083690]] Extended and optimized active inference represents a comprehensive framework that bridges between internal cognitive processes and external environmental interactions.
+[[start:1073790][end:1083690]] Extended and optimized Active Inference represents a comprehensive framework that bridges between internal cognitive processes and external environmental interactions.
 [[start:1084770][end:1097810]] Generative models serve as the cornerstone, extending beyond the confines of an organism's brain and body, to incorporate external cognitive resources such as maps or written language.
 
 18:18 [[start:1098310][end:1107890]] This extension not only enhances the efficiency and accuracy of these models, but also has practical implications in various domains like social interactions and language processing.
@@ -160,9 +160,9 @@
 [[start:1134050][end:1139470]] In sequential dynamics, generative models facilitate effective communication and understanding.
 [[start:1140450][end:1151374]] They allow us to see the emergence of behavioral and neurophysiological correlates, such as Theta gamma coupling, which we will discuss later in neural activity, which can be seen as an emergent property of belief.
 
-19:11 [[start:1151422][end:1165410]] Updating under variational message Passing Building upon the foundational aspects of extending an optimized active inference, it's crucial to delve into its specific applications in social context.
+19:11 [[start:1151422][end:1165410]] Updating under variational message Passing Building upon the foundational aspects of extending an optimized Active Inference, it's crucial to delve into its specific applications in social context.
 
-19:26 [[start:1166730][end:1181930]] When we optimize our generative models through social scripts and norms, we can see how extending active inference serves as a practical tool for navigating and modifying complex social landscapes, aligning with the framework's broader goals of cognitive niche construction.
+19:26 [[start:1166730][end:1181930]] When we optimize our generative models through social scripts and norms, we can see how extending Active Inference serves as a practical tool for navigating and modifying complex social landscapes, aligning with the framework's broader goals of cognitive niche construction.
 [[start:1183870][end:1190240]] So we can see that this integrates both internal and external cognitive resources to optimize the generative model.
 
 19:53 [[start:1193010][end:1201166]] Scripts serve as a cognitive blueprint that reduce the uncertainty and facilitate successful social interactions.
@@ -172,11 +172,11 @@
 [[start:1224510][end:1232890]] These norms are internal representations that help individuals navigate complex social environments effectively.
 
 20:35 [[start:1235170][end:1244990]] So here, cognitive niche construction involves active modification of the environment to create those favorable contexts.
-[[start:1246210][end:1256130]] Extended active inference takes this a step further by allowing for the optimization of generative models, creating environments that are not just favorable but also harmonious.
+[[start:1246210][end:1256130]] Extended Active Inference takes this a step further by allowing for the optimization of generative models, creating environments that are not just favorable but also harmonious.
 [[start:1257270][end:1268710]] The comprehensive approach here has implications that span from psychology, sociology, artificial intelligence, and allows us to potentially set the stage for future research in cognitive science.
 
 21:10 [[start:1270730][end:1278010]] So here we see that there's an importance to optimizing internal models for effective social interactions.
-[[start:1278590][end:1295150]] So, while extended active inference focuses on the broader cognitive architecture involving generative models and social norms, here we zero in on the role of deontic value and social conformity, providing a more nuanced understanding of how individuals adapt and shape their social environment.
+[[start:1278590][end:1295150]] So, while extended Active Inference focuses on the broader cognitive architecture involving generative models and social norms, here we zero in on the role of deontic value and social conformity, providing a more nuanced understanding of how individuals adapt and shape their social environment.
 
 21:36 [[start:1296290][end:1305330]] So, the concept of Deontic value refers to the value attributed to actions based on their adherence to social norms and expectations.
 [[start:1307110][end:1310310]] It allows us to guide individual choices.
@@ -187,12 +187,12 @@
 22:10 [[start:1330660][end:1340812]] So this ties us very nicely to the notion of agency that we explored before in regimes of expectations by Axel Constance.
 [[start:1340956][end:1352200]] We elaborate that Deontay cues enable the environment to learn about the behavior of its inhabitants, effectively outsourcing the epistemic and pragmatic values of any behavior.
 
-22:35 [[start:1355450][end:1360230]] You can see that the expansion of active inference here takes on a whole other meaning.
+22:35 [[start:1355450][end:1360230]] You can see that the expansion of Active Inference here takes on a whole other meaning.
 
-22:42 [[start:1362090][end:1376060]] So active inference allows for dynamic adaptation, enables the individual to update their internal models better anticipate and connect to their environment, such that the environment and the individual mutually model each other.
-[[start:1376990][end:1382750]] The deontic value here serves as a common thread between active inference and regimes of expectations.
+22:42 [[start:1362090][end:1376060]] So Active Inference allows for dynamic adaptation, enables the individual to update their internal models better anticipate and connect to their environment, such that the environment and the individual mutually model each other.
+[[start:1376990][end:1382750]] The deontic value here serves as a common thread between Active Inference and regimes of expectations.
 
-23:05 [[start:1385900][end:1393390]] Through these regimes of expectation in active inference, we'll achieve a better understanding of social conformity and decision making.
+23:05 [[start:1385900][end:1393390]] Through these regimes of expectation in Active Inference, we'll achieve a better understanding of social conformity and decision making.
 
 23:17 [[start:1397030][end:1412280]] Regimes of expectation centers on the computational construct of deontic value, which we explained before and aligns with the broader research on social conformity, especially the winner takes all model proposed by Frank in 2008.
 [[start:1414170][end:1426090]] Social expectation here play a significant role in shaping human decisions, and specifically, social conformity act as a learning strategy which is effective in uncertain environments.
@@ -210,18 +210,18 @@
 
 25:02 [[start:1502210][end:1511890]] Here, social norms and shared Bayesian expectations link our individual and collective decision making processes to the broader understanding of selfhood.
 
-25:18 [[start:1518170][end:1522840]] So how does active inference allow us to model how we derive the sense of self?
+25:18 [[start:1518170][end:1522840]] So how does Active Inference allow us to model how we derive the sense of self?
 [[start:1523790][end:1530940]] Let's start by explaining the three main types of selves, minimal narrative and social.
 [[start:1532350][end:1541840]] The minimal self is the prereflexive experience of being a subject emphasizing the body's role in shaping subjective experience.
 [[start:1543730][end:1548630]] The narrative self is shaped by personal stories and experiences.
-[[start:1548810][end:1565140]] Highlighting the importance of generative models in organizing these experiences aligns with the active inference, formalism, and psychological desires, providing a coherent narrative that guides our sense of self across time.
+[[start:1548810][end:1565140]] Highlighting the importance of generative models in organizing these experiences aligns with the Active Inference, formalism, and psychological desires, providing a coherent narrative that guides our sense of self across time.
 
 26:07 [[start:1567270][end:1577450]] The social self emerges from interactions with others and is influenced by social norms, values, and shared generative models.
 
 26:19 [[start:1579550][end:1589150]] This concept is supported by the folk concept of intentionality, which includes desires, beliefs, intentions, awareness, and skill.
-[[start:1590850][end:1600770]] Understanding these facets of the sense of self through the lens of active inference gives us an integrative cognitive process for emotions and social interactions.
+[[start:1590850][end:1600770]] Understanding these facets of the sense of self through the lens of Active Inference gives us an integrative cognitive process for emotions and social interactions.
 [[start:1602070][end:1611330]] So now we'll delve more into the intricacies of the social self to show that the generative model and social scripts discussed earlier are integral to its formation.
-[[start:1611830][end:1625050]] These scripts, optimized through extended active inference, not only guide our social interaction, but also contribute to the shaping of that self, creating a seamless interplay between individual cognition and collective social behavior.
+[[start:1611830][end:1625050]] These scripts, optimized through extended Active Inference, not only guide our social interaction, but also contribute to the shaping of that self, creating a seamless interplay between individual cognition and collective social behavior.
 [[start:1626990][end:1636730]] So, as we said earlier, social scripts are the cognitive blueprints that guide individuals through a myriad of expected actions or events in social contexts.
 
 27:17 [[start:1637250][end:1643230]] These scripts are essentially generative models that help individuals predict and navigate social interactions.
@@ -235,7 +235,7 @@
 
 28:29 [[start:1709710][end:1723790]] Through this modulation, we can see how social scripts and norms are shaped and adapted over time, which promotes the adaptability in the face of changing environments of individuals embedded in that environment.
 
-28:47 [[start:1727540][end:1746760]] Now, contextual modulation here is pretty important and the mechanism not only refines our generative model, but also provides the adaptive flexibility required in complex environments, which unites the theoretical underpinnings of active inference with empirical findings on adaptive behavior.
+28:47 [[start:1727540][end:1746760]] Now, contextual modulation here is pretty important and the mechanism not only refines our generative model, but also provides the adaptive flexibility required in complex environments, which unites the theoretical underpinnings of Active Inference with empirical findings on adaptive behavior.
 
 29:09 [[start:1749580][end:1761900]] So, according to Francesco Donoruma, action perception is an active inferential process that combines motor prediction and hypothesis testing crucial for understanding social scripts.
 [[start:1762800][end:1770240]] Adaptive social behavior thus results from the dynamic interplay of socioeffective and socio cognitive processes.
@@ -247,7 +247,7 @@
 30:07 [[start:1807528][end:1813100]] These deep temporal models that integrate various kinds of priors at different scales.
 [[start:1813920][end:1831140]] So here, contextual modulation acts as a linchpin in the integration of social scripts into the generative models we can now appreciate how generative model and social scripts coalesce to form a comprehensive framework for understanding interactions.
 
-30:35 [[start:1835270][end:1853030]] So active inference is a nuanced lens to explore how power dynamics shape shared generative models, thereby influencing the cultural affordances available to individuals.
+30:35 [[start:1835270][end:1853030]] So Active Inference is a nuanced lens to explore how power dynamics shape shared generative models, thereby influencing the cultural affordances available to individuals.
 [[start:1854650][end:1864250]] For instance, epistemic communities serves as platforms where power dynamics can significantly shape shared beliefs and actions.
 [[start:1864990][end:1885090]] Through the construction of certain niche, we can see that existing power structure lead to the creation of environments that perpetuate these structures through certain kinds of scripts, certain kinds of norms, and through the valence that we associate to our sense of self relative to these scripts.
 [[start:1886390][end:1891406]] Cultural affordances here are dynamically influenced by power tinged asymmetries.
@@ -255,7 +255,7 @@
 
 31:43 [[start:1903370][end:1909210]] We see how deeply intertwined cultural affordances are with power dynamics.
 [[start:1910510][end:1916250]] It allows us to understand societal structures in more depth.
-[[start:1917710][end:1930590]] So when we expand the scope of active inference in cultural affordance negotiation, we can dive into a case study, that of gender norms and gender fluidity to broader cultural contexts.
+[[start:1917710][end:1930590]] So when we expand the scope of Active Inference in cultural affordance negotiation, we can dive into a case study, that of gender norms and gender fluidity to broader cultural contexts.
 [[start:1931670][end:1935250]] This exemplifies the influence of power dynamics.
 [[start:1936870][end:1947000]] So just as individuals navigate and adapt to cultural affordances that are deeply shaped by societal power structures, they have to navigate gender related affordances that they also engage with.
 
@@ -271,10 +271,10 @@
 
 33:22 [[start:2002190][end:2008960]] Research suggests that these gender differences in negotiation are contextually bound and can be subject to change.
 [[start:2010050][end:2020590]] By understanding how individuals navigate these social scripts and norms, we can, for instance, address the limitations or constraints that affect expressions of their gender identity.
-[[start:2022390][end:2036114]] So here, gender through the lens of active inference as a case study and affordance negotiation gives us a comprehensive view of the social psychology and how it can apply to gender studies, for instance.
+[[start:2022390][end:2036114]] So here, gender through the lens of Active Inference as a case study and affordance negotiation gives us a comprehensive view of the social psychology and how it can apply to gender studies, for instance.
 
 33:56 [[start:2036162][end:2039350]] But this is true for many other kinds of cultural phenomena.
-[[start:2041210][end:2047210]] So we build now on the understanding of how active inference and power dynamics shape cultural affordances.
+[[start:2041210][end:2047210]] So we build now on the understanding of how Active Inference and power dynamics shape cultural affordances.
 
 34:09 [[start:2049630][end:2072542]] We can see how this allows us to understand potentially puzzling actions which are shaped by social scripts and the dynamics within the epistemic communities they inhabit so we have defined how scripts allow us to interpret different kinds of behaviors and how people navigate their desired outcomes.
 [[start:2072606][end:2079730]] Given these social scripts, so what happens when we are faced with puzzling actions?
@@ -301,7 +301,7 @@
 
 37:11 [[start:2231660][end:2238312]] So now we're going to try to see what can be the outcomes in real life of all these processes.
 [[start:2238376][end:2246780]] Together, we're going to focus on cognitive mechanisms that underpin social phenomena like confirmation bias and echo chambers.
-[[start:2247780][end:2260900]] Building on the concept of active inference, we explore how individuals not only interpret ambiguous social cues, but also actively seek information that confirm their preexisting belief, thereby shaping epistemic communities.
+[[start:2247780][end:2260900]] Building on the concept of Active Inference, we explore how individuals not only interpret ambiguous social cues, but also actively seek information that confirm their preexisting belief, thereby shaping epistemic communities.
 
 37:45 [[start:2265370][end:2271320]] Confirmation bias is a cognitive tendency that affects information spread and decision making.
 [[start:2271770][end:2279340]] It is driven by agents seeking information that confirms their preexisting belief while avoiding challenging information.
@@ -312,7 +312,7 @@
 
 38:28 [[start:2308630][end:2314550]] The minimization of free energy transfers to the network, thereby shaping the environment.
 [[start:2315370][end:2322630]] We can see here how there is a loop where the environment both shapes the individual, who will in turn continuously shape the environment.
-[[start:2323690][end:2338474]] Interestingly, some studies have identified a reverse confirmation bias whereby some people actually do seek out information in an explorative manner, which again aligns with this idea of active inference.
+[[start:2323690][end:2338474]] Interestingly, some studies have identified a reverse confirmation bias whereby some people actually do seek out information in an explorative manner, which again aligns with this idea of Active Inference.
 [[start:2338522][end:2349662]] Epistemic value and here we may try to ponder why certain people are more likely to break out of their echo chambers rather than stay in them.
 [[start:2349796][end:2367830]] This may align, potentially with deep temporal models, whereas we can see value at a later point in time and perhaps focus more on this expected value rather than on the direct value of the confirmation bias.
 
@@ -320,7 +320,7 @@
 
 39:45 [[start:2385390][end:2389390]] Now we've explored a little bit confirmation bias and echo chamber.
 [[start:2389890][end:2394590]] We can see how this extends to human communication.
-[[start:2395410][end:2407170]] This allows us to explore the principles of active inference, which shape individual cognitive tendencies, and the influence of the broader dynamics of communication and collective intelligence on the environment.
+[[start:2395410][end:2407170]] This allows us to explore the principles of Active Inference, which shape individual cognitive tendencies, and the influence of the broader dynamics of communication and collective intelligence on the environment.
 
 40:09 [[start:2409190][end:2418950]] So we can link communicative behavior to biological imperative of minimizing free energy, which emphasizes the action oriented nature of communication.
 [[start:2419690][end:2427610]] The framework allows for adaptive behavior even when the models deviate from vertical representations of the environment.
@@ -329,10 +329,10 @@
 40:40 [[start:2440246][end:2442298]] Effectively, this is an action.
 [[start:2442394][end:2451090]] You're trying to push a belief onto the environment such that there is a potential for the environments to be shaped in a way that evidences your beliefs.
 
-40:53 [[start:2453270][end:2461198]] So we can think of cognitive control here, whereby active inference has an effective goal, maintenance in working memory.
+40:53 [[start:2453270][end:2461198]] So we can think of cognitive control here, whereby Active Inference has an effective goal, maintenance in working memory.
 [[start:2461374][end:2467826]] It provides top down guidance for overt behavior, moving beyond stereotyped responses.
 [[start:2468018][end:2474630]] Our understanding of communication is enriched by introducing neurobiologically plausible computational hypotheses.
-[[start:2475550][end:2485590]] The ecological approach to active inference is a framework that understands the complexities of human communication across different scales.
+[[start:2475550][end:2485590]] The ecological approach to Active Inference is a framework that understands the complexities of human communication across different scales.
 [[start:2485750][end:2496350]] It explores how individuals contribute to the collective intelligence of a group or society by fostering a collaborative approach that leverages diverse skills and knowledge.
 
 41:37 [[start:2497250][end:2508020]] This is one of the reasons echo chambers are maintained they're efficient in the transmission of information and promote collaboration among agents who overtly share a model.
@@ -341,8 +341,8 @@
 
 42:00 [[start:2520970][end:2531370]] Context, as we saw earlier, plays a crucial role in the activation of predictive inferences, which offers further support for ecological approaches.
 [[start:2531950][end:2539840]] Active inference models contain terms that encode both the object of desire and the strength of desire at the psychological level.
-[[start:2540370][end:2549470]] So the context of enactive inference suggests that generative and recognition models are best cast as realizing inference and control under the free energy principle.
-[[start:2551030][end:2565350]] So in this way, communication through the active inference lens gives us an action oriented nature of cooperative communication, where together we mutually craft our models such that we can achieve a common goal.
+[[start:2540370][end:2549470]] So the context of enactive Inference suggests that generative and recognition models are best cast as realizing inference and control under the free energy principle.
+[[start:2551030][end:2565350]] So in this way, communication through the Active Inference lens gives us an action oriented nature of cooperative communication, where together we mutually craft our models such that we can achieve a common goal.
 
 42:47 [[start:2567610][end:2576330]] So now and lastly, let's dive into a very short overview of how this may translate to language processing.
 
@@ -369,13 +369,13 @@
 
 44:55 [[start:2695670][end:2705270]] Here, the neural processes can be understood in terms of simulating the epistemic origin seen in reading and other language related activities.
 
-45:07 [[start:2707610][end:2720170]] So, to conclude, we have seen comprehensive understanding of active inference, inactivism and their interplay in shaping social cognition behavior.
+45:07 [[start:2707610][end:2720170]] So, to conclude, we have seen comprehensive understanding of Active Inference, inactivism and their interplay in shaping social cognition behavior.
 [[start:2721150][end:2732510]] We have explored various philosophical perspectives such as the enactive affordance based perspective, the helmholtzium Beijing model, and highlighted their contribution to understanding our social interactions.
 [[start:2733010][end:2741806]] We've explored deep temporal models as a potent computational tool for modeling complex time dependent patterns in social cognition, such as in language.
 [[start:2741838][end:2753350]] As well, we've discussed the role of mirror neurons, emphasizing their potential centrality in continuously updating internal models of the environment and their significance in social cognition.
 
 45:55 [[start:2755690][end:2761590]] We discussed potential future directions for research if you are interested in these topics.
-[[start:2763210][end:2766382]] So, here, the interplay between active inference and activism.
+[[start:2763210][end:2766382]] So, here, the interplay between Active Inference and activism.
 [[start:2766466][end:2773290]] Computational models, like deep temporal models, give us a multidimensional view of social cognition and agency.
 
 46:14 [[start:2774190][end:2782590]] It broadens the scope of research, but also brings us closer to our goal of understanding the complex cognitive and social phenomena.
@@ -386,7 +386,7 @@
 [[start:2817310][end:2821100]] If you have any questions, we can potentially take them now.
 
 47:07 _Daniel:_
-[[start:2827770][end:2828914]] Thank you, Mao.
+[[start:2827770][end:2828914]] Thank you, Mahault.
 [[start:2829042][end:2830470]] That was epic.
 [[start:2831290][end:2835734]] All right, well, people can write questions in the chat.
 [[start:2835782][end:2837260]] I'll just read one.
@@ -492,7 +492,7 @@
 53:42 [[start:3222610][end:3224570]] It's perfect cognitive grip.
 
 53:44 [[start:3224730][end:3245758]] So it's like there's an underlying assumption that this one person was able to update their generative model sufficiently such that they were perfectly able to grab every affordance that the environment gave them to go towards their state objective.
-[[start:3245854][end:3247842]] So in terms of active inference, it's pretty simple.
+[[start:3245854][end:3247842]] So in terms of Active Inference, it's pretty simple.
 [[start:3247896][end:3255618]] It's someone that has the capacity to go from a very unfit generative model to a very fit generative model relative to the environment.
 [[start:3255714][end:3260874]] And so we like that narrative because it's like, okay, well, then that means everybody can do it, right?
 
@@ -505,7 +505,7 @@
 
 55:09 [[start:3309130][end:3310906]] So that's why I'm not a fan of it.
 [[start:3310928][end:3311738]] But I hope.
-[[start:3311904][end:3319660]] Was this the mapping you were looking for in terms of active inference and reenergy minimization kind of thing.
+[[start:3311904][end:3319660]] Was this the mapping you were looking for in terms of Active Inference and reenergy minimization kind of thing.
 
 55:21 _Daniel:_
 [[start:3321330][end:3323102]] Here's one thought on that.
@@ -555,7 +555,7 @@
 59:11 _Daniel:_
 [[start:3551160][end:3551620]] Thanks.
 [[start:3551690][end:3552756]] Really interesting.
-[[start:3552938][end:3565880]] All right, a question from Upcycle Club, who wrote, in terms of the philosophical dimensions of agency in active inference, what is the role of self referentiality?
+[[start:3552938][end:3565880]] All right, a question from Upcycle Club, who wrote, in terms of the philosophical dimensions of agency in Active Inference, what is the role of self referentiality?
 
 59:27 _Mahault:_
 [[start:3567500][end:3587404]] I think you'd have to define the term, but if I understand correctly, we saw that you have to both model yourself and model the rest of the world in order to understand whether your actions are likely to have the effects you want to have on the world.
@@ -601,7 +601,7 @@
 1:03:51 _Daniel:_
 [[start:3831440][end:3838850]] I have a question that I've long had about some of your different research projects which you presented here.
 [[start:3839380][end:3849410]] Often there's this modeling of both the view from the inside with phenomenology, and also a view from the outside.
-[[start:3850100][end:3854870]] So what can you say about active inference and that?
+[[start:3850100][end:3854870]] So what can you say about Active Inference and that?
 [[start:3856840][end:3857812]] What does that mean?
 [[start:3857866][end:3859190]] Where does that come from?
 
@@ -657,7 +657,7 @@
 [[start:4068394][end:4072638]] For the purposes of the demonstration, I'll cluster them into two.
 [[start:4072804][end:4074602]] One, post structuralist.
 [[start:4074666][end:4079090]] In this context, an ideology is any system of value or of instrumentation of the world.
-[[start:4079160][end:4080802]] This is the definition Mao used.
+[[start:4079160][end:4080802]] This is the definition Mahault used.
 
 1:08:00 [[start:4080936][end:4086894]] In this case, everything is ideology, because the basic way we perceive the world is value ridden.
 [[start:4087022][end:4089266]] And two, structuralist.
@@ -668,7 +668,7 @@
 1:08:28 [[start:4108030][end:4118190]] I have a limited insight in the historical evidence, but as of my understanding, ideology as factor of mass mobilization is pretty much an early modern particularism.
 
 1:08:47 _Mahault:_
-[[start:4127990][end:4135442]] I feel like that's if we cast it in terms of active inference, it would be the active states, right?
+[[start:4127990][end:4135442]] I feel like that's if we cast it in terms of Active Inference, it would be the active states, right?
 [[start:4135496][end:4136450]] Like you need.
 [[start:4136600][end:4143266]] You need something which acts upon the world in order to create the self evidencing you require.
 [[start:4143298][end:4145430]] And that would be like the clergy, right?
@@ -733,7 +733,7 @@
 
 1:14:07 [[start:4447630][end:4451850]] So where do we go from there?
 
-1:14:11 [[start:4451920][end:4470078]] And just like thinking about that space, how do you approach chapter six of the textbook in terms of the recipe for the active inference generative model for a social setting?
+1:14:11 [[start:4451920][end:4470078]] And just like thinking about that space, how do you approach chapter six of the textbook in terms of the recipe for the Active Inference generative model for a social setting?
 
 1:14:30 _Mahault:_
 [[start:4470194][end:4471690]] For a social setting.
