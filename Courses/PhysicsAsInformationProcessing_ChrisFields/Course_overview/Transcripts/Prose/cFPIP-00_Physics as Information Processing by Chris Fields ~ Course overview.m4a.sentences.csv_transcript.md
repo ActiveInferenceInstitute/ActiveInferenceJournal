@@ -1,8 +1,8 @@
 
 00:00 _Daniel:_
 [[start:570][end:926]] Hello.
-[[start:1028][end:4794]] Welcome to the course physics as Information Processing.
-[[start:4922][end:9370]] Taught by Chris Fields, with Aguirre Aguire as a course assistant.
+[[start:1028][end:4794]] Welcome to the course physics as Information Processing,
+[[start:4922][end:9370]] Taught by Chris Fields, with Ander Aguirre as a course assistant.
 [[start:9530][end:16622]] Hosted during 2023 by the Active Inference Institute, this video is an overview of the course website.
 [[start:16756][end:21306]] It's going to cover some of the key pieces of the website and ways to participate.
 
