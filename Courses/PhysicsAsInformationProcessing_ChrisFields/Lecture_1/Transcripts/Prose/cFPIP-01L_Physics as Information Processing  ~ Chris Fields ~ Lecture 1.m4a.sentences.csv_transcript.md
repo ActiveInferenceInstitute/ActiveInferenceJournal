@@ -34,7 +34,7 @@
 [[start:127310][end:138478]] And I'll just start with a few quotations that span the middle of the 20th century - from [Ludwig] Wittgenstein in the 1920s saying "The world is all that is the case,"
 [[start:138564][end:143490]] so defining the world in terms of facts, not objects;
 
-02:24 [[start:144390][end:149410]] [Rolf] Landauer in the early '60s, proclaiming that "information is physical;"
+02:24 [[start:144390][end:149410]] [Rolf] Landauer in the early '60s, proclaiming that "Information is Physical;"
 [[start:150470][end:162102]] and then John Archibald Wheeler, who in many ways is the grandfather of this era recently, stating it is "It from Bit,"
 
 02:42 [[start:162236][end:167850]] so things come from information, i.e. bitstrings.
