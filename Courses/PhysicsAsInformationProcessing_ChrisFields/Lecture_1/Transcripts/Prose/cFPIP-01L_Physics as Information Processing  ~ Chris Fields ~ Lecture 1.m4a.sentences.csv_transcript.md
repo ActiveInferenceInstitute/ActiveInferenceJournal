@@ -1,43 +1,43 @@
 
 00:05 _Daniel:_
-[[start:5900][end:9460]] Hello and welcome, everyone, to the active inference institute.
-[[start:9620][end:16020]] This is session one of the course physics as Information Processing with Chris Fields.
-[[start:16180][end:19316]] First we'll have Andrea Guere and Chris Fields.
-[[start:19348][end:20232]] Introduce themselves.
+[[start:5900][end:9460]] Hello and welcome, everyone, to the Active Inference Institute.
+[[start:9620][end:16020]] This is Session 1 of the course "Physics as Information Processing" with Chris Fields.
+[[start:16180][end:19316]] First we'll have Ander Aguirre and Chris Fields
+[[start:19348][end:20232]] introduce themselves.
 
-00:20 [[start:20366][end:23540]] And then we'll carry on with the first lecture.
-[[start:23620][end:24152]] Here.
-[[start:24286][end:44084]] Check out the video description for a link to the course course overview website where you can ask questions that will be answered asynchronously register to participate in the discussions, which happen about two weeks after each of the six lecture sessions and just learn more about this area.
-[[start:44202][end:49264]] So thank you both so much for joining into this adventure.
-[[start:49312][end:51140]] We are starting now.
+00:20 [[start:20366][end:23540]] And then we'll carry on with the first lecture,
+[[start:23620][end:24152]] here.
+[[start:24286][end:44084]] Check out the video description for a link to the [Course Overview website](https://coda.io/@active-inference-institute/fields-physics-2023), where you can ask questions that will be answered asynchronously; register to participate in the discussions, which happen about two weeks after each of the six lecture sessions; and just learn more about this area.
+[[start:44202][end:49264]] So thank you both so much for joining into this adventure
+[[start:49312][end:51140]] we are starting now.
 
-00:51 [[start:51290][end:54328]] And first, please Aguirre Giray, introduce yourself.
-[[start:54414][end:57172]] And then Chris introduction and lecture.
+00:51 [[start:51290][end:54328]] And first, please, Ander Aguirre, introduce yourself.
+[[start:54414][end:57172]] And then Chris' introduction and lecture.
 [[start:57236][end:58010]] Thank you.
 
 00:59 _Ander:_
-[[start:59820][end:60280]] Hello.
+[[start:59820][end:60280]] Hello!
 [[start:60350][end:62200]] So I'll be the course assistant.
 
-01:03 [[start:63180][end:70270]] I'm a postdoc in math, specializing in improbability, and I have a deep interest in the physics of information.
+01:03 [[start:63180][end:70270]] I'm a postdoc in math, specializing in probability, and I have a deep interest in the physics of information.
 [[start:70640][end:74140]] And I've been familiar with Chris's papers for a while.
 [[start:74290][end:76190]] So, yeah, just here to learn myself.
 
 01:19 _Chris:_
-[[start:79460][end:80316]] Thank you, Andrew.
+[[start:79460][end:80316]] Thank you, Ander.
 [[start:80348][end:81840]] And thank you, Daniel.
-[[start:82260][end:99300]] I'm Chris Fields and I'll be presenting this course in six sessions and Aguirre will be organizing discussion sessions after each of those.
+[[start:82260][end:99300]] I'm Chris Fields. And I'll be presenting this course in six sessions, and Ander will be organizing discussion sessions after each of those.
 [[start:99670][end:103380]] And all of this is explained on the course website.
-[[start:104730][end:108040]] So let's start.
+[[start:104730][end:108040]] So let's start!
 
-01:49 [[start:109210][end:126810]] This is a course on physics as information processing, and this first session will be historical perspective on the idea that physics is or is about information processing.
-[[start:127310][end:138478]] And I'll just start with a few quotations that span the middle of the 20th century from Wittgenstein in 1920s saying the world is all that is the case.
-[[start:138564][end:143490]] So defining the world in terms of facts, not objects.
+01:49 [[start:109210][end:126810]] This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
+[[start:127310][end:138478]] And I'll just start with a few quotations that span the middle of the 20th century - from [Ludwig] Wittgenstein in the 1920s saying "The world is all that is the case,"
+[[start:138564][end:143490]] so defining the world in terms of facts, not objects;
 
-02:24 [[start:144390][end:149410]] Landauer in the early 60s proclaiming that information is physical.
-[[start:150470][end:162102]] And then John Archibald Wheeler, who in many ways is the grandfather of this era, recently stating it is it from Bit.
+02:24 [[start:144390][end:149410]] [Rolf] Landauer in the early '60s, proclaiming that "information is physical;"
+[[start:150470][end:162102]] and then John Archibald Wheeler, who in many ways is the grandfather of this era recently, stating it is "It from Bit,"
 
-02:42 [[start:162236][end:167850]] So things come from information, I E bitstrings.
+02:42 [[start:162236][end:167850]] so things come from information, i.e. bitstrings.
 [[start:168910][end:177180]] And if nothing else, this shows that formulations of this idea get pithier as the 20th century rolls on.
 [[start:178510][end:185390]] But the history goes back farther clearly than the 20th century.
 [[start:185730][end:196354]] But I'm only going to really talk about a piece of it and the timeline that I'll actually discuss today.
