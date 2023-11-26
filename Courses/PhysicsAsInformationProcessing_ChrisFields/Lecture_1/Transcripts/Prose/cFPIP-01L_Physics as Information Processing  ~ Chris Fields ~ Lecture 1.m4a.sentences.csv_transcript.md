@@ -1,3 +1,4 @@
+![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/cFPIP-01L_00001.png)
 
 00:05 _Daniel:_
 [[start:5900][end:9460]] Hello and welcome, everyone, to the Active Inference Institute.
