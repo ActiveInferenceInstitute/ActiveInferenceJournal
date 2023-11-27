@@ -48,7 +48,7 @@
 [[start:185730][end:196354]] But I'm only going to really talk about a piece of it and the timeline that I'll actually discuss today,
 [[start:196472][end:203090]] the most relevant history of this idea, goes back to the mid-19th Century.
 
-03:24 [[start:204330][end:211750]] And the first specific thing I'll talk about is **[Rudolf] Clausius**'s definition of **entropy**.
+03:24 [[start:204330][end:211750]] And the first specific thing I'll talk about is **[Rudolf] Clausius**'s definition of entropy.
 
 03:32 [[start:212890][end:230750]] But with the beginning of the understanding of thermodynamics and the role of information in thermodynamics, you get this very interesting multidisciplinary progression of ideas that incorporates the beginning of quantum theory.
 
@@ -93,8 +93,8 @@
 [[start:511050][end:523530]] So in the final session in October we'll talk about applications to biology via the **Free Energy Principle**, and future directions both in physics and biology and elsewhere.
 [[start:524190][end:526294]] So it's going to be an interesting ride!
 
-08:46 [[start:526422][end:541150]] I'm keeping formalism to a minimum, because we're directing this toward the broad array of people who are interested in **Active Inference** and who are involved with the Active Inference Institute.
-[[start:541830][end:553250]] And I would ask you to hold questions because we have a lot to get through in an hour for the interactive discussion and for the discussion forum.
+08:46 [[start:526422][end:541150]] I'm keeping formalism to a minimum, because we're directing this toward the *broad* array of people who are interested in **Active Inference** and who are involved with the Active Inference Institute.
+[[start:541830][end:553250]] And I would ask you to hold questions (because we have a lot to get through in an hour) for the interactive discussion and for the discussion forum.
 
 09:14 [[start:554810][end:562470]] So I hope I explain things well enough that all of the concepts will be understandable.
 [[start:563450][end:570780]] If not, **Wikipedia** is actually a wonderful resource in this area for just definitions of terms.
@@ -105,72 +105,76 @@
 [[start:581188][end:586990]] So let's start! Our story, as I said, begins in the 19th Century.
 
 09:47 [[start:587410][end:596130]] And in the mid-19th Century, lots of physicists were devoting their efforts to figuring out how to make better steam engines.
-[[start:596870][end:611282]] And one question that arises when you're trying to design a steam engine is what happens physically when you add heat to a system at constant temperature?
+[[start:596870][end:611282]] And one question that arises when you're trying to design a steam engine is "what happens *physically* when you add heat to a system at constant temperature?"
 [[start:611346][end:615350]] So if you're building a steam engine, you've got a boiler, because you need to make steam.
 [[start:615690][end:622330]] And as you turn up the heat to your boiler, you get more steam, but the temperature doesn't change.
 [[start:622480][end:624250]] So this is a mystery.
 
-10:25 [[start:625470][end:634670]] What is the heat actually adding to the boiler that is not increasing the temperature?
+10:25 [[start:625470][end:634670]] What is the heat actually *adding* to the boiler that is not increasing the temperature?
 [[start:635810][end:644530]] And Clausius responded to this question in a way that's sort of typical for a physicist or a mathematician.
-[[start:645430][end:652478]] Since he didn't know what the answer was, he just invented a new name for whatever it was and gave it a formal definition.
+[[start:645430][end:652478]] Since he didn't know what the answer was, he just *invented a new name* for whatever it was, and gave it a formal definition.
 
-10:52 [[start:652654][end:665270]] So he called it entropy, which is a made up word that, if it was translated from the Greek, would roughly mean transformation content in trophy.
-[[start:666250][end:683360]] And he represented it by a simple equation that the change in this new concept entropy, which is always called S, is just equal to the change in heat Q at constant temperature t.
+10:52 [[start:652654][end:665270]] So he called it **entropy**, which is a made-up word that, if it was translated from the Greek, would roughly mean "transformation content," en-tropy.
+[[start:666250][end:683360]] And he represented it by a simple equation that the change in this new concept, entropy, which is always called S, is just equal to the change in heat, Q, at constant temperature, T.
 
-11:23 [[start:683730][end:700210]] So obviously, this equation just reformulates the question in declarative form, saying whatever this stuff is, its changes in this stuff are just changes in heat at constant temperature.
+11:23 [[start:683730][end:700210]] So obviously, this equation just reformulates the question in declarative form, saying "whatever this stuff is, its changes in this stuff are just changes in heat at constant temperature."
 [[start:700790][end:702580]] Well, heat is energy.
-[[start:702950][end:716066]] And this wasn't completely recognized in the mid 19th century, but the way you'll see this equation in a current textbook is DS is the change in energy at constant temperature.
+[[start:702950][end:716066]] And this wasn't completely recognized in the mid-19th Century. But the way you'll see this equation in a current textbook is "dS is the change in *energy* at constant temperature."
 
-11:56 [[start:716258][end:724010]] So even more commonly, you would see it written as the change in energy is equal to the temperature times the change in entropy.
+11:56 [[start:716258][end:724010]] So even more commonly, you would see it written as "the change in energy is equal to the temperature times the change in entropy."
 [[start:724430][end:728950]] It's the most common sort of textbook way of seeing this.
 
-12:09 [[start:729120][end:732010]] But the question, of course, is, what is this quantity?
+12:09 [[start:729120][end:732010]] But the question, of course, is, "What *is* this quantity?"
 [[start:732090][end:733498]] What is this entropy?
-[[start:733594][end:735440]] What does this concept mean?
-[[start:736450][end:753300]] And about 15 years after Klausius proposed it, Boltzman had the key insight, which is that entropy is a measurement of our uncertainty about the state the system is in.
-[[start:754490][end:773820]] And in particular, he again, of course, went to formalism and said, the entropy S is equal to some constant times the number of states that the system can be in that look the same to us.
+[[start:733594][end:735440]] What does this concept *mean?*"
 
-12:54 [[start:774750][end:782542]] And since that number of states is enormous, the way to make that manageable is to take the log of the number of states.
+![But what *is* entropy?](../../Video/Slide7.PNG)
+[[start:736450][end:753300]] And about 15 years after Clausius proposed it, **[Ludwig] Boltzmann** had the key insight, which is that "entropy is a measurement of *our uncertainty* about the **state** the system is in."
+[[start:754490][end:773820]] And in particular, he again, of course, went to formalism, and said, "the entropy, S, is equal to some constant times the number of states that the system can be in that look the same to us."
 
-13:02 [[start:782676][end:785310]] The natural log is ln.
-[[start:786050][end:790270]] And this constant k is called Baltimore's constant.
-[[start:791750][end:811080]] And Baltimore was able to do this because he subscribed to a radical, very unpopular theory that material things, including gases like air, were made of atoms and heat made the atoms move around.
+12:54 [[start:774750][end:782542]] And since that number of states is enormous, the way to make that manageable is to take the *log* of the number of states.
+
+13:02 [[start:782676][end:785310]] The **natural log** is *ln.*
+[[start:786050][end:790270]] And this constant k is called **Boltzmann's constant**.
+[[start:791750][end:811080]] And Boltzmann was able to do this because he subscribed to a radical, very unpopular theory that material things, including gases like air, were made of atoms; and heat made the atoms move around.
 [[start:811770][end:816646]] And as you increase the amount of heat, the atoms can move in many different ways.
 
 13:36 [[start:816828][end:822010]] So the number of states that they can be in that look the same to us increases.
 [[start:822350][end:823914]] And that's what entropy is.
 [[start:823952][end:832622]] It's this increase in the number of states that the system can be in that all look the same to us with the measurements that we can make.
-[[start:832676][end:837840]] And since they look the same to us, we're uncertain about exactly what state they're in.
+[[start:832676][end:837840]] And since they look the same to us, we're *uncertain* about exactly what state they're in.
 [[start:839250][end:841870]] So entropy is a measure of uncertainty.
 
-14:03 [[start:843190][end:846370]] This was really the beginning of modern physics.
-[[start:847510][end:855014]] Because what it says now is that decreasing uncertainty requires energy.
+14:03 [[start:843190][end:846370]] This was really the beginning of modern physics,
+[[start:847510][end:855014]] because what it says now is that "decreasing uncertainty requires energy."
 [[start:855212][end:859480]] It links a measurement of uncertainty to a measurement of energy.
-[[start:860490][end:871580]] And if you think about the uncertainty principle in quantum theory, the core idea of the uncertainty principle is you can't measure a system without disturbing it.
+[[start:860490][end:871580]] And if you think about the **uncertainty principle** in quantum theory, the core idea of the uncertainty principle is "you can't *measure* a system without *disturbing* it."
 [[start:872270][end:877914]] So to actually act on a system requires energy.
 
 14:38 [[start:878032][end:880400]] And that's what you have to do to get information.
-[[start:881330][end:885710]] So here's Boltzman, basically, inventing quantum theory.
-[[start:887490][end:892000]] So we're going to fast forward by another 15 years, to 1900.
-[[start:892850][end:903540]] And in 1900, Planck solved this problem called the black body radiation problem, which was basically how much heat does your hot boiler give off into the air?
+[[start:881330][end:885710]] So here's Boltzmann, basically inventing quantum theory.
 
-15:04 [[start:904490][end:918766]] And all of the measurements of the heat that hot boilers gave off to the air ran into problems in classical physics and caused contradictions and quantities that went to infinity.
+![fast forward to 1900](../../Video/Slide8.PNG)
+[[start:887490][end:892000]] So we're going to fast forward by another 15 years, to 1900.
+[[start:892850][end:903540]] And in 1900, **[Max] Planck** solved this problem, called the "black-body radiation problem," which was basically "how much heat does your hot boiler give off into the air?"
+
+15:04 [[start:904490][end:918766]] And all of the measurements of the heat that hot boilers gave off to the air ran into problems in classical physics, and caused contradictions and quantities that went to infinity.
 
 15:18 [[start:918818][end:920346]] And all of that was bad.
-[[start:920528][end:927078]] So many people were trying to solve this problem, and Planck solved it by making a simple postulate.
-[[start:927174][end:932570]] He said the energy of the radiation is proportional to its frequency.
-[[start:932650][end:935440]] So its color in the case of light.
+[[start:920528][end:927078]] So many people were trying to solve this problem. And Planck solved it by making a simple postulate.
+[[start:927174][end:932570]] He said "the energy of the radiation is proportional to its frequency."
+[[start:932650][end:935440]] So its *color* in the case of light.
 [[start:935970][end:942154]] And if you go higher frequency, you end up in ultraviolet and X rays and gamma rays.
 
 15:42 [[start:942202][end:946740]] If you go to lower frequency, you go into microwaves and radio and all of that.
 [[start:947670][end:951182]] So this is a nice way of talking about radiation.
-[[start:951326][end:953330]] And it turned out that this solved the problem.
-[[start:953400][end:963590]] I mean, just assuming this simple proportionality relationship produced spectra for black body radiation that worked, that matched what you saw experimentally.
+[[start:951326][end:953330]] And it turned out that this solved the problem!
+[[start:953400][end:963590]] I mean, just assuming this simple proportionality relationship produced spectra for black-body radiation that worked, that matched what you saw experimentally.
 [[start:964250][end:965958]] Well, this means something very important.
 
-16:06 [[start:966044][end:972906]] It means because this number h, the proportionality constant called plaque's constant, is a number.
-[[start:973008][end:974198]] It's Finite.
-[[start:974374][end:977930]] It means that energy comes in discrete units of H.
+16:06 [[start:966044][end:972906]] It means because this number *h*, the proportionality constant called **Planck's constant**, is a number,
+[[start:973008][end:974198]] it's finite,
+[[start:974374][end:977930]] it means that energy comes in discrete units of *h*.
 [[start:978080][end:984080]] You can have one H or two H or 10 million H, but you can't have half an H of energy.
 [[start:985890][end:987290]] So it's quantized.
 
@@ -190,7 +194,7 @@
 17:21 [[start:1041330][end:1048530]] And since energy and entropy are basically the same thing, we knew already that energy could only take discrete values.
 [[start:1049110][end:1057030]] So we could have realized in 1900 that energy is quantized because the number of states is quantized.
 [[start:1058410][end:1067446]] So it shouldn't have really been a mystery why energy was quantized, but it was a mystery, and it stayed a mystery, and it said, still a mystery.
-[[start:1067478][end:1091870]] People still debate the meaning of quantum theory, but another thing we could have known in 1900 was something very important, and it's that this quantum of action, planck's constant, which has units of action, which is energy times time, is intimately related to Boltzman's constant.
+[[start:1067478][end:1091870]] People still debate the meaning of quantum theory, but another thing we could have known in 1900 was something very important, and it's that this quantum of action, Planck's constant, which has units of action, which is energy times time, is intimately related to Boltzman's constant.
 
 18:13 [[start:1093510][end:1099970]] And Boltzman's constant has units of energy over temperature.
 
