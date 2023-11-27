@@ -196,32 +196,32 @@
 [[start:1058410][end:1067446]] So it shouldn't have really been a *mystery* why energy was quantized. But it was a mystery, and it stayed a mystery, and it's still a mystery!
 [[start:1067478][end:1070170]] People still debate the meaning of quantum theory.
 
-![Already in 1900...](../../Video/Slide9.PNG)
-17:52 [[start:1072110][end:1091870]] But another thing we *could* have known in 1900 was something very important, and it's that this quantum of action, Planck's constant, which has units of action, which is energy times time, is intimately related to Boltzmann's constant.
+![But already in 1900...](../../Video/Slide9.PNG)
+17:52 [[start:1072110][end:1091870]] But another thing we *could* have known in 1900 was something *very* important, and it's that this quantum of action, Planck's constant, which has units of action, which is energy times time, is intimately related to Boltzmann's constant.
 
 18:13 [[start:1093510][end:1099970]] And Boltzmann's constant has units of energy over temperature.
 
 18:21 [[start:1101910][end:1106020]] But this wasn't actually understood until the 1950s.
-[[start:1106870][end:1109158]] No one really figured that this out.
+[[start:1106870][end:1109158]] No one really figured {that} this out.
 [[start:1109244][end:1112214]] There was this relation until the 1950s.
-[[start:1112412][end:1117290]] And when it was figured out, it was figured out by a guy named Jean Carlo Wick.
-[[start:1117710][end:1129930]] And he introduced this notion of the Wick rotation by realizing that if you have an equation in classical physics, and in it, there's the term one over KT.
+[[start:1112412][end:1117290]] And when it was figured out, it was figured out by a guy named **Gian Carlo Wick**.
+[[start:1117710][end:1129930]] And he introduced this notion of the **Wick rotation** by realizing that if you have an equation in classical physics, and in it there's the term "1 over kT,"
 
-18:50 [[start:1130910][end:1135658]] You can always replace that one over KT with this other expression.
-[[start:1135754][end:1137150]] It over h-bar.
-[[start:1137220][end:1143250]] H-bar is just h divided by two pi, and you'll get an equation that's valid in quantum theory.
-[[start:1143910][end:1147730]] And this is typically described in textbooks as a trick.
+18:50 [[start:1130910][end:1135658]] you can always replace that "1 over kT" with this other expression,
+[[start:1135754][end:1137150]] "*i* *t* over h-bar."
+[[start:1137220][end:1143250]] H-bar is just *h* divided by 2 pi; and you'll get an equation that's valid in quantum theory.
+[[start:1143910][end:1147730]] And this is typically described in textbooks as "a trick."
 [[start:1148310][end:1154760]] And whenever something in physics is described as a trick, what that really means is it's something we don't understand.
 
-19:16 [[start:1156650][end:1161030]] And lots of papers have been written about the meaning of the WIC rotation.
-[[start:1162890][end:1169980]] But to start to understand the WIC rotation, I want to look at this equation a little bit.
-[[start:1171790][end:1183134]] One over KT is one over in energy, and it over h-bar is one over in energy.
-[[start:1183252][end:1197250]] Since h-bar is units of energy times time, we have time in this equation, and then we have this factor, I, which is typically thought of as just an imaginary number.
+19:16 [[start:1156650][end:1161030]] And lots of papers have been written about the meaning of the Wick rotation.
+[[start:1162890][end:1169980]] But to start to understand the Wick rotation, I want to look at this equation a little bit.
+[[start:1171790][end:1183134]] "1 over kT" is 1 over an energy. And "*i* *t* over h-bar" is 1 over an energy,
+[[start:1183252][end:1197250]] since h-bar is units of energy times time. We have time in this equation, and then we have this factor, *i*, which is typically thought of as just an imaginary number.
 [[start:1197400][end:1199940]] So it's the square root of minus one.
 
-20:00 [[start:1200550][end:1203358]] And what's this I doing in this equation?
-[[start:1203454][end:1206454]] And in fact, you see factors of it over h-bar.
-[[start:1206492][end:1211698]] If you're familiar with quantum theory everywhere in quantum theory.
+20:00 [[start:1200550][end:1203358]] And - what's this "*i*" doing in this equation?
+[[start:1203454][end:1206454]] And in fact, you see factors of *i* *t* over h-bar
+[[start:1206492][end:1211698]] (if you're familiar with quantum theory) *everywhere* in quantum theory.
 [[start:1211874][end:1216040]] So what's the meaning of this imaginary number?
 
 20:17 [[start:1217230][end:1234670]] And if you just think of it or of I as this arbitrary imaginary number that somehow renders the equation mysterious, then the whole of quantum theory is mysterious, but the Wick rotation is very mysterious.
@@ -241,7 +241,7 @@
 
 21:26 [[start:1286930][end:1297358]] So I is an operator that rotates something by 90 degrees, and if you rotate four times by 90 degrees, you're back to the identity.
 [[start:1297534][end:1299780]] So I to the fourth is one.
-[[start:1300950][end:1308950]] So this tells us something very interesting, which is that what the WIC rotation is really talking about is a rotation.
+[[start:1300950][end:1308950]] So this tells us something very interesting, which is that what the Wick rotation is really talking about is a rotation.
 [[start:1309770][end:1312230]] It's a geometrical equation.
 [[start:1313290][end:1322410]] And in July, we'll come back to this and really probe what this Wick rotation means physically.
 
