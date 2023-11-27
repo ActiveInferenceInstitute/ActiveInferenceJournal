@@ -124,13 +124,13 @@
 11:56 [[start:716258][end:724010]] So even more commonly, you would see it written as "the change in energy is equal to the temperature times the change in entropy."
 [[start:724430][end:728950]] It's the most common sort of textbook way of seeing this.
 
-12:09 [[start:729120][end:732010]] But the question, of course, is, "What *is* this quantity?"
+12:09 [[start:729120][end:732010]] But the question, of course, is, "What *is* this quantity?
 [[start:732090][end:733498]] What is this entropy?
 [[start:733594][end:735440]] What does this concept *mean?*"
 
 ![But what *is* entropy?](../../Video/Slide7.PNG)
 [[start:736450][end:753300]] And about 15 years after Clausius proposed it, **[Ludwig] Boltzmann** had the key insight, which is that "entropy is a measurement of *our uncertainty* about the **state** the system is in."
-[[start:754490][end:773820]] And in particular, he again, of course, went to formalism, and said, "the entropy, S, is equal to some constant times the number of states that the system can be in that look the same to us."
+[[start:754490][end:773820]] And in particular, he again, of course, went to formalism, and said "the entropy, S, is equal to some constant times the number of states that the system can be in that look the same to us."
 
 12:54 [[start:774750][end:782542]] And since that number of states is enormous, the way to make that manageable is to take the *log* of the number of states.
 
@@ -139,7 +139,7 @@
 [[start:791750][end:811080]] And Boltzmann was able to do this because he subscribed to a radical, very unpopular theory that material things, including gases like air, were made of atoms; and heat made the atoms move around.
 [[start:811770][end:816646]] And as you increase the amount of heat, the atoms can move in many different ways.
 
-13:36 [[start:816828][end:822010]] So the number of states that they can be in that look the same to us increases.
+13:36 [[start:816828][end:822010]] So the number of *states* that they can be in that look the same to us *increases.*
 [[start:822350][end:823914]] And that's what entropy is.
 [[start:823952][end:832622]] It's this increase in the number of states that the system can be in that all look the same to us with the measurements that we can make.
 [[start:832676][end:837840]] And since they look the same to us, we're *uncertain* about exactly what state they're in.
@@ -149,14 +149,14 @@
 [[start:847510][end:855014]] because what it says now is that "decreasing uncertainty requires energy."
 [[start:855212][end:859480]] It links a measurement of uncertainty to a measurement of energy.
 [[start:860490][end:871580]] And if you think about the **uncertainty principle** in quantum theory, the core idea of the uncertainty principle is "you can't *measure* a system without *disturbing* it."
-[[start:872270][end:877914]] So to actually act on a system requires energy.
+[[start:872270][end:877914]] So to actually *act* on a system requires energy.
 
 14:38 [[start:878032][end:880400]] And that's what you have to do to get information.
 [[start:881330][end:885710]] So here's Boltzmann, basically inventing quantum theory.
 
 ![fast forward to 1900](../../Video/Slide8.PNG)
 [[start:887490][end:892000]] So we're going to fast forward by another 15 years, to 1900.
-[[start:892850][end:903540]] And in 1900, **[Max] Planck** solved this problem, called the "black-body radiation problem," which was basically "how much heat does your hot boiler give off into the air?"
+[[start:892850][end:903540]] And in 1900, **[Max] Planck** solved this problem called the "black-body radiation problem," which was basically "how much heat does your hot boiler give off into the air?"
 
 15:04 [[start:904490][end:918766]] And all of the measurements of the heat that hot boilers gave off to the air ran into problems in classical physics, and caused contradictions and quantities that went to infinity.
 
@@ -175,7 +175,7 @@
 16:06 [[start:966044][end:972906]] It means because this number *h*, the proportionality constant called **Planck's constant**, is a number,
 [[start:973008][end:974198]] it's finite,
 [[start:974374][end:977930]] it means that energy comes in discrete units of *h*.
-[[start:978080][end:984080]] You can have one H or two H or 10 million H, but you can't have half an H of energy.
+[[start:978080][end:984080]] You can have one *h* or two *h* or 10 million H, but you can't have half an *h* of energy.
 [[start:985890][end:987290]] So it's quantized.
 
 16:27 [[start:987450][end:991230]] And this is widely recognized as the birth of quantum theory.
@@ -194,9 +194,9 @@
 17:21 [[start:1041330][end:1048530]] And since energy and entropy are basically the same thing, we knew already that energy could only take discrete values.
 [[start:1049110][end:1057030]] So we could have realized in 1900 that energy is quantized because the number of states is quantized.
 [[start:1058410][end:1067446]] So it shouldn't have really been a mystery why energy was quantized, but it was a mystery, and it stayed a mystery, and it said, still a mystery.
-[[start:1067478][end:1091870]] People still debate the meaning of quantum theory, but another thing we could have known in 1900 was something very important, and it's that this quantum of action, Planck's constant, which has units of action, which is energy times time, is intimately related to Boltzman's constant.
+[[start:1067478][end:1091870]] People still debate the meaning of quantum theory, but another thing we could have known in 1900 was something very important, and it's that this quantum of action, Planck's constant, which has units of action, which is energy times time, is intimately related to Boltzmann's constant.
 
-18:13 [[start:1093510][end:1099970]] And Boltzman's constant has units of energy over temperature.
+18:13 [[start:1093510][end:1099970]] And Boltzmann's constant has units of energy over temperature.
 
 18:21 [[start:1101910][end:1106020]] But this wasn't actually understood until the 1950s.
 [[start:1106870][end:1109158]] No one really figured that this out.
@@ -205,19 +205,19 @@
 [[start:1117710][end:1129930]] And he introduced this notion of the Wick rotation by realizing that if you have an equation in classical physics, and in it, there's the term one over KT.
 
 18:50 [[start:1130910][end:1135658]] You can always replace that one over KT with this other expression.
-[[start:1135754][end:1137150]] It over h bar.
-[[start:1137220][end:1143250]] H bar is just h divided by two pi, and you'll get an equation that's valid in quantum theory.
+[[start:1135754][end:1137150]] It over h-bar.
+[[start:1137220][end:1143250]] H-bar is just h divided by two pi, and you'll get an equation that's valid in quantum theory.
 [[start:1143910][end:1147730]] And this is typically described in textbooks as a trick.
 [[start:1148310][end:1154760]] And whenever something in physics is described as a trick, what that really means is it's something we don't understand.
 
 19:16 [[start:1156650][end:1161030]] And lots of papers have been written about the meaning of the WIC rotation.
 [[start:1162890][end:1169980]] But to start to understand the WIC rotation, I want to look at this equation a little bit.
-[[start:1171790][end:1183134]] One over KT is one over in energy, and it over h bar is one over in energy.
-[[start:1183252][end:1197250]] Since h bar is units of energy times time, we have time in this equation, and then we have this factor, I, which is typically thought of as just an imaginary number.
+[[start:1171790][end:1183134]] One over KT is one over in energy, and it over h-bar is one over in energy.
+[[start:1183252][end:1197250]] Since h-bar is units of energy times time, we have time in this equation, and then we have this factor, I, which is typically thought of as just an imaginary number.
 [[start:1197400][end:1199940]] So it's the square root of minus one.
 
 20:00 [[start:1200550][end:1203358]] And what's this I doing in this equation?
-[[start:1203454][end:1206454]] And in fact, you see factors of it over h bar.
+[[start:1203454][end:1206454]] And in fact, you see factors of it over h-bar.
 [[start:1206492][end:1211698]] If you're familiar with quantum theory everywhere in quantum theory.
 [[start:1211874][end:1216040]] So what's the meaning of this imaginary number?
 
