@@ -196,11 +196,11 @@
 [[start:1058410][end:1067446]] So it shouldn't have really been a *mystery* why energy was quantized. But it was a mystery, and it stayed a mystery, and it's still a mystery!
 [[start:1067478][end:1070170]] People still debate the meaning of quantum theory.
 
+![Already in 1900...](../../Video/Slide9.PNG)
 17:52 [[start:1072110][end:1091870]] But another thing we *could* have known in 1900 was something very important, and it's that this quantum of action, Planck's constant, which has units of action, which is energy times time, is intimately related to Boltzmann's constant.
 
 18:13 [[start:1093510][end:1099970]] And Boltzmann's constant has units of energy over temperature.
 
-![Already in 1900...](../../Video/Slide9.PNG)
 18:21 [[start:1101910][end:1106020]] But this wasn't actually understood until the 1950s.
 [[start:1106870][end:1109158]] No one really figured that this out.
 [[start:1109244][end:1112214]] There was this relation until the 1950s.
