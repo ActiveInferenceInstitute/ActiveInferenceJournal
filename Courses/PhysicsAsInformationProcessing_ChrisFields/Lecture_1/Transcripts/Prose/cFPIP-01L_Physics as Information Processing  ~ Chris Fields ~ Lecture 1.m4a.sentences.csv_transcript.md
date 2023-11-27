@@ -20,9 +20,9 @@
 [[start:59820][end:60280]] Hello!
 [[start:60350][end:62200]] So I'll be the course assistant.
 
-01:03 [[start:63180][end:70270]] I'm a postdoc in math, specializing in probability, and I have a deep interest in the physics of information.
+01:03 [[start:63180][end:70270]] And I'm a postdoc in math, specializing in probability. And I have a deep interest in the physics of information.
 [[start:70640][end:74140]] And I've been familiar with Chris's papers for a while.
-[[start:74290][end:76190]] So, yeah, just here to learn myself.
+[[start:74290][end:76190]] So, yeah, just here to learn myself!
 
 01:19 _Chris:_
 [[start:79460][end:80316]] Thank you, Ander.
@@ -32,70 +32,79 @@
 [[start:104730][end:108040]] So let's start!
 
 01:49 [[start:109210][end:126810]] This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
-[[start:127310][end:138478]] And I'll just start with a few quotations that span the middle of the 20th century - from [Ludwig] Wittgenstein in the 1920s saying "The world is all that is the case,"
-[[start:138564][end:143490]] so defining the world in terms of facts, not objects;
 
-02:24 [[start:144390][end:149410]] [Rolf] Landauer in the early '60s, proclaiming that "Information is Physical;"
-[[start:150470][end:162102]] and then John Archibald Wheeler, who in many ways is the grandfather of this era recently, stating it is "It from Bit,"
+![Wittgenstein, Landaur, Wheeler](../../Video/Slide2.PNG)
+[[start:127310][end:138478]] And I'll just start with a few quotations that span the middle of the 20th century - from **[Ludwig] Wittgenstein** in the 1920s saying "The world is all that is the case,"
+[[start:138564][end:143490]] so, defining the world in terms of facts, not objects;
+
+02:24 [[start:144390][end:149410]] **[Rolf] Landauer** in the early '60s, proclaiming that "Information is Physical;"
+[[start:150470][end:162102]] and then **John Archibald Wheeler**, who in many ways is the grandfather of this era recently, stating it is "It from Bit,"
 
 02:42 [[start:162236][end:167850]] so things come from information, i.e. bitstrings.
-[[start:168910][end:177180]] And if nothing else, this shows that formulations of this idea get pithier as the 20th century rolls on.
-[[start:178510][end:185390]] But the history goes back farther clearly than the 20th century.
-[[start:185730][end:196354]] But I'm only going to really talk about a piece of it and the timeline that I'll actually discuss today.
-[[start:196472][end:203090]] The most relevant history of this idea goes back to the mid 19th century.
+[[start:168910][end:177180]] And if nothing else, this shows that formulations of this idea get pithier as the 20th century rolls on!
 
-03:24 [[start:204330][end:211750]] And the first specific thing I'll talk about is Clausia's definition of entropy.
+![Physics, Clausius to Friston](../../Video/Slide3.PNG)
+[[start:178510][end:185390]] But the history goes back farther clearly than the 20th century.
+[[start:185730][end:196354]] But I'm only going to really talk about a piece of it and the timeline that I'll actually discuss today,
+[[start:196472][end:203090]] the most relevant history of this idea, goes back to the mid-19th Century.
+
+03:24 [[start:204330][end:211750]] And the first specific thing I'll talk about is **[Rudolf] Clausius**'s definition of **entropy**.
 
 03:32 [[start:212890][end:230750]] But with the beginning of the understanding of thermodynamics and the role of information in thermodynamics, you get this very interesting multidisciplinary progression of ideas that incorporates the beginning of quantum theory.
 
-03:52 [[start:232850][end:252900]] And the beginning of quantum theory can kind of be dated to the first Solve conference in 1928 and the famous debate between Bohr and Einstein over whether quantum theory is about knowledge, information or objects things.
+03:52 [[start:232850][end:252900]] And the beginning of **quantum theory** can kind of be dated to the first **Solvay conference** in 1928 [[the Fifth Solvay Conference on Physics in 1927]], and the famous debate between **[Nils] Bohr** and **[Albert] Einstein** over whether quantum theory is about knowledge, information - or objects, things.
 [[start:254650][end:261186]] But it incorporates a lot of work in computer science and logic and mathematics.
-[[start:261298][end:275062]] So, interestingly, computer science was Born effectively in the mid 30s with the work of Church and Turing, which very rapidly converged with the work in physics.
+[[start:261298][end:275062]] So, interestingly, computer science was born effectively in the mid-30s with the work of **[Alonzo] Church** and **[Alan] Turing**, which very rapidly converged with the work in physics.
 
 04:35 [[start:275206][end:279530]] So today we'll be talking about both computer science and physics.
-[[start:280850][end:286880]] And then in the second half of the 20th century, this just exploded into a huge area.
+[[start:280850][end:286880]] And then in the second half of the 20th Century, this just exploded into a huge area.
 
-04:48 [[start:288050][end:303010]] And in consequence of that mid 20th century development, we're beginning to see a new idea about physics which is roughly encapsulated in quantum information theory.
+04:48 [[start:288050][end:303010]] And in consequence of that mid-20th Century development, we're beginning to see a new idea about physics which is roughly encapsulated in quantum information theory.
+
+![Physics is about information transfer across boundaries](../../Video/Slide4.PNG)
 [[start:303350][end:305494]] And the new idea is this.
-[[start:305692][end:317686]] It's that what physics is actually about is information transfer across boundaries and the information we can represent.
-[[start:317718][end:319978]] The information transfer like this.
+[[start:305692][end:317686]] It's that what physics is actually about is information transfer across boundaries and the information... We can represent
+[[start:317718][end:319978]] the information transfer like this.
 [[start:320144][end:323260]] And this is a convention I'll use.
 
 05:24 [[start:324030][end:326970]] A boundary is always a blue ellipse.
 [[start:328030][end:339360]] And the agents that are exchanging information across this boundary are conventionally called Alice and Bob, which is just a more polite way of saying A and B.
 
 05:40 [[start:340530][end:349890]] And when you think about this picture, it becomes clear that what physics is really about is communication.
-[[start:350950][end:365750]] And this is a wild redescription of the idea of what physics is compared to the ideas of Newton or LaPlace or even the 19th century ideas.
-[[start:366170][end:393810]] And it's very different from the idea that's been preserved in 20th century physics in the lineage of Einstein and others who viewed classical physics as, in a sense, either as completely fundamental or as a fundamental adjunct to quantum theory.
+[[start:350950][end:365750]] And this is a wild redescription of the idea of what physics is, compared to the ideas of Newton or LaPlace or even the 19th century ideas.
+[[start:366170][end:393810]] And it's very different from the idea that's been preserved in 20th Century physics in the lineage of Einstein and others who viewed **classical physics** as, in a sense, either as completely fundamental or as a fundamental adjunct to quantum theory.
 
-06:34 [[start:394550][end:403090]] So this way of thinking about physics is a very deeply quantum theoretic way of thinking about physics.
+06:34 [[start:394550][end:403090]] So this way of thinking about physics is a very deeply quantum-theoretic way of thinking about physics.
 
-06:43 [[start:403670][end:411702]] And where we're going in this course today is really how did this all happen?
+![Where we are going in this course](../../Video/Slide5.PNG)
+06:43 [[start:403670][end:411702]] And where we're going in this course today is really "how did this all happen?"
 [[start:411756][end:413400]] It's the origin story.
-[[start:414650][end:435600]] And then in the next session, I want to discuss quantum information theory explicitly and in particular, how quantum theory makes this conclusion that physics is about communication very simple and obvious, much more obvious than it is in classical physics where it takes work to formulate this idea.
-[[start:436610][end:451060]] Then in the next session, we're going to talk about semantics and how observations become meaningful to the agents who make them and hence how actions become meaningful to the agents who make them.
+[[start:414650][end:435600]] And then in the next session, I want to discuss quantum information theory explicitly. And in particular, how quantum theory makes this conclusion that physics is about communication very simple and obvious, much more obvious than it is in classical physics where it takes *work* to formulate this idea.
+[[start:436610][end:451060]] Then in the next session, we're going to talk about **semantics**, and how observations become meaningful to the agents who make them and hence how actions become meaningful to the agents who make them.
 
-07:32 [[start:452230][end:465750]] Then in August, we'll talk about communication theory a little bit more explicitly and talk about how agents employ multiple communication channels when they're communicating.
+07:32 [[start:452230][end:465750]] Then in August, we'll talk about **communication theory** a little bit more explicitly, and talk about how agents employ multiple communication channels when they're communicating.
 
-07:46 [[start:466410][end:475974]] And this is obvious when you think of people communicating, they not only talk to each other, they look at the same things, they point to things, et cetera.
+07:46 [[start:466410][end:475974]] And this is obvious when you think of people communicating: they not only talk to each other, they look at the same things, they point to things, et cetera.
 [[start:476022][end:479950]] So this is what I mean by multiple communication channels.
-[[start:480450][end:489210]] Then in September, we'll leverage that discussion to talk about how spacetime actually emerges from communication.
+[[start:480450][end:489210]] Then in September, we'll leverage that discussion to talk about how **spacetime** actually emerges from communication.
 [[start:489290][end:493854]] And this is one of the most important aspects, I think, of quantum information theory.
 
-08:13 [[start:493982][end:509960]] It provides us with a way of viewing spacetime as an emergent phenomenon, that communication is what is fundamental in some ontological sense, and the box in which it happens, spacetime is not.
-[[start:511050][end:523530]] So the final session in October will talk about applications to biology via the free energy principle and future directions both in physics and biology and elsewhere.
-[[start:524190][end:526294]] So it's going to be an interesting ride.
+08:13 [[start:493982][end:509960]] It provides us with a way of viewing spacetime as an emergent phenomenon, that communication is what is *fundamental* in some ontological sense; and the *box* in which it happens, spacetime, is not.
+[[start:511050][end:523530]] So in the final session in October we'll talk about applications to biology via the **Free Energy Principle**, and future directions both in physics and biology and elsewhere.
+[[start:524190][end:526294]] So it's going to be an interesting ride!
 
-08:46 [[start:526422][end:541150]] I'm keeping formalism to a minimum because we're directing this toward the broad array of people who are interested in active inference and who are involved with the Active Inference Institute.
+08:46 [[start:526422][end:541150]] I'm keeping formalism to a minimum, because we're directing this toward the broad array of people who are interested in **Active Inference** and who are involved with the Active Inference Institute.
 [[start:541830][end:553250]] And I would ask you to hold questions because we have a lot to get through in an hour for the interactive discussion and for the discussion forum.
 
 09:14 [[start:554810][end:562470]] So I hope I explain things well enough that all of the concepts will be understandable.
-[[start:563450][end:570780]] If not, Wikipedia is actually a wonderful resource in this area for just definitions of terms.
-[[start:571230][end:577894]] So if there's anything that just a term that is a trip up, try Wikipedia.
+[[start:563450][end:570780]] If not, **Wikipedia** is actually a wonderful resource in this area for just definitions of terms.
+[[start:571230][end:577894]] So if there's anything that... just a term that is a trip-up, try Wikipedia.
 [[start:577942][end:581006]] It's probably a very good source for what these terms mean.
-[[start:581188][end:586990]] So let's start our story, as I said, begins in the 19th century.
 
-09:47 [[start:587410][end:596130]] And in the mid 19th century, lots of physicists were devoting their efforts to figuring out how to make better steam engines.
+![Our story begins...](../../Video/Slide6.PNG)
+[[start:581188][end:586990]] So let's start! Our story, as I said, begins in the 19th Century.
+
+09:47 [[start:587410][end:596130]] And in the mid-19th Century, lots of physicists were devoting their efforts to figuring out how to make better steam engines.
 [[start:596870][end:611282]] And one question that arises when you're trying to design a steam engine is what happens physically when you add heat to a system at constant temperature?
 [[start:611346][end:615350]] So if you're building a steam engine, you've got a boiler, because you need to make steam.
 [[start:615690][end:622330]] And as you turn up the heat to your boiler, you get more steam, but the temperature doesn't change.
