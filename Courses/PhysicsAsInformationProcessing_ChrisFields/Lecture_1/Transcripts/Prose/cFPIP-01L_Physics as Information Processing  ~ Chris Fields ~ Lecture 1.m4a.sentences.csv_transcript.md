@@ -172,20 +172,20 @@
 [[start:953400][end:963590]] I mean, just assuming this simple proportionality relationship produced spectra for black-body radiation that worked, that matched what you saw experimentally.
 [[start:964250][end:965958]] Well, this means something very important.
 
-16:06 [[start:966044][end:972906]] It means because this number *h*, the proportionality constant called **Planck's constant**, is a number,
+16:06 [[start:966044][end:972906]] It means because this number *h*, the proportionality constant called **Planck's constant**, is a *number,*
 [[start:973008][end:974198]] it's finite,
 [[start:974374][end:977930]] it means that energy comes in discrete units of *h*.
-[[start:978080][end:984080]] You can have one *h* or two *h* or 10 million H, but you can't have half an *h* of energy.
+[[start:978080][end:984080]] You can have one *h* or two *h* or 10 million *h*, but you can't have half an *h* of energy.
 [[start:985890][end:987290]] So it's quantized.
 
 16:27 [[start:987450][end:991230]] And this is widely recognized as the birth of quantum theory.
-[[start:991750][end:994580]] But of course, we should have known this already.
-[[start:994950][end:997060]] If we just thought a little bit.
-[[start:997430][end:997890]] Right.
-[[start:997960][end:1007110]] We Know that changes of energy are proportional to changes in entropy by temperature.
+[[start:991750][end:994580]] But of course, we should have known this already,
+[[start:994950][end:997060]] if we just thought a little bit,
+[[start:997430][end:997890]] right?
+[[start:997960][end:1007110]] We know that changes of energy are proportional to changes in entropy by temperature.
 
 16:47 [[start:1007610][end:1016120]] And we know that entropy is a measure of the number of states, and numbers of states are just numbers.
-[[start:1016750][end:1028140]] You can have one state, two states, three states, 10 million states, 100 billion states, but they're all just a number, one up.
+[[start:1016750][end:1028140]] You can have one state, two states, three states, 10 million states, 100 billion states, but they're all just a number - one, up.
 
 17:09 [[start:1029310][end:1030486]] And it's not infinite.
 [[start:1030518][end:1035360]] There's not an infinite number of states unless you have an infinite amount of energy, which you don't have.
