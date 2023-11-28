@@ -243,21 +243,22 @@
 [[start:1297534][end:1299780]] So *i* to the fourth is one.
 [[start:1300950][end:1308950]] So this tells us something very interesting, which is that what the Wick rotation is really talking about is a rotation.
 [[start:1309770][end:1312230]] It's a geometrical equation.
-[[start:1313290][end:1322410]] And in July, we'll come back to this and really probe what this Wick rotation means physically.
+[[start:1313290][end:1322410]] And in July, we'll come back to this and really probe what this Wick rotation *means, physically.*
 
-22:04 [[start:1324990][end:1332640]] But as I said, this wasn't understood to the 1950s, and by the 1950s, a lot had happened.
-[[start:1333010][end:1334954]] So quantum theory had been developed.
-[[start:1335002][end:1336922]] Bohren Einstein had had their debate.
+22:04 [[start:1324990][end:1332640]] But as I said, this wasn't understood 'till the 1950s. And by the 1950s, a lot had happened.
+[[start:1333010][end:1334954]] So - quantum theory had been developed.
+[[start:1335002][end:1336922]] Bohr and Einstein had had their debate.
 [[start:1336986][end:1338814]] Particle accelerators had been built.
 
 22:18 [[start:1338852][end:1340574]] The atomic bomb had been built.
 
-22:20 [[start:1340692][end:1349794]] Nuclear physics was well in its way, so an enormous amount of practical physics had been done.
+22:20 [[start:1340692][end:1349794]] Nuclear physics was well on its way. So an enormous amount of practical physics had been done.
 [[start:1349912][end:1351966]] Quantum theory was highly developed.
 [[start:1351998][end:1360310]] People were starting to think about quantum field theory before they made this simple realization that's formulated in the Wick rotation.
-[[start:1360650][end:1363240]] So this is a harboring of things to come.
-[[start:1363610][end:1372060]] But before we continue in physics, we need to backtrack in time a little bit and look at what the mathematicians were doing.
+[[start:1360650][end:1363240]] So this is a harbinger of things to come.
+[[start:1363610][end:1372060]] But before we continue in physics, we need to backtrack in time a little bit, and look at what the mathematicians were doing.
 
+![Meanwhile, across the hall...](../../Video/Slide10.PNG)
 22:53 [[start:1373150][end:1385146]] So across the hall in the math department, one year after the Solve conference in 1929, kurt Godel proved his famous first incompleteness theorem.
 [[start:1385338][end:1391280]] And the theorem states that no formal system that contains arithmetic can be both consistent and complete.
 [[start:1392630][end:1405880]] And that means that either there are true statements that aren't provable in the formal system, or there are false statements that are provable, or, of course, both.
