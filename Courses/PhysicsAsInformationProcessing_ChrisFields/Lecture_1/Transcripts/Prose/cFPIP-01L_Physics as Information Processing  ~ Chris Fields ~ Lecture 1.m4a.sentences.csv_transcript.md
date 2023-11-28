@@ -1,6 +1,7 @@
+# Physics as Information Processing - Session 1, "Historical Perspective"
 ![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/cFPIP-01L_00001.png)
 
-# INTRODUCTION
+## INTRODUCTION
 00:05 _Daniel:_
 [[start:5900][end:9460]] Hello and welcome, everyone, to the Active Inference Institute.
 [[start:9620][end:16020]] This is Session 1 of the course "Physics as Information Processing" with Chris Fields.
@@ -32,7 +33,7 @@
 [[start:99670][end:103380]] And all of this is explained on the course website.
 [[start:104730][end:108040]] So let's start!
 
-# PHYSICS
+## PHYSICS
 01:49 [[start:109210][end:126810]] This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
 
 ![Wittgenstein, Landaur, Wheeler](../../Video/Slide2.PNG)
@@ -50,7 +51,7 @@
 [[start:185730][end:196354]] But I'm only going to really talk about a piece of it and the timeline that I'll actually discuss today,
 [[start:196472][end:203090]] the most relevant history of this idea, goes back to the mid-19th Century.
 
-## Clausius
+### Clausius
 03:24 [[start:204330][end:211750]] And the first specific thing I'll talk about is **[Rudolf] Clausius**'s definition of entropy.
 
 03:32 [[start:212890][end:230750]] But with the beginning of the understanding of thermodynamics and the role of information in thermodynamics, you get this very interesting multidisciplinary progression of ideas that incorporates the beginning of quantum theory.
@@ -59,7 +60,7 @@
 [[start:254650][end:261186]] But it incorporates a lot of work in computer science and logic and mathematics.
 [[start:261298][end:275062]] So, interestingly, computer science was born effectively in the mid-30s with the work of **[Alonzo] Church** and **[Alan] Turing**, which very rapidly converged with the work in physics.
 
-## Physics, Computation, Information
+### Physics, Computation, Information
 04:35 [[start:275206][end:279530]] So today we'll be talking about both computer science and physics.
 [[start:280850][end:286880]] And then in the second half of the 20th Century, this just exploded into a huge area.
 
@@ -80,7 +81,7 @@
 
 06:34 [[start:394550][end:403090]] So this way of thinking about physics is a very deeply quantum-theoretic way of thinking about physics.
 
-# COURSE OUTLINE
+## COURSE OUTLINE
 ![Where we are going in this course](../../Video/Slide5.PNG)
 06:43 [[start:403670][end:411702]] And where we're going in this course today is really "how did this all happen?"
 [[start:411756][end:413400]] It's the origin story.
@@ -106,11 +107,11 @@
 [[start:571230][end:577894]] So if there's anything that... just a term that is a trip-up, try Wikipedia.
 [[start:577942][end:581006]] It's probably a very good source for what these terms mean.
 
-# BACK to the PHYSICS
+## BACK to the PHYSICS
 ![Our story begins...](../../Video/Slide6.PNG)
 [[start:581188][end:586990]] So let's start! Our story, as I said, begins in the 19th Century.
 
-## Steam Engines
+### Steam Engines
 09:47 [[start:587410][end:596130]] And in the mid-19th Century, lots of physicists were devoting their efforts to figuring out how to make better steam engines.
 [[start:596870][end:611282]] And one question that arises when you're trying to design a steam engine is "what happens *physically* when you add heat to a system at constant temperature?"
 [[start:611346][end:615350]] So if you're building a steam engine, you've got a boiler, because you need to make steam.
@@ -135,7 +136,7 @@
 [[start:732090][end:733498]] What is this entropy?
 [[start:733594][end:735440]] What does this concept *mean?*"
 
-## Boltzmann
+### Boltzmann
 ![But what *is* entropy?](../../Video/Slide7.PNG)
 [[start:736450][end:753300]] And about 15 years after Clausius proposed it, **[Ludwig] Boltzmann** had the key insight, which is that "entropy is a measurement of *our uncertainty* about the **state** the system is in."
 [[start:754490][end:773820]] And in particular, he again, of course, went to formalism, and said "the entropy, S, is equal to some constant times the number of states that the system can be in that look the same to us."
@@ -162,7 +163,7 @@
 14:38 [[start:878032][end:880400]] And that's what you have to do to get information.
 [[start:881330][end:885710]] So here's Boltzmann, basically inventing quantum theory.
 
-## Planck
+### Planck
 ![fast forward to 1900](../../Video/Slide8.PNG)
 [[start:887490][end:892000]] So we're going to fast forward by another 15 years, to 1900.
 [[start:892850][end:903540]] And in 1900, **[Max] Planck** solved this problem called the "black-body radiation problem," which was basically "how much heat does your hot boiler give off into the air?"
@@ -214,7 +215,7 @@
 [[start:1106870][end:1109158]] No one really figured {that} this out.
 [[start:1109244][end:1112214]] There was this relation until the 1950s.
 
-## Wick
+### Wick
 [[start:1112412][end:1117290]] And when it was figured out, it was figured out by a guy named **Gian Carlo Wick**.
 [[start:1117710][end:1129930]] And he introduced this notion of the **Wick rotation** by realizing that if you have an equation in classical physics, and in it there's the term "1 over kT,"
 
@@ -269,14 +270,14 @@
 [[start:1360650][end:1363240]] So this is a harbinger of things to come.
 [[start:1363610][end:1372060]] But before we continue in physics, we need to backtrack in time a little bit, and look at what the mathematicians were doing.
 
-# MATHEMATICS
-## Goedel
+## MATHEMATICS
+### Gödel
 ![Meanwhile, across the hall...](../../Video/Slide10.PNG)
-22:53 [[start:1373150][end:1385146]] So across the hall in the math department, one year after the Solve conference in 1929, Kurt Goedel proved his famous first incompleteness theorem.
-[[start:1385338][end:1391280]] And the theorem states that no formal system that contains arithmetic can be both consistent and complete.
-[[start:1392630][end:1405880]] And that means that either there are true statements that aren't provable in the formal system, or there are false statements that are provable, or, of course, both.
+22:53 [[start:1373150][end:1385146]] So across the hall in the math department, one year after the Solvay conference, in 1929, Kurt Gödel proved his famous first incompleteness theorem.
+[[start:1385338][end:1391280]] And the theorem states that "no formal system that contains arithmetic can be both consistent and complete."
+[[start:1392630][end:1405880]] And that means that either there are true statements that aren't provable in the formal system; or there are false statements that are provable; or, of course, both.
 
-23:26 [[start:1406810][end:1411878]] And Godel's proof is actually extremely simple.
+23:26 [[start:1406810][end:1411878]] And Gödel's proof is actually extremely simple.
 [[start:1411964][end:1428010]] Almost all of the work in the proof is setting up all of the notation and procedures and so forth to formulate within arithmetic the sentence, this sentence is not provable.
 
 23:49 [[start:1429090][end:1436800]] And once you have that sentence formulated within arithmetic, then the conclusion of the proof is obvious.
@@ -286,15 +287,15 @@
 
 24:33 [[start:1473878][end:1483600]] And optimistically, he thought that first order logic would allow us to enumerate all those facts and we'd be done dreams of a final theory again.
 
-24:45 [[start:1485970][end:1496690]] So Godel's Theorem means that no system with finite capabilities, no system that can just do finite discrete operations, can fully describe its environment.
+24:45 [[start:1485970][end:1496690]] So Gödel's Theorem means that no system with finite capabilities, no system that can just do finite discrete operations, can fully describe its environment.
 [[start:1497110][end:1503810]] It will always be in an environment where there are true things that aren't provable or false things that are provable.
 [[start:1504890][end:1512040]] But I think more relative to a discussion of agents is that it means that no agent can describe itself.
 [[start:1512970][end:1528540]] Any agent's theory of itself will either contain true statements that it can't derive or false statements, or it will either miss true statements that it can't derive or wind up deriving things that are false about itself.
 [[start:1529410][end:1532320]] Of course, we see this in psychology all the time.
 
-25:33 [[start:1533410][end:1544190]] So an immediate consequence of Godel's Theorem was an intense investigation of what computation actually is, what it meant to talk about finite discrete operations.
+25:33 [[start:1533410][end:1544190]] So an immediate consequence of Gödel's Theorem was an intense investigation of what computation actually is, what it meant to talk about finite discrete operations.
 
-## Computation
+### Computation
 25:44 [[start:1544850][end:1548782]] And two leaders of this were, of course, Church and Turing.
 [[start:1548846][end:1560440]] And here's a picture of a Turing machine, which is just a little device with a couple of tapes and a tape reader and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
 [[start:1561450][end:1577530]] And they defined a computation as a process that can be implemented in finite time by such a machine or by Church's lambda calculus or by any of the now hundreds of other methods that are provably equivalent to a Turing machine.
@@ -305,7 +306,7 @@
 [[start:1594948][end:1600530]] So I can do it on a Turing machine, I can do it on my laptop, I can do it on my head, et cetera.
 [[start:1601270][end:1605554]] The most important things it means is that there are questions with no computable answer.
 
-26:45 [[start:1605672][end:1608306]] This is the Revenge of Godel's theorem.
+26:45 [[start:1605672][end:1608306]] This is the Revenge of Gödel's theorem.
 
 26:48 [[start:1608498][end:1613798]] And two of the most famous questions of this kind are given some arbitrary program.
 [[start:1613884][end:1614882]] Will it halt?
@@ -354,7 +355,7 @@
 30:57 [[start:1857290][end:1860520]] And that's what makes practical programming possible.
 [[start:1861130][end:1878780]] So from these no go theorems that tell you what you can't do, you actually get an enormous boost into it and use to probe the world and develop theories and on and on and on.
 
-31:20 [[start:1880290][end:1891680]] So in a sense, Godel birthed not only computer science, but practical computing by showing us that virtualization is just the way the world works.
+31:20 [[start:1880290][end:1891680]] So in a sense, Gödel birthed not only computer science, but practical computing by showing us that virtualization is just the way the world works.
 [[start:1892150][end:1908230]] So now let's go back to physics where these ideas were replicated, basically reintroduced, reinvented by Feynman in developing his path integral formulation of quantum theory.
 [[start:1908570][end:1921882]] And basically what Feyman realized was that in any physical process, the observer Alice prepares some state that she's interested in.
 
