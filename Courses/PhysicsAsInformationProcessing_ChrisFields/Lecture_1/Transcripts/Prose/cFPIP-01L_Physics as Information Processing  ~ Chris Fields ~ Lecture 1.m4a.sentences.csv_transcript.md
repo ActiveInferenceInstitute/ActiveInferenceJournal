@@ -309,20 +309,20 @@
 25:44 [[start:1544850][end:1548782]] And two leaders of this were, of course, Church and Turing.
 [[start:1548846][end:1560440]] And here's a picture of a Turing machine, which is just a little device with a couple of tapes and a tape reader and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
 [[start:1561450][end:1577530]] And they defined a computation as a process that can be implemented in finite time by such a machine or by Church's lambda calculus or by any of the now hundreds of other methods that are provably equivalent to a Turing machine.
-[[start:1578030][end:1579820]] So what does this mean?
+[[start:1578030][end:1579820]] So what does *this* mean?
 
-26:20 [[start:1580270][end:1589200]] It means that computation is a physical process that can be mechanized and it turns out, mechanized in any one of a huge array of ways.
+26:20 [[start:1580270][end:1589200]] It means that computation is a *physical* process that can be mechanized; and it turns out, mechanized in any one of a huge array of ways.
 [[start:1590050][end:1594846]] It means that many different implementations of any computation are possible.
 [[start:1594948][end:1600530]] So I can do it on a Turing machine, I can do it on my laptop, I can do it on my head, et cetera.
 [[start:1601270][end:1605554]] The most important things it means is that there are questions with no computable answer.
 
 26:45 [[start:1605672][end:1608306]] This is the Revenge of Gödel's theorem.
 
-26:48 [[start:1608498][end:1613798]] And two of the most famous questions of this kind are given some arbitrary program.
-[[start:1613884][end:1614882]] Will it halt?
-[[start:1615026][end:1617578]] Will it get to an answer in finite time?
-[[start:1617744][end:1622410]] And the answer to that question is this is undecidable.
-[[start:1622750][end:1625260]] No procedure can figure this out.
+26:48 [[start:1608498][end:1613798]] And two of the most famous questions of this kind are "Given some arbitrary program,
+[[start:1613884][end:1614882]] will it halt?
+[[start:1615026][end:1617578]] Will it get to an answer in finite time?"
+[[start:1617744][end:1622410]] And the answer to that question is "This is undecidable.
+[[start:1622750][end:1625260]] No procedure can figure this out."
 
 27:06 [[start:1626270][end:1634670]] And the other undecidable question is, given some arbitrary program, what function does it compute?
 [[start:1635090][end:1640730]] And you'd think that would be simple, that you can read a program and figure out what function it computes.
