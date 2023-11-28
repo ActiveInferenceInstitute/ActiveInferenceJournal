@@ -221,26 +221,26 @@
 
 20:00 [[start:1200550][end:1203358]] And - what's this "*i*" doing in this equation?
 [[start:1203454][end:1206454]] And in fact, you see factors of *i* *t* over h-bar
-[[start:1206492][end:1211698]] (if you're familiar with quantum theory) *everywhere* in quantum theory.
-[[start:1211874][end:1216040]] So what's the meaning of this imaginary number?
+[[start:1206492][end:1211698]] (if you're familiar with quantum theory) *everywhere* in quantum theory!
+[[start:1211874][end:1216040]] So what's the meaning of this "imaginary number?"
 
-20:17 [[start:1217230][end:1234670]] And if you just think of it or of I as this arbitrary imaginary number that somehow renders the equation mysterious, then the whole of quantum theory is mysterious, but the Wick rotation is very mysterious.
+20:17 [[start:1217230][end:1234670]] And if you just think of "*i* *t*," or of *i*, as this "arbitrary, imaginary number" that somehow renders the equation mysterious, then the whole of quantum theory is mysterious. But the Wick rotation is very mysterious.
 
-20:35 [[start:1235250][end:1238990]] But what I is actually is an operator.
-[[start:1239970][end:1246910]] And if you think of the real numbers as an axis, which is always drawn horizontally.
+20:35 [[start:1235250][end:1238990]] But what *i* is actually is an **operator**.
+[[start:1239970][end:1246910]] And if you think of the real numbers as an axis (which is always drawn horizontally)...
 [[start:1246990][end:1248082]] So here it is.
 [[start:1248216][end:1252482]] Here's zero, and the axis is pointing that way.
-[[start:1252536][end:1256326]] I'm sorry, I can't get the camera really far enough away to see my arm here.
+[[start:1252536][end:1256326]] {(I'm sorry - I can't get the camera really far enough away to see my arm here.)}
 
-20:56 [[start:1256508][end:1258070]] So what is I?
-[[start:1258220][end:1265190]] I is actually an operator that rotates the whole real axis by 90 degrees.
-[[start:1265690][end:1272954]] So if you see a plot of complex numbers, then the real numbers go this way, and the, quote, imaginary numbers go that way.
-[[start:1272992][end:1277638]] So what multiplying by I has done is rotate by 90 degrees.
+20:56 [[start:1256508][end:1258070]] So what is *i*?
+[[start:1258220][end:1265190]] *i* is actually an operator that rotates the whole real axis by 90 degrees.
+[[start:1265690][end:1272954]] So if you see a plot of complex numbers, then the real numbers go this way, and the, quote, "imaginary numbers" go that way.
+[[start:1272992][end:1277638]] So what multiplying by *i* has done is rotate by 90 degrees.
 
-21:17 [[start:1277814][end:1286400]] And of course, if you do I squared, you rotate twice by 90 degrees by arm would do this, but you end up pointing that way, and those are the negative numbers.
+21:17 [[start:1277814][end:1286400]] And of course, if you do *i* squared, you rotate *twice* by 90 degrees (my arm won't do this), but you end up pointing *that* way, and those are the negative numbers.
 
-21:26 [[start:1286930][end:1297358]] So I is an operator that rotates something by 90 degrees, and if you rotate four times by 90 degrees, you're back to the identity.
-[[start:1297534][end:1299780]] So I to the fourth is one.
+21:26 [[start:1286930][end:1297358]] So *i* is an operator that rotates something by 90 degrees, and if you rotate four times by 90 degrees, you're back to the identity.
+[[start:1297534][end:1299780]] So *i* to the fourth is one.
 [[start:1300950][end:1308950]] So this tells us something very interesting, which is that what the Wick rotation is really talking about is a rotation.
 [[start:1309770][end:1312230]] It's a geometrical equation.
 [[start:1313290][end:1322410]] And in July, we'll come back to this and really probe what this Wick rotation means physically.
@@ -513,7 +513,7 @@
 [[start:3043540][end:3079560]] All of which tell us that the world we see is a projection that's being written on our boundaries by a process that we have no access to except the procedure of active inference or the procedure of science, which is to formulate predictive models and test them by doing things in the world and seeing how the world responds.
 
 51:21 [[start:3081360][end:3085260]] So that's it for this session.
-[[start:3087200][end:3097250]] The first discussion session which Andrew is going to lead will be the 3 June at this same time, I E 05:00 European time.
+[[start:3087200][end:3097250]] The first discussion session which Andrew is going to lead will be the 3 June at this same time, i.e. 05:00 European time.
 [[start:3098180][end:3102960]] And then my session number two will be in mid June.
 [[start:3103700][end:3111910]] And if you look at the course website, there's this subsidiary website for interactive Q and A.
 [[start:3112360][end:3132060]] And I invite everyone to post questions and discuss them and hope that we'll have an interesting exchange and that everyone will come to sort of an understanding of what was talked about today through discussion.
