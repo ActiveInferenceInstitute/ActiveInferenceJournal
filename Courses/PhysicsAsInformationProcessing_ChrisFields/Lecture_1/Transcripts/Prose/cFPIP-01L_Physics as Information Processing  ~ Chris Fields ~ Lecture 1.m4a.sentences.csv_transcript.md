@@ -1,5 +1,6 @@
 ![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/cFPIP-01L_00001.png)
 
+# INTRODUCTION
 00:05 _Daniel:_
 [[start:5900][end:9460]] Hello and welcome, everyone, to the Active Inference Institute.
 [[start:9620][end:16020]] This is Session 1 of the course "Physics as Information Processing" with Chris Fields.
@@ -31,6 +32,7 @@
 [[start:99670][end:103380]] And all of this is explained on the course website.
 [[start:104730][end:108040]] So let's start!
 
+# PHYSICS
 01:49 [[start:109210][end:126810]] This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
 
 ![Wittgenstein, Landaur, Wheeler](../../Video/Slide2.PNG)
@@ -48,6 +50,7 @@
 [[start:185730][end:196354]] But I'm only going to really talk about a piece of it and the timeline that I'll actually discuss today,
 [[start:196472][end:203090]] the most relevant history of this idea, goes back to the mid-19th Century.
 
+## CLAUSIUS
 03:24 [[start:204330][end:211750]] And the first specific thing I'll talk about is **[Rudolf] Clausius**'s definition of entropy.
 
 03:32 [[start:212890][end:230750]] But with the beginning of the understanding of thermodynamics and the role of information in thermodynamics, you get this very interesting multidisciplinary progression of ideas that incorporates the beginning of quantum theory.
@@ -76,6 +79,7 @@
 
 06:34 [[start:394550][end:403090]] So this way of thinking about physics is a very deeply quantum-theoretic way of thinking about physics.
 
+# COURSE OUTLINE
 ![Where we are going in this course](../../Video/Slide5.PNG)
 06:43 [[start:403670][end:411702]] And where we're going in this course today is really "how did this all happen?"
 [[start:411756][end:413400]] It's the origin story.
@@ -104,6 +108,7 @@
 ![Our story begins...](../../Video/Slide6.PNG)
 [[start:581188][end:586990]] So let's start! Our story, as I said, begins in the 19th Century.
 
+## STEAM ENGINES
 09:47 [[start:587410][end:596130]] And in the mid-19th Century, lots of physicists were devoting their efforts to figuring out how to make better steam engines.
 [[start:596870][end:611282]] And one question that arises when you're trying to design a steam engine is "what happens *physically* when you add heat to a system at constant temperature?"
 [[start:611346][end:615350]] So if you're building a steam engine, you've got a boiler, because you need to make steam.
@@ -128,6 +133,7 @@
 [[start:732090][end:733498]] What is this entropy?
 [[start:733594][end:735440]] What does this concept *mean?*"
 
+## BOLTZMANN
 ![But what *is* entropy?](../../Video/Slide7.PNG)
 [[start:736450][end:753300]] And about 15 years after Clausius proposed it, **[Ludwig] Boltzmann** had the key insight, which is that "entropy is a measurement of *our uncertainty* about the **state** the system is in."
 [[start:754490][end:773820]] And in particular, he again, of course, went to formalism, and said "the entropy, S, is equal to some constant times the number of states that the system can be in that look the same to us."
@@ -154,6 +160,7 @@
 14:38 [[start:878032][end:880400]] And that's what you have to do to get information.
 [[start:881330][end:885710]] So here's Boltzmann, basically inventing quantum theory.
 
+## PLANCK
 ![fast forward to 1900](../../Video/Slide8.PNG)
 [[start:887490][end:892000]] So we're going to fast forward by another 15 years, to 1900.
 [[start:892850][end:903540]] And in 1900, **[Max] Planck** solved this problem called the "black-body radiation problem," which was basically "how much heat does your hot boiler give off into the air?"
@@ -204,6 +211,8 @@
 18:21 [[start:1101910][end:1106020]] But this wasn't actually understood until the 1950s.
 [[start:1106870][end:1109158]] No one really figured {that} this out.
 [[start:1109244][end:1112214]] There was this relation until the 1950s.
+
+## WICK
 [[start:1112412][end:1117290]] And when it was figured out, it was figured out by a guy named **Gian Carlo Wick**.
 [[start:1117710][end:1129930]] And he introduced this notion of the **Wick rotation** by realizing that if you have an equation in classical physics, and in it there's the term "1 over kT,"
 
@@ -258,8 +267,10 @@
 [[start:1360650][end:1363240]] So this is a harbinger of things to come.
 [[start:1363610][end:1372060]] But before we continue in physics, we need to backtrack in time a little bit, and look at what the mathematicians were doing.
 
+# MATHEMATICS
+## GOEDEL
 ![Meanwhile, across the hall...](../../Video/Slide10.PNG)
-22:53 [[start:1373150][end:1385146]] So across the hall in the math department, one year after the Solve conference in 1929, kurt Godel proved his famous first incompleteness theorem.
+22:53 [[start:1373150][end:1385146]] So across the hall in the math department, one year after the Solve conference in 1929, Kurt Goedel proved his famous first incompleteness theorem.
 [[start:1385338][end:1391280]] And the theorem states that no formal system that contains arithmetic can be both consistent and complete.
 [[start:1392630][end:1405880]] And that means that either there are true statements that aren't provable in the formal system, or there are false statements that are provable, or, of course, both.
 
@@ -281,6 +292,7 @@
 
 25:33 [[start:1533410][end:1544190]] So an immediate consequence of Godel's Theorem was an intense investigation of what computation actually is, what it meant to talk about finite discrete operations.
 
+## COMPUTATION
 25:44 [[start:1544850][end:1548782]] And two leaders of this were, of course, Church and Turing.
 [[start:1548846][end:1560440]] And here's a picture of a Turing machine, which is just a little device with a couple of tapes and a tape reader and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
 [[start:1561450][end:1577530]] And they defined a computation as a process that can be implemented in finite time by such a machine or by Church's lambda calculus or by any of the now hundreds of other methods that are provably equivalent to a Turing machine.
@@ -514,7 +526,8 @@
 [[start:3043540][end:3079560]] All of which tell us that the world we see is a projection that's being written on our boundaries by a process that we have no access to except the procedure of active inference or the procedure of science, which is to formulate predictive models and test them by doing things in the world and seeing how the world responds.
 
 51:21 [[start:3081360][end:3085260]] So that's it for this session.
-[[start:3087200][end:3097250]] The first discussion session which Andrew is going to lead will be the 3 June at this same time, i.e. 05:00 European time.
+
+[[start:3087200][end:3097250]] The first discussion session which Ander is going to lead will be the 3 June at this same time, i.e. 05:00 European time.
 [[start:3098180][end:3102960]] And then my session number two will be in mid June.
 [[start:3103700][end:3111910]] And if you look at the course website, there's this subsidiary website for interactive Q and A.
 [[start:3112360][end:3132060]] And I invite everyone to post questions and discuss them and hope that we'll have an interesting exchange and that everyone will come to sort of an understanding of what was talked about today through discussion.
