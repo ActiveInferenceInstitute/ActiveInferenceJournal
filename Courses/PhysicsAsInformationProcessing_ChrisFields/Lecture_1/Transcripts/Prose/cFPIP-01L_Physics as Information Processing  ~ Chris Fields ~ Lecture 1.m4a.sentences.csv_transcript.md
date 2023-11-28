@@ -318,20 +318,21 @@
 
 26:45 [[start:1605672][end:1608306]] This is the Revenge of Gödel's theorem.
 
-26:48 [[start:1608498][end:1613798]] And two of the most famous questions of this kind are "Given some arbitrary program,
+26:48 [[start:1608498][end:1613798]] And two of the most famous questions of this kind are, "Given some arbitrary program,
 [[start:1613884][end:1614882]] will it halt?
 [[start:1615026][end:1617578]] Will it get to an answer in finite time?"
 [[start:1617744][end:1622410]] And the answer to that question is "This is undecidable.
 [[start:1622750][end:1625260]] No procedure can figure this out."
 
-27:06 [[start:1626270][end:1634670]] And the other undecidable question is, given some arbitrary program, what function does it compute?
+27:06 [[start:1626270][end:1634670]] And the other undecidable question is, "Given some arbitrary program, what function does it compute?"
 [[start:1635090][end:1640730]] And you'd think that would be simple, that you can read a program and figure out what function it computes.
 [[start:1640890][end:1643502]] But it turns out that is undecidable.
 [[start:1643646][end:1647620]] That cannot be done by any finite process.
 [[start:1649270][end:1659990]] So this was another body blow to the goal of understanding everything with finite discrete processes.
 
+![The state is now set...](../../Video/Slide12.PNG)
 27:40 [[start:1660330][end:1663366]] But it also set the stage for something new.
-[[start:1663548][end:1676380]] It set the stage for thinking about an agent who interacts with a computational process by giving it an input and then looking at its output sometime later.
+[[start:1663548][end:1676380]] It set the stage for thinking about an agent who interacts with a computational process by giving it an input, and then looking at its output some time later.
 
 27:58 [[start:1678110][end:1686590]] And this, of course, will look familiar because I've included the blue ellipse, which is the boundary, which these days we call a user interface.
 [[start:1687490][end:1697700]] And the user interface just allows some finite action on the system and then the ability to observe some finite response by the system.
