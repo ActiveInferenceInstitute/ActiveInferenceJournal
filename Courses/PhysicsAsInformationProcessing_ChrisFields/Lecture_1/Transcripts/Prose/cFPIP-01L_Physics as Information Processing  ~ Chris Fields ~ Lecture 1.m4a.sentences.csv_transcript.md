@@ -1,4 +1,4 @@
-# Physics as Information Processing - Session 1, "Historical Perspective"
+![# Physics as Information Processing - Session 1, "Historical Perspective"
 ![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/cFPIP-01L_00001.png)
 
 ## INTRODUCTION
@@ -37,6 +37,7 @@
 01:49 [[start:109210][end:126810]] This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
 
 ![Wittgenstein, Landaur, Wheeler](../../Video/Slide2.PNG)
+
 [[start:127310][end:138478]] And I'll just start with a few quotations that span the middle of the 20th century - from **[Ludwig] Wittgenstein** in the 1920s saying "The world is all that is the case,"
 [[start:138564][end:143490]] so, defining the world in terms of facts, not objects;
 
@@ -47,6 +48,7 @@
 [[start:168910][end:177180]] And if nothing else, this shows that formulations of this idea get pithier as the 20th century rolls on!
 
 ![Physics, Clausius to Friston](../../Video/Slide3.PNG)
+
 [[start:178510][end:185390]] But the history goes back farther clearly than the 20th century.
 [[start:185730][end:196354]] But I'm only going to really talk about a piece of it and the timeline that I'll actually discuss today,
 [[start:196472][end:203090]] the most relevant history of this idea, goes back to the mid-19th Century.
@@ -56,7 +58,7 @@
 
 03:32 [[start:212890][end:230750]] But with the beginning of the understanding of thermodynamics and the role of information in thermodynamics, you get this very interesting multidisciplinary progression of ideas that incorporates the beginning of quantum theory.
 
-03:52 [[start:232850][end:252900]] And the beginning of **quantum theory** can kind of be dated to the first **Solvay conference** in 1928 [[the Fifth Solvay Conference on Physics in 1927]], and the famous debate between **[Nils] Bohr** and **[Albert] Einstein** over whether quantum theory is about knowledge, information - or objects, things.
+03:52 [[start:232850][end:252900]] And the beginning of **quantum theory** can kind of be dated to the [fifth]{first} **Solvay conference** in [1927]{1928}, and the famous debate between **[Nils] Bohr** and **[Albert] Einstein** over whether quantum theory is about knowledge, information - or [about] objects, things.
 [[start:254650][end:261186]] But it incorporates a lot of work in computer science and logic and mathematics.
 [[start:261298][end:275062]] So, interestingly, computer science was born effectively in the mid-30s with the work of **[Alonzo] Church** and **[Alan] Turing**, which very rapidly converged with the work in physics.
 
@@ -67,6 +69,7 @@
 04:48 [[start:288050][end:303010]] And in consequence of that mid-20th Century development, we're beginning to see a new idea about physics which is roughly encapsulated in quantum information theory.
 
 ![Physics is about information transfer across boundaries](../../Video/Slide4.PNG)
+
 [[start:303350][end:305494]] And the new idea is this.
 [[start:305692][end:317686]] It's that what physics is actually about is information transfer across boundaries and the information... We can represent
 [[start:317718][end:319978]] the information transfer like this.
@@ -109,6 +112,7 @@
 
 ## BACK to the PHYSICS
 ![Our story begins...](../../Video/Slide6.PNG)
+
 [[start:581188][end:586990]] So let's start! Our story, as I said, begins in the 19th Century.
 
 ### Steam Engines
@@ -138,6 +142,7 @@
 
 ### Boltzmann
 ![But what *is* entropy?](../../Video/Slide7.PNG)
+
 [[start:736450][end:753300]] And about 15 years after Clausius proposed it, **[Ludwig] Boltzmann** had the key insight, which is that "entropy is a measurement of *our uncertainty* about the **state** the system is in."
 [[start:754490][end:773820]] And in particular, he again, of course, went to formalism, and said "the entropy, S, is equal to some constant times the number of states that the system can be in that look the same to us."
 
@@ -165,6 +170,7 @@
 
 ### Planck
 ![fast forward to 1900](../../Video/Slide8.PNG)
+
 [[start:887490][end:892000]] So we're going to fast forward by another 15 years, to 1900.
 [[start:892850][end:903540]] And in 1900, **[Max] Planck** solved this problem called the "black-body radiation problem," which was basically "how much heat does your hot boiler give off into the air?"
 
@@ -207,6 +213,7 @@
 [[start:1067478][end:1070170]] People still debate the meaning of quantum theory.
 
 ![But already in 1900...](../../Video/Slide9.PNG)
+
 17:52 [[start:1072110][end:1091870]] But another thing we *could* have known in 1900 was something *very* important, and it's that this quantum of action, Planck's constant, which has units of action, which is energy times time, is intimately related to Boltzmann's constant.
 
 18:13 [[start:1093510][end:1099970]] And Boltzmann's constant has units of energy over temperature.
@@ -273,29 +280,32 @@
 ## MATHEMATICS
 ### Gödel
 ![Meanwhile, across the hall...](../../Video/Slide10.PNG)
+
 22:53 [[start:1373150][end:1385146]] So across the hall in the math department, one year after the Solvay conference, in 1929, Kurt Gödel proved his famous first incompleteness theorem.
 [[start:1385338][end:1391280]] And the theorem states that "no formal system that contains arithmetic can be both consistent and complete."
-[[start:1392630][end:1405880]] And that means that either there are true statements that aren't provable in the formal system; or there are false statements that are provable; or, of course, both.
+[[start:1392630][end:1405880]] And that means that either there are true statements that aren't provable in the formal system; *or* there are false statements that are provable; *or,* of course, both.
 
 23:26 [[start:1406810][end:1411878]] And Gödel's proof is actually extremely simple.
-[[start:1411964][end:1428010]] Almost all of the work in the proof is setting up all of the notation and procedures and so forth to formulate within arithmetic the sentence, this sentence is not provable.
+[[start:1411964][end:1428010]] Almost all of the work in the proof is setting up all of the notation and procedures and so forth to formulate within arithmetic the sentence, "This sentence is not provable."
 
 23:49 [[start:1429090][end:1436800]] And once you have that sentence formulated within arithmetic, then the conclusion of the proof is obvious.
-[[start:1437250][end:1443890]] If you can prove the sentence, this sentence is not provable, then you've proved something that's false.
+[[start:1437250][end:1443890]] If you can prove the sentence, "this sentence is not provable," then you've proved something that's false.
 [[start:1444230][end:1450686]] And if you can't prove it, then there are sentences that you can't prove in arithmetic.
-[[start:1450878][end:1473686]] So this was incredibly bad news for mathematicians who thought that finite discrete operations, which is what proofs are and also what computations are, can exhaustively enumerate the facts and this was the assumption behind Wittgenstein's claim that the world is all that is the case, the world is a collection of facts.
+[[start:1450878][end:1473686]] So this was incredibly bad news for mathematicians who thought that finite discrete operations, which is what proofs are and also what computations are, can exhaustively enumerate the facts. And this was the assumption behind Wittgenstein's claim that "the world is all that is the case," the world is a collection of facts.
 
-24:33 [[start:1473878][end:1483600]] And optimistically, he thought that first order logic would allow us to enumerate all those facts and we'd be done dreams of a final theory again.
+24:33 [[start:1473878][end:1483600]] And optimistically, he thought that first order logic would allow us to enumerate all those facts and we'd be *done.* Dreams of a Final Theory, again!
 
-24:45 [[start:1485970][end:1496690]] So Gödel's Theorem means that no system with finite capabilities, no system that can just do finite discrete operations, can fully describe its environment.
+24:45 [[start:1485970][end:1496690]] So Gödel's theorem means that no system with finite capabilities, no system that can just do finite discrete operations, can fully describe its *environment.*
 [[start:1497110][end:1503810]] It will always be in an environment where there are true things that aren't provable or false things that are provable.
-[[start:1504890][end:1512040]] But I think more relative to a discussion of agents is that it means that no agent can describe itself.
-[[start:1512970][end:1528540]] Any agent's theory of itself will either contain true statements that it can't derive or false statements, or it will either miss true statements that it can't derive or wind up deriving things that are false about itself.
+[[start:1504890][end:1512040]] But I think more relative to a discussion of agents, is that it means that no *agent* can describe itself.
+[[start:1512970][end:1528540]] Any agent's theory of itself {will either contain true statements that it can't derive or false statements, or it} will either *miss* true statements that it can't derive, or will end up deriving things that are false about itself.
 [[start:1529410][end:1532320]] Of course, we see this in psychology all the time.
 
-25:33 [[start:1533410][end:1544190]] So an immediate consequence of Gödel's Theorem was an intense investigation of what computation actually is, what it meant to talk about finite discrete operations.
+25:33 [[start:1533410][end:1544190]] So an immediate consequence of Gödel's theorem was an intense investigation of what computation actually *is,* what it *meant* to talk about finite discrete operations.
 
 ### Computation
+![What is computation?](../../Video/Slide11.PNG)
+
 25:44 [[start:1544850][end:1548782]] And two leaders of this were, of course, Church and Turing.
 [[start:1548846][end:1560440]] And here's a picture of a Turing machine, which is just a little device with a couple of tapes and a tape reader and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
 [[start:1561450][end:1577530]] And they defined a computation as a process that can be implemented in finite time by such a machine or by Church's lambda calculus or by any of the now hundreds of other methods that are provably equivalent to a Turing machine.
