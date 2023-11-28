@@ -50,7 +50,7 @@
 [[start:185730][end:196354]] But I'm only going to really talk about a piece of it and the timeline that I'll actually discuss today,
 [[start:196472][end:203090]] the most relevant history of this idea, goes back to the mid-19th Century.
 
-## CLAUSIUS
+## Clausius
 03:24 [[start:204330][end:211750]] And the first specific thing I'll talk about is **[Rudolf] Clausius**'s definition of entropy.
 
 03:32 [[start:212890][end:230750]] But with the beginning of the understanding of thermodynamics and the role of information in thermodynamics, you get this very interesting multidisciplinary progression of ideas that incorporates the beginning of quantum theory.
@@ -59,6 +59,7 @@
 [[start:254650][end:261186]] But it incorporates a lot of work in computer science and logic and mathematics.
 [[start:261298][end:275062]] So, interestingly, computer science was born effectively in the mid-30s with the work of **[Alonzo] Church** and **[Alan] Turing**, which very rapidly converged with the work in physics.
 
+## Physics, Computation, Information
 04:35 [[start:275206][end:279530]] So today we'll be talking about both computer science and physics.
 [[start:280850][end:286880]] And then in the second half of the 20th Century, this just exploded into a huge area.
 
@@ -105,10 +106,11 @@
 [[start:571230][end:577894]] So if there's anything that... just a term that is a trip-up, try Wikipedia.
 [[start:577942][end:581006]] It's probably a very good source for what these terms mean.
 
+# BACK to the PHYSICS
 ![Our story begins...](../../Video/Slide6.PNG)
 [[start:581188][end:586990]] So let's start! Our story, as I said, begins in the 19th Century.
 
-## STEAM ENGINES
+## Steam Engines
 09:47 [[start:587410][end:596130]] And in the mid-19th Century, lots of physicists were devoting their efforts to figuring out how to make better steam engines.
 [[start:596870][end:611282]] And one question that arises when you're trying to design a steam engine is "what happens *physically* when you add heat to a system at constant temperature?"
 [[start:611346][end:615350]] So if you're building a steam engine, you've got a boiler, because you need to make steam.
@@ -133,7 +135,7 @@
 [[start:732090][end:733498]] What is this entropy?
 [[start:733594][end:735440]] What does this concept *mean?*"
 
-## BOLTZMANN
+## Boltzmann
 ![But what *is* entropy?](../../Video/Slide7.PNG)
 [[start:736450][end:753300]] And about 15 years after Clausius proposed it, **[Ludwig] Boltzmann** had the key insight, which is that "entropy is a measurement of *our uncertainty* about the **state** the system is in."
 [[start:754490][end:773820]] And in particular, he again, of course, went to formalism, and said "the entropy, S, is equal to some constant times the number of states that the system can be in that look the same to us."
@@ -160,7 +162,7 @@
 14:38 [[start:878032][end:880400]] And that's what you have to do to get information.
 [[start:881330][end:885710]] So here's Boltzmann, basically inventing quantum theory.
 
-## PLANCK
+## Planck
 ![fast forward to 1900](../../Video/Slide8.PNG)
 [[start:887490][end:892000]] So we're going to fast forward by another 15 years, to 1900.
 [[start:892850][end:903540]] And in 1900, **[Max] Planck** solved this problem called the "black-body radiation problem," which was basically "how much heat does your hot boiler give off into the air?"
@@ -212,7 +214,7 @@
 [[start:1106870][end:1109158]] No one really figured {that} this out.
 [[start:1109244][end:1112214]] There was this relation until the 1950s.
 
-## WICK
+## Wick
 [[start:1112412][end:1117290]] And when it was figured out, it was figured out by a guy named **Gian Carlo Wick**.
 [[start:1117710][end:1129930]] And he introduced this notion of the **Wick rotation** by realizing that if you have an equation in classical physics, and in it there's the term "1 over kT,"
 
@@ -268,7 +270,7 @@
 [[start:1363610][end:1372060]] But before we continue in physics, we need to backtrack in time a little bit, and look at what the mathematicians were doing.
 
 # MATHEMATICS
-## GOEDEL
+## Goedel
 ![Meanwhile, across the hall...](../../Video/Slide10.PNG)
 22:53 [[start:1373150][end:1385146]] So across the hall in the math department, one year after the Solve conference in 1929, Kurt Goedel proved his famous first incompleteness theorem.
 [[start:1385338][end:1391280]] And the theorem states that no formal system that contains arithmetic can be both consistent and complete.
@@ -292,7 +294,7 @@
 
 25:33 [[start:1533410][end:1544190]] So an immediate consequence of Godel's Theorem was an intense investigation of what computation actually is, what it meant to talk about finite discrete operations.
 
-## COMPUTATION
+## Computation
 25:44 [[start:1544850][end:1548782]] And two leaders of this were, of course, Church and Turing.
 [[start:1548846][end:1560440]] And here's a picture of a Turing machine, which is just a little device with a couple of tapes and a tape reader and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
 [[start:1561450][end:1577530]] And they defined a computation as a process that can be implemented in finite time by such a machine or by Church's lambda calculus or by any of the now hundreds of other methods that are provably equivalent to a Turing machine.
