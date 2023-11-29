@@ -345,10 +345,10 @@
 
 28:57 [[start:1737066][end:1738560]] That's the **halting problem**.
 
-29:00 [[start:1740130][end:1745380]] Shannon showed that Alice can't tell what the inputs mean to the system.
+29:00 [[start:1740130][end:1745380]] [Claude] Shannon showed that Alice can't tell what the inputs mean to the system.
 [[start:1746390][end:1751330]] His whole theory of communication is completely independent of semantics.
 [[start:1751910][end:1758470]] And his theory of communication actually accurately describes what Alice can observe.
-[[start:1759930][end:1769130]] Rice is the one who proved that you can't determine what program is generating the outputs.
+[[start:1759930][end:1769130]] [Henry G.] Rice is the one who proved that you can't determine what program is generating the outputs.
 
 29:29 [[start:1769950][end:1780510]] And then Moore proved a very similar result in a completely different formal setting of general cybernetics that you can't tell what process is generating the outputs by finite observation.
 [[start:1781570][end:1793950]] But what Alice can do is build a predictive model of what generates the output she sees in response to her inputs and test it by designing new inputs.
