@@ -331,7 +331,7 @@
 [[start:1649270][end:1659990]] So this was another body blow to the goal of understanding everything with finite discrete processes.
 
 ![The stage is now set...](../../Video/Slide12.PNG)
-27:40 [[start:1660330][end:1663366]] But it also set the stage for something new.
+27:40 [[start:1660330][end:1663366]] But it also set the stage for something *new.*
 [[start:1663548][end:1676380]] It set the stage for thinking about an agent who interacts with a computational process by giving it an input, and then looking at its output some time later.
 
 27:58 [[start:1678110][end:1686590]] And this, of course, will look familiar because I've included the blue ellipse, which is the **boundary**, which these days we call a "user interface."
@@ -339,6 +339,8 @@
 [[start:1698150][end:1707574]] So we can now ask, "What can Alice determine by acting in some finite way, and then making some finite number of observations?" -
 28:27 [[start:1707612][end:1708200]] i.e.
 [[start:1708650][end:1713880]] receiving some finite number of outputs from the system that she's acting on.
+
+![A flurry of negative answers](../../Video/Slide13.PNG)
 [[start:1715850][end:1722326]] And the first 20 years of this produced a large number of answers, all of them negative.
 [[start:1722518][end:1731070]] So to go back to Turing, he proved that Alice can't tell what's implementing the function that she sees being implemented.
 [[start:1731970][end:1737002]] She can't tell whether a given input will lead to an output.
