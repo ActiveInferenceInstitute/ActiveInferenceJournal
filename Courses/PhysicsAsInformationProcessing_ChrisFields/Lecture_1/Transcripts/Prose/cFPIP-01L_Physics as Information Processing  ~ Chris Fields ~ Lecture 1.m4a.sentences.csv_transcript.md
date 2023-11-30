@@ -342,17 +342,17 @@
 
 ![A flurry of negative answers](../../Video/Slide13.PNG)
 [[start:1715850][end:1722326]] And the first 20 years of this produced a large number of answers, all of them negative.
-[[start:1722518][end:1731070]] So to go back to Turing, he proved that Alice can't tell what's implementing the function that she sees being implemented.
-[[start:1731970][end:1737002]] She can't tell whether a given input will lead to an output.
+[[start:1722518][end:1731070]] So to go back to Turing, he proved that Alice can't tell what's _implementing_ the function that she sees being implemented.
+[[start:1731970][end:1737002]] She can't tell whether a given input will lead to an output -
 
-28:57 [[start:1737066][end:1738560]] That's the **halting problem**.
+28:57 [[start:1737066][end:1738560]] that's the **halting problem**.
 
-29:00 [[start:1740130][end:1745380]] [Claude] Shannon showed that Alice can't tell what the inputs mean to the system.
-[[start:1746390][end:1751330]] His whole theory of communication is completely independent of semantics.
-[[start:1751910][end:1758470]] And his theory of communication actually accurately describes what Alice can observe.
-[[start:1759930][end:1769130]] [Henry Gordon] Rice is the one who proved that you can't determine what program is generating the outputs.
+29:00 [[start:1740130][end:1745380]] **[Claude Elwood] Shannon** showed that Alice can't tell what the inputs _mean_ to the system -
+[[start:1746390][end:1751330]] his whole theory of communication is completely independent of semantics,
+[[start:1751910][end:1758470]] and his theory of communication actually accurately describes what Alice can observe.
+[[start:1759930][end:1769130]] **[Henry Gordon] Rice** is the one who proved that you can't determine what program is generating the outputs.
 
-29:29 [[start:1769950][end:1780510]] And then Moore proved a very similar result in a completely different formal setting of general cybernetics that you can't tell what process is generating the outputs by finite observation.
+29:29 [[start:1769950][end:1780510]] And then **[Darrell R.?] Moore** proved a very similar result in a completely different formal setting of general cybernetics that you can't tell what process is generating the outputs by finite observation.
 [[start:1781570][end:1793950]] But what Alice can do is build a predictive model of what generates the output she sees in response to her inputs and test it by designing new inputs.
 [[start:1794370][end:1800930]] And this is, of course, as Karl Popper told us, the process that we call science.
 
