@@ -88,7 +88,7 @@
 ![Where we are going in this course](../../Video/Slide5.PNG)
 06:43 [[start:403670][end:411702]] And where we're going in this course today is really "how did this all happen?"
 [[start:411756][end:413400]] It's the origin story.
-[[start:414650][end:435600]] And then in the next session, I want to discuss quantum information theory explicitly. And in particular, how quantum theory makes this conclusion that physics is about communication very simple and obvious, much more obvious than it is in classical physics where it takes *work* to formulate this idea.
+[[start:414650][end:435600]] And then in the next session, I want to discuss quantum information theory explicitly. And in particular, how quantum theory makes this conclusion that physics is about communication very simple and obvious, much more obvious than it is in classical physics where it takes _work_ to formulate this idea.
 [[start:436610][end:451060]] Then in the next session, we're going to talk about **semantics**, and how observations become meaningful to the agents who make them and hence how actions become meaningful to the agents who make them.
 
 07:32 [[start:452230][end:465750]] Then in August, we'll talk about **communication theory** a little bit more explicitly, and talk about how agents employ multiple communication channels when they're communicating.
@@ -98,11 +98,11 @@
 [[start:480450][end:489210]] Then in September, we'll leverage that discussion to talk about how **spacetime** actually emerges from communication.
 [[start:489290][end:493854]] And this is one of the most important aspects, I think, of quantum information theory.
 
-08:13 [[start:493982][end:509960]] It provides us with a way of viewing spacetime as an emergent phenomenon, that communication is what is *fundamental* in some ontological sense; and the *box* in which it happens, spacetime, is not.
+08:13 [[start:493982][end:509960]] It provides us with a way of viewing spacetime as an emergent phenomenon, that communication is what is _fundamental_ in some ontological sense; and the _box_ in which it happens, spacetime, is not.
 [[start:511050][end:523530]] So in the final session in October we'll talk about applications to biology via the **Free Energy Principle**, and future directions both in physics and biology and elsewhere.
 [[start:524190][end:526294]] So it's going to be an interesting ride!
 
-08:46 [[start:526422][end:541150]] I'm keeping formalism to a minimum, because we're directing this toward the *broad* array of people who are interested in **Active Inference** and who are involved with the Active Inference Institute.
+08:46 [[start:526422][end:541150]] I'm keeping formalism to a minimum, because we're directing this toward the _broad_ array of people who are interested in **Active Inference** and who are involved with the Active Inference Institute.
 [[start:541830][end:553250]] And I would ask you to hold questions (because we have a lot to get through in an hour) for the interactive discussion and for the discussion forum.
 
 09:14 [[start:554810][end:562470]] So I hope I explain things well enough that all of the concepts will be understandable.
@@ -117,53 +117,53 @@
 
 ### Steam Engines
 09:47 [[start:587410][end:596130]] And in the mid-19th Century, lots of physicists were devoting their efforts to figuring out how to make better steam engines.
-[[start:596870][end:611282]] And one question that arises when you're trying to design a steam engine is "what happens *physically* when you add heat to a system at constant temperature?"
+[[start:596870][end:611282]] And one question that arises when you're trying to design a steam engine is "what happens _physically_ when you add heat to a system at constant temperature?"
 [[start:611346][end:615350]] So if you're building a steam engine, you've got a boiler, because you need to make steam.
 [[start:615690][end:622330]] And as you turn up the heat to your boiler, you get more steam, but the temperature doesn't change.
 [[start:622480][end:624250]] So this is a mystery.
 
-10:25 [[start:625470][end:634670]] What is the heat actually *adding* to the boiler that is not increasing the temperature?
+10:25 [[start:625470][end:634670]] What is the heat actually _adding_ to the boiler that is not increasing the temperature?
 [[start:635810][end:644530]] And Clausius responded to this question in a way that's sort of typical for a physicist or a mathematician.
-[[start:645430][end:652478]] Since he didn't know what the answer was, he just *invented a new name* for whatever it was, and gave it a formal definition.
+[[start:645430][end:652478]] Since he didn't know what the answer was, he just _invented a new name_ for whatever it was, and gave it a formal definition.
 
 10:52 [[start:652654][end:665270]] So he called it **entropy**, which is a made-up word that, if it was translated from the Greek, would roughly mean "transformation content," en-tropy.
 [[start:666250][end:683360]] And he represented it by a simple equation that the change in this new concept, entropy, which is always called S, is just equal to the change in heat, Q, at constant temperature, T.
 
 11:23 [[start:683730][end:700210]] So obviously, this equation just reformulates the question in declarative form, saying "whatever this stuff is, its changes in this stuff are just changes in heat at constant temperature."
 [[start:700790][end:702580]] Well, heat is energy.
-[[start:702950][end:716066]] And this wasn't completely recognized in the mid-19th Century. But the way you'll see this equation in a current textbook is "dS is the change in *energy* at constant temperature."
+[[start:702950][end:716066]] And this wasn't completely recognized in the mid-19th Century. But the way you'll see this equation in a current textbook is "dS is the change in _energy_ at constant temperature."
 
 11:56 [[start:716258][end:724010]] So even more commonly, you would see it written as "the change in energy is equal to the temperature times the change in entropy."
 [[start:724430][end:728950]] It's the most common sort of textbook way of seeing this.
 
-12:09 [[start:729120][end:732010]] But the question, of course, is, "What *is* this quantity?
+12:09 [[start:729120][end:732010]] But the question, of course, is, "What _is_ this quantity?
 [[start:732090][end:733498]] What is this entropy?
-[[start:733594][end:735440]] What does this concept *mean?*"
+[[start:733594][end:735440]] What does this concept _mean?_"
 
 ### Boltzmann
-![But what *is* entropy?](../../Video/Slide7.PNG)
+![But what _is_ entropy?](../../Video/Slide7.PNG)
 
-[[start:736450][end:753300]] And about 15 years after Clausius proposed it, **[Ludwig] Boltzmann** had the key insight, which is that "entropy is a measurement of *our uncertainty* about the **state** the system is in."
+[[start:736450][end:753300]] And about 15 years after Clausius proposed it, **[Ludwig] Boltzmann** had the key insight, which is that "entropy is a measurement of _our uncertainty_ about the **state** the system is in."
 [[start:754490][end:773820]] And in particular, he again, of course, went to formalism, and said "the entropy, S, is equal to some constant times the number of states that the system can be in that look the same to us."
 
-12:54 [[start:774750][end:782542]] And since that number of states is enormous, the way to make that manageable is to take the *log* of the number of states.
+12:54 [[start:774750][end:782542]] And since that number of states is enormous, the way to make that manageable is to take the _log_ of the number of states.
 
-13:02 [[start:782676][end:785310]] The **natural log** is *ln.*
+13:02 [[start:782676][end:785310]] The **natural log** is _ln._
 [[start:786050][end:790270]] And this constant k is called **Boltzmann's constant**.
 [[start:791750][end:811080]] And Boltzmann was able to do this because he subscribed to a radical, very unpopular theory that material things, including gases like air, were made of atoms; and heat made the atoms move around.
 [[start:811770][end:816646]] And as you increase the amount of heat, the atoms can move in many different ways.
 
-13:36 [[start:816828][end:822010]] So the number of *states* that they can be in that look the same to us *increases.*
+13:36 [[start:816828][end:822010]] So the number of _states_ that they can be in that look the same to us _increases._
 [[start:822350][end:823914]] And that's what entropy is.
 [[start:823952][end:832622]] It's this increase in the number of states that the system can be in that all look the same to us with the measurements that we can make.
-[[start:832676][end:837840]] And since they look the same to us, we're *uncertain* about exactly what state they're in.
+[[start:832676][end:837840]] And since they look the same to us, we're _uncertain_ about exactly what state they're in.
 [[start:839250][end:841870]] So entropy is a measure of uncertainty.
 
 14:03 [[start:843190][end:846370]] This was really the beginning of modern physics,
 [[start:847510][end:855014]] because what it says now is that "decreasing uncertainty requires energy."
 [[start:855212][end:859480]] It links a measurement of uncertainty to a measurement of energy.
-[[start:860490][end:871580]] And if you think about the **uncertainty principle** in quantum theory, the core idea of the uncertainty principle is "you can't *measure* a system without *disturbing* it."
-[[start:872270][end:877914]] So to actually *act* on a system requires energy.
+[[start:860490][end:871580]] And if you think about the **uncertainty principle** in quantum theory, the core idea of the uncertainty principle is "you can't _measure_ a system without _disturbing_ it."
+[[start:872270][end:877914]] So to actually _act_ on a system requires energy.
 
 14:38 [[start:878032][end:880400]] And that's what you have to do to get information.
 [[start:881330][end:885710]] So here's Boltzmann, basically inventing quantum theory.
@@ -179,7 +179,7 @@
 15:18 [[start:918818][end:920346]] And all of that was bad.
 [[start:920528][end:927078]] So many people were trying to solve this problem. And Planck solved it by making a simple postulate.
 [[start:927174][end:932570]] He said "the energy of the radiation is proportional to its frequency."
-[[start:932650][end:935440]] So its *color* in the case of light.
+[[start:932650][end:935440]] So its _color_ in the case of light.
 [[start:935970][end:942154]] And if you go higher frequency, you end up in ultraviolet and X rays and gamma rays.
 
 15:42 [[start:942202][end:946740]] If you go to lower frequency, you go into microwaves and radio and all of that.
@@ -188,10 +188,10 @@
 [[start:953400][end:963590]] I mean, just assuming this simple proportionality relationship produced spectra for black-body radiation that worked, that matched what you saw experimentally.
 [[start:964250][end:965958]] Well, this means something very important.
 
-16:06 [[start:966044][end:972906]] It means because this number *h*, the proportionality constant called **Planck's constant**, is a *number,*
+16:06 [[start:966044][end:972906]] It means because this number _h_, the proportionality constant called **Planck's constant**, is a _number,_
 [[start:973008][end:974198]] it's finite,
-[[start:974374][end:977930]] it means that energy comes in discrete units of *h*.
-[[start:978080][end:984080]] You can have one *h* or two *h* or 10 million *h*, but you can't have half an *h* of energy.
+[[start:974374][end:977930]] it means that energy comes in discrete units of _h_.
+[[start:978080][end:984080]] You can have one _h_ or two _h_ or 10 million _h_, but you can't have half an _h_ of energy.
 [[start:985890][end:987290]] So it's quantized.
 
 16:27 [[start:987450][end:991230]] And this is widely recognized as the birth of quantum theory.
@@ -208,13 +208,13 @@
 [[start:1036050][end:1040910]] So we knew already that entropy could only take discrete values.
 
 17:21 [[start:1041330][end:1048530]] And since energy and entropy are basically the same thing, we knew already that energy could only take discrete values.
-[[start:1049110][end:1057030]] So we *could* have realized in 1900 that energy is quantized because the number of states is quantized.
-[[start:1058410][end:1067446]] So it shouldn't have really been a *mystery* why energy was quantized. But it was a mystery, and it stayed a mystery, and it's still a mystery!
+[[start:1049110][end:1057030]] So we _could_ have realized in 1900 that energy is quantized because the number of states is quantized.
+[[start:1058410][end:1067446]] So it shouldn't have really been a _mystery_ why energy was quantized. But it was a mystery, and it stayed a mystery, and it's still a mystery!
 [[start:1067478][end:1070170]] People still debate the meaning of quantum theory.
 
 ![But already in 1900...](../../Video/Slide9.PNG)
 
-17:52 [[start:1072110][end:1091870]] But another thing we *could* have known in 1900 was something *very* important, and it's that this quantum of action, Planck's constant, which has units of action, which is energy times time, is intimately related to Boltzmann's constant.
+17:52 [[start:1072110][end:1091870]] But another thing we _could_ have known in 1900 was something _very_ important, and it's that this quantum of action, Planck's constant, which has units of action, which is energy times time, is intimately related to Boltzmann's constant.
 
 18:13 [[start:1093510][end:1099970]] And Boltzmann's constant has units of energy over temperature.
 
@@ -227,42 +227,42 @@
 [[start:1117710][end:1129930]] And he introduced this notion of the **Wick rotation** by realizing that if you have an equation in classical physics, and in it there's the term "1 over kT,"
 
 18:50 [[start:1130910][end:1135658]] you can always replace that "1 over kT" with this other expression,
-[[start:1135754][end:1137150]] "*i* *t* over h-bar."
-[[start:1137220][end:1143250]] H-bar is just *h* divided by 2 pi; and you'll get an equation that's valid in quantum theory.
+[[start:1135754][end:1137150]] "_i_ _t_ over h-bar."
+[[start:1137220][end:1143250]] H-bar is just _h_ divided by 2 pi; and you'll get an equation that's valid in quantum theory.
 [[start:1143910][end:1147730]] And this is typically described in textbooks as "a trick."
 [[start:1148310][end:1154760]] And whenever something in physics is described as a trick, what that really means is it's something we don't understand.
 
 19:16 [[start:1156650][end:1161030]] And lots of papers have been written about the meaning of the Wick rotation.
 [[start:1162890][end:1169980]] But to start to understand the Wick rotation, I want to look at this equation a little bit.
-[[start:1171790][end:1183134]] "1 over kT" is 1 over an energy. And "*i* *t* over h-bar" is 1 over an energy,
-[[start:1183252][end:1197250]] since h-bar is units of energy times time. We have time in this equation, and then we have this factor, *i*, which is typically thought of as just an imaginary number.
+[[start:1171790][end:1183134]] "1 over kT" is 1 over an energy. And "_i_ _t_ over h-bar" is 1 over an energy,
+[[start:1183252][end:1197250]] since h-bar is units of energy times time. We have time in this equation, and then we have this factor, _i_, which is typically thought of as just an imaginary number.
 [[start:1197400][end:1199940]] So it's the square root of minus one.
 
-20:00 [[start:1200550][end:1203358]] And - what's this "*i*" doing in this equation?
-[[start:1203454][end:1206454]] And in fact, you see factors of *i* *t* over h-bar
-[[start:1206492][end:1211698]] (if you're familiar with quantum theory) *everywhere* in quantum theory!
+20:00 [[start:1200550][end:1203358]] And - what's this "_i_" doing in this equation?
+[[start:1203454][end:1206454]] And in fact, you see factors of _i_ _t_ over h-bar
+[[start:1206492][end:1211698]] (if you're familiar with quantum theory) _everywhere_ in quantum theory!
 [[start:1211874][end:1216040]] So what's the meaning of this "imaginary number?"
 
-20:17 [[start:1217230][end:1234670]] And if you just think of "*i* *t*," or of *i*, as this "arbitrary, imaginary number" that somehow renders the equation mysterious, then the whole of quantum theory is mysterious. But the Wick rotation is very mysterious.
+20:17 [[start:1217230][end:1234670]] And if you just think of "_i_ _t_," or of _i_, as this "arbitrary, imaginary number" that somehow renders the equation mysterious, then the whole of quantum theory is mysterious. But the Wick rotation is very mysterious.
 
-20:35 [[start:1235250][end:1238990]] But what *i* is actually is an **operator**.
+20:35 [[start:1235250][end:1238990]] But what _i_ is actually is an **operator**.
 [[start:1239970][end:1246910]] And if you think of the real numbers as an axis (which is always drawn horizontally)...
 [[start:1246990][end:1248082]] So here it is.
 [[start:1248216][end:1252482]] Here's zero, and the axis is pointing that way.
 [[start:1252536][end:1256326]] {(I'm sorry - I can't get the camera really far enough away to see my arm here.)}
 
-20:56 [[start:1256508][end:1258070]] So what is *i*?
-[[start:1258220][end:1265190]] *i* is actually an operator that rotates the whole real axis by 90 degrees.
+20:56 [[start:1256508][end:1258070]] So what is _i_?
+[[start:1258220][end:1265190]] _i_ is actually an operator that rotates the whole real axis by 90 degrees.
 [[start:1265690][end:1272954]] So if you see a plot of complex numbers, then the real numbers go this way, and the, quote, "imaginary numbers" go that way.
-[[start:1272992][end:1277638]] So what multiplying by *i* has done is rotate by 90 degrees.
+[[start:1272992][end:1277638]] So what multiplying by _i_ has done is rotate by 90 degrees.
 
-21:17 [[start:1277814][end:1286400]] And of course, if you do *i* squared, you rotate *twice* by 90 degrees (my arm won't do this), but you end up pointing *that* way, and those are the negative numbers.
+21:17 [[start:1277814][end:1286400]] And of course, if you do _i_ squared, you rotate _twice_ by 90 degrees (my arm won't do this), but you end up pointing _that_ way, and those are the negative numbers.
 
-21:26 [[start:1286930][end:1297358]] So *i* is an operator that rotates something by 90 degrees, and if you rotate four times by 90 degrees, you're back to the identity.
-[[start:1297534][end:1299780]] So *i* to the fourth is one.
+21:26 [[start:1286930][end:1297358]] So _i_ is an operator that rotates something by 90 degrees, and if you rotate four times by 90 degrees, you're back to the identity.
+[[start:1297534][end:1299780]] So _i_ to the fourth is one.
 [[start:1300950][end:1308950]] So this tells us something very interesting, which is that what the Wick rotation is really talking about is a rotation.
 [[start:1309770][end:1312230]] It's a geometrical equation.
-[[start:1313290][end:1322410]] And in July, we'll come back to this and really probe what this Wick rotation *means, physically.*
+[[start:1313290][end:1322410]] And in July, we'll come back to this and really probe what this Wick rotation _means, physically._
 
 22:04 [[start:1324990][end:1332640]] But as I said, this wasn't understood 'till the 1950s. And by the 1950s, a lot had happened.
 [[start:1333010][end:1334954]] So - quantum theory had been developed.
@@ -283,7 +283,7 @@
 
 22:53 [[start:1373150][end:1385146]] So across the hall in the math department, one year after the Solvay conference, in 1929, Kurt Gödel proved his famous first incompleteness theorem.
 [[start:1385338][end:1391280]] And the theorem states that "no formal system that contains arithmetic can be both consistent and complete."
-[[start:1392630][end:1405880]] And that means that either there are true statements that aren't provable in the formal system; *or* there are false statements that are provable; *or,* of course, both.
+[[start:1392630][end:1405880]] And that means that either there are true statements that aren't provable in the formal system; _or_ there are false statements that are provable; _or,_ of course, both.
 
 23:26 [[start:1406810][end:1411878]] And Gödel's proof is actually extremely simple.
 [[start:1411964][end:1428010]] Almost all of the work in the proof is setting up all of the notation and procedures and so forth to formulate within arithmetic the sentence, "This sentence is not provable."
@@ -293,15 +293,15 @@
 [[start:1444230][end:1450686]] And if you can't prove it, then there are sentences that you can't prove in arithmetic.
 [[start:1450878][end:1473686]] So this was incredibly bad news for mathematicians who thought that finite discrete operations, which is what proofs are and also what computations are, can exhaustively enumerate the facts. And this was the assumption behind Wittgenstein's claim that "the world is all that is the case," the world is a collection of facts.
 
-24:33 [[start:1473878][end:1483600]] And optimistically, he thought that first order logic would allow us to enumerate all those facts and we'd be *done.* Dreams of a Final Theory, again!
+24:33 [[start:1473878][end:1483600]] And optimistically, he thought that first order logic would allow us to enumerate all those facts and we'd be _done._ Dreams of a Final Theory, again!
 
-24:45 [[start:1485970][end:1496690]] So Gödel's theorem means that no system with finite capabilities, no system that can just do finite discrete operations, can fully describe its *environment.*
+24:45 [[start:1485970][end:1496690]] So Gödel's theorem means that no system with finite capabilities, no system that can just do finite discrete operations, can fully describe its _environment._
 [[start:1497110][end:1503810]] It will always be in an environment where there are true things that aren't provable or false things that are provable.
-[[start:1504890][end:1512040]] But I think more relative to a discussion of agents, is that it means that no *agent* can describe itself.
-[[start:1512970][end:1528540]] Any agent's theory of itself {will either contain true statements that it can't derive or false statements, or it} will either *miss* true statements that it can't derive, or will end up deriving things that are false about itself.
+[[start:1504890][end:1512040]] But I think more relative to a discussion of agents, is that it means that no _agent_ can describe itself.
+[[start:1512970][end:1528540]] Any agent's theory of itself {will either contain true statements that it can't derive or false statements, or it} will either _miss_ true statements that it can't derive, or will end up deriving things that are false about itself.
 [[start:1529410][end:1532320]] Of course, we see this in psychology all the time.
 
-25:33 [[start:1533410][end:1544190]] So an immediate consequence of Gödel's theorem was an intense investigation of what computation actually *is,* what it *meant* to talk about finite discrete operations.
+25:33 [[start:1533410][end:1544190]] So an immediate consequence of Gödel's theorem was an intense investigation of what computation actually _is,_ what it _meant_ to talk about finite discrete operations.
 
 ### Computation
 ![What is computation?](../../Video/Slide11.PNG)
@@ -309,9 +309,9 @@
 25:44 [[start:1544850][end:1548782]] And two leaders of this were, of course, Church and Turing.
 [[start:1548846][end:1560440]] And here's a picture of a Turing machine, which is just a little device with a couple of tapes and a tape reader and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
 [[start:1561450][end:1577530]] And they defined a computation as a process that can be implemented in finite time by such a machine or by Church's lambda calculus or by any of the now hundreds of other methods that are provably equivalent to a Turing machine.
-[[start:1578030][end:1579820]] So what does *this* mean?
+[[start:1578030][end:1579820]] So what does _this_ mean?
 
-26:20 [[start:1580270][end:1589200]] It means that computation is a *physical* process that can be mechanized; and it turns out, mechanized in any one of a huge array of ways.
+26:20 [[start:1580270][end:1589200]] It means that computation is a _physical_ process that can be mechanized; and it turns out, mechanized in any one of a huge array of ways.
 [[start:1590050][end:1594846]] It means that many different implementations of any computation are possible.
 [[start:1594948][end:1600530]] So I can do it on a Turing machine, I can do it on my laptop, I can do it on my head, et cetera.
 [[start:1601270][end:1605554]] The most important things it means is that there are questions with no computable answer.
@@ -324,7 +324,7 @@
 [[start:1617744][end:1622410]] And the answer to that question is, "This is undecidable.
 [[start:1622750][end:1625260]] No procedure can figure this out."
 
-27:06 [[start:1626270][end:1634670]] And the other undecidable question is, "Given some arbitrary program, what *function* does it compute?"
+27:06 [[start:1626270][end:1634670]] And the other undecidable question is, "Given some arbitrary program, what _function_ does it compute?"
 [[start:1635090][end:1640730]] And you'd think that would be simple, that you can read a program and figure out what function it computes.
 [[start:1640890][end:1643502]] But it turns out that is undecidable.
 [[start:1643646][end:1647620]] That cannot be done by any finite process.
