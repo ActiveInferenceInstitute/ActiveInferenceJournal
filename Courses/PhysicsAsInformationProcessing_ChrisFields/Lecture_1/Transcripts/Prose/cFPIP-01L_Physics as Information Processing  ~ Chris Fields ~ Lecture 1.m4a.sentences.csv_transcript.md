@@ -341,10 +341,9 @@
 [[start:1708650][end:1713880]] receiving some finite number of outputs from the system that she's acting on.
 
 ![A flurry of negative answers](../../Video/Slide13.PNG)
-[[start:1715850][end:1722326]] And the first 20 years of this produced a large number of answers, all of them negative.
+[[start:1715850][end:1722326]] And the first 20 years of this produced a _large_ number of answers, all of them negative.
 [[start:1722518][end:1731070]] So to go back to Turing, he proved that Alice can't tell what's _implementing_ the function that she sees being implemented.
 [[start:1731970][end:1737002]] She can't tell whether a given input will lead to an output -
-
 28:57 [[start:1737066][end:1738560]] that's the **halting problem**.
 
 29:00 [[start:1740130][end:1745380]] **[Claude Elwood] Shannon** showed that Alice can't tell what the inputs _mean_ to the system -
@@ -352,34 +351,38 @@
 [[start:1751910][end:1758470]] and his theory of communication actually accurately describes what Alice can observe.
 [[start:1759930][end:1769130]] **[Henry Gordon] Rice** is the one who proved that you can't determine what program is generating the outputs.
 
-29:29 [[start:1769950][end:1780510]] And then **[Darrell R.?] Moore** proved a very similar result in a completely different formal setting of general cybernetics that you can't tell what process is generating the outputs by finite observation.
-[[start:1781570][end:1793950]] But what Alice can do is build a predictive model of what generates the output she sees in response to her inputs and test it by designing new inputs.
-[[start:1794370][end:1800930]] And this is, of course, as Karl Popper told us, the process that we call science.
+29:29 [[start:1769950][end:1780510]] And then **[Darrell R.?] Moore** proved a very similar result in a completely different formal setting of general cybernetics, that you can't tell what _process_ is generating the outputs by finite observation.
+[[start:1781570][end:1793950]] But what Alice _can_ do, is build a predictive _model_ of what generates the output she sees in response to her inputs, and test it by designing new inputs.
+[[start:1794370][end:1800930]] And this is, of course, as Karl Popper told us, the process that we call "science."
 
 30:01 [[start:1801430][end:1807080]] So Alice can do science even though she can't answer any of these fundamental questions.
 
-30:10 [[start:1810010][end:1824730]] Now, this, of course, has a huge technological consequence since this theory of computation tells us that processes are effectively virtual.
-[[start:1826430][end:1831306]] We don't know what they are and we can't determine what they are except in theory.
-[[start:1831418][end:1841600]] By making a theory technologically, it means we're free to use virtualization everywhere because we have to deal with it anyway.
+![A major technological consequence](../../Video/Slide14.PNG)
+30:10 [[start:1810010][end:1824730]] Now, this, of course, has a huge technological consequence. Since this theory of computation tells us that processes are effectively virtual,
+[[start:1826430][end:1831306]] we don't know what they are and we can't _determine_ what they are except in theory,
+[[start:1831418][end:1841600]] by _making_ a theory. Technologically, it means we're free to _use_ virtualization everywhere because we have to deal with it anyway.
 [[start:1842470][end:1845758]] And this allows us to build multilevel architectures.
-[[start:1845854][end:1855960]] It means that we can architect computers where no layer of the computation has any idea what's going on below or above it and doesn't need to.
+[[start:1845854][end:1855960]] It means that we can architect computers where no layer of the computation has any idea what's going on below or above it, and doesn't need to.
 
 30:57 [[start:1857290][end:1860520]] And that's what makes practical programming possible.
-[[start:1861130][end:1878780]] So from these no go theorems that tell you what you can't do, you actually get an enormous boost into it and use to probe the world and develop theories and on and on and on.
+[[start:1861130][end:1878780]] So from these no-go theorems that tell you what you _can't_ do, you actually get an enormous boost into [inaudible] and use, to probe the world and develop theories and on and on and on.
 
 31:20 [[start:1880290][end:1891680]] So in a sense, Gödel birthed not only computer science, but practical computing by showing us that virtualization is just the way the world works.
-[[start:1892150][end:1908230]] So now let's go back to physics where these ideas were replicated, basically reintroduced, reinvented by Feynman in developing his path integral formulation of quantum theory.
-[[start:1908570][end:1921882]] And basically what Feyman realized was that in any physical process, the observer Alice prepares some state that she's interested in.
+
+## PHYSICS AGAIN
+### Feynman
+[[start:1892150][end:1908230]] So now let's go back to physics, where these ideas were replicated, basically reintroduced, reinvented by Feynman in developing his path integral formulation of quantum theory.
+[[start:1908570][end:1921882]] And basically what Feyman realized was that in any physical process, the observer, Alice, prepares some state that she's interested in.
 
 32:01 [[start:1921936][end:1924730]] She prepares some input to an experiment.
 [[start:1925230][end:1932080]] Then she lets something happen, and then she sees what the result of the experiment is.
 [[start:1932450][end:1936110]] And the canonical experiment in physics is scattering.
 [[start:1936450][end:1944420]] You fire two protons at each other, and they intersect someplace, and stuff comes out, and you measure the stuff that comes out.
 
-32:24 [[start:1944950][end:1952580]] And what you can measure is momentum and spin energy, things like that position.
+32:24 [[start:1944950][end:1952580]] And what you can measure is momentum and spin energy, things like that, position.
 
 32:33 [[start:1953510][end:1961762]] So these processes conserve the total values of the things you can measure.
-[[start:1961826][end:1974940]] So in particular, they preserve momentum and angular momentum, and they preserve other things that are harder to measure and are only approximately conserved anyway, like Lepton number.
+[[start:1961826][end:1974940]] So in particular, they preserve momentum and angular momentum, and they preserve {you know} other things that are harder to measure and are only approximately conserved anyway, like lepton number.
 [[start:1975710][end:1996020]] But Feynman's contribution to this way of thinking about experiments was to say, look, if you want to understand the output, you have to sum over all of the possible processes that could have produced the output from the input, no matter how improbable they are.
 [[start:1996790][end:2016370]] So the famous idea from Feynman diagrams is if you have an electron that's scattering off an atom, you measure the initial state of the electron that you've generated with an accelerator or something, and you measure the final state, which involves momentum and spin and so forth.
 
