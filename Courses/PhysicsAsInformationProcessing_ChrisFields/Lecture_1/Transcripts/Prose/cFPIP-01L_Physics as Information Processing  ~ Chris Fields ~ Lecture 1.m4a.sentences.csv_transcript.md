@@ -377,40 +377,39 @@
 32:01 [[start:1921936][end:1924730]] She prepares some input to an experiment.
 [[start:1925230][end:1932080]] Then she lets something happen, and then she sees what the result of the experiment is.
 [[start:1932450][end:1936110]] And the canonical experiment in physics is scattering.
-[[start:1936450][end:1944420]] You fire two protons at each other, and they intersect someplace, and stuff comes out, and you measure the stuff that comes out.
+[[start:1936450][end:1944420]] You {you know} fire two protons at each other, and they intersect someplace, and stuff comes out, and you measure the stuff that comes out.
 
 32:24 [[start:1944950][end:1952580]] And what you can measure is momentum and spin energy, things like that, position.
 
 32:33 [[start:1953510][end:1961762]] So these processes conserve the total values of the things you can measure.
 [[start:1961826][end:1974940]] So in particular, they preserve momentum and angular momentum, and they preserve {you know} other things that are harder to measure and are only approximately conserved anyway, like lepton number.
-[[start:1975710][end:1996020]] But Feynman's contribution to this way of thinking about experiments was to say, look, if you want to understand the output, you have to sum over all of the possible processes that could have produced the output from the input, no matter how improbable they are.
+[[start:1975710][end:1996020]] But Feynman's contribution to this way of thinking about experiments was to say, "Look, if you want to understand the output, you have to _sum_ over all of the possible processes that could have produced the output from the input, no matter how improbable they are."
 [[start:1996790][end:2016370]] So the famous idea from Feynman diagrams is if you have an electron that's scattering off an atom, you measure the initial state of the electron that you've generated with an accelerator or something, and you measure the final state, which involves momentum and spin and so forth.
 
-33:36 [[start:2016530][end:2035120]] And for all you knew, partway through the process, the electron disappeared, and an entire universe appeared and then annihilated with a copy of an entire anti universe, and the electron came back out.
+33:36 [[start:2016530][end:2035120]] And for all you knew, partway through the process, the electron disappeared, and an entire universe appeared and then annihilated with a copy of an entire anti-universe, and the electron came back out!
 
 33:55 [[start:2035730][end:2043570]] And you have to include processes like that if you really want to understand and correctly predict the outcomes of your measurements.
-[[start:2044230][end:2056274]] And Murray Gelman lifted the bumper sticker slogan from Th White and the once and Future King everything not explicitly forbidden is mandatory.
+[[start:2044230][end:2056274]] And **Murray Gell-Mann** lifted the bumper sticker slogan from T. H. White and "The Once and Future King," "Everything not explicitly forbidden is mandatory."
 [[start:2056322][end:2058520]] That sums up Feynman's idea.
-[[start:2060090][end:2072490]] And this is called the totalitarian principle, since it's what's written in Th White's book on the kingdom of the ants, for which everything not explicitly forbidden is mandatory.
+[[start:2060090][end:2072490]] And this is called the **totalitarian principle**, since it's what's written in T. H. White's book on the Kingdom of the Ants, for which "everything not explicitly forbidden is mandatory."
 [[start:2073550][end:2080026]] So let's think about a real example that's a bit actually, it's the same as scattering.
 
 34:40 [[start:2080058][end:2085470]] The ultimate scattering experiment in physics is a black hole.
 [[start:2086610][end:2091840]] Stuff goes into the horizon, stars, whole galaxies, whatever.
 [[start:2092710][end:2096322]] Something happens, and stuff comes out.
-[[start:2096376][end:2110840]] And what comes out is Hawking radiation, and information is conserved if the information in the Hawking radiation is actually the same as the information in the stuff that went in.
+[[start:2096376][end:2110840]] And what comes out is **Hawking radiation**, and information is conserved if the information in the Hawking radiation is actually the same as the information in the stuff that went in.
 [[start:2111770][end:2115650]] And conservation is not qualitative.
-
 35:15 [[start:2115730][end:2116910]] It's quantitative.
 [[start:2117010][end:2121130]] It's only the quantity of information that's supposed to be preserved.
-[[start:2121790][end:2130270]] And you can ask, how much is the information that's being emitted by a black hole that's emitting Hawking radiation?
-[[start:2130930][end:2137658]] And Beckenstein was the one who figured this out, using an incredibly simple argument.
+[[start:2121790][end:2130270]] And you can ask, "How much is the information that's being emitted by a black hole that's emitting Hawking radiation?"
+[[start:2130930][end:2137658]] And [Jacob David] Bekenstein was the one who figured this out, using an incredibly simple argument.
 [[start:2137834][end:2140160]] But I'll just give the answer here.
 
-35:40 [[start:2140530][end:2162920]] The answer is that the total entropy of the black hole is its area divided by four, and the area in this equation has to be computed in Planck units, which are units where Planck's constant and the speed of light and boltzman's constant and other interesting things are all set equal to one.
+35:40 [[start:2140530][end:2162920]] The answer is that the total entropy of the black hole is its area divided by four, and the area in this equation has to be computed in **Planck units**, which are units where Planck's constant and the speed of light and Boltzmann's constant and other interesting things are all set equal to one.
 [[start:2164170][end:2172810]] So one Planck area is the Planck length squared, which turns out to be about ten to the minus squared.
 [[start:2173470][end:2178460]] So this is that black holes are the most entropic entities we know of.
-[[start:2178930][end:2199730]] So a black hole about this big with a radius of about a meter has an entropy of about ten to the 70th, which is, of course, an astonishingly big number, and a black hole with the area of the sun.
-[[start:2199880][end:2212440]] So a moderate sized cosmological black hole, a real thing that we can observe with a gravity wave telescope or something, has an entropy of about ten to the 79th.
+[[start:2178930][end:2199730]] So a black hole about this big with a radius of about a meter has an entropy of about ten to the 70th, which is, of course, an astonishingly big number. And a black hole with the area of the sun - 
+[[start:2199880][end:2212440]] so a moderate sized cosmological black hole, a real thing that we can observe with a gravity wave telescope or something -, has an entropy of about ten to the 79th.
 
 36:52 [[start:2212810][end:2224300]] And really big black holes, which are bigger than the entire solar system, have entropies into the ten to the something.
 [[start:2225070][end:2228650]] So these are enormously entropic entities.
