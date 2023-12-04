@@ -1,4 +1,4 @@
-![# Physics as Information Processing - Session 1, "Historical Perspective"
+# Physics as Information Processing - Session 1, "Historical Perspective"
 ![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/cFPIP-01L_00001.png)
 
 ## INTRODUCTION
