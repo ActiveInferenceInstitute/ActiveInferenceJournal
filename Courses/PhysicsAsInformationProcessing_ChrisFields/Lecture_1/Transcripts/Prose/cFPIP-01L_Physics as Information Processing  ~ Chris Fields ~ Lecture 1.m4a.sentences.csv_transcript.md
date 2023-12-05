@@ -75,7 +75,7 @@
 [[start:317718][end:319978]] the information transfer like this.
 [[start:320144][end:323260]] And this is a convention I'll use.
 
-05:24 [[start:324030][end:326970]] A boundary is always a blue ellipse.
+05:24 [[start:324030][end:326970]] A **boundary** is always a blue ellipse.
 [[start:328030][end:339360]] And the agents that are exchanging information across this boundary are conventionally called Alice and Bob, which is just a more polite way of saying A and B.
 
 05:40 [[start:340530][end:349890]] And when you think about this picture, it becomes clear that what physics is really about is communication.
@@ -371,6 +371,7 @@
 
 ## PHYSICS AGAIN
 ### Feynman
+![Feynman expressed these same ideas](../../Video/Slide15.PNG)
 [[start:1892150][end:1908230]] So now let's go back to physics, where these ideas were replicated, basically reintroduced, reinvented by Feynman in developing his path integral formulation of quantum theory.
 [[start:1908570][end:1921882]] And basically what Feyman realized was that in any physical process, the observer, Alice, prepares some state that she's interested in.
 
@@ -382,9 +383,9 @@
 32:24 [[start:1944950][end:1952580]] And what you can measure is momentum and spin energy, things like that, position.
 
 32:33 [[start:1953510][end:1961762]] So these processes conserve the total values of the things you can measure.
-[[start:1961826][end:1974940]] So in particular, they preserve momentum and angular momentum, and they preserve {you know} other things that are harder to measure and are only approximately conserved anyway, like lepton number.
+[[start:1961826][end:1974940]] So in particular, they preserve momentum and angular momentum, and they preserve {you know} other things that are harder to measure and are only approximately conserved anyway, like **lepton number**.
 [[start:1975710][end:1996020]] But Feynman's contribution to this way of thinking about experiments was to say, "Look, if you want to understand the output, you have to _sum_ over all of the possible processes that could have produced the output from the input, no matter how improbable they are."
-[[start:1996790][end:2016370]] So the famous idea from Feynman diagrams is if you have an electron that's scattering off an atom, you measure the initial state of the electron that you've generated with an accelerator or something, and you measure the final state, which involves momentum and spin and so forth.
+[[start:1996790][end:2016370]] So the famous idea from Feynman **diagrams** is if you have an electron that's scattering off an atom, you measure the initial state of the electron that you've generated with an accelerator or something, and you measure the final state, which involves momentum and spin and so forth.
 
 33:36 [[start:2016530][end:2035120]] And for all you knew, partway through the process, the electron disappeared, and an entire universe appeared and then annihilated with a copy of an entire anti-universe, and the electron came back out!
 
@@ -392,77 +393,83 @@
 [[start:2044230][end:2056274]] And **Murray Gell-Mann** lifted the bumper sticker slogan from T. H. White and "The Once and Future King," "Everything not explicitly forbidden is mandatory."
 [[start:2056322][end:2058520]] That sums up Feynman's idea.
 [[start:2060090][end:2072490]] And this is called the **totalitarian principle**, since it's what's written in T. H. White's book on the Kingdom of the Ants, for which "everything not explicitly forbidden is mandatory."
-[[start:2073550][end:2080026]] So let's think about a real example that's a bit actually, it's the same as scattering.
+[[start:2073550][end:2080026]] So let's think about a real example that's {a bit actually it's...} the same as scattering.
 
+![The ultimate scattering experiment is a black hole](../../Video/Slide16.PNG)
 34:40 [[start:2080058][end:2085470]] The ultimate scattering experiment in physics is a black hole.
 [[start:2086610][end:2091840]] Stuff goes into the horizon, stars, whole galaxies, whatever.
 [[start:2092710][end:2096322]] Something happens, and stuff comes out.
-[[start:2096376][end:2110840]] And what comes out is **Hawking radiation**, and information is conserved if the information in the Hawking radiation is actually the same as the information in the stuff that went in.
+[[start:2096376][end:2110840]] And what comes out is **Hawking radiation**, and information is conserved if the information in the Hawking radiation is actually the same as the information in the "stuff" that went in.
 [[start:2111770][end:2115650]] And conservation is not qualitative.
 35:15 [[start:2115730][end:2116910]] It's quantitative.
-[[start:2117010][end:2121130]] It's only the quantity of information that's supposed to be preserved.
+[[start:2117010][end:2121130]] It's only the **quantity of information** that's supposed to be preserved.
 [[start:2121790][end:2130270]] And you can ask, "How much is the information that's being emitted by a black hole that's emitting Hawking radiation?"
 [[start:2130930][end:2137658]] And [Jacob David] Bekenstein was the one who figured this out, using an incredibly simple argument.
 [[start:2137834][end:2140160]] But I'll just give the answer here.
 
-35:40 [[start:2140530][end:2162920]] The answer is that the total entropy of the black hole is its area divided by four, and the area in this equation has to be computed in **Planck units**, which are units where Planck's constant and the speed of light and Boltzmann's constant and other interesting things are all set equal to one.
-[[start:2164170][end:2172810]] So one Planck area is the Planck length squared, which turns out to be about ten to the minus squared.
-[[start:2173470][end:2178460]] So this is that black holes are the most entropic entities we know of.
-[[start:2178930][end:2199730]] So a black hole about this big with a radius of about a meter has an entropy of about ten to the 70th, which is, of course, an astonishingly big number. And a black hole with the area of the sun - 
-[[start:2199880][end:2212440]] so a moderate sized cosmological black hole, a real thing that we can observe with a gravity wave telescope or something -, has an entropy of about ten to the 79th.
+35:40 [[start:2140530][end:2162920]] The answer is that the total entropy of the black hole is its area divided by four. And the area in this equation has to be computed in **Planck units**, which are units where Planck's constant and the speed of light and Boltzmann's constant and other interesting things are all set equal to _one._
+[[start:2164170][end:2172810]] So one Planck area is the Planck length squared, which turns out to be about ten to the minus 70th meters squared.
+[[start:2173470][end:2178460]] So this says that black holes are the most entropic entities we know of.
+[[start:2178930][end:2199730]] So a black hole about this big [gesturing], with a radius of about a meter, has an entropy of about ten to the 70th, which is, of course, an astonishingly big number. And a black hole with the area of the sun - 
+[[start:2199880][end:2212440]] so a moderate sized cosmological black hole, a real thing that we can observe with a gravity wave telescope or something - has an entropy of about ten to the 79th.
 
-36:52 [[start:2212810][end:2224300]] And really big black holes, which are bigger than the entire solar system, have entropies into the ten to the something.
+36:52 [[start:2212810][end:2224300]] And really big black holes, which are bigger than the entire solar system, have entropies into the ten to the 80th, 10 to the 85th, or something.
 [[start:2225070][end:2228650]] So these are enormously entropic entities.
 
 37:10 [[start:2230930][end:2233998]] But Beckenstein didn't just tell us that.
-[[start:2234084][end:2240830]] He told us something about the structure of the interface, the horizon of a black hole.
+[[start:2234084][end:2240830]] He told us something about the _structure_ of the interface, the horizon of a black hole.
+
+![Recall that S = lnΩ](../../Video/Slide17.PNG)
 [[start:2241510][end:2243700]] And this is what he told us.
 
-37:26 [[start:2246790][end:2256950]] You can compute entropy in bits just by using logs, base two instead of logs based e, natural logs.
+37:26 [[start:2246790][end:2256950]] You can compute entropy in bits just by using logs base two instead of logs base _e_, natural logs.
 [[start:2257370][end:2263560]] And that's just multiplying the natural log by about 1.4.
-[[start:2264810][end:2272620]] So we can write the entropy of black hole, of black hole in units of bits, and it's about a over six.
+[[start:2264810][end:2272620]] So we can write the entropy {of black hole,} of black hole in units of bits, and it's about a over six.
 
-37:53 [[start:2273630][end:2280270]] So what does this mean to say that we can think of the entropy in terms of bits?
-[[start:2280610][end:2308690]] What it says is that we can think of the interface in terms of a bit array, and we can think of all of these bits as encoded on this interface at a density of one bit every roughly six plank lengths squared, six plank areas.
+37:53 [[start:2273630][end:2280270]] So what does this mean to say that we can think of the entropy in terms of _bits?_
+[[start:2280610][end:2308690]] What it says is that we can think of the interface in terms of a bit array. And we can think of all of these bits as encoded on this interface at a density of one bit every roughly six Planck lengths squared, six plank areas.
 
 38:28 [[start:2308850][end:2312470]] So this is an incredibly dense encoding in a black hole.
 
 38:34 [[start:2314650][end:2317014]] And it's an interesting idea about black holes.
-[[start:2317062][end:2321498]] But what gets really interesting is what happens when you generalize it.
-[[start:2321584][end:2327260]] And of course, physicists are prone to generalization, and that's what happened next.
+[[start:2317062][end:2321498]] But what gets really interesting is what happens when you _generalize_ it.
+[[start:2321584][end:2327260]] And of course, physicists are prone to generalization, and that's what happened _next._
 
-38:50 [[start:2330110][end:2337150]] Gerard to Hooft, almost immediately thereafter, on the basis of Beckenstein's work, formulated the Holographic principle.
+### The Holographic Principle
+![We just have to generalize](../../Video/Slide18.PNG)
+38:50 [[start:2330110][end:2337150]] Gerard 't Hooft, almost immediately thereafter, on the basis of Beckenstein's work, formulated the **Holographic Principle**.
 
-38:57 [[start:2337730][end:2346050]] And what the Holographic principle says is we can think of any system as approximately a black hole.
-[[start:2346870][end:2350210]] And the only approximation is the encoding density.
-[[start:2350950][end:2361042]] The boundary of any system encodes the information that we can get about the system at some density.
+38:57 [[start:2337730][end:2346050]] And what the Holographic Principle says is "We can think of _any_ system as _approximately_ a black hole.
+[[start:2346870][end:2350210]] And the only approximation is the encoding density."
+[[start:2350950][end:2361042]] The _boundary_ of any system encodes the information that we can _get_ about the system at some density.
 [[start:2361106][end:2366150]] And the density is less than the density for a black hole because we're not black holes.
 
-39:27 [[start:2367370][end:2379130]] And this rules out a lot by limiting the amount of information that you can extract from a system to the amount of information that you can actually write on its boundary.
-[[start:2379790][end:2385406]] And one of the things that it rules out is knowing the geometry on the inside of the system.
-[[start:2385588][end:2402034]] And to Hoof put it this way, which I think is a brilliant thought experiment, he says, look, the metric inside this system can be so curved, effectively the space time inside the system can be so curved that you could stick an entire universe inside.
+39:27 [[start:2367370][end:2379130]] And this rules out a lot by limiting the amount of information that you can _extract_ from a system to the amount of information that you can actually _write on its boundary._
+[[start:2379790][end:2385406]] And one of the things that it rules out is knowing the **geometry** on the inside of the system.
 
-40:02 [[start:2402232][end:2409750]] And we never know because it wouldn't change the amount of entropy number of bits that are encoded on the boundary.
+39:46 [[start:2385588][end:2402034]] And 't Hooft put it this way, which I think is a brilliant thought experiment. He says, "Look, the metric inside this system can be _so curved,_ effectively the space time inside the system can be so curved, that you could stick an entire universe inside.
+40:02 [[start:2402232][end:2409750]] And we never know, because it wouldn't change the amount of entropy, number of bits that are encoded on the boundary.
 [[start:2410650][end:2413494]] So the inside geometry can be anything.
+[[start:2413692][end:2415414]] And you can't find out by
+[[start:2415452][end:2417740]] looking at the outside of the system."
 
-40:13 [[start:2413692][end:2415414]] And you can't find out by.
-[[start:2415452][end:2417740]] Looking at the outside of the system.
-[[start:2418990][end:2424010]] Now, the Holographic principle almost follows from classical physics.
-[[start:2425630][end:2440670]] There's Euler's theorem, which tells you about one over R squared forces, and you can think of the force as penetrating the boundary at some density.
-[[start:2441250][end:2451330]] And the difference between Euler's theorem and the Holographic principle is just that the density in classical physics can go to infinity.
+40:13 [[start:2418990][end:2424010]] Now, the Holographic Principle almost follows from classical physics!
+[[start:2425630][end:2440670]] There's [Leonhard] **Euler's theorem**, which tells you about one over R squared forces, and you can think of the force as penetrating the boundary at some density.
+[[start:2441250][end:2451330]] And the difference between Euler's theorem and the Holographic Principle is just that the density in classical physics can go to infinity.
 
-40:51 [[start:2451990][end:2460466]] And in the Holographic principle, it can only go to this maximal density that's achieved by a black hole.
+40:51 [[start:2451990][end:2460466]] And in the Holographic Principle, it can only go to this maximal density that's achieved by a black hole.
 [[start:2460658][end:2461110]] Why?
 [[start:2461180][end:2469100]] Because if you try to get any higher, more information, the information gets sucked into the black hole, and you can't get it out.
 
-41:11 [[start:2471390][end:2484560]] So the Holographic principle becomes a guiding principle for thinking about any physical system and what it means to extract information from a physical system.
-[[start:2485330][end:2488974]] And in fact, we'll talk about this next time.
-[[start:2489172][end:2495060]] You can say exactly what the information encoded on the boundary of any system is.
+41:11 [[start:2471390][end:2484560]] So the Holographic Principle becomes a _guiding principle_ for thinking about any physical system and what it means to extract information from a physical system.
+[[start:2485330][end:2488974]] And in fact (we'll talk about this next time),
+[[start:2489172][end:2495060]] you can say exactly what the information encoded on the boundary of any system _is._
 [[start:2496790][end:2513106]] And what I'll go through next time is seeing that the information that's encoded on the boundary is a specification of the energy that's being exchanged by the interaction, which, of course, is linear in the number of bits.
 [[start:2513138][end:2515830]] It's just counting the number of bits.
+[[start:2517230][end:2517980]] Okay?
 
-41:57 [[start:2517230][end:2517980]] Okay?
-[[start:2518350][end:2539630]] So with the Holographic principle, we now have a complete new science about systems that are exchanging finite discrete information across a boundary by encoding that information on the boundary and then reading the information off the boundary.
+![Quantum information theory](../../Video/Slide19.PNG)
+41:58 [[start:2518350][end:2539630]] So with the Holographic Principle, we now have a complete new science about systems that are exchanging finite discrete information across a boundary by encoding that information on the boundary and then reading the information off the boundary.
 
 42:20 [[start:2540370][end:2545650]] So here's a new way of thinking about physical interaction.
 [[start:2545990][end:2558658]] Alice writes a message on her boundary with Bob, and Bob reads the message off the boundary and then writes his own new message, which Alice then reads.
