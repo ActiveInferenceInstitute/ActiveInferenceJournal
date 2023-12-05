@@ -466,35 +466,35 @@
 [[start:2489172][end:2495060]] you can say exactly what the information encoded on the boundary of any system _is._
 [[start:2496790][end:2513106]] And what I'll go through next time is seeing that the information that's encoded on the boundary is a specification of the energy that's being exchanged by the interaction, which, of course, is linear in the number of bits.
 [[start:2513138][end:2515830]] It's just counting the number of bits.
-[[start:2517230][end:2517980]] Okay?
 
 ![Quantum information theory](../../Video/Slide19.PNG)
-41:58 [[start:2518350][end:2539630]] So with the Holographic Principle, we now have a complete new science about systems that are exchanging finite discrete information across a boundary by encoding that information on the boundary and then reading the information off the boundary.
+41:57 [[start:2517230][end:2517980]] Okay!
+[[start:2518350][end:2539630]] So with the Holographic Principle, we now have a complete new science about systems that are exchanging finite discrete information across a boundary by encoding that information _on_ the boundary and then reading the information _off_ the boundary.
 
 42:20 [[start:2540370][end:2545650]] So here's a new way of thinking about physical interaction.
-[[start:2545990][end:2558658]] Alice writes a message on her boundary with Bob, and Bob reads the message off the boundary and then writes his own new message, which Alice then reads.
-[[start:2558834][end:2562280]] And of course, that's what's happening right now.
+[[start:2545990][end:2558658]] Alice writes a message _on_ her boundary with Bob, and Bob reads the message _off_ the boundary, and then writes his own new message, which Alice then reads.
 
-42:42 [[start:2562970][end:2570886]] I'm writing information by speaking on an interface, which is effectively the Internet.
-[[start:2571078][end:2576250]] And you're reading that information off the Internet by listening to it.
+42:39 [[start:2558834][end:2562280]] And of course, that's what's happening _right now._
+[[start:2562970][end:2570886]] I'm writing information by speaking _on_ an interface, which is effectively the Internet.
+[[start:2571078][end:2576250]] And you're reading that information _off_ the Internet by listening to it.
 [[start:2576400][end:2584030]] And when we get time for questions, you'll be writing information on the Internet, which I'll be reading.
-[[start:2585250][end:2589658]] Now, the key thing about this new science is that it's topological.
+[[start:2585250][end:2589658]] Now, the key thing about this new science is that it's **topological**.
 [[start:2589754][end:2596942]] It's about connectivity across some communication channel, which we represent as a boundary.
 
 43:17 [[start:2597086][end:2602930]] It's not geometric, so it doesn't assume anything about spacetime.
 
-43:24 [[start:2604090][end:2613030]] So it allows us to build a model of space in particular as an emergent phenomenon.
-[[start:2613370][end:2627100]] And it allows us to see time as not some absolute external abstraction, but something that the communicating agents measure for themselves.
-[[start:2628430][end:2631920]] And so they each act in their own time.
+43:24 [[start:2604090][end:2613030]] So it allows us to _build a model_ of _space_ in particular as an emergent phenomenon.
+[[start:2613370][end:2627100]] And it allows us to see _time_ as not some absolute external abstraction, but something that the communicating agents measure for themselves.
+[[start:2628430][end:2631920]] And so they each act in their _own time._
 [[start:2633090][end:2640906]] And we get a very natural measure of time in terms of how many bits I see coming across my boundary.
 
-44:00 [[start:2640938][end:2651250]] And again, we'll talk about that in the next couple of sessions and then talk about it more thoroughly in September when we talk about emergent spacetime.
+44:00 [[start:2640938][end:2651250]] And again, we'll talk about that in the next couple of sessions, and then talk about it more thoroughly in September when we talk about emergent spacetime.
 [[start:2652230][end:2664882]] So quantum information theory looks very different from the physics that came before, not because it's adopted a new formalism, the tools of quantum theory.
 
-44:25 [[start:2665026][end:2681840]] It's because it's entirely changed the thinking about what physics is and what it's about and replace this idea of forces and balls banging into each other and all of that with the idea of communication between agents.
-[[start:2682530][end:2687310]] And of course that's familiar from an active inference perspective.
-[[start:2687890][end:2695710]] So we can now back up a little bit to see what they were doing in classical physics during this period.
+44:25 [[start:2665026][end:2681840]] It's because it's entirely changed the _thinking_ about what physics is and what it's _about,_ and replace this idea of forces and balls banging into each other and all of that with the idea of communication between agents.
+[[start:2682530][end:2687310]] And of course that's familiar from an Active Inference perspective.
 
+44:48 [[start:2687890][end:2695710]] So we can now back up a little bit to see what they were doing in _classical_ physics during this period.
 44:55 [[start:2695790][end:2697682]] Well, let me go on a little bit.
 [[start:2697736][end:2698340]] Sorry.
 
@@ -534,7 +534,7 @@
 [[start:2884922][end:2889520]] So it's the entropy of the effective Holographic screen.
 
 48:12 [[start:2892390][end:2898210]] All these ideas were reinvented more or less independently within classical physics.
-[[start:2898950][end:2921960]] And it was from this classical physics background that Karl Freston came up with the idea that a Markov blanket defines a persistence, at least from an active inference institute point of view everyone is familiar with, because it's the foundation of the idea of active inference.
+[[start:2898950][end:2921960]] And it was from this classical physics background that Karl Freston came up with the idea that a Markov blanket defines a persistence, at least from an Active Inference Institute point of view everyone is familiar with, because it's the foundation of the idea of Active Inference.
 
 48:44 [[start:2924620][end:2936140]] Any system that persists through time does so by making sure that it doesn't dissolve into its environment.
 [[start:2936560][end:2938284]] Well, what does that mean?
@@ -547,7 +547,7 @@
 
 49:50 [[start:2990400][end:3011060]] So physics is effectively not just the study of communication, but it's the study of agents doing science with each other, pairs of agents who are trying to figure each other out by their communicative exchanges.
 [[start:3012200][end:3043020]] So that's the history of how we got from 1930s sorry, 1850s thermodynamics to the free energy principle and how the free energy principle connects to these very deep and extremely radical, especially within context ideas in quantum theory and quantum cosmology and computer science.
-[[start:3043540][end:3079560]] All of which tell us that the world we see is a projection that's being written on our boundaries by a process that we have no access to except the procedure of active inference or the procedure of science, which is to formulate predictive models and test them by doing things in the world and seeing how the world responds.
+[[start:3043540][end:3079560]] All of which tell us that the world we see is a projection that's being written on our boundaries by a process that we have no access to except the procedure of Active Inference or the procedure of science, which is to formulate predictive models and test them by doing things in the world and seeing how the world responds.
 
 51:21 [[start:3081360][end:3085260]] So that's it for this session.
 
