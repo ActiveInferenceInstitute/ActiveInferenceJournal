@@ -1,9 +1,9 @@
 
 00:07 _Daniel:_
 [[start:7800][end:8870]] Hello, everyone.
-[[start:9320][end:12148]] It's June 15, 2023.
-[[start:12314][end:19280]] We are here in lecture two of Chris field's course, physics as Information Processing.
-[[start:19360][end:19700]] So.
+[[start:9320][end:12148]] It's June 15th, 2023.
+[[start:12314][end:19280]] We are here in lecture two of Chris Field's course: Physics as Information Processing.
+[[start:19360][end:19700]] So,
 
 00:19 [[start:19770][end:21040]] Thank you, Chris.
 [[start:21200][end:23460]] Looking forward to the lecture.
@@ -13,42 +13,42 @@
 [[start:27160][end:29380]] And, yes, welcome to this session.
 [[start:29840][end:30492]] How?
 
-00:30 [[start:30626][end:34300]] This section is titled why Quantum Physics.
-[[start:35440][end:54560]] And if you will recall, from the first session, we reviewed the history of physics and some of the history of mathematics and computer science from the end of the 19th century through to the beginning of the 21st century.
-[[start:55400][end:90808]] And discuss the slow development from classical thermodynamics of quantum information theory and specifically characterizing quantum information theory as a new kind of physics that describes systems that are exchanging finite amounts of discretely encoded information across some intervening boundary.
+00:30 [[start:30626][end:34300]] This section is titled "Why Quantum Physics?".
+[[start:35440][end:54560]] And, if you will recall, from the first session, we reviewed the History of Physics and some of the History of Mathematics and Computer Science, from the end of the 19th century through to the beginning of the 21st century.
+[[start:55400][end:90808]] And, we discussed the slow development from classical thermodynamics of Quantum Information Theory and specifically we characterized Quantum Information Theory as a new kind of physics that describes systems that are exchanging finite amounts of discretely encoded information across some intervening boundary.
 
-01:30 [[start:90984][end:112928]] And so we use this very conventional graphical notation of two agents or physical systems, alice and Bob, A and B, that are exchanging energy and information across some boundary.
+01:30 [[start:90984][end:112928]] And so we use this very conventional graphical notation of two agents or physical systems, Alice and Bob (A and B), that are exchanging energy and information across some boundary.
 [[start:113104][end:120680]] And I always use a blue ellipse like this to indicate the boundary that separates Alice from Bob.
 
 02:01 [[start:121500][end:128884]] And this new approach to physics is entirely topological.
 [[start:129012][end:130840]] It's not geometric.
-[[start:131360][end:140620]] So it doesn't assume a particular background spacetime, so it doesn't assume that Alice and Bob are spatially separated.
-[[start:141920][end:159844]] And so this makes it a very different kind of theory from classical information theory in that the channel that separates Alice from Bob, this boundary is a boundary in state space.
+[[start:131360][end:140620]] So, it doesn't assume a particular background spacetime. So, it doesn't assume that Alice and Bob are spatially separated.
+[[start:141920][end:159844]] And, so, this makes it a very different kind of theory from Classical Information Theory in that the channel that separates Alice from Bob, this boundary, is a boundary in state space.
 
 02:40 [[start:160042][end:164612]] It's not a boundary in some geometric embedding space.
 
-02:44 [[start:164666][end:173880]] And in particular, it's not a boundary or a channel that's embedded in a three dimensional space that separates Alice from Bob.
-[[start:175500][end:194770]] So that's what we talked about last time and today what I want to discuss is how quantum theory in particular makes this idea of physics as a theory of communication simple and obvious.
-[[start:196260][end:211590]] And quantum theory, of course, has a terrible reputation of being abstruse and mathematically incredibly complicated and counterintuitive and difficult to understand.
-[[start:212520][end:224490]] And this is one quotation among many from leading physicists pointing out that quantum mechanics is just difficult.
+02:44 [[start:164666][end:173880]] And, in particular, it's not a boundary or a channel that's embedded in a three-dimensional space that separates Alice from Bob.
+[[start:175500][end:194770]] So, that's what we talked about last time. And today, what I want to discuss is how Quantum Theory in particular makes this idea of physics as a theory of communication simple and obvious.
+[[start:196260][end:211590]] And, Quantum Theory, of course, has a terrible reputation of being abstruse and mathematically incredibly complicated and counterintuitive and difficult to understand.
+[[start:212520][end:224490]] And, this is one quotation among many from leading physicists pointing out that quantum mechanics is just difficult.
 
-03:45 [[start:225900][end:239580]] And as you probably know, there's an entire philosophical industry of interpretations of quantum theory that try to make sense of its ontology.
+03:45 [[start:225900][end:239580]] And, as you probably know, there's an entire philosophical industry of interpretations of Quantum Theory that try to make sense of its ontology.
 
-04:02 [[start:242900][end:248720]] What I don't want to do today is try to introduce quantum mechanics.
+04:02 [[start:242900][end:248720]] And so, what I don't want to do today is try to introduce quantum mechanics.
 [[start:250340][end:253730]] We're not doing any of this.
-[[start:254740][end:264660]] Some of you will recognize this as the table of contents, the first part of the table of contents of the famous textbook by Landau and Lifts.
+[[start:254740][end:264660]] Some of you will recognize this as the table of contents, the first part of the table of contents of the famous textbook by Landau and Lifshitz.
 [[start:265080][end:266004]] How that?
-[[start:266042][end:275930]] If you've studied quantum theory in undergraduate or graduate school, you've probably dealt with a textbook structured much like this one.
+[[start:266042][end:275930]] If you've studied Quantum Theory in undergraduate or graduate school, you've probably dealt with a textbook structured much like this one.
 
-04:36 [[start:276300][end:294530]] And you've probably been introduced to quantum mechanics as it was traditionally conceived as essentially a mechanical theory, a theory of motion with wave functions and particle representations and on and on and on.
+04:36 [[start:276300][end:294530]] And, you've probably been introduced to quantum mechanics as it was traditionally conceived: as essentially a mechanical theory, a theory of motion, with wave functions and particle representations, and on, and on, and on.
 
-04:54 [[start:294980][end:297264]] So we're not going to try to do that.
-[[start:297382][end:318810]] This what we're going to do instead is take a completely information theoretic approach, and we're going to characterize information transfer in a quantum theoretic way without any assumptions about mechanics or spacetime or any of that.
-[[start:319500][end:323770]] So instead of this, we're going to ask a simple question.
-[[start:325580][end:331788]] By a simple question, I mean a question with just a yes no answer or a binary answer.
+04:54 [[start:294980][end:297264]] So, we're not going to try to do that
+[[start:297382][end:318810]] (this). What we're going to do instead is take a completely information theoretical approach, and we're going to characterize information transfer in a quantum theoretical way without any assumptions about mechanics or spacetime or any of that.
+[[start:319500][end:323770]] So, instead of this, we're going to ask a simple question.
+[[start:325580][end:331788]] By a simple question, I mean a question with just a "yes-no" answer or a binary answer.
 
-05:31 [[start:331874][end:336670]] So let's use up or down as our example question.
-[[start:338160][end:341070]] And to ask this question, we need three things.
+05:31 [[start:331874][end:336670]] So, let's use "up or down" as our example question.
+[[start:338160][end:341070]] And, to ask this question, we need three things:
 [[start:342340][end:343932]] First, we need an action.
 [[start:343996][end:346290]] We need a way of asking it.
 [[start:347860][end:351730]] For example, making a sound or writing something down.
@@ -56,43 +56,43 @@
 05:53 [[start:353860][end:359030]] Second, we need a thing that we can ask the question of.
 
 06:00 [[start:360040][end:373930]] We need an environment or a friend or the rest of the world or an experimental apparatus or some system or other that we're going to act on to ask this question.
-[[start:375100][end:381100]] And the third thing that we need to ask this question is a shared language.
-[[start:381520][end:389100]] And it's the shared language that's often neglected in models based in physics.
-[[start:390880][end:396300]] And I think the importance of the shared language became clear in classical information theory.
+[[start:375100][end:381100]] And, the third thing that we need to ask this question is a shared language.
+[[start:381520][end:389100]] And, it's the shared language that's often neglected in models based on physics.
+[[start:390880][end:396300]] And, I think the importance of the shared language became clear in Classical Information Theory.
 
-06:36 [[start:396460][end:400572]] And it's become clear again, of course, in quantum information theory.
+06:36 [[start:396460][end:400572]] And, it's become clear again, of course, in Quantum Information Theory.
 [[start:400716][end:404080]] But this has only happened over the last few decades.
-[[start:404840][end:418664]] So what I want to do today is to construct in a step by step fashion a formal representation of these three things that we need to ask a simple question.
-[[start:418862][end:424628]] And what we'll find is that that formal representation is in fact quantum theory.
+[[start:404840][end:418664]] So, what I want to do today is to construct in a step-by-step fashion a formal representation of these three things that we need to ask a simple question.
+[[start:418862][end:424628]] And, what we'll find is that that formal representation is, in fact, Quantum Theory.
 
-07:04 [[start:424724][end:435436]] So it's quantum theory that provides us with a formal representation of asking these simple binary questions.
+07:04 [[start:424724][end:435436]] So, it's the Quantum Theory that provides us with a formal representation of asking these simple binary questions.
 
 07:15 [[start:435618][end:441950]] And of course, if you can ask a binary question, you can ask any finite number of binary questions.
-[[start:442420][end:455670]] So you can construct an Arbitrarily complex finite decision tree that ends up formulating an Arbitrarily complex but still finite question.
-[[start:456040][end:462870]] So this really is a general model of communicative interactions between agents.
+[[start:442420][end:455670]] So, you can construct an arbitrarily complex, finite decision tree that ends up formulating an arbitrarily complex but still finite question.
+[[start:456040][end:462870]] So, this really is a general model of communicative interactions between agents.
 
-07:45 [[start:465240][end:472104]] So let's go about this and talk first about the action of asking you a question.
-[[start:472222][end:488030]] And so the first thing I want you to do is actually say out loud up or down, actually ask a question and then note two things about what just happened.
+07:45 [[start:465240][end:472104]] So, let's go about this. And, talk first about the action of asking you a question.
+[[start:472222][end:488030]] And, so, the first thing I want you to do is actually say out loud "up or down?". Actually, ask a question, and then note two things about what just happened.
 
 08:09 [[start:489440][end:493856]] The first thing to note is that it took some time to do that.
 [[start:494038][end:503970]] That action actually required a finite amount of time, a couple of seconds, not very long, but it's not zero.
 [[start:504740][end:507590]] It always takes time to ask a question.
 
-08:28 [[start:508440][end:514870]] And the second thing to note is that it took energy to actually say up or down.
+08:28 [[start:508440][end:514870]] And the second thing to note is that it took energy to actually say "up or down".
 [[start:515400][end:520650]] It requires a little bit of exertion to ask a question.
-[[start:521660][end:526920]] So let's put those two together and define a word.
-[[start:526990][end:533596]] We're going to define the word action to mean some energy that's spent in some time.
-[[start:533778][end:544944]] So asking a question is an action and it qualifies as an action because it requires spending some energy in some finite amount of time.
+[[start:521660][end:526920]] So, let's put those two together and define a word.
+[[start:526990][end:533596]] We're going to define the word "action" to mean some energy that's been spent in some time.
+[[start:533778][end:544944]] So, asking a question is an action and it qualifies as an action because it requires spending some energy in some finite amount of time.
 
-09:05 [[start:545142][end:549170]] And so we can write this as action equals energy times time.
+09:05 [[start:545142][end:549170]] And, so, we can write this as: action equals energy times time.
 
 09:09 [[start:549540][end:553730]] Or I'll sometimes use the abbreviation E times T.
 
-09:16 [[start:556100][end:571736]] And action is always required when there's some interaction or two way action between systems.
-[[start:571848][end:583330]] So whenever we talk about physical interaction, we're always talking about two systems doing something to each other that requires both energy and time.
-[[start:584980][end:588220]] So let's define another concept.
-[[start:588300][end:595750]] A concept of a minimum action needed to ask a question, and specifically a question with a binary answer.
-[[start:597000][end:601696]] And we'll just pick a symbol to stand for that minimum action.
+09:16 [[start:556100][end:571736]] And, action is always required when there's some inter-action or two-way-action between systems.
+[[start:571848][end:583330]] So, whenever we talk about physical interaction, we're always talking about two systems doing something to each other that requires both energy and time.
+[[start:584980][end:588220]] So, let's define another concept.
+[[start:588300][end:595750]] A concept of a minimum action needed to ask a question, and, specifically, a question with a binary answer.
+[[start:597000][end:601696]] And, we'll just pick a symbol to stand for that minimum action. STOPPED HERE
 
 10:01 [[start:601888][end:605590]] And the symbol we'll use because it's conventional is h.
 [[start:606200][end:629260]] And it turns out that this h is planck's constant, the number that planck came up with when he was trying to solve the black body problem back in 1900 that we talked about last time and recall, that was the problem of characterizing, the spectrum of radiation emitted by some physical system.
