@@ -71,7 +71,7 @@
 ![Physics is about information transfer across boundaries](../../Video/Slide4.PNG)
 
 [[start:303350][end:305494]] And the new idea is this.
-[[start:305692][end:317686]] It's that what physics is actually about is information transfer across boundaries and the information... We can represent
+[[start:305692][end:317686]] It's that what physics is actually about is information transfer across **boundaries** and the information... We can represent
 [[start:317718][end:319978]] the information transfer like this.
 [[start:320144][end:323260]] And this is a convention I'll use.
 
@@ -291,7 +291,7 @@
 23:49 [[start:1429090][end:1436800]] And once you have that sentence formulated within arithmetic, then the conclusion of the proof is obvious.
 [[start:1437250][end:1443890]] If you can prove the sentence, "this sentence is not provable," then you've proved something that's false.
 [[start:1444230][end:1450686]] And if you can't prove it, then there are sentences that you can't prove in arithmetic.
-[[start:1450878][end:1473686]] So this was incredibly bad news for mathematicians who thought that finite discrete operations, which is what proofs are and also what computations are, can exhaustively enumerate the facts. And this was the assumption behind Wittgenstein's claim that "the world is all that is the case," the world is a collection of facts.
+[[start:1450878][end:1473686]] So this was incredibly bad news for mathematicians who thought that finite discrete operations, which is what proofs are and also what computations are, can exhaustively enumerate the facts. And this was the assumption behind Wittgenstein's claim that "the world is all that is the case," the world is a collection of _facts._
 
 24:33 [[start:1473878][end:1483600]] And optimistically, he thought that first order logic would allow us to enumerate all those facts and we'd be _done._ Dreams of a Final Theory, again!
 
@@ -307,15 +307,14 @@
 ![What is computation?](../../Video/Slide11.PNG)
 
 25:44 [[start:1544850][end:1548782]] And two leaders of this were, of course, Church and Turing.
-[[start:1548846][end:1560440]] And here's a picture of a Turing machine, which is just a little device with a couple of tapes and a tape reader and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
-[[start:1561450][end:1577530]] And they defined a computation as a process that can be implemented in finite time by such a machine or by Church's lambda calculus or by any of the now hundreds of other methods that are provably equivalent to a Turing machine.
+[[start:1548846][end:1560440]] And here's a picture of a Turing machine, which is just a little device with a couple of tapes, and a tape reader, and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
+[[start:1561450][end:1577530]] And they defined a **computation** as a process that can be implemented in finite time by such a machine, or by Church's **lambda calculus**, or by any of the now hundreds of other methods that are provably equivalent to a Turing machine.
 [[start:1578030][end:1579820]] So what does _this_ mean?
 
 26:20 [[start:1580270][end:1589200]] It means that computation is a _physical_ process that can be mechanized; and it turns out, mechanized in any one of a huge array of ways.
 [[start:1590050][end:1594846]] It means that many different implementations of any computation are possible.
 [[start:1594948][end:1600530]] So I can do it on a Turing machine, I can do it on my laptop, I can do it on my head, et cetera.
 [[start:1601270][end:1605554]] The most important things it means is that there are questions with no computable answer.
-
 26:45 [[start:1605672][end:1608306]] This is the Revenge of Gödel's theorem.
 
 26:48 [[start:1608498][end:1613798]] And two of the most famous questions of this kind are, "Given some arbitrary program,
@@ -334,8 +333,8 @@
 27:40 [[start:1660330][end:1663366]] But it also set the stage for something *new.*
 [[start:1663548][end:1676380]] It set the stage for thinking about an agent who interacts with a computational process by giving it an input, and then looking at its output some time later.
 
-27:58 [[start:1678110][end:1686590]] And this, of course, will look familiar because I've included the blue ellipse, which is the **boundary**, which these days we call a "user interface."
-[[start:1687490][end:1697700]] And the **user interface** just allows some finite action on the system, and then the ability to observe some finite response by the system.
+27:58 [[start:1678110][end:1686590]] And this, of course, will look familiar, because I've included the blue ellipse, which is the boundary, which these days we call a "**user interface**."
+[[start:1687490][end:1697700]] And the user interface just allows some finite action on the system, and then the ability to observe some finite response by the system.
 [[start:1698150][end:1707574]] So we can now ask, "What can Alice determine by acting in some finite way, and then making some finite number of observations?" -
 28:27 [[start:1707612][end:1708200]] i.e.
 [[start:1708650][end:1713880]] receiving some finite number of outputs from the system that she's acting on.
@@ -349,7 +348,8 @@
 29:00 [[start:1740130][end:1745380]] **[Claude Elwood] Shannon** showed that Alice can't tell what the inputs _mean_ to the system -
 [[start:1746390][end:1751330]] his whole theory of communication is completely independent of semantics,
 [[start:1751910][end:1758470]] and his theory of communication actually accurately describes what Alice can observe.
-[[start:1759930][end:1769130]] **[Henry Gordon] Rice** is the one who proved that you can't determine what program is generating the outputs.
+[[start:1759930][end:1769130]] **[Henry Gordon] Rice** is the one who proved that you can't determine what program is generating the outputs. 
+[Classes of Recursively Enumerable Sets and Their Decision Problems](https://www.ams.org/journals/tran/1953-074-02/S0002-9947-1953-0053041-6/S0002-9947-1953-0053041-6.pdf)
 
 29:29 [[start:1769950][end:1780510]] And then **[Darrell R.?] Moore** proved a very similar result in a completely different formal setting of general cybernetics, that you can't tell what _process_ is generating the outputs by finite observation.
 [[start:1781570][end:1793950]] But what Alice _can_ do, is build a predictive _model_ of what generates the output she sees in response to her inputs, and test it by designing new inputs.
