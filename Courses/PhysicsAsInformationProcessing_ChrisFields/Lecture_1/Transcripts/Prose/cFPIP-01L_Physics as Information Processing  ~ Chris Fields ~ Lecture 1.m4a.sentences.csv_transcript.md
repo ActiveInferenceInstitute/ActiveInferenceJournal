@@ -565,43 +565,39 @@
 [[start:3098180][end:3102960]] And then my session number two will be in mid June.
 
 51:43 [[start:3103700][end:3111910]] And if you look at the course website [1st Discussion; 2nd Lecture](https://coda.io/@active-inference-institute/fields-physics-2023/questions-answers-3), there's this subsidiary website for interactive Q and A.
-[[start:3112360][end:3132060]] And I invite everyone to post questions and discuss them and hope that we'll have an interesting exchange and that everyone will come to sort of an understanding of what was talked about today through discussion.
+[[start:3112360][end:3132060]] And I invite everyone to post questions, and discuss them; and hope that we'll have an interesting exchange and that everyone will come to sort of an understanding of what was talked about today through discussion.
 
 52:12 [[start:3132560][end:3140888]] And we'll be interested in being back in June to see how to formulate this in quantum theory.
-[[start:3140984][end:3151424]] So thank you very much and thank you again, Daniel, for organizing this and hosting it and putting together all the technical things necessary to pull this off.
 
-52:31 [[start:3151622][end:3153570]] I could never do that on my own.
+[[start:3140984][end:3151424]] So thank you very much and thank you again, Daniel, for organizing this and hosting it and putting together all the technical things necessary to pull this off.
+[[start:3151622][end:3153570]] I could never do that on my own.
 
 52:35 _Daniel:_
 [[start:3155140][end:3155744]] Thank you.
 [[start:3155782][end:3158550]] We're really excited here.
 
 52:39 [[start:3159560][end:3160816]] Any closing thoughts?
-[[start:3160848][end:3165140]] Or andrew, I'd love to hear your reflection just briefly.
-[[start:3166120][end:3172570]] How would you have told that history or how does that history reflect on the areas that you're familiar with?
+[[start:3160848][end:3165140]] Or Ander, I'd love to hear your reflection just briefly.
+[[start:3166120][end:3172570]] How would you have told that history; or how does that history reflect on the areas that you're familiar with?
 
 52:54 _Ander:_
 [[start:3174380][end:3176890]] Well, I don't think I have much to add.
-[[start:3178860][end:3183176]] I've been mainly interested in the weak rotation part.
-
-53:03 [[start:3183278][end:3187020]] I'm excited to hear more about that, Chris.
+[[start:3178860][end:3183176]] I've been mainly interested in the Wick rotation part.
+[[start:3183278][end:3187020]] I'm excited to hear more about that, Chris.
 [[start:3188240][end:3192620]] But no, I found this to be a very nice summary.
 [[start:3193040][end:3208710]] I'm less familiar with the staff on computation, formal computation, despite being a mathematician by training, it was a little more familiar with all the physics stuff, but yeah, I thought it was great.
 
 53:29 _Chris:_
 [[start:3209400][end:3210436]] Thank you.
-[[start:3210618][end:3211508]] All right.
 
 53:31 _Daniel:_
+[[start:3210618][end:3211508]] All right.
 [[start:3211674][end:3212244]] Thank you.
 [[start:3212282][end:3213396]] I will close it.
 [[start:3213418][end:3216320]] So in about two weeks, we'll have the first discussion.
 [[start:3216400][end:3218272]] Everyone's welcome to join.
-[[start:3218416][end:3222996]] I will share with Honor and Chris the questions, and we can develop that.
+[[start:3218416][end:3222996]] I will share with Ander and Chris the questions, and we can develop that.
 
-53:43 [[start:3223018][end:3227584]] And we'll have that on the course, front end before the coming discussion.
+53:43 [[start:3223018][end:3227584]] And we'll have that on the course front end before the coming discussion.
 [[start:3227712][end:3229344]] So thanks again, fellows.
 [[start:3229392][end:3230500]] See you next time.
-
-53:50 _Chris:_
-[[start:3230650][end:3231540]] Bye.
