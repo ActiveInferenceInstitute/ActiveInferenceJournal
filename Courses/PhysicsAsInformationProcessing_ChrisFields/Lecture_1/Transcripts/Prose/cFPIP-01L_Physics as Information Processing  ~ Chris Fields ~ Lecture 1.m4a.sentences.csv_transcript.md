@@ -526,23 +526,25 @@
 
 ### Markov Blankets
 ![Meanwhile, back in classical physics...](../../Video/Slide21.PNG)
-48:46 [[start:2805850][end:2818810]] So _now_ we'll go back to classical physics. And what was happening, or one thing that was happening in classical physics at that time, was a lot of thinking about **stochastic causal networks**.
-[[start:2819630][end:2835130]] And [Judea] Pearl realized that if you have any stochastic causal network that's unidirectional, then around any node, you can draw what he called a **Markov blanket**.
+46:45 [[start:2805850][end:2818810]] So _now_ we'll go back to classical physics. And what was happening, or one thing that was happening in classical physics at that time, was a lot of thinking about **stochastic causal networks**.
+[[start:2819630][end:2835130]] And [Judea] Pearl realized that if you have any stochastic causal network that's **unidirectional**, then around any **node**, you can draw what he called a **Markov blanket**.
 
-47:15 [[start:2835290][end:2857080]] And a Markov blanket is just the set of nodes in the network that absorb all outside causation and then transmit that causation into whatever node you're interested in and then absorb all causation coming from the node you're interested in and transmit it to the rest of the world.
+47:15 [[start:2835290][end:2857080]] And a Markov blanket is just the set of nodes in the network that absorb all outside causation and then transmit that causation into whatever node you're interested in; and then absorb all causation coming from the node you're interested in and transmit it to the rest of the world.
 
-47:37 [[start:2857770][end:2864642]] And so we can redraw that in Part B here, and it should look very familiar.
-[[start:2864706][end:2869900]] A Markov blanket is just a classical physics way of talking about a Holographic screen.
-[[start:2870670][end:2884874]] And the number of nodes in the Markov blanket, or in particular the number of degrees of freedom times the number of nodes, is just the number of bits that flow across that Markov blanket.
-[[start:2884922][end:2889520]] So it's the entropy of the effective Holographic screen.
+47:37 [[start:2857770][end:2864642]] And so we can redraw that in "part b" here, and it should look very familiar.
+[[start:2864706][end:2869900]] A Markov blanket is just a classical-physics way of talking about a **holographic screen**.
+[[start:2870670][end:2884874]] And the number of nodes in the Markov blanket, or in particular the number of **degrees of freedom** times the number of nodes, is just the number of bits that flow across that Markov blanket.
+[[start:2884922][end:2889520]] So it's the entropy of the effective holographic screen.
 
 48:12 [[start:2892390][end:2898210]] All these ideas were reinvented more or less independently within classical physics.
-[[start:2898950][end:2921960]] And it was from this classical physics background that Karl Freston came up with the idea that a Markov blanket defines a persistence, at least from an Active Inference Institute point of view everyone is familiar with, because it's the foundation of the idea of Active Inference.
+[[start:2898950][end:2909730]] And it was from this classical physics background that Karl Friston came up with the idea that a Markov blanket defines a persistent 
+[[start:2909720][end:2913550]][**** inaudible ****] [**thing**, a system that persists through time], 
+[[start:2913560][end:2921960]] at least from an Active Inference Institute point of view everyone is familiar with, because it's the foundation of the idea of Active Inference.
 
 48:44 [[start:2924620][end:2936140]] Any system that persists through time does so by making sure that it doesn't dissolve into its environment.
 [[start:2936560][end:2938284]] Well, what does that mean?
 [[start:2938482][end:2947040]] It means it persists through time by maintaining the integrity of its Markov blanket or the integrity of its boundary.
-[[start:2947620][end:2967380]] So this of course is just a tautology, but it's a very interesting and very productive tautology because it says that any system is using the information it gets on its boundary from its environment to build a model of how its environment behaves.
+[[start:2947620][end:2967380]] So this of course is just a tautology. But it's a very interesting and very productive tautology because it says that any system is using the information it gets on its boundary from its environment to build a model of how its environment behaves.
 [[start:2967960][end:2975690]] And then it uses that model to act back on its environment to test and refine its model.
 
 49:36 [[start:2976380][end:2980490]] And again, as Popper told us, this is just what science is.
