@@ -33,7 +33,7 @@
 [[start:99670][end:103380]] And all of this is explained on the course website.
 [[start:104730][end:108040]] So let's start!
 
-## PHYSICS
+## HISTORICAL PERSPECTIVE: PHYSICS
 01:49 [[start:109210][end:126810]] This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
 
 ![Wittgenstein, Landaur, Wheeler](../../Video/Slide2.PNG)
@@ -110,7 +110,7 @@
 [[start:571230][end:577894]] So if there's anything that... just a term that is a trip-up, try Wikipedia.
 [[start:577942][end:581006]] It's probably a very good source for what these terms mean.
 
-## BACK to the PHYSICS
+## BACK TO THE PHYSICS
 ![Our story begins...](../../Video/Slide6.PNG)
 
 [[start:581188][end:586990]] So let's start! Our story, as I said, begins in the 19th Century.
