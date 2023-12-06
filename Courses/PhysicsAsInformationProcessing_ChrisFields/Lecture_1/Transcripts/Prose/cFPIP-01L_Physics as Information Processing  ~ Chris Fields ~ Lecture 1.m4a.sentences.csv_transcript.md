@@ -353,7 +353,7 @@
 
 29:29 [[start:1769950][end:1780510]] And then **[Darrell R.?] Moore** proved a very similar result in a completely different formal setting of general cybernetics, that you can't tell what _process_ is generating the outputs by finite observation.
 [[start:1781570][end:1793950]] But what Alice _can_ do, is build a predictive _model_ of what generates the output she sees in response to her inputs, and test it by designing new inputs.
-[[start:1794370][end:1800930]] And this is, of course, as Karl Popper told us, the process that we call "science."
+[[start:1794370][end:1800930]] And this is, of course, as **Karl Popper** told us, the process that we call "science."
 
 30:01 [[start:1801430][end:1807080]] So Alice can do science even though she can't answer any of these fundamental questions.
 
@@ -537,28 +537,34 @@
 [[start:2884922][end:2889520]] So it's the entropy of the effective holographic screen.
 
 48:12 [[start:2892390][end:2898210]] All these ideas were reinvented more or less independently within classical physics.
-[[start:2898950][end:2909730]] And it was from this classical physics background that Karl Friston came up with the idea that a Markov blanket defines a persistent 
+
+## Active Inference
+![An MB defines a persistent thing](../../Video/Slide22.PNG)
+48:19 [[start:2898950][end:2909730]] And it was from this classical physics background that Karl Friston came up with the idea that a Markov blanket defines a persistent 
 [[start:2909720][end:2913550]][**** inaudible ****] [**thing**, a system that persists through time], 
 [[start:2913560][end:2921960]] at least from an Active Inference Institute point of view everyone is familiar with, because it's the foundation of the idea of Active Inference.
 
 48:44 [[start:2924620][end:2936140]] Any system that persists through time does so by making sure that it doesn't dissolve into its environment.
-[[start:2936560][end:2938284]] Well, what does that mean?
-[[start:2938482][end:2947040]] It means it persists through time by maintaining the integrity of its Markov blanket or the integrity of its boundary.
-[[start:2947620][end:2967380]] So this of course is just a tautology. But it's a very interesting and very productive tautology because it says that any system is using the information it gets on its boundary from its environment to build a model of how its environment behaves.
+[[start:2936560][end:2938284]] Well, what does that _mean?_
+[[start:2938482][end:2947040]] It means it persists through time by maintaining the integrity of its Markov blanket, or the integrity of its boundary.
+[[start:2947620][end:2967380]] So this of course is just a tautology. But it's a very interesting and very productive tautology, because it says that any system is using the information it gets on its boundary from its environment to build a model of how its environment behaves.
 [[start:2967960][end:2975690]] And then it uses that model to act back on its environment to test and refine its model.
 
-49:36 [[start:2976380][end:2980490]] And again, as Popper told us, this is just what science is.
+49:36 [[start:2976380][end:2980490]] And again, as Popper told us, this is just what _science_ is.
 [[start:2981120][end:2989470]] So what the free energy principle really tells us is that all systems are agents that are doing science all the time.
 
 49:50 [[start:2990400][end:3011060]] So physics is effectively not just the study of communication, but it's the study of agents doing science with each other, pairs of agents who are trying to figure each other out by their communicative exchanges.
-[[start:3012200][end:3043020]] So that's the history of how we got from 1930s sorry, 1850s thermodynamics to the free energy principle and how the free energy principle connects to these very deep and extremely radical, especially within context ideas in quantum theory and quantum cosmology and computer science.
-[[start:3043540][end:3079560]] All of which tell us that the world we see is a projection that's being written on our boundaries by a process that we have no access to except the procedure of Active Inference or the procedure of science, which is to formulate predictive models and test them by doing things in the world and seeing how the world responds.
+[[start:3012200][end:3043020]] So that's the history of how we got from {1930s sorry,} 1850s thermodynamics to the free energy principle, and how the free energy principle connects to these very deep and extremely radical (especially within context) ideas in quantum theory and quantum cosmology and computer science.
+[[start:3043540][end:3079560]] All of which tell us that the world we see is a projection that's being written on our boundaries by a process that we have no access to - except the procedure of Active Inference, or the procedure of science - which is to formulate predictive models and test them by doing things in the world and seeing how the world responds.
 
+## Conclusion
+![1st discussion session: Sat. 3 June 2023](../../Video/Slide23.PNG)
 51:21 [[start:3081360][end:3085260]] So that's it for this session.
 
-[[start:3087200][end:3097250]] The first discussion session which Ander is going to lead will be the 3 June at this same time, i.e. 05:00 European time.
+[[start:3087200][end:3097250]] The first discussion session, which Ander is going to lead, will be the 3rd of June at this same time, i.e. 5 o'clock European time.
 [[start:3098180][end:3102960]] And then my session number two will be in mid June.
-[[start:3103700][end:3111910]] And if you look at the course website, there's this subsidiary website for interactive Q and A.
+
+51:43 [[start:3103700][end:3111910]] And if you look at the course website [1st Discussion; 2nd Lecture](https://coda.io/@active-inference-institute/fields-physics-2023/questions-answers-3), there's this subsidiary website for interactive Q and A.
 [[start:3112360][end:3132060]] And I invite everyone to post questions and discuss them and hope that we'll have an interesting exchange and that everyone will come to sort of an understanding of what was talked about today through discussion.
 
 52:12 [[start:3132560][end:3140888]] And we'll be interested in being back in June to see how to formulate this in quantum theory.
