@@ -489,42 +489,45 @@
 [[start:2633090][end:2640906]] And we get a very natural measure of time in terms of how many bits I see coming across my boundary.
 
 44:00 [[start:2640938][end:2651250]] And again, we'll talk about that in the next couple of sessions, and then talk about it more thoroughly in September when we talk about emergent spacetime.
-[[start:2652230][end:2664882]] So quantum information theory looks very different from the physics that came before, not because it's adopted a new formalism, the tools of quantum theory.
-
-44:25 [[start:2665026][end:2681840]] It's because it's entirely changed the _thinking_ about what physics is and what it's _about,_ and replace this idea of forces and balls banging into each other and all of that with the idea of communication between agents.
+[[start:2652230][end:2664882]] So quantum information theory looks very different from the physics that came before, not because it's adopted a new formalism, the tools of quantum theory;
+[[start:2665026][end:2681840]] it's because it's entirely changed the _thinking_ about what physics _is_ and what it's _about,_ and replaced this idea of forces and balls banging into each other and all of that with the idea of communication between agents.
 [[start:2682530][end:2687310]] And of course that's familiar from an Active Inference perspective.
 
+![Four NOs...](../../Video/Slide20.PNG)
 44:48 [[start:2687890][end:2695710]] So we can now back up a little bit to see what they were doing in _classical_ physics during this period.
-44:55 [[start:2695790][end:2697682]] Well, let me go on a little bit.
-[[start:2697736][end:2698340]] Sorry.
+44:55 [[start:2695790][end:2697682]] {Well, let me go on a little bit.
+[[start:2697736][end:2698340]] Sorry.}
 
-45:02 [[start:2702070][end:2714226]] This is just a slide quoting Wheeler, who of course is the most radical in terms of impitheist, in terms of formulating these ideas.
+### Wheeler on The New Physics
+45:02 [[start:2702070][end:2714226]] This is just a slide quoting Wheeler, who of course is the most radical {in terms of} and _pithiest,_ in terms of formulating these ideas.
 [[start:2714418][end:2718250]] But here's his characterization of this new physics.
-[[start:2718830][end:2720490]] It's not reductive.
-[[start:2721630][end:2723930]] All of the reasoning is circular.
 
-45:25 [[start:2725230][end:2731630]] You don't have smaller things and then yet smaller things, and then yet smaller things forever.
+[[start:2718830][end:2720490]] It's not reductive:
+[[start:2721630][end:2723930]] all of the reasoning is circular;
+[[start:2725230][end:2731630]] you don't have smaller things and then yet smaller things, and then yet smaller things forever.
 
-45:33 [[start:2733090][end:2734510]] There are no laws.
+[[start:2733090][end:2734510]] There are no laws:
+45:36 [[start:2736690][end:2741070]] so what you see on the interface is a message;
+[[start:2741220][end:2747090]] it's not something that's governed by laws since the beginning of the universe.
 
-45:36 [[start:2736690][end:2741070]] So what you see on the interface is a message.
-[[start:2741220][end:2747090]] It's not something that's governed by laws since the beginning of the universe.
-[[start:2747830][end:2749406]] There's no continuum.
-[[start:2749518][end:2752050]] So there's nothing described by real numbers.
-[[start:2752120][end:2753930]] It's all described by integers.
+[[start:2747830][end:2749406]] There's no continuum:
+[[start:2749518][end:2752050]] so there's nothing described by real numbers;
+[[start:2752120][end:2753930]] it's all described by integers;
+[[start:2754030][end:2756710]] everything's done in finite dimensional spaces.
 
-45:54 [[start:2754030][end:2756710]] Everything's done in finite dimensional spaces.
-[[start:2757050][end:2762280]] And finally, and most importantly, there's no spacetime box in which things happen.
-[[start:2762810][end:2766294]] So think of how radical this is means.
-[[start:2766332][end:2773290]] There's no big bang, there's no big rip, there's no bouncing universe.
+45:57 [[start:2757050][end:2762280]] And finally, and most importantly, there's no "spacetime _box_" in which things happen.
+[[start:2762810][end:2766294]] So think of how radical this is!
+[[start:2766332][end:2773290]] It means there's no big bang, there's no big rip, there's no bouncing universe.
 [[start:2773870][end:2779290]] All of those ideas are out the window because they're classical and they're about spacetime.
+[[start:2779970][end:2787390]] And what the new physics wants to do is derive spacetime out of basically users' experiences.
 
-46:19 [[start:2779970][end:2787390]] And what the new physics wants to do is derive spacetime out of basically users experiences.
+46:28 [[start:2788850][end:2796142]] So the agents here are all "observer-participants" in Wheeler's language.
+[[start:2796206][end:2804450]] But what that just means is _agents_ that want to communicate. And it's their communication that gives rise to physics.
 
-46:28 [[start:2788850][end:2796142]] So the agents here are all observer participants in Wheeler's language.
-[[start:2796206][end:2804450]] But what that just means is agents that want to communicate and it's their communication that gives rise to physics.
-[[start:2805850][end:2818810]] So now we'll go back to classical physics and what was happening, or one thing that was happening in classical physics at that time was a lot of thinking about stochastic causal networks.
-[[start:2819630][end:2835130]] And Pearl realized that if you have any stochastic causal network that's unidirectional, then around any node, you can draw what he called a Markov blanket.
+### Markov Blankets
+![Meanwhile, back in classical physics...](../../Video/Slide21.PNG)
+48:46 [[start:2805850][end:2818810]] So _now_ we'll go back to classical physics. And what was happening, or one thing that was happening in classical physics at that time, was a lot of thinking about **stochastic causal networks**.
+[[start:2819630][end:2835130]] And [Judea] Pearl realized that if you have any stochastic causal network that's unidirectional, then around any node, you can draw what he called a **Markov blanket**.
 
 47:15 [[start:2835290][end:2857080]] And a Markov blanket is just the set of nodes in the network that absorb all outside causation and then transmit that causation into whatever node you're interested in and then absorb all causation coming from the node you're interested in and transmit it to the rest of the world.
 
