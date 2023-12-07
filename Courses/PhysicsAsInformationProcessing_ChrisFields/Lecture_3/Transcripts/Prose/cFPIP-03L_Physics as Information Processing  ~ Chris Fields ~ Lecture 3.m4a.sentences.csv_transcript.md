@@ -376,18 +376,18 @@
 45:33 [[start:2733660][end:2738200]] And so a pure thermal interaction is going to start to look like entanglement.
 [[start:2739180][end:2747384]] So we're actually only really interested in systems that aren't interacting only purely thermally with their environments.
 [[start:2747512][end:2756860]] We're interested in systems that have enough internal structure that they're using that thermal energy to do something internally.
-[[start:2757440][end:2777510]] So to give their internal dynamics some particular shape, so that their internal dynamics is actually circling around some well defined attractor that requires some energy to maintain itself.
+[[start:2757440][end:2777510]] So to give their internal dynamics some particular shape, so that their internal dynamics is actually circling around some well-defined attractor that requires some energy to maintain itself.
 
 46:20 _Ander:_
 [[start:2780200][end:2782244]] Yeah, I'm continuing with that question.
-[[start:2782442][end:2799420]] I saw in the paper free energy principle for Quantum Systems that if you're in that situation when both keras are nontrivial, but perhaps B's is larger than a's ace perceives non local hidden variables.
-[[start:2799760][end:2808220]] So I wonder if there is a way to relate those by taking a limit of making a small and recover the thermal interaction.
+[[start:2782442][end:2799420]] I saw in the paper free energy principle for Quantum Systems that if you're in that situation when both keras are nontrivial, but perhaps B's is larger than A's, A's perceives non-local hidden variables.
+[[start:2799760][end:2808220]] So I wonder if there is a way to relate those by taking a limit of making A small and recover the thermal interaction.
 [[start:2808580][end:2815264]] Presumably if you let A become small, you should recover that thermal interaction, so to speak.
 [[start:2815302][end:2815890]] Right?
 
 46:56 _Chris:_
 [[start:2816820][end:2819984]] Yeah, that's a very interesting comment actually.
-[[start:2820102][end:2838016]] So if you're a system and all of your environments variables are effectively hidden to you, then you can't do any information processing because you don't have any access to any of your system, your environments variables.
+[[start:2820102][end:2838016]] So if you're a system and all of your environments variables are effectively hidden to you, then you can't do any information processing because you don't have any access to any of your system, your environments' variables.
 [[start:2838208][end:2841172]] So yeah, your interaction can only be thermal.
 [[start:2841236][end:2842490]] I think that's correct.
 [[start:2844460][end:2845450]] Thank you.
@@ -397,26 +397,26 @@
 [[start:2857920][end:2860016]] On the other hand, you have noise, right?
 [[start:2860118][end:2865250]] In one of those other situations, I can't recall which one.
 [[start:2866340][end:2868448]] I guess in the reversed one, right.
-[[start:2868614][end:2878880]] When a's QRF is larger than that of B, so it encompasses more of the boundary degrees of freedom, those that are not overlapping A perceives as noises.
+[[start:2868614][end:2878880]] When A's QRF is larger than that of B, so it encompasses more of the boundary degrees of freedom, those that are not overlapping A perceives as noises.
 
 47:59 [[start:2879040][end:2879604]] That's correct.
 [[start:2879642][end:2880230]] Right?
 
 48:01 _Chris:_
 [[start:2881320][end:2881780]] Yeah.
-[[start:2881850][end:2889412]] A will be looking at B's thermal sector, b's free energy sector.
+[[start:2881850][end:2889412]] A will be looking at B's thermal sector, B's free energy sector.
 [[start:2889556][end:2890200]] Right.
 
 48:10 [[start:2890350][end:2903340]] So A may be interpreting, in a sense, what it's doing as informative, and A may even be seeing what B is doing as informative.
 
 48:26 [[start:2906800][end:2923890]] So noise for B may be signal for A, depending on how a's QRF is structured, but A is seeing more information than B is trying to send it.
-[[start:2925860][end:2930390]] So it's it's essentially the the reverse of the hidden variable case.
+[[start:2925860][end:2930390]] So it's essentially the reverse of the hidden variable case.
 [[start:2931400][end:2942410]] There are variables in the other system that aren't telling you anything about what the other system is actually doing.
 
 49:06 _Daniel:_
 [[start:2946070][end:2955122]] That's very interesting in terms of reading too much or too little between the lines, connecting too many dots or connecting not enough dots.
-[[start:2955266][end:2965098]] But these challenges where noise for one quantum cognitive agent might be signal for another and vice versa, those are the challenges that we want to address.
-[[start:2965184][end:2977950]] Because to have a physics that doesn't recognize those situations is kind of taking the view from nowhere or not really addressing the complexity of a cognitive engagement.
+[[start:2955266][end:2965098]] But these challenges where noise for one quantum cognitive agent might be signal for another and vice versa, those are the challenges that we want to address...
+[[start:2965184][end:2977950]] ...because to have a physics that doesn't recognize those situations is kind of taking the view from nowhere or not really addressing the complexity of a cognitive engagement.
 
 49:39 _Chris:_
 [[start:2979890][end:2987330]] Yeah, it's describing interactions between, effectively, systems that don't share the same language.
@@ -425,10 +425,10 @@
 [[start:2990390][end:2993300]] I have a question about the free energy principle here.
 [[start:2994630][end:3002790]] Only in the last several years has the quantum free energy principle relationship come into light.
 [[start:3002940][end:3011130]] So maybe could you just share a little bit about what incremental or quantum advances enabled that to happen?
-[[start:3011280][end:3030400]] Or what degrees of freedom were preexisting or added to enable work arising from perception and action in neural systems to also so naturally enter this context with the quantum information?
+[[start:3011280][end:3030400]] Or what degrees of freedom were pre-existing or added to enable work arising from perception and action in neural systems to also so naturally enter this context with the quantum information?
 
 50:32 _Chris:_
-[[start:3032450][end:3047620]] Well, I think, at least from historical point of view, that connection was made based on the analogy between a Markov blanket and a Holographic screen.
+[[start:3032450][end:3047620]] Well, I think, at least from a historical point of view, that connection was made based on the analogy between a Markov blanket and a Holographic screen.
 [[start:3048570][end:3061420]] So these are structures developed in different parts of physics that essentially serve the same function of limiting the information that one system can have about another system.
 [[start:3063230][end:3086930]] So it's that functional analogy between a Markov blanket defined classically and a Holographic screen defined in quantum theory that made it seem obvious that we could translate the free energy principle into a quantum theoretic principle.
 
@@ -437,7 +437,7 @@
 [[start:3096072][end:3124650]] In live stream 40, we talked a lot about this, but I think that remains one of the most remarkable advances inside or outside the free energy principle literature based upon this functional acknowledgment of boundaries and the conditions that they entail, which, again, are the challenges that we want to address lest we ignore boundaries.
 
 52:04 _Chris:_
-[[start:3124990][end:3125642]] Right?
+[[start:3124990][end:3125642]] Right
 [[start:3125776][end:3126774]] Yeah, precisely.
 [[start:3126822][end:3131630]] I mean, the free energy principle is all about what happens when you have a boundary.
 
@@ -455,15 +455,15 @@
 [[start:3204650][end:3215830]] And some of the causal arrows flowing through that blanket network are effectively transmitting noise.
 
 53:39 [[start:3219290][end:3228374]] And you can think in the same way with respect to a holographic screen if you're doing a certain amount of information processing.
-[[start:3228422][end:3240522]] And this this brings up the whole issue of how how efficient is a system in its information processing?
+[[start:3228422][end:3240522]] And this brings up the whole issue of how efficient is a system in its information processing?
 
-54:00 [[start:3240586][end:3243630]] How close is it to the land hour limit?
-[[start:3243710][end:3244340]] Basically?
+54:00 [[start:3240586][end:3243630]] How close is it to the Landauder limit,
+[[start:3243710][end:3244340]] basically.
 
 54:07 [[start:3247350][end:3262950]] Can it extract more energy from some bits than it has to use to modify the states of other bits?
 [[start:3264090][end:3270060]] That's what this, if you will, metabolic question is all about.
 
-54:32 [[start:3272190][end:3287150]] In the case of an organism, is it can I get more energy from some of the chemistry that I have access to than I need to use to modify the chemistry that I need to modify?
+54:32 [[start:3272190][end:3287150]] In the case of an organism, is it, can I get more energy from some of the chemistry that I have access to than I need to use to modify the chemistry that I need to modify?
 [[start:3288290][end:3291622]] And if not, then life stops.
 [[start:3291786][end:3293650]] Everything grinds to a halt.
 
@@ -476,7 +476,7 @@
 55:27 _Chris:_
 [[start:3327010][end:3340420]] Well, the environment is the system sitting over on the other side of the boundary that is absorbing whatever waste heat is generated by the system.
 [[start:3341910][end:3345620]] Let's call it Alice that we're interested in.
-[[start:3346310][end:3366780]] So that environment may be alice can't tell this, but it may be divided up into lots of different compartments, some of which are basically sucking in Alice's waste heat and doing something with it.
+[[start:3346310][end:3366780]] So that environment may be Alice, and Alice can't tell this, but it may be divided up into lots of different compartments, some of which are basically sucking in Alice's waste heat and doing something with it.
 [[start:3368190][end:3386162]] So this is really a question about how is the environment structured and what operations does the environment execute with the input that it gets?
 [[start:3386216][end:3388450]] How does it interpret that input?
 
@@ -490,7 +490,7 @@
 
 57:10 [[start:3430900][end:3434800]] Let me get back to your question about perpetual motion machine.
 [[start:3435460][end:3448580]] Notice that in classical thermodynamics there's always the assumption that there's a big environment out there the rest of the universe or whatever, the whole environment that's not on Earth.
-[[start:3449820][end:3463790]] That is an arbitrarily large source of or it's not an arbitrarily large source of free energy, but it's a large source of free energy.
+[[start:3449820][end:3463790]] That is an arbitrarily large source of, or it's not an arbitrarily large source of free energy, but it's a large source of free energy.
 
 57:44 [[start:3464400][end:3470216]] And it's a large sink for entropy, a kind of arbitrarily large sink for entropy.
 [[start:3470408][end:3489028]] So the second law of thermodynamics says the entropy of this entire system counting the whole surrounding environment doesn't decrease, so it can increase and still satisfy the second law.
@@ -499,12 +499,12 @@
 [[start:3497000][end:3517820]] And so your proposed machine is sitting somewhere embedded in this gigantic environment that can provide some finite amount of free energy but can exhaust effectively an arbitrary amount of entropy.
 [[start:3519520][end:3535116]] So any machine has to dissipate entropy as it runs to fill up this kind of arbitrary sink of entropy that's the classical rest of the Universe.
 
-58:55 [[start:3535228][end:3538180]] Now, compare that to the picture in Quantum theory.
-[[start:3538680][end:3543670]] The picture in Quantum theory is the Universe, by definition, is an isolated system.
+58:55 [[start:3535228][end:3538180]] Now, compare that to the picture in quantum theory.
+[[start:3538680][end:3543670]] The picture in quantum theory is the universe, by definition, is an isolated system.
 
 59:04 [[start:3544600][end:3551480]] So its total information content doesn't change, right?
-[[start:3551550][end:3552564]] It's evolving.
-[[start:3552612][end:3560170]] unitarily unitary operations preserve information, so they're just moving information around.
+[[start:3551550][end:3552564]] It's evolving...
+[[start:3552612][end:3560170]] ...unitarily, unitary operations preserve information, so they're just moving information around.
 
 59:22 [[start:3562800][end:3578800]] So from the point of view of any local system, the local system is getting information from its environment, so it sees its environment losing information, so gaining entropy.
 
@@ -514,11 +514,11 @@
 1:00:00 [[start:3600140][end:3611850]] And this is another kind of big change in the last few decades and has led to, for example, entropic definitions of time.
 [[start:3612400][end:3622590]] My local external time arrow is whatever direction I see entropy increasing the most.
 
-1:00:29 [[start:3629210][end:3637110]] So, again, I would refer to people like Rovelli and Max Taymar, who developed many of these ideas.
+1:00:29 [[start:3629210][end:3637110]] So, again, I would refer to people like Rovelli and Max Tegmark, who developed many of these ideas.
 
 1:00:40 _Daniel:_
 [[start:3640350][end:3641100]] Awesome.
-[[start:3642430][end:3658222]] All right, thank you, Chris, and Ander looking forward to seeing everyone's questions submitted and their preparation and participation and measurement in the discussion section.
+[[start:3642430][end:3658222]] All right, thank you, Chris, and Ander, looking forward to seeing everyone's questions submitted and their preparation and participation and measurement in the discussion section.
 [[start:3658366][end:3660162]] So thank you.
 [[start:3660296][end:3661026]] Till next time.
 
