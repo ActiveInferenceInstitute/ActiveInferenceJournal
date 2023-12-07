@@ -32,7 +32,7 @@
 
 04:25 [[start:265810][end:280802]] And this idea that velocity is not absolute but that's relative to some observer who measures it in some reference frame is the foundation for theories of relativity.
 [[start:280866][end:298410]] So Galileo developed his theory of relativity which basically was just a way of converting from classical velocities measured by one observer to classical velocities measured by another observer that was moving with respect to the first one.
-[[start:298560][end:317490]] And this provided the foundation for Einstein's theories of relativity which modified Galileo's by adding the concept that the observers have to change exchange information and can only exchange it at the speed of light which is finite.
+[[start:298560][end:317490]] And this provided the foundation for Einstein's theories of relativity which modified Galileo's by adding the concept that the observers have to exchange information and can only exchange it at the speed of light which is finite.
 
 05:19 [[start:319990][end:324660]] So this idea in physics has a long history.
 [[start:325110][end:332040]] Of course, the core idea is that measurements are always with respect to something or other.
