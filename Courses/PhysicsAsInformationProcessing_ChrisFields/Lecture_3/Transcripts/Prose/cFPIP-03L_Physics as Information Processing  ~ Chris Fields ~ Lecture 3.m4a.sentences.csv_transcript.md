@@ -38,14 +38,14 @@
 [[start:325110][end:332040]] Of course, the core idea is that measurements are always with respect to something or other.
 [[start:332490][end:338870]] And the something or other is a reference frame and different agents can choose different reference frames.
 [[start:339290][end:341494]] And this idea is very old.
-[[start:341612][end:350170]] Here we have a picture of anubis choosing a feather as the reference frame with which to measure the heart of the pharaoh.
+[[start:341612][end:350170]] Here we have a picture of Anubis choosing a feather as the reference frame with which to measure the heart of the pharaoh.
 
 05:50 [[start:350590][end:354906]] So this goes back to well before the common era.
 [[start:354938][end:357950]] This is about 2000 BCE.
-[[start:358370][end:387750]] So this is a very old idea that's been elaborated over the centuries as science has developed and in the fairly big change in how this idea was thought about occurred in classical physics reference frames were always thought of as mathematical abstractions and an observer and a reference frame were more or less identified by Galileo.
+[[start:358370][end:387750]] So this is a very old idea that's been elaborated over the centuries as science has developed and in the 90s a fairly big change in how this idea was thought about occurred. In classical physics reference frames were always thought of as mathematical abstractions and an observer and a reference frame were more or less identified by Galileo...
 
-06:28 [[start:388250][end:403210]] And that identification is carried forward into Einstein who thinks about observers, for example, sitting on photons and observers in spaceships and observers riding on railroad trains and this sort of thing.
-[[start:403280][end:408720]] And always that just means think of a reference frame that's doing something or other.
+06:28 [[start:388250][end:403210]] ...and that identification is carried forward into Einstein who thinks about observers, for example, sitting on photons and observers in spaceships and observers riding on railroad trains and this sort of thing...
+[[start:403280][end:408720]] ...and always that just means, think of a reference frame that's doing something or other.
 
 06:49 [[start:409570][end:433350]] So a reference frame in classical physics is essentially just a coordinate system and these abstract coordinate systems can be employed in thought experiments and so they are a way to illustrate classical intuitions about motion.
 [[start:434490][end:447002]] And in the 90s, as quantum information theory developed it was realized that a reference frame actually consists of a physical object.
@@ -54,14 +54,14 @@
 07:35 [[start:455490][end:462554]] And that means that the reference frame itself is described by quantum theory.
 [[start:462602][end:464560]] It's some quantum system.
 
-07:45 [[start:465810][end:486950]] And if you think about reference frames that are familiar for example, meter sticks for measuring distance or clocks for measuring time or gyroscopes or batteries or even the Earth's gravitational fields which typically defines up for us those are all physical objects that can be described by quantum theory.
+07:45 [[start:465810][end:486950]] And if you think about reference frames that are familiar for example, meter sticks for measuring distance or clocks for measuring time or gyroscopes or batteries or even the Earth's gravitational fields which typically defines up for us; those are all physical objects that can be described by quantum theory.
 [[start:487770][end:500490]] Well, this was an important insight because it led to the realization that reference frames as quantum systems are unique.
 [[start:501550][end:505200]] And uniqueness in quantum theory is very strong.
-[[start:506610][end:514080]] There's the no Cloning theorem which states that you can't reproduce exactly reproduce any unknown quantum state.
+[[start:506610][end:514080]] There's the no-cloning theorem which states that you can't reproduce, exactly reproduce, any unknown quantum state.
 
 08:35 [[start:515730][end:523074]] And that applies to reference frames because they encode what Bartlett et al.
 
-08:43 [[start:523112][end:533270]] In that paper called non fungible information which just means information that can't be completely represented in any finite bit string.
+08:43 [[start:523112][end:533270]] ...in that paper called nonfungible information which just means information that can't be completely represented in any finite bit string.
 [[start:534010][end:538520]] So unless you know the state of a reference frame, you can't clone it.
 [[start:539290][end:555946]] Since these reference frames encode more than any bit string's worth of information in their quantum phases, they're unique and their states are unknown.
 [[start:556138][end:567726]] And the consequence of this is that if Alice wants Bob to use her reference frame to make a measurement, she can't just send him a description.
@@ -81,7 +81,7 @@
 
 11:00 [[start:660210][end:667730]] So my internal reference frames are what make information I get from the world actionable.
 
-11:08 [[start:668230][end:675694]] And in Bates and sense of differences that make a difference, actionability is the core of semantics.
+11:08 [[start:668230][end:675694]] And in Bateson's sense of differences that make a difference, actionability is the core of semantics.
 [[start:675822][end:679720]] Something is meaningful if I can do something about it.
 [[start:680090][end:693990]] So this idea that we all contain embodied reference frames gives physics a semantics by giving observers a semantics.
 [[start:694150][end:695580]] And this is new.
@@ -90,10 +90,10 @@
 11:46 [[start:706610][end:711550]] But reference frames give semantics to measurements.
 
 11:53 [[start:713730][end:717410]] So here's an example of an embodied reference frame.
-[[start:717990][end:723266]] This is the reference frame that bacteria use for chemotaxis I.
+[[start:717990][end:723266]] This is the reference frame that bacteria use for chemotaxis, i.
 
-12:03 [[start:723288][end:723522]] E.
-[[start:723576][end:733830]] To move toward molecules in the environment that they like, like sugars and to move away from molecules that they don't like, like acids.
+12:03 [[start:723288][end:723522]] e,
+[[start:723576][end:733830]] ...to move toward molecules in the environment that they like, like sugars and to move away from molecules that they don't like, like acids.
 [[start:734250][end:739142]] And it's been worked out in great detail over decades of experimental work.
 
 12:19 [[start:739196][end:741190]] And this is a rough schematic.
@@ -103,9 +103,9 @@
 [[start:758450][end:764346]] And they can bind molecules, which are called ligands, out in the environment.
 
 12:44 [[start:764538][end:770250]] And when they bind them, they send a signal into the back of the bacterium.
-[[start:770330][end:783830]] And it turns out that there's a little miniature reference frame attached directly to these ligands which is this r and B system which control the ligands, not the ligands, the receptor sensitivity.
+[[start:770330][end:783830]] And it turns out that there's a little miniature reference frame attached directly to these ligands which is this R and B system which control the ligands--not the ligands--the receptor sensitivity.
 
-13:04 [[start:784890][end:800170]] Then the back of the reference frame is the action component and it consists of a set of molecules that control a motor, a molecular motor, that drives the flagella on the bacteria.
+13:04 [[start:784890][end:800170]] Then the back of the reference frame is the action component and it consists of a set of molecules that control a motor--a molecular motor--that drives the flagella on the bacteria.
 [[start:800830][end:807390]] And the flagellum allows it to swim forwards or turn in some other direction.
 [[start:808050][end:816640]] And depending on how it spins, the creature either goes in the direction of something it likes or it stops and turns around.
 
@@ -114,7 +114,7 @@
 [[start:843150][end:859760]] And if you're thinking in terms of the free energy principle or Bayesian inference, then you'll immediately see the concentration of this molecule is encoding a prior probability, the bacterium's prior probability for what its environment is like.
 
 14:20 [[start:860450][end:871300]] And the zero point, the default value of that encoding, is the ligand concentration in which the bacterium does nothing.
-[[start:872310][end:890710]] So a QRF in general can be characterized as an expected value, which is here the concentration of this molecule p y phosphorylated plus a bunch of computation, which is all the rest of the things in this diagram.
+[[start:872310][end:890710]] So a QRF in general can be characterized as an expected value, which is here the concentration of this molecule pY phosphorylated plus a bunch of computation, which is all the rest of the things in this diagram.
 
 14:51 [[start:891950][end:897130]] So this is a very simple QRF that's embodied by a bacteria.
 [[start:897470][end:908670]] Here's a more complicated QRF that's embodied by eukaryotic cells, or more complicated cells like our cells.
@@ -127,7 +127,7 @@
 [[start:963850][end:967586]] So it basically controls what proteins the cell is making.
 [[start:967768][end:974530]] And those proteins end up doing something like restructuring the cytoplasm and actually driving cell division.
 [[start:975190][end:987030]] And the stuff in the middle of this reference frame, which I've labeled the integrative center, are three molecules called RAF, mech and ERC.
-[[start:987450][end:993450]] And they're connected by positive by bi directional feedback loops.
+[[start:987450][end:993450]] And they're connected by positive bi-directional feedback loops.
 
 16:33 [[start:993950][end:1004300]] And they basically negotiate the default value of the environment at which the cell does nothing.
 [[start:1005330][end:1014970]] So they're the middle of the reference frame that represents the cell's expectation values about what's going on in its environment.
@@ -136,10 +136,10 @@
 
 17:17 [[start:1037370][end:1039960]] So how do we represent all this stuff?
 [[start:1041050][end:1047020]] There are many ways to do this, but this is a particularly simple way.
-[[start:1048350][end:1068370]] It assumes that whatever's in the middle, which is here called C prime is the most general thing that the inputs can give information to and the most general thing that can give information to the outputs.
+[[start:1048350][end:1068370]] It assumes that whatever's in the middle, which is here called C prime, is the most general thing that the inputs can give information to and the most general thing that can give information to the outputs.
 
-17:49 [[start:1069030][end:1086070]] And most general here has a category theoretic definition so it can be stated in a way that's equivalent across many different specific mathematical forms.
-[[start:1086570][end:1095158]] But if you're familiar with neural networks, this will look to you a lot like the skeleton of a variational auto encoder.
+17:49 [[start:1069030][end:1086070]] And most general here has a category-theoretic definition so it can be stated in a way that's equivalent across many different specific mathematical forms.
+[[start:1086570][end:1095158]] But if you're familiar with neural networks, this will look to you a lot like the skeleton of a variational autoencoder.
 
 18:15 [[start:1095334][end:1097660]] And that's basically what it is.
 [[start:1098910][end:1121620]] And I don't want to deal with this formalism except to say that it exists and is very convenient, except to say that we can attach this kind of formal diagram as a representation of a QRF to our representation of the boundary between two interacting agents.
@@ -149,15 +149,15 @@
 [[start:1146838][end:1160830]] And we can use this simple notation then to investigate what sorts of structures one gets when one starts to think about systems as implementing specific QRFs.
 
 19:22 [[start:1162290][end:1169970]] And here's the structure of the minimal system that we can really think of as an interesting observer.
-[[start:1170870][end:1201078]] And this is a system that has some QRF that I've called E that looks at its environment, the part of its environment that it can actually observe and act on, and it defines a sector of the boundary which mathematically is just the image of this Qrfe that the system can manipulate.
+[[start:1170870][end:1201078]] And this is a system that has some QRF that I've called E that looks at its environment, the part of its environment that it can actually observe and act on, and it defines a sector of the boundary which mathematically is just the image of this QRF-E that the system can manipulate.
 
 20:01 [[start:1201174][end:1208560]] So this is the part of the environment or the part of the boundary that the system actually sees and can do something about.
 [[start:1209890][end:1227380]] And for this observer to be interesting, it needs to be able to detect the difference between what it sees now and what it saw just then so that it can decide whether to take some action or other.
-[[start:1227750][end:1236802]] So it needs a memory and that requires another QRF that has some allocated piece of the boundary recall.
+[[start:1227750][end:1236802]] So it needs a memory and that requires another QRF that has some allocated piece of the boundary. Recall...
 
-20:36 [[start:1236866][end:1244570]] The boundary is where classical information gets written in this purely quantum theoretic formalism.
+20:36 [[start:1236866][end:1244570]] ...the boundary is where classical information gets written in this purely quantum theoretic formalism.
 [[start:1245870][end:1250620]] So it needs a memory sector that that QRF can act on.
-[[start:1251470][end:1266000]] And then in order to do this computation and specifically in order to write information to the boundary, in order to actually flip bits on the boundary, it needs free energy.
+[[start:1251470][end:1266000]] And then in order to do this computation and specifically in order to write information to the boundary--in order to actually flip bits on the boundary--it needs free energy.
 
 21:06 [[start:1266630][end:1279890]] So the rest of its boundary gets devoted to extracting free energy from the environment and exhausting free energy, waste heat, in other words, into the environment.
 [[start:1280050][end:1284600]] And so it has this nice little thermodynamic cycle that drives everything else.
@@ -182,17 +182,17 @@
 
 23:33 [[start:1413850][end:1416390]] Memory is much more expensive for your brain.
 [[start:1416570][end:1419102]] And all cells have to make that decision.
-[[start:1419246][end:1426142]] And the universal solution to this trade off is course grading memory.
-[[start:1426286][end:1426882]] I e.
-[[start:1426936][end:1430878]] Remembering things in less detail than you saw them in the beginning.
+[[start:1419246][end:1426142]] And the universal solution to this trade off is coarse graining memory...
+[[start:1426286][end:1426882]] ...i.e.,
+[[start:1426936][end:1430878]] ...remembering things in less detail than you saw them in the beginning.
 
 23:51 [[start:1431054][end:1432710]] Ander, you have a comment?
 
 23:53 _Ander:_
 [[start:1433530][end:1434278]] Yes.
 [[start:1434444][end:1437074]] I wanted to ask a question now before it gets too late.
-[[start:1437122][end:1452630]] So two or three slides ago, when we were looking at the diagram of the coconut diagrams, I was wondering if the classifiers identified with measurement and preparation.
-[[start:1452710][end:1466602]] Those correspond to sensory and action degrees of freedom in the earlier picture with the bacteria and the classifier in the middle in that picture, would it correspond to the default chemical concentration?
+[[start:1437122][end:1452630]] So two or three slides ago, when we were looking at the diagram of the co-cone diagrams, I was wondering if the classifiers identified with measurement and preparation...
+[[start:1452710][end:1466602]] ...those correspond to sensory and action degrees of freedom in the earlier picture with the bacteria and the classifier in the middle in that picture, would it correspond to the default chemical concentration?
 
 24:26 _Chris:_
 [[start:1466746][end:1468480]] That yes, exactly.
@@ -220,23 +220,23 @@
 26:06 [[start:1566830][end:1596898]] But what thinking about object identification tells you is that every object that you can identify leads to having to sector both the informative part of your boundary and the memory part of your boundary into two new sectors one to store information about object identification and one to store information about the states of those objects.
 
 26:37 [[start:1597074][end:1600310]] So this requires much more metabolism.
-[[start:1601210][end:1605234]] And again, the solution is coarse grain.
+[[start:1601210][end:1605234]] And again, the solution is coarse grained.
 [[start:1605362][end:1610970]] Typically, what we coarse grain is our memory of the object that we've identified.
 [[start:1612750][end:1616250]] So what does this do to systems?
 
-26:59 [[start:1619070][end:1628240]] Because making measurements costs energy and recording memories costs energy.
-[[start:1629330][end:1635586]] We have to make decisions about what QRS to use at what time.
+26:59 [[start:1619070][end:1628240]] Because making measurements costs energy and recording memories costs energy...
+[[start:1629330][end:1635586]] ...we have to make decisions about what QRFs to use at what time.
 [[start:1635688][end:1645250]] Given our finite energy budgets, we can't look at the world with all of our measurement capabilities at the same time because it's too expensive.
 [[start:1646410][end:1675546]] And now we see the effect of a theorem in quantum information theory which is that if two QRFs can't be deployed simultaneously for whatever reason that corresponds to them not commuting as operators and if they don't commute as operators, they have to be implemented by compartments that are separable.
 
 27:55 [[start:1675658][end:1678990]] So compartments that only communicate classically.
 
 28:00 [[start:1680690][end:1702098]] The consequence of this theorem is that as soon as one has too many sensory and motor capabilities to run all at the same time, given your energy budget you end up being compartmentalized into compartments that only communicate classically.
-[[start:1702194][end:1718250]] So you end up looking like this diagram where there are a bunch of components that do sensory motor, loops or memory, one or the other and they can only communicate classically.
+[[start:1702194][end:1718250]] So you end up looking like this diagram where there are a bunch of components that do sensory motor loops or memory, one or the other and they can only communicate classically.
 [[start:1718670][end:1731280]] And they're controlled by some sort of attention system that selects which ones to activate depending on the amount of free energy that's available.
 [[start:1732390][end:1738500]] And clearly, this clock function becomes part of this control system.
 
-28:59 [[start:1739350][end:1765980]] So the physics alone of any system that's acting as that executes a fairly complicated interaction with its environment gives us this hierarchical compartmentalized structure without having to add any biological or cognitive science type assumptions at all.
+28:59 [[start:1739350][end:1765980]] So, the physics alone of any system that's acting as, that executes a fairly complicated interaction with its environment gives us this hierarchical compartmentalized structure without having to add any biological or cognitive science type assumptions at all.
 
 29:27 [[start:1767710][end:1770300]] So we can go in three directions from this.
 [[start:1771390][end:1775150]] We can go deeper into the biology which we're going to do in October.
@@ -255,22 +255,22 @@
 31:03 [[start:1863296][end:1868890]] So each sees what the other is doing, at least on this sector of the boundary.
 [[start:1869230][end:1881370]] And since the agents have to allocate some of the boundary to free energy supply and can't look at that part, then they can't tell what's happening across their entire boundaries.
 [[start:1881450][end:1887730]] They can only tell what's happening in this sector where they can actually deploy a QRF.
-[[start:1888790][end:1899160]] But let's now look at this interesting situation, situation D, where the QRFs are allied between A and B.
+[[start:1888790][end:1899160]] But let's now look at this interesting situation, situation D, where the QRFs are aligned between A and B.
 
 31:40 [[start:1900890][end:1904600]] As I said, that's the optimal channel for A and B.
-[[start:1905770][end:1935506]] And if we think about this, we can write the variational free energy or the uncertainty or the prediction error for A for the Qrfx as the action that it sees I E B's action, the difference between that and what it expects B to do.
+[[start:1905770][end:1935506]] And if we think about this, we can write the variational free energy or the uncertainty or the prediction error for A for the QRF X as the action that it sees, i.e., B's action, the difference between that and what it expects B to do.
 
 32:15 [[start:1935688][end:1938930]] So what it can predict about B's action.
 [[start:1939350][end:1971920]] And this is just the notion of free energy from the free energy principle, except translated into this situation where we have two QRFs and A can measure what B has done, but it can also use its QRF to predict, because it's predicting the very state that it's going to observe next of the same sector that B is using.
 [[start:1973410][end:1991140]] Now, if we look at this diagram, we can see easily that the way to minimize the variational free energy and therefore maximize predictive capability is for these two QRFs to actually be the same.
 
-33:12 [[start:1992150][end:2008700]] So if A is doing the same thing to the boundary that B is a can predict B's next action perfectly because B is going to do whatever A is doing.
+33:12 [[start:1992150][end:2008700]] So if A is doing the same thing to the boundary that B is, A can predict B's next action perfectly because B is going to do whatever A is doing.
 
 33:31 [[start:2011310][end:2029070]] So what the free energy principle tells us in this case is that A and B, as they minimize their variational free energies, will approach having identical QRFs.
-[[start:2030210][end:2040210]] Well, again, we have a theorem that tells us that if these QRFs are shared, a and B are not separable but entangled.
-[[start:2041110][end:2047190]] And this is also fairly easy to see because it depends on this notion of non fungibility.
-[[start:2048570][end:2055480]] If XA and XB both encode non fungible information, which is quantum systems, they do.
-[[start:2056730][end:2066540]] Their states aren't clonable, so they can't be copies of each other because one can't clone an unknown system.
+[[start:2030210][end:2040210]] Well, again, we have a theorem that tells us that if these QRFs are shared, A and B are not separable but entangled.
+[[start:2041110][end:2047190]] And this is also fairly easy to see because it depends on this notion of nonfungibility.
+[[start:2048570][end:2055480]] If XA and XB both encode nonfungible information, which is quantum systems, they do...
+[[start:2056730][end:2066540]] ..their states aren't clonable, so they can't be copies of each other because one can't clone an unknown system.
 
 34:27 [[start:2067630][end:2072430]] So they can only be identical if they're actually identical systems.
 
@@ -299,7 +299,7 @@
 [[start:2221860][end:2226720]] So it has to be, in a sense, more separable from whatever it's interacting with.
 [[start:2227730][end:2230110]] Now, think about this classically.
 
-37:10 [[start:2230850][end:2255350]] If you have a complex system that's doing a lot of computation then it requires a lot of free energy and it has to dissipate a lot of entropy in the form of heat, typically but something, some form of energy transfer that its environment is going to see as noise, as not informative.
+37:10 [[start:2230850][end:2255350]] If you have a complex system that's doing a lot of computation then it requires a lot of free energy and it has to dissipate a lot of entropy in the form of heat, typically, but something, some form of energy transfer that its environment is going to see as noise, as not informative.
 [[start:2256650][end:2263340]] So a complex system is working very hard to predict its environment's next state.
 [[start:2264110][end:2269286]] But by working very hard it's dumping a lot of entropy into its environment.
 
@@ -325,7 +325,7 @@
 
 40:01 [[start:2401996][end:2409530]] How do we manage to largely share a QRF while escaping, becoming entangled?
 [[start:2410750][end:2424458]] And this is a question that's largely been ignored in physics because physicists have tended to ignore language and just assume that observers can communicate classically.
-[[start:2424554][end:2440180]] So, for example, in talking about a Belly PR experiment, which is a canonical experiment for measuring entanglement, the observers have to be able to share their results, or they can't observe entanglement, right?
+[[start:2424554][end:2440180]] So, for example, in talking about a Bell/PR experiment, which is a canonical experiment for measuring entanglement, the observers have to be able to share their results, or they can't observe entanglement, right?
 [[start:2441110][end:2454898]] The observed result is a bunch of observational statistics that violate Bell's inequality, and those statistics can only be computed given the results that both of the observers obtain.
 [[start:2454994][end:2459290]] So the observers have to share language to encode these results.
 
