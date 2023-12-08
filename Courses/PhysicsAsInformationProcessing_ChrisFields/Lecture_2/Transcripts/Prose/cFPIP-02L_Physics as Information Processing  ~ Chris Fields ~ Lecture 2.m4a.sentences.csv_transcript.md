@@ -17,10 +17,10 @@
 [[start:35440][end:54560]] And, if you will recall, from the first session, we reviewed the History of Physics and some of the History of Mathematics and Computer Science, from the end of the 19th century through to the beginning of the 21st century.
 [[start:55400][end:90808]] And, we discussed the slow development from classical thermodynamics of Quantum Information Theory and specifically we characterized Quantum Information Theory as a new kind of physics that describes systems that are exchanging finite amounts of discretely encoded information across some intervening boundary.
 
-01:30 [[start:90984][end:112928]] And so we use this very conventional graphical notation of two agents or physical systems, Alice and Bob (A and B), that are exchanging energy and information across some boundary.
+01:30 [[start:90984][end:112928]] And so, we use this very conventional graphical notation of two agents or physical systems, Alice and Bob (A and B), that are exchanging energy and information across some boundary.
 [[start:113104][end:120680]] And I always use a blue ellipse like this to indicate the boundary that separates Alice from Bob.
 
-02:01 [[start:121500][end:128884]] And this new approach to physics is entirely topological.
+02:01 [[start:121500][end:128884]] And, this new approach to physics is entirely topological.
 [[start:129012][end:130840]] It's not geometric.
 [[start:131360][end:140620]] So, it doesn't assume a particular background spacetime. So, it doesn't assume that Alice and Bob are spatially separated.
 [[start:141920][end:159844]] And, so, this makes it a very different kind of theory from Classical Information Theory in that the channel that separates Alice from Bob, this boundary, is a boundary in state space.
@@ -208,79 +208,79 @@
 [[start:1202280][end:1214452]] So, this idea of a reference frame is an instance of Landauer's principle, which is often summarized as saying that "information is physical".
 [[start:1214596][end:1228700]] What that means is that information always has to have some encoding and that encoding, that object, can always be thought of as a reference frame.
 
-20:29 [[start:1229840][end:1231950]] So, let's put all this stuff together. HERE
+20:29 [[start:1229840][end:1231950]] So, let's put all this stuff together.
 
 20:34 [[start:1234100][end:1240208]] What we have now is a reference frame that defines the difference between up and down.
-[[start:1240374][end:1251110]] We have an action that we've labeled H, and the action acts on this object, the qubit, which is in some state.
-[[start:1252520][end:1256900]] And what we've drawn here now is an experiment.
-[[start:1257660][end:1268324]] And you can think of the incoming part of the arrow that goes from the reference frame to the qubit as a preparation of the qubit.
-[[start:1268452][end:1280590]] So you can think of it as I'm doing something to the qubit to put it in a particular state like up, because that's the state I want it to be in.
+[[start:1240374][end:1251110]] We have an action that we've labeled h, and the action acts on this object, the qubit, which is in some state.
+[[start:1252520][end:1256900]] And, what we've drawn here now is an experiment.
+[[start:1257660][end:1268324]] And, you can think of the incoming part of the arrow that goes from the reference frame to the qubit as a preparation of the qubit.
+[[start:1268452][end:1280590]] So, you can think of it as I'm doing something to the qubit to put it in a particular state like up because that's the state I want it to be in.
 
 21:21 [[start:1281680][end:1290930]] And I can think of this returning part of the arrow as a measurement of the state that the qubit is actually in.
 
-21:31 [[start:1291460][end:1302930]] So if the qubit is actually in this state with the arrow pointing up, then I'm going to get back the answer up when I act on the qubit to measure its state.
-[[start:1304420][end:1328556]] So now we can recognize this action, H as the Hamiltonian operator in quantum theory, which always takes some time, which we represent by an interval DT, to act on some state, and in particular this binary state, Q.
-[[start:1328738][end:1335360]] So this whole picture depicts the action of a very simple Hamiltonian operator.
+21:31 [[start:1291460][end:1302930]] So, if the qubit is actually in this state with the arrow pointing up, then I'm going to get back the answer up when I act on the qubit to measure its state.
+[[start:1304420][end:1328556]] So, now we can recognize this action H as the Hamiltonian operator in Quantum Theory, which always takes some time, which we represent by an interval dt, to act on some state and in particular this binary state, |q>.
+[[start:1328738][end:1335360]] So, this whole picture depicts the action of a very simple Hamiltonian operator.
 
 22:17 [[start:1337380][end:1346070]] And again, I want to emphasize that we've just defined the qubit as the simplest thing that we can ask a binary question of.
 
 22:28 [[start:1348920][end:1351110]] So how does this H work?
 
-22:32 [[start:1352840][end:1361450]] We can use H to prepare this qubit in one of two states, which we're going to label one and minus one.
-[[start:1362140][end:1375292]] The state one corresponds to the up direction, and the state minus one corresponds to the down direction, and doing this to Q.
-[[start:1375426][end:1382288]] So preparing Q in one of these two states takes energy, and we know how much.
+22:32 [[start:1352840][end:1361450]] We can use H to prepare this qubit in one of two states, which we're going to label "1" and "-1".
+[[start:1362140][end:1375292]] The state 1 corresponds to the up direction, and the state -1 corresponds to the down direction. And, doing this to |q>,
+[[start:1375426][end:1382288]] so, preparing |q> in one of these two states takes energy, and we know how much.
 [[start:1382454][end:1394556]] Boltzman told us back in 1875 that the minimum energy to reduce the entropy of the universe by one bit is log two of KT.
 
-23:14 [[start:1394748][end:1398720]] We saw that earlier when we were thinking about Rhodobson.
-[[start:1399240][end:1409864]] So we can say that acting with H always requires some number times KT, where that number is bigger than the log of two.
-[[start:1409982][end:1431612]] Remember, the log of two is just in there to get units of bits of binary questions, as opposed to units of nats, which are questions that have e answers, where E is the exponential base, the natural exponential base.
+23:14 [[start:1394748][end:1398720]] We saw that earlier when we were thinking about rhodopsin.
+[[start:1399240][end:1409864]] So, we can say that acting with H always requires some number times KT, where that number is bigger than the log of two.
+[[start:1409982][end:1431612]] Remember, the log of two is just in there to get units of bits of binary questions, as opposed to units of nats, which are questions that have e answers, where e is the exponential base, the natural exponential base.
 
 23:51 [[start:1431746][end:1437010]] But we want to use units of bits, so we have to always have this factor of log two.
-[[start:1438500][end:1442480]] So this lets us write H in a particular way.
+[[start:1438500][end:1442480]] So, this lets us write H in a particular way.
 
 24:02 [[start:1442550][end:1452900]] We can take out this energetic term that Boltzman tells us we have to include beta times KT.
-[[start:1454040][end:1462868]] And what's left over is, in a sense, the pure representation of the action, stripping out the energy requirement.
-[[start:1463044][end:1472380]] And we're going to call that M, because M is the standard symbol to use in quantum theory for a measurement operator.
-[[start:1473520][end:1476552]] And M is now dimensionless.
+[[start:1454040][end:1462868]] And, what's left over is, in a sense, the pure representation of the action, stripping out the energy requirement.
+[[start:1463044][end:1472380]] And, we're going to call that M, because M is the standard symbol to use in Quantum Theory for a measurement operator.
+[[start:1473520][end:1476552]] And, M is now dimensionless.
 [[start:1476696][end:1487712]] H has units of energy, KT is an energy, and M has no units at all.
 
-24:47 [[start:1487846][end:1490290]] So it's H without the energy.
-[[start:1491300][end:1505220]] So now we can ask, what is this operator M that we've defined as the simplest possible action on a qubit, but abstracting away the amount of energy that we have to use to act on the qubit.
+24:47 [[start:1487846][end:1490290]] So, it's H without the energy.
+[[start:1491300][end:1505220]] So, now we can ask, what is this operator M that we've defined as the simplest possible action on a qubit, but abstracting away the amount of energy that we have to use to act on the qubit.
 
 25:06 [[start:1506200][end:1512490]] Well, what M does is just encode a bit or decode a bit.
-[[start:1513740][end:1520760]] So we can use this operator M to say, I want Q to have the value one.
-[[start:1520910][end:1530030]] I want it to be up, so I can sort of reach out with my operator M and grab Q and turn it so that its arrow is pointing up.
+[[start:1513740][end:1520760]] So, we can use this operator M to say: I want Q to have the value 1.
+[[start:1520910][end:1530030]] I want it to be up, so I can sort of reach out with my operator M and grab |q> and turn it so that its arrow is pointing up.
 
 25:31 [[start:1531600][end:1534332]] And that's the operation.
 [[start:1534396][end:1536284]] That's called preparation in physics.
 [[start:1536332][end:1539644]] It's what it means to prepare an experimental apparatus.
-[[start:1539692][end:1548070]] For example, you actually grab hold of the apparatus, and you twist some knobs and flick some switches to prepare it to be in some state.
+[[start:1539692][end:1548070]] For example, you actually grab hold of the apparatus, and you twist some knobs, and flick some switches to prepare it to be in some state.
 [[start:1549320][end:1554160]] And you can use M to measure a state that isn't known.
 
-25:54 [[start:1554320][end:1565290]] So I can use M to grab a hold of Q and look at it and determine whether it's in state one or minus one.
-[[start:1566140][end:1574940]] And I can represent these as just a cycle that starts with measuring and then prepares, or that starts with preparing and then measuring.
+25:54 [[start:1554320][end:1565290]] So, I can use M to grab a hold of |q> and look at it and determine whether it's in state 1 or -1.
+[[start:1566140][end:1574940]] And, I can represent these as just a cycle that starts with measuring and then preparing, or that starts with preparing and then measuring.
 
-26:15 [[start:1575840][end:1589052]] And if I represent it that way, what I see is M having a value which is either the value I want to encode or the value that I have measured.
-[[start:1589196][end:1603510]] And Q and M acts on that value and Q to produce a particular state of Q, to put Q in a particular state, or to realize that Q is in that state.
-[[start:1604840][end:1613000]] And so M is actually an identity acting on some value and Q.
+26:15 [[start:1575840][end:1589052]] And, if I represent it that way, what I see is M having a value which is either the value I want to encode or the value that I have measured.
+[[start:1589196][end:1603510]] And q and M act on that value and q to produce a particular state of q, to put q in a particular state, or to realize that q is in that state.
+[[start:1604840][end:1613000]] And so, M is actually an identity acting on some value and q.
 
-26:53 [[start:1613150][end:1624664]] So it maps one in Q to one in Q, and it maps minus one in Q to minus one in Q if you do the whole cycle of preparation and then measurement.
+26:53 [[start:1613150][end:1624664]] So it maps 1 in |q> to 1 in |q>, and it maps -1 in |q> to -1 in |q> if you do the whole cycle of preparation and then measurement.
 [[start:1624792][end:1625852]] And that makes sense.
-[[start:1625906][end:1639024]] It's actually an axiom in some formulations of quantum theory that if I measure the state of some object, what I'm doing is also preparing it in that state.
+[[start:1625906][end:1639024]] It's actually an axiom in some formulations of Quantum Theory that if I measure the state of some object, what I'm doing is also preparing it in that state.
 
-27:19 [[start:1639142][end:1643010]] So if I immediately measure it again, I'll see the same value.
+27:19 [[start:1639142][end:1643010]] So, if I immediately measure it again, I'll see the same value.
 [[start:1644580][end:1646512]] And that makes sense physically.
 
-27:26 [[start:1646576][end:1655540]] If I put my coffee cup on the table and then I look for it, it's likely going to be on the table unless something else intervenes.
+27:26 [[start:1646576][end:1655540]] If I, you know, put my coffee cup on the table and then I look for it, it's likely going to be on the table unless something else intervenes.
 [[start:1656200][end:1657464]] Well, what does this mean?
 [[start:1657502][end:1660280]] It means that we can do a little bit of algebra.
 
-27:42 [[start:1662860][end:1680670]] It means that we can write this original expression of acting on Q with our Hamiltonian in this somewhat more explicit form of using the energy beta KT and our operator M on Q.
-[[start:1681540][end:1687890]] And what I get out of that is the energy beta KT multiplied by Q.
+27:42 [[start:1662860][end:1680670]] It means that we can write this original expression of acting on q with our Hamiltonian in this somewhat more explicit form of using the energy beta KT and our operator M|q>.
+[[start:1681540][end:1687890]] And what I get out of that is the energy beta KT multiplied by |q>.
 
-28:10 [[start:1690020][end:1693360]] So HQ equals EQ.
+28:10 [[start:1690020][end:1693360]] So H|q> equals E|q>.
 [[start:1694200][end:1696180]] That's the Schrodinger equation.
-[[start:1696520][end:1700016]] So that's one of the central equations of quantum theory.
+[[start:1696520][end:1700016]] So that's one of the central equations of Quantum Theory. STOPPED HERE
 
 28:20 [[start:1700208][end:1707450]] What it says is that this operator, H, is the total energy operator on a system.
 [[start:1707980][end:1712344]] Its eigenvalues are the total energies of the system.
