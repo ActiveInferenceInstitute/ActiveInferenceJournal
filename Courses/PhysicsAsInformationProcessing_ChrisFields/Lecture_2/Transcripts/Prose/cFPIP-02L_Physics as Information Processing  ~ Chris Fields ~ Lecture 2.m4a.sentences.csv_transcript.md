@@ -84,7 +84,7 @@
 [[start:526990][end:533596]] We're going to define the word "action" to mean some energy that's been spent in some time.
 [[start:533778][end:544944]] So, asking a question is an action and it qualifies as an action because it requires spending some energy in some finite amount of time.
 
-09:05 [[start:545142][end:549170]] And, so, we can write this as: action equals energy times time.
+09:05 [[start:545142][end:549170]] And, so, we can write this as action equals energy times time.
 
 09:09 [[start:549540][end:553730]] Or I'll sometimes use the abbreviation E times T.
 
@@ -92,123 +92,123 @@
 [[start:571848][end:583330]] So, whenever we talk about physical interaction, we're always talking about two systems doing something to each other that requires both energy and time.
 [[start:584980][end:588220]] So, let's define another concept.
 [[start:588300][end:595750]] A concept of a minimum action needed to ask a question, and, specifically, a question with a binary answer.
-[[start:597000][end:601696]] And, we'll just pick a symbol to stand for that minimum action. STOPPED HERE
+[[start:597000][end:601696]] And, we'll just pick a symbol to stand for that minimum action.
 
-10:01 [[start:601888][end:605590]] And the symbol we'll use because it's conventional is h.
-[[start:606200][end:629260]] And it turns out that this h is planck's constant, the number that planck came up with when he was trying to solve the black body problem back in 1900 that we talked about last time and recall, that was the problem of characterizing, the spectrum of radiation emitted by some physical system.
+10:01 [[start:601888][end:605590]] And the symbol we'll use because it's conventional is "h".
+[[start:606200][end:629260]] And it turns out that this h is Planck's constant, the number that Planck came up with when he was trying to solve the black-body problem back in 1900 that we talked about last time. And, recall that was the problem of characterizing the spectrum of radiation emitted by some physical system
 
-10:29 [[start:629330][end:630430]] That was hot.
+10:29 [[start:629330][end:630430]] that was hot.
 [[start:630800][end:633920]] How much energy comes out as a function of temperature.
-[[start:634660][end:642304]] And if you assume that the spectrum of energy coming out is continuous, you get predictions that are wrong.
+[[start:634660][end:642304]] And, if you assume that the spectrum of energy coming out is continuous, you get predictions that are wrong.
 
-10:42 [[start:642502][end:658824]] And Planck got predictions that were correct by assuming that that spectrum was discrete and that this h represented the minimum amount of energy that could be emitted in a particular time.
-[[start:658942][end:663400]] So it represented the minimum energy times time or action.
-[[start:663980][end:666490]] So let's look at an example of that.
-[[start:667500][end:669976]] And here's an example that may be familiar.
+10:42 [[start:642502][end:658824]] And, Planck got predictions that were correct by assuming that that spectrum was discrete and that this h represented the minimum amount of energy that could be emitted in a particular time.
+[[start:658942][end:663400]] So, it represented the minimum energy times time or action.
+[[start:663980][end:666490]] So, let's look at an example of that.
+[[start:667500][end:669976]] And, here's an example that may be familiar.
 [[start:670088][end:673310]] It's the example of your own visual system.
 
-11:14 [[start:674640][end:695750]] So in the retinal, the cells of your retinas, there are many, many molecules that are rodoxins of one variety or other that respond to different wavelengths of visible light, and they have some efficiency for capturing light.
+11:14 [[start:674640][end:695750]] So, in the retinal, the cells of your retinas, there are many, many molecules that are rhodopsins (of one variety or other) that respond to different wavelengths of visible light. And they have some efficiency for capturing light.
 
-11:36 [[start:696280][end:703430]] And let's just assume that they're optimally efficient, that they're as efficient as they could possibly be.
-[[start:704200][end:727372]] And that means that they require the minimum amount of energy to change shape, which is what they do when they're impacted by Light to capture the energy and hence the information that's available in the Light and the minimum energy to do anything that records one bit of information.
-[[start:727506][end:728796]] So yes or no?
-[[start:728898][end:732112]] Up or down is 0.7.
+11:36 [[start:696280][end:703430]] And, let's just assume that they're optimally efficient, that they're as efficient as they could possibly be.
+[[start:704200][end:727372]] And that means that they require the minimum amount of energy to change shape, which is what they do when they're impacted by light, to capture the energy and hence the information that's available in the light. And, the minimum energy to do anything that records one bit of information,
+[[start:727506][end:728796]] so yes or no,
+[[start:728898][end:732112]] up or down, is 0.7.
 
-12:12 [[start:732166][end:739760]] So log two of Boltzman's constant times the temperature.
+12:12 [[start:732166][end:739760]] So, log two of Boltzman's constant times the temperature.
 [[start:741060][end:744370]] And again, we saw this last time.
-[[start:745080][end:760340]] This is from roughly 1875 and was then built into classical information theory by Shannon and then by Landauer in the mid 20th century.
+[[start:745080][end:760340]] This is from roughly 1875 and was then built into Classical Information Theory by Shannon and then by Landauer in the mid-20th century.
 
-12:40 [[start:760680][end:769720]] So what we're doing is assuming that since rudopsin is optimally efficient, all it requires is this amount of energy to change shape.
-[[start:770300][end:775944]] And it's known experimentally, that rhodopsin takes about 200 femtoseconds to change shape.
+12:40 [[start:760680][end:769720]] So, what we're doing is assuming that, since rhodopsin is optimally efficient, all it requires is this amount of energy to change shape.
+[[start:770300][end:775944]] And, it's known experimentally, that rhodopsin takes about 200 femtoseconds to change shape.
 
-12:55 [[start:775992][end:779436]] So that's 200 times ten to the -15.
-[[start:779538][end:780392]] Seconds.
-[[start:780536][end:784320]] So it's a very very fast reaction, chemical reaction.
-[[start:785140][end:807910]] So we can just calculate what the action is and at 37 degrees centigrade so human body temperature KT is about 4.3 times ten to the -21 Joule and Joule is just a standard unit of energy and so we can multiply everything together.
-[[start:809800][end:811992]] KT times zero seven times.
+12:55 [[start:775992][end:779436]] So, that's 200 times ten to the -15
+[[start:779538][end:780392]] seconds.
+[[start:780536][end:784320]] So, it's a very, very fast reaction, chemical reaction.
+[[start:785140][end:807910]] So, we can just calculate what the action is. And, at 37 degrees centigrade, so human body temperature, KT is about 4.3 times 10 to the -21 Joule, and Joule is just a standard unit of energy. And, so we can multiply everything together:
+[[start:809800][end:811992]] KT times 0.7 times
 
-13:32 [[start:812046][end:825260]] This response time of 200 femtoseconds multiplied together gives you an action of about six times ten to the -34 joule seconds.
+13:32 [[start:812046][end:825260]] this response time of 200 femtoseconds. Multiplied together gives you an action of about 6 times 10 to the -34 joule seconds.
 
-13:45 [[start:825840][end:836604]] And if you're familiar with quantum mechanics, you'll instantly recognize that number because it's very close to the value of Planck's Constant, which is 6.6 times.
-[[start:836642][end:837792]] Ten to the -34.
+13:45 [[start:825840][end:836604]] And, if you're familiar with quantum mechanics, you'll instantly recognize that number because it's very close to the value of Planck's Constant, which is 6.6 times
+[[start:836642][end:837792]] 10 to the -34
 [[start:837846][end:838780]] Joule seconds.
-[[start:838860][end:842720]] So this says that Rhodopsin is very near to optimal.
+[[start:838860][end:842720]] So, this says that rhodopsin is very near to optimal.
 
 14:05 [[start:845480][end:850736]] The best it would be able to do would be Planck's constant.
 [[start:850848][end:854180]] That's the minimum action that can be undertaken.
-[[start:855720][end:859290]] So Rodobson is clearly doing very well.
+[[start:855720][end:859290]] So rhodopsin is clearly doing very well.
 [[start:860220][end:868840]] It can't be as efficient as we're assuming it to be, but it's pretty efficient.
-[[start:869180][end:877868]] So this number Planck's constant is and this idea of a minimum action is not something we just pulled out of the air.
+[[start:869180][end:877868]] So, this number Planck's constant (is) and this idea of a minimum action is not something we just pulled out of the air.
 
 14:38 [[start:878034][end:880216]] It's something that one can observe.
-[[start:880328][end:888290]] When you're looking at what real biological systems in particular do and other physical systems do.
+[[start:880328][end:888290]] When you're looking at what real biological systems in particular do, and other physical systems do.
 
-14:49 [[start:889860][end:897380]] So let's think about the second component of this project of asking a question.
-[[start:897450][end:899830]] And that's the thing to be asked.
-[[start:900840][end:903348]] And we want to ask a very simple question.
+14:49 [[start:889860][end:897380]] So, let's think about the second component of this project of asking a question.
+[[start:897450][end:899830]] And, that's the thing to be asked.
+[[start:900840][end:903348]] And, we want to ask a very simple question.
 
 15:03 [[start:903434][end:906870]] We want to have a theory of asking very simple questions.
-[[start:907340][end:915290]] So let's define the simplest thing that we can ask a binary question to.
-[[start:915660][end:923484]] And let's say this is the thing that we can ask a binary question of using just this minimum action h.
-[[start:923682][end:930030]] So we're going to ask for the minimal thing that it's possible physically to ask a question of.
-[[start:930560][end:934160]] And this thing needs a name, so let's call it a qubit.
+[[start:907340][end:915290]] So, let's define the simplest thing that we can ask a binary question to.
+[[start:915660][end:923484]] And, let's say this is the thing that we can ask a binary question of using just this minimum action h.
+[[start:923682][end:930030]] So, we're going to ask for the minimal thing that it's possible physically to ask a question of.
+[[start:930560][end:934160]] And, this thing needs a name, so let's call it a "qubit".
 
-15:34 [[start:934740][end:938210]] And that word is a contraction of Quantum bit.
-[[start:939300][end:940832]] And we can draw it like this.
+15:34 [[start:934740][end:938210]] And, that word is a contraction of "quantum bit".
+[[start:939300][end:940832]] And, we can draw it like this.
 [[start:940886][end:943104]] A little sphere with an arrow through it.
-[[start:943222][end:945380]] That's called a block sphere.
-[[start:946040][end:947504]] And we use a symbol.
+[[start:943222][end:945380]] That's called a "block sphere".
+[[start:946040][end:947504]] And, we use a symbol
 
-15:47 [[start:947552][end:948244]] Q.
-[[start:948442][end:957556]] And that notation with the bar and the angle bracket is called a bra notation.
+15:47 [[start:947552][end:948244]] |q>.
+[[start:948442][end:957556]] And, that notation with the bar and the angle bracket is called a "bra notation".
 
-15:57 [[start:957668][end:960228]] And it originates with Durac.
-[[start:960404][end:972350]] So it's a traditional way of writing inner products, actually, in quantum theory to indicate the state of Q.
-[[start:973360][end:980556]] So this thing called a qubit only responds to binary questions.
+15:57 [[start:957668][end:960228]] And, it originates with Durac.
+[[start:960404][end:972350]] So, it's a traditional way of writing inner products, actually, in Quantum Theory to indicate the state of q.
+[[start:973360][end:980556]] So, this thing called a qubit only responds to binary questions.
 
-16:20 [[start:980738][end:983776]] So it clearly can have only two states.
+16:20 [[start:980738][end:983776]] So, it clearly can have only two states.
 [[start:983878][end:987410]] The state that answers yes and the state that answers no.
-[[start:987860][end:989440]] And conventionally.
-[[start:989780][end:993344]] We draw the arrow going up if the answer is yes.
-[[start:993382][end:996308]] And the arrow going down if the answer is no.
+[[start:987860][end:989440]] And, conventionally,
+[[start:989780][end:993344]] we draw the arrow going up if the answer is yes
+[[start:993382][end:996308]] and the arrow going down if the answer is no.
 
-16:36 [[start:996474][end:1003350]] And so those are the two states that the qubit can be in when it's answered a question.
-[[start:1004520][end:1011480]] So now let's draw a picture for the act of asking a question of q in the state.
-[[start:1011550][end:1011832]] Q.
-[[start:1011886][end:1013530]] And let's draw it like this.
+16:36 [[start:996474][end:1003350]] And, so those are the two states that the qubit can be in when it's answered a question.
+[[start:1004520][end:1011480]] So, now let's draw a picture for the act of asking a question of |q> in the state
+[[start:1011550][end:1011832]] q,
+[[start:1011886][end:1013530]] and let's draw it like this.
 [[start:1015180][end:1021596]] This curvy arrow is the action of asking the question and getting the answer back.
 
-17:01 [[start:1021778][end:1025740]] And we're asking it of this minimum system, the qubit.
-[[start:1026240][end:1038080]] And let's call this entire act of h and write h acting on Q by this expression HQ.
-[[start:1038660][end:1048660]] So again, we're developing the notation of quantum theory, which all of you who know the theory already will find familiar.
+17:01 [[start:1021778][end:1025740]] And, we're asking it of this minimum system, the qubit.
+[[start:1026240][end:1038080]] And, let's call this entire act of H and write H acting on |q> by this expression H|q>.
+[[start:1038660][end:1048660]] So again, we're developing the notation of Quantum Theory, which all of you who know the theory already will find familiar.
 
-17:30 [[start:1050680][end:1058360]] So the third thing that we have to build into this picture and into the theory is the shared language.
-[[start:1059740][end:1068810]] So we have to know what we mean by up or down if we're going to ask the question up or down?
-[[start:1070000][end:1080110]] And we have to have some representation of what it means for the qubit to distinguish up or down.
-[[start:1080560][end:1094560]] So let's say that to us, up and down mean this little diagram with an arrow that's labeled up on one end and down on the other end.
+17:30 [[start:1050680][end:1058360]] So, the third thing that we have to build into this picture and into the theory is the shared language.
+[[start:1059740][end:1068810]] So, we have to know what we mean by "up" or "down" if we're going to ask the question "up or down?".
+[[start:1070000][end:1080110]] And, we have to have some representation of what it means for the qubit to distinguish up or down.
+[[start:1080560][end:1094560]] So, let's say that to us, "up" and "down" mean this little diagram with an arrow that's labeled "up" on one end and "down" on the other end.
 
-18:14 [[start:1094710][end:1100048]] So we're defining up and down in a very simple way as just opposites.
+18:14 [[start:1094710][end:1100048]] So, we're defining "up" and "down" in a very simple way as just opposites.
 
 18:20 [[start:1100144][end:1103888]] We don't know anything else about them except that they're opposites.
-[[start:1104064][end:1107412]] So this is a stripped down one bit question.
-[[start:1107546][end:1110296]] We could have called them one and minus one.
+[[start:1104064][end:1107412]] So, this is a stripped-down one-bit question.
+[[start:1107546][end:1110296]] We could have called them 1 and -1.
 [[start:1110478][end:1112312]] We could have called them A and B.
 [[start:1112366][end:1113930]] We could have called them anything.
 
 18:34 [[start:1114860][end:1120460]] We're just indicating that up and down are two opposing concepts.
-[[start:1121200][end:1133760]] And so this object that we've used to make this definition of the relationship between our two words up and down is called a reference frame.
+[[start:1121200][end:1133760]] And so, this object that we've used to make this definition of the relationship between our two words (up and down) is called a reference frame.
 [[start:1135220][end:1143120]] It's a physical object that encodes a concept or a meaning.
-[[start:1144120][end:1165160]] And if you think about using language, using English, for example, you can understand me speaking in English because your brain has the right sorts of neural circuits to allow you to understand English and produce English using your hand in your mouth.
+[[start:1144120][end:1165160]] And, if you think about using language, using English, for example, you can understand me speaking in English because your brain has the right sorts of neural circuits to allow you to understand English and produce English using your hand and your mouth.
 
-19:25 [[start:1165820][end:1174616]] And those neural circuits are reference frames in your brain for understanding and producing English.
+19:25 [[start:1165820][end:1174616]] And, those neural circuits are reference frames in your brain for understanding and producing English.
 
-19:34 [[start:1174728][end:1178270]] And they encode the relationships between different words.
-[[start:1179600][end:1183040]] So you all know about Chat GPT.
-[[start:1183540][end:1201940]] You can think of all of the weights on all of the ten to the 19th or however many parameters there are in GPT four as a reference frame that describes the relationships between words and phrases in English and many other languages.
-[[start:1202280][end:1214452]] So this idea of a reference frame is an instance of Landauer's principle, which is often summarized as saying that information is physical.
-[[start:1214596][end:1228700]] What that means is that information always has to have some encoding and that encoding, that object can always be thought of as a reference frame.
+19:34 [[start:1174728][end:1178270]] And, they encode the relationships between different words.
+[[start:1179600][end:1183040]] So, you all know about Chat GPT.
+[[start:1183540][end:1201940]] You can think of all of the weights on all of the 10th to the 19th or however many parameters there are in GPT-4 as a reference frame that describes the relationships between words and phrases in English and many other languages.
+[[start:1202280][end:1214452]] So, this idea of a reference frame is an instance of Landauer's principle, which is often summarized as saying that "information is physical".
+[[start:1214596][end:1228700]] What that means is that information always has to have some encoding and that encoding, that object, can always be thought of as a reference frame.
 
-20:29 [[start:1229840][end:1231950]] So let's put all this stuff together.
+20:29 [[start:1229840][end:1231950]] So, let's put all this stuff together. HERE
 
 20:34 [[start:1234100][end:1240208]] What we have now is a reference frame that defines the difference between up and down.
 [[start:1240374][end:1251110]] We have an action that we've labeled H, and the action acts on this object, the qubit, which is in some state.
