@@ -4,106 +4,108 @@
 [[start:7618][end:9388]] Hello and welcome everyone.
 [[start:9554][end:20780]] It is July 7, 2023, and we are in the first introductory session of the course, Active Inference for the Social Sciences.
 [[start:21120][end:28790]] This is going to be a really exciting course and journey that we're all going to join and co create together.
-[[start:29320][end:34820]] With no further ado, I will pass it to please mute turn off the live stream Avel.
+[[start:29320][end:34820]] With no further ado, 
 
-00:36 [[start:36600][end:37590]] Thank you.
-[[start:38120][end:43412]] Complex systems and feedbacks with cyberphysical systems will be a theme.
-[[start:43556][end:45210]] We told you it would be.
+00:36 [[start:36600][end:37590]] 
+[[start:38120][end:43412]] 
+[[start:43556][end:45210]] 
 [[start:45740][end:49364]] I will pass now to Avel for the introductory session.
-[[start:49412][end:57864]] If you're watching live, please feel free to write any comments or questions in the chat and I'll relay them at the end onto the lecture.
+[[start:49412][end:57864]] If you're watching live, please feel free to write any comments or questions in the chat and I'll relay them at the end of the lecture.
 
 00:57 [[start:57912][end:58940]] Thanks, Avel.
 
-01:11 [[start:71160][end:72390]] Go for it.
+01:11 [[start:71160][end:72390]] 
 
 01:25 _Avel:_
-[[start:85270][end:87026]] So, hi, do you hear me?
-[[start:87048][end:89074]] Well, there was a sound issue.
-[[start:89192][end:90260]] Okay, cool.
-[[start:91110][end:93862]] So I'm avoid I organized, I guess, the course.
+[[start:85270][end:87026]] S
+[[start:87048][end:89074]] 
+[[start:89192][end:90260]] 
+
+[[start:91110][end:93862]] So I'm Avel. I organized the course.
 [[start:93916][end:98630]] I had the idea and worked on the curriculum.
 
-01:39 [[start:99930][end:101202]] Do you see the slides?
+01:39 [[start:99930][end:101202]] 
 
 01:41 _Ben:_
-[[start:101266][end:101880]] Well.
+[[start:101266][end:101880]] 
 
 01:44 _Daniel:_
-[[start:104330][end:104934]] Looks good.
-[[start:104972][end:108300]] And just make sure to close the YouTube video or mute it.
+[[start:104330][end:104934]] 
+[[start:104972][end:108300]] 
 
 01:48 _Avel:_
-[[start:108910][end:110666]] So, hi, do you hear me?
-[[start:110688][end:112374]] Well, that was Sunday.
-[[start:112422][end:112778]] Sure.
+[[start:108910][end:110666]] 
+[[start:110688][end:112374]] 
+[[start:112422][end:112778]] 
 
-01:52 [[start:112864][end:113900]] Okay, cool.
-[[start:114510][end:114874]] Okay.
-[[start:114912][end:116560]] I did not know I had to do that.
-[[start:117650][end:123630]] So this is the introduction session of the course.
-[[start:123700][end:125034]] Very unsurprisingly.
+01:52 [[start:112864][end:113900]] 
+[[start:114510][end:114874]]
+[[start:114912][end:116560]] 
+[[start:117650][end:123630]] 
+[[start:123700][end:125034]] 
 
-02:05 [[start:125162][end:127370]] My name is Kerriu.
-[[start:127530][end:138180]] I am a funding member of Kairos Research and I am a non funding member of Active Inference Lab, which co organize the course.
-[[start:139910][end:143974]] And first I will basically present the teaching team.
-[[start:144172][end:163340]] So we have Daniel, which is with us, which is a PhD in Ecology and Evolution, studying ants behavior in an eco evo kind of way, who is a president and co founder of the Enactive Transitutes and who is interested in, among the things art, philosophy and cognitive security.
-[[start:163870][end:183742]] Then we have Ben, which is also here with us, which is a second year PhD candidate in Philosophy at the University of Sussex, which, like me, interested 4E cognition, which is Embodied, Enactive, Embedded and Extended cognition.
+02:05 [[start:125162][end:127370]] My name is Avel Guenin-Carlut.
+[[start:127530][end:138180]] I am a founding member of Kairos Research and a non-founding member of the Active Inference Lab, and I co-organized the course.
+[[start:139910][end:143974]] And first I will present the teaching team.
+[[start:144172][end:163340]] So we have Daniel, who is with us, and is a PhD in Ecology and Evolution, studying ants' behavior in an eco- evo- way, who is a president and co founder of the Active Inference Institute and who is interested in, among other things, art, philosophy and cognitive security.
+[[start:163870][end:183742]] Then we have Ben, who is also here with us, who is a second year PhD candidate in Philosophy at the University of Sussex, who, like me, is interested 4-E cognition, which is Embodied, Enactive, Embedded and Extended cognition.
 
 03:03 [[start:183806][end:186050]] We don't need to get into that now.
 [[start:186120][end:187410]] He will explain to you.
-[[start:187560][end:193640]] And in Enactive Processing, which is basically working on the cognitive science of technology.
-[[start:194010][end:216870]] And then we have people who are not here today, which are Mahault Albarracin, PhD candidate in the Cognitive Computing at University Montreal, which is head of Product Innovation and Research at versus private sector research lab in AI and the mathematics of AI, which specializes in wildlife inference.
-[[start:216950][end:230690]] The theory we're working on right now, script theory, which she will Extended maybe I will talk a bit of it today, but she will be the one who explains what script theory is to you and modern artificial intelligence.
+[[start:187560][end:193640]] He is also interested in Enactive Processing, and is working on the cognitive science of technology.
+[[start:194010][end:216870]] And then we have people who are not here today, which are Mahault Albarracin, PhD candidate in Cognitive Computing at University of Quebec, Montreal, who is head of Product Innovation and Research at Verses, a private-sector research lab in AI and the mathematics of AI. She specializes in Active Inference, 
+[[start:216950][end:230690]] the theory we're working on right now, script theory, which she will explain, and artificial intelligence.
 
-03:51 [[start:231030][end:250390]] And we have Lorena Sganzerla, also a PhD candidate, also in philosophy, but in Wollongong, I believe this is how you say it in Australia, which is centered in philosophy of mind and in the status of information processing, as the term is used in cognitive science.
+03:51 [[start:231030][end:250390]] And we have Lorena Sganzerla, also a PhD candidate, also in philosophy, but in Wollongong, Australia. She is centered on philosophy of mind and on the status of information processing, as the term is used in cognitive science.
 
 04:11 [[start:251690][end:252950]] And then there is me.
-[[start:253020][end:257814]] So I made a career timeline because when I talk about what I did, people get confused.
+[[start:253020][end:257814]] I made a career timeline because when I talk about what I did, people get confused.
 [[start:257862][end:261494]] I did physics, math, I did engineering, I did cognitive science.
 [[start:261542][end:263574]] I did research in ecology and evolution.
 
-04:23 [[start:263702][end:280722]] I did a master's in complex system physics, and I did, like, one year, apparently, given my timeline or two, no, more than more, two of independent research as part of kerose research and as part of the French Society of Cliodynamics before I started the PhD I'm doing now.
-[[start:280776][end:285854]] Which is something about the enaction between mind and material culture.
+04:23 [[start:263702][end:280722]] I did a master's in complex system physics, and I did two years of independent research as part of kerose research and as part of the French Society of Cliodynamics before I started the PhD I'm doing now.
+[[start:280776][end:285854]] Which is something about the relation between mind and material culture.
 [[start:285902][end:288340]] We will get into that at some point.
-[[start:289350][end:295714]] And the question motivation I have are essentially describing the relation between phenomenology.
-[[start:295762][end:306310]] So the way we experience the world and physical reality, which I have the fringe view that somehow phenomenology is constructive of physical reality, which could have weak and strong interpretation.
+[[start:289350][end:295714]] And the question motivating my work is essentially to describe the relationship between phenomenology,
+[[start:295762][end:306310]] (the way we experience the world) and physical reality. I have the fringe view that somehow phenomenology is constructive of physical reality, which could have a weak or a strong interpretation.
 
 05:06 [[start:306390][end:307980]] I subscribe to both.
-[[start:308590][end:322654]] I'm trying maybe more importantly here to explain or at least describe how sociocultural life form, let us say the regularities that in the life, social life, human social life are constructed, which is hard.
+[[start:308590][end:322654]] I'm trying maybe more importantly here to explain or at least describe how sociocultural life forms, let us say the regularities that underlie life, social life, human social life are constructed, which is hard. 
 
-05:22 [[start:322772][end:333620]] And I'm trying to build a research that is effective at doing knowledge, not word piles through our work in Kairos research.
-[[start:334070][end:336446]] So these are specific reference.
-[[start:336558][end:345000]] You will get the slides at some point I guess I will publish them on the website and then we will be able to check it out if this is of interest to you.
+05:22 [[start:322772][end:333620]] And I'm trying to build a research program that is effective at dealing with knowledge, not word piles, through our work in Kairos Research.
+[[start:334070][end:336446]] So these are thespecific reference.
+[[start:336558][end:345000]] You will get the slides at some point and I will publish them on the website and then you will be able to check them out if this is of interest to you.
 
 05:46 [[start:346010][end:350120]] So let us get on the actual relevant content.
-[[start:350490][end:369902]] So what we are going for here is basically explain the very basic demarch of the course, explain how it's of relevance, how the framework we propose is of relevance to social science and present a few case study to make the case.
-[[start:369956][end:372154]] And then we will talk about course layout.
-[[start:372202][end:374160]] But this is pretty quick.
-[[start:374690][end:381166]] So first I'd like to talk about the explanation of cultural dynamics.
+[[start:350490][end:369902]] What I am looking to do here is to explain the very basic structure of the course, how it's of relevance, how the framework we propose is of relevance to social science and to present a few case studies to make the case.
+[[start:369956][end:372154]] And then we will talk about thecourse layout.
+[[start:372202][end:374160]] But this will be pretty quick.
+[[start:374690][end:381166]] So first I'd like to explain a bit about cultural dynamics.
 
 06:21 [[start:381358][end:385380]] What does explaining cultural dynamics even mean?
 
-06:26 [[start:386310][end:387890]] Depends who talks.
-[[start:388550][end:396390]] There are many types or views on what is scientific explanation.
+06:26 [[start:386310][end:387890]] Itepends who is talks
+ing.
+[[start:388550][end:396390]] There are many views on what constitutes a scientific explanation.
 [[start:396890][end:400802]] I say we can cluster them in three broad categories.
-[[start:400946][end:404070]] One is numerological, so it's about laws.
+[[start:400946][end:404070]] One is numerological, so it's about laws,
 
-06:44 [[start:404230][end:413558]] And what it does is to take regularities, just say here is this regularity and consider that these statements.
+06:44 [[start:404230][end:413558]] and what it does is to take regularities: just say here is this regularity and then consider these statements.
 [[start:413654][end:419418]] So the law has an explanatory capacity toward the regularity.
-[[start:419594][end:436510]] So for example, for those of you who are familiar with the work of, and I forget names, foundation, the foundation trilogy, I believe it's trilogy.
-[[start:436670][end:439538]] This is pretty close to what they call psycho history.
-[[start:439624][end:454214]] So basically trying to find laws of behavior and using them to predict history in a regular lawful way, then we have mechanical explanation which are more typical of the life science.
+[[start:419594][end:436510]] So for example, for those of you who are familiar with the Foundation trilogy,
+[[start:436670][end:439538]] this is pretty close to what they call psychohistory.
+[[start:439624][end:454214]] Basically, they are trying to find laws of behavior and using them to predict history in a regular lawful way. Then we have mechanical explanations which are more typical of the life sciences.
 
 07:34 [[start:454342][end:467280]] And what we do in mechanical explanation is to look at the structure of a system and model the structure and try to use this model to predict specific regularities that are of interest.
-[[start:467890][end:486530]] And you have approach to social sense that is I'd say quite close to that which is Cliodynamics, which waits a lot on the Nomological side but still is centered on dynamics and mechanisms and explanation by calling onto structure in specific societies.
+[[start:467890][end:486530]] And you have an approach to social science which I'd say is quite close to that, which is Cliodynamics, which is weighted a lot on the Nomological side but still is centered on dynamics and mechanisms and explanation by identifying structure in specific societies.
 [[start:487270][end:496006]] And then you have a functional explanation which asks what constraints exist so that the system does what it is that the system does.
 [[start:496108][end:503702]] Here again, you will also use a lot of contextual modeling, very often evolutionary game theory.
-[[start:503766][end:524874]] So simulation where we suppose that agent can have specific traits and those that reproduce more or that have more fitness give their traits around and you have the discipline field of study of culture evolution that does that very concretely by just asking how culture evolves.
+[[start:503766][end:524874]] So simulation where we suppose that agents can have specific traits and those that reproduce more or that have more fitness give their traits around and you have the discipline of culture evolution that does that very concretely by just asking how culture evolves,
 
-08:44 [[start:524922][end:532980]] So what cultural threats can get more fitness and be transmitted a very evolutionary centered approach to social change.
-[[start:534070][end:545858]] So, to sum all of this up, basically we explain things by calling on to regularities always and we can talk about regularities in the phenomenology.
-[[start:545874][end:569440]] So what the system does in of itself in the structure that is in the language system activity or in the function that is the constraint that exists over what the stem does and you have a specific brand of explanatory strategies that try to Legify behavior to make Nomological lawful explanation of human behavior and of sociocultural change.
-[[start:570050][end:586980]] And it's not immediately evident how they do that, how they think it's a coherent idea to begin with because well, humans learn culture change so what laws could they be in a field which is changing with time always?
+08:44 [[start:524922][end:532980]] and what cultural traits can get more fitness and be transmitted -- a very evolution-centered approach to social change.
+[[start:534070][end:545858]] So, to sum all of this up, we explain things by identifying regularities, always, and then we can talk about regularities in the phenomenology:
+[[start:545874][end:569440]] what the system does in and of itself in the structure that is in the language system activity or in the function that is the constraint that exists over what the system does. Then you have a specific brand of explanatory strategies that try to codify behavior and to make Nomological lawful explanations of human behavior and of sociocultural change.
+[[start:570050][end:586980]] And it's not immediately evident how they do that, how this can be considered a coherent idea to begin with: humans learn culture change, so what laws could there be in a field which is always changing with time?
 
 09:47 [[start:587830][end:598150]] So in my opinion it is more a question of rhetorics than of epistemology because I do not think the answer is coherent.
 
