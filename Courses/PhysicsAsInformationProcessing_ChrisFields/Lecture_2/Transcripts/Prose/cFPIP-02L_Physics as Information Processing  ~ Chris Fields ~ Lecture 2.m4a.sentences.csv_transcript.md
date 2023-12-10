@@ -280,57 +280,57 @@
 
 28:10 [[start:1690020][end:1693360]] So H|q> equals E|q>.
 [[start:1694200][end:1696180]] That's the Schrodinger equation.
-[[start:1696520][end:1700016]] So that's one of the central equations of Quantum Theory. STOPPED HERE
+[[start:1696520][end:1700016]] So that's one of the central equations of Quantum Theory.
 
 28:20 [[start:1700208][end:1707450]] What it says is that this operator, H, is the total energy operator on a system.
 [[start:1707980][end:1712344]] Its eigenvalues are the total energies of the system.
 
-28:32 [[start:1712542][end:1723576]] And we can now see where that energy is coming from in this very, very simple, stripped down kind of representation of an action.
-[[start:1723768][end:1732930]] The energy is the thermodynamic energy that has to be spent to determine one binary outcome up or down.
+28:32 [[start:1712542][end:1723576]] And, we can now see where that energy is coming from in this very, very simple, stripped-down kind of representation of an action.
+[[start:1723768][end:1732930]] The energy is the thermodynamic energy that has to be spent to determine one binary outcome (up or down).
 [[start:1734900][end:1746500]] Now, if you're familiar with quantum mechanics, you will have seen exponentiated operators like the next line here of algebra.
-[[start:1748120][end:1762420]] This operator P, which is time dependent and which is the exponential of H multiplied by it over H bar, is called the propagator.
+[[start:1748120][end:1762420]] This operator P, which is time-dependent and which is the exponential of H multiplied by it over H bar, is called the propagator.
 
-29:22 [[start:1762500][end:1770190]] It's the unitary operator in quantum theory, the operator that conserves probability or conserves information.
+29:22 [[start:1762500][end:1770190]] It's the unitary operator in Quantum Theory, the operator that conserves probability or conserves information.
 
 29:32 [[start:1772080][end:1785730]] And so, using the representation of H as beta KT, we can see that this operator P is just E to the minus beta M.
-[[start:1787460][end:1803540]] If we recall the WIC rotation from the first session, this strange equivalence of it over H bar with one over KT that wasn't discovered until 50 years after the invention of quantum theory.
+[[start:1787460][end:1803540]] If we recall the Wick rotation from the first session, this strange equivalence of it over H bar with one over KT (that) wasn't discovered until 50 years after the invention of Quantum Theory.
 [[start:1805000][end:1809960]] And it's still a very debated thing.
 [[start:1810030][end:1813850]] I mean, people worry about what this equation really means.
-[[start:1814540][end:1836690]] But one thing that it means in this setting where H has this particularly simple form is that the propagator is now just the exponential of a number multiplied by this very simple strip down operator that encodes a bit or decodes a bit.
+[[start:1814540][end:1836690]] But one thing that it means in this setting where H has this particularly simple form is that the propagator is now just the exponential of a number multiplied by this very simple strip-down operator that encodes a bit or decodes a bit.
 
 30:38 [[start:1838020][end:1842480]] But we know something about the exponential propagator just by looking at its form.
 [[start:1842630][end:1848740]] If you're again familiar with these sorts of exponential operators, you know that they're wave equations.
 [[start:1849720][end:1854608]] And we can make sense of that using the diagram up above.
 [[start:1854784][end:1859160]] What M is doing is just performing a cycle.
-[[start:1860220][end:1867850]] It's just mapping one and Q back to itself, or minus one and Q back to itself.
+[[start:1860220][end:1867850]] It's just mapping 1 and |q> back to itself, or -1 and |q> back to itself.
 
 31:08 [[start:1868620][end:1884290]] So we can think of M as just taking this object and flipping it back around until it gets itself again.
-[[start:1885860][end:1894608]] And that kind of cycle can always be turned into a wave equation and e to the I over H bar times.
-[[start:1894694][end:1903524]] HT is a canonical form of a wave equation, where the horizontal axis here on the wave is time.
+[[start:1885860][end:1894608]] And that kind of cycle can always be turned into a wave equation and e to the i over h bar times
+[[start:1894694][end:1903524]] Ht is a canonical form of a wave equation, where the horizontal axis here on the wave is time.
 
 31:43 [[start:1903722][end:1917370]] Or if you look at the little cycle that I've drawn as a circle with an arrow, it's the time of the thing spinning around like this, which is exactly the same thing as a wave traveling through time.
-[[start:1918540][end:1921070]] So that tells us something very important.
+[[start:1918540][end:1921070]] So, that tells us something very important.
 
 32:02 [[start:1922240][end:1929340]] It tells us that this equivalent expression, e to the minus beta M, is also a wave equation.
 [[start:1929920][end:1937170]] So it tells us that this operator M has built into it some sense of time.
 
 32:19 [[start:1939540][end:1943760]] It's the sense of time of this prepare measure cycle.
-[[start:1944820][end:1948112]] And that's implicit in m right.
-[[start:1948166][end:1958170]] We've used the WIC rotation to get rid of what I'll end up calling the external time t, the objective time T.
-[[start:1959340][end:1971420]] And we'll see in July where this internal time comes from in terms of the WIC rotation.
+[[start:1944820][end:1948112]] And that's implicit in M, right?
+[[start:1948166][end:1958170]] We've used the Wick rotation to get rid of what I'll end up calling the external time T, the objective time T.
+[[start:1959340][end:1971420]] And we'll see in July where this internal time comes from, in terms of the Wick rotation.
 
-32:52 [[start:1972160][end:1977948]] But we can say now that it's an agent specific time.
+32:52 [[start:1972160][end:1977948]] But we can say now that it's an agent-specific time.
 
-32:58 [[start:1978114][end:1992770]] It's an internal time reference frame that's built into our idea of this system, Alice, that can act on the world, and it represents the time that's required to ask this question.
+32:58 [[start:1978114][end:1992770]] It's an internal time reference frame that's built into our idea of this system, Alice, that can act on the world. And it represents the time that's required to ask this question. Ok.
 
 33:14 _Ander:_
-[[start:1994280][end:1997716]] Okay, can I ask a question at this point?
+[[start:1994280][end:1997716]] Can I ask a question at this point?
 
 33:17 _Chris:_
 [[start:1997898][end:1998630]] Yes.
 
 33:19 _Ander:_
-[[start:1999240][end:2004260]] So on this slide with the operator M, I'm curious.
+[[start:1999240][end:2004260]] So, on this slide with the operator M, I'm curious.
 [[start:2004600][end:2011240]] How can the agent deploy in the operator M tell the difference or break the symmetry between preparation and measurement?
 
 33:32 [[start:2012060][end:2015000]] Or are they just completely dual pictures?
@@ -345,7 +345,7 @@
 [[start:2033164][end:2033890]] Right.
 
 33:54 _Chris:_
-[[start:2034340][end:2046310]] That's, in fact, what this axiom of unitarity measuring a state leaves the particle in the measured state means.
+[[start:2034340][end:2046310]] That's, in fact, what this axiom of (unitarity) measuring a state leaves the particle in the measured state means.
 
 34:06 _Ander:_
 [[start:2046760][end:2047510]] Right.
@@ -358,211 +358,209 @@
 
 34:17 _Chris:_
 [[start:2057420][end:2064360]] Okay, so let's now use this theory that we've developed to describe the interaction between Alice and Bob.
-[[start:2064940][end:2079150]] And let's think of a situation in which Alice prepares a qubit that Bob then measures, and then Bob prepares the very same qubit, and then Alice measures it.
-[[start:2079680][end:2090720]] So Alice acts with her Hamiltonian operator, which we'll label Ha, and Bob acts with his Hamiltonian operator that we label HB.
-[[start:2092020][end:2097030]] And let's say that Alice prepares the qubit as in state up.
-[[start:2097800][end:2104870]] And Bob can then measure the qubit in state up and say, oh, the qubit is now up.
+[[start:2064940][end:2079150]] And, let's think of a situation in which Alice prepares a qubit that Bob then measures, and then Bob prepares the very same qubit, and then Alice measures it.
+[[start:2079680][end:2090720]] So, Alice acts with her Hamiltonian operator, which we'll label "Ha", and Bob acts with his Hamiltonian operator that we label "Hb".
+[[start:2092020][end:2097030]] And, let's say that Alice prepares the qubit as in state up.
+[[start:2097800][end:2104870]] And, Bob can then measure the qubit in state up and say: "Oh, the qubit is now up".
 
-35:05 [[start:2105720][end:2117368]] And if Bob then prepares the qubit in state down, alice can measure the qubit in state down and say, oh, the qubit switched from the up that I prepared to down.
+35:05 [[start:2105720][end:2117368]] And, if Bob then prepares the qubit in state down, Alice can measure the qubit in state down and say: "Oh, the qubit switched from the up that I prepared to down".
 
-35:17 [[start:2117454][end:2119950]] So Bob must have prepared it as down.
-[[start:2120880][end:2122590]] So what's happened here?
+35:17 [[start:2117454][end:2119950]] So, Bob must have prepared it as down.
+[[start:2120880][end:2122590]] So, what's happened here?
 [[start:2123920][end:2128700]] Alice and Bob have actually shared a bit flip.
-[[start:2130480][end:2137650]] Alice said up and Bob said, down, and Alice heard him say down.
+[[start:2130480][end:2137650]] Alice said "up" and Bob said "down", and Alice heard him say "down".
 
-35:38 [[start:2138100][end:2143890]] So they've shared this idea of change by interacting with each other.
-[[start:2144680][end:2149510]] Now, this works as long as they mean the same thing by up and down.
-[[start:2150040][end:2160730]] So we've implicitly assumed, in talking about them communicating, that they both have this reference frame that distinguishes up from down.
-[[start:2162220][end:2170876]] And this is actually a completely general model of what I'll call a noiseless one qubit channel.
+35:38 [[start:2138100][end:2143890]] So, they've shared this idea of change by interacting with each other.
+[[start:2144680][end:2149510]] Now, this works as long as they mean the same thing by "up" and "down".
+[[start:2150040][end:2160730]] So, we've implicitly assumed, in talking about them communicating, that they both have this reference frame that distinguishes "up" from "down".
+[[start:2162220][end:2170876]] And, this is actually a completely general model of what I'll call a noiseless 1-qubit channel.
 [[start:2171058][end:2172636]] Now, what does that mean?
 
 36:12 [[start:2172818][end:2177692]] It's noiseless because there's nothing else in the picture, right?
 
 36:17 [[start:2177746][end:2183112]] There's nothing in the picture that can jiggle the qubit when Alice and Bob aren't looking.
 [[start:2183186][end:2190604]] Alice and Bob are the only systems we're talking about, and they share this qubit and there's nothing else in the picture.
-[[start:2190652][end:2202944]] So there's no kind of third party or environment or heat bath or anything like that that's going to mess with the qubit and disrupt their interaction.
-[[start:2203072][end:2215210]] So that's a noiseless channel and it's a one qubit channel because they just have one qubit that they're interacting with and they're alternately preparing and measuring its state.
+[[start:2190652][end:2202944]] So, there's no kind of third party or environment or heat bath or anything like that that's going to mess with the qubit and disrupt their interaction.
+[[start:2203072][end:2215210]] So, that's a noiseless channel and it's a 1-qubit channel because they just have one qubit that they're interacting with and they're alternately preparing and measuring its state.
 
-36:56 [[start:2216620][end:2223100]] Now, clearly, if they can interact using one qubit, they can interact using any finite number of qubits.
-[[start:2223760][end:2236240]] So here's a picture of an in qubit channel that Alice and Bob, which here I've labeled A and B because I took this figure from a paper, are sharing.
-[[start:2236900][end:2245330]] And Alice and Bob both have N operators, one for each of the N qubits that they share.
+36:56 [[start:2216620][end:2223100]] Now, clearly, if they can interact using 1-qubit, they can interact using any finite number of qubits.
+[[start:2223760][end:2236240]] So, here's a picture of an N-qubit channel that Alice and Bob, which here I've labeled A and B, (because I took this figure from a paper) are sharing.
+[[start:2236900][end:2245330]] And, Alice and Bob both have N operators, one for each of the N-qubits that they share.
 
-37:25 [[start:2245700][end:2250192]] And they just do this prepared measurement cycle on all N qubits.
-[[start:2250256][end:2264180]] So you can think of Alice preparing the N qubits, bob measuring the N qubits, and then Bob preparing and Alice measuring, and that allows them to exchange N bit messages.
+37:25 [[start:2245700][end:2250192]] And, they just do this prepared measurement cycle on all N-qubits.
+[[start:2250256][end:2264180]] So, you can think of Alice preparing the N-qubits, Bob measuring the N-qubits, and then Bob preparing and Alice measuring, and that allows them to exchange N-bit messages.
 
-37:44 [[start:2264340][end:2267048]] And we can make N as large as we want.
-[[start:2267214][end:2272060]] And so they can exchange messages of arbitrary complexity.
-[[start:2272640][end:2281580]] And if they share the meaning of up and down, then they can exchange these messages with no noise, so they can communicate.
-[[start:2282260][end:2294050]] And we now have our theory of two communicating agents that are that are sharing arbitrary finite information.
-[[start:2295240][end:2302550]] Now, I've labeled Q one through QN in this picture, a holographic screen.
+37:44 [[start:2264340][end:2267048]] And, we can make N as large as we want.
+[[start:2267214][end:2272060]] And so, they can exchange messages of arbitrary complexity.
+[[start:2272640][end:2281580]] And, if they share the meaning of "up" and "down", then they can exchange these messages with no noise, so they can communicate.
+[[start:2282260][end:2294050]] And, we now have our theory of two communicating agents that are sharing arbitrary finite information.
+[[start:2295240][end:2302550]] Now, I've labeled q1 through qN in this picture, a Holographic Screen.
 
-38:23 [[start:2303080][end:2306150]] And in fact, that's exactly what it is.
+38:23 [[start:2303080][end:2306150]] And, in fact, that's exactly what it is.
 
-38:27 [[start:2307900][end:2313000]] Recall from session one this slide illustrating the holographic principle.
+38:27 [[start:2307900][end:2313000]] Recall from Session 1 this slide illustrating the Holographic principle.
 
-38:36 [[start:2316540][end:2321470]] Shannon made this point that a bit of information is an answer to a yes no question.
-[[start:2322320][end:2327916]] And so we can write down a number of possible states.
+38:36 [[start:2316540][end:2321470]] Shannon made this point that a bit of information is an answer to a yes-no question.
+[[start:2322320][end:2327916]] And so, we can write down a number of possible states.
 [[start:2328018][end:2330220]] We can write down an entropy.
-[[start:2331940][end:2338844]] And the limiting case of that entropy is the entropy of a black hole.
+[[start:2331940][end:2338844]] And, the limiting case of that entropy is the entropy of a black hole.
 [[start:2338972][end:2349300]] The densest possible encoding of information in space or on a boundary.
 
-39:10 [[start:2350520][end:2360040]] And this holographic principle allows us to see any boundary, as we discuss in session one, as an encoding of bits.
-[[start:2360700][end:2368010]] So the previous boundary of these in qubits, we can think of as a holographic screen.
+39:10 [[start:2350520][end:2360040]] And, this Holographic principle allows us to see any boundary, as we discussed in Session 1, as an encoding of bits.
+[[start:2360700][end:2368010]] So, the previous boundary of these in qubits, we can think of as a Holographic Screen.
 
 39:28 [[start:2368960][end:2371310]] Now, why is that important?
 
-39:34 [[start:2374640][end:2402608]] It's important because it allows us to use this idea of holography and this idea of a fixed encoding of a message or a fixed encoding of an observable entropy at some density that was developed in cosmology to talk about arbitrary quantum communication channels.
-[[start:2402704][end:2414890]] So we can import a whole bunch of theory that was done someplace else into quantum information theory and see that it works perfectly because it describes exactly the same situation.
+39:34 [[start:2374640][end:2402608]] It's important because it allows us to use this idea of holography and this idea of a fixed encoding of a message or a fixed encoding of an observable entropy at some density that was developed in Cosmology to talk about arbitrary quantum communication channels.
+[[start:2402704][end:2414890]] So, we can import a whole bunch of theory that was done someplace else into Quantum Information Theory and see that it works perfectly because it describes exactly the same situation.
 [[start:2416620][end:2418410]] Now, what does this tell us?
 [[start:2419840][end:2431340]] Philosophically, it tells us that Alice and Bob can learn about each other at most N bits per communication cycle.
 
-40:32 [[start:2432740][end:2443250]] So the maximal amount of information that they can get from an observation is the in bits that the other one wrote on the screen.
+40:32 [[start:2432740][end:2443250]] So, the maximal amount of information that they can get from an observation is the N bits that the other one wrote on the screen.
 
-40:45 [[start:2445240][end:2464200]] So this tells us something very important, that when an agent is looking at their environment, which is this other agent, Bob, the amount of information that can be extracted from the environment is actually proportional to the size in bits of the boundary.
-[[start:2465260][end:2470910]] And the holographic principle just makes that size finite in space.
-[[start:2471440][end:2480190]] And I said early on that there's no embedding spacetime in this theory, that Alice and Bob are not thought of as separated in space.
-[[start:2480960][end:2491360]] But as soon as we use the holographic principle, we can think of the boundary between them as having a spatial coordinate, even though they don't have a spatial coordinate.
-[[start:2492100][end:2519880]] So we'll get back to this point in September when we talk about theories of emergent spacetime, but all of these theories of emergent spacetime come back to this idea that boundaries can have spatial extent, even though the systems that they separate don't have any natural spatial description or natural spatial degrees of freedom.
+40:45 [[start:2445240][end:2464200]] So, this tells us something very important, that when an agent is looking at their environment, which is this other agent, Bob, the amount of information that can be extracted from the environment is actually proportional to the size in bits of the boundary.
+[[start:2465260][end:2470910]] And, the Holographic principle just makes that size finite in space.
+[[start:2471440][end:2480190]] And, I said early on that there's no embedding spacetime in this theory, that Alice and Bob are not thought of as separated in space.
+[[start:2480960][end:2491360]] But as soon as we use the Holographic principle, we can think of the boundary between them as having a spatial coordinate, even though they don't have a spatial coordinate.
+[[start:2492100][end:2519880]] So, we'll get back to this point in September when we talk about theories of emergent spacetime, but all of these theories of emergent spacetime come back to this idea that boundaries can have spatial extent, even though the systems that they separate don't have any natural spatial description or natural spatial degrees of freedom.
 
-42:02 [[start:2522480][end:2528270]] Okay, so now let's recall another picture from session one.
+42:02 [[start:2522480][end:2528270]] Okay, so now let's recall another picture from Session 1.
 
-42:10 [[start:2530640][end:2557370]] We talked a little bit about Feynman's theory of scattering and the origin of Feynman diagrams and the idea that if Alice prepares some system in some initial state and then measures the state later, if we want to calculate what the new state is.
-[[start:2558140][end:2568760]] We have to take into account all of the possible paths that join the initial state that Alice prepared to the final state that Alice measured.
-[[start:2570000][end:2572110]] So what does that mean?
-[[start:2572560][end:2586770]] I mean, here effectively, if we think of suppose I'm Alice and the boundary is my screen, I'm talking to the screen, and then later on, I'm going to measure the screen.
+42:10 [[start:2530640][end:2557370]] We talked a little bit about Feynman's theory of scattering, the origin of Feynman diagrams, and the idea that if Alice prepares some system in some initial state and then measures the state later. If we want to calculate what the new state is,
+[[start:2558140][end:2568760]] we have to take into account all of the possible paths that join the initial state that Alice prepared to the final state that Alice measured.
+[[start:2570000][end:2572110]] So, what does that mean?
+[[start:2572560][end:2586770]] I mean, here effectively, if we think of... Suppose I'm Alice and the boundary is my screen. I'm talking to the screen, and then later on, I'm going to measure the screen.
 
-43:07 [[start:2587380][end:2595510]] And between my preparation actions and my measurement actions, a bunch of stuff happens on the other side of the screen.
+43:07 [[start:2587380][end:2595510]] And, between my preparation actions and my measurement actions, a bunch of stuff happens on the other side of the screen.
 
-43:16 [[start:2596760][end:2605444]] And if I want to predict what's going to happen on the other side of the screen, I've got to take into account every possible thing.
-[[start:2605482][end:2606630]] That could happen.
-[[start:2608040][end:2613656]] And I have to give some weight to those possible things that could happen.
-[[start:2613758][end:2625870]] And Quantum theory, in fact, tells you how to assign those weights to things that could happen in order to make a measurement, given some theory of the mechanism that makes things happen.
+43:16 [[start:2596760][end:2605444]] And, if I want to predict what's going to happen on the other side of the screen, I've got to take into account every possible thing
+[[start:2605482][end:2606630]] that could happen.
+[[start:2608040][end:2613656]] And, I have to give some weight to those possible things that could happen.
+[[start:2613758][end:2625870]] And, Quantum theory, in fact, tells you how to assign those weights to things that could happen, in order to make a measurement, given some theory of the mechanism that makes things happen.
 [[start:2627040][end:2632370]] But the fact that all of the paths have to be counted is what unitary evolution means.
 
 43:53 [[start:2633060][end:2641570]] This evolution that preserves information that doesn't take any away, it doesn't add any, it just represents it in different ways.
-[[start:2642100][end:2654470]] So if you look at this screen and imagine that Alice is interacting with her boundary and then she's interacting with her boundary again, it looks just like the previous screen.
+[[start:2642100][end:2654470]] So, if you look at this screen and imagine that Alice is interacting with her boundary and then she's interacting with her boundary again, it looks just like the previous screen.
 
 44:14 [[start:2654840][end:2659800]] And the wavy red arrows are what's happening inside Bob.
 [[start:2660540][end:2671630]] The wavy red arrows are a representation of what's going on inside Bob as he measures his side of the screen and then prepares his side of the screen.
-[[start:2672320][end:2684370]] So what Feynman is representing here is just the action of the environment or the action of the system while Alice isn't looking.
+[[start:2672320][end:2684370]] So, what Feynman is representing here is just the action of the environment or the action of the system while Alice isn't looking.
 
 44:44 [[start:2684980][end:2693040]] Between Alice's preparation stage and her measurement stage, while Bob is doing his measurement and preparation.
 [[start:2693780][end:2696832]] So this diagram is actually completely symmetrical.
 [[start:2696896][end:2704896]] We could have drawn an arrow where the wavy red things are and drawn wavy red things where we talked about Alice.
-[[start:2705008][end:2708410]] And we'd have the same picture just from Bob's point of view.
+[[start:2705008][end:2708410]] And, we'd have the same picture just from Bob's point of view.
 [[start:2709260][end:2722830]] We can also think of this, of course, as Alice communicating with her future self by writing a memory record someplace in the world and then coming back and reading it.
 
-45:23 [[start:2723680][end:2739650]] And if Alice writes a memory on the world and then comes back later on and reads it, she actually has to take into account some theory of all of the things the world might have done to her memory while she wasn't looking.
-[[start:2741460][end:2746660]] So this picture of Feynman's actually tells us a lot about memory.
-[[start:2747400][end:2762952]] And when we think about organisms running around in the world doing things like we do all the time, we tend to think of memories as things that are persistent and unchanging and all of that.
+45:23 [[start:2723680][end:2739650]] And if Alice writes a memory in the world and then comes back later on and reads it, she actually has to take into account some theory of all of the things the world might have done to her memory while she wasn't looking.
+[[start:2741460][end:2746660]] So, this picture of Feynman's actually tells us a lot about memory.
+[[start:2747400][end:2762952]] And, when we think about organisms running around in the world doing things like we do all the time, we tend to think of memories as things that are persistent and unchanging and all of that.
 [[start:2763006][end:2764890]] But we know that that's not true.
 [[start:2765340][end:2768730]] We know that memories degrade in various ways.
 
 46:09 [[start:2769600][end:2781340]] We know that adversarial third parties can come and change what we've done so that they fool us into thinking that we've remembered something that we haven't.
-[[start:2781700][end:2783600]] And so on and so forth.
+[[start:2781700][end:2783600]] And so on, and so forth.
 
-46:24 [[start:2784260][end:2796740]] That whole picture of memory is actually encoded in this picture that Feynman drew in the late fifty S to represent scattering of particles.
+46:24 [[start:2784260][end:2796740]] That whole picture of memory is actually encoded in this picture that Feynman drew in the late 1950s to represent the scattering of particles.
 
-46:40 [[start:2800680][end:2807030]] So what we've done here is started with this simple idea of asking questions.
-[[start:2808060][end:2812164]] And we've actually constructed a fair amount of Quantum theory.
-[[start:2812212][end:2816628]] We constructed the Schrodinger equation, we constructed the unitary propagator.
+46:40 [[start:2800680][end:2807030]] So, what we've done here is started with this simple idea of asking questions.
+[[start:2808060][end:2812164]] And, we've actually constructed a fair amount of Quantum Theory.
+[[start:2812212][end:2816628]] We constructed the Schrodinger equation. We constructed the unitary propagator.
 [[start:2816724][end:2824700]] We constructed the idea of a reference frame, which we'll talk about intensely next time in July.
-[[start:2825760][end:2832370]] So we can sum this up by saying that Quantum theory simply is a theory of communicating agents.
+[[start:2825760][end:2832370]] So, we can sum this up by saying that Quantum theory simply is a theory of communicating agents.
 
-47:13 [[start:2833300][end:2854704]] And that quantum mechanics, the theory that Feynman was complaining about in that earlier slide, that quantum mechanics generates this problem that seems intractable of how to understand measurement, because the theory is in fact about measurement.
+47:13 [[start:2833300][end:2854704]] And that quantum mechanics, the theory that Feynman was complaining about in that earlier slide, that quantum mechanics generates this problem that seems intractable of how to understand measurement because the theory is in fact about measurement.
 
 47:34 [[start:2854832][end:2857690]] It's not about mechanical motion at all.
-[[start:2858460][end:2862920]] So quantum theory actually tells us nothing about ontology.
-[[start:2864300][end:2875912]] And this is why the interpretations of quantum theory, the many worlds interpretation, where you have all these branching universes and so forth, are not really science.
+[[start:2858460][end:2862920]] So, Quantum Theory actually tells us nothing about ontology.
+[[start:2864300][end:2875912]] And, this is why the interpretations of Quantum Theory, the many worlds interpretation, where you have all these branching universes and so forth, are not really science.
 [[start:2875976][end:2877112]] They're philosophy.
 
 47:57 [[start:2877176][end:2885788]] They're attempts to understand an ontology that's generated by a theory that doesn't talk about ontology.
 [[start:2885884][end:2888850]] It talks about communication between agents.
 [[start:2889780][end:2892528]] But we've left something very important out.
-[[start:2892694][end:2900070]] We've left out a consideration of what happens when Alice and Bob don't mean the same thing by up and down.
-[[start:2900760][end:2910136]] And we've left out the famous phenomenon of entanglement spooky action at a distance, as Einstein called it.
+[[start:2892694][end:2900070]] We've left out a consideration of what happens when Alice and Bob don't mean the same thing by "up" and "down".
+[[start:2900760][end:2910136]] And, we've left out the famous phenomenon of entanglement - the spooky action at a distance, as Einstein called it.
 
-48:30 [[start:2910238][end:2914680]] And it turns out these things that we've left out are very, very closely related.
+48:30 [[start:2910238][end:2914680]] And, it turns out these things that we've left out are very, very closely related.
 
-48:36 [[start:2916060][end:2919604]] And we're going to see why in July.
+48:36 [[start:2916060][end:2919604]] And, we're going to see why in July.
 [[start:2919732][end:2922604]] But I'm going to give you a brief preview now.
-[[start:2922802][end:2928284]] So what happens when Alice and Bob actually mean different things by up and down?
+[[start:2922802][end:2928284]] So, what happens when Alice and Bob actually mean different things by "up" and "down"?
 [[start:2928482][end:2931660]] What if their reference frames aren't aligned?
 
 48:52 [[start:2932880][end:2937680]] Well, the first thing to note is that nothing in the theory says they have to be aligned.
-[[start:2938180][end:2941490]] So we have to consider the possibility that they're not.
-[[start:2942420][end:2949040]] And in fact, both Alice and Bob have to have what's called free choice of reference frame.
-[[start:2949200][end:2957560]] When Alice prepares her instrument, she has to be able to prepare it any way she wants to in order to do an experiment.
-[[start:2959020][end:2971710]] And when Bob makes up a sentence to tell Alice, he has to be able to choose any language he wants to use, he's a free agent in this way.
+[[start:2938180][end:2941490]] So, we have to consider the possibility that they're not.
+[[start:2942420][end:2949040]] And, in fact, both Alice and Bob have to have what's called "free choice" of reference frame.
+[[start:2949200][end:2957560]] When Alice prepares her instrument, she has to be able to prepare it any way she wants to, in order to do an experiment.
+[[start:2959020][end:2971710]] And, when Bob makes up a sentence to tell Alice, he has to be able to choose any language he wants to use, he's a free agent in this way.
 
-49:32 [[start:2972080][end:2975544]] And if they don't have that freedom, it turns out they're entangled.
-[[start:2975672][end:2981900]] So reference frame, nonalignment and entanglement are very, very closely coupled.
+49:32 [[start:2972080][end:2975544]] And, if they don't have that freedom, it turns out they're entangled.
+[[start:2975672][end:2981900]] So reference frame, nonalignment, and entanglement are very, very closely coupled.
 
-49:44 [[start:2984420][end:2991120]] Now, misalignment of reference frames is what produces superpositions of outcomes.
-[[start:2991940][end:3014776]] So if Alice makes her measurements with her up and down arrow arranged vertically, for example, but Bob prepares his qubit with his up and down arrow arranged at 90 degrees to Alice's, alice is not going to have any idea what Bob did.
-[[start:3014958][end:3018820]] I mean, she can't see distinctions in the left right direction.
-[[start:3018900][end:3022380]] She can only see distinctions in the up and down direction.
-[[start:3022880][end:3025580]] So all she can do is flip a coin.
+49:44 [[start:2984420][end:2991120]] Now, the misalignment of reference frames is what produces superpositions of outcomes.
+[[start:2991940][end:3014776]] So, if Alice makes her measurements with her up-down arrow arranged vertically, for example, but Bob prepares his qubit with his up-down arrow arranged at 90 degrees to Alice's, Alice is not going to have any idea what Bob did.
+[[start:3014958][end:3018820]] I mean, she can't see distinctions in the left-right direction.
+[[start:3018900][end:3022380]] She can only see distinctions in the up-down direction.
+[[start:3022880][end:3025580]] So, all she can do is flip a coin.
 
-50:26 [[start:3026080][end:3036608]] If she wants to know what Bob prepared, it's 50% likely he prepared up for her what she calls one.
+50:26 [[start:3026080][end:3036608]] If she wants to know what Bob prepared, it's 50% likely he prepared up for her what she calls 1.
 [[start:3036774][end:3041088]] And it's 50% likely that he prepared what's down for her.
 [[start:3041174][end:3042370]] She can't tell.
-[[start:3044040][end:3049744]] Now, if Bob's reference frame is pointing at about 45 degrees.
+[[start:3044040][end:3049744]] Now, if Bob's reference frame is pointing at about 45 degrees,
 
-50:49 [[start:3049872][end:3057690]] So up for him means 45 degrees off of Alice's up, then she can sort of tell what he did.
+50:49 [[start:3049872][end:3057690]] so, up for him means 45 degrees off of Alice's up, then she can sort of tell what he did.
 
 50:58 [[start:3058300][end:3066010]] If he's pointing 45 degrees from up, then she's probably going to measure up.
 [[start:3066460][end:3071230]] And if he's pointing 45 degrees from down, she's probably going to measure down.
-[[start:3071600][end:3077420]] So her outcomes are 75% for one and 25% for minus one.
-[[start:3077490][end:3081660]] If he prepares at this 45 degree angle.
-[[start:3082260][end:3084624]] So we can write this in a particular way.
+[[start:3071600][end:3077420]] So, her outcomes are 75% for 1 and 25% for -1.
+[[start:3077490][end:3081660]] If he prepares at this 45-degree angle.
+[[start:3082260][end:3084624]] So, we can write this in a particular way.
 
-51:24 [[start:3084662][end:3106368]] We can say that the value that Alice gets acting with her M on a qubit that Bob prepared is some number times what she measures as up plus some other number plus times what she measures as minus one, where those numbers, the squares of those numbers, add to one.
-[[start:3106554][end:3108344]] So why do they have to add to one?
+51:24 [[start:3084662][end:3106368]] We can say that the value that Alice gets acting with her M on a qubit that Bob prepared is some number times what she measures as up plus some other number plus times what she measures as -1, where those numbers, the squares of those numbers, add to 1.
+[[start:3106554][end:3108344]] So, why do they have to add to one?
 [[start:3108462][end:3111720]] Well, they add to one because of the Pythagorean theorem.
 
-51:54 [[start:3114300][end:3120540]] One is the distance, the total distance between the two outcomes.
+51:54 [[start:3114300][end:3120540]] 1 is the distance, the total distance between the two outcomes.
 [[start:3121360][end:3127740]] And A squared plus B squared are the other two sides of that triangle.
-[[start:3128480][end:3146256]] So another way to think of it is that the metric distance in possibility space is one and A squared and B squared are just the Euclidean distance components.
+[[start:3128480][end:3146256]] So, another way to think of it is that the metric distance in possibility space is 1 and A squared and B squared are just the Euclidean distance components.
 [[start:3146288][end:3149936]] Again, Euclidean distance is based on the Pythagorean theorem.
-[[start:3150128][end:3153060]] So this is the Born rule in quantum theory.
+[[start:3150128][end:3153060]] So, this is the Born rule in Quantum Theory.
 
 52:34 [[start:3154120][end:3162490]] It's the rule that tells us what happens when we're trying to measure a superposition and it tells us where these superpositions come from.
 [[start:3164220][end:3170140]] We have a mismatch in reference frames between two agents that are communicating.
 
-52:52 [[start:3172480][end:3189330]] So if we go back to the free energy principle, which is what this whole active inference class is about, and we formulate it in quantum theory, we get a very simple idea of what the free energy principle is.
+52:52 [[start:3172480][end:3189330]] So, if we go back to the Free Energy Principle, which is what this whole active inference class is about, and we formulate it in Quantum Theory, we get a very simple idea of what the Free Energy Principle is.
 
-53:09 [[start:3189940][end:3201910]] The FEP and quantum theory just says that interacting systems are going to behave in a way that aligns their reference frames and that makes their communication as good as it can be.
-[[start:3203640][end:3217160]] But since aligning reference frames perfectly leads to entanglement, the free energy principle drives systems asymptotically toward entanglement.
+53:09 [[start:3189940][end:3201910]] The FEP and Quantum Theory just say that interacting systems are going to behave in a way that aligns their reference frames and that makes their communication as good as it can be.
+[[start:3203640][end:3217160]] But since aligning reference frames perfectly leads to entanglement, the Free Energy Principle drives systems asymptotically toward entanglement.
 
-53:39 [[start:3219360][end:3226540]] Well, the principle of unitarity says that all systems will approach entanglement asymptotically.
-[[start:3226960][end:3232540]] So we can see the FEP is actually a classical statement of the principle of unitarity.
-[[start:3233540][end:3249860]] And what we'll see in the next session is why this is the case, why active inference, when we think of it, quantum mechanically is a way of talking about the principle of unitarity, which is the deepest axiom of quantum theory.
+53:39 [[start:3219360][end:3226540]] Well, the Principle of Unitarity says that all systems will approach entanglement asymptotically.
+[[start:3226960][end:3232540]] So, we can see the FEP is actually a classical statement of the Principle of Unitarity.
+[[start:3233540][end:3249860]] And, what we'll see in the next Session is why this is the case, why active inference, when we think of it quantum mechanically, is a way of talking about the Principle of Unitarity, which is the deepest axiom of Quantum Theory.
 
-54:10 [[start:3250840][end:3265320]] And we'll also see that this question of alignment becomes more and more complex as the complexity of the messages that the systems are trying to communicate to each other increases.
+54:10 [[start:3250840][end:3265320]] And, we'll also see that this question of alignment becomes more and more complex as the complexity of the messages that the systems are trying to communicate to each other increases.
 [[start:3266220][end:3270860]] And that message complexity correlates with system complexity.
 
 54:31 [[start:3271440][end:3279950]] So that aligning complicated systems is very hard, although aligning very simple systems is fairly easy.
-[[start:3280480][end:3293410]] And if you think about what's the simplest possible theory in science, it's particle physics, because you're dealing with these very simple things that interact in extremely simple ways.
-[[start:3294120][end:3306752]] And the really difficult parts of science are things like sociology, where you're dealing with incredibly complicated systems like humans that interact in incredibly complicated ways.
-[[start:3306906][end:3312250]] And all we have are very vague kind of folk theories of how that works.
+[[start:3280480][end:3293410]] And, if you think about what's the simplest possible theory in science, it's particle physics, because you're dealing with these very simple things that interact in extremely simple ways.
+[[start:3294120][end:3306752]] And, the really difficult parts of science are things like sociology, where you're dealing with incredibly complicated systems like humans that interact in incredibly complicated ways.
+[[start:3306906][end:3312250]] And, all we have are very vague kind of folk theories of how that works.
 
 55:13 [[start:3313180][end:3319370]] But we know from that example that aligning complex systems is extremely difficult.
 
-55:21 [[start:3321580][end:3324030]] So humans don't get along very well.
-[[start:3325600][end:3334610]] So the second session well, the second discussion section which Andrew will be leading is on Saturday, the 1 July, a couple of weeks from now.
-[[start:3335540][end:3361780]] The third lecture session will be on July 13 and I hope you all will contribute to the interactive question and answer session on the web and show up for the discussion on Saturday, the 1 July and join us again in July for the discussion of quantum reference frames and reference frame alignment.
+55:21 [[start:3321580][end:3324030]] So, humans don't get along very well.
+[[start:3325600][end:3334610]] So, the 2nd Session well, the 2nd discussion section which Andrew will be leading is on Saturday, the 1st of July, a couple of weeks from now.
+[[start:3335540][end:3361780]] The 3rd lecture Session will be on July 13th and I hope you all will contribute to the interactive question and answer session on the web and show up for the discussion on Saturday, the 1st of July and join us again in July for the discussion of quantum reference frames and reference frame alignment.
 [[start:3361940][end:3363530]] So thank you very much.
 
 56:08 _Daniel:_
 [[start:3368970][end:3370470]] Thank you, Chris.
 
-56:12 _Ander:_
-[[start:3372170][end:3372790]] All right.
+56:12 [[start:3372170][end:3372790]] All right.
 
-56:12 _Daniel:_
-[[start:3372860][end:3374070]] Thank you all again.
-[[start:3374140][end:3382002]] Please check out the course syllabus, ask questions through the site and see you at the discussion.
+56:12 [[start:3372860][end:3374070]] Thank you all again.
+[[start:3374140][end:3382002]] Please check out the course syllabus, ask questions through the site, and see you at the discussion.
 [[start:3382066][end:3383414]] See you next time.
 
 56:23 [[start:3383612][end:3384262]] Thank you.
