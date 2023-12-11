@@ -1,8 +1,8 @@
 
 00:06 _Daniel:_
 [[start:6720][end:8348]] Hello and welcome, everyone.
-[[start:8514][end:15624]] It is September 14, 2023, and we are in the course, physics as information processing.
-[[start:15752][end:17150]] It's lecture five.
+[[start:8514][end:15624]] It is September 14th, 2023, and we are in the course: Physics as information processing.
+[[start:15752][end:17150]] It's lecture 5.
 [[start:18080][end:20904]] Looking forward to this lecture and then a little conversation.
 
 00:20 [[start:20952][end:21884]] Chris, off to you.
@@ -11,49 +11,47 @@
 00:24 _Chris:_
 [[start:24800][end:25596]] Okay.
 [[start:25778][end:27100]] Thank you, Daniel.
-[[start:27840][end:32340]] And welcome to to session five of Physics of information processing.
-[[start:33400][end:46680]] And today we're going to talk about Spacetime, and particularly about the idea that Spacetime is emergent from information processing.
-[[start:47340][end:54940]] And this has now become a very mainstream idea in the quantum information and quantum gravity communities.
+[[start:27840][end:32340]] And, welcome to session 5 of Physics of information processing.
+[[start:33400][end:46680]] And, today we're going to talk about Spacetime, and particularly about the idea that Spacetime is emergent from information processing.
+[[start:47340][end:54940]] And, this has now become a very mainstream idea in the quantum information and quantum gravity communities.
 
-00:57 [[start:57360][end:65580]] And there's still, of course, some people holding out for the idea that Spacetime is fundamental.
+00:57 [[start:57360][end:65580]] And there are still, of course, some people holding out for the idea that Spacetime is fundamental.
 [[start:66260][end:93000]] But I would say that, at least in these communities, I expect it's become now the dominant idea that Spacetime is not fundamental, that Spacetime is not part of the basic ontology of reality or something like that, and that instead, Spacetime is a construct.
 
-01:33 [[start:93660][end:98570]] So that's what today's session is going to be about.
-[[start:99740][end:123360]] So for those of you who are just joining or who would like a little review, we started this course talking about quantum information theory and the idea that quantum information theory is actually a new science about systems that communicate across a boundary.
-[[start:123700][end:137632]] And the systems are always called Alice and Bob for kind of historical reasons, and emphasize that this new science is topological.
+01:33 [[start:93660][end:98570]] So, that's what today's Session is going to be about.
+[[start:99740][end:123360]] So, for those of you who are just joining or who would like a little review, we started this course talking about Quantum Information Theory and the idea that Quantum Information Theory is actually a new science about systems that communicate across a boundary.
+[[start:123700][end:137632]] And, the systems are always called Alice and Bob for kind of historical reasons. And, we emphasized that this new science is topological.
 
 02:17 [[start:137696][end:140752]] It's about connectivity between systems.
 [[start:140816][end:142596]] It's not geometric.
-[[start:142788][end:146436]] So it doesn't assume a Spacetime embedding.
-[[start:146628][end:152100]] So it leaves open the possibility that Spacetime is actually a construct.
+[[start:142788][end:146436]] So, it doesn't assume a Spacetime embedding.
+[[start:146628][end:152100]] So, it leaves open the possibility that Spacetime is actually a construct.
 [[start:152180][end:155150]] It doesn't assume Spacetime up front.
 
-02:36 [[start:156560][end:179824]] And in the second session of the course, I think we talked about how this boundary could always be represented as an array of qubits, and that what the systems on each side of the boundary do to communicate is prepare and then measure the states of these qubits.
-[[start:179872][end:191440]] So they communicate by exchanging classical information via a quantum channel.
-[[start:192390][end:206630]] And this introduces a particular kind of quantum noise whenever they don't share the reference frames that they use to prepare the bits and measure the bits.
-[[start:206970][end:217646]] So it's not necessarily a perfect communication channel from a classicality fidelity point of view, but all of the noise is quantum noise.
+02:36 [[start:156560][end:179824]] And, in the 2nd Session of the course, I think, we talked about how this boundary could always be represented as an array of qubits, and that what the systems on each side of the boundary do to communicate is prepare and then measure the states of these qubits.
+[[start:179872][end:191440]] So, they communicate by exchanging classical information via a quantum channel.
+[[start:192390][end:206630]] And, this introduces a particular kind of quantum noise whenever they don't share the reference frames that they use to prepare the bits and measure the bits.
+[[start:206970][end:217646]] So, it's not necessarily a perfect communication channel from a classical fidelity point of view, but all of the noise is quantum noise.
 
 03:37 [[start:217698][end:225100]] It's not classical, and it always derives from differences in the reference frames that are used by the two agents.
 
-03:46 [[start:226830][end:236480]] We reformulated the free energy principle in this setting, and the free energy principle turns out to be very simple.
-[[start:237010][end:245170]] It turns out to be a classical limit of the principle of unitarity, which is just the principle that information is conserved.
-[[start:245750][end:258290]] And we saw that the approach to perfect alignment between the two agents, or perfect prediction on the part of the two agents, becomes more challenging.
+03:46 [[start:226830][end:236480]] We reformulated the Free Energy Principle in this setting, and the Free Energy Principle turned out to be very simple.
+[[start:237010][end:245170]] It turns out to be a classical limit of the Principle of Unitarity, which is just the principle that information is conserved.
+[[start:245750][end:258290]] And, we saw that the approach to perfect alignment between the two agents, or perfect prediction on the part of the two agents, becomes more challenging.
 [[start:258370][end:261590]] Not surprisingly, as system complexity increases.
-[[start:262330][end:269180]] So the more complex the communication, the harder it is to predict, as one would expect.
+[[start:262330][end:269180]] So, the more complex the communication, the harder it is to predict, as one would expect.
 
-04:30 [[start:270910][end:282240]] In the last session, we talked about how constraints on thermodynamic free energy induce compartmentalization in agents.
+04:30 [[start:270910][end:282240]] In the last Session, we talked about how constraints on thermodynamic free energy induce compartmentalization in agents.
 
-04:43 [[start:283250][end:299810]] So whenever agents interact with their environments in fairly complex ways, then they end up being compartmentalized into compartments that have to communicate classically.
-[[start:300310][end:304986]] And this is solely a result of quantum information theory.
+04:43 [[start:283250][end:299810]] So, whenever agents interact with their environments in fairly complex ways, then they end up being compartmentalized into compartments that have to communicate classically.
+[[start:300310][end:304986]] And, this is solely a result of Quantum Information Theory.
 [[start:305038][end:314562]] You don't have to assume any biology to get this compartmentalization, but clearly, this is something that we see in biological systems.
 [[start:314626][end:330250]] Not only do we see compartments, we also see hierarchical control, which is likewise a sort of automatic outcome of the theory for complex systems.
 
-05:30 [[start:330850][end:349620]] And finally, last time, we talked a little bit about how these compartments communicate and introduce the idea of communication protocols that involve local operations on a shared quantum resource of some kind.
-
-05:49 [[start:349990][end:351918]] And classical communication.
-[[start:352014][end:366754]] We talked to Fairman about how classicality communication is a little bit problematic to define in quantum theory, because, of course, you're introducing classicality.
-[[start:366802][end:372730]] And so you have to make some very specific assumptions about what's classical.
-[[start:373470][end:386270]] And we'll see later on today what the key assumption that gives you classicality is, as we talk about Spacetime.
+05:30 [[start:330850][end:349620]] And finally, last time, we talked a little bit about how these compartments communicate and introduced the idea of communication protocols that involve local operations on a shared quantum resource of some kind and classical communication.
+[[start:352014][end:366754]] We talked to fair amount about how classical communication is a little bit problematic to define in Quantum Theory, because, of course, you're introducing classicality.
+[[start:366802][end:372730]] And so, you have to make some very specific assumptions about what's classical.
+[[start:373470][end:386270]] And, we'll see later on today what the key assumption that gives you classicality is, as we talk about Spacetime.
 
 06:27 [[start:387730][end:395220]] But before I go into the topic of Spacetime, I want to spend a little time.
 [[start:397110][end:399300]] Okay, sorry.
@@ -61,64 +59,61 @@
 [[start:401016][end:406360]] We're talking about Spacetime, and we'll talk about applications to biology next time.
 [[start:407050][end:413030]] But before we get going on this, I want to spend a little bit of time talking about explanation.
 
-06:53 [[start:413930][end:427100]] And this is motivated by a question that came up, a very long question that touched on many different topics that came up in the interactive Q A last time.
-[[start:428990][end:450450]] And a fair amount of that question had to do with, directly or indirectly, the question of what scale free explanation looks like and how it compares to scientific explanation in general, most of which is reductive.
-[[start:451590][end:469514]] So I want to make a short detour into the question of how reductionist theories, which all of you are probably very familiar with, relate to scale free theories, and particularly the free.
-[[start:469552][end:470874]] Free, free energy principle.
-[[start:470912][end:472490]] Scale free theory.
+06:53 [[start:413930][end:427100]] And, this is motivated by a question that came up, a very long question that touched on many different topics that came up in the interactive Q&A last time.
+[[start:428990][end:450450]] And, a fair amount of that question had to do with, directly or indirectly, the question of what scale-free explanation looks like and how it compares to scientific explanation in general, most of which is reductive.
+[[start:451590][end:469514]] So, I want to make a short detour into the question of how reductionist theories, which all of you are probably very familiar with, relate to scale-free theories, and particularly the Free Energy Principle is a scale-free theory.
 
-07:53 [[start:473070][end:484240]] So it's a theory that's unlike most of the theories that most of you probably learned about in college.
+07:53 [[start:473070][end:484240]] So, it's a theory that's unlike most of the theories that most of you probably learned about in college.
 
-08:05 [[start:485090][end:500994]] So we're all familiar with reductionist theories and the reductionist idea of scientific explanation, which is really an outcome of philosophy of science in the.
+08:05 [[start:485090][end:500994]] So, we're all familiar with reductionist theories and the reductionist idea of scientific explanation, which is really an outcome of the Philosophy of Science in the 1920s and 1930s.
 [[start:501032][end:510280]] People like Rudolph Carnap were among the first to actually make precise what this idea of reductive explanation is.
-[[start:511050][end:531920]] But the basic idea is that the laws or the dynamics or the formalism that describes behavior at some microscale, the behavior of little things actually explains the behavior of big things.
-[[start:532610][end:541680]] So the basic reductionist idea is that what the little things are doing is what's important.
+[[start:511050][end:531920]] But the basic idea is that the laws or the dynamics or the formalism that describes the behavior at some microscale, the behavior of little things actually explains the behavior of big things.
+[[start:532610][end:541680]] So, the basic reductionist idea is that what the little things are doing is what's important.
 
-09:02 [[start:542710][end:551422]] And what big things are doing are either emergent phenomena, or they're just epiphenomena.
+09:02 [[start:542710][end:551422]] And, what big things are doing are either emergent phenomena, or they're just epiphenomena.
 
 09:11 [[start:551566][end:553890]] They're essentially just appearances.
-[[start:555050][end:558898]] And this defines a fundamental scale.
-[[start:559074][end:574998]] So the real assumption in any reductionist theory is that there's some fundamental scale at which the real dynamics takes place and everything else is just an appearance, or it's some sort of emergent phenomenon.
-[[start:575174][end:584874]] And I try to be very careful when I use the word emergence because it's one of the most ambiguous words in the philosophy of science.
+[[start:555050][end:558898]] And, this defines a fundamental scale.
+[[start:559074][end:574998]] So, the real assumption in any reductionist theory is that there's some fundamental scale at which the "real dynamics" takes place and everything else is just an appearance, or it's some sort of emergent phenomenon.
+[[start:575174][end:584874]] And, I try to be very careful when I use the word "emergence" because it's one of the most ambiguous words in the Philosophy of Science.
 
 09:44 [[start:584922][end:587680]] And people use it to mean all sorts of different things.
 
-09:50 [[start:590050][end:599380]] But whenever you say emergent, it always sort of implies the idea that it's emergent from something.
-[[start:600310][end:617350]] And so the idea of emergence is essentially a reductionist idea because it at least implicitly assumes that there's some microscale from which the macro scale is emergent.
+09:50 [[start:590050][end:599380]] But whenever you say "emergent", it always sort of implies the idea that it's emergent from something.
+[[start:600310][end:617350]] And, so the idea of emergence is essentially a reductionist idea because it at least implicitly assumes that there's some microscale from which the macroscale is emergent.
 
-10:18 [[start:618430][end:630460]] And so discussions of emergent phenomena are often very consistent with reductionism, even if they claim not to be.
-[[start:631570][end:638670]] And we're all taught that science is reductionist.
-[[start:639250][end:644930]] And there are certainly people who publicly claim that science is reductionist.
+10:18 [[start:618430][end:630460]] And so, the discussions of emergent phenomena are often very consistent with reductionism, even if they claim not to be.
+[[start:631570][end:638670]] And, we're all taught that science is reductionist.
+[[start:639250][end:644930]] And, there are certainly people who publicly claim that science is reductionist.
 
 10:45 [[start:645750][end:650340]] Richard Dawkins is certainly a shining example of this.
 [[start:651430][end:679740]] But I suspect that a lot of scientists just kind of play lip service to reductionism without really believing in it, because they don't really believe that the macroscopic phenomena that they are studying, life, for example, is completely determined by what's going on at the microscale, or what's going on at the microscale, plus some stochastic noise or something like that.
 
-11:20 [[start:680450][end:686910]] So I want to explicitly contrast this with a scalefree theory.
-[[start:687730][end:696050]] In a scale free theory is not simply a holistic theory, it's much more precise.
-[[start:696390][end:709590]] In a scale free theory, little things and big things obey the same laws, or they have the same dynamics, or they're described by the same formalism.
+11:20 [[start:680450][end:686910]] So, I want to explicitly contrast this with a scale-free theory.
+[[start:687730][end:696050]] In a scale-free theory is not simply a holistic theory, it's much more precise.
+[[start:696390][end:709590]] In a scale-free theory, little things and big things obey the same laws, or they have the same dynamics, or they're described by the same formalism.
 
 11:50 [[start:710330][end:715110]] So it's not that the macro scale is emergent from the microscale.
 [[start:715770][end:720410]] The macro scale and the microscale actually obey the same laws.
-[[start:721470][end:730250]] And the relationship between macro and micro is probably best stated as one of implementation.
+[[start:721470][end:730250]] And, the relationship between macro and micro is probably best stated as one of implementation.
 
 12:12 [[start:732350][end:740480]] Macro scale things have microscale components, and those microscale components are doing something or other.
 
-12:20 [[start:740930][end:749410]] And whatever they're doing implements the macroscale system and its behavior.
+12:20 [[start:740930][end:749410]] And, whatever they're doing implements the macroscale system and its behavior.
 [[start:750950][end:761960]] But this implementation is not an explanation, or at least it's not an explanation all by itself.
-[[start:762730][end:766866]] And the bumper sticker version of scale free theories is just as above.
-[[start:766898][end:774646]] So below whatever laws you have at the macro scale, are the ones, the same ones you have at The Microscale, and Vice Versa.
+[[start:762730][end:766866]] And the bumper sticker version of scale-free theories is just as above, so below. Whatever laws you have at the macro scale, are the ones, the same ones you have at the microscale, and vice versa.
 
-12:54 [[start:774838][end:777498]] So, scale free Theories, in a sense, are simple.
-[[start:777584][end:781470]] It's the same Theory at every level of Description.
-[[start:783330][end:791520]] So what is this idea of scale, and how does it Relate to what we've talked about in this Course?
+12:54 [[start:774838][end:777498]] So, scale-free theories, in a sense, are simple.
+[[start:777584][end:781470]] It's the same theory at every level of description.
+[[start:783330][end:791520]] So, what is this idea of scale, and how does it relate to what we've talked about in this course? STOPPED HERE
 [[start:792450][end:799090]] Well, what we've talked about in this Course all has to Do With what an Agent Can Observe on its Boundary.
-[[start:799590][end:810360]] So scale has to Do With How Information Is Encoded on the boundary, and we can Describe that scale in many different Ways.
+[[start:799590][end:810360]] So, scale has to Do With How Information Is Encoded on the boundary, and we can Describe that scale in many different Ways.
 
 13:31 [[start:811770][end:821340]] Here's A Commonplace Way to Describe it in Physics by A Relationship between energy and distance, or size.
-[[start:822590][end:828250]] And you've probably all heard of the Planck scale.
+[[start:822590][end:828250]] And, you've probably all heard of the Planck scale.
 [[start:828910][end:833840]] The Planck scale is the smallest scale at which current Physics Makes any sense.
 
-13:56 [[start:836930][end:847650]] And in energetic terms, it's defined by energies on the order of Ten to the 19th GEV, which is GiGAelectron volt.
+13:56 [[start:836930][end:847650]] And, in energetic terms, it's defined by energies on the order of Ten to the 19th GEV, which is GiGAelectron volt.
 
 14:09 [[start:849750][end:858738]] The LHC, the Large Hadron Collider in Switzerland, gets to about ten to the Fourth GEV.
 [[start:858834][end:863190]] So many, many orders of magnitude less than the Planck scale.
