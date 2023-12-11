@@ -2,28 +2,27 @@
 00:07 _Daniel:_
 [[start:7390][end:9306]] Hello and welcome, everyone.
 [[start:9488][end:10422]] This is physics.
-[[start:10486][end:14806]] As information processing session four on communicating observers.
-[[start:14918][end:17740]] It's the 10 August 2023.
+[[start:10486][end:14806]] As information processing Session 4 on communicating observers.
+[[start:14918][end:17740]] It's the 10th of August 2023.
 [[start:18110][end:20390]] Chris looking forward to this lecture.
 
 00:20 [[start:20470][end:21580]] Off to you.
 
 00:23 _Chris:_
 [[start:23470][end:26810]] Thank you, Daniel, and welcome to this session.
-[[start:27310][end:30734]] As Daniel said, this is about out communicating observers.
+[[start:27310][end:30734]] As Daniel said, this is about communicating observers.
 [[start:30862][end:35540]] And fasten your seatbelts because we have a lot to cover in the next hour.
 [[start:36870][end:39170]] So just to do a quick review.
 
 00:39 [[start:39320][end:55850]] We've been talking about quantum information theory and we've been talking about it in the simplest possible setting of two systems, Alice and Bob, that exchange information through their mutual boundary.
 [[start:56350][end:60118]] And we've assumed that everything is finite dimensional.
 [[start:60214][end:65130]] So we don't need to worry about infinite energy transfer across this boundary.
-[[start:65790][end:72682]] And of course, we assume conservation of energy so there are no sources or sinks in either of the systems.
-[[start:72746][end:87250]] Alice and Bob and we emphasize that this way of depicting things as topological we're not assuming any background geometry, no sort of spatial embedding which is going to become very important in this session.
+[[start:65790][end:72682]] And of course, we assume conservation of energy so there are no sources or sinks in either of the systems, Alice and Bob.
+[[start:72746][end:87250]] And we emphasize that this way of depicting things as topological we're not assuming any background geometry, no sort of spatial embedding which is going to become very important in this session.
 
 01:29 [[start:89750][end:102706]] In the last session, we talked about how the boundary, which I'll always call B can be thought of as a channel that comprises N qubits that are independent.
 [[start:102818][end:113450]] And Alice and Bob each can prepare and measure those qubits and they can always choose independently their reference frames for doing so.
-[[start:113520][end:121070]] So how they define up and down when they're measuring a spin with effectively a Zspin operator.
-[[start:121810][end:124430]] To interact with these qubits.
+[[start:113520][end:121070]] So how they define up and down when they're measuring a spin with effectively a z-spin operator to interact with these qubits.
 [[start:125810][end:130690]] We talked a little bit about the free energy principle and its quantum formulation.
 
 02:11 [[start:131510][end:143250]] And the principle basically says that interacting systems will behave in a way that aligns their reference frames and that they therefore asymptotically approach entanglement.
@@ -35,45 +34,43 @@
 
 03:11 [[start:191758][end:193590]] That's clearly true for us.
 [[start:193660][end:199510]] We have to consume oxygen and eat food and things like that to keep running as systems.
-[[start:200490][end:216970]] And we discussed a little bit this theorem that if two reference frames or quantum processes, q One and Q Two don't commute, they have to be implemented by compartments that communicate classically.
+[[start:200490][end:216970]] And we discussed a little bit this theorem that if two reference frames or quantum processes, Q1 and Q2 don't commute, they have to be implemented by compartments that communicate classically.
 [[start:217050][end:219520]] And we'll use this extensively today.
-[[start:220450][end:233970]] But the bottom line last time was that physics alone gives us compartmentalization in systems whenever the systems are complex enough to have multiple kinds of measurements that they can't deploy simultaneously.
+[[start:220450][end:233970]] But the bottom line, last time, was that physics alone gives us compartmentalization in systems whenever the systems are complex enough to have multiple kinds of measurements that they can't deploy simultaneously.
 
-03:56 [[start:236390][end:254470]] So where we're going today, we're going to start from this place we left off last time of the possibility of agents that are compartmentalized and into compartments that have to communicate classically.
+03:56 [[start:236390][end:254470]] So where we're going, today, we're going to start from this place we left off last time of the possibility of agents that are compartmentalized into compartments that have to communicate classically.
 [[start:255070][end:270830]] So we're going to talk about agents that can be compartmentalized into multiple subagents that share an environment, the environment consisting of Bob and how those agents talk about that shared environment.
 [[start:271490][end:274000]] So the motivation for this is simple.
 [[start:274450][end:278250]] It's that what we do all the time is a group activity.
-[[start:278330][end:283470]] And what we're doing right now is a group activity that involves sharing an environment.
-
-04:43 [[start:283550][end:287060]] What's shown on this screen and talking about it.
+[[start:278330][end:283470]] And what we're doing right now is a group activity that involves sharing an environment such as what's shown on this screen and talking about it.
 [[start:287430][end:296886]] And the whole post session discussion process will be another example of just that sort of thing.
 
-04:57 [[start:297068][end:313130]] So to talk about science at all or to talk about any kind of social relations or to talk about anything other than solipsism, we have to be able to talk about how multiple agents communicate about some shared environment.
+04:57 [[start:297068][end:313130]] So to talk about science at all or to talk about any kind of social relation or to talk about anything other than solipsism, we have to be able to talk about how multiple agents communicate about some shared environment.
 [[start:313630][end:318000]] And so that's what we're going to develop a formal way of talking about.
 [[start:318690][end:323920]] And there are two things to notice right off the top about this.
 
 05:24 [[start:324610][end:331310]] One is that the way we've defined interactions at boundaries, they're effectively instantaneous.
 [[start:331470][end:337758]] So each agent, remember, interacts with its boundary with some set of operators.
-[[start:337854][end:345326]] And what those operators do is effectively measure each operator effectively measures the spin of a qubit.
+[[start:337854][end:345326]] And what those operators do is effectively measure each operator--effectively measure the spin of a qubit.
 [[start:345518][end:347940]] So this is a very fast process.
 
 05:50 [[start:350390][end:370762]] The other thing that we then need to notice is that if we have two agents and they're communicating with each other classically, then they're going to be using degrees of freedom of their shared environment in order to communicate.
 
 06:10 [[start:370906][end:373278]] And that's exactly what we're doing right now.
-[[start:373364][end:379718]] For example, we're using degrees of freedom of the Internet to communicate.
+[[start:373364][end:379718]] For example, we're using degrees of freedom of the internet to communicate.
 [[start:379914][end:391140]] I'm using degrees of freedom of the local atmosphere to talk to my microphone and I'm using degrees of freedom of the local photon field to see my screen.
 [[start:392090][end:403122]] So all communication between agents and certainly all classical communication between agents uses degrees of freedom of the environment.
 
 06:43 [[start:403186][end:410090]] And the environment, remember, is the other system, Bob, that's on the other side of that shared boundary.
 [[start:410750][end:420698]] So we're going to be interested in how components of Alice use Bob as a communication channel and in fact, as multiple communication channels.
-[[start:420874][end:429558]] And I just wanted to quote my colleague and friend Mike Levin in his statement that all intelligence is composite.
-[[start:429754][end:449270]] All of us, all organisms, even single cells, are composite systems that comprise many different agents that are able to make different kinds of measurements and execute different kinds of actions and so have to communicate classically.
+[[start:420874][end:429558]] And I just wanted to quote my colleague and friend, Mike Levin, in his statement that all intelligence is composite.
+[[start:429754][end:449270]] All of us, all organisms, even single cells, are composite systems that comprise many many different agents that are able to make different kinds of measurements and execute different kinds of actions and so have to communicate classically.
 
 07:30 [[start:450010][end:458780]] So we're talking about all of life here as well as all of social systems and ecosystems and such things as that.
 
 07:40 [[start:460270][end:470490]] So the first thing I want to do today is simplify the notation so that we don't have to draw quite such complicated diagrams.
 [[start:470650][end:474618]] So the picture on the left here is a picture from the last session.
-[[start:474794][end:490900]] It shows the structure of a very simple agent that makes some measurements using a reference frame called e and then writes some results of those measurements to memory using a reference frame called y.
+[[start:474794][end:490900]] It shows the structure of a very simple agent that makes some measurements using a reference frame called E and then writes some results of those measurements to memory using a reference frame called Yy.
 [[start:491450][end:500662]] And those two processes are connected by an internal clock that ticks between the input process and the output process.
 [[start:500796][end:508490]] And the clock tick corresponds to the expenditure of free energy to write information irreversibly on the boundary.
 
