@@ -70,33 +70,33 @@
 
 07:40 [[start:460270][end:470490]] So the first thing I want to do today is simplify the notation so that we don't have to draw quite such complicated diagrams.
 [[start:470650][end:474618]] So the picture on the left here is a picture from the last session.
-[[start:474794][end:490900]] It shows the structure of a very simple agent that makes some measurements using a reference frame called E and then writes some results of those measurements to memory using a reference frame called Yy.
+[[start:474794][end:490900]] It shows the structure of a very simple agent that makes some measurements using a reference frame called E and then writes some results of those measurements to memory using a reference frame called Y.
 [[start:491450][end:500662]] And those two processes are connected by an internal clock that ticks between the input process and the output process.
 [[start:500796][end:508490]] And the clock tick corresponds to the expenditure of free energy to write information irreversibly on the boundary.
 
 08:28 [[start:508830][end:515478]] So the memories are actually written on the boundary because that's where classical information lives in this theory.
 
-08:35 [[start:515654][end:530930]] So you can think of this whole process from e through the clock and back to y as a single quantum process or as a quantum computation that maps some sector e of the boundary to some sector Y of the boundary.
+08:35 [[start:515654][end:530930]] So you can think of this whole process from E through the clock and back to Y as a single quantum process or as a quantum computation that maps some sector E of the boundary to some sector Y of the boundary.
 [[start:531590][end:544150]] And so we can represent it in this much simpler way that's over on the right side as some process Q that maps some sector on the boundary to some other sector on the boundary.
 [[start:544650][end:551030]] And formally, that process can be thought of as a topological quantum field theory.
 [[start:551530][end:553446]] Topological here is important.
 
 09:13 [[start:553548][end:561660]] It's not geometric, it doesn't assume an embedding in space and this will become critically important later on.
-[[start:562030][end:573790]] And the operation of that tqft requires a clock tick or it incorporates a tick of this internal clock.
-[[start:574370][end:592530]] And we can do this because we were able to prove jim Glazeburg and Tanino Marciano and I were able to prove last year that we can always represent a quantum reference frame as a topological quantum field theory.
+[[start:562030][end:573790]] And the operation of that TQFT [Topological Quantum Field Theory] requires a clock tick or it incorporates a tick of this internal clock.
+[[start:574370][end:592530]] And we can do this because we were able to prove--James Glazebrook and Antonino Marciano and I [2022, The Free Energy Principles Induces Neuromorphic Development] --were able to prove last year that we can always represent a quantum reference frame as a topological quantum field theory.
 
 09:52 [[start:592690][end:599526]] And this just illustrates the two kinds of transformations between quantum reference frames that are important.
-[[start:599628][end:622730]] We can take one and divide it into two pieces that commute or we can take a two part reference frame and we can swap in another part that doesn't commute with the part that we've swapped it in for but that does commute with the remainder of the reference frame.
+[[start:599628][end:622730]] We can take one and divide it into two pieces that commute or we can take a two-part reference frame and we can swap in another part that doesn't commute with the part that we've swapped it in for but that does commute with the remainder of the reference frame.
 
 10:22 [[start:622810][end:637394]] So here R is the reference component of some object identification system and we can swap in some different way of looking at the object once we've identified it.
-[[start:637432][end:661690]] So, for example, if the object that we're identifying is a box that can measure both Z spin and X spin, then P and Q can be the z spin and x spin settings on that box that allow us to effectively rotate the filter from this way to that way so that we measure vertical spin versus horizontal spin.
+[[start:637432][end:661690]] So, for example, if the object that we're identifying is a box that can measure both Z spin and X spin, then P and Q can be the Z spin and X spin settings on that box that allow us to effectively rotate the filter from this way to that way so that we measure vertical spin versus horizontal spin.
 
 11:02 [[start:662110][end:663562]] And that's really it.
 [[start:663616][end:669194]] I mean, those are the ways that one can transform quantum reference frames.
-[[start:669322][end:687810]] Of course, we could do arbitrarily many compositions of this kind of transformation to do something very complicated, but they map very simply to tqfts with the structure and you can construct categories out of this and find a function that's well defined that maps one category to another.
+[[start:669322][end:687810]] Of course, we could do arbitrarily many compositions of this kind of transformation to do something very complicated, but they map very simply to TQFTs with the structure and you can construct categories out of this and find a functor that's well defined that maps one category to another.
 
 11:27 [[start:687880][end:698390]] So it's an example of a nice use of categorical techniques for solving a problem that looks difficult but in fact it's very straightforward.
-[[start:699370][end:728350]] So using this simplified notation, it becomes very easy to see that if we have two systems, alice and Bob on opposite sides of this boundary and we perfectly align their quantum reference frames, which is what the FEP says they will tend to do, then they become entangled.
+[[start:699370][end:728350]] So using this simplified notation, it becomes very easy to see that if we have two systems, Alice and Bob on opposite sides of this boundary and we perfectly align their quantum reference frames, which is what the FEP says they will tend to do, then they become entangled.
 
 12:08 [[start:728790][end:739940]] And you can see that they're entangled by seeing that once the reference frames are perfectly aligned, they jointly implement one quantum process.
 [[start:741610][end:746630]] And jointly implementing one quantum process just means you're entangled.
