@@ -83,7 +83,7 @@
 
 09:13 [[start:553548][end:561660]] It's not geometric, it doesn't assume an embedding in space and this will become critically important later on.
 [[start:562030][end:573790]] And the operation of that TQFT [Topological Quantum Field Theory] requires a clock tick or it incorporates a tick of this internal clock.
-[[start:574370][end:592530]] And we can do this because we were able to prove--James Glazebrook and Antonino Marciano and I [2022, The Free Energy Principles Induces Neuromorphic Development] --were able to prove last year that we can always represent a quantum reference frame as a topological quantum field theory.
+[[start:574370][end:592530]] And we can do this because we were able to prove--James Glazebrook and Antonino Marciano and I [(2022) Sequential measurements, topological quantum field theories, and topological quantum neural networks]--were able to prove last year that we can always represent a quantum reference frame as a topological quantum field theory.
 
 09:52 [[start:592690][end:599526]] And this just illustrates the two kinds of transformations between quantum reference frames that are important.
 [[start:599628][end:622730]] We can take one and divide it into two pieces that commute or we can take a two-part reference frame and we can swap in another part that doesn't commute with the part that we've swapped it in for but that does commute with the remainder of the reference frame.
@@ -106,7 +106,7 @@
 [[start:764510][end:786158]] So a lot of things like this become very simple when we think of these processes as just quantum computations going on inside some system implemented by some system and how those processes relate across some boundary.
 [[start:786334][end:792680]] So that's what we're going to do for studying communication today.
 
-13:14 [[start:794410][end:812454]] Another thing to recall from a couple of sessions ago, our last session, is that if two reference frames, q one and Q Two commute, we can always join them together to form a single reference frame.
+13:14 [[start:794410][end:812454]] Another thing to recall from a couple of sessions ago, our last session, is that if two reference frames, Q1 and Q2 commute, we can always join them together to form a single reference frame.
 [[start:812502][end:818560]] And this is just a graphical depiction in this simpler language of how that works.
 
 13:39 [[start:819250][end:826862]] And topologically, there's no distinction between the left side and the right side.
@@ -119,7 +119,7 @@
 14:22 [[start:862886][end:866410]] They do each have free choice of reference frame.
 [[start:867090][end:870074]] And so they have to communicate classically.
 [[start:870202][end:877070]] They don't share a single quantum process, so they're not entangled.
-[[start:878130][end:908006]] And before we go ahead to do that, I just wanted to remind you of some of the no go theorems that follow from this situation depicted on the right, where we have a single agent executing a single reference frame, a single process, a single kind of measurement, any set of commuting measurements that can be combined into one measurement.
+[[start:878130][end:908006]] And before we go ahead to do that, I just wanted to remind you of some of the no-go theorems that follow from this situation depicted on the right, where we have a single agent executing a single reference frame, a single process, a single kind of measurement, any set of commuting measurements that can be combined into one measurement.
 [[start:908198][end:910666]] And here are some things Alice can't do.
 
 15:10 [[start:910768][end:913450]] And we've talked about some of these previously.
@@ -146,20 +146,20 @@
 
 17:21 [[start:1041850][end:1057350]] And that's clearly connected to this first point, that she can't measure the entanglement entropy across Bob, because the entanglement entropy can only be small if her dimension and Bob's dimension are both much larger than the dimension of the boundary.
 [[start:1057430][end:1059740]] So that's a condition she can't check.
-[[start:1061310][end:1066330]] So all of these kind of no go theorems lead off in interesting directions.
+[[start:1061310][end:1066330]] So all of these kind of no-go theorems lead off in interesting directions.
 [[start:1066690][end:1088610]] And the only one that we're really going to be interested in here is the third one, the one about measuring Bob's entanglement entropy, because we want to talk specifically about how multiple agents, so multiple components of Alice can access information about Bob's entanglement entropy.
 
 18:13 [[start:1093050][end:1101290]] Okay, so recall from the end of the last session that the last thing we talked about was classical communication.
 
 18:21 [[start:1101950][end:1111920]] And we talked about the fact that classical communication involves assumptions and pitfalls and that we have to be very careful whenever we talk about it.
 [[start:1112450][end:1117178]] And what we're going to do today is standard practice in physics.
-[[start:1117274][end:1127390]] We're simply going to stipulate that these components, a one and a two, the separable components of Alice, communicate classically.
+[[start:1117274][end:1127390]] We're simply going to stipulate that these components, A1 and A2, the separable components of Alice, communicate classically.
 [[start:1127470][end:1129202]] And so we're going to draw it like this.
 
 18:49 [[start:1129256][end:1135330]] We're going to draw a classical channel between them, and that classical channel passes through Bob.
-[[start:1135410][end:1149610]] It uses degrees of freedom of the ambient photon field or the ambient atmosphere or pieces of paper or email or something like that that's out there in the environment to exchange classical messages.
+[[start:1135410][end:1149610]] It uses degrees of freedom of the ambient photon field or the ambient atmosphere or pieces of paper or email or something like that, that's out there in the environment to exchange classical messages.
 [[start:1150510][end:1154394]] And there are a couple of things to note here I haven't even written down here.
-[[start:1154432][end:1159322]] We're assuming that a one and a two share some language for this classical communication.
+[[start:1154432][end:1159322]] We're assuming that A1 and A2 share some language for this classical communication.
 [[start:1159386][end:1162320]] That's a big assumption, as we talked about last time.
 
 19:23 [[start:1163810][end:1168398]] But I will note explicitly that classical communication takes time.
@@ -172,13 +172,10 @@
 [[start:1191930][end:1201900]] But we can say that whatever passes through this classical channel requires at least one clock tick on Bob's side.
 [[start:1202590][end:1206330]] So it's a process that Bob has to execute.
 [[start:1206930][end:1210158]] And executing that process takes time.
-[[start:1210244][end:1216318]] So getting the signal from me to you on the internet takes some time.
+[[start:1210244][end:1216318]] So getting the signal from me to you on the internet takes some time so the environment's clock has to tick during that.
+[[start:1221110][end:1241686]] And all of these assumptions bundled together turn out to be a fairly serious set of assumptions and they involve assumptions about fine tuning, about the universe being just right and they should make us nervous, and I just want to leave it at that.
 
-20:16 [[start:1216484][end:1220340]] So the environment's clock has to tick during that.
-[[start:1221110][end:1241686]] And all of these assumptions bundled together turn out to be a fairly serious set of assumptions and they involve assumptions about fine tuning, about the universe being just right and they should make us nervous and I just want to leave it at that.
-
-20:41 [[start:1241868][end:1247142]] We always assume with complete a plumb that agents can communicate classically.
-[[start:1247206][end:1258442]] But it's not a straightforward assumption and it's worth any of you are looking at for interesting research projects can look into the nature of classical communication.
+20:41 [[start:1241868][end:1247142]] We always assume with complete aplomb that agents can communicate classically but it's not a straightforward assumption--and it's worth--for any of you who are looking for interesting research projects, can look into the nature of classical communication.
 [[start:1258506][end:1266846]] It's full of hidden assumptions and surprises and things that aren't at all straightforward even though they look like they ought to be.
 
 21:07 [[start:1267028][end:1268590]] So there's a challenge.
@@ -187,24 +184,23 @@
 [[start:1273934][end:1278930]] We do it because we have to if we're going to talk about detecting entanglement.
 [[start:1280070][end:1287666]] And most of you probably know the history of the notion of entanglement.
 
-21:27 [[start:1287778][end:1296314]] It was first noticed by Einstein, Podolski and Rosen ever after called EPR in 1935.
-[[start:1296512][end:1309390]] And they wrote a paper which is infamous and called the EPR Paper in which they argued that the phenomenon of entanglement made no sense and couldn't possibly be physical.
+21:27 [[start:1287778][end:1296314]] It was first noticed by [Albert] Einstein, [Boris] Podolski and [Nathan] Rosen--ever after called EPR [Einstein-Podolsky-Rosen]--in 1935.
+[[start:1296512][end:1309390]] And they wrote a paper which is infamous, and called the EPR paper, in which they argued that the phenomenon of entanglement made no sense and couldn't possibly be physical.
 
 21:50 [[start:1310050][end:1320100]] And since quantum theory included this notion of entanglement, it couldn't possibly be a complete theory of what's going on in the world.
 [[start:1320710][end:1331570]] And Schrodinger replied the same year with a very detailed paper where he introduces, among other things, Schrodinger's cat as a paradox.
-[[start:1332170][end:1338498]] And he explains very clearly what entanglement is and why entanglement follows from quantum theory.
+[[start:1332170][end:1338498]] And he explains very clearly what entanglement is, and why entanglement follows from quantum theory.
 
-22:18 [[start:1338674][end:1347322]] And he uses that discussion to argue that the classical notion of a physical state is not actually applicable to the world as it is.
-[[start:1347376][end:1351050]] So he answers the EPR paper very directly.
-[[start:1352270][end:1373810]] And this discussion is currently mostly known as the Bohr Einstein debate because of course Bohr already in 1928 has said had said in print that the classical notion of causality in space and time simply doesn't apply anymore.
+22:18 [[start:1338674][end:1347322]] And he uses that discussion to argue that the classical notion of a physical state is not actually applicable to the world as it is, so he answers the EPR paper very directly.
+[[start:1352270][end:1373810]] And this discussion is currently mostly known as the Bohr-Einstein debate because of course [Niels] Bohr already in 1928 had said in print that the classical notion of causality in space and time simply doesn't apply anymore.
 
 22:54 [[start:1374470][end:1377646]] And Einstein objected to that vigorously.
 [[start:1377838][end:1385090]] But that was 1935 and it was almost 50 years later that entanglement was first observed in the laboratory.
 
-23:05 [[start:1385170][end:1398060]] Here the 1982 picture is a picture of the interior of Alan Aspet's laboratory when he performed the first entanglement experiment for which he finally won the Nobel Prize last year.
-[[start:1399790][end:1409310]] And these days this kind of experiment is done all over the world and is even done with satellite borne sources.
+23:05 [[start:1385170][end:1398060]] Here, the 1982 picture is a picture of the interior of Alain Aspect's laboratory when he performed the first entanglement experiment for which he finally won the Nobel Prize last year.
+[[start:1399790][end:1409310]] And these days this kind of experiment is done all over the world and is even done with satellite-borne sources.
 
-23:32 [[start:1412710][end:1428440]] Resource is the key to quantum secured communication, as we'll discuss in quantum cryptography and quantum banking and the quantum internet, all this other stuff that you may have heard of.
+23:32 [[start:1412710][end:1428440]] Source is the key to quantum secured communication--as we'll discuss--in quantum cryptography and quantum banking and the quantum internet, all this other stuff that you may have heard of.
 [[start:1429450][end:1440570]] So before talking more about these experiments, I just want to provide a definition of entanglement.
 
 24:02 [[start:1442350][end:1446278]] Entangled simply means not separable.
@@ -213,17 +209,14 @@
 
 24:20 [[start:1460310][end:1461426]] And that's it.
 [[start:1461528][end:1462930]] That's the definition.
-[[start:1463830][end:1484540]] And the literature, and especially the popular literature, is absolutely rife with hype and various kinds of mischief of entanglement and authors trying to convince you that entanglement is this amazing kind of woo woo thing.
-[[start:1485310][end:1500670]] And whenever you run across that, go back to the definition, entanglement simply means this simple mathematical condition of not separability or a state that isn't factorizable.
+[[start:1463830][end:1484540]] And the literature, and especially the popular literature, is absolutely rife with hype and various kinds of mysterification of entanglement and authors trying to convince you that entanglement is this amazing kind of woo-woo thing.
+[[start:1485310][end:1500670]] And whenever you run across that, go back to the definition. Entanglement simply means this simple mathematical condition of non-separability or a state that isn't factorizable.
 [[start:1501170][end:1506346]] And that means that the state does not display classical conditional independence.
 
-25:06 [[start:1506538][end:1509074]] So classically, that's the way to think about it.
-[[start:1509112][end:1511810]] It's a failure of conditional independence.
+25:06 [[start:1506538][end:1509074]] So classically, that's the way to think about it; it's a failure of conditional independence.
 [[start:1512230][end:1519650]] And it's ubiquitous in quantum theory, even though it wasn't actually absurd for almost 50 years after it was predicted.
 [[start:1521130][end:1524182]] So here's what all these experiments look like.
-[[start:1524236][end:1535406]] They're called Bell EPR experiments, after John Bell, who derived the statistical criterion for detecting entanglement and EPR.
-
-25:35 [[start:1535458][end:1544330]] Einstein, Podolski and Rosen, who did this as a thought experiment and said, if this occurs in the theory, it can't possibly be real.
+[[start:1524236][end:1535406]] They're called Bell EPR experiments, after John Bell, who derived the statistical criterion for detecting entanglement and EPR, Einstein, Podolski and Rosen, who did this as a thought experiment and said, if this occurs in the theory, it can't possibly be real.
 [[start:1544400][end:1545900]] And of course it is real.
 [[start:1546270][end:1549390]] It's now amply demonstrated by experimentation.
 [[start:1550050][end:1551022]] Here's how they work.
@@ -237,7 +230,7 @@
 [[start:1573420][end:1575720]] So this is not a separable state.
 
 26:16 [[start:1576570][end:1586886]] And this state propagates outward in space and time to two observers who have independent laboratories, for example, on different continents.
-[[start:1586998][end:1602830]] In that space based experiment that I showed you the picture of from the COVID of Science a few years ago, 2017, I think, the Tulip observers have freedom to choose their own reference frame, their own Z axis for measuring spin.
+[[start:1586998][end:1602830]] In that space-based experiment that I showed you the picture of from the cover of Science a few years ago, 2017, I think, the two observers have freedom to choose their own reference frame, their own Z axis for measuring spin.
 [[start:1603170][end:1607550]] They do a spin measurement, and they do this over and over and over again.
 [[start:1607620][end:1617598]] They accumulate statistics and they exchange their results so that they can analyze the joint statistics of their experiment.
 [[start:1617774][end:1623938]] And they check to see whether that joint statistics is consistent with classical probability theory.
@@ -265,8 +258,7 @@
 [[start:1711070][end:1719250]] So this is why we have to assume classical communication to talk about detecting or using entanglement.
 [[start:1720470][end:1723640]] So now I want to represent this in a different way.
 
-28:45 [[start:1725770][end:1728226]] Using our little picture earlier.
-[[start:1728418][end:1732520]] We're going to think of Alice, again as two components, a one and a two.
+28:45 [[start:1725770][end:1728226]] Using our little picture earlier, we're going to think of Alice, again as two components, a one and a two.
 [[start:1733070][end:1736890]] They're separable, so they have to communicate classically.
 [[start:1737230][end:1743866]] They have a classical channel that goes through Bob, and they also now share some quantum channel.
 [[start:1743968][end:1746060]] They share an entangled state.
@@ -276,20 +268,20 @@
 [[start:1752450][end:1763060]] And their detectors, if you want to think about it that way, are located on this boundary B, or their interface with the sources on this boundary B.
 
 29:23 [[start:1763830][end:1774760]] And each of them executes a process that accumulates data from the quantum channel and communicates it to the other observer via the classical channel.
-[[start:1776010][end:1779842]] Now, this picture illustrates what's called a lock protocol.
+[[start:1776010][end:1779842]] Now, this picture illustrates what's called a LOCC protocol.
 
-29:39 [[start:1779986][end:1784250]] Lock means local operations and classical communication.
-[[start:1784830][end:1789766]] So a one and a two are each operating locally on their boundary.
+29:39 [[start:1779986][end:1784250]] LOCC means local operations and classical communication.
+[[start:1784830][end:1789766]] So A1 and A2 are each operating locally on their boundary.
 [[start:1789878][end:1800938]] They're making measurements locally on their boundary, and they're communicating via actions locally on their boundary and observations locally on their boundary.
 [[start:1801034][end:1806526]] So, for example, I'm communicating with my computer here.
 [[start:1806628][end:1808958]] We can consider it my boundary.
 
-30:09 [[start:1809134][end:1823094]] And stuff is happening in the environment that's implemented by the Internet, and you're receiving those communications locally on your boundary, on your laptop or whatever it is you're using.
+30:09 [[start:1809134][end:1823094]] And stuff is happening in the environment that's implemented by the internet, and you're receiving those communications locally on your boundary, on your laptop or whatever it is you're using.
 [[start:1823292][end:1826360]] So that's what local operations means.
 
 30:26 [[start:1826890][end:1831890]] And these protocols specifically involve classical communication.
 [[start:1831970][end:1834774]] And so they're able to detect entanglement.
-[[start:1834902][end:1839370]] And a Bell EPR experiment is just an example of a lock protocol.
+[[start:1834902][end:1839370]] And a Bell/EPR experiment is just an example of a LOCC protocol.
 
 30:40 [[start:1840670][end:1845974]] The observers exchange information about how they're going to do their experiments.
 [[start:1846022][end:1848202]] They're both going to measure D spin.
@@ -297,50 +289,45 @@
 [[start:1855970][end:1858480]] So that's all classically set up.
 [[start:1858870][end:1864270]] Then they actually make their observations, and then they classically communicate their results.
 
-31:04 [[start:1864350][end:1877510]] So classical communication front and back lock protocols are not limited to this sort of Bell EPR sort of setting.
-[[start:1877930][end:1882630]] We can also represent a scattering experiment as a lock protocol.
-[[start:1884030][end:1889718]] So here's a representation of scattering as a lock protocol.
+31:04 [[start:1864350][end:1877510]] So classical communication, front and back LOCC protocols, are not limited to this sort of Bell/EPR sort of setting.
+[[start:1877930][end:1882630]] We can also represent a scattering experiment as a LOCC protocol.
+[[start:1884030][end:1889718]] So here's a representation of scattering as a LOCC protocol.
 
-31:29 [[start:1889814][end:1900494]] And you can see all I've done is cut that previous boundary at the division between a one and a two.
+31:29 [[start:1889814][end:1900494]] And you can see all I've done is cut that previous boundary at the division between A1 and A2.
 [[start:1900692][end:1914290]] And I've then extended it in some external time, the time that is counted by Bob's clock, not by Alice's clock.
 
 31:54 [[start:1914950][end:1917250]] That's what's meant by external.
-[[start:1917910][end:1923718]] And I've relabeled Alice two as Alice one at a later time.
-[[start:1923804][end:1936300]] So now what Alice is doing is communicating with her past self, or a one is communicating with her future self, and they're each doing something different.
-[[start:1937470][end:1944490]] A one is executing a procedure that in the laboratory we call state preparation.
-[[start:1945470][end:1953450]] She's preparing a state that we'll call in, which is just the initial state of some scattering experiment.
+[[start:1917910][end:1923718]] And I've relabeled A2 as A1 at a later time.
+[[start:1923804][end:1936300]] So now what Alice is doing is communicating with her past self, or A1 is communicating with her future self, and they're each doing something different.
+[[start:1937470][end:1944490]] A1 is executing a procedure that in the laboratory we call state preparation.
+[[start:1945470][end:1953450]] She's preparing a state that we'll call "in", which is just the initial state of some scattering experiment.
 
-32:33 [[start:1953530][end:1965220]] So, for example, at the LHC, N is some state of two protons that are portaling around the ring at the LHC at close to the speed of light.
-[[start:1966790][end:1975494]] And Alice, then later on at T plus delta, t is doing a different kind of quantum process.
-[[start:1975612][end:1986730]] She's analyzing the data coming out of something like the Atlas detector, which is a multiparticle counter that's located at the LHC.
+32:33 [[start:1953530][end:1965220]] So, for example, at the LHC [Large Hadron Collider], "in" is some state of two protons that are portaling around the ring at the LHC at close to the speed of light.
+[[start:1966790][end:1975494]] And Alice, then later on at t plus delta t, is doing a different kind of quantum process.
+[[start:1975612][end:1986730]] She's analyzing the data coming out of something like the ATLAS detector, which is a multiparticle counter that's located at the LHC.
 [[start:1987550][end:1997120]] So they share a quantum channel, which is the scattering channel that takes the incoming state and produces the outgoing state.
-[[start:1997810][end:2017006]] And I recall from the very first session, as Feynman told us, to understand this transition from in to out, we have to integrate over all possible paths that are consistent with conservation of spin.
-
-33:37 [[start:2017038][end:2019970]] Holicity basically momentum plus spin.
-
-33:42 [[start:2022010][end:2030790]] All the different spins that are relevant in a high energy physics experiment, including things like Lepton number, which is basically a spin.
+[[start:1997810][end:2017006]] And recall from the very first session, as [Richard] Feynman told us, to understand this transition from "in" to "out", we have to integrate over all possible paths that are consistent with conservation of spin helicity, basically, momentum plus spin--all the different spins that are relevant in a high energy physics experiment, including things like lepton number, which is basically a spin.
 [[start:2032490][end:2033858]] Now, how do we know?
 [[start:2033964][end:2036330]] How do we know what we have to conserve?
-[[start:2036750][end:2048442]] We know what we have to conserve because Alice is doing the experiment has a classical memory that allows her to remember what she prepared.
+[[start:2036750][end:2048442]] We know what we have to conserve because Alice is doing the experiment as a classical memory that allows her to remember what she prepared.
 [[start:2048586][end:2064770]] She can remember that what she did back in the past was set to protons counterrotating in the LHC, and they had certain energies, and so they had certain momenta, and they were protons, so they had certain spin variables.
 
-34:25 [[start:2065510][end:2071670]] All of that has to be remembered to make any sense of the output of the detectors.
-[[start:2072570][end:2079240]] And so to actually come up with a measured state that makes sense.
+34:25 [[start:2065510][end:2071670]] All of that has to be remembered to make any sense of the output of the detectors and so to actually come up with a measured state that makes sense.
 
 34:40 [[start:2080410][end:2087078]] And very often this memory channel is neglected by physicists.
-[[start:2087174][end:2089980]] And I'm going to pause here and let Andrew ask a question.
+[[start:2087174][end:2089980]] And I'm going to pause here and let Ander ask a question.
 
 34:52 _Ander:_
 [[start:2092110][end:2093078]] Thank you, Chris.
-[[start:2093174][end:2102682]] So does this imply that every time you have a log channel, the quantum part is a scattering picture, like a unitary evolution?
+[[start:2093174][end:2102682]] So does this imply that every time you have a LOCC channel, the quantum part is a scattering picture, like a unitary evolution?
 [[start:2102746][end:2109970]] Even in the earlier EPR picture, is that quantum channel portion always a unitary evolution scattering picture?
 [[start:2110310][end:2111300]] Thank you.
 
 35:14 _Chris:_
 [[start:2114310][end:2127510]] Yes, for essentially the reason that defined a classical channel, you're always assuming you have something that's protected from decoherence by the environment.
 [[start:2128250][end:2140730]] So, yeah, if you're doing an EPR experiment, you have to assume that you don't have any environmental decoherence between the source and the detectors.
-[[start:2141630][end:2166740]] And similarly, when you're doing a scattering experiment, you have to make the assumption that the environment is not reaching in there and messing with the outgoing state that you're going to see, or reaching in and messing with the incoming state and changing it in some way that repepes it in a way that you don't know, that you have no knowledge of.
-[[start:2167190][end:2175640]] So, yes, you're making a fairly strong antidecornce assumption in any of these settings when you're talking about having a quantum channel.
+[[start:2141630][end:2166740]] And similarly, when you're doing a scattering experiment, you have to make the assumption that the environment is not reaching in there and messing with the outgoing state that you're going to see, or reaching in and messing with the incoming state and changing it in some way that reprepares it in a way that you don't know, that you have no knowledge of.
+[[start:2167190][end:2175640]] So, yes, you're making a fairly strong anti-decoherence assumption in any of these settings when you're talking about having a quantum channel.
 
 36:18 [[start:2178090][end:2179720]] Does that answer the question?
 
@@ -350,16 +337,13 @@
 
 36:21 _Chris:_
 [[start:2181852][end:2182920]] Okay, great.
-[[start:2183530][end:2198650]] So we can think of lock, we can think of scattering as Locke, and I just wanted to now emphasize that effectively.
-
-36:38 [[start:2198730][end:2202682]] What Locke is implementing is two parallel memories.
+[[start:2183530][end:2198650]] So we can think of LOCC, we can think of scattering as LOCC, and I just wanted to now emphasize that effectively what LOCC is implementing is two parallel memories.
 [[start:2202746][end:2209330]] A classical memory, which, as we said in the case of scattering, is memory for preparation.
 [[start:2209910][end:2219940]] In the EPR case, it's memory for preparation for what the experimental setup is, for what the instructions for doing the experiment are.
 [[start:2220890][end:2227058]] And we also have a quantum channel, which is effectively another memory.
 [[start:2227234][end:2230280]] It's something that's extended through time.
 
-37:10 [[start:2230970][end:2237190]] And again, it's implemented by the environment, implemented by Bob, and it involves Bob's.
-[[start:2237270][end:2238570]] Clock ticking.
+37:10 [[start:2230970][end:2237190]] And again, it's implemented by the environment, implemented by Bob, and it involves Bob's clock ticking.
 [[start:2239550][end:2248110]] So whenever we have two memories in parallel, we can construct an error correcting code.
 
 37:28 [[start:2248180][end:2251760]] So think of a simple classical error correcting code.
@@ -375,7 +359,7 @@
 [[start:2302516][end:2309294]] So this corresponds to environmental decoherence not being a good assumption.
 
 38:29 [[start:2309422][end:2314180]] Even though it's classical, environmental interference is not a good assumption in this case.
-[[start:2315510][end:2319666]] So a quantum error correct encoder is basically the same idea.
+[[start:2315510][end:2319666]] So a quantum error correcting code is basically the same idea.
 [[start:2319768][end:2333690]] I use some feature of the fact that I have two different memories and that I'm encoding something in time.
 
 38:53 [[start:2333840][end:2344940]] I'm encoding multiple replicates of something in time to provide a way of checking to make sure that I'm sending the correct message.
@@ -394,40 +378,36 @@
 40:26 [[start:2426730][end:2434570]] It reassures you that something's not happening in the environment that's dangerous and disturbing.
 [[start:2435150][end:2447870]] And if you couldn't do that, if your environment was constantly changing and there was no familiarity about the environment, you wouldn't be able to check your memory.
 
-40:48 [[start:2448450][end:2449406]] You wouldn't be able to.
-[[start:2449428][end:2450590]] Check your sanity.
+40:48 [[start:2448450][end:2449406]] You wouldn't be able to check your sanity.
 [[start:2451410][end:2460494]] So even though we don't think about our local environments as effectively an error correcting code, that's exactly how we use it.
 
-41:00 [[start:2460532][end:2470180]] We use stigmurgic memory or memory out there in the environment as a way of checking our own memories and assuring that our memory is okay.
+41:00 [[start:2460532][end:2470180]] We use stigmergic memory, or memory out there in the environment, as a way of checking our own memories and assuring that our memory is okay.
 
 41:13 [[start:2473180][end:2476650]] So I talked a little bit about quantum security.
 [[start:2477420][end:2481064]] Here's how quantum security system works again.
-[[start:2481102][end:2482520]] It's a lock protocol.
-[[start:2483660][end:2498720]] We have some classical signal that can be thought of as a code or a key or a one time pad, for example, that encodes a way of doing experiments.
+[[start:2481102][end:2482520]] It's a LOCC protocol.
+[[start:2483660][end:2498720]] We have some classical signal that can be thought of as a code or a key or a one-time pad, for example, that encodes a way of doing experiments.
 [[start:2499380][end:2507890]] And once that's been exchanged, assuming it's secure, then we can use the quantum channel to communicate information.
 
 41:48 [[start:2508500][end:2514308]] And the classical channel has told us what we have to do with that quantum channel.
 [[start:2514394][end:2521184]] We have to make certain kinds of measurements at, say, particular clock times as measured.
 [[start:2521312][end:2529000]] And we'll get information sent from the past, from the sender.
-[[start:2530060][end:2550130]] And the classical channel protects the quantum channel from adversarial agents, because anything that an adversarial agent does to the quantum channel, if some agent tries to eavesdrop, for example, on the quantum channel, they'll disrupt the quantum channel.
-[[start:2550580][end:2559388]] And the results of our measurement will not be what's expected given the protocol that we run, that we have run.
+[[start:2530060][end:2550130]] And the classical channel protects the quantum channel from adversarial agents, because anything that an adversarial agent does to the quantum channel, if some agent tries to eavesdrop, for example, on the quantum channel, they'll disrupt the quantum channel and the results of our measurement will not be what's expected given the protocol that we run.
 
 42:39 [[start:2559574][end:2571380]] So quantum communication is secured by the fact that interfering with some entangled state actually destroys the state so it's detectable.
 
 42:52 [[start:2572040][end:2580360]] We can always know if someone is trying to disrupt our communications, which isn't true if we just have two classical channels.
-[[start:2581020][end:2584468]] Charlie can always intercept a message and then recreate it.
-[[start:2584574][end:2588110]] And that's not possible with the quantum channel.
+[[start:2581020][end:2584468]] Charlie can always intercept a message and then recreate it, and that's not possible with the quantum channel.
 
 43:10 [[start:2590720][end:2600130]] So let's refold this diagram so that we've taken the external time back out of it.
-[[start:2601300][end:2609712]] And we have this picture where the two components of Alice are just interacting via their shared boundary with their environment.
-[[start:2609776][end:2617190]] Bob and now we can see that the source of redundancy is not time, it's the boundary itself.
+[[start:2601300][end:2609712]] And we have this picture where the two components of Alice are just interacting via their shared boundary with their environment, Bob, and now we can see that the source of redundancy is not time, it's the boundary itself.
 
-43:39 [[start:2619320][end:2634940]] Just sharing the boundary allows Alice's components, a one and a two, to put copies of the same information on different places on the boundary.
+43:39 [[start:2619320][end:2634940]] Just sharing the boundary allows Alice's components, A1 and A2, to put copies of the same information on different places on the boundary.
 
 43:55 [[start:2635520][end:2640510]] So the boundary now becomes a resource for redundant storage of information.
-[[start:2641360][end:2666740]] So Alice one and Alice two can use different parts of the boundary to check what other parts of the boundary, say, to check the information that's encoded on other parts of the boundary so they can define an error correct encode on the boundary itself using this lock protocol.
+[[start:2641360][end:2666740]] So Alice 1 and Alice 2 can use different parts of the boundary to check what other parts of the boundary say, to check the information that's encoded on other parts of the boundary, so they can define an error correcting code on the boundary itself using this LOCC protocol.
 
-44:29 [[start:2669320][end:2710710]] So I just want to leave you with this idea that using classical and quantum channels together allows us to define error correcting codes on boundaries that we share as separate agents and leave you to think about what shared measurements, what shared quantum reference frames let us as agents see the same things.
+44:29 [[start:2669320][end:2710710]] So I just want to leave you with this idea that using classical and quantum channels together allows us to define error correcting codes on boundaries that we share as separate agents, and leave you to think about what shared measurements, what shared quantum reference frames, let us as agents see the same things.
 
 45:13 [[start:2713560][end:2718580]] And this is what we'll talk about next time in September.
 [[start:2719400][end:2741980]] We'll talk specifically about how space provides us with an error correcting code and try to understand why space is treated as emergent from something else, basically from communication in most of quantum gravity.
@@ -450,8 +430,7 @@
 [[start:2789272][end:2796460]] So do clocks have to tick discreetly or how do we think about continuous time modeling.
 
 46:39 _Chris:_
-[[start:2799700][end:2801036]] In this quantum setting?
-[[start:2801068][end:2816100]] They do have to tick discreetly because one has to be able to distinguish Alice's preparation of the qubits on her boundary from Bob's measurements of the qubits on the boundary.
+[[start:2799700][end:2801036]] In this quantum setting they do have to tick discreetly because one has to be able to distinguish Alice's preparation of the qubits on her boundary from Bob's measurements of the qubits on the boundary.
 [[start:2817640][end:2827130]] And this process can be extremely fast with respect to any kind of sense of macroscopic time.
 
 47:09 [[start:2829260][end:2836060]] Your eyes are responding to photons in, I think it's hundreds of femtoseconds.
@@ -479,41 +458,40 @@
 
 48:26 _Daniel:_
 [[start:2906560][end:2906972]] Yeah.
-[[start:2907026][end:2937210]] So so given these rapid and ongoing developments in theory and practice related to quantum information science and quantum information security, how are people using this distinction of the classical stigmagic memory and then the quantum cognitive process to anticipate how to develop information systems that are reliable going forward?
+[[start:2907026][end:2937210]] So given these rapid and ongoing developments in theory and practice related to quantum information science and quantum information security, how are people using this distinction of the classical stigmergic memory and then the quantum cognitive process to anticipate how to develop information systems that are reliable going forward?
 
 49:01 _Chris:_
 [[start:2941520][end:2954880]] I don't know of any instances in which thinking about quantum cognition has entered directly into any design of communication systems.
 [[start:2955940][end:2961360]] The ability of humans to interact with these systems is just assumed.
 [[start:2962500][end:2976928]] So it's just assumed that the user can interact with, say, a computer interface, which is the sort of interface that will be provided or is provided to any quantum computer.
-[[start:2977114][end:2985770]] So if you think about a quantum computer, a practical quantum computer, it has classical interfaces front and back.
+[[start:2977114][end:2985770]] So if you think about a quantum computer, a practical quantum computer, it has classical interfaces, front and back.
 [[start:2986700][end:2999196]] So in thinking about interacting with the computer, I'm giving it some classical problem statement, for example, and asking for some classical answer.
 
 49:59 [[start:2999298][end:3003520]] And what it's going to give me is a probability distribution of classical answers.
 
 50:04 [[start:3004500][end:3011520]] But I can, by running the calculation many times, make that probability distribution fairly tight.
 
-50:16 [[start:3016130][end:3020340]] Yeah, I don't know of anyone talking about quantum BCIs at this point.
+50:16 [[start:3016130][end:3020340]] Yeah, I don't know of anyone talking about quantum BCIs [Brain-Computer Interfaces] at this point.
 [[start:3021110][end:3022900]] It'd be an interesting question.
 
 50:27 _Daniel:_
-[[start:3027030][end:3036450]] Was it always understood these sorts of blind spots and axioms associated with classical communication.
-[[start:3037190][end:3046826]] Was it developed as kind of like a proposal or like a special case and more unpacking was left for later?
+[[start:3027030][end:3036450]] Was it always understood, these sorts of blind spots and axioms associated with classical communication, was it developed as kind of like a proposal or like a special case and more unpacking was left for later?
 [[start:3046928][end:3050730]] Or are these blind spots things that we're now coming into awareness of?
 [[start:3050800][end:3054170]] Given what we're learning in the quantum information sciences?
 
 50:55 _Chris:_
 [[start:3055890][end:3058560]] I think we're learning how serious they are.
 
-50:59 [[start:3059970][end:3064720]] But they were certainly recognized even by Bohr in his 1928 paper.
+50:59 [[start:3059970][end:3064720]] But they were certainly recognized even by [Niels] Bohr in his 1928 paper [1928, The Quantum Postulate and the Recent Development of Atomic Theory, https://www.nature.com/articles/121580a0].
 [[start:3065490][end:3070050]] And that's a very good paper, too.
 [[start:3070200][end:3074194]] It's called the present state of quantum theory or something like that.
 [[start:3074232][end:3079410]] And it's in Nature, and it's available on the web somewhere.
 [[start:3081050][end:3082760]] I have a copy of it.
 
-51:23 [[start:3083610][end:3098010]] But it was written, in a sense, as Bohr's summary of the 1927 Solve Conference, which was the conference at which everyone doing quantum theory at that time got together to talk about their results.
-[[start:3098990][end:3116566]] And in it, Bohr essentially presents what came to be the Copenhagen interpretation, which I think is probably unfairly called an interpretation.
+51:23 [[start:3083610][end:3098010]] But it was written, in a sense, as Bohr's summary of the 1927 Solvay Conference [Fifth Solvay Conference, Oct 24-29, 1927], which was the conference at which everyone doing quantum theory at that time got together to talk about their results.
+[[start:3098990][end:3116566]] And in it, [Niels] Bohr essentially presents what came to be the Copenhagen interpretation, which I think is probably unfairly called an interpretation.
 
-51:56 [[start:3116698][end:3122850]] It's sort of the Copenhagen Pragmatic stance toward quantum theory.
+51:56 [[start:3116698][end:3122850]] It's sort of the Copenhagen pragmatic stance toward quantum theory.
 [[start:3123670][end:3137320]] And essentially what Bohr says is that if we're going to do science, we have to assume that people can talk to each other.
 [[start:3138650][end:3152010]] And if we're going to do science, we have to assume that there are instruments that we can manipulate and have reasonable confidence that we know what manipulation we've done.
 
@@ -522,18 +500,18 @@
 [[start:3172390][end:3181560]] And if we think about any of those assumptions in purely quantum theoretic terms, then all sorts of questions are raised, right?
 
 53:02 [[start:3182010][end:3184178]] Every quantum system is unique.
-[[start:3184354][end:3188870]] We have the no Cloning theorem, so every scientific instrument is unique.
+[[start:3184354][end:3188870]] We have the no-cloning theorem, so every scientific instrument is unique.
 
 53:09 [[start:3189690][end:3194934]] So there's no such thing as exactly replicating an experiment.
 [[start:3195062][end:3195740]] Right?
-[[start:3196350][end:3202460]] That's a coarse grained description of what I've done with a completely unique quantum system.
+[[start:3196350][end:3202460]] That's a coarse-grained description of what I've done with a completely unique quantum system.
 [[start:3202990][end:3207646]] And my brain, of course, is unique, and yours is too.
 [[start:3207668][end:3209360]] And everyone else's is.
 
-53:30 [[start:3210050][end:3217070]] So talking about us sharing a language is essentially a coarse grained assumption.
-[[start:3217910][end:3225710]] And what the Copenhagen stance is all about is coarse graining yielding effective classicality?
-[[start:3225870][end:3234840]] Or what that really means is coarse graining yielding a description that we can use in the language that we understand?
-[[start:3235770][end:3252250]] So these are very, very old issues that have been recognized for a long time, but I think in part because of the disaster of shut up and calculate, they haven't really been talked about in the classroom.
+53:30 [[start:3210050][end:3217070]] So talking about us sharing a language is essentially a coarse-grained assumption.
+[[start:3217910][end:3225710]] And what the Copenhagen stance is all about is coarse-graining yielding effective classicality.
+[[start:3225870][end:3234840]] Or what that really means is coarse-graining yielding a description that we can use in the language that we understand?
+[[start:3235770][end:3252250]] So these are very, very old issues that have been recognized for a long time, but I think in part because of the disaster of "shut up and calculate", they haven't really been talked about in the classroom.
 
 54:14 _Daniel:_
 [[start:3254990][end:3255546]] Awesome.
@@ -545,13 +523,12 @@
 [[start:3268470][end:3270318]] The revenge of zoom.
 
 54:30 _Daniel:_
-[[start:3270494][end:3277570]] Well, we looked at the chart earlier where, like, Bob was talking to Alice, the Unidirectional.
+[[start:3270494][end:3277570]] Well, we looked at the chart earlier where, like, Bob was talking to Alice, the unidirectional communication.
 
 54:40 [[start:3280550][end:3281570]] Okay, okay.
-[[start:3281720][end:3282978]] The Unidirectional.
+[[start:3281720][end:3282978]] The unidirectional...
 [[start:3283074][end:3285640]] The third party is recording it, I'm sure.
-[[start:3286410][end:3298038]] Alexi wrote, regarding the environment being used for error correction, a symptom of derealization in psychological trauma breakdown.
-[[start:3298214][end:3301690]] We don't recognize the environment around us and it's scary.
+[[start:3286410][end:3298038]] Alexi wrote, regarding the environment being used for error correction, a symptom of derealization in psychological trauma breakdown, we don't recognize the environment around us and it's scary.
 
 55:04 _Chris:_
 [[start:3304350][end:3305340]] Makes sense.
@@ -575,15 +552,15 @@
 [[start:3341500][end:3345500]] It depends on what parts of the state are separable.
 [[start:3347040][end:3357500]] So again, entanglement is just a statement about components of a joint state that factor or don't.
 
-55:59 [[start:3359700][end:3368000]] So you can have a joint state that looks separable along some dimensions, but in other dimensions.
+55:59 [[start:3359700][end:3368000]] So you can have a joint state that looks separable along some dimensions, but... [inaudible] ...in other dimensions.
 [[start:3368580][end:3377190]] The other big complication here is that whether a state looks entangled depends on the reference frames that you use to measure it with.
-[[start:3378920][end:3388896]] And if you pick entangled reference frames, then what we ordinarily think of as separable, as entangled states become separable.
+[[start:3378920][end:3388896]] And if you pick entangled reference frames, then what we ordinarily think of as separable entangled states become separable.
 
 56:29 [[start:3389088][end:3391270]] So you can move entanglement around.
 
 56:33 _Daniel:_
 [[start:3393800][end:3394524]] Awesome.
-[[start:3394682][end:3411360]] Okay, from Roland Rodriguez is the discrete temporality only within the context of a given holographic screen interface with time being bracketed otherwise beyond interface systems, is continuity or discretion kept agnostic?
+[[start:3394682][end:3411360]] Okay, from Roland Rodriguez--is the discrete temporality only within the context of a given holographic screen interface, with time being bracketed otherwise beyond interface systems, is continuity or discretization kept agnostic?
 
 56:54 _Chris:_
 [[start:3414900][end:3419650]] I think if I understand the question correctly, it's yes.
@@ -595,8 +572,8 @@
 
 57:29 _Daniel:_
 [[start:3449280][end:3449740]] Awesome.
-[[start:3449810][end:3452620]] Time must have a stop huxley.
-[[start:3453040][end:3466604]] And I'll ask one last question from the appropriately monikered question quanderer all communication is abductive is a sentiment that I've been using to develop some arguments.
+[[start:3449810][end:3452620]] Time must "have a stop", Huxley.
+[[start:3453040][end:3466604]] And I'll ask one last question from the appropriately "monikered question quanderer"--all communication is abductive is a sentiment that I've been using to develop some arguments.
 
 57:46 [[start:3466652][end:3468210]] Does that scan for you?
 [[start:3469560][end:3474260]] How do we connect what we're discussing here with quantum to abductive logic?
@@ -615,8 +592,8 @@
 58:17 _Ander:_
 [[start:3497440][end:3497852]] Yes.
 [[start:3497906][end:3498670]] Thank you.
-[[start:3499280][end:3503500]] So going back to the picture where the scattering picture?
-[[start:3504320][end:3512716]] So we have so far everything is topological and certainly induces breaking the boundary in different sectors.
+[[start:3499280][end:3503500]] So going back to the picture where the scattering picture.
+[[start:3504320][end:3512716]] So we have so far, everything is topological, and certainly induces breaking the boundary in different sectors.
 [[start:3512748][end:3516396]] I suppose it induces a topology on the boundary.
 
 58:36 [[start:3516588][end:3521590]] Now, I had a couple of questions as for the geometry, and this might be getting ahead.
@@ -628,10 +605,9 @@
 [[start:3537660][end:3548750]] Yeah, this is really the topic for September, but you do point out the fact that it's something of a chicken and egg situation.
 
 59:11 [[start:3551040][end:3570980]] The way I think of it is, I suppose to choose the chicken side and think about what kind of reference frame does the agent have to implement to see space on their boundary.
-[[start:3572040][end:3576468]] And the reason I think about it that way is that's a question?
-[[start:3576554][end:3579360]] I want to be able to ask about biological systems.
-[[start:3579520][end:3584760]] And this actually gets into probably what won't be talked about till October.
-[[start:3585420][end:3610560]] But I want to be able to ask essentially a phylogenetic question of what sorts of organisms, where in the lineage from Luca do we find systems that are able to assign spatial coordinates to their boundaries and what coordinates come first?
+[[start:3572040][end:3576468]] And the reason I think about it that way is that's a question I want to be able to ask about biological systems.
+[[start:3579520][end:3584760]] And this actually gets into probably what won't be talked about until October.
+[[start:3585420][end:3610560]] But I want to be able to ask essentially a phylogenetic question of what sorts of organisms, where in the lineage from LUCA, do we find systems that are able to assign spatial coordinates to their boundaries and what coordinates come first?
 
 1:00:10 [[start:3610710][end:3647630]] And I suspect that sort of discrete location names with no metric come first that a system can talk about, for example, this part of their membrane versus that part of their membrane without even having any ability to say, how far apart they are and that some sort of metric representation of this angular space comes later and that a radial space comes even later than that.
 [[start:3648080][end:3649928]] That's, at this point, speculation.
@@ -652,11 +628,11 @@
 [[start:3720880][end:3742480]] But we tend to regard those as separate things as we learn object persistence, because space is rotationally symmetric, but we can view it the other way around, that space is rotationally symmetric for me because I implement these constraints that are called object persistence.
 
 1:02:25 _Daniel:_
-[[start:3745060][end:3761240]] Do you think we can understand phylogenetics as a whole, as a kind of scattering experiment, like the high energy Leuka event and then dissipating and propagating in a very tangled bank?
+[[start:3745060][end:3761240]] Do you think we can understand phylogenetics as a whole, as a kind of scattering experiment, like the high energy LUCA event and then dissipating and propagating in a very tangled bank?
 
 1:02:42 _Chris:_
 [[start:3762780][end:3773388]] Well, I do want to be able to understand phylogeny in exactly the same terms as embryology, and Mike Levin and I have published papers about that.
-[[start:3773474][end:3782030]] We should be able to view the lineage of Luca in exactly the same way that we view the lineage of the Zygote that produced us.
+[[start:3773474][end:3782030]] We should be able to view the lineage of LUCA in exactly the same way that we view the lineage of the zygote that produced us.
 
 1:03:03 _Ander:_
 [[start:3783220][end:3795330]] So that's why it's no coincidence that during pregnancy, the development of the embryo mirrors evolution in terms of the parts that are developed first.
@@ -665,22 +641,21 @@
 [[start:3796840][end:3810810]] Yeah, this is the old idea that phylogeny and ontogeny are related in some way, which, from an embryonic development point of view, they're certainly analogous in ways.
 
 1:03:33 _Ander:_
-[[start:3813340][end:3819700]] Sorry, if I may ask one last question, things should be very quick regarding the weak rotation.
+[[start:3813340][end:3819700]] Sorry, if I may ask one last question--should be very quick--regarding the weak rotation.
 [[start:3819780][end:3828590]] I'm still a bit unsure how it ties to this diagrammatic notation that we had with quantum channels on show so on.
 
 1:03:51 [[start:3831760][end:3840240]] In the second session, we briefly talked about the weak rotation being a reversal in the direction of time.
 [[start:3840310][end:3842960]] Is there any relation to today's session?
 
 1:04:05 _Chris:_
-[[start:3845880][end:3862388]] Yeah, whenever we think about the flow of time as driven by the input output cycle the input output cycle?
-[[start:3862484][end:3869064]] For agents separated by a boundary, there's always a sign change.
+[[start:3845880][end:3862388]] Yeah, whenever we think about the flow of time as driven by the input-output cycle, the input-output cycle for agents separated by a boundary, there's always a sign change.
 [[start:3869182][end:3869560]] Right.
 [[start:3869630][end:3872460]] My input is your output, and vice versa.
-[[start:3873200][end:3899540]] So when we think about the bob's clock ticking, when Alice does something, his direction of time, in a sense, points with respect to the boundary opposite to hers, but that's only with respect to the boundary.
+[[start:3873200][end:3899540]] So when we think about Bob's clock ticking, when Alice does something, his direction of time, in a sense, points with respect to the boundary opposite to hers, but that's only with respect to the boundary.
 
 1:05:00 [[start:3900600][end:3905270]] He sees information flowing in, and she sees information flowing in.
 
-1:05:07 [[start:3907160][end:3912980]] That's the only point being made here about the WIC rotation as an operation.
+1:05:07 [[start:3907160][end:3912980]] That's the only point being made here about the Wick rotation as an operation.
 
 1:05:14 _Ander:_
 [[start:3914600][end:3915590]] Thank you.
@@ -689,7 +664,7 @@
 [[start:3916600][end:3917940]] Thank you, Chris.
 [[start:3918520][end:3922668]] Very well appreciated by the viewers and by us.
 
-1:05:22 [[start:3922754][end:3935112]] So we'll certainly look forward to reviewing the q a, and everybody is welcome and encouraged to join for the participatory discussion in about two weeks on Saturday.
+1:05:22 [[start:3922754][end:3935112]] So we'll certainly look forward to reviewing the Q&A, and everybody is welcome and encouraged to join for the participatory discussion in about two weeks on Saturday.
 [[start:3935256][end:3938270]] So till next time.
 
 1:05:38 _Chris:_
