@@ -522,7 +522,7 @@
 
 39:22 [[start:2362550][end:2381218]] The scattering picture as Alice preparing as her, of her boundary, and writing it into her memory, and then measuring it at some point in the future, requires that you consider the possible things that happened to that preparation.
 [[start:2381394][end:2381734]] Okay.
-[[start:2381772][end:2393226]] So if there's some amount of time passes, you prepared your state at time T, you look at it again at time T plus DT, you have to take into account all the possible histories, clearly, [inaudible] of the system, or at least that part of the system.
+[[start:2381772][end:2393226]] So if there's some amount of time passes, you prepared your state at time T, you look at it again at time T plus dT, you have to take into account all the possible histories, clearly, [inaudible] of the system, or at least that part of the system.
 [[start:2399456][end:2407610]] Writing, it's just saying, I prepared it here, now it's up to B what happens until the next time I look at it, up to the environment.
 
 40:07 [[start:2407690][end:2412766]] So in that unitary evolution, I consider all the possibilities.
