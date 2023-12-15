@@ -653,7 +653,7 @@
 48:08 [[start:2888840][end:2897788]] For a discrete time model where you have the B transition matrix, then the choice of delta T is a modeler's decision.
 [[start:2897884][end:2906928]] And we talked about this a lot in live stream 52 on accelerated optimization, there's some delta T that's like, going to get you the most accelerated optimization.
 [[start:2907024][end:2914788]] If you have too small of delta T, then you're either oversampling or you're maybe even physically unrealistic like you pointed to.
-[[start:2914874][end:2922980]] Or if you have some long Delta T, you're also not making an informative simulation in the discrete time case where you're explicitly making time steps.
+[[start:2914874][end:2922980]] Or if you have some long delta T, you're also not making an informative simulation in the discrete time case where you're explicitly making time steps.
 [[start:2923140][end:2934936]] Contrast with the continuous time generative model, where we're doing more of a Taylor series expansion on the generalized coordinates, at which point delta T is not required.
 
 48:55 [[start:2935048][end:2942610]] You're merely just taking an extended approximation from a given snapshot, and so delta T doesn't even come into play.
