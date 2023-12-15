@@ -1,4 +1,3 @@
-//test test working with edits 
 
 00:07 _Daniel:_
 [[start:7700][end:9810]] Hello and welcome, everybody.
