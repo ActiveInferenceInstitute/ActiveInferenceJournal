@@ -476,7 +476,7 @@ and then Read from that medium in some finite amount of time.
 [[start:3015760][end:3027310]] So I'm an anthropologist, and I've worked with indigenous peoples and spent 20 years of my life living in these small scale societies.
 
 50:31 [[start:3031170][end:3033550]] One of my observations is that--and that I find really fascinating...and we don't have a good understanding of it...and that's why I decided to dig into physics as information processing--which is that goals are constantly being negotiated.
-[[start:3059522][end:3080350]] So, Michael Levine's work actually led me to explore quantum information theory, which is about the collective intelligences that exist within systems.
+[[start:3059522][end:3080350]] So, Michael Levin's work actually led me to explore quantum information theory, which is about the collective intelligences that exist within systems.
 [[start:3080770][end:3103014]] And so, at each level of collective intelligence, it's not just that you have a collective intelligence dictating a goal, but that those goals are being negotiated as the environments change and as relationships between the systems change.
 
 51:43 [[start:3103212][end:3120460]] So I know these are very big questions, but if you could just help me, give me some thoughts on what your thoughts have been about these kinds of questions.
@@ -600,8 +600,7 @@ and then Read from that medium in some finite amount of time.
 
 1:03:01 _Daniel:_
 [[start:3781480][end:3783824]] Thank you, Kate.
-[[start:3783872][end:3785476]] Do you want to ask anything, or.
-[[start:3785498][end:3789210]] Anyone can just bring up anything they're thinking right now.
+[[start:3783872][end:3785476]] Do you want to ask anything, or anyone can just bring up anything they're thinking right now.
 
 1:03:10 _Kate:_
 [[start:3790780][end:3792088]] Nothing in particular.
