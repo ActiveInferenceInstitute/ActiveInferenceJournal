@@ -57,7 +57,7 @@
 [[start:397110][end:399300]] Okay, sorry.
 [[start:399750][end:400962]] This is where we're going.
 [[start:401016][end:406360]] We're talking about Spacetime, and we'll talk about applications to biology next time.
-[[start:407050][end:413030]] But before we get going on this, I want to spend a little bit of time talking about explanation.
+[[start:407050][end:413030]] But before we get going on this, I want to spend a little bit of time talking about the explanation.
 
 06:53 [[start:413930][end:427100]] And, this is motivated by a question that came up, a very long question that touched on many different topics that came up in the interactive Q&A last time.
 [[start:428990][end:450450]] And, a fair amount of that question had to do with, directly or indirectly, the question of what scale-free explanation looks like and how it compares to scientific explanation in general, most of which is reductive.
@@ -105,79 +105,75 @@
 
 12:54 [[start:774838][end:777498]] So, scale-free theories, in a sense, are simple.
 [[start:777584][end:781470]] It's the same theory at every level of description.
-[[start:783330][end:791520]] So, what is this idea of scale, and how does it relate to what we've talked about in this course? STOPPED HERE
-[[start:792450][end:799090]] Well, what we've talked about in this Course all has to Do With what an Agent Can Observe on its Boundary.
-[[start:799590][end:810360]] So, scale has to Do With How Information Is Encoded on the boundary, and we can Describe that scale in many different Ways.
+[[start:783330][end:791520]] So, what is this idea of scale, and how does it relate to what we've talked about in this course?
+[[start:792450][end:799090]] Well, what we've talked about in this course all has to do with what an agent can observe on its boundary.
+[[start:799590][end:810360]] So, scale has to do with how information is encoded on the boundary, and we can describe that scale in many different ways.
 
-13:31 [[start:811770][end:821340]] Here's A Commonplace Way to Describe it in Physics by A Relationship between energy and distance, or size.
+13:31 [[start:811770][end:821340]] Here's a commonplace way to describe it in Physics by a relationship between energy and distance, or size.
 [[start:822590][end:828250]] And, you've probably all heard of the Planck scale.
-[[start:828910][end:833840]] The Planck scale is the smallest scale at which current Physics Makes any sense.
+[[start:828910][end:833840]] The Planck scale is the smallest scale at which current Physics makes any sense.
 
-13:56 [[start:836930][end:847650]] And, in energetic terms, it's defined by energies on the order of Ten to the 19th GEV, which is GiGAelectron volt.
+13:56 [[start:836930][end:847650]] And, in energetic terms, it's defined by energies on the order of 10 to the 19th GEV, which is gigaelectronvolt.
 
-14:09 [[start:849750][end:858738]] The LHC, the Large Hadron Collider in Switzerland, gets to about ten to the Fourth GEV.
+14:09 [[start:849750][end:858738]] The LHC (the Large Hadron Collider) in Switzerland gets to about 10 to the 4th GEV.
 [[start:858834][end:863190]] So many, many orders of magnitude less than the Planck scale.
-[[start:863930][end:870170]] So the Planck scale is extremely energetic compared to what we can probe Experimentally.
-[[start:871710][end:884110]] The Planck scale energy of ten to the 9th GEV corresponds to a distance of about ten to the -35 meters, which is incredibly tiny.
+[[start:863930][end:870170]] So the Planck scale is extremely energetic compared to what we can probe experimentally.
+[[start:871710][end:884110]] The Planck scale energy of 10 to the 9th GEV corresponds to a distance of about 10 to the -35 meters, which is incredibly tiny.
 
 14:45 [[start:885410][end:890970]] An intermediate scale on this diagram is about the scale of a nucleon.
 
-14:51 [[start:891050][end:901410]] So, for example, a proton or a neutron, they have a rest mass of about one GeV and a size of about one femtometer.
-[[start:901830][end:906550]] So this intermediate scale is roughly the scale of nucleon physics.
-[[start:907930][end:927066]] And then if you go to our scale, the scale of things that are about a meter in size, Human beings, Tables and chairs, lots of animals, the Things we're most Familiar with, that corresponds to an incredibly tiny energy.
-[[start:927168][end:941230]] Ten to the -5 EV is about the energy of a photon of radio Radiation, and a meter is about the Wavelength of long wave Radio.
-[[start:941970][end:951966]] So if you think about Visible light, has a Wavelength of about ten to the -5 meters, an energy of about an electron volt.
+14:51 [[start:891050][end:901410]] So, for example, a proton or a neutron, they have a rest mass of about 1 GEV and a size of about 1 femtometer.
+[[start:901830][end:906550]] So, this intermediate scale is roughly the scale of nucleon Physics.
+[[start:907930][end:927066]] And, then if you go to our scale, the scale of things that are about a meter in size, human beings, tables, and chairs, lots of animals, the things we're most familiar with, that corresponds to an incredibly tiny energy 10 to the -5 electron volts, which is about the energy of a photon of radio... radiation. And, a meter is about the wavelength of long wave Radio.
+[[start:941970][end:951966]] So, if you think about visible light, it has a wavelength of about 10 to the -5 meters, an energy of about an electron volt.
 
-15:52 [[start:952078][end:967670]] So it's not Surprising that visible light feels energetic to Us because it's Orders of magnitude above our Natural scale of energy of this Sort of thermal environment in which we exist.
-[[start:968990][end:984640]] So it's the encoding scale and the boundary that is going to relate theories of things that we see to each other.
-[[start:985490][end:988874]] And this ends up giving a kind of complicated picture.
-[[start:988922][end:994770]] If you think of Alice interacting with Bob and measuring things on the boundary.
+15:52 [[start:952078][end:967670]] So, it's not surprising that visible light feels energetic to us because it's orders of magnitude above our natural scale of energy of this sort of thermal environment in which we exist.
+[[start:968990][end:984640]] So, it's the encoding scale and the boundary that is going to relate theories of things that we see to each other.
+[[start:985490][end:988874]] And, this ends up giving a kind of complicated picture.
+[[start:988922][end:994770]] If you think of Alice interacting with Bob and measuring things on the boundary...
 
 16:39 [[start:999890][end:1001790]] Sorry, I'm a little bit ahead of myself.
-[[start:1001940][end:1004954]] I just wanted to show you a picture of a reductive theory.
+[[start:1001940][end:1004954]] I just wanted to show you a picture of a Reductive Theory.
 [[start:1005002][end:1005994]] This is the Big Bang.
 [[start:1006042][end:1007700]] You're all familiar with this.
 [[start:1008070][end:1017220]] Something happens at the Planck scale, and the entire universe results from it by just a scale change.
 
-16:57 [[start:1017670][end:1020626]] So this is a reductive theory.
-[[start:1020818][end:1023830]] A scale free theory is much more complicated.
-[[start:1024650][end:1027720]] So here's what a scale free theory looks like.
-[[start:1029050][end:1037962]] Alice interacts with Bob, and she's looking at her boundary, and her boundary states.
-[[start:1038096][end:1042170]] The boundary states she sees could be encoded at different scales.
+16:57 [[start:1017670][end:1020626]] So this is a Reductive Theory.
+[[start:1020818][end:1023830]] A scale-free theory is much more complicated.
+[[start:1024650][end:1027720]] So here's what a scale-free theory looks like.
+[[start:1029050][end:1037962]] Alice interacts with Bob, and she's looking at her boundary, and her boundary states, the boundary states she sees could be encoded at different scales.
 
-17:23 [[start:1043070][end:1048080]] So there may be a small scale scale one and a bigger scale scale two.
-[[start:1049330][end:1059200]] And what Alice is looking for is some sort of theory that relates the first scale, the microscale, to the.
+17:23 [[start:1043070][end:1048080]] So, there may be a small-scale scale1 and a bigger scale scale2.
+[[start:1049330][end:1059200]] And, what Alice is looking for is some sort of theory that relates the first scale, the microscale, to the macro scale.
 
-17:42 [[start:1062930][end:1069540]] So it's not that the microscale came first like it did in the Big Bang, and the macro scale came later.
+17:42 [[start:1062930][end:1069540]] So, it's not that the microscale came first like it did in the Big Bang, and the macro scale came later.
 
 17:51 [[start:1071770][end:1075430]] These are encodings that can be happening simultaneously.
 [[start:1076090][end:1083494]] And the theoretical task is to find theories that relate between these scales.
 
 18:03 [[start:1083542][end:1091020]] And these are implementation theories, or you might call them embedding theories from one scale into another.
 [[start:1092110][end:1099982]] And what we want as a consistency criterion is for these theories to be constant in time.
-[[start:1100036][end:1102400]] So as Bob evolves in time.
-
-18:23 [[start:1103170][end:1107726]] And so what Alice sees are these encodings on her boundary.
+[[start:1100036][end:1102400]] So as Bob evolves in time and what Alice sees are these encodings on her boundary.
 [[start:1107918][end:1117220]] She wants the relationship between encodings at different scales to stay constant, because if it doesn't, she'll never be able to figure anything out.
 [[start:1118870][end:1125960]] She'll just have this chaotic relationship between things happening at different scales, and nothing will make sense.
-[[start:1127690][end:1133130]] So you have this complicated picture in scale free theories.
-[[start:1133470][end:1154510]] And if you look at this and it seems vaguely familiar, or even vaguely even very familiar, then it should, because this is exactly the kind of explanatory structure or semantic structure that you have in computer science.
+[[start:1127690][end:1133130]] So, you have this complicated picture in scale-free theories.
+[[start:1133470][end:1154510]] And, if you look at this and it seems vaguely familiar, or even vaguely... even very familiar then it should, because this is exactly the kind of explanatory structure or semantic structure that you have in Computer Science.
 
 19:16 [[start:1156050][end:1170390]] If you're studying the behavior of a computer, which is just some piece of hardware, some physical system, then you can describe what that piece of hardware is doing at different scales.
-[[start:1170970][end:1187878]] And in fact, what we call the hardware level of description when we talk about our laptops, for example, is typically the level of description of circuits, of transistors inside microprocessors.
-[[start:1187974][end:1190010]] We think of that as the hardware level.
+[[start:1170970][end:1187878]] And, in fact, what we call "the hardware level of description" when we talk about our laptops, for example, is typically the level of description of circuits and transistors inside microprocessors.
+[[start:1187974][end:1190010]] We think of that as "the hardware level".
 [[start:1190160][end:1208020]] But of course, that's just a description, too, that's layered on top of lots of much smaller scale dynamics, all the way down to the scale of atoms and eventually nuclei and elementary particles and all that other stuff.
-[[start:1208710][end:1217250]] So there's some quantum stuff that's going on that we describe as having a classical hardware level of bit exchange.
+[[start:1208710][end:1217250]] So, there's some quantum stuff that's going on that we describe as having a classical hardware level of bit exchange. STOPPED HERE
 
 20:18 [[start:1218550][end:1223320]] And then we describe the behavior of programs on top of that.
-[[start:1224650][end:1240134]] So what we want, what makes a computer useful is that we can assign semantics to programs, and we can talk about semantic relationships between programs.
+[[start:1224650][end:1240134]] So, what we want, what makes a computer useful is that we can assign semantics to programs, and we can talk about semantic relationships between programs.
 [[start:1240182][end:1258900]] For example, the relationship between the Internet protocol stuff that Zoom is doing and what you actually see on your user interface and hear on your user interface that needs to stay fixed over time.
 [[start:1259270][end:1268020]] Or Zoom becomes incomprehensible and not programmable and in fact, not even well defined as an algorithmic system.
 [[start:1268470][end:1277080]] And the same is true for the relationship between the operating system and the hardware description, or between the operating system and zoom as a program.
 
-21:17 [[start:1277850][end:1284666]] So computer science works in exactly this scale free way.
+21:17 [[start:1277850][end:1284666]] So computer science works in exactly this scale-free way.
 
-21:24 [[start:1284848][end:1291462]] And so, in a sense, scale free explanation is very familiar.
+21:24 [[start:1284848][end:1291462]] And so, in a sense, scale-free explanation is very familiar.
 [[start:1291526][end:1296618]] It's exactly the kind of explanation that we have in computer science.
 [[start:1296794][end:1310850]] And that's why I referred to the relationship between scales as one of implementation, because that's a term that we're familiar with from thinking about computers implementing programs.
 [[start:1311910][end:1314046]] So what are these theories?
