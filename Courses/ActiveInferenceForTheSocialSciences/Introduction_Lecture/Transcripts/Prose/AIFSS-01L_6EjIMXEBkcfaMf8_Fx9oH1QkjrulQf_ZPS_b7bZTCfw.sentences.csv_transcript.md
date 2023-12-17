@@ -141,67 +141,67 @@ ing.
 [[start:790950][end:803480]] Let's explain a natural phenomenon by describing how the underlying structure works but also by trying to explain how it's brought about how the system's activity explain the way it takes shape through time.
 
 13:24 [[start:804750][end:830500]] So a claim that we will make here that in itself could be contentious (although we don't have to look at why as it is not relevant here) is that active inference, which is a specific new trendy theory of human cognition, can actually explain how regularities underlying social activity can be constructed through time.
-[[start:831510][end:835278]] And let us look at what active inference says precisely.
+[[start:831510][end:835278]] Let us look at what active inference says precisely.
 [[start:835374][end:842942]] So we won't look at the math ever, we won't look here at the specifics of the theory.
-[[start:843086][end:855290]] The only thing we are going for is to prove that this theory indeed does what I think it does, which is explain or at least describe in a nontrivial way the evolution of social regulatories.
+[[start:843086][end:855290]] The only thing we are going for is to prove that this theory indeed does what I think it does, which is toexplain or at least describe in a nontrivial way the evolution of social regularities.
 
-14:16 [[start:856030][end:868014]] So if active inference framework is true, then cognitive agents perceive the world through expectation they have developed about the world.
+14:16 [[start:856030][end:868014]] So if the active inference framework is true, then cognitive agents perceive the world through the expectations they have developed about the world.
 
 14:28 [[start:868132][end:870880]] So perception is an active process.
-[[start:871650][end:880258]] I do not perceive things with my eyes and compute higher and higher level of traits of what I saw.
+[[start:871650][end:880258]] I do not perceive things with my eyes and compute higher and higher levels of traits of what I saw.
 [[start:880424][end:888850]] I basically expect things in front of me and I will actively look at the things that are most likely to inform me.
-[[start:889000][end:896930]] And something that is critical about this framework is that the prediction it also underlies action or policies.
-[[start:897010][end:904282]] So let's say trajectory of action that I enact, I will do the action that I believe I am more likely to do.
+[[start:889000][end:896930]] And something that is critical about this framework is that the prediction also underlies actions or policies.
+[[start:897010][end:904282]] So let's say of the trajectory of an action that I enact that I will do the action that I believe I am more likely to do.
 
 15:04 [[start:904416][end:909382]] I will do that in virtue of me believing I am more likely to do this action.
-[[start:909526][end:910410]] Whoops.
-[[start:911310][end:939486]] So in that framework, active inference is understood as a process of enaction of a specific model that is causally shaped both by an agent's dynamics and an environment Cliodynamics and this relation well, brings a model that corresponds in abstract way to the structure of the dynamics of the relation.
+[[start:909526][end:910410]] 
+[[start:911310][end:939486]] So in that framework, active inference is understood as a process of enaction of a specific model that is causally shaped both by an agent's dynamics and an environmental dynamics, and this relation brings about a model that corresponds in an abstract way to the structure of the dynamics of the relation.
 
-15:39 [[start:939598][end:949282]] And this model I can also look at it in a way more concrete sense in that it is what's in the lies what drives the agent dynamic?
-[[start:949346][end:959110]] You have a duality between the Cliodynamics and the epistemic mental states that we put, that we project, that we can observe in the dynamic.
+15:39 [[start:939598][end:949282]] And this model I can also look at it in a more concrete sense in that it is what underlies, what drives the agent dynamic?
+[[start:949346][end:959110]] You have a duality between the dynamics and the epistemic mental states that we put, project and can observe in the dynamic.
 
-15:59 [[start:959610][end:969870]] So a very important aspect of this is that world's entirely agency, as we would understand the term.
-[[start:970210][end:983940]] There is no distinct step of perception which informs the agent on what the world is like and based on which the agents decide freely what action it will take.
+15:59 [[start:959610][end:969870]] So a very important aspect of this is that it dissolves entirely agency, as we would understand the term.
+[[start:970210][end:983940]] There is no distinct step of perception which informs the agent as to what the world is like and based on which the agents decides freely what action it will take.
 [[start:984310][end:992818]] There is a constant prediction of what is going to happen and this is enacted by the agent both through perception and action.
-[[start:992994][end:997110]] So what drives decision here?
-[[start:997180][end:1009290]] What drives generally the flow that analyze the agent behavior is the agent self model and that has interesting consequences.
+[[start:992994][end:997110]] So what drives decisions here?
+[[start:997180][end:1009290]] What drives generally the flow that analyzes the agent behavior is the agent self-model and that has interesting consequences.
 
-16:49 [[start:1009950][end:1012006]] So I have notifications.
-[[start:1012038][end:1021670]] So we'll cut them sorry, what?
-[[start:1021840][end:1022714]] Let me drink.
-[[start:1022762][end:1023386]] I will drink.
-[[start:1023418][end:1030478]] I need to drink it.
+16:49 [[start:1009950][end:1012006]] 
+[[start:1012038][end:1021670]] 
+[[start:1021840][end:1022714]] 
+[[start:1022762][end:1023386]] 
+[[start:1023418][end:1030478]] 
 
-17:10 [[start:1030564][end:1044338]] So one consequence of this feminism is that normativity so the values and norms it's hard to go around that word that drive behavior.
-[[start:1044434][end:1050630]] They are not in the brain, they are not something that the agent abstractly relates to.
-[[start:1050780][end:1058060]] They are Embedded in the very process in which the agent understands and gorges and navigates the world.
-[[start:1059230][end:1065458]] And this is very relevant for a human cultural evolution because well, we are cultural creatures.
-[[start:1065654][end:1086210]] We learn expectation about each other both explicitly by looking at how people do things and then expecting them to do the same things again and implicitly through the very process by which we relate to other people like norms, like language.
+17:10 [[start:1030564][end:1044338]] One consequence of this formalism  is that normativity, that is the values and norms (it's hard to get around using that word) that drive behavior,
+[[start:1044434][end:1050630]] are not in the brain, they are not something that the agent abstractly relates to.
+[[start:1050780][end:1058060]] They are embedded in the very process in which the agent understands, engages and navigates the world.
+[[start:1059230][end:1065458]] And this is very relevant for human cultural evolution because we are cultural creatures.
+[[start:1065654][end:1086210]] We learn expectations about each other both explicitly by looking at how people do things and then expecting them to do the same things again and implicitly through the very processes by which we relate to other people like norms, like language.
 
-18:06 [[start:1086870][end:1102990]] And the way you look at this learning through be, it can be reduced essentially because of the properties of active inference to what people call regimes of attention.
-[[start:1103170][end:1120990]] So the way I pay attention to things, the specific things I will look at in my process of understanding and navigating the world, the flow by which has been that is the same thing as a set of value and a set of expectations.
-[[start:1122130][end:1136654]] So what is important here is that normativity and values and things like that, they are Embedded in my cognition in a much more basic way than conscious self reflection.
-[[start:1136702][end:1140510]] Although of course conscious self enaction can inform that flow.
-[[start:1140670][end:1145894]] It is Embedded in the shared expectation I have with other people.
+18:06 [[start:1086870][end:1102990]] And the way you look at this learning through image(??) can be reduced essentially, because of the properties of active inference, to what people call regimes of attention.
+[[start:1103170][end:1120990]] So the way I pay attention to things, the specific things I will look at in my process of understanding and navigating the world, the flow by which I arrive at that is the same thing as a set of values and a set of expectations.
+[[start:1122130][end:1136654]] So what is important here is that normativity and values and things like that are embedded in my cognition in a much more basic way than conscious self-reflection,
+[[start:1136702][end:1140510]] although of course conscious self-reflection can inform that flow.
+[[start:1140670][end:1145894]] It is embedded in the shared expectation I have with other people.
 
-19:05 [[start:1145932][end:1165820]] And there is no warranty, no result that I can actually be reflexive about it because, well, the way I predict things, it's based on the statistical regulators that have seen in the world and because the way I pay attention, it's entailed by a predictive model of what is going on around me.
+19:05 [[start:1145932][end:1165820]] And there is no warranty, nor reason that I can actually be reflexive about it because the way I predict things is based on the statistical regularities that I have seen in the world and because the way I pay attention is entailed by a predictive model of what is going on around me.
 
-19:27 [[start:1167390][end:1172926]] I'm very constrained, very much constrained by the statistics I have of the thing I have seen around me.
-[[start:1173108][end:1179470]] So regularities drive, how I pay attention, which drive implicit or explicit value and normativity.
-[[start:1179810][end:1193270]] And you can add dimical steps, you can add reflexivity, you can add, I don't know, accountability, you can add a lot of things, but you cannot remove the very basic way in which cultural values and cultural expectation are Embedded in perception.
+19:27 [[start:1167390][end:1172926]] I'm very constrained, very much constrained, by the statistics I have of the things I have seen around me.
+[[start:1173108][end:1179470]] So regularities drive how I pay attention, which in turn drives implicit or explicit values and normativity.
+[[start:1179810][end:1193270]] And you can add dynamical(??) steps, you can add reflexivity, you can add, I don't know, accountability, you can add a lot of things, but you cannot remove the very basic way in which cultural values and cultural expectations are embedded in perception.
 
-19:56 [[start:1196650][end:1208038]] Yes, this is a repetition of what I said, the patterns in the flow of attention that are Embedded that I have developed through the very fact of engaging with a cultural niche.
-[[start:1208214][end:1211142]] And they constrain my actions towards specific outcome.
-[[start:1211206][end:1226670]] They entail specific values, specific norms, and they entail, at least they constrain very heavily the intention that I'm even able to conceive to generate.
+19:56 [[start:1196650][end:1208038]] So yes, this is a repetition of what I said, that the patterns in the flow of attention that are embedded, that I have developed, through the very fact of engaging with a cultural niche
+[[start:1208214][end:1211142]] constrain my actions towards specific outcomes.
+[[start:1211206][end:1226670]] They entail specific values, specific norms, and they entail, at least they constrain very heavily, the intention that I'm even able to conceive, to generate.
 
-20:27 [[start:1227490][end:1237342]] So there is an equivalent way to see this, which is engagement with the cultural landscape.
-[[start:1237486][end:1243640]] So every agent, they experience the world not in the same way, of course, but they experience the same.
+20:27 [[start:1227490][end:1237342]] So there is a dualism, an equivalent way to see this, which is engagement with the cultural landscape.
+[[start:1237486][end:1243640]] So every agent experiences the world not in the same way, of course, but they experience the same thing.
 
-20:44 [[start:1244650][end:1254490]] Let us say that each person's experience of the world, it predicts very strongly the experience of the world that other people will develop around them.
-[[start:1254640][end:1264380]] So there are structural properties of the landscape, of opportunities and perception and possible action that we experience.
-[[start:1264830][end:1268346]] There are properties that are transferred between individuals robustly.
+20:44 [[start:1244650][end:1254490]] Let us say that each person's experience of the world predicts very strongly the experience of the world that other people will develop around them.
+[[start:1254640][end:1264380]] So there are structural properties of the landscape, of opportunities and perception and possible actions that we experience.
+[[start:1264830][end:1268346]] They are properties that are transferred between individuals robustly.
 [[start:1268458][end:1270750]] This is the case, for example, of norms.
-[[start:1272610][end:1279038]] If I look at a law, any specific law, all of the people in the same country, they are subject to the same law.
+[[start:1272610][end:1279038]] If I look at a law, any specific law, all of the people in the same country are subject to the same law.
 
 21:19 [[start:1279124][end:1281454]] So maybe some of them can just ignore it.
 [[start:1281492][end:1282914]] They live too far from the city.
@@ -209,30 +209,30 @@ ing.
 [[start:1284184][end:1287086]] Maybe some of them are above the law in some capacity.
 [[start:1287118][end:1287950]] It's their relation.
 
-21:28 [[start:1288030][end:1292726]] But the basic constraints that the law entail, it is experienced by everyone in a different way.
-[[start:1292748][end:1297238]] We will all expect that specific people will react to specific situation in specific way.
+21:28 [[start:1288030][end:1292726]] But the basic constraints that the law entails are experienced by each person in a different way.
+[[start:1292748][end:1297238]] We all expect that specific people will react to specific situations in a specific way.
 [[start:1297324][end:1300760]] And this is a real property of the landscape that we experience.
-[[start:1301290][end:1311494]] So the way that this landscape shapes exploitation in a robust way, we can look at basically it as a constraint.
+[[start:1301290][end:1311494]] So the way that this landscape shapes expectation in a robust way we can look at basically as a constraint.
 [[start:1311542][end:1324400]] So not as a derivative property of a landscape that I can or cannot experience, but just as a statistical force that shapes behavior in a specific way.
 
-22:05 [[start:1325010][end:1344598]] And looking at things like that, it means that I can see a given sociocultural field in two complementary way as a set of agents that navigate common well, not quite common, but mutually constrained social, cultural worlds or as a set of constraints that produce itself.
-[[start:1344764][end:1356220]] And the way agents reconstruct the world around them in their mind, the way they understand it in a creative manner, it is equivalent to the way the set of constraints reconstruct itself.
+22:05 [[start:1325010][end:1344598]] And looking at things like that means that I can see a given sociocultural field in two complementary ways: as a set of agents that navigate common, well not quite common, but mutually constrained, social, cultural worlds or as a set of constraints that produces itself.
+[[start:1344764][end:1356220]] And the way agents reconstruct the world around them in their mind, the way they understand it in a creative manner is equivalent to the way the set of constraints reconstructs itself.
 
-22:36 [[start:1356670][end:1380260]] Which is important because if I can look at this whole world as a set of constraints over statistical constraints or behavior that reproduce itself, I can look at it as a living thing, strictly speaking, because this is how we define living things, at least in specific sub branch of system biology that I believe is relevant is to be believed about that.
-[[start:1380790][end:1389614]] So when we talk about structural landscape, we can look at them either as a landscape of affordances.
-[[start:1389662][end:1403474]] This is opportunity for action that are experienced and enacted by a set of individual agents which interact so as to having some level of coherence between the landscapes they experience and enact.
+22:36 [[start:1356670][end:1380260]] Which is important because if I can look at this whole world as a set of constraints, of statistical constraints over behavior that reproduces itself, I can look at it as a living thing, strictly speaking, because this is how we define living things, at least in the specific sub-branch of system biology that I believe is relevant in this context.
+[[start:1380790][end:1389614]] So when we talk about structural landscapes, we can look at them as a landscape of affordances,
+[[start:1389662][end:1403474]] that is as opportunities for action that are experienced and enacted by a set of individual agents which interact so as to have some level of coherence between the landscapes they experience and enact.
 
-23:23 [[start:1403602][end:1422526]] And I can look at the same landscape as a system of constraints that are exerted over the behavior of this agent and that I can define and study with no clear reference to any individual agent in the same way that I can study a dog without looking at every single individual cell.
+23:23 [[start:1403602][end:1422526]] Alternatively I can look at the same landscape as a system of constraints that are exerted over the behavior of this agent and that I can define and study with no clear reference to any individual agent, in the same way that I can study a dog without looking at every single individual cell.
 
-23:42 [[start:1422628][end:1430354]] What you're interested in, biology or sociology is usually aggregated patterns, not what every single living thing around thinks of.
-[[start:1430392][end:1431540]] Every single thing.
+23:42 [[start:1422628][end:1430354]] What you're interested in biology or sociology is usually aggregated patterns, not what every single living thing around thinks of
+[[start:1430392][end:1431540]] every other thing.
 [[start:1432790][end:1438820]] So that was the heaviest it got probably over the whole course.
 
 24:01 [[start:1441130][end:1451090]] I do not expect you to grasp all of the consequences of what I said because it was very condensed and it was very abstract.
 [[start:1451250][end:1456970]] But the case I'm making here is not that everyone has to understand all the math right now.
-[[start:1457040][end:1465050]] It is that this framework, it has things to say about relevant question in social science.
-[[start:1465550][end:1471514]] And to make this point, I will not just give the abstract presentation of how it's awesome because we have landscape.
-[[start:1471562][end:1494290]] Whatnot I will look at specific fields, questions, case studies in social sense and I will look at basically how Oxygen France entails a pretty specific model of that that is well grounded in committee sense and that is relevant and that is adequate to the study of living, changing systems, et cetera, et cetera.
+[[start:1457040][end:1465050]] It is that this framework has things to say about relevant questions in social science.
+[[start:1465550][end:1471514]] And to make this point, I will not just give an abstract presentation of how it's awesome because we have landscapes and
+[[start:1471562][end:1494290]] whatnot. I will look at specific fields, questions and case studies in social sense and I will look at basically how Active Inference entails a pretty specific model of that which is grounded in a cognitive sense and that is relevant and that is adequate to the study of living, changing systems, et cetera, et cetera.
 
 24:55 [[start:1495030][end:1498950]] So first agenda setting.
 [[start:1499690][end:1503480]] Some of you will know what it is, some of you will not know what it is.
