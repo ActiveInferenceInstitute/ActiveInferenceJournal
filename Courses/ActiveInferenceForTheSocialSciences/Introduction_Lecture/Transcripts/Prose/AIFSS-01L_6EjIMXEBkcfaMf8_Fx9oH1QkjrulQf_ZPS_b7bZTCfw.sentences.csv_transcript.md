@@ -84,7 +84,7 @@
 
 06:21 [[start:381358][end:385380]] What does explaining cultural dynamics even mean?
 
-06:26 [[start:386310][end:387890]] Itepends who is talks
+06:26 [[start:386310][end:387890]] It depends who is talking.
 ing.
 [[start:388550][end:396390]] There are many views on what constitutes a scientific explanation.
 [[start:396890][end:400802]] I say we can cluster them in three broad categories.
@@ -109,38 +109,38 @@ ing.
 
 09:47 [[start:587830][end:598150]] So in my opinion it is more a question of rhetorics than of epistemology because I do not think the answer is coherent.
 
-09:58 [[start:598570][end:615930]] The answer is, as far as I'm concerned that people they just Raify regularities that are observed in experimental settings often that are quite heavily fabricated as kind of cognitive laws of behavior.
-[[start:616530][end:634078]] And because those people usually agree in spirit to the mechanical kind of explanation they talk about cognitive mechanism or mental processes but only insofar that those mechanism or processes are explanatory of cognitive laws.
+09:58 [[start:598570][end:615930]] The answer is, as far as I'm concerned, that people just reify regularities that are observed in experimental settings, often that are quite heavily fabricated as kind of cognitive laws of behavior.
+[[start:616530][end:634078]] And because those people usually agree in spirit with the mechanical kind of explanation they talk about cognitive mechanism or mental processes but only insofar as those mechanisms or processes are explanatory of cognitive laws.
 [[start:634094][end:638542]] They do not do the work of looking at the structure and function of the systems.
-[[start:638606][end:653518]] They just claim there must be a mechanism that explain the vague law that I have observed over 20 people that came to my lab and these laws, they are assumed to scale for the explanation of social activity.
+[[start:638606][end:653518]] They just claim there must be a mechanism that explain the vague law that I have observed over 20 people that came to my lab and these laws are assumed to scale for the explanation of social activity.
 
-10:53 [[start:653714][end:661180]] And so you have it, you have the recipe for universal law of social change.
+10:53 [[start:653714][end:661180]] And so you have it, you have the recipe for a universal law of social change.
 
-11:02 [[start:662910][end:679710]] And basically the whole argument stands on the idea that you have a presentation or mental processes or cognitive mechanism that somehow entail that the subject's behavior is regular through time and between individuals.
-[[start:680450][end:691410]] And you never have the work that would actually in any capacity prove it for reasons that we will not get into because it would get math heavy and renty.
-[[start:691850][end:707530]] So if the rules and regularities of human behavior can change through learning, through culture, evolution, through whatnot, how can we exactly model or explain or even describe this agency?
+11:02 [[start:662910][end:679710]] And basically the whole argument stands on the idea that you have a presentation or mental processes or cognitive mechanism that somehow entails that the subject's behavior is regular through time and between individuals.
+[[start:680450][end:691410]] And you never do the work that would actually in any capacity prove it, for reasons that we will not get into because it would get math-heavy and ranty.
+[[start:691850][end:707530]] So if the rules and regularities of human behavior can change through learning, through cultural evolution, through whatnot, how can we exactly model or explain or even describe this agency?
 
-11:49 [[start:709550][end:719374]] This is not dwell in anomaly callful framework because when we do natural laws, we look at regularities, we claim here is a law, this regularity is a law.
+11:49 [[start:709550][end:719374]] This is not doable in a nomological/lawful framework because when we do natural laws, we look at regularities: we claim here is a law, this regularity is a law.
 
-11:59 [[start:719412][end:724602]] So it explains that it exists and this is a circle.
-[[start:724666][end:730270]] Because as far as I'm concerned, it's a circular reasoning.
+11:59 [[start:719412][end:724602]] So it explains that it exists, and this is a circle
+[[start:724666][end:730270]] because as far as I'm concerned, it's a circular reasoning.
 [[start:730430][end:735070]] Like the regularities explain the regularities, which explain the regularities.
 [[start:735150][end:737538]] There is no way out of this.
 
 12:17 [[start:737624][end:740420]] You can recurse this all day long.
-[[start:740790][end:743894]] The only fact that you observe the thing is your explanation for the thing.
+[[start:740790][end:743894]] The only fact that you observe about the thing is your explanation for the thing.
 [[start:743932][end:747510]] This is not, hopefully, how we do Things in Science.
-[[start:747850][end:752870]] And you have a process of explanation that is more complete.
-[[start:752940][end:760310]] If you look at structure and function written lodge you can look at a specific system which has specific structure.
+[[start:747850][end:752870]] And you have a process of explanation that is more complete,
+[[start:752940][end:760310]] if you look at structure and function written large you can look at a specific system which has specific structure.
 
-12:40 [[start:760390][end:766334]] And you can look at what the system does, the function that the system enacts a specific point in time.
-[[start:766452][end:773966]] And you can look at how this function, this activity, shapes the system later on at T plus one.
-[[start:773988][end:788034]] You can have developmental approach to things that is centered on how system unfold how they learn, how they evolve through time that is doable there is no law against that and it could actually work.
+12:40 [[start:760390][end:766334]] And you can look at what the system does, the function that the system enacts at a specific point in time.
+[[start:766452][end:773966]] And you can look at how this function, this activity, shapes the system later on at time t + 1.
+[[start:773988][end:788034]] You can have a developmental approach to things that is centered on how systems unfold how they learn, how they evolve through time that is doable. There is no law against that and it could actually work.
 
 13:08 [[start:788072][end:789860]] So yeah, let's do that.
-[[start:790950][end:803480]] Let's explain natural phenomenon by describing how the underlying structure work but also by trying to explain how it's brought about how the system's activity explain the way it takes shape through time.
+[[start:790950][end:803480]] Let's explain a natural phenomenon by describing how the underlying structure works but also by trying to explain how it's brought about how the system's activity explain the way it takes shape through time.
 
-13:24 [[start:804750][end:830500]] So a claim that we will make here that is itself could be contentious but we don't have to look at why it is not relevant here is that active inference, which is a specific new trendy theory of human cognition can actually explain how regularities underlying social activity be constructed through time.
+13:24 [[start:804750][end:830500]] So a claim that we will make here that in itself could be contentious (although we don't have to look at why as it is not relevant here) is that active inference, which is a specific new trendy theory of human cognition, can actually explain how regularities underlying social activity can be constructed through time.
 [[start:831510][end:835278]] And let us look at what active inference says precisely.
 [[start:835374][end:842942]] So we won't look at the math ever, we won't look here at the specifics of the theory.
 [[start:843086][end:855290]] The only thing we are going for is to prove that this theory indeed does what I think it does, which is explain or at least describe in a nontrivial way the evolution of social regulatories.
