@@ -236,67 +236,67 @@ ing.
 
 24:55 [[start:1495030][end:1498950]] So first agenda setting.
 [[start:1499690][end:1503480]] Some of you will know what it is, some of you will not know what it is.
-[[start:1504330][end:1510934]] So Azure setting is something that is situated in the work on public opinion.
+[[start:1504330][end:1510934]] So agenda setting is something that is situated in the work on public opinion.
 [[start:1511062][end:1516250]] Specifically, I believe this book is called Public Opinion.
-[[start:1518110][end:1519734]] So ajana setting.
+[[start:1518110][end:1519734]] 
 
-25:19 [[start:1519782][end:1531434]] It refers historically, although you have a more diverse way to understand it now to the role of mass media like journals and later TV in manufacturing Consent.
-[[start:1531482][end:1539666]] This is a textualization from the text of no, I thought I had the book cover, I forgot the name of the guy.
-[[start:1539688][end:1541322]] I'm sorry you have to look at the reference.
-[[start:1541486][end:1555130]] But it is used to study how mass media can manufacture consent by drawing attention to specific issues and shaping specific expectation about the world.
+25:19 [[start:1519782][end:1531434]] Agenda setting refers historically, although you have a more diverse way to understand it now, to the role of mass media like journals and later TV in manufacturing consent.
+[[start:1531482][end:1539666]] 
+[[start:1539688][end:1541322]] You can find the book in the References.
+[[start:1541486][end:1555130]] But this idea is used to study how mass media can manufacture consent by drawing attention to specific issues and shaping specific expectations about the world.
 
-25:55 [[start:1555280][end:1569530]] So the idea is that you have a role, an active role of the elite, what I call the elite here, people which have active inference of the flow of policy or society.
+25:55 [[start:1555280][end:1569530]] So the idea is that you have a role, an active role of the elite, what I call the elite here, people who have outsize influnce on the flow of policy or society.
 
-26:09 [[start:1569690][end:1571034]] I will call them elite.
-[[start:1571162][end:1576030]] And so those people, they basically transmit norms, they transmit normative expectation.
-[[start:1576530][end:1581890]] So consent to whatever is the thing that they do, they want you to do more specifically.
-[[start:1582310][end:1585474]] And they do so not by telling you do this and that.
+26:09 [[start:1569690][end:1571034]] I will call them the elite. 
+[[start:1571162][end:1576030]] And so those people, they basically transmit norms, they transmit normative expectations,
+[[start:1576530][end:1581890]] consent to whatever is the thing that they do, or more specifically that they want you to do.
+[[start:1582310][end:1585474]] And they do so not by telling you to do this and that.
 [[start:1585592][end:1588030]] They do so by building agendas.
 
-26:28 [[start:1588110][end:1591800]] So drawing attention to specific issues in specific way.
-[[start:1592490][end:1598374]] And you can see here people who are I mean, it's prevalent in political life.
-[[start:1598412][end:1599414]] Everyone knows that.
-[[start:1599532][end:1601702]] But the US.
-[[start:1601836][end:1605882]] Right wing is very transparent in doing that.
+26:28 [[start:1588110][end:1591800]] So drawing attention to specific issues in specific ways.
+[[start:1592490][end:1598374]] And you can see here people who are -- it's prevalent in political life,
+[[start:1598412][end:1599414]] everyone knows that --
+[[start:1599532][end:1601702]] But in the US
+[[start:1601836][end:1605882]] the right wing is very transparent in doing that. [This statement is problematic in that it is in itself a pretty thinly veiled example of agenda setting, implying that one side in a political argument is manufacturing political opinion, but not the other. The impression is left that the adoption of an active inference perspective allows the imposition of norms by some agents to be recognised as such, but only at the expense of smuggling in another set of norms, those of the exponent of active inference.]
 
-26:46 [[start:1606016][end:1624640]] And so this is a meeting between two experts in a general setting, donald Trump and Ron DeSantis, which basically have convinced people that they should not worry about things like, I don't know, the price of life, whether we wage war here and there.
+26:46 [[start:1606016][end:1624640]] And so this is a meeting between two experts in a general setting, Donald Trump and Ron DeSantis, who basically have convinced people that they should not worry about things like, I don't know, the price of life, whether we wage war here and there. [Is it helpful here to talk about a policy agenda in such vague, disparaging language, suggesting further that this it represents the thinking of half the US population? Using ActInf to debunk a strawman agenda that has already been trashed by the speaker's use of language demeans the value of ActInf as a cutting edge tool of analysis.]
 
 27:05 [[start:1625730][end:1627898]] Why do we have to pay millions?
-[[start:1627994][end:1628594]] Why do us?
-[[start:1628632][end:1638770]] People have to pay millions to get health care, but to how LGBTQ Democratic people threaten the US.
-[[start:1638840][end:1640642]] Life in a very abstract way?
+[[start:1627994][end:1628594]] Why the US?
+[[start:1628632][end:1638770]] People have to pay millions to get health care, but how do LGBTQ Democratic people threaten US
+[[start:1638840][end:1640642]] life in a very abstract way? [This is a poor example as it only works as an example of agenda setting if one believes that feeling against an LGBTQ aganda was manufactured by the Republican Party.]
 
-27:20 [[start:1640696][end:1653590]] Like, I did not ever hear any consistent, coherent, believable mechanism by which they explained how LGBTQ threatens whatever Republicans.
+27:20 [[start:1640696][end:1653590]] I did not ever hear any consistent, coherent, believable mechanism by which they explained how LGBTQ threatens  Republicans. [Isn't such deprecation/rejection of evidence contrary to one's own model axiomatic for an ActInf agent?]
 [[start:1654250][end:1656662]] But they do draw attention to this topic.
-[[start:1656806][end:1661462]] They do share the expectation that Democrats and GBTQ are predators.
-[[start:1661606][end:1680500]] And they do so in a way that is able to legitimize themselves as become other people, to mobilize people to actually be behind them and do their bidding and to canalize political life in a way that is convenient for them because it keeps them in power.
+[[start:1656806][end:1661462]] They do share an expectation that Democrats and LGBTQ are predators.
+[[start:1661606][end:1680500]] And they do so in a way that is able to legitimize themselves as become other people, to mobilize people to actually be behind them and do their bidding and to canalize political life in a way that is convenient for them because it keeps them in power. [Isn't this true of all politics by its very nature? Has an ActInf perspective added any value here?]
 [[start:1681430][end:1695170]] And the role of attention, the way you pay attention to things in shaping behavior, it's just a redo of what I explained in active inference.
 
-28:15 [[start:1695330][end:1703346]] If you believe that the forces, the way we constrain attention is explicit of behavior, then you believe in active inference just expressed differently.
-[[start:1703458][end:1713894]] So this is a case where you have a classical, let us say, concept in a circle sense that essentially reduces to concepts of active inference.
-[[start:1714022][end:1725562]] It's not to say, of course, that astrology is irrelevant and we should just do cognitive sense, but this is pretty rare to have such a direct response between topics that are disciplinary this far apart.
-[[start:1725626][end:1728880]] So this is something we should definitely pay attention to.
-[[start:1729910][end:1732850]] So, second case study nationalism.
+28:15 [[start:1695330][end:1703346]] If you believe that the forces, the way we constrain attention is explicative of behavior, then you believe in active inference just expressed differently.
+[[start:1703458][end:1713894]] So this is a  case where you have a classical concept in a circular sense that essentially reduces to concepts of active inference.
+[[start:1714022][end:1725562]] It's not to say, of course, that astrology is irrelevant and we should just do cognitive science, but it is pretty rare to have such a direct response between topics that are disciplinary this far apart.
+[[start:1725626][end:1728880]] So this is something we should definitely pay attention to. [The speaker's intention is unclear here.]
+[[start:1729910][end:1732850]] So, the second case study is nationalism.
 
 28:53 [[start:1733910][end:1751558]] Basically, this case study is entailed by what I said over the Republicans because the move by which they legitimize their rule, it is just say we share an identity here, us, conservative, traditional values, et cetera, et cetera.
-[[start:1751644][end:1754182]] And this identity, it entails specific norms.
-[[start:1754246][end:1765174]] And for reasons that we are usually left out of the frame, I so elite people run DeSantis, Trump, Napoleon, whoever.
+[[start:1751644][end:1754182]] And this identity, it entails specific norms. 
+[[start:1754246][end:1765174]] And for reasons that we are usually left out of the frame, I so elite people Ron DeSantis, Trump, Napoleon, whoever
 
-29:25 [[start:1765302][end:1769110]] I get to tell you what this entity entails in terms of behavior.
+29:25 [[start:1765302][end:1769110]] get to tell you what this entity entails in terms of behavior.
 [[start:1769270][end:1779490]] You don't get to speak, really, because you are not someone who has newspapers that parrot what I say, what you say, because you have to keep constant with this subject.
 
-29:40 [[start:1780150][end:1784580]] And this is very consistent with the Cliodynamics by which we constructed nation states.
+29:40 [[start:1780150][end:1784580]] And this is very consistent with the dynamics by which we constructed nation states. [This is another strawman argument whereby having trashed the US Republican Party it is asserted that all national identities were constructed through similar machinations.]
 [[start:1785190][end:1802374]] So for the historical context, the idea that we have ethnicities and this is somehow relevant, normatively, like the Slav should organize together or the, I don't know, Hungarian should organize together, and we should get to agree to things that we do and then do them.
 [[start:1802412][end:1803510]] It's very recent.
 [[start:1805150][end:1806470]] It's extremely recent.
 [[start:1806550][end:1807290]] Dates?
 
-30:07 [[start:1807950][end:1836530]] Well, I won't get into the specifics, but let us say in this specific formulation, it dates from the 19th century, when you add a bunch of very powerful bureaucratic administration that took hold respectively, of France, united Kingdom, Prussia and they had the capability to rule most of the social activity, but they did not have any clear argument why people should listen to them in any capacity.
+30:07 [[start:1807950][end:1836530]] Well, I won't get into the specifics, but let us say in this specific formulation, it dates from the 19th century, when you add a bunch of very powerful bureaucratic administration that took hold respectively, of France, united Kingdom, Prussia and they had the capability to rule most of the social activity, but they did not have any clear argument why people should listen to them in any capacity. [The suggestion here appears to be that legitimate power is exercised only by a clear argument being set out and people assentinh to this. Not onlyu has this never happened historically, it is hard to see how it could given the evolutionary way the ActInf mechanism works. 
 
-30:37 [[start:1837270][end:1862650]] And the way it worked is that those administration they basically started claiming that they were somehow representative of a given ethnical and linguistic community and that in virtue of being part of this community you should listen to them and pay them respect and actively work for their goal to be fulfilled.
+30:37 [[start:1837270][end:1862650]] And the way it worked is that those administration they basically started claiming that they were somehow representative of a given ethnical and linguistic community and that in virtue of being part of this community you should listen to them and pay them respect and actively work for their goal to be fulfilled. 
 [[start:1863390][end:1875854]] And of course it is not that easy to make this claim but what happened is they invested a huge deal of energy and organization into actually having people buy that.
-[[start:1875892][end:1888530]] They built schools, they built prison, they built psychiatric hospital, they built a lot of infrastructure that enabled them to transmit norms in a very robust way and transmit identity in a very robust way.
-[[start:1888600][end:1902322]] And in doing that they managed to embed most of the micro social relation you could have into their specific ethnicity and into the normative power they lend to this ethnicity.
+[[start:1875892][end:1888530]] They built schools, they built prisons, they built psychiatric hospital, they built a lot of infrastructure that enabled them to transmit norms in a very robust way and transmit identity in a very robust way. 
+[[start:1888600][end:1902322]] And in doing that they managed to embed most of the micro social relation you could have into their specific ethnicity and into the normative power they lend to this ethnicity. 
 
 31:42 [[start:1902466][end:1914202]] So at some point, you know, I always forget farmer in a lost village in France you only meet at tax time.
 [[start:1914256][end:1920922]] So main arm come and tell you give your grain and you give your grain because else you're dead.
@@ -345,157 +345,157 @@ ing.
 36:12 [[start:2172610][end:2182994]] And there is no necessity of a reflexive step where you actually think about what is your self model and you are expected to do a thing.
 [[start:2183032][end:2186322]] You do the thing because you expect yourself to be doing the thing.
 [[start:2186376][end:2190114]] And active in France, as we said, you do what you expect to do.
-[[start:2190312][end:2209674]] So this basically explains why such symbolic raw power it has actual consequences while if you have more rational model of humanity the question is why you build big things and not infrastructure it will be a rational response but this is not what people do.
-[[start:2209712][end:2215770]] People follow norms and this is a way to broadcast norms very efficiently and robustly.
+[[start:2190312][end:2209674]] So this basically explains why such symbolic raw power it has actual consequences while if you have more rational model of humanity the question is why you build big things and not infrastructure it will be a rational response but this is not what people do. [The suggestion is here made that there is a thing called rationality which is distinct from ActInf, but are not all models axiomatically the product of ActInf? And if so, how can the speaker assert that the prior beliefs being criticised are irrational and should be supplanted by his preferred rational alternative?]
+[[start:2209712][end:2215770]] People follow norms and this is a way to broadcast norms very efficiently and robustly. [This appears to be a consequence of how ActInf works: norms arguably would not exist unless they were broadcast efficiently and robustly. That in no way invalidates those norms; and indeed is there a means for the invalidation of norms from within an ActInf perspective, as opposed to their replacement by different norms broadacast by a different authority/elite?]
 
-36:56 [[start:2216610][end:2236162]] So due to that I'd like to talk about structure and agency so there is a constant question in a social sense, usually social sense talk about structure so norms habitus way that institution builds through life and there is a legitimate question that is.
-[[start:2236216][end:2243614]] Asked which is if you believe structure to human behavior, what is the place for agency?
-[[start:2243662][end:2254166]] So there are constant debates in every subfield possible of social sense regarding what is actually explained by this structure and what is left to individual agency.
+36:56 [[start:2216610][end:2236162]] So due to that I'd like to talk about structure and agency. There is a constant question in social science about structure 
+[[start:2236216][end:2243614]] which is, if you believe it is germane to human behavior, what is the place for agency?
+[[start:2243662][end:2254166]] So there are constant debates in every subfield possible of social science regarding what is actually explained by the structure and what is left to individual agency.
 [[start:2254278][end:2260234]] And what I want to say is that this question is essentially dissolved by the model of agency we have.
-[[start:2260432][end:2268000]] So as we said, agency it's exerted through expectation over myself.
+[[start:2260432][end:2268000]] So, as we said, agency is exerted through my expectations for myself. 
 
-37:48 [[start:2268530][end:2288322]] So because social structure it becomes expected, it is enacted through the agency of these specific people that are within it not have an opposition between how strong the institutions are and how agentive people are because strong institution are institution that basically become Embedded in your self model.
+37:48 [[start:2268530][end:2288322]] So because social structure becomes expected, it is enacted through the agency of these specific people that are within it. We do not have an opposition between how strong the institutions are and how much agancy people exert because strong institutions are institutions that basically become embedded in your self-model.
 
-38:08 [[start:2288456][end:2298274]] And so there are people freely not freely, it's a bad term but from their own accord they enact those institution.
-[[start:2298402][end:2302550]] And this is the whole thing about anticapture, which I presented.
-[[start:2303150][end:2320550]] Nationalistic ideology is strong, is efficient in building actual mobilization because it makes you believe that you will actually, if you want a court, follow the social order it gives, which was not unprecedented, but pretty rare in a premodern institution.
-[[start:2320710][end:2324826]] Usually promoter institution are I am the king.
+38:08 [[start:2288456][end:2298274]] And so there are people who of their own accord enact those institutions.
+[[start:2298402][end:2302550]] And this is the whole thing about anticapture(??), which I presented.
+[[start:2303150][end:2320550]] Nationalistic ideology is strong, is efficient in building actual mobilization because it makes you believe that you will actually, of your own accord, follow the social order it gives, which was not unprecedented, but pretty rare in premodern institutions.
+[[start:2320710][end:2324826]] Usually premodern institution are "I am the king.
 
 38:44 [[start:2324858][end:2325674]] I have an army.
-[[start:2325722][end:2326640]] Give me food.
-[[start:2327170][end:2336094]] And when you have legitimation attempts to actually explain why I should get the food these are pretty much justification.
-[[start:2336222][end:2355514]] This is the elite people talking to themselves about why they are justified knowing that but you have no arguments and that would be actually compelling so as to why you would have to give the food and you have no attempt whatsoever to convince people who have to give the food they should give the food.
+[[start:2325722][end:2326640]] Give me food."
+[[start:2327170][end:2336094]] And when you have legitimation attempts to actually explain why I should get the food these are pretty much justifications.
+[[start:2336222][end:2355514]] This is the elite people talking to themselves about why they are justified in knowing that but you have no arguments that would be actually compelling so as to why you would have to give the food and you have no attempt whatsoever to convince people who have to give the food they should give the food.
 
-39:15 [[start:2355632][end:2366460]] This ideology they do not talk to the people they ask things from, they talk to themselves about why they can't they are legitimate to take the things.
+39:15 [[start:2355632][end:2366460]] This ideology they do not talk to the people they ask things from, they talk to themselves about why it is legitimate to take the things.
 
 39:26 [[start:2366990][end:2373434]] And so yeah, in those case you have a pretty visible conflicting between structure and agency.
 [[start:2373562][end:2379070]] Do I do what I'm told to do under a threat of death or do I do any other thing?
 [[start:2379140][end:2381754]] Of course most people would like to do other things but they can't.
-[[start:2381802][end:2383678]] And I will feel that they can't.
+[[start:2381802][end:2383678]] And they will feel that they can't.
 [[start:2383854][end:2398130]] But if you accept that agency is built through normativity, through engagement with a sociocultural field of finances, of productive action, you have to admit that software exists at least in part through agency.
 
-39:58 [[start:2398290][end:2406250]] Because what agent believe is legitimate, what agents believe is right, what agent believe is expected.
-[[start:2406670][end:2421214]] It is very precisely what constitutes structures and that is insight that is at least in part left out of the conversation in some field.
+39:58 [[start:2398290][end:2406250]] Because what agents believe is legitimate, what agents believe is right, what agents believe is expected.
+[[start:2406670][end:2421214]] It is very precisely what constitutes structures and that is an insight that is at least in part left out of the conversation in some fields.
 
-40:21 [[start:2421252][end:2431250]] And I'd like to show why the direct conflict between certain agencies it does not have a strong bonding.
-[[start:2432710][end:2448610]] Yes, again, I have said the thing that the slide would say there is another thing that is maybe closer to my core body of work which is how active inference afford indirectly an archaeology of cognitive landscape.
-[[start:2448770][end:2468398]] So if socialization is made of constraint over behavior and those constraints are to some extent Embedded in the natural environment of the people, then we can to some extent study archaeological landscape for themselves.
+40:21 [[start:2421252][end:2431250]] And I'd like to show why the direct conflict between certain agencies does not have a strong bonding.
+[[start:2432710][end:2448610]] There is another thing that is maybe closer to my core body of work which is how active inference affords indirectly an archaeology of cognitive landscape.
+[[start:2448770][end:2468398]] So if socialization is made of constraints over behavior and those constraints are to some extent embedded in the natural environment of the people, then we can to some extent study archaeological landscapes for themselves.
 
-41:08 [[start:2468484][end:2480510]] We can look at landscape like material landscape, the object of study of archaeology, and we can make some inference over the constraints that this landscape entails over collective behavior.
+41:08 [[start:2468484][end:2480510]] We can look at landscapes like material landscapes, the object of study of archaeology, and we can make some inference about the constraints that this landscape entails over collective behavior.
 
-41:21 [[start:2481490][end:2488658]] I will not get into detail as well as to why, because it's far call.
-[[start:2488744][end:2491886]] Making this inference is difficult, but very concretely.
-[[start:2491918][end:2494974]] We can ask whether you're a key.
-[[start:2495032][end:2507142]] So the idea that some people get to say to other people what to do and certification, the idea that some people are by nature above other people, they can be Embedded in vertical patterning.
+41:21 [[start:2481490][end:2488658]] I will not get into detail as well as to why, because it's a far call.
+[[start:2488744][end:2491886]] Making this inference is difficult, but very concretely
+[[start:2491918][end:2494974]] we can ask whether
+[[start:2495032][end:2507142]] the idea that some people get to say to other people what to do and stratification, the idea that some people are by nature above other people, can be embedded in vertical patterning.
 
-41:47 [[start:2507206][end:2512540]] So you have a claim by people who fund me escape project, look it up, it's nice.
-[[start:2513470][end:2526826]] You have a claim that to some extent the rectification of society around the Iron Age, it is written, it is Embedded in vertical patterns in material culture and architecture.
+41:47 [[start:2507206][end:2512540]] So you have a claim
+[[start:2513470][end:2526826]] that to some extent the stratification of society around the Iron Age, it is written, is embedded in vertical patterns in material culture and architecture.
 [[start:2527018][end:2532606]] And maybe I will not buy the claim outright, but it is very compelling.
 [[start:2532638][end:2535246]] If you look at specific architecture, you get a specific feeling.
-[[start:2535358][end:2539490]] So this is the not cathedral, but maybe Basilica of Frequency.
+[[start:2535358][end:2539490]] So this is the not a cathedral, but maybe a Basilica of Reykjavik.
 
-42:19 [[start:2539910][end:2545526]] I will not try to say the name because I do not speak Icelandic, and that would be bad.
+42:19 [[start:2539910][end:2545526]]
 
-42:25 [[start:2545708][end:2550130]] But you have very progressive, compelling curve toward the sky.
-[[start:2550210][end:2558566]] You have specific feelings that are, how do you say, produced by this architecture.
+42:25 [[start:2545708][end:2550130]] But you have a very progressive, compelling curve toward the sky.
+[[start:2550210][end:2558566]] You have specific feelings that are produced by this architecture.
 [[start:2558758][end:2566780]] And you have a very specific way in which it drives attention from something wide on the ground to something that goes up.
-[[start:2567150][end:2584610]] And if I did not make it clear yet, if we buy active inference, we buy that the patterning of attention, the way you give attention to things, it carries norms, it carries intentionality and in first person by introspection.
+[[start:2567150][end:2584610]] And if I have not made it clear yet, if we buy active inference, we buy that the patterning of attention, the way you give attention to things, carries norms and intentionality and, in the first person by introspection,.
 
-43:04 [[start:2584950][end:2594710]] I think all of you can very clearly see how architecture drives specific patterns of attention and how those patterns specific elicit specific feelings.
-[[start:2595530][end:2601078]] And we currently do not have models that would be very specific and very Enactive of how this work.
-[[start:2601164][end:2604810]] But we could this is huge work, but this is doable work.
-[[start:2604880][end:2606646]] This is not speculations.
+43:04 [[start:2584950][end:2594710]] I think all of you can very clearly see how architecture drives specific patterns of attention and how those patterns elicit specific feelings.
+[[start:2595530][end:2601078]] And we currently do not have models that would be very specific and very predictive of how this works.
+[[start:2601164][end:2604810]] But we could. This is huge work, but this is doable work.
+[[start:2604880][end:2606646]] This is not speculation.
 
-43:26 [[start:2606838][end:2611980]] And I do not know of another commonism than active in France that would actually make it possible.
+43:26 [[start:2606838][end:2611980]] And I do not know of a formalism other than active inference that would actually make it possible.
 
-43:33 [[start:2613790][end:2627200]] And last, I'd like to talk about the favorite thing in social sense, I guess, which is thing like a state, scots anthropology of states.
-[[start:2627570][end:2635202]] So the core argument of Scott's, I'd say it's hard to identify a core argument in that book.
-[[start:2635256][end:2641690]] But you have ways in which states so here equivalent to administrations.
-[[start:2641790][end:2642726]] They understand the world.
-[[start:2642748][end:2654646]] They understand the world through written forms that they can pass around many people, many institution to have actually a coherent model of the world that is pretty much abuse.
+43:33 [[start:2613790][end:2627200]] And last, I'd like to talk about my favorite thing in social sciene, I guess, which is seeing like a state, Scott's anthropology of states.
+[[start:2627570][end:2635202]] So the core argument of Scott's I'd say -- it's hard to identify a core argument in that book -- 
+[[start:2635256][end:2641690]] is that you have ways in which states, here equivalent to administrations.
+[[start:2641790][end:2642726]] understand the world.
+[[start:2642748][end:2654646]] They understand the world through written forms that they can pass around many people, many institution have actually a coherent model of the world that is pretty much obvious.
 
-44:14 [[start:2654758][end:2659882]] And what should be abuse but is not is that those models are reductive in the sense any model are.
+44:14 [[start:2654758][end:2659882]] And what should be obvious but is not is that those models are reductive in the sense any model is.
 [[start:2660016][end:2667280]] They emphasize specific information and they leave out other specific information.
 
-44:28 [[start:2668690][end:2684606]] And something that is very interesting, I'd say, is that states they tend to push specific models, specific landscaping, specific norms in urbanism, specific family norms that build legibility.
-[[start:2684718][end:2688226]] So the ability to be understood by the state.
+44:28 [[start:2668690][end:2684606]] And something that is very interesting, I'd say, is that states tend to push specific models, specific landscaping, specific norms in urbanism, specific family norms that build legibility,
+[[start:2684718][end:2688226]] that is the ability to be understood by the state.
 [[start:2688408][end:2697094]] So, for example, you could have very sparse settlements that are quite autonomous and that do that thing.
 
 44:57 [[start:2697132][end:2698162]] It is a possibility.
 [[start:2698306][end:2701590]] There is no law or physical constraint around that.
 [[start:2701740][end:2705702]] But it is far easier as a state to manage what is very close to it, right?
 [[start:2705836][end:2713194]] So for a state, it's good to have a population that lives very close to the center of power because those people, they are just there.
-[[start:2713232][end:2715658]] You can go tell them what to do, it's simple.
+[[start:2713232][end:2715658]] You can go and tell them what to do, it's simple.
 
 45:15 [[start:2715824][end:2717774]] And you can go ask them things.
 [[start:2717812][end:2718446]] It's simple too.
 [[start:2718468][end:2720560]] It's very easy to manage that.
 [[start:2721330][end:2725150]] And those people, they would need food to stay there.
-[[start:2725300][end:2735970]] So we need some kind of food production model that is easy to take from and that is easy to organize and goge as a centralized institution.
+[[start:2725300][end:2735970]] So we need some kind of food production model that is easy to take from and that is easy to organize and gouge as a centralized institution.
 
 45:36 [[start:2736390][end:2740306]] And this is monoculture, this is agriculture as we understand it currently.
-[[start:2740408][end:2744834]] This is people that make big field, that make the same crop always cereals.
-[[start:2744962][end:2762902]] Well, not always, sometimes potatoes, but mostly cereals, because cereals, you know, it's very dense, energetically, it is easy to keep, it is easy to transport because it is dense and it stay edible long after recall.
-[[start:2762966][end:2765126]] You say recall in English cropping.
-[[start:2765158][end:2772974]] I don't know what is the word, but when you take the food from the plants and people have to stay there for very long to cultivate that.
+[[start:2740408][end:2744834]] This is people that make big fields, that make the same crop,
+[[start:2744962][end:2762902]] sometimes potatoes, but mostly cereals, because cereals, you know, are very dense, energetically, easy to keep, and easy to transport because it is dense and stays edible long after harvesting.
+[[start:2762966][end:2765126]] 
+[[start:2765158][end:2772974]] So people have to stay there for very long to cultivate that.
 
-46:13 [[start:2773012][end:2778794]] So they cannot go around and put potatoes here and there and leave when they don't.
-[[start:2778922][end:2788260]] So you can just go to people and you know where the people are and where you can take the food and you know when the food is going to be.
-[[start:2789030][end:2793354]] Again, I don't know the word cropped because it's cereals.
-[[start:2793422][end:2794870]] It's always the same time.
-[[start:2794940][end:2801970]] It's very visible in the landscape how far you are from recollecting cropping.
+46:13 [[start:2773012][end:2778794]] They cannot go around and put potatoes here and there and leave when they want.
+[[start:2778922][end:2788260]] So you can just go to people and you know where the people are and where you can take the food and you know when the food is going to be harvested.
+[[start:2789030][end:2793354]] Because it's cereals
+[[start:2793422][end:2794870]] it's always the same time and
+[[start:2794940][end:2801970]] it's very visible in the landscape, how far you are from harvest time.
 
 46:42 [[start:2802050][end:2804118]] So you cannot really have a way to cheat that.
-[[start:2804204][end:2813450]] You can just send many norms, take the food, give it to the city, to a different population, and you have a very rationalized controllable society.
-[[start:2813790][end:2831090]] And we do not know that this is the reason why we have cities and monoculture, but we do have traces that states very consistently tried to have big cities and monoculture field and mostly they succeeded.
+[[start:2804204][end:2813450]] You can just send men in arms, take the food, give it to the city, to a different population, and you have a very rationalized, controllable society.
+[[start:2813790][end:2831090]] And we do not know that this is the reason why we have cities and monoculture, but we do have traces that states very consistently tried to have big cities and monoculture fields and mostly they succeeded.
 
-47:13 [[start:2833910][end:2844998]] And oh yeah, this is relevant to active inference because in active inference, the way you pay attention to things, it is productive of your world, it is productive of what cognition you have.
+47:13 [[start:2833910][end:2844998]] And this is relevant to active inference because in active inference, the way you pay attention to things, it is productive of your world and productive of what cognition you have.
 [[start:2845084][end:2856202]] And here the capacity for administration, the capacity for written symbols that tell what things are, they are critical to a state's understanding of the world.
 [[start:2856256][end:2862234]] They are what literally produces the way states pay attention to things.
 
-47:42 [[start:2862432][end:2884260]] And the fact it was basically major thing for them to have a world that looks like this it is very directly telling about the fact it creates a world, it's a direct instantiation of that and that is a nice link to do and I'm happy I did this link.
-[[start:2885350][end:2891982]] So this is for the case studies expectedly.
+47:42 [[start:2862432][end:2884260]] And the fact it was basically a major thing for them to have a world that looks like this is very directly telling about the fact it creates a world. It's a direct instantiation of that and that is a nice link to make and I'm happy I made this link.
+[[start:2885350][end:2891982]] So it is for the case studies, I expect, that
 
-48:12 [[start:2892126][end:2902566]] You don't see the corrections, not all of them maybe you're convinced that there is something there but most likely you don't see very precisely what is to be seen here.
-[[start:2902748][end:2908486]] So the expectation is that over the course, you develop a very specific understanding of active inference.
-[[start:2908518][end:2925440]] The framework you develop a specific understanding of how it relates to social science, to questions that are relevant in social science, and you develop the capacity to have an informal opinion on that critical informal opinion on how this relates to question in circle sense.
+48:12 [[start:2892126][end:2902566]] you don't see the connections, not all of them. Maybe you're convinced that there is something there but most likely you don't see very precisely what is to be seen here.
+[[start:2902748][end:2908486]] So the expectation is that over the course, you develop a very specific understanding of active inference,
+[[start:2908518][end:2925440]] the framework. You develop a specific understanding of how it relates to social science, to questions that are relevant in social science, and you develop the capacity to have an informed opinion on that, a critical informed opinion on how this relates to questions in social science.
 
 48:46 [[start:2926290][end:2930638]] So we are doing the introduction lecture.
-[[start:2930734][end:2935700]] Hopefully I've convinced you there is something to see here if not too bad.
+[[start:2930734][end:2935700]] Hopefully I've convinced you there is something to see here. If not, too bad.
 
 48:56 [[start:2936710][end:2940834]] And the next session will be in four days, not one week, four days.
-[[start:2940952][end:2954780]] It will be about basically the basics of active inference, what you have to know to understand, not the framework per se because it's math heavy, but what the framework says about our life as cognitive agent.
+[[start:2940952][end:2954780]] It will be about the basics of active inference, what you have to know to understand, not the framework per se because it's math heavy, but what the framework says about our life as cognitive agent.
 [[start:2955310][end:2957130]] So then you have the discussion.
 [[start:2958910][end:2961254]] You should know that for each lecture there is discussion.
-[[start:2961302][end:2964362]] Lecture is vertical, people talk, you listen.
+[[start:2961302][end:2964362]] The lecture is vertical: people talk, you listen.
 
-49:24 [[start:2964496][end:2966540]] Discussion is more free form.
+49:24 [[start:2964496][end:2966540]] Discussion is more free-form.
 [[start:2967010][end:2978014]] Every person has basically authority on how they share the discussion but the expectation is that it is a discussion because it's the name we gave to the thing.
-[[start:2978212][end:2982206]] So after the basics we look at patterns of collective behavior.
-[[start:2982318][end:3001314]] So how those elements on cognition, human cognition or non human cognition, they give tools to study the organization of collective systems like ant colonies or societies but we'll stay in not specific to human approach.
+[[start:2978212][end:2982206]] So after the basics we'll look at patterns of collective behavior.
+[[start:2982318][end:3001314]] So how those elements on cognition, human cognition or non-human cognition,  give tools to study the organization of collective systems like ant colonies or societies, but we'll not restrict our interest to human systems.
 
 50:01 [[start:3001362][end:3011190]] We'll be interested in collective behavior but will not be interested in the specific patterns of collective behavior as afforded by human cognition.
 
-50:11 [[start:3011350][end:3031470]] Then we'll look at semiotics and semantics, the evolution of symbols so things that are closer to humans, we'll look at how Enactive inference accounts for evolution of symbol and what evolution of symbol affords for cognition and then from here we'll look at very social sensey things norm, script, narrative language.
-[[start:3031630][end:3036638]] So how this discussion on active inference and collective behavior and semiotics?
-[[start:3036734][end:3038206]] They inform very directly.
-[[start:3038238][end:3045426]] They give a model specific principled, predictive model of social human behavior.
-[[start:3045538][end:3059146]] And then we'll look at so my thing, the way I like to think of it all, which is social constraints and we'll go back to the claim that there are landscapes of social, cultural cognition thingy thing.
+50:11 [[start:3011350][end:3031470]] Then we'll look at semiotics and semantics, the evolution of symbols, things that are closer to humans. We'll look at how active inference accounts for the evolution of symbols and what the evolution of symbols affords for cognition and then from here we'll look at very social sensey things norms, script, narrative language,
+[[start:3031630][end:3036638]] how this discussion on active inference and collective behavior and semiotics
+[[start:3036734][end:3038206]] informs us very directly
+[[start:3038238][end:3045426]] giving a specific, principled, predictive model of human social behavior.
+[[start:3045538][end:3059146]] And then we'll look at my thing, the way I like to think of it all, which is social constraints and we'll go back to the claim that there are landscapes of social, cultural cognition things
 
-50:59 [[start:3059248][end:3065974]] And those landscapes can be looked at in abstracted from the individual scale manner.
+50:59 [[start:3059248][end:3065974]] and those landscapes can be looked at in a manner abstracted from scale of the individual.
 
 51:06 [[start:3066102][end:3069242]] And this is explanatory of cultural change.
 [[start:3069376][end:3071962]] And then we go for the conclusion.
 [[start:3072026][end:3074590]] So we'll be interested in your opinion of the course.
-[[start:3074660][end:3080740]] This is the first run we'd like to have feedback, a lot of feedback on what you thought of it and what would make it good.
+[[start:3074660][end:3080740]] This is the first run so we'd like to have feedback, a lot of feedback on what you thought of it and what would make it good.
 
 51:22 [[start:3082950][end:3086210]] So that will be for the conclusion discussion.
 [[start:3087510][end:3091060]] So here I hoped that you'd present yourself.
 [[start:3092650][end:3099160]] We have not the capacity right now to have students take the screen and talk.
-[[start:3100090][end:3108060]] But I'd like to know, you can say in the chat what is your background, what are your expectation for the course?
-[[start:3108510][end:3115562]] Whatever you want to say about things, the world preferably being related somehow to the course.
+[[start:3100090][end:3108060]] But I'd like to know, you can say in the chat what is your background, what are your expectations for the course?
+[[start:3108510][end:3115562]] Whatever you want to say about things, the world, preferably related somehow to the course.
 
-51:55 [[start:3115616][end:3126270]] That would be nice, but yeah, please tell things to Usher.
+51:55 [[start:3115616][end:3126270]] That would be nice, but yeah, please tell us these things.
 
 52:11 [[start:3131110][end:3132674]] That concludes my talk.
 [[start:3132792][end:3145330]] I thought this slide made it clear we have last thing, maybe we considered making projects.
