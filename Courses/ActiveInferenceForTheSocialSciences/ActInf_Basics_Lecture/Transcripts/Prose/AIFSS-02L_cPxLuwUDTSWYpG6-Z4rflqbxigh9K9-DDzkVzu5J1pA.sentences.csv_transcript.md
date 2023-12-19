@@ -1,11 +1,11 @@
-
+# Basics of Active Inference
 00:01 _Daniel:_
 [[start:1970][end:3374]] Hello and welcome, everyone.
 [[start:3492][end:7646]] It is July 11, 2023.
-[[start:7828][end:17774]] We are in Active Inference for the social sciences, and today is going to be a lecture by Ben White on basics of Active Inference, the Active Inference agent.
+[[start:7828][end:17774]] We are in Active Inference for the Social Sciences, and today is going to be a lecture by Ben White on Basics of Active Inference, the Active Inference agent.
 
 00:17 [[start:17892][end:19994]] So, Ben, thank you for the lecture.
-[[start:20122][end:23566]] Off to you, and we're looking forward to it.
+[[start:20122][end:23566]] Over to you, and we're looking forward to it.
 
 00:23 _Ben:_
 [[start:23748][end:24702]] Thank you very much.
@@ -14,14 +14,14 @@
 
 00:33 [[start:33930][end:39350]] I'm going to be talking about the Active Inference agent and trying to cover some of the basics.
 [[start:40010][end:41878]] I won't take too long introducing myself.
-[[start:41964][end:64020]] Ava gave a very thorough introduction in his talk recently, but I'm a second year PhD student in philosophy at the University of Sussex, and I work with Andy Clark and with Avel and some other people using Active Inference to try and find things out about our relationship with technology and within the context of well being and mental health.
-[[start:65590][end:85350]] The aims for today I'm going to try and provide quite a wide ranging overview of how Active Inference has connected with areas of philosophical interest, and particularly how they relate to the individual agent and the experience of the agent and how the agent finds themselves in the world.
+[[start:41964][end:64020]] Avel gave a very thorough introduction in his talk recently, but I'm a second year PhD student in philosophy at the University of Sussex, and I work with Andy Clark and with Avel and some other people using Active Inference to try and find things out about our relationship with technology and within the context of well-being and mental health.
+[[start:65590][end:85350]] The aims for today are that I'm going to try and provide quite a wide ranging overview of how Active Inference has connected with areas of philosophical interest, and particularly how they relate to the individual agent and the experience of the agent and how the agent finds themself in the world.
 
 01:25 [[start:85420][end:90118]] So I've split this up to look at several different defined topics.
 
-01:30 [[start:90214][end:99530]] So I'm going to move quite quickly through mind, agency, emotion, and phenomenology, and I'm going to say a little bit about the self as well.
+01:30 [[start:90214][end:99530]] I'm going to move quite quickly through mind, agency, emotion, and phenomenology, and I'm going to say a little bit about the self as well.
 [[start:99600][end:104160]] And then there's going to be a case study at the end that I'm going to move through if we have time.
-[[start:104690][end:115270]] So one of the other aims that I have is to lay out very clearly some of the core concepts and core mechanisms like precision, weighting, and prediction error enactive models.
+[[start:104690][end:115270]] So one of the other aims that I have is to lay out very clearly some of the core concepts and core mechanisms like precision-weighting, and prediction error in generative models.
 [[start:115450][end:118942]] I'm not going to go into any technical details whatsoever.
 [[start:119006][end:121006]] This is all going to be fairly abstract.
 
@@ -32,82 +32,82 @@
 [[start:158714][end:161454]] So we've got our work cut out for us.
 [[start:161572][end:162880]] So I'll get started.
 
-02:43 [[start:163570][end:168658]] So before I dive in, I wanted to just say a little bit about how these frameworks hang together.
-[[start:168744][end:173982]] So Active Inference is based on Karl Friston's free energy principle.
+02:43 [[start:163570][end:168658]] But before I dive in, I wanted to just say a little bit about how these frameworks hang together.
+[[start:168744][end:173982]] Active Inference is based on Karl Friston's free energy principle.
 [[start:174046][end:175794]] I think most of us are familiar with that.
-[[start:175832][end:192102]] But the free energy principle just states that in order to persist through time, biological organisms must occupy only those states that it would expect to occupy, given the type of thing that it is so free energy is essentially a measure of the disatunment between a system and its environment.
+[[start:175832][end:192102]] But the free energy principle just states that in order to persist through time, a biological organism must occupy only those states that it would expect to occupy, given the type of thing that it is, so free energy is essentially a measure of the disattunement between a system and its environment.
 [[start:192166][end:198780]] And I'm going to say a little bit more about attunement and how that gets cashed out in various ways as we go on.
 
-03:19 [[start:199150][end:206926]] Active Inference is a process theory that essentially explains how embodied organisms actually go about remaining in those expected states.
-[[start:207028][end:211120]] So how we actually go about minimizing free energy.
+03:19 [[start:199150][end:206926]] Active Inference is a process theory that essentially explains how embodied organisms actually go about remaining in those expected states,
+[[start:207028][end:211120]] that is, how we actually go about minimizing free energy.
 
 03:31 [[start:211490][end:220290]] And the idea is that all adaptive behavior is explained by agents garnering evidence to confirm their own expectations.
 [[start:221510][end:222654]] Predictive processing.
-[[start:222702][end:233490]] For the purposes of the lecture today, I'm going to treat these as synonymous because most of the work that I kind of came up through as I was learning about this was predictive processing.
+[[start:222702][end:233490]] For the purposes of the lecture today, I'm going to treat these as synonymous because most of the work that I {kind of} came up through as I was learning about this was predictive processing.
 
 03:53 [[start:233650][end:244934]] And all of the papers that we're using today that refer to predictive processing refer to a predictive processing that I take to be more or less synonymous with Active Inference.
-[[start:244982][end:250566]] So that's a very embodied, inactive flavor of predictive processing.
+[[start:244982][end:250566]] So that's a very embodied, enactive flavor of predictive processing.
 [[start:250678][end:258442]] I think generally the difference is that predictive processing can be a much broader term and predictive processing can also apply to passive models of perception.
 [[start:258506][end:260960]] But we're not going to concern ourselves with that.
-[[start:262630][end:268100]] Okay, so some key concepts of Active Inference, predictive processing then.
+[[start:262630][end:268100]] Okay, so some key concepts of Active Inference / predictive processing then.
 
-04:28 [[start:268630][end:288674]] So the framework says that agents embody or agents have we won't concern ourselves with the nuance there, but they have a generative model, which is essentially a kind of understanding or a model of the regularities that underpin the dynamics between the agent and the environment.
+04:28 [[start:268630][end:288674]] So the framework says that agents embody or agents have (we won't concern ourselves with the nuance there) a generative model, which is essentially a kind of understanding or a model of the regularities that underpin the dynamics between the agent and the environment.
 
 04:48 [[start:288802][end:297660]] So another way to think about this in very rough terms is a kind of mental model of the regularities in the world and how the agent exists in the world.
 [[start:298030][end:303278]] And using that model, the agent can generate predictions about its own sensory states.
-[[start:303444][end:310510]] So given the model, what kinds of sensory states would it expect to find itself in in a particular set of circumstances?
-[[start:311170][end:316174]] And so where those predictions don't actually match the sensory inputs.
+[[start:303444][end:310510]] So given the model, what kinds of sensory states would it expect to find itself in in a particular set of circumstances,
+[[start:311170][end:316174]] and so where those predictions don't actually match the sensory inputs?
 
-05:16 [[start:316222][end:326306]] So where there's a discrepancy between the actual incoming sense data and the prediction, prediction errors are generated and prediction errors are going to flow upwards through the hierarchy.
+05:16 [[start:316222][end:326306]] So, where there's a discrepancy between the actual incoming sense data and the prediction, prediction errors are generated and prediction errors are going to flow upwards through the hierarchy.
 [[start:326338][end:333538]] So the generative model is said to be a hierarchical model and predictions flow downwards and prediction errors flow upwards.
-[[start:333714][end:341050]] And the sole imperative of the brain body system, according to this framework is to minimize those prediction errors.
-[[start:342830][end:349878]] So a good way to kind of get a little handle on this is to think about just the example of perception.
+[[start:333714][end:341050]] And the sole imperative of the brain body system, according to this framework, is to minimize those prediction errors.
+[[start:342830][end:349878]] So a good way to {kind of} get a little handle on this is to think about just the example of perception.
 
-05:49 [[start:349974][end:353454]] So perception traditionally so I'm talking about visual perception here.
+05:49 [[start:349974][end:353454]] So perception -- I'm talking about visual perception here --
 
-05:53 [[start:353492][end:356254]] It's traditionally been understood as a bottom up process.
+05:53 [[start:353492][end:356254]] has traditionally been understood as a bottom-up process.
 [[start:356452][end:366370]] And what that means is that the brain waits for incoming sensory signals and then it processes them as they come in and it combines them in kind of increasingly abstract ways.
 [[start:366520][end:372750]] And what we see is some combination of those sensory signals that have come in and been processed and combined.
-[[start:372910][end:380194]] So if you think about me leaving my apartment in the morning and stepping out onto the street and seeing some cars.
-[[start:380322][end:391046]] What's happening there is some sensory information is hitting my retina and it's being processed first with very basic features like light shade, edges and so on and so forth.
+[[start:372910][end:380194]] So if you think about me leaving my apartment in the morning and stepping out onto the street and seeing some cars,
+[[start:380322][end:391046]] what's happening there is some sensory information is hitting my retina and it's being processed first with very basic features like light shade, edges and so on and so forth.
 
 06:31 [[start:391158][end:396346]] And then it's being combined with my understanding of what a car is or what a bus stop is.
-[[start:396448][end:399020]] And that gives me my kind of visual field.
-[[start:400850][end:406382]] Predictive processing, famously at this point, flips this picture upside down on its head.
-[[start:406436][end:410858]] So visual perception under predictive processing is a top down affair.
+[[start:396448][end:399020]] And that gives me my {kind of} visual field.
+[[start:400850][end:406382]] Predictive processing, famously at this point, flips this picture upside down, on its head.
+[[start:406436][end:410858]] So visual perception under predictive processing is a top-down affair.
 
-06:51 [[start:411034][end:416494]] So the Generative model is going to encode multilevel expectations about the likely scene.
+06:51 [[start:411034][end:416494]] The Generative model is going to encode multilevel expectations about the likely scene.
 
-06:56 [[start:416542][end:430390]] So, just to be very clear, when we talk about multilevel and hierarchical, the higher up levels are going to be tracking longer timescales and higher levels of abstraction, and the lower levels are going to be much faster and much more concrete.
-[[start:430730][end:440626]] So a changeable scene, so there's going to be some variation in what I see when I leave my apartment every day is going to mean that there's always going to be some error in that picture.
-[[start:440658][end:445546]] So it's never going to be the same two days in a row or it's extremely unlikely to be.
+06:56 [[start:416542][end:430390]] So, just to be very clear, when we talk about multilevel and hierarchical, the higher-up levels are going to be tracking longer timescales and higher levels of abstraction, and the lower levels are going to be much faster and much more concrete.
+[[start:430730][end:440626]] So in a changeable scene, the fact that there's going to be some variation in what I see when I leave my apartment every day means that there's always going to be some error in that picture.
+[[start:440658][end:445546]] It's never going to be the same two days in a row or it's extremely unlikely to be.
 [[start:445648][end:452910]] So no matter how well I can predict what I'm going to see when I leave my house, it's always going to be cleaned up by some prediction errors.
 [[start:453250][end:460880]] So essentially, when I step outside and I step into the street, my brain is already anticipating what it's going to see out there.
 
-07:41 [[start:461570][end:467342]] So I know where particular cars are going to be parked, I know where the bus stop is, so on and so forth.
+07:41 [[start:461570][end:467342]] I know where particular cars are going to be parked, I know where the bus stop is, and so on and so forth.
 [[start:467486][end:471490]] And the perceptual experience that we have is a construction.
 
-07:52 [[start:472150][end:478050]] We actually experience the expectation that has been kind of cleaned up post prediction error.
+07:52 [[start:472150][end:478050]] We actually experience the expectation that has been kind of cleaned up post-prediction error.
 [[start:478210][end:482102]] There's a little bit of debate there about exactly what it is that we experience.
 [[start:482236][end:488650]] But for our purposes today, we can say that visual perception is essentially a construction.
 
 08:10 [[start:490510][end:497420]] So on the face of it, prediction errors can be minimized using one of two strategies, and this is going to be really important.
 
-08:19 [[start:499790][end:503386]] So we have what I just described there, which is perceptual inference.
+08:19 [[start:499790][end:503386]] First, we have what I just described there, which is 'perceptual inference'.
 [[start:503498][end:507082]] That's where we revise our predictions to better fit the evidence.
 [[start:507146][end:511630]] So essentially we update our model to better reflect the regularities in the environment.
 [[start:512290][end:520660]] Or we can engage in Active Inference, which is where the framework gets its name from, which is where we essentially make the evidence fit the model.
-[[start:521190][end:527042]] So that's where we in some sense update the world so it conforms to the original prediction.
+[[start:521190][end:527042]] That's where we in some sense update the world so it conforms to the original prediction.
 
-08:47 [[start:527186][end:538890]] And Active Inference agents bring about those expected states by sampling the world in a bias way, so they have certain expectations and then we sample the world to confirm the predictions.
+08:47 [[start:527186][end:538890]] And Active Inference agents bring about those expected states by sampling the world in a biased way, so they have certain expectations and then sample the world to confirm the predictions.
 
-08:59 [[start:539230][end:550758]] And I put perceptual inference there in scare quotes because perceptual inference on kind of readings of most readings of Active Inference just becomes a kind of action readiness.
-[[start:550854][end:554202]] Or as Ramstead and colleagues put it, a state estimation.
-[[start:554346][end:558938]] So it's just perception and action are just wrapped up in this continuous loop.
+08:59 [[start:539230][end:550758]] And I put perceptual inference there in scare quotes because perceptual inference on most readings of Active Inference just becomes a kind of action readiness.
+[[start:550854][end:554202]] Or as Ramstead et al. (2020) [ref??] put it, a state estimation.
+[[start:554346][end:558938]] So perception and action are just wrapped up in this continuous loop.
 [[start:559034][end:560714]] But it's really all about the action.
 
 09:20 [[start:560762][end:567186]] It's really all about bringing about those expected states, and perception is just kind of in service of that process.
-[[start:567368][end:576194]] And so Bruineberg and colleagues refer to the enactive inference agent as a crooked scientist, which is something I really like.
+[[start:567368][end:576194]] And so [Bruineberg et al. (2018)](https://link.springer.com/article/10.1007/s11229-016-1239-1) refer to the active inference agent as a crooked scientist, which is something I really like.
 [[start:576232][end:577746]] I think that's a very charming image.
 [[start:577778][end:586422]] So we are scientists that are engaging in some very dodgy behavior because we're not really interested in having an accurate model.
 [[start:586476][end:590810]] We're more interested in confirming our original predictions.
@@ -115,21 +115,24 @@
 09:52 [[start:592350][end:601462]] Okay, so that was a very rapid overview of some of the core concepts and mechanisms, but they're going to crop up continuously.
 
 10:01 [[start:601526][end:605340]] So I think we're going to get a much better grasp on them as we go on.
+
+## Section 1: Mind and World
+
 [[start:605870][end:617460]] In this section, I'm going to start to expand on some of those things that we've just put on the table, and I'm going to begin to flesh them out in terms of thinking about how Active Inference agents actually exist in the world.
-[[start:619030][end:621442]] So I should say I put this here to remind me.
+[[start:619030][end:621442]] So I should say I put this list of readings here to remind me.
 [[start:621496][end:635250]] So those of you who are taking part in the course, I'm going to make available a document with all of the readings that I firstly, all of the readings that I've used to make these slides, and then a bunch of other readings as well that I think are going to be very relevant.
 
 10:35 [[start:635330][end:640214]] And obviously, they're going to be organized in terms of the structure of this presentation as well.
 [[start:640252][end:645450]] So this is just I've put a little sample up on these slides, but there's going to be much more in the document.
-[[start:646510][end:649740]] So I think it's always good to start with some guiding questions.
+[[start:646510][end:649740]] I think it's always good to start with some guiding questions.
 [[start:650350][end:652240]] So I've thrown up three here.
 
-10:54 [[start:654690][end:657690]] The first is how does enactive inference characterize cognition?
+10:54 [[start:654690][end:657690]] The first is: how does enactive inference characterize cognition?
 [[start:657770][end:662990]] So we've just looked at predictions and prediction errors, but we're going to expand on that a little bit.
 
 11:03 [[start:663060][end:666718]] And we're going to ask what kinds of processes does cognition involve?
 [[start:666894][end:669550]] How is cognition related to the material environment?
-[[start:669630][end:675426]] This is going to be something how cognition relates to the environment is going to be very important in subsequent weeks.
+[[start:669630][end:675426]] This is going to be something -- how cognition relates to the environment -- is going to be very important in subsequent weeks.
 
 11:15 [[start:675608][end:681030]] And we're going to ask quite briefly what kinds of vehicles might realize cognitive processing.
 [[start:681610][end:684482]] So here's a couple of whales.
