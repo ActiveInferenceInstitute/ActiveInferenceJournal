@@ -153,80 +153,80 @@
 [[start:766046][end:780438]] And there's some debate about the proper way to really characterize affordances, but I like to think of them as relational properties emerging from an environmental feature and some skilled embodied ability of the agent.
 [[start:780524][end:786210]] So the same thing in the environment will not afford the same thing to different organisms.
 
-13:06 [[start:786370][end:795738]] So for example, soil to a human agent might afford walking on or laying down on, but to an Earthworm it affords very different things.
+13:06 [[start:786370][end:795738]] So for example, soil to a human agent might afford walking on or laying down on, but to an earthworm it affords very different things.
 [[start:795824][end:806560]] And also, even amongst the same organisms with humans, especially, different surfaces and features of the environment will afford different things depending on your particular skill set.
 [[start:807890][end:817834]] And agents are going to go about minimizing their uncertainty, so minimizing prediction errors, staying attuned to their environment through an engagement with affordances.
 [[start:817962][end:825060]] And this is going to be something that is going to drift away slightly as we move through some sections and then it's going to come back very heavily at the end.
-[[start:825830][end:834962]] And I should say that the idea of affordances, to my knowledge, it first emerges in the work of James Gibson the Ecological Approach to Visual Perception.
+[[start:825830][end:834962]] And I should say that the idea of affordances, to my knowledge, it first emerges in the work of [James Gibson (1979)](https://www.taylorfrancis.com/books/mono/10.4324/9781315740218/ecological-approach-visual-perception-james-gibson), The Ecological Approach to Visual Perception.
 
 13:55 [[start:835026][end:839530]] I think it's chapter eight in that book that really lays out a theory of affordances.
 
-14:04 [[start:844560][end:858160]] So this idea that systems or organisms maintain their organization through ongoing action means that Active Inference has been labeled as quintessentially inactive by Karl Friston's.
+14:04 [[start:844560][end:858160]] So this idea that systems or organisms maintain their organization through ongoing action means that Active Inference has been labeled as quintessentially enactive by Karl Friston.
 
-14:18 [[start:858580][end:871216]] And I think that this is a nice inactivism is an older framework from theoretical cognitive science and I think it's a nice way to understand some of the key features of Active Inference.
+14:18 [[start:858580][end:871216]] And I think that this is nice. Enactivism is an older framework from theoretical cognitive science and I think it's a nice way to understand some of the key features of Active Inference.
 [[start:871328][end:875184]] But it does come with a little bit of historical philosophical baggage.
-[[start:875232][end:886090]] And I'm going to try and unpack that really quickly because I want to unpack exactly what it is that we're committing ourselves to when we think about cognition in activist terms.
-[[start:887100][end:899144]] So inactivism comes in various strands very, very quickly and roughly, you have autopoietic inactivism, which commits itself to what's known as the mind life continuity thesis.
+[[start:875232][end:886090]] And I'm going to try and unpack that really quickly because I want to unpack exactly what it is that we're committing ourselves to when we think about cognition in enactivist terms.
+[[start:887100][end:899144]] So enactivism comes in various strands very, very quickly and roughly, you have autopoietic inactivism, which commits itself to what's known as the mind-life continuity thesis.
 
 14:59 [[start:899272][end:909840]] This is essentially that the structures that give a ground to life itself are the same structures that instantiate cognitive processes.
 [[start:910900][end:917616]] Sensing on this view is teleological because it's oriented around supporting vital systems.
 [[start:917648][end:926810]] So things in the environment have intrinsic meaning to the organism because they support the vital functioning of the organism in some way.
 
-15:27 [[start:927660][end:939544]] Sensory motor in activism emphasizes how mobile and embodied agents essentially enact the grounds and conditions for their own sensory engagements with the world.
-[[start:939662][end:958124]] So the world is not a kind of neutral static given that we're parachuted into actually the conditions through which we sense the world are the conditions that we can move and kind of interact with the world in various ways and then there's radical enactivism.
+15:27 [[start:927660][end:939544]] Sensory motor enactivism emphasizes how mobile and embodied agents essentially enact the grounds and conditions for their own sensory engagements with the world.
+[[start:939662][end:958124]] So the world is not a kind of neutral static given that we're parachuted into. Actually the conditions through which we sense the world are the conditions under which we can move and {kind of} interact with the world in various ways. And then there's radical enactivism.
 
-15:58 [[start:958252][end:964864]] And this is the view that cognition is purely grounded in these agent environment dynamics.
+15:58 [[start:958252][end:964864]] This is the view that cognition is purely grounded in these agent-environment dynamics.
 [[start:964912][end:972064]] It's a purely dynamicist account of cognition and there's no role whatsoever for internal representations.
-[[start:972192][end:981540]] So certainly in certain brands of sensory motor in enactivism there remains a role for internal manipulation of representations.
+[[start:972192][end:981540]] So certainly in certain brands of sensory-motor enactivism there remains a role for internal manipulation of representations.
 [[start:981700][end:987240]] And mental representations are just mental states that are about something in the world.
 [[start:987390][end:992172]] So some mental state is reconstructing some feature of the world.
 
-16:32 [[start:992306][end:1008064]] And this all harks back to kind of old debates in philosophy of cognitive science between internalist notions of cognition and more embodied, embedded, extended and we'll take more of a look at that in a second.
-[[start:1008182][end:1013964]] But the question here is what are we committing ourselves to with Active Inference?
-[[start:1014092][end:1019300]] And I need to be a little bit careful because I think that people are going to disagree with this to certain extents.
-[[start:1021080][end:1024512]] But I think we're certainly committing ourselves to sensory motor in activism.
+16:32 [[start:992306][end:1008064]] And this all harks back to {kind of} old debates in philosophy of cognitive science between internalist notions of cognition and more embodied, embedded, extended ones and we'll take more of a look at that in a second.
+[[start:1008182][end:1013964]] But the question here is: what are we committing ourselves to with Active Inference?
+[[start:1014092][end:1019300]] And I need to be a little bit careful because I think that people are going to disagree with this to a certain extents.
+[[start:1021080][end:1024512]] But I think we're certainly committing ourselves to sensory motor enactivism.
 [[start:1024576][end:1026384]] I think that's fairly uncontroversial.
 
 17:06 [[start:1026512][end:1040920]] And I would say as well that the underpinning of Active Inference by the free energy principle by my lights also commits us or it certainly chimes very deeply with the core tenets of autopoetic inactivism.
-[[start:1041660][end:1049800]] But I think what's really interesting in trying to understand cognition in the Active Inference agent is to understand what role, if any, there are for representations.
-[[start:1050300][end:1065024]] So if you have any familiarity with the literature on Active Inference, you'll know that Active Inference people are always banging on about models, prediction errors, various other computationally sounding things.
+[[start:1041660][end:1049800]] But I think what's really interesting in trying to understand cognition in the Active Inference agent is to understand what role, if any, there is for representations.
+[[start:1050300][end:1065024]] So if you have any familiarity with the literature on Active Inference, you'll know that Active Inference people are always banging on about models, prediction errors, various other computational-sounding things.
 
 17:45 [[start:1065222][end:1075712]] And so the worry here is at least for well, it's not necessarily a worry, but the thought would be are we committing ourselves to a form of cognitivism?
-[[start:1075776][end:1092350]] And again, cognitivism is this it's generally considered to be an old fashioned notion of cognition as like computation over symbolic representations in the brain according to some syntactic set of rules or something.
+[[start:1075776][end:1092350]] And again, cognitivism is generally considered to be an old fashioned notion of cognition as like computation over symbolic representations in the brain according to some syntactic set of rules or some such thing.
 
 18:13 [[start:1093440][end:1099468]] And typically over the last couple of decades in cognitive science people have been moving away from that view.
 [[start:1099634][end:1108172]] So it would be interesting if we were committing ourselves to something that we'd already moved away from and some people think that we are making that commitment.
-[[start:1108236][end:1121216]] So Jakob Hohwy, for example, has argued in various places that essentially predictive processing or enactive inference commits us to these very rich reconstructive notions of representation.
-[[start:1121408][end:1131384]] And even Andy Clark, Jakob Hohwy's foil in many places has said himself that he thinks that representations play a role here as well.
+[[start:1108236][end:1121216]] So Jakob Hohwy, for example, has argued in various places that essentially predictive processing or active inference commits us to these very rich reconstructive notions of representation.
+[[start:1121408][end:1131384]] And even Andy Clark, Jakob Hohwy's foil in many places, has said himself that he thinks that representations play a role here as well.
 
-18:51 [[start:1131502][end:1136644]] So in a talk in 2016, Clark said it's internal representation.
+18:51 [[start:1131502][end:1136644]] So in a talk in 2016, Clark said "It's internal representation.
 
 18:56 [[start:1136772][end:1137640]] I think it is.
-[[start:1137710][end:1145948]] These are representation using stories, but it's not internal representation in quite the way that we originally thought about it.
+[[start:1137710][end:1145948]] These are representation using stories...but it's not internal representation in quite the way that we originally thought about it."
 [[start:1146114][end:1152432]] So there's some differences, perhaps major differences between Hohwy and Clark there, but others have pushed back.
-[[start:1152486][end:1169300]] So there's a paper by Maxwell Ramstead and colleagues from 2020, I think it's the tale of two densities paper where they say that a proper understanding of the generative models in Active Inference suggests that there's no role for representations.
-[[start:1170040][end:1172470]] So this is the kind of anti Howie view.
+[[start:1152486][end:1169300]] There's a paper by [Maxwell Ramstead et al. (2020)](https://journals.sagepub.com/doi/10.1177/1059712319862774), I think it's the tale of two densities paper, where they say that a proper understanding of the generative models in Active Inference suggests that there's no role for representations.
+[[start:1170040][end:1172470]] So this is the kind of anti-Howie view.
 
-19:35 [[start:1175800][end:1190660]] So I really like this paper from Avel Constant and Andy Clark and Karl Friston's which essentially tries to broker some kind of peace in a debate that in some form or another has been raging for decades.
+19:35 [[start:1175800][end:1190660]] So I really like this paper from [Axel Constant, Andy Clark and Karl Friston (2021)](https://philpapers.org/rec/CONRWE) which essentially tries to broker some kind of peace in a debate that in some form or another has been raging for decades.
 [[start:1190740][end:1194108]] So it'd be quite nice to finally put this to bed.
 
-19:54 [[start:1194274][end:1201150]] So they argue that we can find, in the formalisms of Active Inference, we can find grounds for an armistice here.
-[[start:1201940][end:1213672]] So they argue that the formalisms of Active Inference show that, quote representational and non representational cognitive processes can be implemented by the brain under Active Inference.
+19:54 [[start:1194274][end:1201150]] So they argue that we can find, in the formalisms of Active Inference, grounds for an armistice here.
+[[start:1201940][end:1213672]] So they argue that the formalisms of Active Inference show that, "representational and non representational cognitive processes can be implemented by the brain under Active Inference."
 [[start:1213836][end:1218976]] And they do this by showing that Active Inference accommodates a dual architecture.
 
-20:19 [[start:1219168][end:1237240]] So they show that on the one hand, in some sense the brain has to represent because under Active Inference action selection policies are happening over extended timescales and so the agent has to engage in some kind of counterfactual thinking.
+20:19 [[start:1219168][end:1237240]] They show that on the one hand, in some sense the brain has to represent because under Active Inference action selection policies are happening over extended timescales and so the agent has to engage in some kind of counterfactual thinking.
 [[start:1237390][end:1239272]] So if I do X, what happens?
-[[start:1239326][end:1240780]] If I do, y what happens?
+[[start:1239326][end:1240780]] If I do Y, what happens?
 [[start:1240850][end:1241644]] And so on.
-[[start:1241762][end:1248460]] And the argument, very roughly speaking, is that that is going to entail some kind of representational, some use of representations.
+[[start:1241762][end:1248460]] And the argument, very roughly speaking, is that that is going to entail some use of representations.
 
 20:49 [[start:1249360][end:1259564]] But on the other hand, they argue that what they call deontic actions are processed through different mappings in the generative model and they're directly triggered by sensory input.
 
 20:59 [[start:1259692][end:1267088]] So a deontic action is an action that is ingrained by our sense of the expectations of others.
-[[start:1267254][end:1273828]] So the example that the authors use is stopping at some red traffic lights in the middle of the night when there's nobody else around.
-[[start:1273994][end:1292780]] So in a sense the claim is that through a kind of social conditioning we know what other people would expect us to do in those circumstances and that allows for this kind of dynamic reflexive action policy setting.
+[[start:1267254][end:1273828]] The example that the authors use is stopping at some red traffic lights in the middle of the night when there's nobody else around.
+[[start:1273994][end:1292780]] So in a sense the claim is that through a kind of social conditioning we know what other people would expect us to do in those circumstances, and that allows for this kind of dynamic, reflexive action-policy setting.
 
-21:35 [[start:1295120][end:1300670]] And in those cases there's no room for representative or there's no need for representations there.
+21:35 [[start:1295120][end:1300670]] And in those cases there's no room, no need for representations there.
 [[start:1301380][end:1319910]] I would definitely suggest people interested in this go and read this paper because you might already have thought of some potential objections here to the claim that representations aren't needed for deontic action and they do go into some detail in talking about potential objections there.
 
 22:01 [[start:1321320][end:1326500]] So that's the kind of status of the role of representations.
@@ -235,22 +235,24 @@
 
 22:19 [[start:1339076][end:1349070]] And it might turn out that that's a good thing because we can make everybody happy or it might turn out to be a bad thing because you might think, well, we've not really settled anything one way or another.
 [[start:1350640][end:1356748]] I wanted to take some time, though, to mention extended Active Inference.
-[[start:1356844][end:1371552]] So I've been talking about inactivism and I've mentioned this debate between cognitiveism and older ways of thinking about sorry, cognitiveism and newer ways of thinking about cognition as embodied or embedded.
-[[start:1371696][end:1374736]] And these are part of what's known as the four E paradigm.
-[[start:1374848][end:1383992]] And clearly I think we are talking about inactive cognition and you get embodied and embedded kind of for free with this.
+[[start:1356844][end:1371552]] I've been talking about inactivism and I've mentioned this debate between cognitivism and newer ways of thinking about cognition as embodied or embedded.
+[[start:1371696][end:1374736]] And these are part of what's known as the four-E paradigm.
+[[start:1374848][end:1383992]] And clearly I think we are talking about enactive cognition and you get embodied and embedded kind of for free with this.
 
 23:04 [[start:1384046][end:1387416]] So the only one left on the table is the extended mind.
 [[start:1387598][end:1400750]] And this is just the claim that under some conditions the system that's realizing cognitive processing can literally extend outwards from the mind.
-[[start:1401200][end:1405984]] So I'll put some nice read ins for this up if anybody's unfamiliar and interested.
+[[start:1401200][end:1405984]] So I'll put some nice readings for this up if anybody's unfamiliar and interested.
 [[start:1406102][end:1409280]] But it's usually the most controversial of the four E's.
 [[start:1410980][end:1421392]] And Andy Clark, who is one of the original authors of the extended mind paper, really thinks that Active Inference accommodates the extended mind theory.
 
-23:41 [[start:1421456][end:1435140]] And it's not just that it accommodates it, but it actually solves some old problems in the extended mind about knowing how and why the brain knows when and where to recruit certain extra neural resources.
-[[start:1435300][end:1448968]] And part of the argument for this, what really sits at the core is Clark develops this argument based on the fact that the generative models in Active Inference are always in this, always making a trade off between accuracy and complexity.
+23:41 [[start:1421456][end:1435140]] And it's not just that it accommodates it, but it actually solves some old problems in the extended mind about knowing how and why the brain knows when and where to recruit certain extra-neural resources.
+[[start:1435300][end:1448968]] And part of the argument for this, what really sits at the core, is that Clark develops this argument based on the fact that the generative models in Active Inference are always, in this, making a trade-off between accuracy and complexity.
 
 24:09 [[start:1449144][end:1462348]] So you want your model of the world to be accurate enough that you can act effectively on the world, but you also want to minimize the metabolic costs of having models that are overly complex.
-[[start:1462524][end:1477690]] And so Clark utilizes this insight to make the case that this explains that in some cases as agents we make use of these extra neural kind of props and tools and things.
-[[start:1478540][end:1488970]] And he says that the imperative to reduce uncertainty provides a location neutral cost function that's always been missing from the older arguments around extended mind.
+[[start:1462524][end:1477690]] And so Clark utilizes this insight to make the case that this explains that in some cases we as agents make use of these extra-neural kind of props and tools and things.
+[[start:1478540][end:1488970]] And he says that the imperative to reduce uncertainty provides a location-neutral cost function that's always been missing from the older arguments around extended mind.
+
+## Agency and Motivation
 
 24:50 [[start:1490160][end:1498360]] So the upshot to this, I think, is that you end up with a view of agents as deeply coupled with their environments.
 [[start:1498520][end:1505196]] So under Active Inference it's just nonsensical to try and think about agents as decoupled from their environment.
