@@ -116,7 +116,7 @@
 
 10:01 [[start:601526][end:605340]] So I think we're going to get a much better grasp on them as we go on.
 
-## Section 1: Mind and World
+## Section One: Mind and World
 
 [[start:605870][end:617460]] In this section, I'm going to start to expand on some of those things that we've just put on the table, and I'm going to begin to flesh them out in terms of thinking about how Active Inference agents actually exist in the world.
 [[start:619030][end:621442]] So I should say I put this list of readings here to remind me.
@@ -252,35 +252,35 @@
 [[start:1462524][end:1477690]] And so Clark utilizes this insight to make the case that this explains that in some cases we as agents make use of these extra-neural kind of props and tools and things.
 [[start:1478540][end:1488970]] And he says that the imperative to reduce uncertainty provides a location-neutral cost function that's always been missing from the older arguments around extended mind.
 
-## Agency and Motivation
+## Section Two: Agency and Motivation
 
 24:50 [[start:1490160][end:1498360]] So the upshot to this, I think, is that you end up with a view of agents as deeply coupled with their environments.
 [[start:1498520][end:1505196]] So under Active Inference it's just nonsensical to try and think about agents as decoupled from their environment.
 [[start:1505308][end:1510700]] The generative models themselves are of the dynamics between the agent and the environment.
 
-25:10 [[start:1510780][end:1516400]] So these two things can't be decoupled perception, action loops.
-[[start:1516480][end:1520612]] So remember I said that perceptual and Active Inference are essentially the same thing.
+25:10 [[start:1510780][end:1516400]] So these two things can't be decoupled: perception-action loops.
+[[start:1516480][end:1520612]] So remember I said that pe rceptual and Active Inference are essentially the same thing.
 
 25:20 [[start:1520666][end:1527720]] They're part of this circular causality and they see the agent constantly producing their own worlds.
 [[start:1528220][end:1532040]] They occupy the states that they're expecting to through action.
 [[start:1532540][end:1540536]] And we might think, based on the literature that I've gone through, that there's some role here for representations.
 [[start:1540728][end:1543100]] So we're not committing ourselves.
-[[start:1544560][end:1551100]] The Active Inference agent is not one that fits with very radical interpretations of inactivism.
+[[start:1544560][end:1551100]] The Active Inference agent is not one that fits with very radical interpretations of enactivism.
 
 25:51 [[start:1551940][end:1556972]] And Active Inference agents are porous.
 [[start:1557116][end:1568790]] They're open to recruiting external material features of the environment to reduce complexity and therefore minimize the metabolic costs of realizing those expected states.
 
-26:11 [[start:1571000][end:1584402]] Okay, so that was a bit of Active Inference set against the backdrop of some older questions in philosophy of mind theoretical cognitive science.
+26:11 [[start:1571000][end:1584402]] Okay. So that was a bit of Active Inference set against the backdrop of some older questions in philosophy of mind theoretical cognitive science.
 [[start:1584546][end:1589720]] But I'm going to jump straight into agency and motivation now because there's a lot to get through here.
 [[start:1590890][end:1592966]] I'm going to start with a dark room problem.
 [[start:1593068][end:1597094]] This is a canonical philosophical worry in Active Inference.
 [[start:1597142][end:1599770]] So a lot of people, I think, will be familiar with this.
 
 26:39 [[start:1599920][end:1603020]] And in really brief terms, it's really easy to state.
-[[start:1603390][end:1614686]] The challenge here is to say, if it's all about minimizing prediction error, why don't we just find the most predictable environments possible and stay there and live a nice error free life?
+[[start:1603390][end:1614686]] The challenge here is to say, if it's all about minimizing prediction error, why don't we just find the most predictable environments possible and stay there and live a nice error-free life?
 [[start:1614868][end:1625060]] So Andy Clark paints a picture of a dark room, and you can just be strapped up to an intravenous drip, feeding you the nutrients you need, and you can just be really happy.
 [[start:1625510][end:1627586]] But clearly, we don't do that.
-[[start:1627768][end:1629362]] Active Inference sorry.
+[[start:1627768][end:1629362]] {Active Inference sorry.}
 
 27:09 [[start:1629416][end:1637718]] Agents in the world, us, we generally typically sometimes we do enjoy dark rooms, but most of the time we don't for any extended period of time.
 
@@ -289,10 +289,10 @@
 [[start:1661050][end:1673070]] So, to be very clear, folk psychology is just the kind of propositional linguistic framework that the folk use to talk about and describe motivated action.
 [[start:1673150][end:1679606]] So it's a language we typically use every day to describe the reasons people are doing things.
 
-27:59 [[start:1679788][end:1689490]] So folk psychology has this belief, desire, intention, schema, where, if I want to explain, my friend going to grab a beer.
-[[start:1689650][end:1692822]] I would say, my friend believes there's beer in the fridge.
-[[start:1692886][end:1694806]] My friend desires beer.
-[[start:1694918][end:1698774]] And so those are combined to form the intention to go and get beer.
+27:59 [[start:1679788][end:1689490]] So folk psychology has this belief-desire-intention, schema, where, if I want to explain my friend going to grab a beer,
+[[start:1689650][end:1692822]] I would say my friend believes there's beer in the fridge and
+[[start:1692886][end:1694806]] my friend desires beer,
+[[start:1694918][end:1698774]] and so those are combined to form the intention to go and get beer.
 
 28:18 [[start:1698822][end:1702060]] So folk psychology doesn't have these kinds of problems.
 
@@ -300,19 +300,19 @@
 [[start:1708770][end:1711630]] So the dark room problem invites more than one answer.
 [[start:1711700][end:1714400]] We're going to see more than one answer to it as we go along.
 [[start:1715090][end:1722162]] One response is to talk about what drives curiosity and play and exploration, and we are going to see more of that.
-[[start:1722296][end:1738882]] But the first response offered by Friston Thornton and Clark is to highlight the fact that organisms have basic needs to eat, drink, and reproduce what you might call evolutionarily ingrained needs, and that those needs are going to necessitate some form of exploratory behavior.
+[[start:1722296][end:1738882]] But the first response offered by [Friston, Thornton and Clark (2012)](https://www.frontiersin.org/articles/10.3389/fpsyg.2012.00130/full) is to highlight the fact that organisms have basic needs to eat, drink, and reproduce what you might call evolutionarily ingrained needs, and that those needs are going to necessitate some form of exploratory behavior.
 
-28:59 [[start:1739026][end:1747210]] So staying in the dark room will inevitably, under most circumstances, going to lead to physical dissipation.
-
+28:59 [[start:1739026][end:1747210]] So staying in the dark room will inevitably, under most circumstances, lead to physical dissipation.
+ 
 29:09 [[start:1749790][end:1753980]] So the question is, are these kinds of appeals enough?
-[[start:1755950][end:1762570]] And I wanted to pull up a paper by Colin Klein 2018 that I think is like a really nice articulation of these challenges.
+[[start:1755950][end:1762570]] And I wanted to pull up a paper by [Colin Klein (2018)](https://philpapers.org/rec/KLEWDP) that I think is a really nice articulation of these challenges.
 
 29:22 [[start:1762650][end:1768118]] Ultimately, I think he's wrong and it falls flat, but I think it's a strong articulation.
 [[start:1768314][end:1774770]] So Klein argues that predictions alone simply can't account for the motivational character of these needs.
 [[start:1774840][end:1777890]] So Klein says, look, it's fine that you've got these needs.
 
 29:37 [[start:1777960][end:1788054]] Nobody's going to deny that, but you just have this one primitive to describe how those needs motivate you, and prediction is just not going to do it.
-[[start:1788092][end:1795900]] So prediction alone, as your sole primitive is not going to be able it's like predicting is not the same thing as being motivated by something.
+[[start:1788092][end:1795900]] So prediction alone, as your sole primitive is not going to be able to do it: predicting is not the same thing as being motivated by something.
 [[start:1797550][end:1803466]] And Klein is really not happy with appeals to these phenotypic needs.
 [[start:1803648][end:1811406]] And he construes these in the relevance of the evolutionary history of the organism and goes into a little bit of detail.
 [[start:1811508][end:1829758]] So he says, look, these expectations are either going to be about states, possible states, so the state of being fed or clothed or warm, or they're going to be about state transitions, about what the appropriate action is in one state to move to another state.
@@ -321,22 +321,22 @@
 [[start:1838946][end:1847942]] So it might be the case that in my evolutionary past, all of my ancestors have had the same expectations about which states they're going to occupy.
 [[start:1848086][end:1857280]] But there are lots of states in my life that I could be motivated to occupy that there's simply no evolutionary history to account for.
 [[start:1857810][end:1868378]] And he says there's a very similar or similarly difficult problem with state transitions where essentially what we're talking about with state transitions are the most appropriate actions.
-[[start:1868554][end:1878786]] So I have expectations about the actions that are going to fill foot that I need to take under certain circumstances that are going to get me to a particular expected state.
+[[start:1868554][end:1878786]] So I have expectations about the actions {that are going to fill foot} that I need to take under certain circumstances that are going to get me to a particular expected state.
 
-31:18 [[start:1878968][end:1884694]] And Klein's worry is that there's just going to be too many possible actions in any given situation.
-[[start:1884812][end:1891658]] So there's just a kind of explosion that's just going to be unaccountable for.
+31:18 [[start:1878968][end:1884694]] And Klein's worry is that there are just going to be too many possible actions in any given situation.
+[[start:1884812][end:1891658]] So there's just a kind of explosion that's just not capable of being taken into account.
 
-31:31 [[start:1891744][end:1900860]] There's just going to be too many different ways of getting to an expected state that we won't be able to account for in our past.
-[[start:1901470][end:1908574]] So it's fairly robust, thorough challenge built on the dark room problem.
+31:31 [[start:1891744][end:1900860]] There are just going to be too many different ways of getting to an expected state that we won't be able to account for in our past.
+[[start:1901470][end:1908574]] So it's a fairly robust, thorough challenge built on the dark room problem.
 [[start:1908772][end:1912330]] And I think actually it's a worry with two faces.
 
 31:52 [[start:1912410][end:1922414]] So I think the first is about how Active Inference can describe agential behavior with its austere, purely doxastic landscape.
 [[start:1922462][end:1932662]] So if you imagine somebody looking at their house burning down, it seems like you need more than beliefs to explain any course of action they take.
 [[start:1932716][end:1935314]] So there has to be desire in there somewhere.
 [[start:1935442][end:1938594]] So this is an example Andy Clark uses in one of his papers.
-[[start:1938642][end:1951606]] And he know the desire to run in and rescue some item that you want from the house or the desire to claim on the insurance is the thing that's.
+[[start:1938642][end:1951606]] And he says the desire to run in and rescue some item that you want from the house or the desire to claim on the insurance is the thing that's
 
-32:31 [[start:1951638][end:1954538]] Going to dictate how you explain the person's behavior.
+32:31 [[start:1951638][end:1954538]] going to dictate how you explain the person's behavior.
 
 32:34 [[start:1954714][end:1956206]] So that's the first problem.
 [[start:1956308][end:1962590]] We need to look at how folk psychology tessellates with prediction.
@@ -344,83 +344,83 @@
 [[start:1971726][end:1979880]] So can we even tell some story using just predictions and prediction error about what really moves agents to act?
 
 33:01 [[start:1981130][end:1988946]] So firstly, thinking about folk psychology, there's a couple of ways to go here and I think ultimately we can answer this worry.
-[[start:1989138][end:1997210]] So Ryan Smith and colleagues in 2022 in their paper Active Inference models do not contradict folk psychology.
-[[start:1997630][end:2003926]] They argue that the formalisms of Active Inference can accommodate a belief desire distinction.
-[[start:2004118][end:2012954]] Now, I'll admit that it's a very math heavy paper and it's a little bit beyond my capabilities, but the claim here is simply that there's no contradiction.
-[[start:2013082][end:2018214]] That actually the worry that the important thing we have in folk psychology is desire.
+[[start:1989138][end:1997210]] So [Ryan Smith et al. (2022)](https://osf.io/preprints/psyarxiv/kr5xf) in their paper "Active inference models do not contradict folk psychology"
+[[start:1997630][end:2003926]] argue that the formalisms of Active Inference can accommodate a belief-desire distinction.
+[[start:2004118][end:2012954]] Now, I'll admit that it's a very math-heavy paper and it's a little bit beyond my capabilities, but the claim here is simply that there's no contradiction:
+[[start:2013082][end:2018214]] that actually the worry that the important thing we have in folk psychology is desire
 
-33:38 [[start:2018362][end:2020494]] And we're not getting that in Active Inference.
-[[start:2020542][end:2022530]] This is just an unfounded worry.
+33:38 [[start:2018362][end:2020494]] and we're not getting that in Active Inference.
+[[start:2020542][end:2022530]] is just an unfounded worry.
 [[start:2023030][end:2025042]] But there's another strategy as well.
-[[start:2025176][end:2034386]] So Joe Dewhurst, in his 2017 paper, he employs a different strategy and he says, look, what are we even doing with folk psychology?
-[[start:2034498][end:2043820]] Let's not kind of be too hasty and we need to think about what are we doing when we talk about these propositional kind of states.
+[[start:2025176][end:2034386]] So [Joe Dewhurst (2017)](https://philarchive.org/rec/JOEFPA) in his paper "Folk Psychology and the Bayesian Brain" employs a different strategy and says, look, what are we even doing with folk psychology?
+[[start:2034498][end:2043820]] Let's not be too hasty: we need to think about what we are doing when we talk about these propositional kind of states.
 
 34:05 [[start:2045070][end:2048842]] So he says the first option is to say, well, we're just being realists here.
-[[start:2048896][end:2058880]] So when I say that X desires Y, I'm actually positing the real existence as a fine grained mental state in X's head.
+[[start:2048896][end:2058880]] So when I say that X desires Y, I'm actually positing the real existence as a fine-grained mental state in X's head.
 [[start:2059650][end:2062430]] And he thinks that this is actually the wrong way to think about things.
-[[start:2062500][end:2067086]] He thinks that folk psychology actually it's an instrumentalist tool.
-[[start:2067188][end:2074834]] It's a kind of framework that we use just for picking out coarse grained behavioral patterns in some useful way.
+[[start:2062500][end:2067086]] He thinks that folk psychology actually is an instrumentalist tool.
+[[start:2067188][end:2074834]] It's a kind of framework that we use just for picking out coarse-grained behavioral patterns in some useful way.
 
-34:35 [[start:2075032][end:2097162]] So if we agree with Duhurst here and we just become instrumentalists about folk psychology again, it looks as though there's different we're not forced to kind of worry that there's some kind of empirical problem here where the mechanisms of enactive inference are in some sense incommensurable with real properties that we're positing the existence of.
+34:35 [[start:2075032][end:2097162]] So if we agree with Dewhurst here and we just become instrumentalists about folk psychology, again it looks as though we're not forced to  worry that there's some kind of empirical problem here where the mechanisms of enactive inference are in some sense incommensurable with real properties that we're positing the existence of.
 
 34:57 [[start:2097216][end:2103420]] Because we're just going to say that those things don't really exist in the way that we've typically assumed that they might.
 [[start:2104050][end:2115710]] So either way, whichever route you go down here, it looks like Active Inference agents have beliefs and that we're going to be fine in describing motivated action.
 
 35:17 [[start:2117990][end:2119940]] So what about the second problem?
 
-35:22 [[start:2122870][end:2126930]] So Andy Clark in 2020 authored a direct response decline.
-[[start:2127830][end:2140390]] So Clark wants to argue that actually using predictions and prediction errors and precision weighting, which I'll explain in a second, we can get a picture of agential action.
+35:22 [[start:2122870][end:2126930]] [Andy Clark (2020)](https://sussex.figshare.com/articles/journal_contribution/Beyond_desire_Agency_choice_and_the_predictive_mind/23465813) authored a direct response to Klein, entitled "Beyond desire? Agency, choice, and the predictive mind".
+[[start:2127830][end:2140390]] Clark seeks to argue that actually using predictions and prediction errors and precision weighting, which I'll explain in a second, we can get a picture of agential action.
 
-35:42 [[start:2142830][end:2153414]] So the first thing Clark does is to outline the fact that under Active Inference we have a very nice, well worn account of embodied action.
-[[start:2153462][end:2165226]] So, in other words, what it takes to actually move the body to perform different actions is perfectly folded into Active Inference under the same kind of computational flow of prediction error minimization.
+35:42 [[start:2142830][end:2153414]] So the first thing Clark does is to outline the fact that under Active Inference we have a very nice, well-worn account of embodied action.
+[[start:2153462][end:2165226]] In other words, what it takes to actually move the body to perform different actions is perfectly folded into Active Inference under the same kind of computational flow of prediction error minimization.
 
-36:05 [[start:2165418][end:2174050]] Just in a nutshell, for me to move my arm, what I'm doing is making a prediction that my arm is in someplace and then minimizing the prediction error.
+36:05 [[start:2165418][end:2174050]] Just in a nutshell, for me to move my arm, what I'm doing is making a prediction that my arm is in some place and then minimizing the prediction error.
 [[start:2175510][end:2182600]] So once that's on the table, Clark says, OK, that's fine, we have this account of action, but that's not really what Klein means.
-[[start:2183370][end:2201510]] So the move Clark makes is to appeal to the hierarchical nested structure of the generative model and to say that higher level beliefs, which are about temporarily extended future states, these are going to perform a really important role as a kind of controller for lower level actions.
+[[start:2183370][end:2201510]] So the move Clark makes is to appeal to the hierarchical nested structure of the generative model and to say that higher-level beliefs, which are about temporarily extended future states, are going to perform a really important role as a kind of controller for lower-level actions.
 
-36:41 [[start:2201670][end:2226130]] So the idea is that if I have a high level, temporarily extended expectation to attain a PhD, what happens is that high level belief becomes unpacked at lower levels in the hierarchy, and what you get are more fine grained, faster action policies that the system expects to help support that higher level expectation.
+36:41 [[start:2201670][end:2226130]] So the idea is that if I have a high-level, temporally extended expectation to attain a PhD, what happens is that high-level belief becomes unpacked at lower levels in the hierarchy, and what you get are more fine-grained, faster action policies that the system expects to help support that higher-level expectation.
 
 37:06 [[start:2226550][end:2242934]] And there's a mechanism in play here called precision weighting, which applies to prediction error signals, because obviously not all of the predictions we make about the environment are going to be equally important.
 [[start:2243052][end:2248890]] We're not going to have equal confidence in all of our actions to bring about an expected state.
-[[start:2249040][end:2261626]] And so what precision weighting does is essentially communicate how much confidence we have in a particular action policy to move us into that expected state under perceptual inference.
-[[start:2261818][end:2269170]] Precision weighting just signals how newsworthy prediction errors are, so how important they are for the system.
+[[start:2249040][end:2261626]] And so what precision weighting does is essentially communicate how much confidence we have in a particular action policy to move us into that expected state. Under perceptual inference,
+[[start:2261818][end:2269170]] precision weighting just signals how newsworthy prediction errors are, so how important they are for the system.
 
 37:49 [[start:2269240][end:2275566]] So precision weighting drives attention, for example, when we're talking about predictive processing.
-[[start:2275678][end:2291350]] But in this case, Clark's claim is that when you have this kind of nested hierarchy of expectations, so you have temporarily extended expectations at the high level, unpacked into a kind of web of lower level action policies.
+[[start:2275678][end:2291350]] But in this case, Clark's claim is that when you have this kind of nested hierarchy of expectations, when you have temporally extended expectations at the high level, unpacked into a kind of web of lower-level action policies
 
-38:11 [[start:2291770][end:2301020]] And precision waiting is kind of modulating the system's expectations about which of those policies are most likely to bring about the expected states.
-[[start:2301470][end:2307178]] You get something that looks a lot like motivated directed action.
-[[start:2307354][end:2321826]] And agency is kind of inherent in this model because the system rather has to model itself as a cause of those expected states.
+38:11 [[start:2291770][end:2301020]] and precision weighting is kind of modulating the system's expectations about which of those policies are most likely to bring about the expected states,
+[[start:2301470][end:2307178]] you get something that looks a lot like motivated directed action.
+[[start:2307354][end:2321826]] And agency is kind of inherent in this model because the system has to model itself as a cause of those expected states.
 
-38:41 [[start:2321928][end:2332598]] So if I have these high level expectations, I, in a very inherent way, have to model my own causal efficacy to bring about those states.
+38:41 [[start:2321928][end:2332598]] So if I have these high-level expectations, I, in a very inherent way, have to model my own causal efficacy to bring about those states.
 [[start:2332764][end:2343654]] So on a very low level, the system has to model some form of agent because I can be the cause of change to my own sensory states, so I can cover my own eyes and so on and so forth.
-[[start:2343782][end:2354182]] So kind of on this view, agency is a latent variable in these systems when it's making these predictions, so it just kind of turns up.
+[[start:2343782][end:2354182]] On this view, agency is a latent variable in these systems when it's making these predictions, so it just kind of turns up.
 
 39:14 [[start:2354336][end:2363466]] And Clark argues that you essentially end up with something that looks very much like agents under folk psychology.
-[[start:2363658][end:2374206]] But he thinks this is a better view because we end up with a, quote, different and arguably much more unified internal architecture trading in a single currency.
+[[start:2363658][end:2374206]] But he thinks this is a better view because we end up with a, "different and arguably much more unified internal architecture trading in a single currency."
 
-39:34 [[start:2374318][end:2378910]] So Clark thinks, look, okay, Klein's worry is we have this one primitive.
-[[start:2378990][end:2380718]] We have just prediction.
-[[start:2380894][end:2384802]] And the concern is that we're not going to be able to explain agential action.
-[[start:2384866][end:2391346]] But actually there are ways that we can appeal to the hierarchical structure of the model and precision weighting.
-[[start:2391458][end:2395260]] And it turns out that this is a much more elegant picture as well.
+39:34 [[start:2374318][end:2378910]] So Clark thinks, look, okay, Klein's worry is we have this one primitive,
+[[start:2378990][end:2380718]] we have just prediction
+[[start:2380894][end:2384802]] and the concern is that we're not going to be able to explain agential action,
+[[start:2384866][end:2391346]] but actually there are ways that we can appeal to the hierarchical structure of the model and precision weighting
+[[start:2391458][end:2395260]] and it turns out that this is a much more elegant picture as well.
 
-39:55 [[start:2395950][end:2407120]] But Klein might press the worry, and anybody listening might kind of think, well, we've kind of done some work there, but why do we expect the things that we expect in the first place?
-[[start:2408530][end:2415934]] So why is my long term expectation to attain a PhD and not to join the French Foreign Legion, for example?
+39:55 [[start:2395950][end:2407120]] But Klein might press the worry, and anybody listening might think, well, we've kind of done some work there, but why do we expect the things that we expect in the first place?
+[[start:2408530][end:2415934]] Why is my long-term expectation to attain a PhD and not to join the French Foreign Legion, for example?
 
 40:16 [[start:2416132][end:2419300]] What means that I expect one thing rather than another?
-[[start:2419750][end:2425380]] And here Clark just bites a bullet and says, nobody can explain that.
-[[start:2425750][end:2431314]] We've kind of shifted to talking about questions, know, spookier questions about free will.
+[[start:2419750][end:2425380]] And here Clark just bites a bullet and says nobody can explain that.
+[[start:2425750][end:2431314]] We've kind of shifted to talking about "spookier" questions about free will.
 
-40:31 [[start:2431432][end:2450220]] And Clark says, look, if this is what you want, if this is what you're demanding, then you have to recognize that simply appealing to folks psychology doesn't get you that, know, people with these kinds of worries need to be careful in how much they demand from the Active Inference agent.
-[[start:2450830][end:2460942]] And I think the real answer to that question actually, this is more speculative, but the real answer to a deeper answer to these kinds of questions will lie in the kinds of things that we're going to look at in subsequent weeks.
+40:31 [[start:2431432][end:2450220]] And Clark says, look, if this is what you want, if this is what you're demanding, then you have to recognize that simply appealing to folk psychology doesn't get you that either. People with these kinds of worries need to be careful about how much they demand from the Active Inference agent.
+[[start:2450830][end:2460942]] And I think the real answer to that question actually, this is more speculative, but the real answer, a deeper answer, to these kinds of questions will lie in the kinds of things that we're going to look at in subsequent weeks.
 [[start:2461076][end:2481640]] So, for example, the reason I have the expectation to attain a PhD rather than join the French Foreign Legion is because I exist in a particular kind of sociocultural landscape with specific norms, and a lot of my actions and beliefs are tempered and shaped by the expectations of people around me.
 
 41:23 [[start:2483370][end:2485110]] So this is just an overview.
 [[start:2485530][end:2487560]] We went over the dark room problem.
 
-41:28 [[start:2488490][end:2497478]] Why do we do anything at all if it's all about certainty and prediction error minimization this worry?
-[[start:2497574][end:2502070]] I said you can kind of highlight two aspects of this worry.
+41:28 [[start:2488490][end:2497478]] Why do we do anything at all if it's all about certainty and prediction error minimization?
+[[start:2497574][end:2502070]] I said you can highlight two aspects of this worry.
 [[start:2502150][end:2506718]] One is an actual account of agency under Active Inference, which we have.
 [[start:2506804][end:2516106]] We have this Andy Clark model of agency to do with hierarchical nested, unfolding action policies over time and different precision mappings.
 [[start:2516298][end:2519806]] And then we have this worry about the relationship with folk psychology.
@@ -428,18 +428,19 @@
 41:59 [[start:2519918][end:2526254]] So how do we describe agential behavior and motivated behavior?
 [[start:2526302][end:2531970]] How do we describe the behavior of agents if we only have recourse to prediction?
 
-42:13 [[start:2533990][end:2543010]] And as we saw, there's one argument here is that actually Active Inference, the formalisms can accommodate this belief desire distinction.
+42:13 [[start:2533990][end:2543010]] And as we saw, there's one argument here that actually Active Inference, the formalisms, can accommodate this belief-desire distinction.
 [[start:2543170][end:2548890]] And the other move that I really like is to just say, look, folk psychology is just this instrumental tool.
 
-42:28 [[start:2548960][end:2561258]] It is, in effect, it's part of the sociocultural landscape that we use to shape each other's expectations by putting these labels to explain our actions.
-[[start:2561434][end:2563760]] This kind of form of Active Inference itself.
-[[start:2564690][end:2580920]] So there's this kind of philosophically interesting debate about folk psychology, but it turns out that everything's okay and Active Inference agents are in fact agents with beliefs, desires and hopes and dreams and so on.
+42:28 [[start:2548960][end:2561258]] It is, in effect, part of the sociocultural landscape that we use to shape each other's expectations by applying these labels to explain our actions.
+[[start:2561434][end:2563760]] This is a form of Active Inference in itself.
+[[start:2564690][end:2580920]] So there's this philosophically interesting debate about folk psychology, but it turns out that everything's okay and Active Inference agents are in fact agents with beliefs, desires, hopes and dreams, and so on.
 
 43:02 [[start:2582410][end:2583206]] Okay?
 [[start:2583388][end:2584630]] That's agency.
 [[start:2585770][end:2587240]] We're making good time.
 
-43:11 [[start:2591290][end:2591750]] Okay.
+## Section Three: Allostasis, Emotion, and the Self
+43:11 [[start:2591290][end:2591750]]
 [[start:2591820][end:2602554]] So in this section I'm going to introduce quite a lot of stuff, but it's going to be all tied together hopefully rather neatly in the case study.
 [[start:2602592][end:2606074]] At the end, I'm going to talk about allostatis and emotion.
 [[start:2606202][end:2610960]] I'm going to say very briefly a little bit about the self as well.
