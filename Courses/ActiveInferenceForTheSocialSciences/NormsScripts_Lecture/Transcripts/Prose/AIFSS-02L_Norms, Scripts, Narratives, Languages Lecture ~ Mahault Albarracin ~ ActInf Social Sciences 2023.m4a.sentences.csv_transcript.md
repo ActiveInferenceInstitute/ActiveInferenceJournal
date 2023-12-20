@@ -2,17 +2,17 @@
 00:08 _Daniel:_
 [[start:8450][end:9598]] Hello and welcome.
 [[start:9684][end:12590]] It's September 20, 2023.
-[[start:12740][end:25706]] We're at the Active Inference Institute in the course, Active Inference for the Social Sciences, and here with Mahault Albarracin, who will be presenting today on norm scripts and linguistics under Active Inference.
+[[start:12740][end:25706]] We're at the Active Inference Institute in the course, Active Inference for the Social Sciences, and here with Mahault Albarracin, who will be presenting today on norms, scripts and linguistics under Active Inference.
 [[start:25738][end:27840]] So thank you, Mahault, to you.
 
 00:29 _Mahault:_
 [[start:29090][end:29598]] Awesome.
 
 00:29 [[start:29684][end:30406]] So, hi, everyone.
-[[start:30468][end:38594]] In as last time, there was a presentation on semiotics and semantics.
+[[start:30468][end:38594]] Last time, there was a presentation on semiotics and semantics.
 [[start:38642][end:43820]] I won't dig too far into linguistics, but I'll touch on it at the end of the course.
 [[start:44750][end:48950]] So what are we going to do in this module?
-[[start:49030][end:55798]] We're going to explore the concept of Active Inference and its relevance to social norms and human decision making.
+[[start:49030][end:55798]] We're going to explore the concept of Active Inference and its relevance to social norms and human decision-making.
 
 00:55 [[start:55984][end:70034]] As you will have seen in the previous classes, Active Inference is a theoretical framework that seeks to explain how organisms, including humans, engage with their environment to minimize uncertainty and maintain their internal states.
 [[start:70152][end:78014]] We're not going to dig into these concepts too, too much, because I assume they have been previously explained.
