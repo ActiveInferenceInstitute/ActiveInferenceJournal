@@ -5,11 +5,13 @@ author:
 - 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
 - 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
 date: "2023-05-18 Version 1.0"
-doi: 10.5281/zenodo.9999999
 ...
+
+## Lecture 1, "Historical Perspective"
+
 ![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/cFPIP-01L_00001.png)
 
-## INTRODUCTION
+### INTRODUCTION
 _Daniel:_
  Hello and welcome, everyone, to the Active Inference Institute.
  This is Session 1 of the course "Physics as Information Processing" with Chris Fields.
@@ -41,7 +43,7 @@ _Chris:_
  And all of this is explained on the course website.
  So let's start!
 
-## HISTORICAL PERSPECTIVE: PHYSICS
+### HISTORICAL PERSPECTIVE: PHYSICS
  This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
 
 ![Wittgenstein, Landaur, Wheeler](../../Video/Slide2.PNG)
@@ -61,7 +63,7 @@ _Chris:_
  But I'm only going to really talk about a piece of it and the timeline that I'll actually discuss today,
  the most relevant history of this idea, goes back to the mid-19th Century.
 
-### Clausius
+#### Clausius
  And the first specific thing I'll talk about is **[Rudolf] Clausius**'s definition of entropy.
 
  But with the beginning of the understanding of thermodynamics and the role of information in thermodynamics, you get this very interesting multidisciplinary progression of ideas that incorporates the beginning of quantum theory.
@@ -70,7 +72,7 @@ _Chris:_
  But it incorporates a lot of work in computer science and logic and mathematics.
  So, interestingly, computer science was born effectively in the mid-30s with the work of **[Alonzo] Church** and **[Alan] Turing**, which very rapidly converged with the work in physics.
 
-### Physics, Computation, Information
+#### Physics, Computation, Information
  So today we'll be talking about both computer science and physics.
  And then in the second half of the 20th Century, this just exploded into a huge area.
 
@@ -92,7 +94,7 @@ _Chris:_
 
  So this way of thinking about physics is a very deeply quantum-theoretic way of thinking about physics.
 
-## COURSE OUTLINE
+### COURSE OUTLINE
 ![Where we are going in this course](../../Video/Slide5.PNG)
  And where we're going in this course today is really "how did this all happen?"
  It's the origin story.
@@ -118,12 +120,12 @@ _Chris:_
  So if there's anything that... just a term that is a trip-up, try Wikipedia.
  It's probably a very good source for what these terms mean.
 
-## BACK TO THE PHYSICS
+### BACK TO THE PHYSICS
 ![Our story begins...](../../Video/Slide6.PNG)
 
  So let's start! Our story, as I said, begins in the 19th Century.
 
-### Steam Engines
+#### Steam Engines
  And in the mid-19th Century, lots of physicists were devoting their efforts to figuring out how to make better steam engines.
  And one question that arises when you're trying to design a steam engine is "what happens _physically_ when you add heat to a system at constant temperature?"
  So if you're building a steam engine, you've got a boiler, because you need to make steam.
@@ -148,7 +150,7 @@ _Chris:_
  What is this entropy?
  What does this concept _mean?_"
 
-### Boltzmann
+#### Boltzmann
 ![But what _is_ entropy?](../../Video/Slide7.PNG)
 
  And about 15 years after Clausius proposed it, **[Ludwig] Boltzmann** had the key insight, which is that "entropy is a measurement of _our uncertainty_ about the **state** the system is in."
@@ -176,7 +178,7 @@ _Chris:_
  And that's what you have to do to get information.
  So here's Boltzmann, basically inventing quantum theory.
 
-### Planck
+#### Planck
 ![fast forward to 1900](../../Video/Slide8.PNG)
 
  So we're going to fast forward by another 15 years, to 1900.
@@ -230,7 +232,7 @@ _Chris:_
  No one really figured {that} this out.
  There was this relation until the 1950s.
 
-### Wick
+#### Wick
  And when it was figured out, it was figured out by a guy named **Gian Carlo Wick**.
  And he introduced this notion of the **Wick rotation** by realizing that if you have an equation in classical physics, and in it there's the term "1 over kT,"
 
@@ -285,8 +287,8 @@ _Chris:_
  So this is a harbinger of things to come.
  But before we continue in physics, we need to backtrack in time a little bit, and look at what the mathematicians were doing.
 
-## MATHEMATICS
-### Gödel
+### MATHEMATICS
+#### Gödel
 ![Meanwhile, across the hall...](../../Video/Slide10.PNG)
 
  So across the hall in the math department, one year after the Solvay conference, in 1929, Kurt Gödel proved his famous first incompleteness theorem.
@@ -311,7 +313,7 @@ _Chris:_
 
  So an immediate consequence of Gödel's theorem was an intense investigation of what computation actually _is,_ what it _meant_ to talk about finite discrete operations.
 
-### Computation
+#### Computation
 ![What is computation?](../../Video/Slide11.PNG)
 
  And two leaders of this were, of course, Church and Turing.
@@ -377,8 +379,8 @@ _Chris:_
 
  So in a sense, Gödel birthed not only computer science, but practical computing by showing us that virtualization is just the way the world works.
 
-## PHYSICS AGAIN
-### Feynman
+### PHYSICS AGAIN
+#### Feynman
 ![Feynman expressed these same ideas](../../Video/Slide15.PNG)
  So now let's go back to physics, where these ideas were replicated, basically reintroduced, reinvented by Feynman in developing his path integral formulation of quantum theory.
  And basically what Feyman realized was that in any physical process, the observer, Alice, prepares some state that she's interested in.
@@ -443,7 +445,7 @@ _Chris:_
  But what gets really interesting is what happens when you _generalize_ it.
  And of course, physicists are prone to generalization, and that's what happened _next._
 
-### The Holographic Principle
+#### The Holographic Principle
 ![We just have to generalize](../../Video/Slide18.PNG)
  Gerard 't Hooft, almost immediately thereafter, on the basis of Beckenstein's work, formulated the **Holographic Principle**.
 
@@ -506,7 +508,7 @@ _Chris:_
  {Well, let me go on a little bit.
  Sorry.}
 
-### Wheeler on The New Physics
+#### Wheeler on The New Physics
  This is just a slide quoting Wheeler, who of course is the most radical {in terms of} and _pithiest,_ in terms of formulating these ideas.
  But here's his characterization of this new physics.
 
@@ -532,7 +534,7 @@ _Chris:_
  So the agents here are all "observer-participants" in Wheeler's language.
  But what that just means is _agents_ that want to communicate. And it's their communication that gives rise to physics.
 
-### Markov Blankets
+#### Markov Blankets
 ![Meanwhile, back in classical physics...](../../Video/Slide21.PNG)
  So _now_ we'll go back to classical physics. And what was happening, or one thing that was happening in classical physics at that time, was a lot of thinking about **stochastic causal networks**.
  And [Judea] Pearl realized that if you have any stochastic causal network that's **unidirectional**, then around any **node**, you can draw what he called a **Markov blanket**.
@@ -546,7 +548,7 @@ _Chris:_
 
  All these ideas were reinvented more or less independently within classical physics.
 
-## Active Inference
+### Active Inference
 ![An MB defines a persistent thing](../../Video/Slide22.PNG)
  And it was from this classical physics background that Karl Friston came up with the idea that a Markov blanket defines a persistent 
 [**** inaudible ****] [**thing**, a system that persists through time], 
@@ -565,7 +567,7 @@ _Chris:_
  So that's the history of how we got from {1930s sorry,} 1850s thermodynamics to the free energy principle, and how the free energy principle connects to these very deep and extremely radical (especially within context) ideas in quantum theory and quantum cosmology and computer science.
  All of which tell us that the world we see is a projection that's being written on our boundaries by a process that we have no access to - except the procedure of Active Inference, or the procedure of science - which is to formulate predictive models and test them by doing things in the world and seeing how the world responds.
 
-## Conclusion
+### Conclusion
 ![1st discussion session: Sat. 3 June 2023](../../Video/Slide23.PNG)
  So that's it for this session.
 
@@ -609,68 +611,3 @@ _Daniel:_
  And we'll have that on the course front end before the coming discussion.
  So thanks again, fellows.
  See you next time.
-
-## Acknowledgements
-
-We extend gratitude to the following contributors whose expertise enhanced the quality of this transcription:
-
-- David S. Douglass (Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-7894-8019)
-- Alexander Vyatkin (Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0000-0003-1306-4620)
-- Holly Grimm (Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0009-0001-6181-2569)
-
-## Appendix: Terminology
-
-Action
-
-:   Broad sense: The dynamics, mechanisms, and measurements of Behavior
-
-Active Inference
-
-:   Active Inference is a Process Theory related to Free Energy Principle.
-
-Agent
-
-:   Entity as modeled by Active Inference, with Internal State separated from External State by Blanket State
-
-Free Energy
-
-:   Free Energy is an Information Theoretic quantity that constitutes an upper bound on Surprisal.
-
-Free Energy Principle
-
-:   A generalization of Predictive Coding (PC) according to which organisms minimize an upper bound on the Entropy of Sensory input  (or sensory signals) (the Free Energy). Under specific assumptions, Free Energy translates to Prediction error.
-
-Inference
-
-:   Process of reaching a (local or global) conclusion within a Model, for example with Bayesian Inference.
-
-Information
-
-:   Measured in bits, the reduction of Uncertainty on a Belief distribution of some type. Usually Syntactic (Shannon) but also can be Semantic (e.g. Bayesian).
-
-Markov Blanket
-
-:   Markov Partitioning Model of System, reflecting Agent as delineated from the Niche via an Interface. The Markov Blanket Blanket State reflect the State(s) upon which Internal State and External State are conditionally independent.
-
-Observation
-
-:   The Belief updating of an Internal State registered by a Sensory input, given the weighting assigned to that class of input in comparison with weighting of the competing Priors. (This is a narrow sense of “observation,” where the Agent is “looking for this kind of input.” This sense excludes situations where (a) an incoming stimulus with these attributes has already been explained-away or pre-discounted, or (b) the prior is so strongly weighted as to exclude updating in response to any inputs (other than, perhaps, “catastrophic” ones, as may occur in e.g. fainting, hysterical blindness).)
-
-Particle
-
-:   An Agent consisting of Blanket State and Internal State, partitioned off from Niche.
-
-State
-
-:   is the statistical, computational, or mathematical value for a parameter within the State space of a Model.
-
-System
-
-:   Set of relations described by State space of a Model.
-
-Uncertainty
-
-:   In Bayesian Inference, a measure of the Expectation of Surprise (Entropy) of a Random variable (associated with its variance or inverse Precision)
-
-
-![Act. Infer. Serve](images/logo.png){ width=5% } Act to connect with The Institute by [web](https://activeinference.org), [email](mailto:Blanket@ActiveInference.Institute), [YouTube](https://www.youtube.com/c/ActiveInference/videos), [Discord](https://discord.gg/8VNKNp4jtx), or [LinkedIn](https://www.linkedin.com/company/active-inference/).
