@@ -779,65 +779,65 @@ _Dean:_
 
  Because I think when both are part of the conversation, that's when we start to get a sense of what's really going on.
 
-1:_Daniel:_
+_Daniel:_
  Thank you.
  In this sort of closing sessions, especially if anyone hasn't added anything, please feel free to give any last reflections or questions arising.
  So first, as many people as would like can reflect that way.
  And then after every hand has been addressed, then Ander if you could just give us a kind of look ahead.
  So Avel first, then anyone else with just where does this discussion take us and where do you want to continue to learn more about Avel?
 
-1:_Avel:_
+_Avel:_
  So, two things.
  First, if I walk out of here without understanding what is Cone-Cocone, I will be disappointed.
  And I don't actually expect it to happen in like 12 hours.
  That seems like it's something.
  But more seriously, I can agree with that difficulty that there is a unity between physical structure and communication protocols and that communication protocols are quantum reference frame, kind of individuate physical states, individuate meaningful measurement outcomes that are ray-file as physical possibilities.
 
-1: But the question is then where do communication protocols/quantum merchants frame come from?
+ But the question is then where do communication protocols/quantum merchants frame come from?
  Like, what are the physical determinants that bring about those things?
  And that seems like a question that could be addressed at the conceptual level of this course.
  And I would like, I saw the live stream 17, so that did not help.
 
-1: Anyway, I would like to have more grip into that if we can address it in the [?] courses.
+ Anyway, I would like to have more grip into that if we can address it in the [?] courses.
 
-1:_Daniel:_
+_Daniel:_
  Thank you.
 
-1: Anyone else?
+ Anyone else?
  Especially if they haven't added anything yet, want to give kind of a closing thought?
 
-1: Yeah, there's a lot to learn and Chris brings up a lot in his lecture, even though we've only had one.
+ Yeah, there's a lot to learn and Chris brings up a lot in his lecture, even though we've only had one.
  It's one of the denser hours of epistemic resourcing that I've seen.
  And there's also all of these accessory and cutting edge works that Ander is showing.
  So I'm really looking forward to how we can continue to curate and improve the questions that we have, so that the uncertainties in our generative model that we have, how would this be useful?
 
-1: What does this mean?
+ What does this mean?
 
-1: Why is this variable this way?
+ Why is this variable this way?
  What is the implication for that?
  Those are all the great questions and let's just get them inscribed on our classical documents so that we can have other quantum cognitive agents reduce their uncertainty by looking at the responses.
  So with that, Ander, if you could just look ahead to lecture two and just point towards where we're going to be going.
 
-1:_Ander:_
+_Ander:_
  Yes, lecture 2 will, I think, from what I hear from Chris, is going to start to address these basic ontological aspects of the quantum measurement.
  So the two sources to look at would be two papers, mainly this one, Physical Meaning of Holographic Principle.
  This one's, by far the most pedagogical one.
  So if I had to suggest that folks look at one, it would be this one.
  It's very easy to read, I think, but maybe for a bit more detail there's the slightly older one and they talk at length about Cone-Cocone background here in "Free Energy Principle for Generic Content Systems".
 
-1: So I think that's what's going to come in these two lectures.
+ So I think that's what's going to come in these two lectures.
  Basically, the main ideas behind these two papers, and yeah, that's all I have to say.
 
-1:_Daniel:_
+_Daniel:_
  All right, well, thank you for all who joined this first discussion.
  Hope that it was fun for you and for the audience.
  And check out the course site for the readings to get ahead of the second lecture.
  We'll all watch the second lecture and come back in about a month for the second discussion.
  Everyone's welcome to join, and the website has the registration information.
 
-1: And so now that we've seen a little bit of one way, it can be, we may do something similar or we may do something different for the second discussion.
+ And so now that we've seen a little bit of one way, it can be, we may do something similar or we may do something different for the second discussion.
  So thanks again, everybody.
  See you later.
 
-1:_Ander:_
+_Ander:_
  Bye.

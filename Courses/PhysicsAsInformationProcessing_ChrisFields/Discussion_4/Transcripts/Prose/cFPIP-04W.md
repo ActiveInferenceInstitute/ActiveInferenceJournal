@@ -496,49 +496,49 @@ _Ander:_
  However, as you said, for this experiment to make sense, you need to have a classical memory of how that experiment was prepared, so that means that classical guy on top is static.
  There's no time flow in it.
 
-1:_Chris:_
+_Chris:_
  Well, this actually gets back to the talk by [Leonard] Susskind that we were talking about before we started here, that you kindly referred me to.
  Part of this classical memory is memory for what counts as a classical clock.
  And we'll actually get to this again in the September session.
  But if you think again about doing an experiment in which a state is prepared and then it's measured, this quantum process is a process through time with respect to some classical clock that actually provides the time coordinate for the experiment.
  So this classical clock is some external reference frame that A1 here in this notation is using as part of her classical memory.
 
-1:_Ander:_
+_Ander:_
  Right.
 
-1:_Chris:_
+_Chris:_
  Again, it's a memory because it's something that's assumed not to change.
  This will be kind of the heart of the discussion in September that time and memory and object persistence are all different names for this same assumption that we make about the world.
 
-1:_Daniel:_
+_Daniel:_
  Thank you, Chris.
 
-1:_Ander:_
+_Ander:_
  Thank you.
 
-1:_Chris:_
+_Chris:_
  I am going to have to disappear.
 
-1:_Daniel:_
+_Daniel:_
  Only for now though.
 
-1:_Chris:_
+_Chris:_
  Yeah, only for now.
  I will nonetheless persist someplace.
 
-1:_Ander:_
+_Ander:_
  Thank you, Chris, so much, Chris.
 
-1:_Chris:_
+_Chris:_
  Okay, awesome.
  See you.
  Thanks very much.
 
-1:_Daniel:_
+_Daniel:_
  Measure you later.
  Ander, if you wanted to drop any other cues or clues or bring us a little bit of a preparation for where we're going to be heading in lecture 5, that would be pretty cool.
 
-1:_Ander:_
+_Ander:_
  Sure.
  So, I mean, I'm a little aware of what's coming in lecture 5.
  It's about space and time and how space may be, sorry, time may be a little more fundamental than space, for reasons that Chris will show...has a lot to do with the notion of how you define a clock, as in, we need to think hard about what are the bare minimum ingredients for you to talk about the existence of a clock.
@@ -546,7 +546,7 @@ _Ander:_
  And the good news, and that's the [Leonard] Susskind talk that Chris and I were referring to, is that other people, especially in the high energy community, are also looking into these questions, which is very reassuring.
  So I'm talking at [Edward] Witten, [Leondard] Susskind, [Daniel] Harlow, etc. There is a recent talk on YouTube where they talk about what does it mean for something to be a clock; how long does a clock last?
 
-1: And then Chris will also talk about space.
+ And then Chris will also talk about space.
  And the punchline of it will be that there's obviously a physics approach to emergent spacetime, which is very technical and so on.
  But from what I understood (I have yet to see the talk myself first), is that there is a parallel biological approach as to how we learn out spacetime.
  So from developmental psychology point of view infants, and I suppose all kinds of animals are not born fully equipped to perceive spacetime, hence, the necessity of things like play and so on.
@@ -554,7 +554,7 @@ _Ander:_
  And eventually things like the mirror test, which is nontrivial.
  No human is born passing the mirror test already.
 
-1: So that implies that at least biologically, it is nontrivial.
+ So that implies that at least biologically, it is nontrivial.
  And it takes a few steps until you get to have that sort of spatial awareness.
  Right?
  Now, the interesting part, at least for me personally, is what the physics side of it is.
@@ -563,25 +563,25 @@ _Ander:_
  Yeah, I mean, that's that's about all I can say.
  But very looking forward to the biology also.
 
-1:_Daniel:_
+_Daniel:_
  Yeah, cool.
  Haris any last thoughts or anything you want to point towards?
 
-1:_Haris:_
+_Haris:_
  Basically, I would like to thank everyone for inviting me.
  I really enjoyed it the whole livestream.
  I hope we have made some progress and looking forward to the next live streams number 5 and number 5.
  So that's about it.
  Thank you, everyone.
 
-1:_Daniel:_
+_Daniel:_
  Thank you.
  Anything else, Ander?
 
-1:_Ander:_
+_Ander:_
  That's it.
 
-1:_Daniel:_
+_Daniel:_
  Awesome.
  Well, I encourage everyone to go to the syllabus page, look ahead, look back, pregest, digest, regest, ask questions and let's make progress as you exhort, Haris.
  So, see you all.

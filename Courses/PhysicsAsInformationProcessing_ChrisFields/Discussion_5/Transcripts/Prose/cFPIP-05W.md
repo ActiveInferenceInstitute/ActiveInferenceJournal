@@ -575,188 +575,188 @@ _Chris:_
  And all of this is coupled to Godel's theorem.
  And these other paradoxes of self-reference are aspects of self-reference.
 
-1: But I think this situation really is ubiquitous and inescapable.
+ But I think this situation really is ubiquitous and inescapable.
 
-1: That as soon as we apply the tools of science to the practice of science, we generate these paradoxical situations in which we have to acknowledge that we are entities of a certain sort, and that we are constructing our theories using a faculty of imagination that lets us act as if we don't have a point of view.
+ That as soon as we apply the tools of science to the practice of science, we generate these paradoxical situations in which we have to acknowledge that we are entities of a certain sort, and that we are constructing our theories using a faculty of imagination that lets us act as if we don't have a point of view.
 
-1: So it lets us act as if what we're talking about is point of view-independent.
+ So it lets us act as if what we're talking about is point of view-independent.
  But our theories themselves tell us that we have points of view and that they're important.
 
-1: So we're stuck in this paradoxical situation.
+ So we're stuck in this paradoxical situation.
  I don't know whether that's what you're trying to point to here, but it's what I immediately leaped to, hearing what you said.
 
-1:_Daniel:_
+_Daniel:_
  Yeah, a lot there.
  Anyone else want to add a piece?
 
-1:_Chris:_
+_Chris:_
  Yeah, I'm going to have to go.
 
-1:_Daniel:_
+_Daniel:_
  So thank you, Chris.
  We'll stay for a few minutes.
  Thank you, though.
  This was awesome.
 
-1: We're really looking forward to lecture 6.
+ We're really looking forward to lecture 6.
 
-1:_Chris:_
+_Chris:_
  Okay, thank you all, and thank you all for attending this discussion session.
  It's nice to have this kind of real time discussion which is missing during the actual lecture sessions, so I appreciate it.
 
-1: Thanks again.
+ Thanks again.
  See you.
 
-1:_Ana:_
+_Ana:_
  Thank you.
 
-1:_Ander:_
+_Ander:_
  Thank you, Chris.
 
-1:_Daniel:_
+_Daniel:_
  Thank you, Kate.
  Do you want to ask anything, or anyone can just bring up anything they're thinking right now.
 
-1:_Kate:_
+_Kate:_
  Nothing in particular.
  I'm just really looking forward to the last lecture on the biology of it all.
 
-1:_Ian:_
+_Ian:_
  Great.
 
-1:_Daniel:_
+_Daniel:_
  Well, any other thoughts or questions, or if anyone in the live chat has a thought or a question, they can write it and we'll read it in the coming minutes.
 
-1:_Ana:_
+_Ana:_
  Well, I just wanted to thank you for creating the space.
  It's been absolutely amazing that I was able to find this situation where people are talking about enormous questions and very difficult questions.
 
-1: I just thought I'd share that I find in academia.
+ I just thought I'd share that I find in academia.
 
-1: I don't know why we're not having these conversations.
+ I don't know why we're not having these conversations.
  It's been like a ten year journey, and I have finally found this group.
  I just wanted to express my gratitude.
 
-1:_Daniel:_
+_Daniel:_
  Thank you.
 
-1: I'll read a question from the live chat and anyone can give their thoughts.
+ I'll read a question from the live chat and anyone can give their thoughts.
  So, Mills 8102 wrote, it seems that consilience would aim to ameliorate the problems of self reference.
  Is this a category of solution that seems valuable or fraught?
 
-1: Could consilience ameliorate the problems of self-reference?
+ Could consilience ameliorate the problems of self-reference?
 
-1:_Ander:_
+_Ander:_
  Yes, Dean, can I just ask a different question built on that?
  Which is, what if the contradiction is a feature as opposed to a fraughtness?
 
-1:_Daniel:_
+_Daniel:_
  Do I contradict myself?
  Very well, then.
  I contain multitudes.
  There's the Whitman angle, then there's the William Blake, "life is a fiction and is made up of contradiction."
 
-1: So what is the problem of self-reference?
+ So what is the problem of self-reference?
 
-1: Whose problem is it?
+ Whose problem is it?
  Haris?
 
-1:_Haris:_
+_Haris:_
  Yeah, I will try to answer a bit, to tackle a bit both questions by offering my views from the cognitive science perspective.
  Basically, I think it has to do with consilience, has to do with the numerous cognitive bias that we all are, let's say, subjected to.
  So there is a very long list of cognitive biases, and there are more than 100 listed, I think.
 
-1: So this is one of the challenges in terms of achieving, let's say, good levels of consilience across various domains.
+ So this is one of the challenges in terms of achieving, let's say, good levels of consilience across various domains.
  So this is what I wanted to add.
 
-1:_Daniel:_
+_Daniel:_
  Another thought on that is consilience, though it can mean many things, synthesis.
 
-1:_Ana:_
+_Ana:_
  I don't really have insights into the self-referencing problem.
  I need to do a lot of thinking about that.
  But coming from training in evolutionary biology and spending time in graduate school, postgraduate school, working on explanations where we thought of many hypotheses, models, etcetera, based on a goal, which is organisms are designed to maximize their fitness.
  And, of course, we know that there are lots of problems with that.
  And it turns out, with our data, what we found is that was not the case in the populations that we're working with.
 
-1: Too often, the goal did not seem to be fitness.
+ Too often, the goal did not seem to be fitness.
 
-1: But what that experience gave me is that there was something we could hang on to in order to allow ourselves to propose models for why humans behave the way they do and the decisions that they make.
+ But what that experience gave me is that there was something we could hang on to in order to allow ourselves to propose models for why humans behave the way they do and the decisions that they make.
  So that's why I go back to goals, because if, at whatever level of collective intelligence we're talking about, there is a goal, and Haris, please let me know if this would be correct, that even cognitive biases exist because there is some goal.
 
-1:_Haris:_
+_Haris:_
  Yes, there is some sort of teleonomy in conscious agents, or personal systems, as I call them, and it has to do with goals and cognitive biases and the limitations on the knowledge.
  Let's say, maybe it's limitations on parts of the knowledge representation that each of us has.
  Maybe there are limitations in terms of access to knowing, and there are various forms of knowing, so it depends on many things.
 
-1: And, for example, one of the cognitive biases that I believe can have a negative impact on consilience, let's say, in addressing this self-referentiality will be the halo effect.
+ And, for example, one of the cognitive biases that I believe can have a negative impact on consilience, let's say, in addressing this self-referentiality will be the halo effect.
 
-1: So where you seem to prioritize, let's say, or give some advantage to some types of individuals, ideas, or even theories because of that, hell, for whatever reason that is, it is based on maybe on many different things, maybe on your past history or other things.
+ So where you seem to prioritize, let's say, or give some advantage to some types of individuals, ideas, or even theories because of that, hell, for whatever reason that is, it is based on maybe on many different things, maybe on your past history or other things.
 
-1:_Kate:_
+_Kate:_
  Thank you, Ana.
  And if I may add something rather briefly.
  Your question reminded me of Levin's, and I think it was written with Fields--the proposal about reduction of stress as a goal that guides the emergence of collective structures--one of the papers formulated--that seems to be the goal that drives things as they grow in complexity, reduction of collective stress or reduction of stress at any level.
 
-1: Yeah, I don't remember the title of the paper [see page 12, Box 1-Stress as the glue of agency, Technological Approach to Mind Everywhere: An Experimentally-Grounded Framework for Understanding Diverse Bodies and Minds, Levin M], but that was the gist of it, if I understood it correctly.
+ Yeah, I don't remember the title of the paper [see page 12, Box 1-Stress as the glue of agency, Technological Approach to Mind Everywhere: An Experimentally-Grounded Framework for Understanding Diverse Bodies and Minds, Levin M], but that was the gist of it, if I understood it correctly.
 
-1:_Ana:_
+_Ana:_
  Thank you.
  I'll look that up.
  Great.
 
-1:_Daniel:_
+_Daniel:_
  Another piece of the Levins-Fields collaboration that Chris alluded to earlier is that the notion of computation is observer-dependent; that's polycomputation.
  If there was a fully encrypted computation, an observer without the key would only be seeing noise to them.
  Whereas if they were to have the decryption key, then they could fully understand and go into more detail about the computation.
  So then let's say that we're in relation or observing or investigating some life phenomena at some scale, but we're speaking in the scale-free setting, but we're observing a thing that's there.
  People have ascribed different goals to describe what we call goal-oriented behavior, like seemingly to survive or seemingly to have evolutionary fitness.
 
-1: However, one, An observer could also project different proximate goals; like the goal to minimize stress, the goal to minimize free energy, the goal to minimize surprise.
+ However, one, An observer could also project different proximate goals; like the goal to minimize stress, the goal to minimize free energy, the goal to minimize surprise.
  Those proximate-observer-proposed goals as if goals may be exactly isomorphic or aligned with fitness maximization.
  So that could just be multiple perspectives of projective goals, and whatever the observer projects, that doesn't mean it describes the actual process of the phenomena at all.
 
-1: There's just nothing.
+ There's just nothing.
  Alice can make any story about Bob.
  And it may or may not have anything to do or even be possible to be of the kind that Bob tells about themselves.
 
-1:_Dean:_
+_Dean:_
  I want to just piggyback on that, Daniel, this is really hugely important.
 
-1: The moment you use the word goals, or the moment you use the word fitness, you are assuming context.
+ The moment you use the word goals, or the moment you use the word fitness, you are assuming context.
  Whereas a lot of this stuff that's happening on this holographic screen is completely abstracted and completely context less.
  There's no context required.
  So if you're going to focus on that part of it, as long as you can juggle both at the same time and keep the two things apart, because one does not require context, the other completely assumes that context is given.
  And now you're taking that into your calculus.
 
-1: Right?
+ Right?
  But they're not the same.
 
-1:_Dean:_
+_Dean:_
  I want to reinforce what Daniel just said.
 
-1:_Daniel:_
+_Daniel:_
  Thank you, Dean, Ian.
 
-1: Unmute, then continue.
+ Unmute, then continue.
 
-1:_Ian:_
+_Ian:_
  Thank you.
  Yeah, I was just maybe reinforcing what you were saying or reflecting on it.
  I was thinking about the behaviors we see in other animals and even ourselves that we might not think are related to fitness.
  Like, I don't know, there's those kind of gazelle-type creatures that just jump into the air, but they seem to do that at a time which might make them be predated upon by some tiger or lion, which then all the sort of biologists try and figure out how is this related to fitness?
  And we may do the same.
 
-1: If I go and mow my lawn, waste half a Sunday afternoon, mowing my lawn, what's that got to do with my fitness?
+ If I go and mow my lawn, waste half a Sunday afternoon, mowing my lawn, what's that got to do with my fitness?
  Well, actually, it's to do with keeping up with the Joneses and my social status.
  So it's really hard to actually know what my behavior is about.
 
-1: I can create a story to say that it's to do with minimizing free energy or fitness, but really, is it or not?
+ I can create a story to say that it's to do with minimizing free energy or fitness, but really, is it or not?
 
-1: I don't know.
+ I don't know.
  Is that kind of what you were getting at or something different?
 
-1:_Daniel:_
+_Daniel:_
  Yeah, it's a great point.
  And also, it's come up several times about goals.
  The term goal is not to be found within the active inference ontology, strictly speaking, that's why we have so much fun with what we expect and what we prefer.
@@ -764,111 +764,111 @@ _Chris:_
  Well, that's how paths of least action work.
  And then if somebody else wants to look at that path of least action and say, well, here was a mile point, and this is where it looked like they were heading north, and this is where it looked like the goal was to evade this, those are all stories that an observer could tell about a path, or that the path might tell itself about its own path.
 
-1: But those goal narratives don't need to be implemented proximally or primally with goals, as a kind of core player in the active inference ontology. I'll read some of these great comments and questions, just if anybody has a thought on them from the live chat, just feel free.
+ But those goal narratives don't need to be implemented proximally or primally with goals, as a kind of core player in the active inference ontology. I'll read some of these great comments and questions, just if anybody has a thought on them from the live chat, just feel free.
  John Reed wrote, what does the active inference group--I think that's us, but includes everyone--think about the equation of pilot wave with Many Worlds recently expounded upon by Chris O'Dowd at PBS.
  I found it to be mixing terms and frustrating personally; any thoughts on pilot wave and Many Worlds?
  And I would also just be curious on the physics or technical side, where does what Chris is sharing connect to these kinds of discussions that people have about Many Worlds and different interpretations of quantum?
 
-1:_Ander:_
+_Ander:_
  Yeah, that's a great question.
  So I don't know that I can answer it.
  I know that when it comes to interpretations of quantum mechanics, whether the collapse or the Many Worlds or whatever, I think what they're hinting at, and Chris would probably answer something along those lines, that quantum theory is fundamentally about information.
  And until we make sense of that fully and fully spell out all the details, I think these philosophical issues or the interpretations of quantum mechanics are going to linger.
  I don't have any strong thoughts on interpretations, and I would say I'm an agnostic about interpretations of quantum mechanics.
 
-1: I don't know that I subscribe to any of, and especially pilot wave, I don't have the slightest idea about it.
+ I don't know that I subscribe to any of, and especially pilot wave, I don't have the slightest idea about it.
 
-1:_Daniel:_
+_Daniel:_
  Haris?
 
-1:_Haris:_
+_Haris:_
  Yes.
 
-1: If you allow me, I have a small story regarding pilot wave.
+ If you allow me, I have a small story regarding pilot wave.
  I was conversing with ChatGPT and I actually asked what it thought about pilot wave after watching a lecture on it and then I got intrigued and I wanted to ask and this actually happened.
  The model started replying and I got the chance to read a bit the reply.
  And the reply was like, it is very interesting, but most probably is not correct, it is wrong.
  And then it must have reached some sort of information goal.
 
-1: It retracted the reply and it replied to me.
+ It retracted the reply and it replied to me.
  Can you ask me a different question?
  So this is my short experience with pilot wave theory.
 
-1:_Dean:_
+_Dean:_
  Can I ask a question?
  Is a pilot wave more or less than 100ft in height?
 
-1:_Daniel:_
+_Daniel:_
  I think it's exactly 100.
 
-1: Any other thoughts or questions?
+ Any other thoughts or questions?
  It's a fun and lively live chat too, which is always fun.
 
-1: Yeah, well, we are it coming right along in the year and now 5, 6 completed with this course.
+ Yeah, well, we are it coming right along in the year and now 5, 6 completed with this course.
  So any comments that anyone here just wants to make in a closing round?
  Anybody who wants to can go for it.
 
-1:_Ana:_
+_Ana:_
  Yeah, I have a question.
  If questions come up, have come up during the session, who could I send them to and how?
 
-1:_Daniel:_
+_Daniel:_
  Great question.
  In the video description, you can get to the syllabus of the course and one of the pages on the course website.
  Course syllabus is a question and answer form.
 
-1: So you'll see several dozen questions that people have already written and Chris gives answers and then it's publicly posted.
+ So you'll see several dozen questions that people have already written and Chris gives answers and then it's publicly posted.
  All of the lectures, discussions and questions and answers will be published after the course.
  So every question, no matter from where, or where to, all of these questions are encouraged, it only makes it a richer and more relevant publication.
 
-1:_Ana:_
+_Ana:_
  Thank you.
 
-1:_Daniel:_
+_Daniel:_
  Okay, Ian, Harris or Dean?
 
-1:_Daniel:_
+_Daniel:_
  Susan also says post in discord.
  Great point.
 
-1:_Haris:_
+_Haris:_
  Yeah, I just wanted to add a small point as a conclusion.
  From my personal perspective, I really find that the ideas of Chris Fields, they can be revolutionary, let's say in a variety of different fields.
  And I can see it in quantum cryptography and also about what I've mentioned before in terms of quantum knowledge representation.
  So these are the two fields that I can clearly see it.
  So it is great to be able to participate in this conversation.
 
-1: So once again, thanks to everyone.
+ So once again, thanks to everyone.
 
-1:_Daniel:_
+_Daniel:_
  Great to participate in this conversation or quantum knowledge representation, whichever you prefer.
 
-1: Ander, any last comments?
+ Ander, any last comments?
 
-1:_Ander:_
+_Ander:_
  Not really.
  Just looking forward to the next one. I guess.
 
-1:_Ander:_
+_Ander:_
  I should say.
  And what next year?
  This is going to be an ongoing thing.
 
-1:_Chris:_
+_Chris:_
  Yes, we'll.
 
-1:_Ander:_
+_Ander:_
  We'll come back stronger next year, for sure.
 
-1:_Daniel:_
+_Daniel:_
  Okay.
  What a ride.
  Thank you all.
  See you next time.
  Bye.
 
-1:_Haris:_
+_Haris:_
  Bye, everyone.
 
-1:_Chris:_
+_Chris:_
  Bye.

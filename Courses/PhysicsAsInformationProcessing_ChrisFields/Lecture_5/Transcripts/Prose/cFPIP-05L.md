@@ -485,94 +485,94 @@ _Chris:_
  I mean, we have the solar clock, the lunar clock, etc., and the orbit of Venus clock that was so important to the Mayans and so on.
  So there are lots of available clocks in the environment if you have the ability to notice them and enough memory to realize that they're clocks.
 
-1:_Daniel:_
+_Daniel:_
  Awesome.
  All right, here's a question from Upcycle Club.
 
-1: They wrote: how does representing the network structure and dynamics with quantum embeddings affect the semantic interpretation of the network?
+ They wrote: how does representing the network structure and dynamics with quantum embeddings affect the semantic interpretation of the network?
 
-1:_Chris:_
+_Chris:_
  The embedding theory is the simplest semantic interpretation of the network.
  So...
 
-1: And again, a good way to think of this is through the lens of Computer Science.
+ And again, a good way to think of this is through the lens of Computer Science.
  As soon as you have a programming language that allows variable binding, then you've built a very simple kind of semantics into the language.
 
-1: If you have X as a variable and you have variable binding, then at different times in the execution of the program, X can have different causal consequences for downstream computation because it's been bound to a different value, so it has different semantics.
+ If you have X as a variable and you have variable binding, then at different times in the execution of the program, X can have different causal consequences for downstream computation because it's been bound to a different value, so it has different semantics.
 
-1: So, the semantics of X, again, go back to Gregory Bateson.
+ So, the semantics of X, again, go back to Gregory Bateson.
 
-1: The basis of semantics is differences that make a difference, make a difference to behavior, make a difference to actionability.
+ The basis of semantics is differences that make a difference, make a difference to behavior, make a difference to actionability.
  So, variable binding gives you differences that actually make a difference to what the program does.
  So, what is that?
  That is the semantics that's assigned by your embedding theory between what the programming language is doing and what the operating system is doing and so forth.
  And, I think it's no surprise that the semantics of programming languages end up being represented with these very general mathematical constructs like Category Theory, which are essentially tools for representing arbitrary relations between systems.
 
-1: And, that's what embedding theories are.
+ And, that's what embedding theories are.
  They're theories that state relationships between systems.
 
-1:_Daniel:_
+_Daniel:_
  Awesome, and very provocative to explore on the biological and life and on the spacetime and matter sides, which are of course, seamlessly integrated through, if only our own experiences.
 
-1:_Chris:_
+_Chris:_
  Yeah, this is another place where it's useful to go back to this difference between reductive theories and scale-free theories.
  Scale-free theories are all about semantics because they represent the existence of stuff happening at different scales.
  And so, they naturally raise the question of what are these relationships, what are these embedding theories?
  And, in reductive theories there's a very deep sense in which semantics doesn't matter.
 
-1: If you think that all that's going on that's important is the stuff that's going on at the Planck scale, then you don't need any semantics, right?
+ If you think that all that's going on that's important is the stuff that's going on at the Planck scale, then you don't need any semantics, right?
 
-1: You see this in the late 60s, early 70s, old-fashioned AI, where people talk about computation, is purely syntactic.
+ You see this in the late 60s, early 70s, old-fashioned AI, where people talk about computation, is purely syntactic.
 
-1: And, this is a very reductionist view of computation.
+ And, this is a very reductionist view of computation.
  It leaves out the semantics, and without the semantics, the computation is useless.
  It doesn't tell us anything at all unless we can map it to something.
  So, we have this philosophy of science tradition that tells us that semantics is not important, and we end up with tools like the FEP that essentially tell us that semantics is all important.
 
-1: And, from a biological point of view, the most natural response is, of course, we knew that all the time.
+ And, from a biological point of view, the most natural response is, of course, we knew that all the time.
  That's why we're doing biology.
 
-1: So all of this ties together.
+ So all of this ties together.
 
-1:_Daniel:_
+_Daniel:_
  Would you say that FEP says semantics is important, and then what does it say about what semantics are important?
  Or is that entirely left up to the modeler?
 
-1:_Chris:_
+_Chris:_
  Well, it tells you a lot about what's important for the system itself, right?
  The system itself is dealing with its environment and it's trying to increase its predictive power.
  So, it's building a theory of the environment, and that theory is intrinsically semantic, right?
  It's about the environment and it's actionable.
  The theory is meant to drive action on the environment that will either yield more information or get the environment to behave, to do what I'm predicting it's going to do.
 
-1: So, I think the FEP is intrinsically semantic in that sense, that it's about an agent modeling its environment.
+ So, I think the FEP is intrinsically semantic in that sense, that it's about an agent modeling its environment.
 
-1:_Daniel:_
+_Daniel:_
  Yes.
  And about the semantics of action, as opposed to a partial or limited semantics of passive inference or semantics of abstraction, which kind of leaves the important link between the agent and the environment through sense-making and decision selection basically unaddressed because it's kind of Descartes in the thought experiment in the room.
  And here, when we actually engage with the boundary of the room, that's where we start.
 
-1:_Chris:_
+_Chris:_
  Yeah, yeah.
 
-1: The FEP completely destroys this classical notion of the passive observer, as does Quantum Theory.
+ The FEP completely destroys this classical notion of the passive observer, as does Quantum Theory.
  There are no passive observers in quantum theory.
  So, this is a construct that we inherited from a classical worldview that is seriously misleading.
 
-1:_Daniel:_
+_Daniel:_
  A lot more to say, but that's a great place to end.
  Thank you, Chris.
 
-1:_Chris:_
+_Chris:_
  OK.
  Thank you, Daniel.
  And thanks to you all.
 
-1: And ask questions.
+ And ask questions.
 
-1:_Daniel:_
+_Daniel:_
  See you next time.
 
-1:_Chris:_
+_Chris:_
  Cheers.
  We'll see you next time.

@@ -619,64 +619,64 @@ _Chris:_
  And this actually gets into probably what won't be talked about until October.
  But I want to be able to ask essentially a phylogenetic question of what sorts of organisms, where in the lineage from LUCA, do we find systems that are able to assign spatial coordinates to their boundaries and what coordinates come first?
 
-1: And I suspect that sort of discrete location names with no metric come first that a system can talk about, for example, this part of their membrane versus that part of their membrane without even having any ability to say, how far apart they are and that some sort of metric representation of this angular space comes later and that a radial space comes even later than that.
+ And I suspect that sort of discrete location names with no metric come first that a system can talk about, for example, this part of their membrane versus that part of their membrane without even having any ability to say, how far apart they are and that some sort of metric representation of this angular space comes later and that a radial space comes even later than that.
  That's, at this point, speculation.
  But I think these are questions that we can end up asking given the right kind of formalism and the right understanding of what it means to be able to make a spatial measurement.
 
-1:_Ander:_
+_Ander:_
  So the conjecture is that the metric would emerge from a discrete network metric of counting ticks sort of thing.
 
-1:_Chris:_
+_Chris:_
  Yeah, I think that's correct.
 
-1: And the sort of symmetries of space that we see are very much tied up with object identity.
+ And the sort of symmetries of space that we see are very much tied up with object identity.
  So if we think about something like rotational symmetry let's see, I should stop screen sharing.
 
-1: So I've got this object, right, and I can do this, and I say, oh, space has this rotational symmetry.
+ So I've got this object, right, and I can do this, and I say, oh, space has this rotational symmetry.
  But for me to say that, I have to recognize that this is the same object, right?
  I have to implement object persistence, which we all learn to do when we're nine months old or something.
  But we tend to regard those as separate things as we learn object persistence, because space is rotationally symmetric, but we can view it the other way around, that space is rotationally symmetric for me because I implement these constraints that are called object persistence.
 
-1:_Daniel:_
+_Daniel:_
  Do you think we can understand phylogenetics as a whole, as a kind of scattering experiment, like the high energy LUCA event and then dissipating and propagating in a very tangled bank?
 
-1:_Chris:_
+_Chris:_
  Well, I do want to be able to understand phylogeny in exactly the same terms as embryology, and Mike Levin and I have published papers about that.
  We should be able to view the lineage of LUCA in exactly the same way that we view the lineage of the zygote that produced us.
 
-1:_Ander:_
+_Ander:_
  So that's why it's no coincidence that during pregnancy, the development of the embryo mirrors evolution in terms of the parts that are developed first.
 
-1:_Chris:_
+_Chris:_
  Yeah, this is the old idea that phylogeny and ontogeny are related in some way, which, from an embryonic development point of view, they're certainly analogous in ways.
 
-1:_Ander:_
+_Ander:_
  Sorry, if I may ask one last question--should be very quick--regarding the weak rotation.
  I'm still a bit unsure how it ties to this diagrammatic notation that we had with quantum channels on show so on.
 
-1: In the second session, we briefly talked about the weak rotation being a reversal in the direction of time.
+ In the second session, we briefly talked about the weak rotation being a reversal in the direction of time.
  Is there any relation to today's session?
 
-1:_Chris:_
+_Chris:_
  Yeah, whenever we think about the flow of time as driven by the input-output cycle, the input-output cycle for agents separated by a boundary, there's always a sign change.
  Right.
  My input is your output, and vice versa.
  So when we think about Bob's clock ticking, when Alice does something, his direction of time, in a sense, points with respect to the boundary opposite to hers, but that's only with respect to the boundary.
 
-1: He sees information flowing in, and she sees information flowing in.
+ He sees information flowing in, and she sees information flowing in.
 
-1: That's the only point being made here about the Wick rotation as an operation.
+ That's the only point being made here about the Wick rotation as an operation.
 
-1:_Ander:_
+_Ander:_
  Thank you.
 
-1:_Daniel:_
+_Daniel:_
  Thank you, Chris.
  Very well appreciated by the viewers and by us.
 
-1: So we'll certainly look forward to reviewing the Q&A, and everybody is welcome and encouraged to join for the participatory discussion in about two weeks on Saturday.
+ So we'll certainly look forward to reviewing the Q&A, and everybody is welcome and encouraged to join for the participatory discussion in about two weeks on Saturday.
  So till next time.
 
-1:_Chris:_
+_Chris:_
  All right, thank you.
  Cheers.

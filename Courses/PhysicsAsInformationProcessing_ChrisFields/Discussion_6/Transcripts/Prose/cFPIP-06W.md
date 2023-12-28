@@ -722,29 +722,29 @@ _Dean:_
  Again, I cannot emphasize enough, when we get a chance to interact with this stuff, when we get to manipulate it, when we're able to ask questions, even though we feel vulnerable, I think that that's when a lot of the really good stuff tends to get consolidated.
  So thank you to all of you.
 
-1:_Daniel:_
+_Daniel:_
  I'll read some fun comments from the live chat, just the last several, just to recognize some of our great colleagues.
  Lucrative leadership wrote, yes.
 
-1: More on affordances.
+ More on affordances.
  Ian wrote, would love for this series to continue.
  Joanne wrote, thank you.
  This was a wonderful learning experience.
  Mills 8102 Two wrote the probable and the possible.
 
-1: There are some emojis.
+ There are some emojis.
  Pablo sent a heart pow wow dao.
  I don't speak this language, but I can definitely hear, understand, and feel it.
  So thank you, everybody who's watching along.
  These were all great, and we prepare and measure every day at the institute.
 
-1: So I really do hope that people from all backgrounds, all vectors, all preference and prior sets come engage and not presuppose too much about us or themselves or what can happen when we really do interact and when we take it into the kinds of spaces and timelines that we know we want to be on.
+ So I really do hope that people from all backgrounds, all vectors, all preference and prior sets come engage and not presuppose too much about us or themselves or what can happen when we really do interact and when we take it into the kinds of spaces and timelines that we know we want to be on.
 
-1: All right, thank you.
+ All right, thank you.
  Bye.
 
-1:_Haris:_
+_Haris:_
  Thank you, everyone.
 
-1:_David:_
+_David:_
  Bye.

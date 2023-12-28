@@ -521,23 +521,23 @@ _Chris:_
  What this tells us is that entropy is, in fact, not a globally definable quantity.
  Entropy is always defined relative to some observer, some division, some boundary.
 
-1: And this is another kind of big change in the last few decades and has led to, for example, entropic definitions of time.
+ And this is another kind of big change in the last few decades and has led to, for example, entropic definitions of time.
  My local external time arrow is whatever direction I see entropy increasing the most.
 
-1: So, again, I would refer to people like Rovelli and Max Tegmark, who developed many of these ideas.
+ So, again, I would refer to people like Rovelli and Max Tegmark, who developed many of these ideas.
 
-1:_Daniel:_
+_Daniel:_
  Awesome.
  All right, thank you, Chris, and Ander, looking forward to seeing everyone's questions submitted and their preparation and participation and measurement in the discussion section.
  So thank you.
  Till next time.
 
-1:_Chris:_
+_Chris:_
  All right.
 
-1: Thanks again, Daniel.
+ Thanks again, Daniel.
  Thank you.
  Ander, we'll see you later.
 
-1:_Ander:_
+_Ander:_
  Bye.

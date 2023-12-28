@@ -626,38 +626,38 @@ _Dean:_
 
  But again, I struggle with this.
 
-1: I'm guilty as charged, but what I'm trying to do is trying to come up with my own narrative, so that what Chris is saying makes sense to me, as opposed to make sense to the world, which is what Chris is trying to do.
+ I'm guilty as charged, but what I'm trying to do is trying to come up with my own narrative, so that what Chris is saying makes sense to me, as opposed to make sense to the world, which is what Chris is trying to do.
 
-1:_Daniel:_
+_Daniel:_
  I'll try with another speculative fiction.
  So there's a screen between, let's just say, the stage and the audience or whatever.
  It's a holographic screen.
  And on each side of the screen, there's some embodied object.
 
-1: So that means that it's a volume enclosing object because points and lines and planes are only abstractions.
+ So that means that it's a volume enclosing object because points and lines and planes are only abstractions.
  Every real physical object encloses volume.
  And now a light is going to be coming from behind each object facing the screen.
  And that's this kind of cone that we're seeing from each side.
  It's like the shadow cast by the object.
 
-1: So if the object was a sphere, then it would be projecting down to a circle onto the screen.
+ So if the object was a sphere, then it would be projecting down to a circle onto the screen.
  If the shape were a cube, it could be projecting down.
  And so where the light is positioned is the perspective that that cognitive entity is taking on its QRF.
 
-1: Those lights could move.
+ Those lights could move.
  So now we have the situation where the two spotlights are moving.
 
-1: Maybe the shapes are staying the same, maybe they're changing too.
+ Maybe the shapes are staying the same, maybe they're changing too.
  And it's like two search lights scanning across this B oval and sometimes they are perfectly locked or there could be a situation where they're perfectly aligned or there could be situations where they're totally disjoint.
 
-1: And each of those situations have different implications for what one entity sees when it looks at the screen.
+ And each of those situations have different implications for what one entity sees when it looks at the screen.
  Maybe like the shadow is the only part where you can see because the rest of it is too blinding or something like that.
  And so then if we're in case (a) here where maybe (b) doesn't have a projection or maybe (b)'s projection is totally somewhere else, then (a) is in this solipsistic I'm the active agent interacting within an inert world setting.
 
-1: And (d) is like potentially the computer engineer's classical dream or asymptote, which is like all the data going through the USB cable is just being perfectly noiselessly received.
+ And (d) is like potentially the computer engineer's classical dream or asymptote, which is like all the data going through the USB cable is just being perfectly noiselessly received.
  And then we also get these (b) and (c) cases.
 
-1: But (a) is kind of like the inner world.
+ But (a) is kind of like the inner world.
  (d) is like the perfect communication channel. Then to connect it just to Friston's concept of generalized synchrony, as we've talked about many times, generalized synchrony doesn't mean lockstep.
  Two agents could reduce their uncertainty about each other, not by doing the same thing at every time step, but for example, by turn-taking.
  And I think that points the way to how we get reduction of variational free energy, reduction of prediction error, surprise and so on without, especially, spatial temporal enmeshment, but not necessarily even informational identity enmeshment, because you could have two things that through their alignment become actually differentiated and that could increase the mutual information between two metronomes,not just to have them going in the same direction, but to have them going in opposite directions.
@@ -665,59 +665,59 @@ _Dean:_
  So it's not the case that generalized synchrony means that things are becoming blurred.
  We could actually also have integrated information through increased articulation, not just decreased.
 
-1: And then life finds a way or cognition finds a way on this trade-off frontier of, in our pursuit of unitarity, will we blur to unify or will we differentiate to unify?
+ And then life finds a way or cognition finds a way on this trade-off frontier of, in our pursuit of unitarity, will we blur to unify or will we differentiate to unify?
 
-1: But those are the paths we have.
+ But those are the paths we have.
  We don't have the backwards ratchet.
 
-1:_Dean:_
+_Dean:_
  Yeah, yeah, makes sense.
 
-1:_Daniel:_
+_Daniel:_
  Any other latter slides, Ander?
 
-1:_Ander:_
+_Ander:_
  No, that's it.
  So Chris made a few more remarks at the end about language here, but he mentioned that he's going to talk more about this in the coming lecture.
  So we'll just leave it up to him.
 
-1:_Daniel:_
+_Daniel:_
  Yeah.
  There could be some very powerful and interesting linguistic opportunities for updating our speaking to reflect what we are learning here.
  I don't know what those necessarily are, whether it's a syntactic or a semantic thing, or whether it's a narrative thing, but how to actually reenter some of these formalisms into our focused understanding could just be immensely powerful, and we could have a lot of integrity between the natural language way that potentially we're already showing up for engagement, and some of these formalisms that get to first principles about interacting entities and boundary conditions and all of that.
 
-1: Dean, any penultimate thoughts?
+ Dean, any penultimate thoughts?
 
-1:_Dean:_
+_Dean:_
  Not really.
 
-1: I'm going to go back and listen to Chris's comments again about this common cause and the fine-tuning assumption and whether that's sort of metaphorically, a dialing-in or what he means exactly by the fine-tuning, in the context of this conversation today, what you just kind of said about are we dulling something here or are we sculpting something to make it more fittable?
+ I'm going to go back and listen to Chris's comments again about this common cause and the fine-tuning assumption and whether that's sort of metaphorically, a dialing-in or what he means exactly by the fine-tuning, in the context of this conversation today, what you just kind of said about are we dulling something here or are we sculpting something to make it more fittable?
  I'm going to go now and go back and listen to what he talks about in terms of fine-tuning and maybe update my priors around that.
 
-1:_Daniel:_
+_Daniel:_
  And are there any last thoughts or maybe scroll over to the schedule of the course again just so we can close on that?
 
-1: Yeah, we're halfway through.
+ Yeah, we're halfway through.
  We just completed the third discussion section now, so we've had three lectures and three discussions.
  It's all downhill from here.
  By the way, this was the first midterm.
  You guys both did well.
 
-1: We're going to head into session 4 with these last three, how agents use multiple communication channels and that's going to get connected to the quantum FEP, how spacetime emerges from communication, which is something that we've brought up a bunch, it's been in the background, but making that explicit is going to be exciting.
+ We're going to head into session 4 with these last three, how agents use multiple communication channels and that's going to get connected to the quantum FEP, how spacetime emerges from communication, which is something that we've brought up a bunch, it's been in the background, but making that explicit is going to be exciting.
  And then section 6, I think, is just going to be such a jumping-off point because the scope and the intensity of what is transpiring is extreme,so connecting it to biology, which is to say life more fully, and where we go in '23 and beyond, that's going to be awesome.
  So, any last words, Ander?
 
-1:_Ander:_
+_Ander:_
  No, I just echo what you said.
  I would say it's going to be uphill in terms of how interesting it's going to get, uphill in a good sense, meaning that we're planning.
 
-1:_Daniel:_
+_Daniel:_
  Cool, well, I encourage people to check out the course website and submit questions that they'd like to see addressed by Chris.
  Also to register and join these participatory discussions.
  There'll be three more of them, so if you want to join, share your QRF, be part of the publication of all of these works that we'll compile at the end and just get your exoskeleton in the game with what is happening here.
 
-1: It'd be really awesome to hear more voices and to have more on board.
+ It'd be really awesome to hear more voices and to have more on board.
  Okay, thank you, Dean, and Ander, till next time.
 
-1:_Ander:_
+_Ander:_
  Bye.

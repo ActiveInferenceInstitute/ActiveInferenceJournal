@@ -745,144 +745,144 @@ _Dean:_
  And so I'm guessing that now that we've established those two as different, where does that go?
  But again, that's just the rookie's view of things.
 
-1:_Daniel:_
+_Daniel:_
  Hey, Chris.
  Welcome.
 
-1:_Chris:_
+_Chris:_
  Yeah, hi.
  This is a very interesting discussion and it's given me some pointers as to what to emphasize at the beginning of session three.
  But I can say in response to Dean's question that the time when Alice isn't looking is the time during which Bob is making his measurement and then his next preparation step.
 
-1: So if you consider again that slide that shows sort of the Feynman representation of what's happening as this unitary flow, that's what Bob is doing.
+ So if you consider again that slide that shows sort of the Feynman representation of what's happening as this unitary flow, that's what Bob is doing.
  And I think Ander said that from Alice's point of view, Bob is just some quantum system and she's banged on that system by asking a question.
 
-1: And now that system is doing something or other that she can't see until it, i.e., Bob, bangs on his side of the screen and she gets some information by making a measurement. So, she may be not looking for a very short period of time.
+ And now that system is doing something or other that she can't see until it, i.e., Bob, bangs on his side of the screen and she gets some information by making a measurement. So, she may be not looking for a very short period of time.
  Right.
 
-1: According to her internal clock, she's not looking for just the time it takes for one of her internal ticks to take place.
+ According to her internal clock, she's not looking for just the time it takes for one of her internal ticks to take place.
  But in general, we're not saying anything about how long that time is, right?
  If you think of this in a scattering theory way, then we're talking about the time between two protons leaving the rings on the Large Hadron Collider to the time that all the stuff that comes out of their collision is measured by the detectors, which is a nanosecond or something like that, some very short period of time.
 
-1: So just think of that interval as the measure of the intrinsic time dependence, the external time dependence, of the interaction.
+ So just think of that interval as the measure of the intrinsic time dependence, the external time dependence, of the interaction.
  Someone has to do something and then someone else has to do something.
  And there's a gap between what the first person does and what they see in response.
  Let's see what's the other question. The other central question that came up today was the question of why observing something requires action.
  And of course, in the classical picture, observing something doesn't require any action at all.
 
-1: The event just happens.
+ The event just happens.
  And this is the fundamental, if you will, distinction between classical and quantum theory is that making an observation in quantum theory is taking an action on the world.
 
-1: And there's a lovely metaphor that's not correct in detail but it's very useful, I think, conceptually which [Werner] Heisenberg came up with to try to explain his uncertainty principle to his classical colleagues.
+ And there's a lovely metaphor that's not correct in detail but it's very useful, I think, conceptually which [Werner] Heisenberg came up with to try to explain his uncertainty principle to his classical colleagues.
  He said, look, suppose I'm trying to see a very small particle and measure its motion.
 
-1: I have to have a microscope to see this particle and to measure its motion.
+ I have to have a microscope to see this particle and to measure its motion.
  I need to light it up.
  I need to shine some light on it.
  And those photons of light are actually impacting the thing I'm trying to see.
  So the act of observation itself requires banging something into an object.
 
-1: And when we're just looking out at the world, it's the sun that's banging the light into the object, not us.
+ And when we're just looking out at the world, it's the sun that's banging the light into the object, not us.
 
-1: But we can sort of merge those two systems together because it's the sun that's taking the action that lets us get some information.
+ But we can sort of merge those two systems together because it's the sun that's taking the action that lets us get some information.
  But the sun is perturbing the things that we're looking at by banging photons into them.
 
-1: And I think that picture of Heisenberg's is what he used to actually derive the uncertainty principle in terms of momentum and position, because banging something into something is transferring momentum to it.
+ And I think that picture of Heisenberg's is what he used to actually derive the uncertainty principle in terms of momentum and position, because banging something into something is transferring momentum to it.
  Photons transfers the momentum to the tiny particle in the microscope, and that perturbs its position on the microscope stage, which is precisely what Heisenberg is trying to measure.
  So that's his point in that analogy.
  Observation itself always takes action.
  And that's why observation and preparation are duals in quantum theory, because they each require a minimum one unit of action.
 
-1: And I think, Ander, you said the duality can be thought of in terms of time invariance, and that's exactly correct.
+ And I think, Ander, you said the duality can be thought of in terms of time invariance, and that's exactly correct.
  Preparation is just measurement run backwards and vice versa.
 
-1:_Ander:_
+_Ander:_
  And if you let me say a few words, I think this also answers my own confusion and the question that Alexey posed earlier, which is this duality between preparation and measurement. In your picture that you're bringing up Chris with Heisenberg...by shining photons on particle that I'm trying to observe.
  These pictures of preparation and measurement are dual because in doing so, I'm constraining the system.
  In trying to measure it, I'm constraining it.
 
-1: In me trying to gather information by shining photons on it what I'm really doing is I'm constraining it.
+ In me trying to gather information by shining photons on it what I'm really doing is I'm constraining it.
  I'm just saying you can only take this moment or position.
  Would that be correct?
 
-1:_Chris:_
+_Chris:_
  Yeah.
  In fact, in the microscope example, it's particularly clear you're bouncing a photon off of the object, and then it's that photon that you're detecting.
  Right.
  There was one other question that can be answered quickly.
  It was the question about what's the reference frame that Alice is using when she's measuring up or down, measuring her spin up or down.
 
-1: And of course, there are several reference frames involved here, so let's work inwards in a real system.
+ And of course, there are several reference frames involved here, so let's work inwards in a real system.
  Alice is sitting here.
  She's got a Stern-Gerlach apparatus, which is a vertical magnet apparatus, and she's measuring the spin of an electron that's traveling through this Stern-Gerlach device.
  And what the Stern-Gerlach device does is orient the spin with a magnetic field that's not homogeneous, so it ends up pointing physically up as it comes through the apparatus.
 
-1: So how is that apparatus oriented?
+ So how is that apparatus oriented?
 
-1: I mean, what defines the up direction for that apparatus?
+ I mean, what defines the up direction for that apparatus?
  Well, in the practical setting, what defines that apparatus orientation is the Earth's gravitational field.
  Right.
  We're here in the laboratory, and the Earth's gravitational field tells us what direction is down.
  It's toward the center of the Earth, and so up is away from the center of the Earth, and that's what defines the axis for the apparatus, which is a great big piece of metal.
 
-1: So it's very responsive to the gravitational field.
+ So it's very responsive to the gravitational field.
  So now we can ask about Alice.
  Right.
  Alice is also embedded in this gravitational field, and she also can detect the gravitational field.
  She can tell which way is down toward the center of the Earth by the force acting on her feet.
 
-1: And that measurement is taking place in Alice's brain.
+ And that measurement is taking place in Alice's brain.
 
-1: So in Alice's brain, there's a representation of which way is up, and that's the internal reference frame of Alice that lets her do the experiment.
+ So in Alice's brain, there's a representation of which way is up, and that's the internal reference frame of Alice that lets her do the experiment.
  If she was freely floating in space, but the apparatus was anchored to the gravitational field, she wouldn't be able to tell that it was anchored to the gravitational field.
  That's Einstein's point, that Einstein makes in all of those experiments, where he has observers flying around in spacecraft that they have to have their own reference frame.
  What Einstein didn't emphasize was that reference frame is in their head.
 
-1: It's encoded by their nervous system.
+ It's encoded by their nervous system.
  So I think it was Daniel who said this exactly correctly, that the physical object in her head, the actual neural network that tells her which way the gravitational field is, is itself a semantic object.
 
-1: That's what gives the word up and down meaning for Alice.
+ That's what gives the word up and down meaning for Alice.
  What do I mean when I say the word meaning?
  I mean, it lets her take some action.
 
-1: Semantics boils down to actionability if it gives things significance.
+ Semantics boils down to actionability if it gives things significance.
  And this was the point that [Gregory] Bateson was making when he said, "differences that make a difference" for an organism, something is meaningful if it actually makes a difference for what I can do in this world that I'm trying to survive in.
  So I'll leave it at that.
  But this is very useful for leading off the next session.
  So thank you very much for all that discussion.
 
-1:_Daniel:_
+_Daniel:_
  Awesome.
  Thank you.
 
-1:_Ander:_
+_Ander:_
  I guess if I could say one thing here is that let me scroll back up to the three points early in the slides.
  Differences that make a difference would tell you that you require action to perturb a system and measure.
  And then the semantics or the contextuality that may be encoded in the nervous system would tell you what is the difference that is being made.
 
-1: Would that be correct?
+ Would that be correct?
 
-1:_Chris:_
+_Chris:_
  Yeah.
  Right.
  What tells you that there's a difference there?
  It's what you're able to detect and represent internally.
 
-1:_Daniel:_
+_Daniel:_
  It's almost like step one, do differently.
  Step two, you have to ask it to a different thing.
  And then three, you need the semantic frame that makes A and B different; differences all the way down.
  Well, we will transcribe this and fix the few patchy moments, Ander.
  We'll work together on updating the transcript so that everybody who wants to be well-prepared for the measurement of the third lecture will be absolutely in place.
 
-1: Thank you, Chris, for joining.
+ Thank you, Chris, for joining.
  That's a fun cap to this discussion.
 
-1:_Chris:_
+_Chris:_
  So, all right, thank you.
 
-1:_Daniel:_
+_Daniel:_
  See you all next time.
 
-1:_Ander:_
+_Ander:_
  Bye.
