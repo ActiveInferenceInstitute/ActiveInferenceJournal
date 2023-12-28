@@ -11,7 +11,8 @@ date: "2023-05-18 Version 1.0"
 
 ![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/cFPIP-01L_00001.png)
 
-### INTRODUCTION
+### Introduction
+
 00:05 _Daniel:_
 [[start:5900][end:9460]] Hello and welcome, everyone, to the Active Inference Institute.
 [[start:9620][end:16020]] This is Session 1 of the course "Physics as Information Processing" with Chris Fields.
@@ -43,7 +44,8 @@ date: "2023-05-18 Version 1.0"
 [[start:99670][end:103380]] And all of this is explained on the course website.
 [[start:104730][end:108040]] So let's start!
 
-### HISTORICAL PERSPECTIVE: PHYSICS
+### Historial Perspective: Physics
+
 01:49 [[start:109210][end:126810]] This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
 
 ![Wittgenstein, Landaur, Wheeler](../../Video/Slide2.PNG)
@@ -64,6 +66,7 @@ date: "2023-05-18 Version 1.0"
 [[start:196472][end:203090]] the most relevant history of this idea, goes back to the mid-19th Century.
 
 #### Clausius
+
 03:24 [[start:204330][end:211750]] And the first specific thing I'll talk about is **[Rudolf] Clausius**'s definition of entropy.
 
 03:32 [[start:212890][end:230750]] But with the beginning of the understanding of thermodynamics and the role of information in thermodynamics, you get this very interesting multidisciplinary progression of ideas that incorporates the beginning of quantum theory.
@@ -73,6 +76,7 @@ date: "2023-05-18 Version 1.0"
 [[start:261298][end:275062]] So, interestingly, computer science was born effectively in the mid-30s with the work of **[Alonzo] Church** and **[Alan] Turing**, which very rapidly converged with the work in physics.
 
 #### Physics, Computation, Information
+
 04:35 [[start:275206][end:279530]] So today we'll be talking about both computer science and physics.
 [[start:280850][end:286880]] And then in the second half of the 20th Century, this just exploded into a huge area.
 
@@ -94,8 +98,10 @@ date: "2023-05-18 Version 1.0"
 
 06:34 [[start:394550][end:403090]] So this way of thinking about physics is a very deeply quantum-theoretic way of thinking about physics.
 
-### COURSE OUTLINE
+### Course Outline
+
 ![Where we are going in this course](../../Video/Slide5.PNG)
+
 06:43 [[start:403670][end:411702]] And where we're going in this course today is really "how did this all happen?"
 [[start:411756][end:413400]] It's the origin story.
 [[start:414650][end:435600]] And then in the next session, I want to discuss quantum information theory explicitly. And in particular, how quantum theory makes this conclusion that physics is about communication very simple and obvious, much more obvious than it is in classical physics where it takes _work_ to formulate this idea.
@@ -120,12 +126,14 @@ date: "2023-05-18 Version 1.0"
 [[start:571230][end:577894]] So if there's anything that... just a term that is a trip-up, try Wikipedia.
 [[start:577942][end:581006]] It's probably a very good source for what these terms mean.
 
-### BACK TO THE PHYSICS
+### Back to the Physics
+
 ![Our story begins...](../../Video/Slide6.PNG)
 
 [[start:581188][end:586990]] So let's start! Our story, as I said, begins in the 19th Century.
 
 #### Steam Engines
+
 09:47 [[start:587410][end:596130]] And in the mid-19th Century, lots of physicists were devoting their efforts to figuring out how to make better steam engines.
 [[start:596870][end:611282]] And one question that arises when you're trying to design a steam engine is "what happens _physically_ when you add heat to a system at constant temperature?"
 [[start:611346][end:615350]] So if you're building a steam engine, you've got a boiler, because you need to make steam.
@@ -150,8 +158,9 @@ date: "2023-05-18 Version 1.0"
 [[start:732090][end:733498]] What is this entropy?
 [[start:733594][end:735440]] What does this concept _mean?_"
 
-#### Boltzmann
 ![But what _is_ entropy?](../../Video/Slide7.PNG)
+
+#### Boltzmann
 
 [[start:736450][end:753300]] And about 15 years after Clausius proposed it, **[Ludwig] Boltzmann** had the key insight, which is that "entropy is a measurement of _our uncertainty_ about the **state** the system is in."
 [[start:754490][end:773820]] And in particular, he again, of course, went to formalism, and said "the entropy, S, is equal to some constant times the number of states that the system can be in that look the same to us."
@@ -178,8 +187,9 @@ date: "2023-05-18 Version 1.0"
 14:38 [[start:878032][end:880400]] And that's what you have to do to get information.
 [[start:881330][end:885710]] So here's Boltzmann, basically inventing quantum theory.
 
-#### Planck
 ![fast forward to 1900](../../Video/Slide8.PNG)
+
+#### Planck
 
 [[start:887490][end:892000]] So we're going to fast forward by another 15 years, to 1900.
 [[start:892850][end:903540]] And in 1900, **[Max] Planck** solved this problem called the "black-body radiation problem," which was basically "how much heat does your hot boiler give off into the air?"
@@ -233,6 +243,7 @@ date: "2023-05-18 Version 1.0"
 [[start:1109244][end:1112214]] There was this relation until the 1950s.
 
 #### Wick
+
 [[start:1112412][end:1117290]] And when it was figured out, it was figured out by a guy named **Gian Carlo Wick**.
 [[start:1117710][end:1129930]] And he introduced this notion of the **Wick rotation** by realizing that if you have an equation in classical physics, and in it there's the term "1 over kT,"
 
@@ -287,9 +298,11 @@ date: "2023-05-18 Version 1.0"
 [[start:1360650][end:1363240]] So this is a harbinger of things to come.
 [[start:1363610][end:1372060]] But before we continue in physics, we need to backtrack in time a little bit, and look at what the mathematicians were doing.
 
-### MATHEMATICS
-#### Gödel
+### Mathematics
+
 ![Meanwhile, across the hall...](../../Video/Slide10.PNG)
+
+#### Gödel
 
 22:53 [[start:1373150][end:1385146]] So across the hall in the math department, one year after the Solvay conference, in 1929, Kurt Gödel proved his famous first incompleteness theorem.
 [[start:1385338][end:1391280]] And the theorem states that "no formal system that contains arithmetic can be both consistent and complete."
@@ -313,8 +326,9 @@ date: "2023-05-18 Version 1.0"
 
 25:33 [[start:1533410][end:1544190]] So an immediate consequence of Gödel's theorem was an intense investigation of what computation actually _is,_ what it _meant_ to talk about finite discrete operations.
 
-#### Computation
 ![What is computation?](../../Video/Slide11.PNG)
+
+#### Computation
 
 25:44 [[start:1544850][end:1548782]] And two leaders of this were, of course, Church and Turing.
 [[start:1548846][end:1560440]] And here's a picture of a Turing machine, which is just a little device with a couple of tapes, and a tape reader, and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
@@ -340,6 +354,7 @@ date: "2023-05-18 Version 1.0"
 [[start:1649270][end:1659990]] So this was another body blow to the goal of understanding everything with finite discrete processes.
 
 ![The stage is now set...](../../Video/Slide12.PNG)
+
 27:40 [[start:1660330][end:1663366]] But it also set the stage for something *new.*
 [[start:1663548][end:1676380]] It set the stage for thinking about an agent who interacts with a computational process by giving it an input, and then looking at its output some time later.
 
@@ -350,6 +365,7 @@ date: "2023-05-18 Version 1.0"
 [[start:1708650][end:1713880]] receiving some finite number of outputs from the system that she's acting on.
 
 ![A flurry of negative answers](../../Video/Slide13.PNG)
+
 [[start:1715850][end:1722326]] And the first 20 years of this produced a _large_ number of answers, all of them negative.
 [[start:1722518][end:1731070]] So to go back to Turing, he proved that Alice can't tell what's _implementing_ the function that she sees being implemented.
 [[start:1731970][end:1737002]] She can't tell whether a given input will lead to an output -
@@ -368,6 +384,7 @@ date: "2023-05-18 Version 1.0"
 30:01 [[start:1801430][end:1807080]] So Alice can do science even though she can't answer any of these fundamental questions.
 
 ![A major technological consequence](../../Video/Slide14.PNG)
+
 30:10 [[start:1810010][end:1824730]] Now, this, of course, has a huge technological consequence. Since this theory of computation tells us that processes are effectively virtual,
 [[start:1826430][end:1831306]] we don't know what they are and we can't _determine_ what they are except in theory,
 [[start:1831418][end:1841600]] by _making_ a theory. Technologically, it means we're free to _use_ virtualization everywhere because we have to deal with it anyway.
@@ -379,9 +396,12 @@ date: "2023-05-18 Version 1.0"
 
 31:20 [[start:1880290][end:1891680]] So in a sense, Gödel birthed not only computer science, but practical computing by showing us that virtualization is just the way the world works.
 
-### PHYSICS AGAIN
-#### Feynman
+### Physics Again
+
 ![Feynman expressed these same ideas](../../Video/Slide15.PNG)
+
+#### Feynman
+
 [[start:1892150][end:1908230]] So now let's go back to physics, where these ideas were replicated, basically reintroduced, reinvented by Feynman in developing his path integral formulation of quantum theory.
 [[start:1908570][end:1921882]] And basically what Feyman realized was that in any physical process, the observer, Alice, prepares some state that she's interested in.
 
@@ -406,6 +426,7 @@ date: "2023-05-18 Version 1.0"
 [[start:2073550][end:2080026]] So let's think about a real example that's {a bit actually it's...} the same as scattering.
 
 ![The ultimate scattering experiment is a black hole](../../Video/Slide16.PNG)
+
 34:40 [[start:2080058][end:2085470]] The ultimate scattering experiment in physics is a black hole.
 [[start:2086610][end:2091840]] Stuff goes into the horizon, stars, whole galaxies, whatever.
 [[start:2092710][end:2096322]] Something happens, and stuff comes out.
@@ -430,6 +451,7 @@ date: "2023-05-18 Version 1.0"
 [[start:2234084][end:2240830]] He told us something about the _structure_ of the interface, the horizon of a black hole.
 
 ![Recall that S = lnΩ](../../Video/Slide17.PNG)
+
 [[start:2241510][end:2243700]] And this is what he told us.
 
 37:26 [[start:2246790][end:2256950]] You can compute entropy in bits just by using logs base two instead of logs base _e_, natural logs.
@@ -445,8 +467,11 @@ date: "2023-05-18 Version 1.0"
 [[start:2317062][end:2321498]] But what gets really interesting is what happens when you _generalize_ it.
 [[start:2321584][end:2327260]] And of course, physicists are prone to generalization, and that's what happened _next._
 
-#### The Holographic Principle
 ![We just have to generalize](../../Video/Slide18.PNG)
+
+#### The Holographic Principle
+
+
 38:50 [[start:2330110][end:2337150]] Gerard 't Hooft, almost immediately thereafter, on the basis of Beckenstein's work, formulated the **Holographic Principle**.
 
 38:57 [[start:2337730][end:2346050]] And what the Holographic Principle says is "We can think of _any_ system as _approximately_ a black hole.
@@ -478,6 +503,7 @@ date: "2023-05-18 Version 1.0"
 [[start:2513138][end:2515830]] It's just counting the number of bits.
 
 ![Quantum information theory](../../Video/Slide19.PNG)
+
 41:57 [[start:2517230][end:2517980]] Okay!
 [[start:2518350][end:2539630]] So with the Holographic Principle, we now have a complete new science about systems that are exchanging finite discrete information across a boundary by encoding that information _on_ the boundary and then reading the information _off_ the boundary.
 
@@ -504,11 +530,13 @@ date: "2023-05-18 Version 1.0"
 [[start:2682530][end:2687310]] And of course that's familiar from an Active Inference perspective.
 
 ![Four NOs...](../../Video/Slide20.PNG)
+
 44:48 [[start:2687890][end:2695710]] So we can now back up a little bit to see what they were doing in _classical_ physics during this period.
 44:55 [[start:2695790][end:2697682]] {Well, let me go on a little bit.
 [[start:2697736][end:2698340]] Sorry.}
 
 #### Wheeler on The New Physics
+
 45:02 [[start:2702070][end:2714226]] This is just a slide quoting Wheeler, who of course is the most radical {in terms of} and _pithiest,_ in terms of formulating these ideas.
 [[start:2714418][end:2718250]] But here's his characterization of this new physics.
 
@@ -534,8 +562,10 @@ date: "2023-05-18 Version 1.0"
 46:28 [[start:2788850][end:2796142]] So the agents here are all "observer-participants" in Wheeler's language.
 [[start:2796206][end:2804450]] But what that just means is _agents_ that want to communicate. And it's their communication that gives rise to physics.
 
-#### Markov Blankets
 ![Meanwhile, back in classical physics...](../../Video/Slide21.PNG)
+
+#### Markov Blankets
+
 46:45 [[start:2805850][end:2818810]] So _now_ we'll go back to classical physics. And what was happening, or one thing that was happening in classical physics at that time, was a lot of thinking about **stochastic causal networks**.
 [[start:2819630][end:2835130]] And [Judea] Pearl realized that if you have any stochastic causal network that's **unidirectional**, then around any **node**, you can draw what he called a **Markov blanket**.
 
@@ -549,7 +579,9 @@ date: "2023-05-18 Version 1.0"
 48:12 [[start:2892390][end:2898210]] All these ideas were reinvented more or less independently within classical physics.
 
 ### Active Inference
+
 ![An MB defines a persistent thing](../../Video/Slide22.PNG)
+
 48:19 [[start:2898950][end:2909730]] And it was from this classical physics background that Karl Friston came up with the idea that a Markov blanket defines a persistent 
 [[start:2909720][end:2913550]][**** inaudible ****] [**thing**, a system that persists through time], 
 [[start:2913560][end:2921960]] at least from an Active Inference Institute point of view everyone is familiar with, because it's the foundation of the idea of Active Inference.
@@ -568,7 +600,9 @@ date: "2023-05-18 Version 1.0"
 [[start:3043540][end:3079560]] All of which tell us that the world we see is a projection that's being written on our boundaries by a process that we have no access to - except the procedure of Active Inference, or the procedure of science - which is to formulate predictive models and test them by doing things in the world and seeing how the world responds.
 
 ### Conclusion
+
 ![1st discussion session: Sat. 3 June 2023](../../Video/Slide23.PNG)
+
 51:21 [[start:3081360][end:3085260]] So that's it for this session.
 
 [[start:3087200][end:3097250]] The first discussion session, which Ander is going to lead, will be the 3rd of June at this same time, i.e. 5 o'clock European time.
