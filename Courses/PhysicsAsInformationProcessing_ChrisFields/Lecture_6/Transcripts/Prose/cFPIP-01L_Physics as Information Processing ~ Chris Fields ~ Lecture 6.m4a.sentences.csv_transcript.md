@@ -10,7 +10,7 @@ date: "2023-10-12 Version 1.0"
 
 ![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/Slide1.png)
 
-## Introduction
+### Introduction
 
 00:08 _Daniel:_
 [[start:8040][end:9748]] Hello and welcome, everyone.

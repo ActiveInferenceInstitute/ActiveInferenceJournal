@@ -10,7 +10,7 @@ date: "2023-10-12 Version 1.0"
 
 ![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/Slide1.png)
 
-## Introduction
+### Introduction
 
 _Daniel:_
  Hello and welcome, everyone.
@@ -597,79 +597,79 @@ _Chris:_
 
  But if we think of what we measure as not necessarily reflecting a static structure, I think we'll start to conceptualize it differently and build models of it differently.
 
-1: I mean, clearly, when we look at things like protein structure, we're looking at snapshots of something that's very dynamic.
+ I mean, clearly, when we look at things like protein structure, we're looking at snapshots of something that's very dynamic.
  And when we look in a chemistry textbook and we see pictures of this confirmation that changes to that confirmation.
  We think of those as static, stable structures, that that's kind of a switch, but it's not actually a switch the way a light switch is.
  It's a much more dynamic process.
  And the kinds of molecular dynamic simulations that allow you to study that process are incredibly complicated and time expensive and uncertain due to resolution problems and other things.
 
-1: But I think thinking of these as kind of fluid, reversible processes is going to change the way we think about them.
+ But I think thinking of these as kind of fluid, reversible processes is going to change the way we think about them.
 
-1:_Daniel:_
+_Daniel:_
  That's a great point.
  And it reminds me of the more physics based way of thinking about the paths that could happen between observations or the statistics based way of samples of a dynamical process.
  And in biology, we know that even if we take a snapshot, okay, this organism is 1, it's 2 cm tomorrow, something changed.
  So we know there was a developmental process, then we know there's an ecological process, and then there's an evolutionary context.
 
-1: Eco Evo Devo.
+ Eco Evo Devo.
  And then from that, more biological understanding of contextual developing organisms.
  All of these different biological phenomena actually help us expand our space of measurement and analysis for material that on one hand, some people may have called inanimate, but then they have their own dynamics, different timescales.
 
-1: And so bringing some of those, like the challenges of measuring and observing, intervening in historical and biological things, gives us a bigger understanding, even on measuring and summarizing, analyzing ensembles or scales that don't immediately appear to have that kind of historiosity, like pieces of silicon or carbon.
+ And so bringing some of those, like the challenges of measuring and observing, intervening in historical and biological things, gives us a bigger understanding, even on measuring and summarizing, analyzing ensembles or scales that don't immediately appear to have that kind of historiosity, like pieces of silicon or carbon.
 
-1:_Chris:_
+_Chris:_
  Yeah, that's well put.
  And I think we have the same problem as we go up in scale.
  Also, we tend not to think of things like societies as living systems, but in one sense, they clearly are.
  And to the extent that we can think of these structures that are much larger than we are individually as living systems, cognitive systems, et cetera.
  I think we'll understand their dynamics better.
 
-1:_Daniel:_
+_Daniel:_
  Okay, final question.
  Upcycle Club wrote, how can a quantum system detect and respond to quantum context shifts (switches), which are changes in the measurement basis or the entanglement structure of the system.
 
-1:_Chris:_
+_Chris:_
  Mmm.
 
-1: Well, the answer here is simple and not very informative.
+ Well, the answer here is simple and not very informative.
  It's by making measurements, which is all that quantum systems can actually do, and making measurements that follow probing actions that try to push the boundaries of the model of a context.
 
-1: When having this discussion, I always like to go back to the frame problem in artificial intelligence, which is the problem formulated in the late 60s,
+ When having this discussion, I always like to go back to the frame problem in artificial intelligence, which is the problem formulated in the late 60s,
  of predicting what won't change is the result of an action.
  So it's sort of the inverse of the problem of predicting the side effects.
 
-1: And if you could predict all of the side effects, you can predict what doesn't change.
+ And if you could predict all of the side effects, you can predict what doesn't change.
  So it's equivalent to the question of predicting all the side effects.
 
-1: And context change is a side effect, and it's often an unobserved and maybe unobservable side effect.
+ And context change is a side effect, and it's often an unobserved and maybe unobservable side effect.
  But if you have a model that says, I'm working in this context, then you can intentionally probe the boundaries of that model and see if you can actually alter the context you're in as a way of discovering what context you're in.
  And humans do that in social settings all the time.
 
-1: But I think this is something that we need to think about happening at many different scales.
+ But I think this is something that we need to think about happening at many different scales.
  I suspect that cells are doing this all the time.
 
-1: We just don't know how.
+ We just don't know how.
 
-1:_Daniel:_
+_Daniel:_
  There's so much to say there.
  It just makes me think of the paradox or the tension between expecting the expected, expecting the unexpected, and life needing to expect both of that.
 
-1:_Chris:_
+_Chris:_
  Right.
 
-1:_Daniel:_
+_Daniel:_
  So thank you, Chris.
  It's been an amazing lecture series.
 
-1: Many people in the live chat are very appreciative, and we'll look forward to their submitted questions and their participation in the final discussion coming soon.
+ Many people in the live chat are very appreciative, and we'll look forward to their submitted questions and their participation in the final discussion coming soon.
  So thank you, Chris.
 
-1:_Chris:_
+_Chris:_
  Till next time, okay?
  And thank you all.
 
-1:_Daniel:_
+_Daniel:_
  Bye.
 
-1:_Chris:_
-1: Ciao.
+_Chris:_
+ Ciao.
