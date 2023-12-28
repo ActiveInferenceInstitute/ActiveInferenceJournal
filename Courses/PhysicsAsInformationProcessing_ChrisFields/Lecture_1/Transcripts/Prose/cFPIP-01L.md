@@ -11,7 +11,8 @@ date: "2023-05-18 Version 1.0"
 
 ![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/cFPIP-01L_00001.png)
 
-### INTRODUCTION
+### Introduction
+
 _Daniel:_
  Hello and welcome, everyone, to the Active Inference Institute.
  This is Session 1 of the course "Physics as Information Processing" with Chris Fields.
@@ -43,7 +44,8 @@ _Chris:_
  And all of this is explained on the course website.
  So let's start!
 
-### HISTORICAL PERSPECTIVE: PHYSICS
+### Historial Perspective: Physics
+
  This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
 
 ![Wittgenstein, Landaur, Wheeler](../../Video/Slide2.PNG)
@@ -64,6 +66,7 @@ _Chris:_
  the most relevant history of this idea, goes back to the mid-19th Century.
 
 #### Clausius
+
  And the first specific thing I'll talk about is **[Rudolf] Clausius**'s definition of entropy.
 
  But with the beginning of the understanding of thermodynamics and the role of information in thermodynamics, you get this very interesting multidisciplinary progression of ideas that incorporates the beginning of quantum theory.
@@ -73,6 +76,7 @@ _Chris:_
  So, interestingly, computer science was born effectively in the mid-30s with the work of **[Alonzo] Church** and **[Alan] Turing**, which very rapidly converged with the work in physics.
 
 #### Physics, Computation, Information
+
  So today we'll be talking about both computer science and physics.
  And then in the second half of the 20th Century, this just exploded into a huge area.
 
@@ -94,8 +98,10 @@ _Chris:_
 
  So this way of thinking about physics is a very deeply quantum-theoretic way of thinking about physics.
 
-### COURSE OUTLINE
+### Course Outline
+
 ![Where we are going in this course](../../Video/Slide5.PNG)
+
  And where we're going in this course today is really "how did this all happen?"
  It's the origin story.
  And then in the next session, I want to discuss quantum information theory explicitly. And in particular, how quantum theory makes this conclusion that physics is about communication very simple and obvious, much more obvious than it is in classical physics where it takes _work_ to formulate this idea.
@@ -120,12 +126,14 @@ _Chris:_
  So if there's anything that... just a term that is a trip-up, try Wikipedia.
  It's probably a very good source for what these terms mean.
 
-### BACK TO THE PHYSICS
+### Back to the Physics
+
 ![Our story begins...](../../Video/Slide6.PNG)
 
  So let's start! Our story, as I said, begins in the 19th Century.
 
 #### Steam Engines
+
  And in the mid-19th Century, lots of physicists were devoting their efforts to figuring out how to make better steam engines.
  And one question that arises when you're trying to design a steam engine is "what happens _physically_ when you add heat to a system at constant temperature?"
  So if you're building a steam engine, you've got a boiler, because you need to make steam.
@@ -150,8 +158,9 @@ _Chris:_
  What is this entropy?
  What does this concept _mean?_"
 
-#### Boltzmann
 ![But what _is_ entropy?](../../Video/Slide7.PNG)
+
+#### Boltzmann
 
  And about 15 years after Clausius proposed it, **[Ludwig] Boltzmann** had the key insight, which is that "entropy is a measurement of _our uncertainty_ about the **state** the system is in."
  And in particular, he again, of course, went to formalism, and said "the entropy, S, is equal to some constant times the number of states that the system can be in that look the same to us."
@@ -178,8 +187,9 @@ _Chris:_
  And that's what you have to do to get information.
  So here's Boltzmann, basically inventing quantum theory.
 
-#### Planck
 ![fast forward to 1900](../../Video/Slide8.PNG)
+
+#### Planck
 
  So we're going to fast forward by another 15 years, to 1900.
  And in 1900, **[Max] Planck** solved this problem called the "black-body radiation problem," which was basically "how much heat does your hot boiler give off into the air?"
@@ -233,6 +243,7 @@ _Chris:_
  There was this relation until the 1950s.
 
 #### Wick
+
  And when it was figured out, it was figured out by a guy named **Gian Carlo Wick**.
  And he introduced this notion of the **Wick rotation** by realizing that if you have an equation in classical physics, and in it there's the term "1 over kT,"
 
@@ -287,9 +298,11 @@ _Chris:_
  So this is a harbinger of things to come.
  But before we continue in physics, we need to backtrack in time a little bit, and look at what the mathematicians were doing.
 
-### MATHEMATICS
-#### Gödel
+### Mathematics
+
 ![Meanwhile, across the hall...](../../Video/Slide10.PNG)
+
+#### Gödel
 
  So across the hall in the math department, one year after the Solvay conference, in 1929, Kurt Gödel proved his famous first incompleteness theorem.
  And the theorem states that "no formal system that contains arithmetic can be both consistent and complete."
@@ -313,8 +326,9 @@ _Chris:_
 
  So an immediate consequence of Gödel's theorem was an intense investigation of what computation actually _is,_ what it _meant_ to talk about finite discrete operations.
 
-#### Computation
 ![What is computation?](../../Video/Slide11.PNG)
+
+#### Computation
 
  And two leaders of this were, of course, Church and Turing.
  And here's a picture of a Turing machine, which is just a little device with a couple of tapes, and a tape reader, and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
@@ -340,6 +354,7 @@ _Chris:_
  So this was another body blow to the goal of understanding everything with finite discrete processes.
 
 ![The stage is now set...](../../Video/Slide12.PNG)
+
  But it also set the stage for something *new.*
  It set the stage for thinking about an agent who interacts with a computational process by giving it an input, and then looking at its output some time later.
 
@@ -350,6 +365,7 @@ _Chris:_
  receiving some finite number of outputs from the system that she's acting on.
 
 ![A flurry of negative answers](../../Video/Slide13.PNG)
+
  And the first 20 years of this produced a _large_ number of answers, all of them negative.
  So to go back to Turing, he proved that Alice can't tell what's _implementing_ the function that she sees being implemented.
  She can't tell whether a given input will lead to an output -
@@ -368,6 +384,7 @@ _Chris:_
  So Alice can do science even though she can't answer any of these fundamental questions.
 
 ![A major technological consequence](../../Video/Slide14.PNG)
+
  Now, this, of course, has a huge technological consequence. Since this theory of computation tells us that processes are effectively virtual,
  we don't know what they are and we can't _determine_ what they are except in theory,
  by _making_ a theory. Technologically, it means we're free to _use_ virtualization everywhere because we have to deal with it anyway.
@@ -379,9 +396,12 @@ _Chris:_
 
  So in a sense, Gödel birthed not only computer science, but practical computing by showing us that virtualization is just the way the world works.
 
-### PHYSICS AGAIN
-#### Feynman
+### Physics Again
+
 ![Feynman expressed these same ideas](../../Video/Slide15.PNG)
+
+#### Feynman
+
  So now let's go back to physics, where these ideas were replicated, basically reintroduced, reinvented by Feynman in developing his path integral formulation of quantum theory.
  And basically what Feyman realized was that in any physical process, the observer, Alice, prepares some state that she's interested in.
 
@@ -406,6 +426,7 @@ _Chris:_
  So let's think about a real example that's {a bit actually it's...} the same as scattering.
 
 ![The ultimate scattering experiment is a black hole](../../Video/Slide16.PNG)
+
  The ultimate scattering experiment in physics is a black hole.
  Stuff goes into the horizon, stars, whole galaxies, whatever.
  Something happens, and stuff comes out.
@@ -430,6 +451,7 @@ _Chris:_
  He told us something about the _structure_ of the interface, the horizon of a black hole.
 
 ![Recall that S = lnΩ](../../Video/Slide17.PNG)
+
  And this is what he told us.
 
  You can compute entropy in bits just by using logs base two instead of logs base _e_, natural logs.
@@ -445,8 +467,11 @@ _Chris:_
  But what gets really interesting is what happens when you _generalize_ it.
  And of course, physicists are prone to generalization, and that's what happened _next._
 
-#### The Holographic Principle
 ![We just have to generalize](../../Video/Slide18.PNG)
+
+#### The Holographic Principle
+
+
  Gerard 't Hooft, almost immediately thereafter, on the basis of Beckenstein's work, formulated the **Holographic Principle**.
 
  And what the Holographic Principle says is "We can think of _any_ system as _approximately_ a black hole.
@@ -478,6 +503,7 @@ _Chris:_
  It's just counting the number of bits.
 
 ![Quantum information theory](../../Video/Slide19.PNG)
+
  Okay!
  So with the Holographic Principle, we now have a complete new science about systems that are exchanging finite discrete information across a boundary by encoding that information _on_ the boundary and then reading the information _off_ the boundary.
 
@@ -504,11 +530,13 @@ _Chris:_
  And of course that's familiar from an Active Inference perspective.
 
 ![Four NOs...](../../Video/Slide20.PNG)
+
  So we can now back up a little bit to see what they were doing in _classical_ physics during this period.
  {Well, let me go on a little bit.
  Sorry.}
 
 #### Wheeler on The New Physics
+
  This is just a slide quoting Wheeler, who of course is the most radical {in terms of} and _pithiest,_ in terms of formulating these ideas.
  But here's his characterization of this new physics.
 
@@ -534,8 +562,10 @@ _Chris:_
  So the agents here are all "observer-participants" in Wheeler's language.
  But what that just means is _agents_ that want to communicate. And it's their communication that gives rise to physics.
 
-#### Markov Blankets
 ![Meanwhile, back in classical physics...](../../Video/Slide21.PNG)
+
+#### Markov Blankets
+
  So _now_ we'll go back to classical physics. And what was happening, or one thing that was happening in classical physics at that time, was a lot of thinking about **stochastic causal networks**.
  And [Judea] Pearl realized that if you have any stochastic causal network that's **unidirectional**, then around any **node**, you can draw what he called a **Markov blanket**.
 
@@ -549,7 +579,9 @@ _Chris:_
  All these ideas were reinvented more or less independently within classical physics.
 
 ### Active Inference
+
 ![An MB defines a persistent thing](../../Video/Slide22.PNG)
+
  And it was from this classical physics background that Karl Friston came up with the idea that a Markov blanket defines a persistent 
 [**** inaudible ****] [**thing**, a system that persists through time], 
  at least from an Active Inference Institute point of view everyone is familiar with, because it's the foundation of the idea of Active Inference.
@@ -568,7 +600,9 @@ _Chris:_
  All of which tell us that the world we see is a projection that's being written on our boundaries by a process that we have no access to - except the procedure of Active Inference, or the procedure of science - which is to formulate predictive models and test them by doing things in the world and seeing how the world responds.
 
 ### Conclusion
+
 ![1st discussion session: Sat. 3 June 2023](../../Video/Slide23.PNG)
+
  So that's it for this session.
 
  The first discussion session, which Ander is going to lead, will be the 3rd of June at this same time, i.e. 5 o'clock European time.
