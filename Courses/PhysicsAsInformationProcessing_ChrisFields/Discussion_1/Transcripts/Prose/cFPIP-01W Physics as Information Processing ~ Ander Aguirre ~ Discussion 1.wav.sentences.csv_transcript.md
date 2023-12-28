@@ -1,3 +1,18 @@
+---
+title:  'Physics as Information Processing - Discussion 1, "Historical Perspective"'
+author:
+- 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
+- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+- 'Ross Berger'
+- 'Avel Guénin-Carlut (Active Inference Institute, Verses Lab, University of Sussex, Kairos Research) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-8239-7264)'
+- 'V. Bleu Knight (Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-9894-1989)'
+- 'Alexey Tolchinsky, Psy.D. (The George Washington University) [![Orcid](images/orcid.png)](https://orcid.org/0009-0009-4721-515X)' 
+- 'Francesco Balzan'
+- 'Corby Prior'
+date: "2023-06-03 Version 1.0"
+...
+
+## Discussion 1, "Historical Perspective"
 
 00:06 _Daniel:_
 [[start:6000][end:7676]] Hello and welcome, everyone.

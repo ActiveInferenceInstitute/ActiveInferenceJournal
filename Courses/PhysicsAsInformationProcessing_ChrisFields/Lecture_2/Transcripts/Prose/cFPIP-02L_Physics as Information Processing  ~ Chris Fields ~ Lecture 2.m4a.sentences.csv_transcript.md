@@ -1,3 +1,13 @@
+---
+title:  'Physics as Information Processing - Lecture 2, "Why Quantum Physics?"'
+author:
+- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)'
+- 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
+- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+date: "2023-06-15 Version 1.0"
+...
+
+## Lecture 2, "Why Quantum Physics?"
 
 00:07 _Daniel:_
 [[start:7800][end:8870]] Hello, everyone.

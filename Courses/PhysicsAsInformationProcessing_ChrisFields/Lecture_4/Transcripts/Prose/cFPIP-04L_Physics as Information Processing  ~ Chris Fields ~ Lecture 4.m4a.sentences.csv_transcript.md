@@ -1,3 +1,13 @@
+---
+title:  'Physics as Information Processing - Lecture 4, "Communicating Observers"'
+author:
+- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)'
+- 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
+- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+date: "2023-08-10 Version 1.0"
+...
+
+## Lecture 4, "Communicating Observers"
 
 00:07 _Daniel:_
 [[start:7390][end:9306]] Hello and welcome, everyone.

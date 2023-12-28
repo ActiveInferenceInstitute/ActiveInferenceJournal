@@ -1,3 +1,16 @@
+---
+title:  'Physics as Information Processing - Discussion 2, "Why Quantum Physics?"'
+author:
+- 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
+- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+- 'Alexey Tolchinsky, Psy.D. (The George Washington University) [![Orcid](images/orcid.png)](https://orcid.org/0009-0009-4721-515X)'
+- 'Dean Rickles (Professional Initiatives Programming, Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0000-0003-2213-0773)'
+- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)'
+
+date: "2023-07-01 Version 1.0"
+...
+
+## Discussion 2, "Why Quantum Physics?"
 
 00:06 _Daniel:_
 [[start:6480][end:7230]] Hello.

@@ -1,3 +1,13 @@
+---
+title:  'Physics as Information Processing - Discussion 3, "Quantum Reference Frames"'
+author:
+- 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
+- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+- 'Dean Rickles (Professional Initiatives Programming, Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0000-0003-2213-0773)'
+date: "2023-07-29 Version 1.0"
+...
+
+## Discussion 3, "Quantum Reference Frames"
 
 00:05 _Daniel:_
 [[start:5970][end:7294]] Hello and welcome.

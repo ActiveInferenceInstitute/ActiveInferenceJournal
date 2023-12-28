@@ -1,3 +1,13 @@
+---
+title:  'Physics as Information Processing - Lecture 3, "Quantum Reference Frames"'
+author:
+- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)'
+- 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
+- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+date: "2023-07-13 Version 1.0"
+...
+
+## Lecture 3, "Quantum Reference Frames"
 
 00:06 _Daniel:_
 [[start:6930][end:8462]] Hello and welcome everyone.
