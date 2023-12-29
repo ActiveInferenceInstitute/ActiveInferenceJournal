@@ -7,7 +7,7 @@ author:
 date: "2023-06-15 Version 1.0"
 ...
 
-## Lecture 2, "Why Quantum Physics?"
+# Lecture 2, "Why Quantum Physics?"
 
 00:07 _Daniel:_
 [[start:7800][end:8870]] Hello, everyone.

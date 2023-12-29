@@ -12,7 +12,7 @@ author:
   - name: David Draguta[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0009-0005-3179-9286)
     institute: [independent]
   - name: Avel Guénin-Carlut[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0001-8239-7264)
-    institute: [aii, verses, sussex, kairos]
+    institute: [sussex, kairos, aii]
   - name: Ana Magdelena Hurtado[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0003-4064-1876)
     institute: [asu]
   - name: V. Bleu Knight[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0002-9894-1989)
@@ -33,7 +33,6 @@ institute:
   - aii: Active Inference Institute
   - ucdavis: University of California, Davis
   - independent: Independent
-  - verses: Verses Lab
   - sussex: University of Sussex
   - kairos: Kairos Research
   - asu: Arizona State University
@@ -42,46 +41,41 @@ institute:
   - professional: Professional Initiatives Programming
   - anglia: Anglia Ruskin University
   - gwu: The George Washington University
-
-author_new:
-- 'Chris Fields[![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)^[Allen Discovery Center at Tufts University]'
-- 'Ander Aguirre[![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)^[Ohio State University]'
-- 'Daniel Friedman[![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)^[Active Inference Institute; University of California, Davis]'
-- 'Francesco Balzan'
-- 'Ross Berger'
-- 'David Draguta[![Orcid](images/orcid.png)](https://orcid.org/0009-0005-3179-9286)^[Independent]'
-- 'Avel Guénin-Carlut[![Orcid](images/orcid.png)](https://orcid.org/0000-0001-8239-7264)^[Active Inference Institute, Verses Lab, University of Sussex, Kairos Research]'
-- 'Ana Magdelena Hurtado[![Orcid](images/orcid.png)](https://orcid.org/0000-0003-4064-1876)^[Arizona State University]'
-- 'V. Bleu Knight[![Orcid](images/orcid.png)](https://orcid.org/0000-0002-9894-1989)^[Active Inference Institute]'
-- 'Kate Koles'
-- 'Haris Neophytou[![Orcid](images/orcid.png)](https://orcid.org/0009-0003-0921-737X)^[Interfusion Services / UpCycleClub]'
-- 'Corby Prior'
-- 'Dean Rickles[![Orcid](images/orcid.png)](https://orcid.org/0000-0003-2213-0773)^[Professional Initiatives Programming, Active Inference Institute]'
-- 'Ian Tennant[![Orcid](images/orcid.png)](https://orcid.org/0009-0003-2185-8620)^[Anglia Ruskin University]'
-- 'Alexey Tolchinsky, Psy.D.[![Orcid](images/orcid.png)](https://orcid.org/0009-0009-4721-515X)^[The George Washington University]' 
-author_old:
-- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)'
-- 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
-- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
-- 'Francesco Balzan'
-- 'Ross Berger'
-- 'David Draguta (Independent) [![Orcid](images/orcid.png)](https://orcid.org/0009-0005-3179-9286)'
-- 'Avel Guénin-Carlut (Active Inference Institute, Verses Lab, University of Sussex, Kairos Research) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-8239-7264)'
-- 'Ana Magdelena Hurtado (Arizona State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0003-4064-1876)'
-- 'V. Bleu Knight (Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-9894-1989)'
-- 'Kate Koles'
-- 'Haris Neophytou (Interfusion Services / UpCycleClub) [![Orcid](images/orcid.png)](https://orcid.org/0009-0003-0921-737X)'
-- 'Corby Prior'
-- 'Dean Rickles (Professional Initiatives Programming, Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0000-0003-2213-0773)'
-- 'Ian Tennant (Anglia Ruskin University) [![Orcid](images/orcid.png)](https://orcid.org/0009-0003-2185-8620)'
-- 'Alexey Tolchinsky, Psy.D. (The George Washington University) [![Orcid](images/orcid.png)](https://orcid.org/0009-0009-4721-515X)' 
 date: "2023-05-18 Version 1.0"
+output:
+  pdf_document:
+    pandoc_args: 
+      - --lua-filter=images/scholarly-metadata.lua
+      - --lua-filter=images/author-info-blocks.lua
+    latex_engine: xelatex
+
+geometry:
+  - left=2.5cm
+  - top=2cm
+  - right=2.5cm
+  - bottom=2cm
+pagestyle: headings
+
+# xeLaTeX
+mainfont: Arial
+
+header-includes:
+    - \usepackage{xpatch}
+    - \xapptocmd{\tableofcontents}{\vspace{2em}}{}{}
 ...
-## Lecture 1, "Historical Perspective"
+\newpage
+```{=latex}
+\setcounter{tocdepth}{1}
+\tableofcontents
+```
+
+\newpage
+
+# Lecture 1, "Historical Perspective"
 
 ![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/cFPIP-01L_00001.png)
 
-### Introduction
+## Introduction
 
 _Daniel:_
  Hello and welcome, everyone, to the Active Inference Institute.
@@ -114,7 +108,7 @@ _Chris:_
  And all of this is explained on the course website.
  So let's start!
 
-### Historial Perspective: Physics
+## Historial Perspective: Physics
 
  This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
 
@@ -135,7 +129,7 @@ _Chris:_
  But I'm only going to really talk about a piece of it and the timeline that I'll actually discuss today,
  the most relevant history of this idea, goes back to the mid-19th Century.
 
-#### Clausius
+### Clausius
 
  And the first specific thing I'll talk about is **[Rudolf] Clausius**'s definition of entropy.
 
@@ -145,7 +139,7 @@ _Chris:_
  But it incorporates a lot of work in computer science and logic and mathematics.
  So, interestingly, computer science was born effectively in the mid-30s with the work of **[Alonzo] Church** and **[Alan] Turing**, which very rapidly converged with the work in physics.
 
-#### Physics, Computation, Information
+### Physics, Computation, Information
 
  So today we'll be talking about both computer science and physics.
  And then in the second half of the 20th Century, this just exploded into a huge area.
@@ -168,7 +162,7 @@ _Chris:_
 
  So this way of thinking about physics is a very deeply quantum-theoretic way of thinking about physics.
 
-### Course Outline
+## Course Outline
 
 ![Where we are going in this course](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide5.PNG)
 
@@ -196,13 +190,13 @@ _Chris:_
  So if there's anything that... just a term that is a trip-up, try Wikipedia.
  It's probably a very good source for what these terms mean.
 
-### Back to the Physics
+## Back to the Physics
 
 ![Our story begins...](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide6.PNG)
 
  So let's start! Our story, as I said, begins in the 19th Century.
 
-#### Steam Engines
+### Steam Engines
 
  And in the mid-19th Century, lots of physicists were devoting their efforts to figuring out how to make better steam engines.
  And one question that arises when you're trying to design a steam engine is "what happens _physically_ when you add heat to a system at constant temperature?"
@@ -230,7 +224,7 @@ _Chris:_
 
 ![But what _is_ entropy?](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide7.PNG)
 
-#### Boltzmann
+### Boltzmann
 
  And about 15 years after Clausius proposed it, **[Ludwig] Boltzmann** had the key insight, which is that "entropy is a measurement of _our uncertainty_ about the **state** the system is in."
  And in particular, he again, of course, went to formalism, and said "the entropy, S, is equal to some constant times the number of states that the system can be in that look the same to us."
@@ -259,7 +253,7 @@ _Chris:_
 
 ![fast forward to 1900](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide8.PNG)
 
-#### Planck
+### Planck
 
  So we're going to fast forward by another 15 years, to 1900.
  And in 1900, **[Max] Planck** solved this problem called the "black-body radiation problem," which was basically "how much heat does your hot boiler give off into the air?"
@@ -312,7 +306,7 @@ _Chris:_
  No one really figured {that} this out.
  There was this relation until the 1950s.
 
-#### Wick
+### Wick
 
  And when it was figured out, it was figured out by a guy named **Gian Carlo Wick**.
  And he introduced this notion of the **Wick rotation** by realizing that if you have an equation in classical physics, and in it there's the term "1 over kT,"
@@ -368,11 +362,11 @@ _Chris:_
  So this is a harbinger of things to come.
  But before we continue in physics, we need to backtrack in time a little bit, and look at what the mathematicians were doing.
 
-### Mathematics
+## Mathematics
 
 ![Meanwhile, across the hall...](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide10.PNG)
 
-#### Gödel
+### Gödel
 
  So across the hall in the math department, one year after the Solvay conference, in 1929, Kurt Gödel proved his famous first incompleteness theorem.
  And the theorem states that "no formal system that contains arithmetic can be both consistent and complete."
@@ -398,7 +392,7 @@ _Chris:_
 
 ![What is computation?](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide11.PNG)
 
-#### Computation
+### Computation
 
  And two leaders of this were, of course, Church and Turing.
  And here's a picture of a Turing machine, which is just a little device with a couple of tapes, and a tape reader, and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
@@ -466,11 +460,11 @@ _Chris:_
 
  So in a sense, Gödel birthed not only computer science, but practical computing by showing us that virtualization is just the way the world works.
 
-### Physics Again
+## Physics Again
 
 ![Feynman expressed these same ideas](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide15.PNG)
 
-#### Feynman
+### Feynman
 
  So now let's go back to physics, where these ideas were replicated, basically reintroduced, reinvented by Feynman in developing his path integral formulation of quantum theory.
  And basically what Feyman realized was that in any physical process, the observer, Alice, prepares some state that she's interested in.
@@ -539,7 +533,7 @@ _Chris:_
 
 ![We just have to generalize](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide18.PNG)
 
-#### The Holographic Principle
+### The Holographic Principle
 
 
  Gerard 't Hooft, almost immediately thereafter, on the basis of Beckenstein's work, formulated the **Holographic Principle**.
@@ -605,7 +599,7 @@ _Chris:_
  {Well, let me go on a little bit.
  Sorry.}
 
-#### Wheeler on The New Physics
+### Wheeler on The New Physics
 
  This is just a slide quoting Wheeler, who of course is the most radical {in terms of} and _pithiest,_ in terms of formulating these ideas.
  But here's his characterization of this new physics.
@@ -634,7 +628,7 @@ _Chris:_
 
 ![Meanwhile, back in classical physics...](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide21.PNG)
 
-#### Markov Blankets
+### Markov Blankets
 
  So _now_ we'll go back to classical physics. And what was happening, or one thing that was happening in classical physics at that time, was a lot of thinking about **stochastic causal networks**.
  And [Judea] Pearl realized that if you have any stochastic causal network that's **unidirectional**, then around any **node**, you can draw what he called a **Markov blanket**.
@@ -648,7 +642,7 @@ _Chris:_
 
  All these ideas were reinvented more or less independently within classical physics.
 
-### Active Inference
+## Active Inference
 
 ![An MB defines a persistent thing](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide22.PNG)
 
@@ -669,7 +663,7 @@ _Chris:_
  So that's the history of how we got from {1930s sorry,} 1850s thermodynamics to the free energy principle, and how the free energy principle connects to these very deep and extremely radical (especially within context) ideas in quantum theory and quantum cosmology and computer science.
  All of which tell us that the world we see is a projection that's being written on our boundaries by a process that we have no access to - except the procedure of Active Inference, or the procedure of science - which is to formulate predictive models and test them by doing things in the world and seeing how the world responds.
 
-### Conclusion
+## Conclusion
 
 ![1st discussion session: Sat. 3 June 2023](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide23.PNG)
 
@@ -716,7 +710,9 @@ _Daniel:_
  So thanks again, fellows.
  See you next time.
 
-## Discussion 1, "Historical Perspective"
+\newpage
+
+# Discussion 1, "Historical Perspective"
 
 _Daniel:_
  Hello and welcome, everyone.
@@ -1546,7 +1542,9 @@ _Daniel:_
 _Ander:_
  Bye.
 
-## Lecture 2, "Why Quantum Physics?"
+\newpage
+
+# Lecture 2, "Why Quantum Physics?"
 
 _Daniel:_
  Hello, everyone.
@@ -2093,7 +2091,9 @@ _Daniel:_
  Thank you.
  Bye.
 
-## Discussion 2, "Why Quantum Physics?"
+\newpage
+
+# Discussion 2, "Why Quantum Physics?"
 
 _Daniel:_
  Hello.
@@ -2970,7 +2970,9 @@ _Daniel:_
 _Ander:_
  Bye.
 
-## Lecture 3, "Quantum Reference Frames"
+\newpage
+
+# Lecture 3, "Quantum Reference Frames"
 
 _Daniel:_
  Hello and welcome everyone.
@@ -3505,7 +3507,9 @@ _Chris:_
 _Ander:_
  Bye.
 
-## Discussion 3, "Quantum Reference Frames"
+\newpage
+
+# Discussion 3, "Quantum Reference Frames"
 
 _Daniel:_
  Hello and welcome.
@@ -4220,7 +4224,9 @@ _Daniel:_
 _Ander:_
  Bye.
 
-## Lecture 4, "Communicating Observers"
+\newpage
+
+# Lecture 4, "Communicating Observers"
 
 _Daniel:_
  Hello and welcome, everyone.
@@ -4894,7 +4900,9 @@ _Chris:_
  All right, thank you.
  Cheers.
 
-## Discussion 4, "Communicating Observers"
+\newpage
+
+# Discussion 4, "Communicating Observers"
 
 _Daniel:_
  All right.
@@ -5472,7 +5480,9 @@ _Daniel:_
  So, see you all.
  Till next time.
 
-## Lecture 5, "Spacetime"
+\newpage
+
+# Lecture 5, "Spacetime"
 
 _Daniel:_
  Hello and welcome, everyone.
@@ -6043,7 +6053,9 @@ _Chris:_
  Cheers.
  We'll see you next time.
 
-## Discussion 5, "Spacetime"
+\newpage
+
+# Discussion 5, "Spacetime"
 
 _Daniel:_
  Hello and welcome, everyone.
@@ -6904,11 +6916,13 @@ _Haris:_
 _Chris:_
  Bye.
 
-## Lecture 6, "Biology"
+\newpage
+
+# Lecture 6, "Biology"
 
 ![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide1.png)
 
-### Introduction
+## Introduction
 
 _Daniel:_
  Hello and welcome, everyone.
@@ -6924,7 +6938,7 @@ _Chris:_
  And welcome, everyone, to this last session that I'll be doing with a focus on biology.
  And just to give a brief review.
 
-### Generic Quantum Systems
+## Generic Quantum Systems
 
 ![Generic quantum systems - topological, not gemoetric approach](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide2.png)
 
@@ -6953,7 +6967,7 @@ _Chris:_
  You can think of it as a qualitative characterization, the semantics of the information, and a quantitative characterization, the amount of information.
  But other than that, we've left the nature of these systems open.
 
-### Free Energy Principle (FEP)
+## Free Energy Principle (FEP)
 
 ![Free Energy Principle (FEP)](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide4.png)
 
@@ -6978,7 +6992,7 @@ _Chris:_
  And we see compartmentalization, of course, ubiquitously in biology.
  But this suggests to us that features of biology that are very familiar actually follow from fairly deep physics, and compartmentalization is one of them.
 
-### Spacetime
+## Spacetime
 
 ![Approaches to emergent spacetime](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide6.png)
 
@@ -7011,7 +7025,7 @@ _Chris:_
 
 ![Where we are going: the course schedule](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide8.png)
 
-### Life as Computation
+## Life as Computation
 
  So today, we're going to put some of these things together in a discussion of biology and end by looking forward to future directions, not just in biology, but in all of **quantum information theory (QIT)**.
  So, let's talk about biological systems, living systems, which, of course, includes us, but also includes all other organisms and communities of organisms and so forth, at multiple scales.
@@ -7107,7 +7121,7 @@ _Chris:_
 
 ![From the view of cell lineage, all life is one ur-organism!](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide13.png)
 
-### Common Ancestry
+## Common Ancestry
 
  We can also look at it in terms of a cell lineage.
  The fact that we're all related at the DNA level tells us that we're all descendants of a common ancestor, which is usually called **LUCA**, the **last universal common ancestor**.
@@ -7195,7 +7209,7 @@ _Chris:_
 
  So this is the FEP in action driving the expansion of life at the expense of the physical environment.
 
-### Scale Transition Mechanism
+## Scale Transition Mechanism
 
 ![The question of the mechanism of biological scane transitions](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide17.png)
 
@@ -7232,7 +7246,7 @@ _Chris:_
  And to try to make sense of it, we can go to the one developed theory that we have in biology, which has been formulated by Dawkins and others as universal Darwinism.
  This is just kind of an abstraction of the modern synthesis between Darwinian evolution and genetics.
 
-### Universal Darwinism
+## Universal Darwinism
 
 ![Universal Darwinism](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide18.png)
 
@@ -7257,7 +7271,7 @@ _Chris:_
 
  So that's what I want to talk about for the next little bit.
 
-### Copying
+## Copying
 
 ![What does copy mean?](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide20.png)
 
@@ -7286,7 +7300,7 @@ _Chris:_
  To duplicate organisms, you have to duplicate cells.
  And this suggests that this copying operation is indeed scale free, that the copying operation at each level enables the copying operation at the next level.
 
-### Diversification
+## Diversification
 
 ![Diversification: Biological and Sociological](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide21.png)
 
@@ -7327,7 +7341,7 @@ _Chris:_
 
  so, for example, transpose, unmediated mechanisms enable horizontal gene transfer in microorganisms.
 
-### FEP: Efficiency due to Intelligence
+## FEP: Efficiency due to Intelligence
 
 ![FEP: Efficiency is due to intelligence](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide22.png)
 
@@ -7344,7 +7358,7 @@ _Chris:_
  We have tissues that are fairly different, but that have the same functions, for example, eyes and different kinds of organisms that allow vision, but have very different structure.
  And, of course, we have functional convergence and social relations.
 
-### Life's Social Nature
+## Life's Social Nature
 
  And if we look at how cells interact, traditional evolutionary theory really focuses on competition.
  But we now know that cells cooperate, that they exchange resources in various ways, even across vast differences in phylogeny, for example, the interchange between plants and fungi, or between bacteria and us.
@@ -7399,7 +7413,7 @@ _Chris:_
  We call it death.
  So the FEP seems to give us a lot of the features of biology, and it gives us these features in a scale free way, and it derives them from this very basic physics.
 
-### Challenge to Evolve QIT 
+## Challenge to Evolve QIT 
 
 ![Evolving Quantum Information Theory](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide24.png)
 
@@ -7572,7 +7586,9 @@ _Daniel:_
 _Chris:_
  Ciao.
 
-## Discussion 6, "Biology"
+\newpage
+
+# Discussion 6, "Biology"
 
 _Daniel:_
  Hello and welcome, everybody.
@@ -8311,7 +8327,9 @@ _Haris:_
 _David:_
  Bye.
 
-## Acknowledgments
+\newpage
+
+# Acknowledgments
 
 We extend gratitude to the following contributors whose expertise enhanced the quality of this transcription:
 
@@ -8322,7 +8340,7 @@ We extend gratitude to the following contributors whose expertise enhanced the q
 - Alexander Vyatkin (Active Inference Institute) [![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0003-1306-4620)
 - Holly Grimm (Active Inference Institute) [![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0009-0001-6181-2569)
 
-## Appendix: Terminology
+# Appendix: Terminology
 
 Accuracy
 

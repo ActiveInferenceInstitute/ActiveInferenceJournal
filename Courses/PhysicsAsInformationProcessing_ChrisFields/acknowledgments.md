@@ -1,4 +1,4 @@
-## Acknowledgments
+# Acknowledgments
 
 We extend gratitude to the following contributors whose expertise enhanced the quality of this transcription:
 

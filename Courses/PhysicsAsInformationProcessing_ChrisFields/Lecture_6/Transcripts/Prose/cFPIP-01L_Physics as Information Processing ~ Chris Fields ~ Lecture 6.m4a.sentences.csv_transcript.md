@@ -6,11 +6,11 @@ author:
 date: "2023-10-12 Version 1.0"
 ...
 
-## Lecture 6, "Biology"
+# Lecture 6, "Biology"
 
 ![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/Slide1.png)
 
-### Introduction
+## Introduction
 
 00:08 _Daniel:_
 [[start:8040][end:9748]] Hello and welcome, everyone.
@@ -26,7 +26,7 @@ date: "2023-10-12 Version 1.0"
 [[start:39256][end:47200]] And welcome, everyone, to this last session that I'll be doing with a focus on biology.
 [[start:48660][end:51936]] And just to give a brief review.
 
-### Generic Quantum Systems
+## Generic Quantum Systems
 
 ![Generic quantum systems - topological, not gemoetric approach](../../Video/Slide2.png)
 
@@ -55,7 +55,7 @@ date: "2023-10-12 Version 1.0"
 [[start:196420][end:206230]] You can think of it as a qualitative characterization, the semantics of the information, and a quantitative characterization, the amount of information.
 [[start:207000][end:211910]] But other than that, we've left the nature of these systems open.
 
-### Free Energy Principle (FEP)
+## Free Energy Principle (FEP)
 
 ![Free Energy Principle (FEP)](../../Video/Slide4.png)
 
@@ -80,7 +80,7 @@ date: "2023-10-12 Version 1.0"
 [[start:342908][end:348080]] And we see compartmentalization, of course, ubiquitously in biology.
 [[start:349940][end:364950]] But this suggests to us that features of biology that are very familiar actually follow from fairly deep physics, and compartmentalization is one of them.
 
-### Spacetime
+## Spacetime
 
 ![Approaches to emergent spacetime](../../Video/Slide6.png)
 
@@ -113,7 +113,7 @@ date: "2023-10-12 Version 1.0"
 
 ![Where we are going: the course schedule](../../Video/Slide8.png)
 
-### Life as Computation
+## Life as Computation
 
 09:16 [[start:556040][end:571880]] So today, we're going to put some of these things together in a discussion of biology and end by looking forward to future directions, not just in biology, but in all of **quantum information theory (QIT)**.
 [[start:573260][end:588700]] So, let's talk about biological systems, living systems, which, of course, includes us, but also includes all other organisms and communities of organisms and so forth, at multiple scales.
@@ -209,7 +209,7 @@ date: "2023-10-12 Version 1.0"
 
 ![From the view of cell lineage, all life is one ur-organism!](../../Video/Slide13.png)
 
-### Common Ancestry
+## Common Ancestry
 
 18:59 [[start:1139784][end:1143440]] We can also look at it in terms of a cell lineage.
 [[start:1144580][end:1157600]] The fact that we're all related at the DNA level tells us that we're all descendants of a common ancestor, which is usually called **LUCA**, the **last universal common ancestor**.
@@ -297,7 +297,7 @@ date: "2023-10-12 Version 1.0"
 
 28:28 [[start:1708520][end:1716340]] So this is the FEP in action driving the expansion of life at the expense of the physical environment.
 
-### Scale Transition Mechanism
+## Scale Transition Mechanism
 
 ![The question of the mechanism of biological scane transitions](../../Video/Slide17.png)
 
@@ -334,7 +334,7 @@ date: "2023-10-12 Version 1.0"
 [[start:1943280][end:1958160]] And to try to make sense of it, we can go to the one developed theory that we have in biology, which has been formulated by Dawkins and others as universal Darwinism.
 [[start:1959380][end:1968480]] This is just kind of an abstraction of the modern synthesis between Darwinian evolution and genetics.
 
-### Universal Darwinism
+## Universal Darwinism
 
 ![Universal Darwinism](../../Video/Slide18.png)
 
@@ -359,7 +359,7 @@ date: "2023-10-12 Version 1.0"
 
 35:02 [[start:2102080][end:2107810]] So that's what I want to talk about for the next little bit.
 
-### Copying
+## Copying
 
 ![What does copy mean?](../../Video/Slide20.png)
 
@@ -388,7 +388,7 @@ date: "2023-10-12 Version 1.0"
 37:46 [[start:2266340][end:2269760]] To duplicate organisms, you have to duplicate cells.
 [[start:2270660][end:2284970]] And this suggests that this copying operation is indeed scale free, that the copying operation at each level enables the copying operation at the next level.
 
-### Diversification
+## Diversification
 
 ![Diversification: Biological and Sociological](../../Video/Slide21.png)
 
@@ -429,7 +429,7 @@ date: "2023-10-12 Version 1.0"
 
 42:38 [[start:2558740][end:2569680]] so, for example, transpose, unmediated mechanisms enable horizontal gene transfer in microorganisms.
 
-### FEP: Efficiency due to Intelligence
+## FEP: Efficiency due to Intelligence
 
 ![FEP: Efficiency is due to intelligence](../../Video/Slide22.png)
 
@@ -446,7 +446,7 @@ date: "2023-10-12 Version 1.0"
 [[start:2676950][end:2689570]] We have tissues that are fairly different, but that have the same functions, for example, eyes and different kinds of organisms that allow vision, but have very different structure.
 [[start:2689730][end:2693160]] And, of course, we have functional convergence and social relations.
 
-### Life's Social Nature
+## Life's Social Nature
 
 44:54 [[start:2694250][end:2702410]] And if we look at how cells interact, traditional evolutionary theory really focuses on competition.
 [[start:2703310][end:2722880]] But we now know that cells cooperate, that they exchange resources in various ways, even across vast differences in phylogeny, for example, the interchange between plants and fungi, or between bacteria and us.
@@ -501,7 +501,7 @@ date: "2023-10-12 Version 1.0"
 [[start:3015970][end:3017390]] We call it death.
 [[start:3018690][end:3033410]] So the FEP seems to give us a lot of the features of biology, and it gives us these features in a scale free way, and it derives them from this very basic physics.
 
-### Challenge to Evolve QIT 
+## Challenge to Evolve QIT 
 
 ![Evolving Quantum Information Theory](../../Video/Slide24.png)
 

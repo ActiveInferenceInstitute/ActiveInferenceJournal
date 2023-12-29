@@ -7,11 +7,11 @@ author:
 date: "2023-05-18 Version 1.0"
 ...
 
-## Lecture 1, "Historical Perspective"
+# Lecture 1, "Historical Perspective"
 
 ![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/cFPIP-01L_00001.png)
 
-### Introduction
+## Introduction
 
 _Daniel:_
  Hello and welcome, everyone, to the Active Inference Institute.
@@ -44,7 +44,7 @@ _Chris:_
  And all of this is explained on the course website.
  So let's start!
 
-### Historial Perspective: Physics
+## Historial Perspective: Physics
 
  This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
 
@@ -65,7 +65,7 @@ _Chris:_
  But I'm only going to really talk about a piece of it and the timeline that I'll actually discuss today,
  the most relevant history of this idea, goes back to the mid-19th Century.
 
-#### Clausius
+### Clausius
 
  And the first specific thing I'll talk about is **[Rudolf] Clausius**'s definition of entropy.
 
@@ -75,7 +75,7 @@ _Chris:_
  But it incorporates a lot of work in computer science and logic and mathematics.
  So, interestingly, computer science was born effectively in the mid-30s with the work of **[Alonzo] Church** and **[Alan] Turing**, which very rapidly converged with the work in physics.
 
-#### Physics, Computation, Information
+### Physics, Computation, Information
 
  So today we'll be talking about both computer science and physics.
  And then in the second half of the 20th Century, this just exploded into a huge area.
@@ -98,7 +98,7 @@ _Chris:_
 
  So this way of thinking about physics is a very deeply quantum-theoretic way of thinking about physics.
 
-### Course Outline
+## Course Outline
 
 ![Where we are going in this course](../../Video/Slide5.PNG)
 
@@ -126,13 +126,13 @@ _Chris:_
  So if there's anything that... just a term that is a trip-up, try Wikipedia.
  It's probably a very good source for what these terms mean.
 
-### Back to the Physics
+## Back to the Physics
 
 ![Our story begins...](../../Video/Slide6.PNG)
 
  So let's start! Our story, as I said, begins in the 19th Century.
 
-#### Steam Engines
+### Steam Engines
 
  And in the mid-19th Century, lots of physicists were devoting their efforts to figuring out how to make better steam engines.
  And one question that arises when you're trying to design a steam engine is "what happens _physically_ when you add heat to a system at constant temperature?"
@@ -160,7 +160,7 @@ _Chris:_
 
 ![But what _is_ entropy?](../../Video/Slide7.PNG)
 
-#### Boltzmann
+### Boltzmann
 
  And about 15 years after Clausius proposed it, **[Ludwig] Boltzmann** had the key insight, which is that "entropy is a measurement of _our uncertainty_ about the **state** the system is in."
  And in particular, he again, of course, went to formalism, and said "the entropy, S, is equal to some constant times the number of states that the system can be in that look the same to us."
@@ -189,7 +189,7 @@ _Chris:_
 
 ![fast forward to 1900](../../Video/Slide8.PNG)
 
-#### Planck
+### Planck
 
  So we're going to fast forward by another 15 years, to 1900.
  And in 1900, **[Max] Planck** solved this problem called the "black-body radiation problem," which was basically "how much heat does your hot boiler give off into the air?"
@@ -242,7 +242,7 @@ _Chris:_
  No one really figured {that} this out.
  There was this relation until the 1950s.
 
-#### Wick
+### Wick
 
  And when it was figured out, it was figured out by a guy named **Gian Carlo Wick**.
  And he introduced this notion of the **Wick rotation** by realizing that if you have an equation in classical physics, and in it there's the term "1 over kT,"
@@ -298,11 +298,11 @@ _Chris:_
  So this is a harbinger of things to come.
  But before we continue in physics, we need to backtrack in time a little bit, and look at what the mathematicians were doing.
 
-### Mathematics
+## Mathematics
 
 ![Meanwhile, across the hall...](../../Video/Slide10.PNG)
 
-#### Gödel
+### Gödel
 
  So across the hall in the math department, one year after the Solvay conference, in 1929, Kurt Gödel proved his famous first incompleteness theorem.
  And the theorem states that "no formal system that contains arithmetic can be both consistent and complete."
@@ -328,7 +328,7 @@ _Chris:_
 
 ![What is computation?](../../Video/Slide11.PNG)
 
-#### Computation
+### Computation
 
  And two leaders of this were, of course, Church and Turing.
  And here's a picture of a Turing machine, which is just a little device with a couple of tapes, and a tape reader, and a simple logic unit that either writes a one or a zero if it sees a one or a zero.
@@ -396,11 +396,11 @@ _Chris:_
 
  So in a sense, Gödel birthed not only computer science, but practical computing by showing us that virtualization is just the way the world works.
 
-### Physics Again
+## Physics Again
 
 ![Feynman expressed these same ideas](../../Video/Slide15.PNG)
 
-#### Feynman
+### Feynman
 
  So now let's go back to physics, where these ideas were replicated, basically reintroduced, reinvented by Feynman in developing his path integral formulation of quantum theory.
  And basically what Feyman realized was that in any physical process, the observer, Alice, prepares some state that she's interested in.
@@ -469,7 +469,7 @@ _Chris:_
 
 ![We just have to generalize](../../Video/Slide18.PNG)
 
-#### The Holographic Principle
+### The Holographic Principle
 
 
  Gerard 't Hooft, almost immediately thereafter, on the basis of Beckenstein's work, formulated the **Holographic Principle**.
@@ -535,7 +535,7 @@ _Chris:_
  {Well, let me go on a little bit.
  Sorry.}
 
-#### Wheeler on The New Physics
+### Wheeler on The New Physics
 
  This is just a slide quoting Wheeler, who of course is the most radical {in terms of} and _pithiest,_ in terms of formulating these ideas.
  But here's his characterization of this new physics.
@@ -564,7 +564,7 @@ _Chris:_
 
 ![Meanwhile, back in classical physics...](../../Video/Slide21.PNG)
 
-#### Markov Blankets
+### Markov Blankets
 
  So _now_ we'll go back to classical physics. And what was happening, or one thing that was happening in classical physics at that time, was a lot of thinking about **stochastic causal networks**.
  And [Judea] Pearl realized that if you have any stochastic causal network that's **unidirectional**, then around any **node**, you can draw what he called a **Markov blanket**.
@@ -578,7 +578,7 @@ _Chris:_
 
  All these ideas were reinvented more or less independently within classical physics.
 
-### Active Inference
+## Active Inference
 
 ![An MB defines a persistent thing](../../Video/Slide22.PNG)
 
@@ -599,7 +599,7 @@ _Chris:_
  So that's the history of how we got from {1930s sorry,} 1850s thermodynamics to the free energy principle, and how the free energy principle connects to these very deep and extremely radical (especially within context) ideas in quantum theory and quantum cosmology and computer science.
  All of which tell us that the world we see is a projection that's being written on our boundaries by a process that we have no access to - except the procedure of Active Inference, or the procedure of science - which is to formulate predictive models and test them by doing things in the world and seeing how the world responds.
 
-### Conclusion
+## Conclusion
 
 ![1st discussion session: Sat. 3 June 2023](../../Video/Slide23.PNG)
 

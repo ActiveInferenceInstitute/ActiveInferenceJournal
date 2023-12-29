@@ -9,7 +9,7 @@ author:
 date: "2023-08-26 Version 1.0"
 ...
 
-## Discussion 4, "Communicating Observers"
+# Discussion 4, "Communicating Observers"
 
 00:08 _Daniel:_
 [[start:8730][end:9390]] All right.

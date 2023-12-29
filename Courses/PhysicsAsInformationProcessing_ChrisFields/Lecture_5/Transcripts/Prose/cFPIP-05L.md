@@ -6,7 +6,7 @@ author:
 date: "2023-09-14 Version 1.0"
 ...
 
-## Lecture 5, "Spacetime"
+# Lecture 5, "Spacetime"
 
 _Daniel:_
  Hello and welcome, everyone.

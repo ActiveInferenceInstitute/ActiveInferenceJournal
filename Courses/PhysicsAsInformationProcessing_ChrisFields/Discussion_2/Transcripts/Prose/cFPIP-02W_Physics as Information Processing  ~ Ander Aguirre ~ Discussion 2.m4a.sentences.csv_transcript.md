@@ -10,7 +10,7 @@ author:
 date: "2023-07-01 Version 1.0"
 ...
 
-## Discussion 2, "Why Quantum Physics?"
+# Discussion 2, "Why Quantum Physics?"
 
 00:06 _Daniel:_
 [[start:6480][end:7230]] Hello.

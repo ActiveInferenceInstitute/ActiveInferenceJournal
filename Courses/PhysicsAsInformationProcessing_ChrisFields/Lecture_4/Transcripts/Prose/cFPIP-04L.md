@@ -7,7 +7,7 @@ author:
 date: "2023-08-10 Version 1.0"
 ...
 
-## Lecture 4, "Communicating Observers"
+# Lecture 4, "Communicating Observers"
 
 _Daniel:_
  Hello and welcome, everyone.

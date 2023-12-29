@@ -12,7 +12,7 @@ author:
 date: "2023-09-30 Version 1.0"
 ...
 
-## Discussion 5, "Spacetime"
+# Discussion 5, "Spacetime"
 
 _Daniel:_
  Hello and welcome, everyone.

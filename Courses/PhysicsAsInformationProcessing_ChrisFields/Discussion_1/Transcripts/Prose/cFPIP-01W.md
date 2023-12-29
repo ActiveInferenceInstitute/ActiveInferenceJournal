@@ -12,7 +12,7 @@ author:
 date: "2023-06-03 Version 1.0"
 ...
 
-## Discussion 1, "Historical Perspective"
+# Discussion 1, "Historical Perspective"
 
 _Daniel:_
  Hello and welcome, everyone.

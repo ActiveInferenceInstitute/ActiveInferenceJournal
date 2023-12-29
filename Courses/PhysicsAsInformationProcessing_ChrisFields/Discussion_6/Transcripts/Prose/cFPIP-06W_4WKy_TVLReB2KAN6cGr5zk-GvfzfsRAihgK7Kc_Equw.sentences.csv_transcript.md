@@ -10,7 +10,7 @@ author:
 date: "2023-10-28 Version 1.0"
 ...
 
-## Discussion 6, "Biology"
+# Discussion 6, "Biology"
 
 00:07 _Daniel:_
 [[start:7700][end:9810]] Hello and welcome, everybody.

@@ -7,7 +7,7 @@ author:
 date: "2023-07-29 Version 1.0"
 ...
 
-## Discussion 3, "Quantum Reference Frames"
+# Discussion 3, "Quantum Reference Frames"
 
 _Daniel:_
  Hello and welcome.

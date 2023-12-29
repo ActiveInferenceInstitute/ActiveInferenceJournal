@@ -7,7 +7,7 @@ author:
 date: "2023-07-13 Version 1.0"
 ...
 
-## Lecture 3, "Quantum Reference Frames"
+# Lecture 3, "Quantum Reference Frames"
 
 00:06 _Daniel:_
 [[start:6930][end:8462]] Hello and welcome everyone.
