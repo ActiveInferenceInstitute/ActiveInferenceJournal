@@ -7,20 +7,20 @@
 [[start:18584][end:22590]] And today we're in the semiotics and semantics section.
 
 00:22 [[start:22750][end:29318]] We'll be hearing a lecture from Lorena Sganzerla, and then we're going to have a little bit of a discussion.
-[[start:29414][end:34810]] So, Lorena, thank you a lot for joining and off to you for the lecture.
+[[start:29414][end:34810]] So, Lorena, thank you a lot for joining and over to you for the lecture.
 
 00:36 _Lorena:_
 [[start:36350][end:38460]] Okay, hello, everyone.
 [[start:39970][end:42170]] I'm based in Australia.
 [[start:42250][end:43322]] Yeah, I'm Lorena.
 
-00:43 [[start:43386][end:46800]] I'm doing actually my PhD in philosophy here.
+00:43 [[start:43386][end:46800]] I'm doing my PhD in philosophy here.
 [[start:47330][end:49834]] We work in cognitive sciences and philosophy.
 [[start:49882][end:53300]] I work with concepts and notions of information.
 [[start:54150][end:64614]] So I'm very interested in foundational understanding of cognitive sciences and information and how these kind of things cash out.
 [[start:64812][end:75686]] And this is why I was interested in talking about semantics and social cognition to see how these things cash out.
 
-01:15 [[start:75708][end:91662]] I have a few ideas on how semiotics can be compatible with, like, active inference, and I try to organize a little bit of this semiotic notion and active inference to see if they pan out.
+01:15 [[start:75708][end:91662]] I have a few ideas on how semiotics can be compatible with active inference, and I will try to organize a little bit of this semiotic notion and active inference to see if they pan out.
 [[start:91796][end:92730]] Maybe they don't.
 [[start:92810][end:94560]] So let's see how it goes.
 
