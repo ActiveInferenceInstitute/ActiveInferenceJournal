@@ -582,7 +582,7 @@ date: "2023-05-18 Version 1.0"
 
 ![An MB defines a persistent thing](../../Video/Slide22.PNG)
 
-48:19 [[start:2898950][end:2909730]] And it was from this classical physics background that Karl Friston came up with the idea that a Markov blanket defines a persistent 
+48:19 [[start:2898950][end:2909730]] And it was from this classical physics background that **Karl Friston** came up with the idea that a Markov blanket defines a persistent 
 [[start:2909720][end:2913550]][**** inaudible ****] [**thing**, a system that persists through time], 
 [[start:2913560][end:2921960]] at least from an Active Inference Institute point of view everyone is familiar with, because it's the foundation of the idea of Active Inference.
 
