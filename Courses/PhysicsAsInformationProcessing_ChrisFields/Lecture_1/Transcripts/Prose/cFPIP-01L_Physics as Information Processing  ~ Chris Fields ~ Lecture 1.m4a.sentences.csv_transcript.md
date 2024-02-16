@@ -377,7 +377,7 @@ date: "2023-05-18 Version 1.0"
 [[start:1759930][end:1769130]] **[Henry Gordon] Rice** is the one who proved that you can't determine what program is generating the outputs. 
 [Classes of Recursively Enumerable Sets and Their Decision Problems](https://www.ams.org/journals/tran/1953-074-02/S0002-9947-1953-0053041-6/S0002-9947-1953-0053041-6.pdf)
 
-29:29 [[start:1769950][end:1780510]] And then **[Darrell R.?] Moore** proved a very similar result in a completely different formal setting of general cybernetics, that you can't tell what _process_ is generating the outputs by finite observation.
+29:29 [[start:1769950][end:1780510]] And then **[Darrell R.] Moore** proved a very similar result in a completely different formal setting of general cybernetics, that you can't tell what _process_ is generating the outputs by finite observation.
 [[start:1781570][end:1793950]] But what Alice _can_ do, is build a predictive _model_ of what generates the output she sees in response to her inputs, and test it by designing new inputs.
 [[start:1794370][end:1800930]] And this is, of course, as **Karl Popper** told us, the process that we call "science."
 
