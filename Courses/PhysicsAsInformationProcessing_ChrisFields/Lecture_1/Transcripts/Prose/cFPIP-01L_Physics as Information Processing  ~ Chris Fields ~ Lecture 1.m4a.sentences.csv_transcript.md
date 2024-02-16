@@ -435,7 +435,7 @@ date: "2023-05-18 Version 1.0"
 35:15 [[start:2115730][end:2116910]] It's quantitative.
 [[start:2117010][end:2121130]] It's only the **quantity of information** that's supposed to be preserved.
 [[start:2121790][end:2130270]] And you can ask, "How much is the information that's being emitted by a black hole that's emitting Hawking radiation?"
-[[start:2130930][end:2137658]] And [Jacob David] Bekenstein was the one who figured this out, using an incredibly simple argument.
+[[start:2130930][end:2137658]] And **[Jacob David] Bekenstein** was the one who figured this out, using an incredibly simple argument.
 [[start:2137834][end:2140160]] But I'll just give the answer here.
 
 35:40 [[start:2140530][end:2162920]] The answer is that the total entropy of the black hole is its area divided by four. And the area in this equation has to be computed in **Planck units**, which are units where Planck's constant and the speed of light and Boltzmann's constant and other interesting things are all set equal to _one._
@@ -472,7 +472,7 @@ date: "2023-05-18 Version 1.0"
 ### The Holographic Principle
 
 
-38:50 [[start:2330110][end:2337150]] Gerard 't Hooft, almost immediately thereafter, on the basis of Beckenstein's work, formulated the **Holographic Principle**.
+38:50 [[start:2330110][end:2337150]] **Gerard 't Hooft**, almost immediately thereafter, on the basis of Beckenstein's work, formulated the **Holographic Principle**.
 
 38:57 [[start:2337730][end:2346050]] And what the Holographic Principle says is "We can think of _any_ system as _approximately_ a black hole.
 [[start:2346870][end:2350210]] And the only approximation is the encoding density."
@@ -567,7 +567,7 @@ date: "2023-05-18 Version 1.0"
 ### Markov Blankets
 
 46:45 [[start:2805850][end:2818810]] So _now_ we'll go back to classical physics. And what was happening, or one thing that was happening in classical physics at that time, was a lot of thinking about **stochastic causal networks**.
-[[start:2819630][end:2835130]] And [Judea] Pearl realized that if you have any stochastic causal network that's **unidirectional**, then around any **node**, you can draw what he called a **Markov blanket**.
+[[start:2819630][end:2835130]] And **[Judea] Pearl** realized that if you have any stochastic causal network that's **unidirectional**, then around any **node**, you can draw what he called a **Markov blanket**.
 
 47:15 [[start:2835290][end:2857080]] And a Markov blanket is just the set of nodes in the network that absorb all outside causation and then transmit that causation into whatever node you're interested in; and then absorb all causation coming from the node you're interested in and transmit it to the rest of the world.
 
