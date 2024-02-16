@@ -420,9 +420,9 @@ date: "2023-05-18 Version 1.0"
 33:36 [[start:2016530][end:2035120]] And for all you knew, partway through the process, the electron disappeared, and an entire universe appeared and then annihilated with a copy of an entire anti-universe, and the electron came back out!
 
 33:55 [[start:2035730][end:2043570]] And you have to include processes like that if you really want to understand and correctly predict the outcomes of your measurements.
-[[start:2044230][end:2056274]] And **Murray Gell-Mann** lifted the bumper sticker slogan from T. H. White and "The Once and Future King," "Everything not explicitly forbidden is mandatory."
+[[start:2044230][end:2056274]] And **Murray Gell-Mann** lifted the bumper sticker slogan from T. H. White in the book "The Once and Future King," "Everything not explicitly forbidden is mandatory."
 [[start:2056322][end:2058520]] That sums up Feynman's idea.
-[[start:2060090][end:2072490]] And this is called the **totalitarian principle**, since it's what's written in T. H. White's book on the Kingdom of the Ants, for which "everything not explicitly forbidden is mandatory."
+[[start:2060090][end:2072490]] And this is called the **totalitarian principle**, since it's what's written in T. H. White's section in the book "The Once and Future King" on the kingdom of the ants, for which "everything not explicitly forbidden is mandatory."
 [[start:2073550][end:2080026]] So let's think about a real example that's {a bit actually it's...} the same as scattering.
 
 ![The ultimate scattering experiment is a black hole](../../Video/Slide16.PNG)
