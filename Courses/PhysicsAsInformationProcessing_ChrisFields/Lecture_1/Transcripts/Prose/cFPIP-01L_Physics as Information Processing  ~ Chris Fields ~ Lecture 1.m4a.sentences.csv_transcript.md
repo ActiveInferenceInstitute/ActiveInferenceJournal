@@ -489,7 +489,7 @@ date: "2023-05-18 Version 1.0"
 [[start:2415452][end:2417740]] looking at the outside of the system."
 
 40:13 [[start:2418990][end:2424010]] Now, the Holographic Principle almost follows from classical physics!
-[[start:2425630][end:2440670]] There's [Leonhard] **Euler's theorem**, which tells you about one over R squared forces, and you can think of the force as penetrating the boundary at some density.
+[[start:2425630][end:2440670]] There's **[Leonhard]** **Euler's theorem**, which tells you about one over R squared forces, and you can think of the force as penetrating the boundary at some density.
 [[start:2441250][end:2451330]] And the difference between Euler's theorem and the Holographic Principle is just that the density in classical physics can go to infinity.
 
 40:51 [[start:2451990][end:2460466]] And in the Holographic Principle, it can only go to this maximal density that's achieved by a black hole.
