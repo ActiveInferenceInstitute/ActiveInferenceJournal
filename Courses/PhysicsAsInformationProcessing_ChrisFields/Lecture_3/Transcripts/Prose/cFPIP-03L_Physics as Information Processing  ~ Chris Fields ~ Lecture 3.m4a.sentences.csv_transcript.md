@@ -9,6 +9,8 @@ date: "2023-07-13 Version 1.0"
 
 # Lecture 3, "Quantum Reference Frames"
 
+![Introduction](..\Video\video1.png)
+
 00:06 _Daniel:_
 [[start:6930][end:8462]] Hello and welcome everyone.
 [[start:8596][end:11230]] It's July 13, 2023.
@@ -18,7 +20,12 @@ date: "2023-07-13 Version 1.0"
 00:31 [[start:31602][end:34600]] So thank you again, Chris, to you.
 
 00:36 _Chris:_
-[[start:36410][end:44330]] Thank you and welcome to Physics as Information Processing, session Three, which is about quantum reference frames.
+[[start:36410][end:44330]] Thank you and welcome to Physics as Information Processing, session Three, which is about **quantum reference frames**.
+
+## Introduction
+
+![Quantum Information Theory](..\Video\video2.png)
+
 [[start:45470][end:67490]] So in this course, we've talked about quantum information theory, which we characterized as a general theory that describes the exchange of information, exchange of finite information between two finite agents that are separated by some boundary.
 [[start:67830][end:77330]] And we emphasize that this is a topological theory, not a geometric theory, so it makes no assumptions about an embedding spacetime.
 [[start:79050][end:110830]] And last time we showed how to characterize this boundary of script B as an array of N, some finite N quantum bits or qubits, and how to characterize the interaction of the agents A and B with the boundary as an alternating cycle of preparing and measuring the qubits in this array.
