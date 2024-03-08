@@ -377,7 +377,7 @@ _Chris:_
  **[Henry Gordon] Rice** is the one who proved that you can't determine what program is generating the outputs. 
 [Classes of Recursively Enumerable Sets and Their Decision Problems](https://www.ams.org/journals/tran/1953-074-02/S0002-9947-1953-0053041-6/S0002-9947-1953-0053041-6.pdf)
 
- And then **[Darrell R.?] Moore** proved a very similar result in a completely different formal setting of general cybernetics, that you can't tell what _process_ is generating the outputs by finite observation.
+ And then **[Darrell R.] Moore** proved a very similar result in a completely different formal setting of general cybernetics, that you can't tell what _process_ is generating the outputs by finite observation.
  But what Alice _can_ do, is build a predictive _model_ of what generates the output she sees in response to her inputs, and test it by designing new inputs.
  And this is, of course, as **Karl Popper** told us, the process that we call "science."
 
@@ -420,9 +420,9 @@ _Chris:_
  And for all you knew, partway through the process, the electron disappeared, and an entire universe appeared and then annihilated with a copy of an entire anti-universe, and the electron came back out!
 
  And you have to include processes like that if you really want to understand and correctly predict the outcomes of your measurements.
- And **Murray Gell-Mann** lifted the bumper sticker slogan from T. H. White and "The Once and Future King," "Everything not explicitly forbidden is mandatory."
+ And **Murray Gell-Mann** lifted the bumper sticker slogan from T. H. White in the book "The Once and Future King," "Everything not explicitly forbidden is mandatory."
  That sums up Feynman's idea.
- And this is called the **totalitarian principle**, since it's what's written in T. H. White's book on the Kingdom of the Ants, for which "everything not explicitly forbidden is mandatory."
+ And this is called the **totalitarian principle**, since it's what's written in T. H. White's section in the book "The Once and Future King" on the kingdom of the ants, for which "everything not explicitly forbidden is mandatory."
  So let's think about a real example that's {a bit actually it's...} the same as scattering.
 
 ![The ultimate scattering experiment is a black hole](../../Video/Slide16.PNG)
@@ -435,7 +435,7 @@ _Chris:_
  It's quantitative.
  It's only the **quantity of information** that's supposed to be preserved.
  And you can ask, "How much is the information that's being emitted by a black hole that's emitting Hawking radiation?"
- And [Jacob David] Bekenstein was the one who figured this out, using an incredibly simple argument.
+ And **[Jacob David] Bekenstein** was the one who figured this out, using an incredibly simple argument.
  But I'll just give the answer here.
 
  The answer is that the total entropy of the black hole is its area divided by four. And the area in this equation has to be computed in **Planck units**, which are units where Planck's constant and the speed of light and Boltzmann's constant and other interesting things are all set equal to _one._
@@ -472,7 +472,7 @@ _Chris:_
 ### The Holographic Principle
 
 
- Gerard 't Hooft, almost immediately thereafter, on the basis of Beckenstein's work, formulated the **Holographic Principle**.
+ **Gerard 't Hooft**, almost immediately thereafter, on the basis of Beckenstein's work, formulated the **Holographic Principle**.
 
  And what the Holographic Principle says is "We can think of _any_ system as _approximately_ a black hole.
  And the only approximation is the encoding density."
@@ -489,7 +489,7 @@ _Chris:_
  looking at the outside of the system."
 
  Now, the Holographic Principle almost follows from classical physics!
- There's [Leonhard] **Euler's theorem**, which tells you about one over R squared forces, and you can think of the force as penetrating the boundary at some density.
+ There's **[Leonhard]** **Euler's theorem**, which tells you about one over R squared forces, and you can think of the force as penetrating the boundary at some density.
  And the difference between Euler's theorem and the Holographic Principle is just that the density in classical physics can go to infinity.
 
  And in the Holographic Principle, it can only go to this maximal density that's achieved by a black hole.
@@ -567,7 +567,7 @@ _Chris:_
 ### Markov Blankets
 
  So _now_ we'll go back to classical physics. And what was happening, or one thing that was happening in classical physics at that time, was a lot of thinking about **stochastic causal networks**.
- And [Judea] Pearl realized that if you have any stochastic causal network that's **unidirectional**, then around any **node**, you can draw what he called a **Markov blanket**.
+ And **[Judea] Pearl** realized that if you have any stochastic causal network that's **unidirectional**, then around any **node**, you can draw what he called a **Markov blanket**.
 
  And a Markov blanket is just the set of nodes in the network that absorb all outside causation and then transmit that causation into whatever node you're interested in; and then absorb all causation coming from the node you're interested in and transmit it to the rest of the world.
 
@@ -582,7 +582,7 @@ _Chris:_
 
 ![An MB defines a persistent thing](../../Video/Slide22.PNG)
 
- And it was from this classical physics background that Karl Friston came up with the idea that a Markov blanket defines a persistent 
+ And it was from this classical physics background that **Karl Friston** came up with the idea that a Markov blanket defines a persistent 
 [**** inaudible ****] [**thing**, a system that persists through time], 
  at least from an Active Inference Institute point of view everyone is familiar with, because it's the foundation of the idea of Active Inference.
 
