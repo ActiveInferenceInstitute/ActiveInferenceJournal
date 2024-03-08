@@ -44,7 +44,7 @@ date: "2023-05-18 Version 1.0"
 [[start:99670][end:103380]] And all of this is explained on the course website.
 [[start:104730][end:108040]] So let's start!
 
-## Historial Perspective: Physics
+## Historical Perspective: Physics
 
 01:49 [[start:109210][end:126810]] This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
 

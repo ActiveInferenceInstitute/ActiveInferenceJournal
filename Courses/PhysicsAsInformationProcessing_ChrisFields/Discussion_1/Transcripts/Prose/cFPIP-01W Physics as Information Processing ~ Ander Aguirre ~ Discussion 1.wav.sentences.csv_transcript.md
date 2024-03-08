@@ -579,7 +579,7 @@ date: "2023-06-03 Version 1.0"
 
 38:58 [[start:2338446][end:2340890]] Here they talk about the Wick rotation again.
 
-39:05 [[start:2345500][end:2368112]] So I think it has it has to do with, at least from what I heard from Chris' email, it has to do with this notion of local time, the definition of local time in this observation picture, and the fact that you rotate 90 egrees twice, you get the opposite sign, basically, right?
+39:05 [[start:2345500][end:2368112]] So I think it has it has to do with, at least from what I heard from Chris' email, it has to do with this notion of local time, the definition of local time in this observation picture, and the fact that you rotate 90 degrees twice, you get the opposite sign, basically, right?
 [[start:2373946][end:2390840]] So the local time, effectively, that's going to ensure that the picture is symmetric and that the flow is going to be opposite in the direction towards the observer and towards the environment.
 
 39:55 _Daniel:_
