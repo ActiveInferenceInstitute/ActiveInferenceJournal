@@ -579,7 +579,7 @@ _Ander:_
 
  Here they talk about the Wick rotation again.
 
- So I think it has it has to do with, at least from what I heard from Chris' email, it has to do with this notion of local time, the definition of local time in this observation picture, and the fact that you rotate 90 egrees twice, you get the opposite sign, basically, right?
+ So I think it has it has to do with, at least from what I heard from Chris' email, it has to do with this notion of local time, the definition of local time in this observation picture, and the fact that you rotate 90 degrees twice, you get the opposite sign, basically, right?
  So the local time, effectively, that's going to ensure that the picture is symmetric and that the flow is going to be opposite in the direction towards the observer and towards the environment.
 
 _Daniel:_

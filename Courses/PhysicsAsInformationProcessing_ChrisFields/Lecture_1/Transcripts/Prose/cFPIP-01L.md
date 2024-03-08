@@ -44,7 +44,7 @@ _Chris:_
  And all of this is explained on the course website.
  So let's start!
 
-## Historial Perspective: Physics
+## Historical Perspective: Physics
 
  This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
 
