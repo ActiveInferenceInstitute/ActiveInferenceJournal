@@ -103,7 +103,7 @@ _Chris:_
  So, you can construct an arbitrarily complex, finite decision tree that ends up formulating an arbitrarily complex but still finite question.
  So, this really is a **general model of communicative interactions between agents**.
 
- ## First, Action
+## First, Action
  
 ![First, Action](../../Video/Video8.png)
 

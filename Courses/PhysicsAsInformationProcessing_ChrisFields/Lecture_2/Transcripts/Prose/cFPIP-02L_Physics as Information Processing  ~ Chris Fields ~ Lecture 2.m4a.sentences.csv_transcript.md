@@ -103,7 +103,7 @@ date: "2023-06-15 Version 1.0"
 [[start:442420][end:455670]] So, you can construct an arbitrarily complex, finite decision tree that ends up formulating an arbitrarily complex but still finite question.
 [[start:456040][end:462870]] So, this really is a **general model of communicative interactions between agents**.
 
- ## First, Action
+## First, Action
  
 ![First, Action](../../Video/Video8.png)
 
