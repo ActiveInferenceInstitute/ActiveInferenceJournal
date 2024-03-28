@@ -50,7 +50,7 @@ date: "2023-08-10 Version 1.0"
 [[start:220450][end:233970]] But the bottom line, last time, was that physics alone gives us compartmentalization in systems whenever the systems are complex enough to have multiple kinds of measurements that they can't deploy simultaneously.
 
 03:56 [[start:236390][end:254470]] So where we're going: Today, we're going to start from this place we left off last time, of the possibility of agents that are compartmentalized into compartments that have to communicate classically.
-[[start:255070][end:270830]] So we're going to talk about agents that can be compartmentalized into multiple subagents that share an environment, the environment consisting of Bob and how those agents talk about that shared environment.
+[[start:255070][end:270830]] So we're going to talk about agents that can be compartmentalized into multiple subagents that share an environment, the environment consisting of Bob, and how those agents talk about that shared environment.
 [[start:271490][end:274000]] So the motivation for this is simple.
 [[start:274450][end:278250]] It's that what we do all the time is a group activity.
 [[start:278330][end:283470]] And what we're doing right now is a group activity that involves sharing an environment such as what's shown on this screen, and talking about it.
@@ -59,7 +59,7 @@ date: "2023-08-10 Version 1.0"
 04:57 [[start:297068][end:313130]] So to talk about science at all, or to talk about any kind of social relation or to talk about anything other than solipsism, we have to be able to talk about how multiple agents communicate about some shared environment.
 [[start:313630][end:318000]] And so that's what we're going to develop a formal way of talking about.
 
-[[start:318690][end:323920]] And there are two things to notice right off the top about this.
+05:19 [[start:318690][end:323920]] And there are two things to notice right off the top about this.
 
 05:24 [[start:324610][end:331310]] One is that the way we've defined interactions at boundaries, they're effectively instantaneous.
 [[start:331470][end:337758]] So each agent, remember, interacts with its boundary with some set of operators.
@@ -71,41 +71,41 @@ date: "2023-08-10 Version 1.0"
 06:10 [[start:370906][end:373278]] And that's exactly what we're doing right now,
 [[start:373364][end:379718]] for example. We're using degrees of freedom of the internet to communicate.
 [[start:379914][end:391140]] I'm using degrees of freedom of the local atmosphere to talk to my microphone and I'm using degrees of freedom of the local photon field to see my screen.
-[[start:392090][end:403122]] So all communication between agents and certainly all classical communication between agents uses degrees of freedom of the environment.
+[[start:392090][end:403122]] So all communication between agents, and certainly all classical communication between agents, uses degrees of freedom of the environment.
 
 06:43 [[start:403186][end:410090]] And the environment, remember, is the other system, Bob, that's on the other side of that shared boundary.
-[[start:410750][end:420698]] So we're going to be interested in how components of Alice use Bob as a communication channel and in fact, as multiple communication channels.
-[[start:420874][end:429558]] And I just wanted to quote my colleague and friend, Mike Levin, in his statement that all intelligence is composite.
-[[start:429754][end:449270]] All of us, all organisms, even single cells, are composite systems that comprise many many different agents that are able to make different kinds of measurements and execute different kinds of actions and so have to communicate classically.
+[[start:410750][end:420698]] So we're going to be interested in how components of Alice use Bob as a communication channel - and in fact, as multiple communication channels.
+[[start:420874][end:429558]] And I just wanted to quote my colleague and friend, Mike Levin, in his statement that "all intelligence is composite."
+[[start:429754][end:449270]] All of us, all organisms, even single cells, are composite systems that comprise many many different agents that are able to make different kinds of measurements and execute different kinds of actions, and so have to communicate classically.
 
-07:30 [[start:450010][end:458780]] So we're talking about all of life here as well as all of social systems and ecosystems and such things as that.
+07:30 [[start:450010][end:458780]] So we're talking about all of life here, as well as all of social systems and ecosystems and such things as that.
 
 07:40 [[start:460270][end:470490]] So the first thing I want to do today is simplify the notation so that we don't have to draw quite such complicated diagrams.
-[[start:470650][end:474618]] So the picture on the left here is a picture from the last session.
-[[start:474794][end:490900]] It shows the structure of a very simple agent that makes some measurements using a reference frame called E and then writes some results of those measurements to memory using a reference frame called Y.
+[[start:470650][end:474618]] So the picture on the left here [[see slide "First, simplify the graphic notation..."]] is a picture from the last session.
+[[start:474794][end:490900]] It shows the structure of a very simple agent that makes some measurements using a reference frame called "E," and then writes some results of those measurements to memory using a reference frame called Y.
 [[start:491450][end:500662]] And those two processes are connected by an internal clock that ticks between the input process and the output process.
 [[start:500796][end:508490]] And the clock tick corresponds to the expenditure of free energy to write information irreversibly on the boundary.
 
 08:28 [[start:508830][end:515478]] So the memories are actually written on the boundary because that's where classical information lives in this theory.
 
-08:35 [[start:515654][end:530930]] So you can think of this whole process from E through the clock and back to Y as a single quantum process or as a quantum computation that maps some sector E of the boundary to some sector Y of the boundary.
+08:35 [[start:515654][end:530930]] So you can think of this whole process from E through the clock and back to Y as a single quantum process, or as a quantum computation, that maps some sector E of the boundary to some sector Y of the boundary.
 [[start:531590][end:544150]] And so we can represent it in this much simpler way that's over on the right side as some process Q that maps some sector on the boundary to some other sector on the boundary.
 [[start:544650][end:551030]] And formally, that process can be thought of as a topological quantum field theory.
-[[start:551530][end:553446]] Topological here is important.
 
-09:13 [[start:553548][end:561660]] It's not geometric, it doesn't assume an embedding in space and this will become critically important later on.
+09:11 [[start:551530][end:553446]] Topological here is important.
+[[start:553548][end:561660]] It's not geometric, it doesn't assume an embedding in space and this will become critically important later on.
 [[start:562030][end:573790]] And the operation of that TQFT [Topological Quantum Field Theory] requires a clock tick or it incorporates a tick of this internal clock.
 [[start:574370][end:592530]] And we can do this because we were able to prove--James Glazebrook and Antonino Marciano and I [(2022) Sequential measurements, topological quantum field theories, and topological quantum neural networks]--were able to prove last year that we can always represent a quantum reference frame as a topological quantum field theory.
 
-09:52 [[start:592690][end:599526]] And this just illustrates the two kinds of transformations between quantum reference frames that are important.
-[[start:599628][end:622730]] We can take one and divide it into two pieces that commute or we can take a two-part reference frame and we can swap in another part that doesn't commute with the part that we've swapped it in for but that does commute with the remainder of the reference frame.
+09:52 [[start:592690][end:599526]] And this just illustrates the two kinds of transformations between quantum reference frames that are important. [[See slide "This reflect a general result: QRFs are TQFTs"]]
+[[start:599628][end:622730]] We can take one and divide it into two pieces that commute. Or we can take a two-part reference frame and we can swap in another part that doesn't commute with the part that we've swapped it in for, but that does commute with the remainder of the reference frame.
 
-10:22 [[start:622810][end:637394]] So here R is the reference component of some object identification system and we can swap in some different way of looking at the object once we've identified it.
-[[start:637432][end:661690]] So, for example, if the object that we're identifying is a box that can measure both Z spin and X spin, then P and Q can be the Z spin and X spin settings on that box that allow us to effectively rotate the filter from this way to that way so that we measure vertical spin versus horizontal spin.
+10:22 [[start:622810][end:637394]] So here "R" is the reference component of some object identification system; and we can swap in some different way of looking at the object once we've identified it.
+[[start:637432][end:661690]] So, for example, if the object that we're identifying is a box that can measure both Z spin and X spin, then P and Q can be the Z-spin and X-spin settings on that box that allow us to effectively rotate the filter from this way to that way, so that we measure vertical spin versus horizontal spin.
 
 11:02 [[start:662110][end:663562]] And that's really it.
 [[start:663616][end:669194]] I mean, those are the ways that one can transform quantum reference frames.
-[[start:669322][end:687810]] Of course, we could do arbitrarily many compositions of this kind of transformation to do something very complicated, but they map very simply to TQFTs with the structure and you can construct categories out of this and find a functor that's well defined that maps one category to another.
+[[start:669322][end:687810]] Of course, we could do arbitrarily many compositions of this kind of transformation to do something very complicated, but they map very simply to TQFTs with the structure. And you can construct categories out of this and find a functor that's well defined that maps one category to another.
 
 11:27 [[start:687880][end:698390]] So it's an example of a nice use of categorical techniques for solving a problem that looks difficult but in fact it's very straightforward.
 [[start:699370][end:728350]] So using this simplified notation, it becomes very easy to see that if we have two systems, Alice and Bob on opposite sides of this boundary and we perfectly align their quantum reference frames, which is what the FEP says they will tend to do, then they become entangled.
@@ -115,20 +115,20 @@ date: "2023-08-10 Version 1.0"
 [[start:747290][end:753640]] The two sides no longer have conditionally independent states.
 
 12:34 [[start:754190][end:763930]] If one quantum process, which is time reversible, information preserving, is implemented jointly by the two systems.
-[[start:764510][end:786158]] So a lot of things like this become very simple when we think of these processes as just quantum computations going on inside some system implemented by some system and how those processes relate across some boundary.
+[[start:764510][end:786158]] So a lot of things like this become very simple when we think of these processes as just quantum computations going on inside some system, implemented by some system, and how those processes relate across some boundary.
 [[start:786334][end:792680]] So that's what we're going to do for studying communication today.
 
-13:14 [[start:794410][end:812454]] Another thing to recall from a couple of sessions ago, our last session, is that if two reference frames, Q1 and Q2 commute, we can always join them together to form a single reference frame.
+13:14 [[start:794410][end:812454]] Another thing to recall from a couple of sessions ago, or last session, [[Clarify! - ed.]] is that if two reference frames, Q1 and Q2, commute, we can always join them together to form a single reference frame.
 [[start:812502][end:818560]] And this is just a graphical depiction in this simpler language of how that works.
 
 13:39 [[start:819250][end:826862]] And topologically, there's no distinction between the left side and the right side.
 [[start:826916][end:834210]] What I've done is just squeeze the top two green circles together and the bottom two green circles together into one circle.
 [[start:834790][end:840594]] And that just makes a simple process connecting the top one to the bottom one.
-[[start:840792][end:856170]] So what we're going to be interested in is situations where this doesn't happen, where Alice consists of two components that execute reference frames that don't commute.
+[[start:840792][end:856170]] So what we're going to be interested in, is situations where this doesn't happen, where Alice consists of two components that execute reference frames that don't commute.
 
-14:16 [[start:856750][end:862822]] And so the two components are conditionally independent.
+14:16 [[start:856750][end:862822]] And so the two components _are_ conditionally independent.
 
-14:22 [[start:862886][end:866410]] They do each have free choice of reference frame.
+14:22 [[start:862886][end:866410]] They _do_ each have free choice of reference frame.
 [[start:867090][end:870074]] And so they have to communicate classically.
 [[start:870202][end:877070]] They don't share a single quantum process, so they're not entangled.
 [[start:878130][end:908006]] And before we go ahead to do that, I just wanted to remind you of some of the no-go theorems that follow from this situation depicted on the right, where we have a single agent executing a single reference frame, a single process, a single kind of measurement, any set of commuting measurements that can be combined into one measurement.
@@ -139,26 +139,28 @@ date: "2023-08-10 Version 1.0"
 
 15:17 [[start:917090][end:927626]] But Alice can't, using just one measurement, measure the entanglement entropy across her own boundary.
 [[start:927818][end:931442]] So Alice can't know that she has an independent state.
-[[start:931576][end:935598]] She can't know that she's not entangled with Bob.
+[[start:931576][end:935598]] She can't know that she's _not_ entangled with Bob.
 
 15:35 [[start:935774][end:942360]] And that's a useful thing to think about philosophically as it applies to you and me.
-[[start:942810][end:946360]] We can't actually know that we have independent states.
-[[start:947690][end:957530]] Alice can't measure her own entanglement entropy, so she can't know whether she has components that have to communicate classically.
+[[start:942810][end:946360]] We can't actually know that we have independent states.![image](https://github.com/ActiveInferenceInstitute/ActiveInferenceJournal/assets/30888152/e202d421-db89-4b87-abd6-588203f0a920)
 
-15:59 [[start:959630][end:968430]] She can't measure Bob's entanglement entropy, so she can't know whether Bob has compartments that have to communicate classically.
+15:47 [[start:947690][end:957530]] Alice can't measure her own entanglement entropy, so she can't know whether she has components that have to communicate classically.
+
+15:59 [[start:959630][end:968430]] She can't measure _Bob's_ entanglement entropy, so she can't know whether Bob has compartments that have to communicate classically.
 [[start:968850][end:978670]] And if you think in terms of perception theory, this says Alice can't know whether Bob consists of separate objects that behave classically.
+[[start:981190][end:993190]] Their behavior can look classical to her, but she's not able to determine that their behavior _is_ classical, because she can't measure Bob's entanglement entropy.
 
-16:21 [[start:981190][end:993190]] Their behavior can look classical to her, but she's not able to determine that their behavior is classical because she can't measure Bob's entanglement entropy.
-[[start:994410][end:1014540]] She can't measure the dimension of her own boundary and recall from a couple of times ago that the boundary includes some sector that supplies free energy that Alice can't extract information from for further processing, she can only extract free energy from.
+16:34 [[start:994410][end:1014540]] She can't measure the dimension of her own boundary. And recall from a couple of times ago that the boundary includes some sector that supplies free energy that Alice can't extract information from for further processing, she can only extract free energy from.
 [[start:1014990][end:1023360]] So she can't measure the dimension of that sector, and so she can't measure the dimension of the whole boundary itself.
 [[start:1023970][end:1027646]] And this, of course, means that she can't measure her own dimension either.
-[[start:1027748][end:1036382]] And of course, she can't measure Bob's dimension, because the only information she can get about Bob is the classical information that's encoded on this boundary.
 
-17:16 [[start:1036446][end:1041220]] She can't reach past the boundary to see how large a system Bob is.
+17:08 [[start:1027748][end:1036382]] And of course, she can't measure Bob's dimension, because the only information she can get about Bob is the classical information that's encoded on this boundary.
+[[start:1036446][end:1041220]] She can't reach past the boundary to see how large a system Bob is.
 
 17:21 [[start:1041850][end:1057350]] And that's clearly connected to this first point, that she can't measure the entanglement entropy across Bob, because the entanglement entropy can only be small if her dimension and Bob's dimension are both much larger than the dimension of the boundary.
 [[start:1057430][end:1059740]] So that's a condition she can't check.
-[[start:1061310][end:1066330]] So all of these kind of no-go theorems lead off in interesting directions.
+
+17:41 [[start:1061310][end:1066330]] So all of these kind of no-go theorems lead off in interesting directions.
 [[start:1066690][end:1088610]] And the only one that we're really going to be interested in here is the third one, the one about measuring Bob's entanglement entropy, because we want to talk specifically about how multiple agents, so multiple components of Alice can access information about Bob's entanglement entropy.
 
 18:13 [[start:1093050][end:1101290]] Okay, so recall from the end of the last session that the last thing we talked about was classical communication.
