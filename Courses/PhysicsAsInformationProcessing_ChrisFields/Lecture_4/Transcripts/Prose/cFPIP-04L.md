@@ -11,10 +11,9 @@ date: "2023-08-10 Version 1.0"
 
 _Daniel:_
  Hello and welcome, everyone.
- This is physics.
- As information processing Session 4 on communicating observers.
- It's the 10th of August 2023.
- Chris looking forward to this lecture.
+ This is Physics as Information Processing, Session 4, on Communicating Observers.
+ It's the 10th of August, 2023.
+ Chris, looking forward to this lecture!
 
  Off to you.
 
@@ -22,13 +21,12 @@ _Chris:_
  Thank you, Daniel, and welcome to this session.
  As Daniel said, this is about communicating observers.
  And fasten your seatbelts because we have a lot to cover in the next hour.
+ 
  So just to do a quick review.
-
  We've been talking about quantum information theory and we've been talking about it in the simplest possible setting of two systems, Alice and Bob, that exchange information through their mutual boundary.
- And we've assumed that everything is finite dimensional.
- So we don't need to worry about infinite energy transfer across this boundary.
+ And we've assumed that everything is finite dimensional, so we don't need to worry about infinite energy transfer across this boundary.
  And of course, we assume conservation of energy so there are no sources or sinks in either of the systems, Alice and Bob.
- And we emphasize that this way of depicting things as topological we're not assuming any background geometry, no sort of spatial embedding which is going to become very important in this session.
+ And we emphasize that this way of depicting things as topological - we're not assuming any background geometry, no sort of spatial embedding, which is going to become very important in this session.
 
  In the last session, we talked about how the boundary, which I'll always call B can be thought of as a channel that comprises N qubits that are independent.
  And Alice and Bob each can prepare and measure those qubits and they can always choose independently their reference frames for doing so.
