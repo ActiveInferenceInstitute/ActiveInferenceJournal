@@ -161,29 +161,30 @@ date: "2023-08-10 Version 1.0"
 [[start:1057430][end:1059740]] So that's a condition she can't check.
 
 17:41 [[start:1061310][end:1066330]] So all of these kind of no-go theorems lead off in interesting directions.
-[[start:1066690][end:1088610]] And the only one that we're really going to be interested in here is the third one, the one about measuring Bob's entanglement entropy, because we want to talk specifically about how multiple agents, so multiple components of Alice can access information about Bob's entanglement entropy.
+[[start:1066690][end:1088610]] And the only one that we're really going to be interested in here is the third one, the one about measuring Bob's entanglement entropy, because we want to talk specifically about how multiple agents, so _multiple_ components of Alice, can access information about Bob's entanglement entropy.
 
 18:13 [[start:1093050][end:1101290]] Okay, so recall from the end of the last session that the last thing we talked about was classical communication.
 
 18:21 [[start:1101950][end:1111920]] And we talked about the fact that classical communication involves assumptions and pitfalls and that we have to be very careful whenever we talk about it.
 [[start:1112450][end:1117178]] And what we're going to do today is standard practice in physics.
-[[start:1117274][end:1127390]] We're simply going to stipulate that these components, A1 and A2, the separable components of Alice, communicate classically.
-[[start:1127470][end:1129202]] And so we're going to draw it like this.
+[[start:1117274][end:1127390]] We're simply going to _stipulate_ that these components, A1 and A2, the separable components of Alice, communicate classically.
+[[start:1127470][end:1129202]] And so we're going to draw it like this. [[See slide "Recall from July session:"]]
 
 18:49 [[start:1129256][end:1135330]] We're going to draw a classical channel between them, and that classical channel passes through Bob.
-[[start:1135410][end:1149610]] It uses degrees of freedom of the ambient photon field or the ambient atmosphere or pieces of paper or email or something like that, that's out there in the environment to exchange classical messages.
-[[start:1150510][end:1154394]] And there are a couple of things to note here I haven't even written down here.
-[[start:1154432][end:1159322]] We're assuming that A1 and A2 share some language for this classical communication.
+[[start:1135410][end:1149610]] It uses degrees of freedom of the ambient photon field or the ambient atmosphere or pieces of paper or email or something like that, that's out there in the environment, to exchange classical messages.
+[[start:1150510][end:1154394]] And there are a couple of things to note here - I haven't even written down here.
+[[start:1154432][end:1159322]] We're assuming that A1 and A2 share some **language** for this classical communication.
 [[start:1159386][end:1162320]] That's a big assumption, as we talked about last time.
 
 19:23 [[start:1163810][end:1168398]] But I will note explicitly that classical communication takes time.
 [[start:1168564][end:1171554]] That's what defines classicality here.
 [[start:1171592][end:1176180]] It's causal, so it can't work faster than the speed of light.
-[[start:1177030][end:1179150]] This is a topological theory.
-[[start:1179230][end:1181102]] We don't have any embedding geometry.
 
-19:41 [[start:1181166][end:1191240]] So we can't, at this point, talk about light, which is a relationship between space and time, because we've got time, we've got clocks, but we don't have any space.
-[[start:1191930][end:1201900]] But we can say that whatever passes through this classical channel requires at least one clock tick on Bob's side.
+19:37 [[start:1177030][end:1179150]] This is a topological theory.
+[[start:1179230][end:1181102]] We don't have any embedding geometry.
+[[start:1181166][end:1191240]] So we can't, at this point, talk about light, which is a relationship between space and time, because we've got time, we've got clocks, but we don't have any space.
+
+19:51 [[start:1191930][end:1201900]] But we _can_ say that whatever passes through this classical channel requires at least one clock tick on Bob's side.
 [[start:1202590][end:1206330]] So it's a process that Bob has to execute.
 [[start:1206930][end:1210158]] And executing that process takes time.
 [[start:1210244][end:1216318]] So getting the signal from me to you on the internet takes some time so the environment's clock has to tick during that.
