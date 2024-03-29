@@ -188,104 +188,98 @@ date: "2023-08-10 Version 1.0"
 [[start:1202590][end:1206330]] So it's a process that Bob has to execute.
 [[start:1206930][end:1210158]] And executing that process takes time.
 [[start:1210244][end:1216318]] So getting the signal from me to you on the internet takes some time so the environment's clock has to tick during that.
-[[start:1221110][end:1241686]] And all of these assumptions bundled together turn out to be a fairly serious set of assumptions and they involve assumptions about fine tuning, about the universe being just right and they should make us nervous, and I just want to leave it at that.
 
-20:41 [[start:1241868][end:1247142]] We always assume with complete aplomb that agents can communicate classically but it's not a straightforward assumption--and it's worth--for any of you who are looking for interesting research projects, can look into the nature of classical communication.
-[[start:1258506][end:1266846]] It's full of hidden assumptions and surprises and things that aren't at all straightforward even though they look like they ought to be.
+20:21 [[start:1221110][end:1241686]] And all of these assumptions bundled together turn out to be a fairly serious set of assumptions. And they involve assumptions about fine tuning, about the universe being just right. And they should make us nervous! And I just want to leave it at that.
+[[start:1241868][end:1247142]] We always assume, with complete aplomb, that agents can communicate classically. But it's not a straightforward assumption--and it's worth... Any of you who are looking for interesting research projects, can look into the nature of classical communication.
+[[start:1258506][end:1266846]] It's full of hidden assumptions and surprises and things that aren't at all straightforward, even though they look like they ought to be.
 
 21:07 [[start:1267028][end:1268590]] So there's a challenge.
 [[start:1269890][end:1271374]] So why do we assume this?
 [[start:1271412][end:1273758]] Why do we assume classical communication?
-[[start:1273934][end:1278930]] We do it because we have to if we're going to talk about detecting entanglement.
+[[start:1273934][end:1278930]] We do it because we _have to_ if we're going to talk about detecting entanglement.
 [[start:1280070][end:1287666]] And most of you probably know the history of the notion of entanglement.
 
-21:27 [[start:1287778][end:1296314]] It was first noticed by [Albert] Einstein, [Boris] Podolski and [Nathan] Rosen--ever after called EPR [Einstein-Podolsky-Rosen]--in 1935.
+21:27 [[start:1287778][end:1296314]] It was first noticed by [Albert] Einstein, [Boris] Podolski, and [Nathan] Rosen--ever after called EPR [Einstein-Podolsky-Rosen]--in 1935.
 [[start:1296512][end:1309390]] And they wrote a paper which is infamous, and called the EPR paper, in which they argued that the phenomenon of entanglement made no sense and couldn't possibly be physical.
+[[start:1310050][end:1320100]] And since quantum theory included this notion of entanglement, it couldn't possibly be a complete theory of what's going on in the world.
 
-21:50 [[start:1310050][end:1320100]] And since quantum theory included this notion of entanglement, it couldn't possibly be a complete theory of what's going on in the world.
-[[start:1320710][end:1331570]] And Schrodinger replied the same year with a very detailed paper where he introduces, among other things, Schrodinger's cat as a paradox.
+21:59 [[start:1320710][end:1331570]] And [Erwin] Schroedinger replied the same year with a very detailed paper where he introduces, among other things, "Schroedinger's cat" as a paradox.
 [[start:1332170][end:1338498]] And he explains very clearly what entanglement is, and why entanglement follows from quantum theory.
+[[start:1338674][end:1347322]] And he uses that discussion to argue that the classical notion of a physical state is not actually applicable to the world as it is, so he answers the EPR paper very directly.
 
-22:18 [[start:1338674][end:1347322]] And he uses that discussion to argue that the classical notion of a physical state is not actually applicable to the world as it is, so he answers the EPR paper very directly.
-[[start:1352270][end:1373810]] And this discussion is currently mostly known as the Bohr-Einstein debate because of course [Niels] Bohr already in 1928 had said in print that the classical notion of causality in space and time simply doesn't apply anymore.
+22:32 [[start:1352270][end:1373810]] And this discussion is currently mostly known as the Bohr-Einstein debate because of course [Niels] Bohr already in 1928 had said, in print, that the classical notion of causality in space and time simply doesn't apply anymore.
+[[start:1374470][end:1377646]] And Einstein objected to that vigorously.
 
-22:54 [[start:1374470][end:1377646]] And Einstein objected to that vigorously.
-[[start:1377838][end:1385090]] But that was 1935 and it was almost 50 years later that entanglement was first observed in the laboratory.
-
-23:05 [[start:1385170][end:1398060]] Here, the 1982 picture is a picture of the interior of Alain Aspect's laboratory when he performed the first entanglement experiment for which he finally won the Nobel Prize last year.
+22:57 [[start:1377838][end:1385090]] But that was 1935. And it was almost 50 years later that entanglement was first observed in the laboratory.
+[[start:1385170][end:1398060]] Here, the 1982 picture is a picture of the interior of Alain Aspect's laboratory when he performed the first entanglement experiment for which he finally won the Nobel Prize last year [2022].
 [[start:1399790][end:1409310]] And these days this kind of experiment is done all over the world and is even done with satellite-borne sources.
 
-23:32 [[start:1412710][end:1428440]] Source is the key to quantum secured communication--as we'll discuss--in quantum cryptography and quantum banking and the quantum internet, all this other stuff that you may have heard of.
-[[start:1429450][end:1440570]] So before talking more about these experiments, I just want to provide a definition of entanglement.
+23:32 [[start:1412710][end:1428440]] Resource[?] is the key to quantum-secured communication--as we'll discuss--in quantum cryptography and quantum banking and the quantum internet, all this other stuff that you may have heard of.
 
-24:02 [[start:1442350][end:1446278]] Entangled simply means not separable.
+23:49 [[start:1429450][end:1440570]] So before talking more about these experiments, I just want to provide a definition of entanglement.
+[[start:1442350][end:1446278]] "Entangled" simply means "not separable."
 [[start:1446374][end:1447850]] That's the definition.
-[[start:1448270][end:1459220]] So a state, a joint state AB is entangled if and only if it does not factor into two separable states.
-
-24:20 [[start:1460310][end:1461426]] And that's it.
+[[start:1448270][end:1459220]] So a state, a joint state "ab" is entangled if and only if it does not factor into two separable states.
+[[start:1460310][end:1461426]] And that's it.
 [[start:1461528][end:1462930]] That's the definition.
-[[start:1463830][end:1484540]] And the literature, and especially the popular literature, is absolutely rife with hype and various kinds of mysterification of entanglement and authors trying to convince you that entanglement is this amazing kind of woo-woo thing.
+
+24:23 [[start:1463830][end:1484540]] And the literature, and especially the popular literature, is absolutely rife with hype and various kinds of mysterification of entanglement and authors trying to convince you that entanglement is this amazing kind of woo-woo thing.
 [[start:1485310][end:1500670]] And whenever you run across that, go back to the definition. Entanglement simply means this simple mathematical condition of non-separability or a state that isn't factorizable.
 [[start:1501170][end:1506346]] And that means that the state does not display classical conditional independence.
 
 25:06 [[start:1506538][end:1509074]] So classically, that's the way to think about it; it's a failure of conditional independence.
-[[start:1512230][end:1519650]] And it's ubiquitous in quantum theory, even though it wasn't actually absurd for almost 50 years after it was predicted.
-[[start:1521130][end:1524182]] So here's what all these experiments look like.
-[[start:1524236][end:1535406]] They're called Bell EPR experiments, after John Bell, who derived the statistical criterion for detecting entanglement and EPR, Einstein, Podolski and Rosen, who did this as a thought experiment and said, if this occurs in the theory, it can't possibly be real.
+[[start:1512230][end:1519650]] And it's ubiquitous in quantum theory, even though it wasn't actually observed for almost 50 years after it was predicted.
+[[start:1521130][end:1524182]] So here's what all these experiments look like. [[See slide "Bell/EPR experiment (lab frame)"]]
+[[start:1524236][end:1535406]] They're called "Bell-EPR Experiments, after John Bell, who derived the statistical criterion for detecting entanglement; and EPR, Einstein, Podolski, and Rosen, who did this as a thought experiment and said, if this occurs in the theory, it can't possibly be real.
 [[start:1544400][end:1545900]] And of course it is real.
 [[start:1546270][end:1549390]] It's now amply demonstrated by experimentation.
-[[start:1550050][end:1551022]] Here's how they work.
+
+25:50 [[start:1550050][end:1551022]] Here's how they work.
 [[start:1551076][end:1552190]] There's a source.
+[[start:1552930][end:1557562]] The source produces a state that is entangled.
+[[start:1557706][end:1562050]] And I've written the typical... what's called a Bell state.
+[[start:1562200][end:1567906]] It's up plus-or-minus down, divided by the square root of two just to normalize it.
+[[start:1568088][end:1573350]] But up plus-or-minus down is clearly not the same as up times down.
 
-25:52 [[start:1552930][end:1557562]] The source produces a state that is entangled.
-[[start:1557706][end:1562050]] And I've written the typical what's called a Bell state.
-[[start:1562200][end:1567906]] It's up plus or minus down divided by the square root of two just to normalize it.
-
-26:08 [[start:1568088][end:1573350]] But up plus or minus down is clearly not the same as up times down.
-[[start:1573420][end:1575720]] So this is not a separable state.
-
-26:16 [[start:1576570][end:1586886]] And this state propagates outward in space and time to two observers who have independent laboratories, for example, on different continents.
-[[start:1586998][end:1602830]] In that space-based experiment that I showed you the picture of from the cover of Science a few years ago, 2017, I think, the two observers have freedom to choose their own reference frame, their own Z axis for measuring spin.
+26:13 [[start:1573420][end:1575720]] So this is not a separable state.
+[[start:1576570][end:1586886]] And this state propagates outward in space and time to two observers who have independent laboratories, for example on different continents.
+[[start:1586998][end:1602830]] In that space-based experiment that I showed you the picture of from the cover of Science a few years ago (2017, I think), the two observers have freedom to choose their own reference frame, their own Z axis for measuring spin.
 [[start:1603170][end:1607550]] They do a spin measurement, and they do this over and over and over again.
 [[start:1607620][end:1617598]] They accumulate statistics and they exchange their results so that they can analyze the joint statistics of their experiment.
 [[start:1617774][end:1623938]] And they check to see whether that joint statistics is consistent with classical probability theory.
+[[start:1624114][end:1634090]] And if it isn't, to a statistically significant level, then they've been able to detect entanglement.
 
-27:04 [[start:1624114][end:1634090]] And if it isn't to a statistically significant level, then they've been able to detect entanglement.
-
-27:14 [[start:1634910][end:1640086]] Now, notice that this process requires classical communication.
+27:14 [[start:1634910][end:1640086]] Now, notice that this process requires _classical_ communication.
 [[start:1640278][end:1653550]] They have to make their independent measurements in their own laboratories, and then they have to exchange results, or one of them has to send results to the other one, or they both have to send their results to some third party.
 [[start:1653890][end:1658962]] But in all of these cases, they're exchanging some classical data.
 [[start:1659096][end:1669730]] And so we have the assumption that whoever gets that classical data knows the language it was recorded in and so can do a joint analysis.
 
-27:50 [[start:1670410][end:1677062]] So I'll just show you another picture of this experiment that's in a standard space time diagram here.
+27:50 [[start:1670410][end:1677062]] So I'll just show you another picture of this experiment that's in a standard space-time diagram here. [[See slide "How Bell/EPR works"]]
 [[start:1677116][end:1679830]] Time is vertical, space is horizontal.
-
-28:01 [[start:1681930][end:1684970]] The two observers are labeled Alice and Bob.
+[[start:1681930][end:1684970]] The two observers are labeled Alice and Bob.
 [[start:1686190][end:1691622]] They share a quantum channel that goes from Alice to the source to Bob.
 [[start:1691686][end:1693340]] That's the entangled state.
 [[start:1694190][end:1696082]] They do some processing.
 
-28:16 [[start:1696246][end:1701194]] And then one of them here, Bob, sends the results to Alice.
-
-28:21 [[start:1701322][end:1703658]] And that's a classical communication.
+28:16 [[start:1696246][end:1701194]] And then one of them, here Bob, sends the results to Alice.
+[[start:1701322][end:1703658]] And that's a classical communication.
 [[start:1703754][end:1707600]] It takes time, and it traverses space.
 [[start:1708470][end:1710910]] So this step is classical.
 [[start:1711070][end:1719250]] So this is why we have to assume classical communication to talk about detecting or using entanglement.
-[[start:1720470][end:1723640]] So now I want to represent this in a different way.
 
-28:45 [[start:1725770][end:1728226]] Using our little picture earlier, we're going to think of Alice, again as two components, a one and a two.
+28:40 [[start:1720470][end:1723640]] So now I want to represent this in a different way.
+[[start:1725770][end:1728226]] Using our little picture earlier, we're going to think of Alice, again as two components, A1 and A2.
 [[start:1733070][end:1736890]] They're separable, so they have to communicate classically.
 [[start:1737230][end:1743866]] They have a classical channel that goes through Bob, and they also now share some quantum channel.
 [[start:1743968][end:1746060]] They share an entangled state.
 
 29:06 [[start:1746670][end:1749642]] And the entangled state, of course, is produced by Bob.
-[[start:1749706][end:1752030]] The source is part of Bob.
+[[start:1749706][end:1752030]] The _source_ is part of Bob.
 [[start:1752450][end:1763060]] And their detectors, if you want to think about it that way, are located on this boundary B, or their interface with the sources on this boundary B.
+[[start:1763830][end:1774760]] And each of them executes a process that accumulates data from the quantum channel and communicates it to the other observer via the classical channel.
 
-29:23 [[start:1763830][end:1774760]] And each of them executes a process that accumulates data from the quantum channel and communicates it to the other observer via the classical channel.
-[[start:1776010][end:1779842]] Now, this picture illustrates what's called a LOCC protocol.
-
-29:39 [[start:1779986][end:1784250]] LOCC means local operations and classical communication.
+29:36 [[start:1776010][end:1779842]] Now, this picture illustrates what's called a LOCC protocol.
+[[start:1779986][end:1784250]] LOCC means local operations and classical communication.
 [[start:1784830][end:1789766]] So A1 and A2 are each operating locally on their boundary.
 [[start:1789878][end:1800938]] They're making measurements locally on their boundary, and they're communicating via actions locally on their boundary and observations locally on their boundary.
 [[start:1801034][end:1806526]] So, for example, I'm communicating with my computer here.
