@@ -278,8 +278,8 @@ date: "2023-08-10 Version 1.0"
 [[start:1752450][end:1763060]] And their detectors, if you want to think about it that way, are located on this boundary B, or their interface with the source is on this boundary B.
 [[start:1763830][end:1774760]] And each of them executes a process that accumulates data from the quantum channel and communicates it to the other observer via the classical channel.
 
-29:36 [[start:1776010][end:1779842]] Now, this picture illustrates what's called a LOCC protocol.
-[[start:1779986][end:1784250]] LOCC means "local operations and classical communication."
+29:36 [[start:1776010][end:1779842]] Now, this picture illustrates what's called a **LOCC protocol.**
+[[start:1779986][end:1784250]] **LOCC** means "local operations and classical communication."
 [[start:1784830][end:1789766]] So A1 and A2 are each operating locally on their boundary.
 [[start:1789878][end:1800938]] They're making measurements locally on their boundary, and they're communicating via actions locally on their boundary and observations locally on their boundary.
 
@@ -391,50 +391,48 @@ date: "2023-08-10 Version 1.0"
 [[start:2451410][end:2460494]] So even though we don't _think_ about our local environments as effectively an error correcting code, that's exactly how we use it.
 [[start:2460532][end:2470180]] We use **stigmergic memory,** or memory out there in the environment, as a way of checking our own memories and assuring that our memory is okay.
 
-41:13 [[start:2473180][end:2476650]] So I talked a little bit about quantum security.
+41:13 [[start:2473180][end:2476650]] So I talked a little bit about **quantum security.**
 [[start:2477420][end:2481064]] Here's how quantum security system works again.
 [[start:2481102][end:2482520]] It's a LOCC protocol.
 [[start:2483660][end:2498720]] We have some classical signal that can be thought of as a code or a key or a one-time pad, for example, that encodes a way of doing experiments.
 [[start:2499380][end:2507890]] And once that's been exchanged, assuming it's secure, then we can use the quantum channel to communicate information.
 
-41:48 [[start:2508500][end:2514308]] And the classical channel has told us what we have to do with that quantum channel.
+41:48 [[start:2508500][end:2514308]] And the classical channel has told us what we have to _do_ with that quantum channel.
 [[start:2514394][end:2521184]] We have to make certain kinds of measurements at, say, particular clock times as measured.
 [[start:2521312][end:2529000]] And we'll get information sent from the past, from the sender.
-[[start:2530060][end:2550130]] And the classical channel protects the quantum channel from adversarial agents, because anything that an adversarial agent does to the quantum channel, if some agent tries to eavesdrop, for example, on the quantum channel, they'll disrupt the quantum channel and the results of our measurement will not be what's expected given the protocol that we run.
+[[start:2530060][end:2550130]] And the classical channel protects the quantum channel from adversarial agents, because anything that an adversarial agent does to the quantum channel, if some agent tries to eavesdrop, for example, on the quantum channel, they'll disrupt the quantum channel and the results of our measurement will not be what's expected given the protocol that we have run.
 
-42:39 [[start:2559574][end:2571380]] So quantum communication is secured by the fact that interfering with some entangled state actually destroys the state so it's detectable.
-
-42:52 [[start:2572040][end:2580360]] We can always know if someone is trying to disrupt our communications, which isn't true if we just have two classical channels.
+42:39 [[start:2559574][end:2571380]] So quantum communication is secured by the fact that interfering with some entangled state actually destroys the state - so it's detectable.
+[[start:2572040][end:2580360]] We can always know if someone is trying to disrupt our communications, which isn't true if we just have two classical channels.
 [[start:2581020][end:2584468]] Charlie can always intercept a message and then recreate it, and that's not possible with the quantum channel.
 
 43:10 [[start:2590720][end:2600130]] So let's refold this diagram so that we've taken the external time back out of it.
-[[start:2601300][end:2609712]] And we have this picture where the two components of Alice are just interacting via their shared boundary with their environment, Bob, and now we can see that the source of redundancy is not time, it's the boundary itself.
+[[start:2601300][end:2609712]] And we have this picture where the two components of Alice are just interacting via their shared boundary with their environment, Bob. And now we can see that the source of redundancy is not _time;_ it's the boundary itself.
 
 43:39 [[start:2619320][end:2634940]] Just sharing the boundary allows Alice's components, A1 and A2, to put copies of the same information on different places on the boundary.
+[[start:2635520][end:2640510]] So the boundary now becomes a resource for redundant storage of information.
+[[start:2641360][end:2666740]] So Alice 1 and Alice 2 can use different parts of the boundary to check what other parts of the boundary say, to check the information that's encoded on other parts of the boundary. So they can define an error correcting code on the boundary itself using this LOCC protocol.
 
-43:55 [[start:2635520][end:2640510]] So the boundary now becomes a resource for redundant storage of information.
-[[start:2641360][end:2666740]] So Alice 1 and Alice 2 can use different parts of the boundary to check what other parts of the boundary say, to check the information that's encoded on other parts of the boundary, so they can define an error correcting code on the boundary itself using this LOCC protocol.
+44:29 [[start:2669320][end:2710710]] So I just want to leave you with this idea: that using classical and quantum channels together allows us to define error correcting codes on boundaries that we share as separate agents, and leave you to think about what shared measurements, what shared quantum reference frames, let us as agents see the same things.
 
-44:29 [[start:2669320][end:2710710]] So I just want to leave you with this idea that using classical and quantum channels together allows us to define error correcting codes on boundaries that we share as separate agents, and leave you to think about what shared measurements, what shared quantum reference frames, let us as agents see the same things.
-
-45:13 [[start:2713560][end:2718580]] And this is what we'll talk about next time in September.
-[[start:2719400][end:2741980]] We'll talk specifically about how space provides us with an error correcting code and try to understand why space is treated as emergent from something else, basically from communication in most of quantum gravity.
+45:13 [[start:2713560][end:2718580]] And this is what we'll talk about next time. In September
+[[start:2719400][end:2741980]] we'll talk specifically about how _space_ provides us with an error correcting code, and try to understand why space is treated as emergent from something else, basically from communication in most of quantum gravity.
 [[start:2742400][end:2744270]] So thank you very much.
-[[start:2744880][end:2752716]] I encourage you to use the interactive QA and to attend the discussion sessions, and we'll see you in September.
+[[start:2744880][end:2752716]] I encourage you to use the interactive Q&A and to attend the discussion sessions, and we'll see you in September.
 [[start:2752908][end:2753890]] Thank you.
 
 45:57 _Daniel:_
 [[start:2757940][end:2758690]] Awesome.
 [[start:2760120][end:2763780]] Chris, thank you for the lecture.
-[[start:2764280][end:2768950]] Andrew, do you have any remarks or questions?
+[[start:2764280][end:2768950]] Ander, do you have any remarks or questions?
 
 46:10 _Ander:_
 [[start:2770040][end:2771750]] Not right now, thank you.
 
 46:13 _Daniel:_
-[[start:2773320][end:2778116]] I'll just ask a few quick questions and if anyone has one, quickly in the live chat.
+[[start:2773320][end:2778116]] I'll just ask a few quick questions. And if anyone has one, quickly, in the live chat!
 
-46:18 [[start:2778228][end:2789224]] So you mentioned the tick of the clock, and in active inference, we often hold up side by side both the discrete time models and the continuous time models.
+46:18 [[start:2778228][end:2789224]] So, you mentioned the tick of the clock. And in Active Inference, we often hold up side by side both the discrete time models and the continuous time models.
 [[start:2789272][end:2796460]] So do clocks have to tick discreetly or how do we think about continuous time modeling.
 
 46:39 _Chris:_
