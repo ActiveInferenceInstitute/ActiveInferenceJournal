@@ -347,51 +347,49 @@ date: "2023-08-10 Version 1.0"
 
 36:21 _Chris:_
 [[start:2181852][end:2182920]] Okay, great.
-[[start:2183530][end:2198650]] So we can think of LOCC, we can think of scattering as LOCC, and I just wanted to now emphasize that effectively what LOCC is implementing is two parallel memories.
-[[start:2202746][end:2209330]] A classical memory, which, as we said in the case of scattering, is memory for preparation.
-[[start:2209910][end:2219940]] In the EPR case, it's memory for preparation for what the experimental setup is, for what the instructions for doing the experiment are.
-[[start:2220890][end:2227058]] And we also have a quantum channel, which is effectively another memory.
-[[start:2227234][end:2230280]] It's something that's extended through time.
 
-37:10 [[start:2230970][end:2237190]] And again, it's implemented by the environment, implemented by Bob, and it involves Bob's clock ticking.
-[[start:2239550][end:2248110]] So whenever we have two memories in parallel, we can construct an error correcting code.
+36:23 [[start:2183530][end:2198650]] So we can think of LOCC, we can think of scattering as LOCC. And I just wanted to now emphasize that effectively what LOCC is implementing is two parallel memories.
+[[start:2202746][end:2209330]] A _classical_ memory, which, as we said in the case of scattering, is memory for preparation.
+[[start:2209910][end:2219940]] In the EPR case, it's memory for preparation for what the experimental setup is, for what the instructions for doing the experiment are.
+
+37:00 [[start:2220890][end:2227058]] And we also have a _quantum_ channel, which is effectively _another memory._
+[[start:2227234][end:2230280]] It's something that's extended through time.
+[[start:2230970][end:2237190]] And again, it's implemented by the environment, implemented by Bob, and it involves Bob's clock ticking.
+[[start:2239550][end:2248110]] So whenever we have two memories in parallel, we can construct an **error correcting code.**
 
 37:28 [[start:2248180][end:2251760]] So think of a simple classical error correcting code.
 [[start:2252610][end:2258026]] For example, the use of parity bits in exchanging digital data.
+[[start:2258148][end:2277190]] So if I send you a bit string classically, and I send it to you two or three times, so there's some redundancy in my signal, and I send you a parity bit, I say, okay, add up your bit string, and the result should be one.
 
-37:38 [[start:2258148][end:2277190]] So if I send you a bit string classically, and I send it to you two or three times, so there's some redundancy in my signal and I send you a parity bit, I say, okay, add up your bit string, and the result should be one.
-[[start:2277340][end:2279160]] It's one on my side.
+37:57 [[start:2277340][end:2279160]] It's one on my side.
 [[start:2279850][end:2283830]] If you add it up and you get zero, there's an error someplace.
 [[start:2284270][end:2286806]] You can use that parity bit to detect errors.
-[[start:2286838][end:2300666]] So you can throw out the bit strings that you receive that have parity of zero and say, oh, the environment interfered somehow with the signal, or some eavesdropper interfered with the signal.
+[[start:2286838][end:2300666]] So you can throw out the bit strings that you receive that have parity of zero and say, oh, the environment interfered somehow with the signal, or some eavesdropper interfered with the signal,
+[[start:2300698][end:2302462]] it made a mistake, or something like that.
 
-38:20 [[start:2300698][end:2302462]] It made a mistake, or something like that.
-[[start:2302516][end:2309294]] So this corresponds to environmental decoherence not being a good assumption.
+38:22 [[start:2302516][end:2309294]] So this corresponds to environmental decoherence not being a good assumption.
+[[start:2309422][end:2314180]] Even though it's classical, environmental interference is not a good assumption in this case.
 
-38:29 [[start:2309422][end:2314180]] Even though it's classical, environmental interference is not a good assumption in this case.
-[[start:2315510][end:2319666]] So a quantum error correcting code is basically the same idea.
+38:35 [[start:2315510][end:2319666]] So a quantum error correcting code is basically the same idea.
 [[start:2319768][end:2333690]] I use some feature of the fact that I have two different memories and that I'm encoding something in time.
+[[start:2333840][end:2344940]] I'm encoding multiple replicates of something in time to provide a way of checking to make sure that I'm sending the correct message.
 
-38:53 [[start:2333840][end:2344940]] I'm encoding multiple replicates of something in time to provide a way of checking to make sure that I'm sending the correct message.
-[[start:2346610][end:2361650]] So I can, for example, consider the message to be my classical memory and consider the quantum process as a process that tests that memory.
+39:06 [[start:2346610][end:2361650]] So I can, for example, consider the message to be my classical memory, and consider the quantum process as a process that _tests_ that memory.
 [[start:2362230][end:2367300]] So I remember that I need to do experiment X, and I will get result Y.
-[[start:2367830][end:2374440]] I actually do experiment X on this quantum channel and see if I get result Y.
-
-39:36 [[start:2376010][end:2379320]] And if I don't get result Y, then something's wrong.
-
-39:40 [[start:2380570][end:2389450]] Either I can't trust the quantum channel or I've remembered my preparation conditions incorrectly.
+[[start:2367830][end:2374440]] I actually _do_ experiment X on this quantum channel and see if I get result Y.
+[[start:2376010][end:2379320]] And if I don't get result Y, then something's wrong.
+[[start:2380570][end:2389450]] Either I can't trust the quantum channel, or I've remembered my preparation conditions incorrectly.
 [[start:2389790][end:2394220]] So I'm using one memory to check the accuracy of the other.
-[[start:2394830][end:2411378]] And this using something about the environment, some channel in the environment to check memory is absolutely ubiquitous, and we use it all the time.
-[[start:2411464][end:2421910]] So, for example, look around your room, and your room hopefully looks more or less the same now that it did at the start of this session.
+
+39:54 [[start:2394830][end:2411378]] And {this} using something about the environment, some channel in the environment, to check memory, is absolutely ubiquitous, and we use it all the time.
+[[start:2411464][end:2421910]] So, for example, look around your room, and your room (hopefully) looks more or less the same now that it did at the start of this session.
 [[start:2423050][end:2425830]] And that's very reassuring.
+[[start:2426730][end:2434570]] It reassures you that something's not happening in the environment that's dangerous and disturbing.
 
-40:26 [[start:2426730][end:2434570]] It reassures you that something's not happening in the environment that's dangerous and disturbing.
-[[start:2435150][end:2447870]] And if you couldn't do that, if your environment was constantly changing and there was no familiarity about the environment, you wouldn't be able to check your memory.
-
-40:48 [[start:2448450][end:2449406]] You wouldn't be able to check your sanity.
-[[start:2451410][end:2460494]] So even though we don't think about our local environments as effectively an error correcting code, that's exactly how we use it.
-
-41:00 [[start:2460532][end:2470180]] We use stigmergic memory, or memory out there in the environment, as a way of checking our own memories and assuring that our memory is okay.
+40:35 [[start:2435150][end:2447870]] And if you couldn't do that, if your environment was constantly changing and there was no familiarity about the environment, you wouldn't be able to check your memory.
+[[start:2448450][end:2449406]] You wouldn't be able to check your sanity.
+[[start:2451410][end:2460494]] So even though we don't _think_ about our local environments as effectively an error correcting code, that's exactly how we use it.
+[[start:2460532][end:2470180]] We use **stigmergic memory,** or memory out there in the environment, as a way of checking our own memories and assuring that our memory is okay.
 
 41:13 [[start:2473180][end:2476650]] So I talked a little bit about quantum security.
 [[start:2477420][end:2481064]] Here's how quantum security system works again.
