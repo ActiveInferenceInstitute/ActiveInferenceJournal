@@ -315,16 +315,17 @@ date: "2023-08-10 Version 1.0"
 [[start:1966790][end:1975494]] And Alice then, later on, at t plus delta t, is doing a different kind of quantum process.
 [[start:1975612][end:1986730]] She's analyzing the data coming out of something like the ATLAS detector, which is a multiparticle counter that's located at the LHC.
 [[start:1987550][end:1997120]] So they share a quantum channel, which is the scattering channel that takes the incoming state and produces the outgoing state.
-[[start:1997810][end:2017006]] And recall from the very first session, as [Richard] Feynman told us, to understand this transition from "in" to "out", we have to integrate over all possible paths that are consistent with conservation of spin helicity, basically, momentum plus spin--all the different spins that are relevant in a high energy physics experiment, including things like lepton number, which is basically a spin.
-[[start:2032490][end:2033858]] Now, how do we know?
+
+33:18 [[start:1997810][end:2017006]] And recall from the very first session, as [Richard] Feynman told us, to understand this transition from "in" to "out", we have to integrate over all possible paths that are consistent with conservation of spin helicity - basically, momentum plus spin--all the different spins that are relevant in a high energy physics experiment, including things like lepton number, which is basically a spin.
+
+33:52 [[start:2032490][end:2033858]] Now, how do we know?
 [[start:2033964][end:2036330]] How do we know what we have to conserve?
 [[start:2036750][end:2048442]] We know what we have to conserve because Alice is doing the experiment has a classical memory that allows her to remember what she prepared.
-[[start:2048586][end:2064770]] She can remember that what she did back in the past was set to protons counterrotating in the LHC, and they had certain energies, and so they had certain momenta, and they were protons, so they had certain spin variables.
+[[start:2048586][end:2064770]] She can remember that what she did back in the past was set two protons counterrotating in the LHC, and they had certain energies, and so they had certain momenta, and they were protons, so they had certain spin variables.
+[[start:2065510][end:2071670]] All of that has to be remembered to make any sense of the output of the detectors and so to actually come up with a measured state that _makes sense._
+[[start:2080410][end:2087078]] And very often this memory channel is neglected by physicists.
 
-34:25 [[start:2065510][end:2071670]] All of that has to be remembered to make any sense of the output of the detectors and so to actually come up with a measured state that makes sense.
-
-34:40 [[start:2080410][end:2087078]] And very often this memory channel is neglected by physicists.
-[[start:2087174][end:2089980]] And I'm going to pause here and let Ander ask a question.
+34:47 [[start:2087174][end:2089980]] And I'm going to pause here and let Ander ask a question.
 
 34:52 _Ander:_
 [[start:2092110][end:2093078]] Thank you, Chris.
@@ -333,8 +334,8 @@ date: "2023-08-10 Version 1.0"
 [[start:2110310][end:2111300]] Thank you.
 
 35:14 _Chris:_
-[[start:2114310][end:2127510]] Yes, for essentially the reason that defined a classical channel, you're always assuming you have something that's protected from decoherence by the environment.
-[[start:2128250][end:2140730]] So, yeah, if you're doing an EPR experiment, you have to assume that you don't have any environmental decoherence between the source and the detectors.
+[[start:2114310][end:2127510]] Yes. For essentially the reason that defined a classical channel, you're always assuming you have something that's protected from decoherence by the environment.
+[[start:2128250][end:2140730]] So, yeah. If you're doing an EPR experiment, you have to assume that you don't have any environmental decoherence between the source and the detectors.
 [[start:2141630][end:2166740]] And similarly, when you're doing a scattering experiment, you have to make the assumption that the environment is not reaching in there and messing with the outgoing state that you're going to see, or reaching in and messing with the incoming state and changing it in some way that reprepares it in a way that you don't know, that you have no knowledge of.
 [[start:2167190][end:2175640]] So, yes, you're making a fairly strong anti-decoherence assumption in any of these settings when you're talking about having a quantum channel.
 
