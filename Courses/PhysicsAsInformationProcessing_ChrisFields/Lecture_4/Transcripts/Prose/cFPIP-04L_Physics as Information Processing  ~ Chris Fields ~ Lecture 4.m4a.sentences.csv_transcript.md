@@ -237,12 +237,12 @@ date: "2023-08-10 Version 1.0"
 25:50 [[start:1550050][end:1551022]] Here's how they work.
 [[start:1551076][end:1552190]] There's a source.
 [[start:1552930][end:1557562]] The source produces a state that is entangled.
-[[start:1557706][end:1562050]] And I've written the typical... what's called a Bell state.
-[[start:1562200][end:1567906]] It's up plus-or-minus down, divided by the square root of two just to normalize it.
+[[start:1557706][end:1562050]] And I've written the typical... what's called a "Bell state."
+[[start:1562200][end:1567906]] It's "up" plus-or-minus "down," divided by the square root of two just to normalize it.
 [[start:1568088][end:1573350]] But up plus-or-minus down is clearly not the same as up times down.
+[[start:1573420][end:1575720]] So this is not a separable state.
 
-26:13 [[start:1573420][end:1575720]] So this is not a separable state.
-[[start:1576570][end:1586886]] And this state propagates outward in space and time to two observers who have independent laboratories, for example on different continents.
+26:16 [[start:1576570][end:1586886]] And this state propagates outward in space and time to two observers who have independent laboratories, for example on different continents.
 [[start:1586998][end:1602830]] In that space-based experiment that I showed you the picture of from the cover of Science a few years ago (2017, I think), the two observers have freedom to choose their own reference frame, their own Z axis for measuring spin.
 [[start:1603170][end:1607550]] They do a spin measurement, and they do this over and over and over again.
 [[start:1607620][end:1617598]] They accumulate statistics and they exchange their results so that they can analyze the joint statistics of their experiment.
