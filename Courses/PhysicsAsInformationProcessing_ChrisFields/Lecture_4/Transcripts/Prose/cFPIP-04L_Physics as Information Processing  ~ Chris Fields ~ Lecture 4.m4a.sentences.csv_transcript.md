@@ -230,7 +230,7 @@ date: "2023-08-10 Version 1.0"
 25:06 [[start:1506538][end:1509074]] So classically, that's the way to think about it; it's a failure of conditional independence.
 [[start:1512230][end:1519650]] And it's ubiquitous in quantum theory, even though it wasn't actually observed for almost 50 years after it was predicted.
 [[start:1521130][end:1524182]] So here's what all these experiments look like. [[See slide "Bell/EPR experiment (lab frame)"]]
-[[start:1524236][end:1535406]] They're called "Bell-EPR Experiments, after John Bell, who derived the statistical criterion for detecting entanglement; and EPR, Einstein, Podolski, and Rosen, who did this as a thought experiment and said, if this occurs in the theory, it can't possibly be real.
+[[start:1524236][end:1535406]] They're called "Bell/EPR experiments," after John Bell, who derived the statistical criterion for detecting entanglement; and EPR, Einstein, Podolski, and Rosen, who did this as a thought experiment and said, if this occurs in the theory, it can't possibly be real.
 [[start:1544400][end:1545900]] And of course it is real.
 [[start:1546270][end:1549390]] It's now amply demonstrated by experimentation.
 
@@ -249,7 +249,7 @@ date: "2023-08-10 Version 1.0"
 [[start:1617774][end:1623938]] And they check to see whether that joint statistics is consistent with classical probability theory.
 [[start:1624114][end:1634090]] And if it isn't, to a statistically significant level, then they've been able to detect entanglement.
 
-27:14 [[start:1634910][end:1640086]] Now, notice that this process requires _classical_ communication.
+27:14 [[start:1634910][end:1640086]] Now, notice that this process _requires_ classical communication.
 [[start:1640278][end:1653550]] They have to make their independent measurements in their own laboratories, and then they have to exchange results, or one of them has to send results to the other one, or they both have to send their results to some third party.
 [[start:1653890][end:1658962]] But in all of these cases, they're exchanging some classical data.
 [[start:1659096][end:1669730]] And so we have the assumption that whoever gets that classical data knows the language it was recorded in and so can do a joint analysis.
@@ -257,7 +257,7 @@ date: "2023-08-10 Version 1.0"
 27:50 [[start:1670410][end:1677062]] So I'll just show you another picture of this experiment that's in a standard space-time diagram here. [[See slide "How Bell/EPR works"]]
 [[start:1677116][end:1679830]] Time is vertical, space is horizontal.
 [[start:1681930][end:1684970]] The two observers are labeled Alice and Bob.
-[[start:1686190][end:1691622]] They share a quantum channel that goes from Alice to the source to Bob.
+[[start:1686190][end:1691622]] They share a quantum channel that goes, from Alice, to the source, to Bob.
 [[start:1691686][end:1693340]] That's the entangled state.
 [[start:1694190][end:1696082]] They do some processing.
 
@@ -268,24 +268,24 @@ date: "2023-08-10 Version 1.0"
 [[start:1711070][end:1719250]] So this is why we have to assume classical communication to talk about detecting or using entanglement.
 
 28:40 [[start:1720470][end:1723640]] So now I want to represent this in a different way.
-[[start:1725770][end:1728226]] Using our little picture earlier, we're going to think of Alice, again as two components, A1 and A2.
+[[start:1725770][end:1728226]] Using our little picture earlier, we're going to think of Alice, again, as two components, A1 and A2.
 [[start:1733070][end:1736890]] They're separable, so they have to communicate classically.
-[[start:1737230][end:1743866]] They have a classical channel that goes through Bob, and they also now share some quantum channel.
+[[start:1737230][end:1743866]] They have a classical channel that goes through Bob, and they also now share some _quantum_ channel.
 [[start:1743968][end:1746060]] They share an entangled state.
 
-29:06 [[start:1746670][end:1749642]] And the entangled state, of course, is produced by Bob.
+29:06 [[start:1746670][end:1749642]] And the entangled state, of course, is produced by _Bob._
 [[start:1749706][end:1752030]] The _source_ is part of Bob.
-[[start:1752450][end:1763060]] And their detectors, if you want to think about it that way, are located on this boundary B, or their interface with the sources on this boundary B.
+[[start:1752450][end:1763060]] And their detectors, if you want to think about it that way, are located on this boundary B, or their interface with the source is on this boundary B.
 [[start:1763830][end:1774760]] And each of them executes a process that accumulates data from the quantum channel and communicates it to the other observer via the classical channel.
 
 29:36 [[start:1776010][end:1779842]] Now, this picture illustrates what's called a LOCC protocol.
-[[start:1779986][end:1784250]] LOCC means local operations and classical communication.
+[[start:1779986][end:1784250]] LOCC means "local operations and classical communication."
 [[start:1784830][end:1789766]] So A1 and A2 are each operating locally on their boundary.
 [[start:1789878][end:1800938]] They're making measurements locally on their boundary, and they're communicating via actions locally on their boundary and observations locally on their boundary.
-[[start:1801034][end:1806526]] So, for example, I'm communicating with my computer here.
-[[start:1806628][end:1808958]] We can consider it my boundary.
 
-30:09 [[start:1809134][end:1823094]] And stuff is happening in the environment that's implemented by the internet, and you're receiving those communications locally on your boundary, on your laptop or whatever it is you're using.
+30:01 [[start:1801034][end:1806526]] So, for example, I'm communicating with my computer here.
+[[start:1806628][end:1808958]] We can consider it my boundary.
+[[start:1809134][end:1823094]] And stuff is happening in the environment that's implemented by the Internet, and you're receiving those communications locally on your boundary, on your laptop or whatever it is you're using.
 [[start:1823292][end:1826360]] So that's what local operations means.
 
 30:26 [[start:1826890][end:1831890]] And these protocols specifically involve classical communication.
@@ -293,32 +293,32 @@ date: "2023-08-10 Version 1.0"
 [[start:1834902][end:1839370]] And a Bell/EPR experiment is just an example of a LOCC protocol.
 
 30:40 [[start:1840670][end:1845974]] The observers exchange information about how they're going to do their experiments.
-[[start:1846022][end:1848202]] They're both going to measure D spin.
+[[start:1846022][end:1848202]] They're both going to measure Z spin.
 [[start:1848346][end:1855070]] They're going to use independently chosen reference frames, and they're going to look at the output from some agreed upon source.
 [[start:1855970][end:1858480]] So that's all classically set up.
 [[start:1858870][end:1864270]] Then they actually make their observations, and then they classically communicate their results.
+[[start:1864350][end:1867620]] So classical communication, front and back. 
 
-31:04 [[start:1864350][end:1877510]] So classical communication, front and back LOCC protocols, are not limited to this sort of Bell/EPR sort of setting.
-[[start:1877930][end:1882630]] We can also represent a scattering experiment as a LOCC protocol.
+31:08 [[start:1868950][end:1877510]] LOCC protocols are not limited to this sort of Bell/EPR sort of setting.
+[[start:1877930][end:1882630]] We can also represent a _scattering_ experiment as a LOCC protocol.
 [[start:1884030][end:1889718]] So here's a representation of scattering as a LOCC protocol.
+[[start:1889814][end:1900494]] And you can see all I've done is cut that previous boundary at the division between A1 and A2.
+[[start:1900692][end:1914290]] And I've then _extended_ it in some external time, the time that is counted by Bob's clock, not by Alice's clock.
+[[start:1914950][end:1917250]] That's what's meant by external.
 
-31:29 [[start:1889814][end:1900494]] And you can see all I've done is cut that previous boundary at the division between A1 and A2.
-[[start:1900692][end:1914290]] And I've then extended it in some external time, the time that is counted by Bob's clock, not by Alice's clock.
-
-31:54 [[start:1914950][end:1917250]] That's what's meant by external.
-[[start:1917910][end:1923718]] And I've relabeled A2 as A1 at a later time.
+31:57 [[start:1917910][end:1923718]] And I've relabeled Alice2 as Alice1 at a later time.
 [[start:1923804][end:1936300]] So now what Alice is doing is communicating with her past self, or A1 is communicating with her future self, and they're each doing something different.
-[[start:1937470][end:1944490]] A1 is executing a procedure that in the laboratory we call state preparation.
+[[start:1937470][end:1944490]] A1 is executing a procedure that in the laboratory we call "state preparation."
 [[start:1945470][end:1953450]] She's preparing a state that we'll call "in", which is just the initial state of some scattering experiment.
 
-32:33 [[start:1953530][end:1965220]] So, for example, at the LHC [Large Hadron Collider], "in" is some state of two protons that are portaling around the ring at the LHC at close to the speed of light.
-[[start:1966790][end:1975494]] And Alice, then later on at t plus delta t, is doing a different kind of quantum process.
+32:33 [[start:1953530][end:1965220]] So, for example, at the LHC [Large Hadron Collider], "in" is some state of two protons that are whirling around the ring at the LHC at close to the speed of light.
+[[start:1966790][end:1975494]] And Alice then, later on, at t plus delta t, is doing a different kind of quantum process.
 [[start:1975612][end:1986730]] She's analyzing the data coming out of something like the ATLAS detector, which is a multiparticle counter that's located at the LHC.
 [[start:1987550][end:1997120]] So they share a quantum channel, which is the scattering channel that takes the incoming state and produces the outgoing state.
 [[start:1997810][end:2017006]] And recall from the very first session, as [Richard] Feynman told us, to understand this transition from "in" to "out", we have to integrate over all possible paths that are consistent with conservation of spin helicity, basically, momentum plus spin--all the different spins that are relevant in a high energy physics experiment, including things like lepton number, which is basically a spin.
 [[start:2032490][end:2033858]] Now, how do we know?
 [[start:2033964][end:2036330]] How do we know what we have to conserve?
-[[start:2036750][end:2048442]] We know what we have to conserve because Alice is doing the experiment as a classical memory that allows her to remember what she prepared.
+[[start:2036750][end:2048442]] We know what we have to conserve because Alice is doing the experiment has a classical memory that allows her to remember what she prepared.
 [[start:2048586][end:2064770]] She can remember that what she did back in the past was set to protons counterrotating in the LHC, and they had certain energies, and so they had certain momenta, and they were protons, so they had certain spin variables.
 
 34:25 [[start:2065510][end:2071670]] All of that has to be remembered to make any sense of the output of the detectors and so to actually come up with a measured state that makes sense.
