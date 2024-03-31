@@ -433,38 +433,38 @@ date: "2023-08-10 Version 1.0"
 [[start:2773320][end:2778116]] I'll just ask a few quick questions. And if anyone has one, quickly, in the live chat!
 
 46:18 [[start:2778228][end:2789224]] So, you mentioned the tick of the clock. And in Active Inference, we often hold up side by side both the discrete time models and the continuous time models.
-[[start:2789272][end:2796460]] So do clocks have to tick discreetly or how do we think about continuous time modeling.
+[[start:2789272][end:2796460]] So do clocks have to tick discretely? Or, how do we think about continuous time modeling?
 
 46:39 _Chris:_
-[[start:2799700][end:2801036]] In this quantum setting they do have to tick discreetly because one has to be able to distinguish Alice's preparation of the qubits on her boundary from Bob's measurements of the qubits on the boundary.
+[[start:2799700][end:2801036]] In this quantum setting they do have to tick discretely, because one has to be able to distinguish Alice's preparation of the qubits on her boundary from Bob's measurements of the qubits on the boundary.
 [[start:2817640][end:2827130]] And this process can be extremely fast with respect to any kind of sense of macroscopic time.
 
 47:09 [[start:2829260][end:2836060]] Your eyes are responding to photons in, I think it's hundreds of femtoseconds.
-[[start:2837440][end:2853760]] So the discrete transitions that are effectively time measurements for you are at that very fast molecular timescale, much, much faster than our typical clocks.
+[[start:2837440][end:2853760]] So the discrete transitions that are effectively time measurements for you are, at that very fast molecular timescale, much, much faster than our typical clocks.
 [[start:2855300][end:2865860]] Now, when we try to do very fast timing, we're constructing a faster clock than that, but it's a clock that we can only observe indirectly.
 
 47:50 _Daniel:_
 [[start:2870640][end:2871292]] Awesome.
 [[start:2871426][end:2871916]] Okay.
-[[start:2872018][end:2892390]] Now this one maybe connects a little bit to application, but with all the developments happening in theory, some of which you're reviewing here and also in practice with quantum computation, and then keeping in mind this distinction sorry, I've lost you back.
+[[start:2872018][end:2892390]] Now, this one maybe connects a little bit to application, but: With all the developments happening in theory, some of which you're reviewing here and also in practice with quantum computation, and then keeping in mind this distinction... {Sorry, I've lost you.} {Back?}
 
-48:17 _Chris:_
-[[start:2897440][end:2898936]] I've lost you, Daniel.
+{48:17 _Chris:_
+[[start:2897440][end:2898936]] I've lost you, Daniel.}
 
-48:19 _Daniel:_
+{48:19 _Daniel:_
 [[start:2899048][end:2901388]] Okay, we'll wait till you're back.
-[[start:2901554][end:2902460]] I can see you.
+[[start:2901554][end:2902460]] I can see you.}
 
-48:22 _Chris:_
+{48:22 _Chris:_
 [[start:2902530][end:2902908]] No.
-[[start:2902994][end:2903724]] Okay.
+[[start:2902994][end:2903724]] Okay.}
 
-48:23 [[start:2903922][end:2904364]] All right.
-[[start:2904402][end:2905340]] Just repeat.
+{48:23 [[start:2903922][end:2904364]] All right.
+[[start:2904402][end:2905340]] Just repeat.}
 
 48:26 _Daniel:_
-[[start:2906560][end:2906972]] Yeah.
-[[start:2907026][end:2937210]] So given these rapid and ongoing developments in theory and practice related to quantum information science and quantum information security, how are people using this distinction of the classical stigmergic memory and then the quantum cognitive process to anticipate how to develop information systems that are reliable going forward?
+{[[start:2906560][end:2906972]] Yeah.}
+[[start:2907026][end:2937210]] So, given these rapid and ongoing developments in theory and practice related to quantum information science and quantum information security, how are people using this distinction of the classical stigmergic memory and then the quantum cognitive process to anticipate how to develop information systems that are reliable going forward?
 
 49:01 _Chris:_
 [[start:2941520][end:2954880]] I don't know of any instances in which thinking about quantum cognition has entered directly into any design of communication systems.
