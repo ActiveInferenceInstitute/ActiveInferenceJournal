@@ -12,7 +12,7 @@ date: "2023-09-14 Version 1.0"
 
 00:06 _Daniel:_
 [[start:6720][end:8348]] Hello and welcome, everyone.
-[[start:8514][end:15624]] It is September 14th, 2023, and we are in the course: Physics as information processing.
+[[start:8514][end:15624]] It is September 14th, 2023, and we are in the course Physics as information processing.
 [[start:15752][end:17150]] It's Lecture 5.
 [[start:18080][end:20904]] Looking forward to this lecture and then a little conversation.
 
@@ -23,15 +23,16 @@ date: "2023-09-14 Version 1.0"
 [[start:24800][end:25596]] Okay.
 [[start:25778][end:27100]] Thank you, Daniel.
 [[start:27840][end:32340]] And, welcome to session 5 of Physics of information processing.
-[[start:33400][end:46680]] And, today we're going to talk about Spacetime, and particularly about the idea that Spacetime is emergent from information processing.
+[[start:33400][end:46680]] And, today we're going to talk about **Spacetime**, and particularly about the idea that Spacetime is emergent from information processing.
 [[start:47340][end:54940]] And, this has now become a very mainstream idea in the quantum information and quantum gravity communities.
 
 00:57 [[start:57360][end:65580]] And there are still, of course, some people holding out for the idea that Spacetime is fundamental.
-[[start:66260][end:93000]] But I would say that, at least in these communities, I expect it's become now the dominant idea that Spacetime is not fundamental, that Spacetime is not part of the basic ontology of reality or something like that, and that instead, Spacetime is a construct.
+[[start:66260][end:93000]] But I would say that, at least in these communities, I expect it's become now the dominant idea that Spacetime is _not_ fundamental, that Spacetime is not part of the basic ontology of reality or something like that, and that instead, Spacetime is a **construct.**
 
-01:33 [[start:93660][end:98570]] So, that's what today's Session is going to be about.
-[[start:99740][end:123360]] So, for those of you who are just joining or who would like a little review, we started this course talking about Quantum Information Theory and the idea that Quantum Information Theory is actually a new science about systems that communicate across a boundary.
-[[start:123700][end:137632]] And, the systems are always called Alice and Bob for kind of historical reasons. And, we emphasized that this new science is topological.
+01:33 [[start:93660][end:98570]] So, that's what today's session is going to be about.
+[[start:99740][end:106110]] So, for those of you who are just joining or who would like a little review: 
+[[start:107200][end:123360]] We started this course talking about Quantum Information Theory and the idea that Quantum Information Theory is actually a _new_ science about systems that communicate across a boundary.
+[[start:123700][end:137632]] And the systems are always called Alice and Bob for kind of historical reasons. And, we emphasized that this new science is **topological.**
 
 02:17 [[start:137696][end:140752]] It's about connectivity between systems.
 [[start:140816][end:142596]] It's not geometric.
