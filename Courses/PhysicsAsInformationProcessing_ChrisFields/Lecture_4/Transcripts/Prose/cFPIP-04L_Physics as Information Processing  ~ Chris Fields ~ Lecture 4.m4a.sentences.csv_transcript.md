@@ -142,7 +142,7 @@ date: "2023-08-10 Version 1.0"
 [[start:931576][end:935598]] She can't know that she's _not_ entangled with Bob.
 
 15:35 [[start:935774][end:942360]] And that's a useful thing to think about philosophically as it applies to you and me.
-[[start:942810][end:946360]] We can't actually know that we have independent states.![image](https://github.com/ActiveInferenceInstitute/ActiveInferenceJournal/assets/30888152/e202d421-db89-4b87-abd6-588203f0a920)
+[[start:942810][end:946360]] We can't actually know that we have independent states. [[See image at https://github.com/ActiveInferenceInstitute/ActiveInferenceJournal/assets/30888152/e202d421-db89-4b87-abd6-588203f0a920]]
 
 15:47 [[start:947690][end:957530]] Alice can't measure her own entanglement entropy, so she can't know whether she has components that have to communicate classically.
 
@@ -471,34 +471,32 @@ date: "2023-08-10 Version 1.0"
 [[start:2955940][end:2961360]] The ability of humans to interact with these systems is just assumed.
 [[start:2962500][end:2976928]] So it's just assumed that the user can interact with, say, a computer interface, which is the sort of interface that will be provided or is provided to any quantum computer.
 [[start:2977114][end:2985770]] So if you think about a quantum computer, a practical quantum computer, it has classical interfaces, front and back.
-[[start:2986700][end:2999196]] So in thinking about interacting with the computer, I'm giving it some classical problem statement, for example, and asking for some classical answer.
 
-49:59 [[start:2999298][end:3003520]] And what it's going to give me is a probability distribution of classical answers.
-
-50:04 [[start:3004500][end:3011520]] But I can, by running the calculation many times, make that probability distribution fairly tight.
+49:46 [[start:2986700][end:2999196]] So in thinking about interacting with the computer, I'm giving it some classical problem statement, for example, and asking for some classical answer.
+[[start:2999298][end:3003520]] And what it's going to give me is a probability distribution of classical answers.
+[[start:3004500][end:3011520]] But I can, by running the calculation many times, make that probability distribution fairly tight.
 
 50:16 [[start:3016130][end:3020340]] Yeah, I don't know of anyone talking about quantum BCIs [Brain-Computer Interfaces] at this point.
 [[start:3021110][end:3022900]] It'd be an interesting question.
 
 50:27 _Daniel:_
-[[start:3027030][end:3036450]] Was it always understood, these sorts of blind spots and axioms associated with classical communication, was it developed as kind of like a proposal or like a special case and more unpacking was left for later?
-[[start:3046928][end:3050730]] Or are these blind spots things that we're now coming into awareness of?
-[[start:3050800][end:3054170]] Given what we're learning in the quantum information sciences?
+[[start:3027030][end:3036450]] Was it always understood, these sorts of blind spots and axioms associated with classical communication? Was it developed as kind of {like} a proposal or like a special case and more unpacking was left for later?
+[[start:3046928][end:3050730]] Or are these blind spots things that we're now coming into awareness of,
+[[start:3050800][end:3054170]] given what we're learning in the quantum information sciences?
 
 50:55 _Chris:_
 [[start:3055890][end:3058560]] I think we're learning how serious they are.
-
-50:59 [[start:3059970][end:3064720]] But they were certainly recognized even by [Niels] Bohr in his 1928 paper [1928, The Quantum Postulate and the Recent Development of Atomic Theory, https://www.nature.com/articles/121580a0].
+[[start:3059970][end:3064720]] But they were certainly recognized even by [Niels] Bohr in his 1928 paper [The Quantum Postulate and the Recent Development of Atomic Theory](https://www.nature.com/articles/121580a0).
 [[start:3065490][end:3070050]] And that's a very good paper, too.
-[[start:3070200][end:3074194]] It's called the present state of quantum theory or something like that.
+[[start:3070200][end:3074194]] It's called "The present state of quantum theory," or something like that.
 [[start:3074232][end:3079410]] And it's in Nature, and it's available on the web somewhere.
 [[start:3081050][end:3082760]] I have a copy of it.
 
-51:23 [[start:3083610][end:3098010]] But it was written, in a sense, as Bohr's summary of the 1927 Solvay Conference [Fifth Solvay Conference, Oct 24-29, 1927], which was the conference at which everyone doing quantum theory at that time got together to talk about their results.
-[[start:3098990][end:3116566]] And in it, [Niels] Bohr essentially presents what came to be the Copenhagen interpretation, which I think is probably unfairly called an interpretation.
+51:23 [[start:3083610][end:3098010]] But it was written, in a sense, as Bohr's summary of the 1927 Solvay Conference [[Fifth Solvay Conference on Physics, Oct 24-29, 1927]], which was the conference at which everyone doing quantum theory at that time got together to talk about their results.
+[[start:3098990][end:3116566]] And in it, Bohr essentially presents what came to be the Copenhagen interpretation, which I think is probably unfairly called an interpretation.
 
 51:56 [[start:3116698][end:3122850]] It's sort of the Copenhagen pragmatic stance toward quantum theory.
-[[start:3123670][end:3137320]] And essentially what Bohr says is that if we're going to do science, we have to assume that people can talk to each other.
+[[start:3123670][end:3137320]] And essentially what Bohr says is that, if we're going to do science, we have to assume that people can talk to each other.
 [[start:3138650][end:3152010]] And if we're going to do science, we have to assume that there are instruments that we can manipulate and have reasonable confidence that we know what manipulation we've done.
 
 52:32 [[start:3152080][end:3161200]] So if I turn a knob from one to two, I have to be reasonably confident that I'm making a particular change that I can understand.
@@ -506,9 +504,8 @@ date: "2023-08-10 Version 1.0"
 [[start:3172390][end:3181560]] And if we think about any of those assumptions in purely quantum theoretic terms, then all sorts of questions are raised, right?
 
 53:02 [[start:3182010][end:3184178]] Every quantum system is unique.
-[[start:3184354][end:3188870]] We have the no-cloning theorem, so every scientific instrument is unique.
-
-53:09 [[start:3189690][end:3194934]] So there's no such thing as exactly replicating an experiment.
+[[start:3184354][end:3188870]] We have the **no-cloning theorem,** so every scientific instrument is unique.
+[[start:3189690][end:3194934]] So there's no such thing as exactly replicating an experiment.
 [[start:3195062][end:3195740]] Right?
 [[start:3196350][end:3202460]] That's a coarse-grained description of what I've done with a completely unique quantum system.
 [[start:3202990][end:3207646]] And my brain, of course, is unique, and yours is too.
@@ -516,25 +513,24 @@ date: "2023-08-10 Version 1.0"
 
 53:30 [[start:3210050][end:3217070]] So talking about us sharing a language is essentially a coarse-grained assumption.
 [[start:3217910][end:3225710]] And what the Copenhagen stance is all about is coarse-graining yielding effective classicality.
-[[start:3225870][end:3234840]] Or what that really means is coarse-graining yielding a description that we can use in the language that we understand?
-[[start:3235770][end:3252250]] So these are very, very old issues that have been recognized for a long time, but I think in part because of the disaster of "shut up and calculate", they haven't really been talked about in the classroom.
+[[start:3225870][end:3234840]] Or what that really means is coarse-graining yielding a description that we can use in the language that we understand.
+[[start:3235770][end:3252250]] So these are very, very old issues that have been recognized for a long time, but I think in part because of the disaster of "shut up and calculate," they haven't really been talked about in the classroom.
 
 54:14 _Daniel:_
 [[start:3254990][end:3255546]] Awesome.
 [[start:3255648][end:3258270]] I'll just read short questions from the chat.
 [[start:3258930][end:3264190]] We can pass them to the discussion section, but there's a lot of great diverse questions.
 
-54:24 _Chris:_
-[[start:3264340][end:3267680]] So Alexi wrote, I think I've lost you again.
-[[start:3268470][end:3270318]] The revenge of zoom.
+54:23 [[start:3264340][end:3267680]] So Alexey wrote... {I think I've lost you again.}
+{[[start:3268470][end:3270318]] The revenge of zoom.}
 
 54:30 _Daniel:_
 [[start:3270494][end:3277570]] Well, we looked at the chart earlier where, like, Bob was talking to Alice, the unidirectional communication.
-
-54:40 [[start:3280550][end:3281570]] Okay, okay.
+{54:40 [[start:3280550][end:3281570]] Okay, okay.
 [[start:3281720][end:3282978]] The unidirectional...
-[[start:3283074][end:3285640]] The third party is recording it, I'm sure.
-[[start:3286410][end:3298038]] Alexi wrote, regarding the environment being used for error correction, a symptom of derealization in psychological trauma breakdown, we don't recognize the environment around us and it's scary.
+[[start:3283074][end:3285640]] The third party is recording it, I'm sure.}
+
+54:46 [[start:3286410][end:3298038]] Alexey wrote, "Regarding the environment being used for error correction, a symptom of 'derealization' in psychological trauma - break that down - we don't recognize the environment around us and it's scary?"
 
 55:04 _Chris:_
 [[start:3304350][end:3305340]] Makes sense.
@@ -547,33 +543,34 @@ date: "2023-08-10 Version 1.0"
 
 55:07 _Daniel:_
 [[start:3307668][end:3308778]] From Bala.
-[[start:3308874][end:3309802]] Nice presentation.
-
-55:09 [[start:3309866][end:3315994]] I heard Chris say entangled states are LOCC for a specific reference frame.
-[[start:3316122][end:3321730]] Is this entanglement unitary or is it related to the numbers of degrees of freedom?
+[[start:3308874][end:3309802]] "Nice presentation!
+[[start:3309866][end:3315994]] I heard Chris say entangled states are LOCC for a specific reference frame.
+[[start:3316122][end:3321730]] Is this entanglement unitary, or is it related to the numbers of degrees of freedom?"
 
 55:27 _Chris:_
-[[start:3327320][end:3331270]] I think the quick answer would be both.
+[[start:3327320][end:3331270]] I think the quick answer would be "both."
 [[start:3332940][end:3339720]] If you have a complex system with many degrees of freedom, some can be entangled while others aren't.
 [[start:3341500][end:3345500]] It depends on what parts of the state are separable.
 [[start:3347040][end:3357500]] So again, entanglement is just a statement about components of a joint state that factor or don't.
 
 55:59 [[start:3359700][end:3368000]] So you can have a joint state that looks separable along some dimensions, but... [inaudible] ...in other dimensions.
-[[start:3368580][end:3377190]] The other big complication here is that whether a state looks entangled depends on the reference frames that you use to measure it with.
-[[start:3378920][end:3388896]] And if you pick entangled reference frames, then what we ordinarily think of as separable entangled states become separable.
-
-56:29 [[start:3389088][end:3391270]] So you can move entanglement around.
+[[start:3368580][end:3377190]] The other big complication here is that, whether a state looks entangled depends on the reference frames that you use to measure it with.
+[[start:3378920][end:3388896]] And if you pick entangled reference frames, then what we ordinarily think of as {separable...} entangled states become separable.
+[[start:3389088][end:3391270]] So you can move entanglement around.
 
 56:33 _Daniel:_
 [[start:3393800][end:3394524]] Awesome.
-[[start:3394682][end:3411360]] Okay, from Roland Rodriguez--is the discrete temporality only within the context of a given holographic screen interface, with time being bracketed otherwise beyond interface systems, is continuity or discretization kept agnostic?
+[[start:3394682][end:3411360]] Okay, from Roland-Rodriguez: "Is the discrete temporality only within the context of a given holographic screen qua interface, with time being bracketed otherwise? Beyond interfaced systems, is continuity or discretization kept agnostic?"
 
-56:54 _Chris:_
-[[start:3414900][end:3419650]] I think if I understand the question correctly, it's yes.
+
+[[start:3414900][end:3419650]] I think (if I understand the question correctly) it's "yes."
 [[start:3420840][end:3434280]] If I don't draw any boundaries, I just have the joint state, then the evolution is unitary and in a sense time plays no role.
 [[start:3434940][end:3443720]] And if unitary evolution is perfectly time symmetric, so time actually drops out altogether.
 
-57:25 [[start:3445840][end:3446204]] Awesome.
+{57:25  _Daniel:_
+[[start:3445840][end:3446204]] Awesome.}
+
+57:26 _Chris:_
 [[start:3446242][end:3448780]] So to talk about time, we have to draw boundaries.
 
 57:29 _Daniel:_
