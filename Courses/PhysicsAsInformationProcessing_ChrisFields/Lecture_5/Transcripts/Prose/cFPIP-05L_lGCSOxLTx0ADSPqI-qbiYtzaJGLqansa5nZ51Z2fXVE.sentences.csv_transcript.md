@@ -32,17 +32,17 @@ date: "2023-09-14 Version 1.0"
 01:33 [[start:93660][end:98570]] So, that's what today's session is going to be about.
 [[start:99740][end:106110]] So, for those of you who are just joining or who would like a little review: 
 [[start:107200][end:123360]] We started this course talking about Quantum Information Theory and the idea that Quantum Information Theory is actually a _new_ science about systems that communicate across a boundary.
-[[start:123700][end:137632]] And the systems are always called Alice and Bob for kind of historical reasons. And, we emphasized that this new science is **topological.**
+[[start:123700][end:137632]] And the systems are always called Alice and Bob for kind of historical reasons. And, we emphasized that this new science is _topological._
 
-02:17 [[start:137696][end:140752]] It's about connectivity between systems.
+02:17 [[start:137696][end:140752]] It's about _connectivity_ between systems.
 [[start:140816][end:142596]] It's not geometric.
-[[start:142788][end:146436]] So, it doesn't assume a Spacetime embedding.
-[[start:146628][end:152100]] So, it leaves open the possibility that Spacetime is actually a construct.
+[[start:142788][end:146436]] So it doesn't assume a Spacetime embedding.
+[[start:146628][end:152100]] So it leaves open the possibility that Spacetime is actually a construct.
 [[start:152180][end:155150]] It doesn't assume Spacetime up front.
 
-02:36 [[start:156560][end:179824]] And, in the 2nd Session of the course, I think, we talked about how this boundary could always be represented as an array of qubits, and that what the systems on each side of the boundary do to communicate is prepare and then measure the states of these qubits.
+02:36 [[start:156560][end:179824]] And, in the 2nd session of the course, I think, we talked about how this boundary could always be represented as an array of qubits, and that what the systems on each side of the boundary do to communicate is prepare and then measure the states of these qubits.
 [[start:179872][end:191440]] So, they communicate by exchanging classical information via a quantum channel.
-[[start:192390][end:206630]] And, this introduces a particular kind of quantum noise whenever they don't share the reference frames that they use to prepare the bits and measure the bits.
+[[start:192390][end:206630]] And, this introduces a particular kind of quantum _noise_ whenever they don't share the reference frames that they use to prepare the bits and measure the bits.
 [[start:206970][end:217646]] So, it's not necessarily a perfect communication channel from a classical fidelity point of view, but all of the noise is quantum noise.
 
 03:37 [[start:217698][end:225100]] It's not classical, and it always derives from differences in the reference frames that are used by the two agents.
