@@ -1,8 +1,10 @@
 ---
 title:  'Physics as Information Processing - Lecture 5, "Spacetime"'
+
 author:
 - 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)'
 - 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+
 date: "2023-09-14 Version 1.0"
 ...
 
@@ -11,7 +13,7 @@ date: "2023-09-14 Version 1.0"
 00:06 _Daniel:_
 [[start:6720][end:8348]] Hello and welcome, everyone.
 [[start:8514][end:15624]] It is September 14th, 2023, and we are in the course: Physics as information processing.
-[[start:15752][end:17150]] It's lecture 5.
+[[start:15752][end:17150]] It's Lecture 5.
 [[start:18080][end:20904]] Looking forward to this lecture and then a little conversation.
 
 00:20 [[start:20952][end:21884]] Chris, off to you.
