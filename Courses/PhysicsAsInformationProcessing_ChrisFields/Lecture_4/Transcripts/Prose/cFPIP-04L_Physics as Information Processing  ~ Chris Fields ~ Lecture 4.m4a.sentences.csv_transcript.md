@@ -1,9 +1,11 @@
 ---
 title:  'Physics as Information Processing - Lecture 4, "Communicating Observers"'
+
 author:
 - 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)'
 - 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
 - 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+  
 date: "2023-08-10 Version 1.0"
 ...
 
@@ -644,17 +646,17 @@ date: "2023-08-10 Version 1.0"
 [[start:3796840][end:3810810]] Yeah, this is the old idea that phylogeny and ontogeny are related in some way, which, from an embryonic development point of view, they're certainly analogous in ways.
 
 1:03:33 _Ander:_
-[[start:3813340][end:3819700]] Sorry, if I may ask one last question--should be very quick--regarding the weak rotation.
-[[start:3819780][end:3828590]] I'm still a bit unsure how it ties to this diagrammatic notation that we had with quantum channels on show so on.
+[[start:3813340][end:3819700]] Sorry, if I may ask one last question--should be very quick--regarding the **Wick rotation.**
+[[start:3819780][end:3828590]] I'm still a bit unsure how it ties to this diagrammatic notation that we had with quantum channels. {Unsure; so I'm...}
 
-1:03:51 [[start:3831760][end:3840240]] In the second session, we briefly talked about the weak rotation being a reversal in the direction of time.
+1:03:51 [[start:3831760][end:3840240]] In the second session, we briefly talked about the Wick rotation being a reversal in the direction of time.
 [[start:3840310][end:3842960]] Is there any relation to today's session?
 
 1:04:05 _Chris:_
-[[start:3845880][end:3862388]] Yeah, whenever we think about the flow of time as driven by the input-output cycle, the input-output cycle for agents separated by a boundary, there's always a sign change.
-[[start:3869182][end:3869560]] Right.
+[[start:3845880][end:3862388]] Yeah, whenever we think about the flow of time as driven by the input-output cycle, the input-output cycle for agents separated by a boundary, there's always a sign change,
+[[start:3869182][end:3869560]] right?
 [[start:3869630][end:3872460]] My input is your output, and vice versa.
-[[start:3873200][end:3899540]] So when we think about Bob's clock ticking, when Alice does something, his direction of time, in a sense, points with respect to the boundary opposite to hers, but that's only with respect to the boundary.
+[[start:3873200][end:3899540]] So when we think about Bob's clock ticking when Alice does something, his direction of time, in a sense, points with respect to the boundary opposite to hers, but that's only with respect to the boundary.
 
 1:05:00 [[start:3900600][end:3905270]] He sees information flowing in, and she sees information flowing in.
 
@@ -668,7 +670,7 @@ date: "2023-08-10 Version 1.0"
 [[start:3918520][end:3922668]] Very well appreciated by the viewers and by us.
 
 1:05:22 [[start:3922754][end:3935112]] So we'll certainly look forward to reviewing the Q&A, and everybody is welcome and encouraged to join for the participatory discussion in about two weeks on Saturday.
-[[start:3935256][end:3938270]] So till next time.
+[[start:3935256][end:3938270]] So - till next time!
 
 1:05:38 _Chris:_
 [[start:3938880][end:3940300]] All right, thank you.
