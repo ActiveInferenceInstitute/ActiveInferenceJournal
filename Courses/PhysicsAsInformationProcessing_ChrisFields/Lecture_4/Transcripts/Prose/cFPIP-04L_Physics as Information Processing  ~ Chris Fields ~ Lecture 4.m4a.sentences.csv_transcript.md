@@ -560,9 +560,10 @@ date: "2023-08-10 Version 1.0"
 
 56:33 _Daniel:_
 [[start:3393800][end:3394524]] Awesome.
-[[start:3394682][end:3411360]] Okay, from Roland-Rodriguez: "Is the discrete temporality only within the context of a given holographic screen qua interface, with time being bracketed otherwise? Beyond interfaced systems, is continuity or discretization kept agnostic?"
+[[start:3394682][end:3397100]] Okay, from Roland-Rodriguez: 
+[[start:3397440][end:3411360]] "Is the discrete temporality only within the context of a given holographic screen qua interface, with time being bracketed otherwise? Beyond interfaced systems, is continuity vs discreteness kept agnostic?"
 
-
+56:54 _Chris:_
 [[start:3414900][end:3419650]] I think (if I understand the question correctly) it's "yes."
 [[start:3420840][end:3434280]] If I don't draw any boundaries, I just have the joint state, then the evolution is unitary and in a sense time plays no role.
 [[start:3434940][end:3443720]] And if unitary evolution is perfectly time symmetric, so time actually drops out altogether.
@@ -575,66 +576,65 @@ date: "2023-08-10 Version 1.0"
 
 57:29 _Daniel:_
 [[start:3449280][end:3449740]] Awesome.
-[[start:3449810][end:3452620]] Time must "have a stop", Huxley.
-[[start:3453040][end:3466604]] And I'll ask one last question from the appropriately "monikered question quanderer"--all communication is abductive is a sentiment that I've been using to develop some arguments.
+[[start:3449810][end:3452620]] "Time must have a stop", Huxley.
 
-57:46 [[start:3466652][end:3468210]] Does that scan for you?
+[[start:3453040][end:3460080]] And I'll ask one last question from the appropriately monikered Question Quanderer--
+[[start:3460420][end:3466604]] "'All communication is abductive' is a sentiment that I've been using to develop some arguments."
+[[start:3466652][end:3468210]] Does that scan for you?
 [[start:3469560][end:3474260]] How do we connect what we're discussing here with quantum to abductive logic?
 
 57:57 _Chris:_
 [[start:3477640][end:3482792]] Yeah, I could go along with that.
 [[start:3482846][end:3484330]] I'd want a lot more detail.
-
-58:06 [[start:3486860][end:3490564]] All communication is essentially analogical.
+[[start:3486860][end:3490564]] All communication is essentially analogical.
 [[start:3490692][end:3491752]] I would agree with that.
 [[start:3491806][end:3492410]] Yes.
 
 58:13 _Daniel:_
-[[start:3493900][end:3494840]] Andrew?
+[[start:3493900][end:3494840]] Ander?
 
 58:17 _Ander:_
 [[start:3497440][end:3497852]] Yes.
 [[start:3497906][end:3498670]] Thank you.
-[[start:3499280][end:3503500]] So going back to the picture where the scattering picture.
+[[start:3499280][end:3503500]] So going back to {the picture where...} the scattering picture.
 [[start:3504320][end:3512716]] So we have so far, everything is topological, and certainly induces breaking the boundary in different sectors.
 [[start:3512748][end:3516396]] I suppose it induces a topology on the boundary.
 
-58:36 [[start:3516588][end:3521590]] Now, I had a couple of questions as for the geometry, and this might be getting ahead.
-
-58:44 [[start:3524200][end:3529104]] Is it an emergent property of those channels between different boundary sectors?
+58:36 [[start:3516588][end:3521590]] Now, I had a couple of questions. As for the geometry, and this might be getting ahead.
+[[start:3524200][end:3529104]] Is it an emergent property of those channels between different boundary sectors?
 [[start:3529232][end:3533850]] And if that's the case, then what does it mean to have a QRF or space?
 
 58:57 _Chris:_
 [[start:3537660][end:3548750]] Yeah, this is really the topic for September, but you do point out the fact that it's something of a chicken and egg situation.
 
-59:11 [[start:3551040][end:3570980]] The way I think of it is, I suppose to choose the chicken side and think about what kind of reference frame does the agent have to implement to see space on their boundary.
-[[start:3572040][end:3576468]] And the reason I think about it that way is that's a question I want to be able to ask about biological systems.
+59:11 [[start:3551040][end:3570980]] The way I think of it is, I suppose, to choose the chicken side, and think about "what kind of reference frame does the agent have to implement to see space on their boundary?"
+[[start:3572040][end:3576468]] And the reason I think about it that way is, that's a question I want to be able to ask about biological systems.
 [[start:3579520][end:3584760]] And this actually gets into probably what won't be talked about until October.
-[[start:3585420][end:3610560]] But I want to be able to ask essentially a phylogenetic question of what sorts of organisms, where in the lineage from LUCA, do we find systems that are able to assign spatial coordinates to their boundaries and what coordinates come first?
+[[start:3585420][end:3610560]] But I want to be able to ask essentially a **phylogenetic** question of, "what sorts of organisms, where in the lineage from **LUCA** [[**Last Universal Common Ancestor**]], do we find systems that are able to assign spatial coordinates to their boundaries, and what coordinates come first?"
 
-1:00:10 [[start:3610710][end:3647630]] And I suspect that sort of discrete location names with no metric come first that a system can talk about, for example, this part of their membrane versus that part of their membrane without even having any ability to say, how far apart they are and that some sort of metric representation of this angular space comes later and that a radial space comes even later than that.
+1:00:10 [[start:3610710][end:3647630]] And I suspect that sort-of discrete location names with no metric come first; that a system can talk about, for example, this part of their membrane versus that part of their membrane, without even having any ability to say how far apart they are; and that some sort of metric representation of this **angular space** comes later; and that a **radial space** comes even later than that.
 [[start:3648080][end:3649928]] That's, at this point, speculation.
-[[start:3650024][end:3662400]] But I think these are questions that we can end up asking given the right kind of formalism and the right understanding of what it means to be able to make a spatial measurement.
+[[start:3650024][end:3662400]] But I think these are questions that we can end up asking, given the right kind of formalism and the right understanding of what it means, to be able to make a spatial measurement.
 
 1:01:03 _Ander:_
-[[start:3663220][end:3670452]] So the conjecture is that the metric would emerge from a discrete network metric of counting ticks sort of thing.
+[[start:3663220][end:3670452]] So the conjecture is that the metric would emerge from a discrete network metric of counting ticks sort of thing?
 
 1:01:10 _Chris:_
 [[start:3670506][end:3673236]] Yeah, I think that's correct.
 
 1:01:13 [[start:3673338][end:3682396]] And the sort of symmetries of space that we see are very much tied up with object identity.
-[[start:3682528][end:3696080]] So if we think about something like rotational symmetry let's see, I should stop screen sharing.
+[[start:3682528][end:3696080]] So if we think about something like rotational symmetry... {let's see, I should stop screen sharing.}
 
 1:01:38 [[start:3698680][end:3707300]] So I've got this object, right, and I can do this, and I say, oh, space has this rotational symmetry.
 [[start:3708040][end:3712744]] But for me to say that, I have to recognize that this is the same object, right?
-[[start:3712862][end:3720010]] I have to implement object persistence, which we all learn to do when we're nine months old or something.
-[[start:3720880][end:3742480]] But we tend to regard those as separate things as we learn object persistence, because space is rotationally symmetric, but we can view it the other way around, that space is rotationally symmetric for me because I implement these constraints that are called object persistence.
+[[start:3712862][end:3720010]] I have to implement **object persistence,** which we all learn to do when we're nine months old or something.
+[[start:3720880][end:3742480]] But we tend to regard those as separate things as we learn object persistence, because space is rotationally symmetric. But we can view it the other way around, that space is rotationally symmetric _for me_ because I implement these constraints that are called object persistence.
 
 1:02:25 _Daniel:_
 [[start:3745060][end:3761240]] Do you think we can understand phylogenetics as a whole, as a kind of scattering experiment, like the high energy LUCA event and then dissipating and propagating in a very tangled bank?
 
 1:02:42 _Chris:_
-[[start:3762780][end:3773388]] Well, I do want to be able to understand phylogeny in exactly the same terms as embryology, and Mike Levin and I have published papers about that.
+[[start:3762780][end:3773388]] Well, I do want to be able to understand phylogeny in exactly the same terms as embryology, and Mike Levin and I have published papers about that. [[E.g. 2022, [Does evolution have a target morphology?](https://chrisfieldsresearch.com/evol-target-morph-Organisms.pdf)]]
 [[start:3773474][end:3782030]] We should be able to view the lineage of LUCA in exactly the same way that we view the lineage of the zygote that produced us.
 
 1:03:03 _Ander:_
