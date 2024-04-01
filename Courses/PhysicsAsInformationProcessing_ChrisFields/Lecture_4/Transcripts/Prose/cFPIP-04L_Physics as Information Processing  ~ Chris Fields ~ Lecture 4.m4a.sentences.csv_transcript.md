@@ -144,7 +144,7 @@ date: "2023-08-10 Version 1.0"
 [[start:931576][end:935598]] She can't know that she's _not_ entangled with Bob.
 
 15:35 [[start:935774][end:942360]] And that's a useful thing to think about philosophically as it applies to you and me.
-[[start:942810][end:946360]] We can't actually know that we have independent states. [[See image at https://github.com/ActiveInferenceInstitute/ActiveInferenceJournal/assets/30888152/e202d421-db89-4b87-abd6-588203f0a920]]
+[[start:942810][end:946360]] We can't actually know that we have independent states.
 
 15:47 [[start:947690][end:957530]] Alice can't measure her own entanglement entropy, so she can't know whether she has components that have to communicate classically.
 
