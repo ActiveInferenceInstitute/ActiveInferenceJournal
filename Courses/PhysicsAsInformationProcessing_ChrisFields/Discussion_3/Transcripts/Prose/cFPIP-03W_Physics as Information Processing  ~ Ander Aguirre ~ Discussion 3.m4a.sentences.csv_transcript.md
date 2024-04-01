@@ -157,89 +157,83 @@ date: "2023-07-29 Version 1.0"
 
 12:43 _Daniel:_
 [[start:763710][end:769150]] Can I add another piece here on the previous slide?
-[[start:769570][end:777562]] So this looks really technical and scientific, but let's think about Alice's laboratory; is Alice's brain, mind and Bob's analogously?
+[[start:769570][end:777562]] So this looks really technical and scientific. But let's think about Alice's laboratory; is Alice's brain/mind and Bob's analogously?
 [[start:782378][end:786370]] Alice is thinking about what to say and then says it.
 [[start:786520][end:790402]] And that information might be written in a chat form.
 
 13:10 [[start:790456][end:795350]] It might be said verbally, it might be transmitted through digital or analog signal.
 [[start:795770][end:799986]] But at some point it's going through this classical informational interface.
-[[start:800018][end:804182]] And then Bob's laboratory is like perceiving and unpacking it.
+[[start:800018][end:804182]] And then Bob's laboratory is, like, perceiving and unpacking it.
 [[start:804316][end:817334]] And the question of semantic alignment is such that if Alice gives a shopping list of ten items, if there's semantic alignment, Bob would be able to go to the store and then find those ten items.
-[[start:817462][end:822558]] And it made me think of the dictionary definition of left and right.
 
-13:42 [[start:822644][end:829390]] So this gets back to our discussion of whether the vertex on these axes is coming towards us or away from us.
+13:37 [[start:817462][end:822558]] And it made me think of the dictionary definition of "left" and "right."
+[[start:822644][end:829390]] So this gets back to our discussion of whether the vertex on these axes is coming towards us or away from us.
+[[start:829460][end:842158]] So I looked up the dictionary definition of "left:" "on, toward, or relating to the side of a human body or of a thing that is to the west when the person or that thing is facing north."
+[[start:842334][end:846630]] [[Both chuckle.]] So that's, I guess, one attempt to anchor what it means to be "left!"
+[[start:846700][end:850194]] The second definition is the left hand part, side, or direction.
+[[start:850242][end:853270]] And you could imagine there's an analogous definition for "right."
 
-13:49 [[start:829460][end:842158]] So I looked up the dictionary definition of left: "on, toward, or relating to the side of a human body or of a thing that is to the west when the person or that thing is facing north."
-[[start:842334][end:846630]] So that's, I guess, one attempt to anchor what it means to be left.
-[[start:846700][end:850194]] The second definition is the left hand part side or direction.
-[[start:850242][end:853270]] And you could imagine there's an analogous definition for right.
-
-14:13 [[start:853420][end:866890]] The point is you can't describe verbally leftness and rightness or chirality in general because its reference is an embodied perspective.
+14:13 [[start:853420][end:866890]] The point is, you can't describe verbally leftness and rightness, or chirality in general, because its reference is an embodied perspective.
 [[start:867390][end:883010]] And so if Alice said, okay, you're going to go down the street and then turn left at the stop sign, how would Alice communicate to Bob what leftness meant at that stop sign versus rightness?
 [[start:884470][end:887250]] And that's this question of flipping.
 [[start:887670][end:909658]] And the way that the quantum formalism accommodates that is through the Wick rotation and the quantum cognitive event where the fungible transmittable holographic information gets rotated into the imaginary axis with the formalisms that enable it to be rotated at all.
-
-15:09 [[start:909744][end:913500]] But that means you could rotate it "left" or rotate it right.
+[[start:909744][end:913500]] But that means you could rotate it "left" or rotate it "right."
 
 15:15 _Ander:_
 [[start:915790][end:919962]] Yeah, I think that's a very good explanation.
 [[start:920106][end:921854]] I don't know if I have much to add.
-[[start:921892][end:923440]] Dean you wanted to say.
+[[start:921892][end:923440]] Dean, you wanted to say something?
 
-15:27 _Dean:_
-[[start:927490][end:928074]] I can't.
-[[start:928122][end:957830]] I don't know the answer to this, but to take what Daniel just said, to take the basic concept of being able to take something that, for all intents and purposes, can appear one way or another and then turn that into how Chris closed the last lecture with we are seeing ourselves as both being entangled and also being separatable.
-[[start:957990][end:969834]] How did we go literally from a three dimension vertex to we're both entangled and we're not living in a paradox.
-[[start:969962][end:971742]] That's just the way it is.
+15:28 _Dean:_
+[[start:928122][end:957830]] I don't know the answer to this, but to take what Daniel just said, to take the basic concept of being able to take something that, for all intents and purposes, can appear one way or another, and then turn that into how Chris closed the last lecture with "we are seeing ourselves as both being entangled and also being separatable."
+[[start:957990][end:969834]] How did we go, literally from a three-dimension vertex, to "we're both entangled _and_ we're not living in a paradox;
+[[start:969962][end:971742]] that's just the way it is." - ?
 [[start:971876][end:978174]] We're also removing ourselves or separating ourselves at the same time.
 
 16:18 [[start:978292][end:988530]] That's what I would like to know, because somewhere between three arbitrary lines and complexity is not a paradox.
-
-16:28 [[start:988870][end:994760]] Something has to be happening, and I'm not exactly sure how that transition plays out.
-
-16:39 [[start:999120][end:1001230]] Anybody want to enlighten me?
+[[start:988870][end:994760]] Something has to be happening, and I'm not exactly sure how that transition plays out.
+[[start:999120][end:1001230]] Anybody want to enlighten me?
 
 16:41 _Ander:_
 [[start:1001840][end:1004172]] Can you repeat your question, please?
 
 16:44 _Dean:_
 [[start:1004226][end:1017170]] Well, how do we go at this point of the reference frame description of saying, you can't copy it, all you can do is pass it?
-[[start:1018740][end:1028180]] Because we think things could be flipped based on internal reference frames, internal meanings and internal models.
-[[start:1028520][end:1030064]] The thing we choose for context.
+[[start:1018740][end:1028180]] Because we think things could be flipped based on internal reference frames, internal meanings and internal models,
+[[start:1028520][end:1030064]] the thing we choose for context,
+[[start:1030112][end:1062908]] yada yada yada... Goes all the way out to the conclusion of Chris's conversation with us in Number 3, where he said, "Bottom line is that it's not a paradox, that as things become more and more complex, then it wants to get to a place of entanglement, alignment, a sense of agreement; and at the same time wants to remain separate."
 
-17:10 [[start:1030112][end:1062908]] Yada yada yada yada goes all the way out to the conclusion of Chris's conversation with us in number 3, where he said, bottom line is that it's not a paradox that as things become more and more complex, then it wants to get to a place of entanglement, alignment, a sense of agreement, and at the same time wants to remain separate.
-[[start:1063004][end:1067890]] So between those two things, a whole lot has happened.
-
-17:48 [[start:1068900][end:1076384]] And I don't think we've skipped over it, but we certainly haven't opened it up and really looked at it closely.
+17:43 [[start:1063004][end:1067890]] So between those two things, a whole lot has happened.
+[[start:1068900][end:1076384]] And I don't think we've skipped over it, but we certainly haven't opened it up and really looked at it closely.
 [[start:1076432][end:1080820]] And I'm just curious what's in between those two scales.
 
 18:01 _Ander:_
 [[start:1081160][end:1081812]] I agree.
+[[start:1081866][end:1088536]] I think we're going to cover that towards the end of the talk, but I agree.
+[[start:1088718][end:1107356]] I don't know how you see this related to QRFs or the stuff we just talked about, but I think it's the big question in this lecture, right? - that was like, where does this tension between increasing complexity and wanting to predict what the environment is doing?
+[[start:1107458][end:1121296]] One requires entanglement and the other one requires separability, at least colloquially speaking. I think this tension is basically what the Free Energy Principle comes down to,
+[[start:1121318][end:1121456]] right, Daniel?
 
-18:01 [[start:1081866][end:1088536]] I think we're going to cover that towards the end of the talk, but I agree.
-[[start:1088718][end:1107356]] I don't know how you see this related to QRFs or the stuff we just talked about, but I think it's the big question in this lecture, right, that was like, where does this tension between increasing complexity and wanting to predict what the environment is doing?
-[[start:1107458][end:1121296]] One requires entanglement and the other one requires separability, at least colloquially speaking, I think this tension is basically what the free energy principle comes down to.
-[[start:1121318][end:1121456]] Right.
-[[start:1121478][end:1122770]] Daniel, what do you think?
+18:41 [[start:1121478][end:1122770]] What do you think?
+[[start:1123300][end:1127060]] You have the free energy and you have the E minus tS.
+[[start:1127560][end:1128864]] One is prediction error...
+[[start:1128912][end:1130816]] I mean, not exactly E minus tS,
+[[start:1130848][end:1130996]] right?
+[[start:1131018][end:1133456]] That would be thermodynamics; but you know what I mean.
 
-18:43 [[start:1123300][end:1127060]] You have the free energy and you have the E minus tS.
-[[start:1127560][end:1128864]] One is prediction error.
-[[start:1128912][end:1130816]] I mean, not exactly E minus tS.
-[[start:1130848][end:1130996]] Right?
-[[start:1131018][end:1133456]] That would be thermodynamics but you know what I mean.
-
-18:53 [[start:1133498][end:1138250]] One is prediction error and the other one is what was?
-[[start:1139340][end:1140650]] I can remember.
+18:53 [[start:1133498][end:1138250]] One is prediction error and the other one is - what was it?
+[[start:1139340][end:1140650]] I can't remember.
 
 19:02 _Daniel:_
-[[start:1142940][end:1152604]] I'll definitely look forward to the technical unpacking that you'll get to soon, but I was reminded of the William Blake quotation, "do what you will, this life's a fiction and is made up of contradiction."
+[[start:1142940][end:1147836]] I'll definitely look forward to the technical unpacking that you'll get to soon. 
+
+19:07 [[start:1147938][end:1152604]] But I was reminded of the William Blake quotation, "do what you will, this life's a fiction and is made up of contradiction."
 [[start:1156568][end:1165600]] So let's modify that: "project what you will, rotate what you will, spacetime's a fiction."
-[[start:1166020][end:1177232]] Not that it's false, but that it's a projected fictionalization that it doesn't have the ontological primacy that the topology of communication does and is made up of contradiction.
-[[start:1177376][end:1177780]] Yes.
+[[start:1166020][end:1177232]] Not that it's false, but that it's a projected fictionalization; that it doesn't have the ontological primacy that the topology of communication does and is made up of contradiction.
 
-19:37 [[start:1177850][end:1193112]] And it's made up of this tension between fitting and not overfitting, between aligning and the principle of unitarity and differentiating and becoming through others, we become ourselves and that type of articulation and recognizing that two complementary forces like convex and concave come into existence at once.
-
-20:06 [[start:1206050][end:1213440]] Like a zero to two jump is not an issue or a stumbling block.
+19:37 [[start:1177376][end:1177780]] Yes;
+[[start:1177850][end:1193112]] and it's made up of this tension between fitting and not overfitting, between aligning and the principle of unitarity and differentiating. And becoming through others, we become ourselves and that type of articulation and recognizing that two complementary forces like convex and concave come into existence at once,
+[[start:1206050][end:1213440]] like a zero to two jump is not an issue or a stumbling block.
 [[start:1214020][end:1217170]] It's that we wouldn't have it any other way.
 [[start:1218340][end:1220210]] Couldn't have it any other way.
 
