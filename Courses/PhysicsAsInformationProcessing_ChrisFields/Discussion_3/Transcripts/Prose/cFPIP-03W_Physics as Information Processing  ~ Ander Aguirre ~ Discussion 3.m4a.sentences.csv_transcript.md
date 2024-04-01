@@ -249,15 +249,15 @@ date: "2023-07-29 Version 1.0"
 [[start:1268588][end:1271190]] We'll talk about emergent space later on the course.
 [[start:1272200][end:1279190]] But for now, let's say a few more words about QRFs. And then we'll get to the complexity stuff towards the end.
 
-21:22 [[start:1282120][end:1302684]] QRFs are almost building blocks, if you want, for information processing. Here, it's very useful to recall the definition that I feel, I think we have mentioned before, of information as being differences that make a difference.
+21:22 [[start:1282120][end:1302684]] QRFs are almost building blocks, if you want, for information processing. Here, it's very useful to recall the definition that I feel, I think we have mentioned before, of information as being "differences that make a difference."
 [[start:1302882][end:1307772]] That's probably the best colloquial definition of information I've heard.
 [[start:1307826][end:1310224]] And I think it does a lot of work.
 [[start:1310262][end:1315216]] I mean, it's almost mathematical. But anyways, we need to unpack it a little more and see.
 [[start:1315318][end:1321424]] So for a difference to make a difference, what do you want out of QRF,
 [[start:1321472][end:1322070]] right?
 
-22:02 [[start:1322680][end:1328470]] Unsurprisingly, I mean, not surprisingly, but reassuringly, I think would be the word.
-[[start:1330120][end:1340168]] You need a QRF to have sensory, action and a default state, right?
+22:02 [[start:1322680][end:1328470]] {And surprisingly... I mean not surprisingly, but} _Reassuringly_ (I think would be the word),
+[[start:1330120][end:1340168]] you need a QRF to have sensory action and a default state, right?
 [[start:1340254][end:1346336]] This is sort of like where your Bayesian prior distribution is encoded.
 
 22:26 [[start:1346468][end:1352312]] These three things will give you a building block for any information processing.
