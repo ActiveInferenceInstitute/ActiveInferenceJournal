@@ -116,7 +116,7 @@ date: "2023-07-29 Version 1.0"
 [[start:486200][end:490100]] And that goes back to the preparation question and not just the measuring.
 
 08:10 _Daniel:_
-[[start:490680][end:516110]] Yeah. Like if the preparation... if your whole enculturation or the last five minutes, it was entrained, or you were holding an object that predisposed you to think that the vertex of the intersection was further away, that's the preparation that sets your prior so that when you get this ambiguous artifact, you rotate it into the most natural position, cognitively, and that's the preparation that sets you up for a measurement.
+[[start:490680][end:516110]] Yeah. Like if the preparation... if your whole enculturation or the last five minutes, it was entrained, or you were holding an object that predisposed you to think that the vertex of the intersection was further away, that's the preparation that sets your **prior** so that when you get this ambiguous artifact, you rotate it into the most natural position, cognitively, and that's the preparation that sets you up for a measurement.
 [[start:520892][end:523200]] No measurement can happen without a preparation.
 
 08:44 [[start:524180][end:525520]] What do you think, Ander?
@@ -253,51 +253,48 @@ date: "2023-07-29 Version 1.0"
 [[start:1302882][end:1307772]] That's probably the best colloquial definition of information I've heard.
 [[start:1307826][end:1310224]] And I think it does a lot of work.
 [[start:1310262][end:1315216]] I mean, it's almost mathematical. But anyways, we need to unpack it a little more and see.
-[[start:1315318][end:1321424]] So for a difference to make a difference, what do you want out of QRF,
-[[start:1321472][end:1322070]] right?
+[[start:1315318][end:1321424]] So for a difference to make a difference, what do you want out of QRF?
+[[start:1321472][end:1322070]] {right?}
 
 22:02 [[start:1322680][end:1328470]] {And surprisingly... I mean not surprisingly, but} _Reassuringly_ (I think would be the word),
-[[start:1330120][end:1340168]] you need a QRF to have sensory action and a default state, right?
+[[start:1330120][end:1340168]] you need a QRF to have sensory; action; and a default state - right?
 [[start:1340254][end:1346336]] This is sort of like where your Bayesian prior distribution is encoded.
+[[start:1346468][end:1352312]] These three things will give you a building block for any information processing.
+[[start:1352456][end:1364240]] And that ties together with all the work in the Free Energy literature, and perception-action loops, and whatnot.
 
-22:26 [[start:1346468][end:1352312]] These three things will give you a building block for any information processing.
+22:45 [[start:1365140][end:1373216]] So before we see mathematically how a QRF is defined, I think it's more illustrative -
+[[start:1373248][end:1383444]] and I think Chris went exactly on the right order, when he presented this a couple weeks ago, seeing examples from each.
+[[start:1383642][end:1391960]] These are actual pieces of hardware that are effectively QRFs, and it's remarkable how they map to... well, I'll skip ahead a little bit.
 
-22:32 [[start:1352456][end:1364240]] And that ties together with all the work in the free energy literature and perception-action loops and whatnot.
-[[start:1365140][end:1373216]] So before we see mathematically how a QRF is defined, I think it's more illustrative.
-[[start:1373248][end:1383444]] And I think Chris went exactly on the right order when he presented this a couple weeks ago, seeing examples from each.
-[[start:1383642][end:1391960]] These are actual pieces of hardware that are effectively QRFs, and it's remarkable how they map to...well, I'll skip ahead a little bit.
-
-23:13 [[start:1393726][end:1409256]] But when you get to the mathematical definition of a QRF as a quantum system that you can specify with this category theory diagram, you have incoming arrows into a node that then expands.
-
-23:29 [[start:1409288][end:1409484]] Right?
+23:13 [[start:1393726][end:1409256]] But when you get to the mathematical definition of a QRF as a quantum system that you can specify with this category-theory diagram, you have incoming arrows into a node that then expands,
+[[start:1409288][end:1409484]] right?
 [[start:1409522][end:1418684]] And this roughly corresponds to measurement and preparation degrees of, not degrees of freedom, degrees of freedom would be the same, right, when you attach it to the boundary.
-[[start:1418812][end:1422870]] But measurement and preparation stages, I guess, would be the better word.
+[[start:1418812][end:1422870]] But _measurement and preparation stages,_ I guess, would be the better word.
 [[start:1424600][end:1428500]] But anyways, let me go back to these examples, right?
 
 23:48 [[start:1428650][end:1433448]] And Daniel, you're the biologist here, so correct me if I say anything wrong here.
 [[start:1433534][end:1443144]] You have a cartoon picture of a bacteria, I think, and this is a very simple sort of thing, right?
 [[start:1443182][end:1449790]] It navigates in the direction of food and that's it, right?
-[[start:1450240][end:1454600]] So it is a very simple rudimentary example of a cureb.
+[[start:1450240][end:1454600]] So it is a very simple rudimentary example of a QRF.
 [[start:1454760][end:1463324]] You have the sensory stage here, I guess the degrees of freedom.
 
-[[start:1466260][end:1469490]] It's not obvious here what the boundary is, that's one thing.
+24:26 [[start:1466260][end:1469490]] It's not obvious here what the boundary is, that's one thing.
+[[start:1470420][end:1481716]] But it is a good enough picture to see the resemblance to _here._ We have the measurement, which in this case you're trying to measure concentration of food.
+[[start:1481898][end:1492490]] You have your node _here, C,_ which is your prior distribution for concentration of food.
+[[start:1492860][end:1504604]] And finally you have the output, the preparation stage, which is the rest of this chemical network that will control and steer this bacterium, right?
+[[start:1504642][end:1513730]] So here you want to call it the action degrees of freedom that will steer this bacteria in the direction of food.
 
-24:30 [[start:1470420][end:1481716]] But it is a good enough picture to see the resemblance to here we have the measurement which in this case you're trying to measure concentration of food.
-[[start:1481898][end:1492490]] You have your node here, C, which is your prior distribution for concentration of food.
-[[start:1492860][end:1504604]] And finally you have the output, the preparation stage, which is the rest of this chemical network that will control and steer this bacteria, right?
-
-25:04 [[start:1504642][end:1513730]] So here you want to call it the action degrees of freedom that will steer this bacteria in the direction of food.
-[[start:1514180][end:1519840]] And likewise with cell division, this I understand even less that the network appears more complicated.
-[[start:1520840][end:1536920]] But I think it's fair to say that at the end of the day, all these chemical networks that appear super complicated somehow have to be mapped to this category theoretical diagram.
+25:14 [[start:1514180][end:1519840]] And likewise with cell division (this I understand even less), that the network appears more complicated.
+[[start:1520840][end:1536920]] But I think it's fair to say that at the end of the day, all these chemical networks, that appear super-complicated, somehow have to be mapped to this category-theoretical diagram.
 
 25:37 [[start:1537580][end:1539048]] That's all there is to it.
-[[start:1539134][end:1552750]] You're going to have the sensory input and the action output and you're going to have the default chemical concentration which amounts to this node over here.
+[[start:1539134][end:1552750]] You're going to have the sensory input; and the action output; and you're going to have the default chemical concentration, which amounts to this node over here.
 
 25:56 [[start:1556320][end:1559304]] You remember this from last lecture, right, Daniel?
 
 25:59 _Daniel:_
 [[start:1559432][end:1559868]] Yeah.
-[[start:1559954][end:1566796]] In the Cone-Cocone we explored also in the live stream 17 on the Bayesian semantic information flow.
+[[start:1559954][end:1566796]] In the **cone-cocone** we explored also in the [2021] Livestream #017, on the Bayesian semantic information flow. [Information flow in context-dependent hierarchical Bayesian inference](https://www.youtube.com/watch?v=o7sJ-5vFJGk)
 [[start:1566908][end:1580352]] But I'll kind of add a point about these biological systems in relationship to artificially specified systems and what that helps us understand about perception, cognition, action.
 [[start:1580496][end:1599272]] So the cone Cone-Cocone diagram has this bow tie architecture or this kind of like two pyramids touching point to point where there's a preparation and a measurement which can be different dimensionalities or different scopes.
 
