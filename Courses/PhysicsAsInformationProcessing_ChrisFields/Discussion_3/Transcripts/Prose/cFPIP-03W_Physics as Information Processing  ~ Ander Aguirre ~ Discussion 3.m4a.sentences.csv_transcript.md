@@ -5,7 +5,7 @@ author:
 - 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
 - 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
 - 'Dean Tickles (Professional Initiatives Programming, Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0000-0003-2213-0773)'
-- 
+
 date: "2023-07-29 Version 1.0"
 ...
 
@@ -229,34 +229,34 @@ date: "2023-07-29 Version 1.0"
 
 19:07 [[start:1147938][end:1152604]] But I was reminded of the William Blake quotation, "do what you will, this life's a fiction and is made up of contradiction."
 [[start:1156568][end:1165600]] So let's modify that: "project what you will, rotate what you will, spacetime's a fiction."
-[[start:1166020][end:1177232]] Not that it's false, but that it's a projected fictionalization; that it doesn't have the ontological primacy that the topology of communication does and is made up of contradiction.
+[[start:1166020][end:1177232]] Not that it's _false,_ but that it's a projected fictionalization; that it doesn't have the ontological primacy that the topology of communication does, and is made up of contradiction.
 
 19:37 [[start:1177376][end:1177780]] Yes;
-[[start:1177850][end:1193112]] and it's made up of this tension between fitting and not overfitting, between aligning and the principle of unitarity and differentiating. And becoming through others, we become ourselves and that type of articulation and recognizing that two complementary forces like convex and concave come into existence at once,
+[[start:1177850][end:1193112]] _and_ it's made up of this tension between fitting and not overfitting; between aligning and the principle of unitarity and differentiating. And becoming through others, we become ourselves and that type of articulation; and recognizing that two complementary forces like convex and concave come into existence at once,
 [[start:1206050][end:1213440]] like a zero to two jump is not an issue or a stumbling block.
 [[start:1214020][end:1217170]] It's that we wouldn't have it any other way.
 [[start:1218340][end:1220210]] Couldn't have it any other way.
 
 20:20 _Ander:_
-[[start:1220820][end:1224016]] Yeah, sure, we'll get that.
-[[start:1224038][end:1227584]] Towards the end, you can almost even call it a duality.
+[[start:1220820][end:1224016]] Yeah, sure, we'll get that
+[[start:1224038][end:1227584]] towards the end. You can almost even call it a duality.
 [[start:1227632][end:1229728]] It's not far fetched.
 [[start:1229744][end:1233788]] I mean, it's the sort of thing that I think most people will be happy to take for granted.
 [[start:1233824][end:1241912]] Such supersymmetry like you have two kinds of particles, but the same amount of them, and dualities that are all over the place.
+[[start:1241966][end:1256600]] So I think it's not unreasonable to just accept that there is a tension between increasing complexity, which you want A and B to be separable for, _and_ accuracy of prediction.
 
-20:41 [[start:1241966][end:1256600]] So I think it's not unreasonable to just accept that there is a tension between increasing complexity, which you want A and B to be separable for, and accuracy prediction.
-[[start:1256680][end:1268556]] Now, how this is related to emergent space and these QRFs stuff, I don't want to make very far fetched claims.
+20:56 [[start:1256680][end:1268556]] Now, how this is related to emergent space and this QRF stuff, I don't want to make very far-fetched claims.
 [[start:1268588][end:1271190]] We'll talk about emergent space later on the course.
-[[start:1272200][end:1279190]] But for now, let's say a few more words about QRFs and then we'll get to the complexity stuff towards the end.
+[[start:1272200][end:1279190]] But for now, let's say a few more words about QRFs. And then we'll get to the complexity stuff towards the end.
 
-21:22 [[start:1282120][end:1302684]] QRFs are almost building blocks, if you want, for information processing. Here, it's very useful to recall the definition that I feel, I think, we have mentioned before, of information as being differences that make a difference.
+21:22 [[start:1282120][end:1302684]] QRFs are almost building blocks, if you want, for information processing. Here, it's very useful to recall the definition that I feel, I think we have mentioned before, of information as being differences that make a difference.
 [[start:1302882][end:1307772]] That's probably the best colloquial definition of information I've heard.
 [[start:1307826][end:1310224]] And I think it does a lot of work.
-[[start:1310262][end:1315216]] I mean, it's almost mathematical, but anyways, we need to unpack it a little more and see.
-[[start:1315318][end:1321424]] So for a difference to make a difference, what do you want out of QRF?
+[[start:1310262][end:1315216]] I mean, it's almost mathematical. But anyways, we need to unpack it a little more and see.
+[[start:1315318][end:1321424]] So for a difference to make a difference, what do you want out of QRF,
+[[start:1321472][end:1322070]] right?
 
-22:01 [[start:1321472][end:1322070]] Right.
-[[start:1322680][end:1328470]] Unsurprisingly, I mean, not surprisingly, but reassuringly, I think would be the word.
+22:02 [[start:1322680][end:1328470]] Unsurprisingly, I mean, not surprisingly, but reassuringly, I think would be the word.
 [[start:1330120][end:1340168]] You need a QRF to have sensory, action and a default state, right?
 [[start:1340254][end:1346336]] This is sort of like where your Bayesian prior distribution is encoded.
 
