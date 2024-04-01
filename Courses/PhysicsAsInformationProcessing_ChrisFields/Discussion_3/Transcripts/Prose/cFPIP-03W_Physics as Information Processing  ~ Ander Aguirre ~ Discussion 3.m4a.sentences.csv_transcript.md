@@ -1,9 +1,11 @@
 ---
 title:  'Physics as Information Processing - Discussion 3, "Quantum Reference Frames"'
+
 author:
 - 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
 - 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
-- 'Dean Rickles (Professional Initiatives Programming, Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0000-0003-2213-0773)'
+- 'Dean Tickles (Professional Initiatives Programming, Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0000-0003-2213-0773)'
+- 
 date: "2023-07-29 Version 1.0"
 ...
 
@@ -11,31 +13,31 @@ date: "2023-07-29 Version 1.0"
 
 00:05 _Daniel:_
 [[start:5970][end:7294]] Hello and welcome.
-[[start:7412][end:21386]] It's July 29, 2023, and we're here in session three discussion of the course physics's Information Processing at the Active Inference Institute.
-[[start:21578][end:32098]] We're having a follow up discussion on Chris Fields's third lecture on quantum reference frames, and we're looking forward to your participation.
+[[start:7412][end:21386]] It's July 29, 2023, and we're here in Session Three Discussion of the course Physics as Information Processing at the Active Inference Institute.
+[[start:21578][end:32098]] We're having a follow-up discussion on Chris Fields's third lecture on quantum reference frames, and we're looking forward to your participation.
 [[start:32274][end:37942]] So if you're watching along live and you've been invited to the calendar event, it's not too late to jump in.
 [[start:38076][end:45686]] If you're watching on YouTube, you can write any questions or comments in the live chat with Dean and Ander here.
 
 00:45 [[start:45708][end:57594]] We're going to be looking at some of the key points and taking it in a few different directions, sharing our reference frames, making a shared one.
-[[start:57712][end:74114]] So, Ander, would be awesome to have you Zoom in a little bit on the slide and then feel free to take us through some of the key points so that we can see a little bit how you're seeing it.
+[[start:57712][end:74114]] So, Ander, it would be awesome to have you zoom in a little bit on the slide. And then feel free to take us through some of the key points so that we can see a little bit how you're seeing it.
+[[start:74152][end:74900]] Thank you.
 
-01:14 [[start:74152][end:74900]] Thank you.
+{01:15 _Ander:_
+[[start:75670][end:76754]] That looks good?
+[[start:76872][end:77540]] Yes.}
 
-01:15 _Ander:_
-[[start:75670][end:76754]] That looks good.
-[[start:76872][end:77540]] Yes.
-
-01:18 [[start:78070][end:86882]] Okay, so let's start by reviewing the last lecture from a couple of weeks ago, and then we can open up the discussions.
+01:18 _Ander:_
+[[start:78070][end:86882]] Okay, so let's start by reviewing the last lecture from a couple of weeks ago, and then we can open up the discussions.
 [[start:86946][end:90520]] If there's any questions that appear in the live chat, we can address those.
 [[start:91230][end:91802]] All right.
-[[start:91856][end:115398]] So lecture 2, Chris introduced this idea of the information processing between systems A and B, where they interact via qubits on a boundary, and they have reference frames that give meaning to this communication.
+[[start:91856][end:115398]] So lecture two, Chris introduced this idea of the information processing between systems A and B, where they interact via qubits on a boundary, and they have reference frames that give meaning to this communication.
 [[start:115594][end:125380]] You want to think of information processing as a communication channel, the way Shannon thought about it.
+[[start:126230][end:127890]] So that was in lecture 2.
 
-02:06 [[start:126230][end:127890]] So that was in lecture 2.
-[[start:128040][end:140246]] And lecture 3, a couple weeks ago, tried to make this more explicit by emphasizing the idea that this has to be physically embodied somewhere.
+02:08 [[start:128040][end:140246]] And lecture 3, a couple weeks ago, tried to make this more explicit by emphasizing the idea that this has to be physically embodied somewhere,
+[[start:140358][end:140874]] okay?
 
-02:20 [[start:140358][end:140874]] Okay.
-[[start:140992][end:164990]] And I think that because we are so used to information being fungible in no small part because of the Internet and everything, it's a little hard to understand at first when the claim is made that you have a QRF that is not fungible or you have a piece of quantum information that's nonfungible or things like the no-Cloning theorem.
+02:20 [[start:140992][end:164990]] And I think that because we are so used to information being fungible - in no small part because of the Internet and everything - it's a little hard to understand at first when the claim is made that you have a QRF [[(quantum reference frame)]] that is not **fungible,** or you have a piece of quantum information that's nonfungible, or things like the **no-cloning theorem.**
 [[start:165590][end:180550]] We're so used to information being fungible, to "it" being zeros and ones, that it's a bit of a change in mindset at first, but that's exactly what lecture 3 introduced.
 
 03:01 [[start:181130][end:183640]] This was old stuff, right?
@@ -45,27 +47,27 @@ date: "2023-07-29 Version 1.0"
 [[start:186284][end:189522]] What would it mean for information to be fungible?
 [[start:189586][end:191350]] Or what's that stance like?
 [[start:191420][end:194182]] And then, what does it mean for information to be nonfungible?
-
-03:14 [[start:194246][end:196060]] And what is that stance like?
+[[start:194246][end:196060]] And what is that stance like?
 
 03:16 _Ander:_
 [[start:196830][end:199578]] Yeah, I'm out to get there.
 [[start:199664][end:203854]] So let me scroll down the slides, because that's addressed here.
-[[start:203892][end:211886]] So maybe I should have kept this in the beginning, but anyways, session 2 talked about how information theory makes this simple and obvious.
-[[start:211988][end:212640]] Okay.
+[[start:203892][end:211886]] So maybe I should have kept this in the beginning, but anyways. Session 2 talked about how information theory makes this simple and obvious,
+[[start:211988][end:212640]] Okay?
 
-03:33 [[start:213570][end:220980]] And in session 3, we talk about reference frames and mechanistically, how all of this works.
-[[start:222710][end:230022]] So, yeah, let's address that question of the difference between... hold on 1 second.
+03:33 [[start:213570][end:220980]] And in session 3, we talk about reference frames and, mechanistically, how all of this works.
+[[start:222710][end:230022]] So, yeah, let's address that question of the difference between... {hold on 1 second.
 [[start:230076][end:233320]] Let me use my mouse to scroll down here.
 
 03:55 [[start:235530][end:237346]] Okay, so that's a little faster.
 [[start:237378][end:237960]] Right.
-[[start:239370][end:240120]] Okay.
+[[start:239370][end:240120]] Okay.}
+
+04:02 _Ander:_
 [[start:242110][end:244118]] Can you restate your question, Daniel?
-[[start:244214][end:244474]] Yeah.
 
 04:04 _Daniel:_
-[[start:244512][end:248970]] What would it mean for information to be fungible or nonfungible?
+[[start:244214][end:248970]] Yeah. What would it mean for information to be fungible or nonfungible?
 [[start:249470][end:257390]] People might be familiar with that in the economic setting with nonfungible tokens and all of that, but what are we talking about with informational fungibility?
 
 04:18 _Ander:_
@@ -74,91 +76,83 @@ date: "2023-07-29 Version 1.0"
 [[start:267560][end:275460]] As far as I know, fungible information is everything that you can basically turn into a message of zeros and ones.
 
 04:39 [[start:279430][end:284038]] How you transmit it may be different, the channel, the physical hardware and so on.
-[[start:284124][end:291738]] But at the end of the day, it's something that you can write on a boundary and something that you can transmit at zeros and ones.
+[[start:284124][end:291738]] But at the end of the day, it's something that you can write on a boundary and something that you can transmit as zeros and ones.
 [[start:291824][end:299350]] Whereas quantum information, you literally have to send the hardware, the piece of hardware, the QRF.
 [[start:299510][end:301402]] At least that's how I understand it.
 [[start:301456][end:311114]] So a simple answer might be that it's information encoded in a piece of software versus a piece of hardware.
-
-05:11 [[start:311162][end:314000]] But I don't think that analogy is perfect.
-[[start:315750][end:316114]] Yeah.
+[[start:311162][end:314000]] But I don't think that analogy is perfect.
 
 05:16 _Daniel:_
-[[start:316152][end:317300]] Dean, what do you think?
+[[start:315750][end:317300]] Yeah. Dean, what do you think?
 
 05:18 _Dean:_
-[[start:318710][end:320754]] Here's what I'm curious about.
+[[start:318710][end:320754]] Here's what _I'm_ curious about.
 [[start:320952][end:323602]] And again, you guys can help me with this.
 
-05:23 [[start:323736][end:330126]] As opposed to reference frames, I oftentimes default to frame of reference.
+05:23 [[start:323736][end:330126]] As opposed to "reference frames," I oftentimes default to "frame of reference."
 [[start:330158][end:337794]] And I know that in one of the live streams, what I tried to bring out was the idea that there was an ice cream cone looking at an ice cream truck.
-[[start:337922][end:346262]] And the question was always whether or not which one of those two entities, one is in the foreground and one is in the background.
-[[start:346326][end:369150]] And in this slide that Ander has up the question is, is the nonfungibility because only A and B can decide whether the VA as seen by B, the A is deeper into that image based on our frame of reference.
-[[start:369230][end:376878]] And the B is closer or is the B the one that's actually deeper and the A is the one that's in the foreground?
+[[start:337922][end:346262]] And the question was always {whether or not...} which one of those two entities, one is in the foreground and one is in the background.
 
-06:16 [[start:376974][end:392060]] And I was wondering whether the idea of noncopyability is because of that depth of field aspect that cannot be determined unless it's literally handed over the way that Chris was describing it.
+05:46 [[start:346326][end:369150]] And in this slide that Ander has up the question is, is the nonfungibility because only A and B can decide whether the VA as seen by B, the A is deeper into that image based on our frame of reference
+[[start:369230][end:376878]] and the B is closer; or is the _B_ the one that's actually deeper and the _A_ is the one that's in the foreground?
+[[start:376974][end:392060]] And I was wondering whether the idea of noncopyability is because of that depth of field aspect that cannot be determined unless it's literally handed over the way that Chris was describing it.
 
 06:32 _Ander:_
-[[start:392830][end:411840]] I think that's basically accurate. I'm not sure that I can answer your question, but I think I have the feeling that Chris well, Chris said this in the lecture, that at the end of the day, the QRF is somewhere in your nervous system.
-[[start:413090][end:416858]] And here, you bring up a good point.
-[[start:416884][end:417170]] Right.
+[[start:392830][end:411840]] I think that's basically accurate. I'm not sure that I can answer your question, but... {I think I have the feeling that Chris...} Well, Chris said this in the lecture, that at the end of the day, the QRF is somewhere in your nervous system.
+[[start:413090][end:416858]] And here, you bring up a good point,
+[[start:416884][end:417170]] right?
 [[start:417240][end:421070]] It looks like this slide is a bit of an optical illusion.
 
 07:01 [[start:421150][end:427800]] Whether you see A or B deeper, I guess it depends on something going on inside your head.
 [[start:429050][end:434310]] This picture is so symmetrical that if you focus enough on it, you can change your opinion.
 
 07:16 _Daniel:_
-[[start:436250][end:440010]] Just to even connect that to what we're talking about.
-[[start:440080][end:453306]] The classical fungible information on the Holographic screen, on the blanket, and then the quantum cognitive rotation, is those two images are on the screen, identical.
-[[start:453498][end:472094]] And then whether it gets a quantum rotation such that the three points of the axes are closer to us than the intersection on that kind of tetrahedron or the other way around, whether the ballerina is rotating one way or the other, that's not on the boundary.
-
-07:52 [[start:472222][end:483190]] So the information about the depth of field is part of the QRF or part of the enactment of the QRF, and it's not written on the boundary.
+[[start:436250][end:440010]] Just to even connect that to what we're talking about:
+[[start:440080][end:453306]] The classical fungible information on the holographic screen, on the blanket, and then the quantum cognitive rotation, is those two images are, _on the screen,_ identical.
+[[start:453498][end:472094]] And then whether it gets a quantum rotation such that the three points of the axes are closer to us than the intersection on that kind of tetrahedron, or the other way around - whether the ballerina is rotating one way or the other - that's not _on the boundary,_
+[[start:472222][end:483190]] so the information about the depth of field _is_ part of the QRF or part of the enactment of the QRF, and it's _not_ written on the boundary.
 
 08:06 _Dean:_
 [[start:486200][end:490100]] And that goes back to the preparation question and not just the measuring.
 
-08:10 _Ander:_
-[[start:490680][end:491140]] Yeah.
+08:10 _Daniel:_
+[[start:490680][end:516110]] Yeah. Like if the preparation... if your whole enculturation or the last five minutes, it was entrained, or you were holding an object that predisposed you to think that the vertex of the intersection was further away, that's the preparation that sets your prior so that when you get this ambiguous artifact, you rotate it into the most natural position, cognitively, and that's the preparation that sets you up for a measurement.
+[[start:520892][end:523200]] No measurement can happen without a preparation.
 
-08:11 _Daniel:_
-[[start:491210][end:516110]] Like if the preparation...if your whole enculturation or the last five minutes, it was entrained, or you were holding an object, that predisposed you to think that the vertex of the intersection was further away, that's the preparation that sets your prior so that when you get this ambiguous artifact, you rotate it into the most natural position, cognitively, and that's the preparation that sets you up for a measurement.
-
-08:40 [[start:520892][end:523200]] No measurement can happen without a preparation.
-[[start:524180][end:525520]] What do you think, Ander?
+08:44 [[start:524180][end:525520]] What do you think, Ander?
 
 08:47 _Ander:_
 [[start:527220][end:527970]] Sure.
 [[start:528840][end:529204]] Yeah.
 [[start:529242][end:530630]] Everything you said makes sense.
 
-08:52 [[start:532680][end:550570]] So perhaps let me recall, what was that, around the slides, it was in this whole spirit or philosophy of making, emphasizing that information is physical, it concubit [?] this whole thing.
-[[start:551580][end:578800]] One of the glaring omissions in physics was the embodiment of the reference frame, which was treated as an abstraction in classical physics, such as by Galileo, but maybe even Einstein, even if he, my hunch, is that he did have more of this instinct,  particularly in all those thought experiments of trying to chase the light ray.
-[[start:579300][end:580732]] You are chasing the light ray.
-[[start:580796][end:580976]] Right.
-[[start:580998][end:590740]] I mean, this is the whole process of making the observer and the reference frame more and more explicit and more and more physical.
+08:52 [[start:532680][end:550570]] So, perhaps let me recall what was said around the slides{, it was}... In this whole spirit or philosophy of {making...} emphasizing that information is physical, it confronted[?] this whole thing.
+[[start:551580][end:578800]] One of the glaring omissions in physics was the embodiment of the reference frame, which was treated as an abstraction in classical physics, such as by Galileo, but maybe even Einstein, even if he... my hunch is that he did have more of this instinct,  particularly in all those thought experiments of trying to chase the light ray.
+[[start:579300][end:580732]] _You_ are chasing the light ray,
+[[start:580796][end:580976]] right?
+[[start:580998][end:590740]] So, at the end of the day, {I mean,} this is the whole process of making the observer and the reference frame more and more explicit and more and more physical.
 
-09:51 [[start:591180][end:593850]] Because at the end of the day, it has to right.
-[[start:594460][end:616990]] If you start with this assumption, that solipsistic assumption almost, that all you see is part of the same material ether that you are, then you are part of the universe and you're observing something that is out there.
-[[start:617520][end:622224]] So you need to include a theory of what it means for you to be observing that.
-[[start:622262][end:622608]] Right.
+09:51 [[start:591180][end:593850]] Because at the end of the day, it _has to,_ right?
+[[start:594460][end:616990]] If you start with this assumption, that _solipsistic_ assumption almost, that all you see is part of the same _material ether_ that you are, then you are part of the universe and you're observing something that is out there.
+[[start:617520][end:622224]] So you need to include a theory of what it means for you to be observing that,
+[[start:622262][end:622608]] right?
 [[start:622694][end:625724]] And at the end of the day, the observer has to be physical.
 
 10:25 [[start:625852][end:630256]] That's what was emphasized by Chris at the beginning of this lecture.
-[[start:630448][end:650456]] So this jump from treating the reference frame as an abstraction to a real physical entity...these people have talked a lot about in these papers that are quoted there [2007, Reference Frames, Superselection Rules, and Quantum Information, Bartlett SD, Rudolph T, Spekkers, RW].
-[[start:650558][end:657624]] But I should also remark, if folks want to see this, it's coming up in high energy theory.
+[[start:630448][end:650456]] So, this jump from treating the reference frame as an abstraction to a real physical entity... These people have talked a lot about [that] in these papers that are quoted there. [[2007, Reference Frames, Superselection Rules, and Quantum Information, Bartlett SD, Rudolph T, Spekkers, RW]]
+[[start:650558][end:657624]] But I should also remark, if folks want to see this, it's coming up in High Energy Theory
+[[start:657672][end:666856]] also, in recent work of [Leonard] Susskind and others, where they talk about quantum reference frames very explicitly.
+[[start:666968][end:681940]] So, I don't have the citations off the bat, but it's definitely becoming an important thing in the last 20 years, this attempt to really explicitly treat the reference frame and the observer as a quantum entity, as a physical entity.
 
-10:57 [[start:657672][end:666856]] Also in recent work of Susskind [Leonard Susskind] and others, where they talk about quantum reference frames very explicitly.
-[[start:666968][end:681940]] So I don't have the citations at the bottom, but it's definitely becoming an important thing in the last 20 years, this attempt to really explicitly treat the reference frame and the observer as a quantum entity, as a physical entity.
-
-11:22 [[start:682680][end:694330]] Okay, so that's what I just said the jump from treating things reference frames as abstractions to physical objects.
+11:22 [[start:682680][end:694330]] Okay, so that's what I just said - the jump from treating {things} reference frames as abstractions, to physical objects.
 
 11:36 [[start:696620][end:708940]] And because we cannot make a perfect copy of quantum information, we say that these are unique and nonclonable and nonfungible.
-[[start:710000][end:719184]] So in order to recreate an experiment perfectly, this is addressed as a part of fungibility or not.
+[[start:710000][end:719184]] So in order to recreate an experiment perfectly, this is addressed as a part of fungibility-or-not,
+[[start:719222][end:719664]] right?
 
-11:59 [[start:719222][end:719664]] Right.
-[[start:719782][end:734150]] Can Alice, if you have some sort of quantum experiment and Alice and Bob are, you know, it's the usual DPR [?] thought experiment or whatever, Alice and Bob are separated by light years.
-[[start:735000][end:743850]] Is it enough, if they want to recreate the same, exact same experiment for Alice to send a string of zeros and ones?
-
-12:24 [[start:744460][end:751176]] Well, if you had an experiment where that's enough, then you can recreate it with fungible information.
+11:59 [[start:719782][end:734150]] Can Alice, if you have some sort of quantum experiment and Alice and Bob are... {You know,} It's the usual EPR thought experiment{or whatever}, Alice and Bob are separated by light years...
+[[start:735000][end:743850]] Is it enough, if they want to recreate the same, exactly the same experiment, for Alice to send a string of zeros and ones?
+[[start:744460][end:751176]] Well, if you had an experiment where that's enough, then you can recreate it with fungible information.
 [[start:751278][end:758860]] If not, then you need to somehow send nonfungible information, which really implies sending a piece of hardware.
 
 12:43 _Daniel:_
