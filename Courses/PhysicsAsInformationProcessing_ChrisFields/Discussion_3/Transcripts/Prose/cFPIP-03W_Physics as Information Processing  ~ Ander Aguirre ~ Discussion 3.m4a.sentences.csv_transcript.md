@@ -256,27 +256,27 @@ date: "2023-07-29 Version 1.0"
 [[start:1315318][end:1321424]] So for a difference to make a difference, what do you want out of QRF?
 [[start:1321472][end:1322070]] {right?}
 
-22:02 [[start:1322680][end:1328470]] {And surprisingly... I mean not surprisingly, but} _Reassuringly_ (I think would be the word),
-[[start:1330120][end:1340168]] you need a QRF to have sensory; action; and a default state - right?
-[[start:1340254][end:1346336]] This is sort of like where your Bayesian prior distribution is encoded.
+22:02 [[start:1322680][end:1328470]] And {surprisingly... I mean not surprisingly, but} reassuringly (I think would be the word),
+[[start:1330120][end:1340168]] you need a QRF to have sensory; action; and a default state - right? -
+[[start:1340254][end:1346336]] this is {sort of like} where your Bayesian prior distribution is encoded.
 [[start:1346468][end:1352312]] These three things will give you a building block for any information processing.
 [[start:1352456][end:1364240]] And that ties together with all the work in the Free Energy literature, and perception-action loops, and whatnot.
 
-22:45 [[start:1365140][end:1373216]] So before we see mathematically how a QRF is defined, I think it's more illustrative -
+22:45 [[start:1365140][end:1373216]] So before we see mathematically how a QRF is defined, I think it's more illustrative...
 [[start:1373248][end:1383444]] and I think Chris went exactly on the right order, when he presented this a couple weeks ago, seeing examples from each.
-[[start:1383642][end:1391960]] These are actual pieces of hardware that are effectively QRFs, and it's remarkable how they map to... well, I'll skip ahead a little bit.
+[[start:1383642][end:1391960]] These are actual pieces of hardware that are effectively QRFs. And it's remarkable how they map to... well, I'll skip ahead a little bit.
 
 23:13 [[start:1393726][end:1409256]] But when you get to the mathematical definition of a QRF as a quantum system that you can specify with this category-theory diagram, you have incoming arrows into a node that then expands,
 [[start:1409288][end:1409484]] right?
-[[start:1409522][end:1418684]] And this roughly corresponds to measurement and preparation degrees of, not degrees of freedom, degrees of freedom would be the same, right, when you attach it to the boundary.
+[[start:1409522][end:1418684]] And this roughly corresponds to measurement and preparation degrees of... (not degrees of freedom, degrees of freedom would be the same, right?, when you attach it to the boundary).
 [[start:1418812][end:1422870]] But _measurement and preparation stages,_ I guess, would be the better word.
 [[start:1424600][end:1428500]] But anyways, let me go back to these examples, right?
 
 23:48 [[start:1428650][end:1433448]] And Daniel, you're the biologist here, so correct me if I say anything wrong here.
 [[start:1433534][end:1443144]] You have a cartoon picture of a bacteria, I think, and this is a very simple sort of thing, right?
 [[start:1443182][end:1449790]] It navigates in the direction of food and that's it, right?
-[[start:1450240][end:1454600]] So it is a very simple rudimentary example of a QRF.
-[[start:1454760][end:1463324]] You have the sensory stage here, I guess the degrees of freedom.
+[[start:1450240][end:1454600]] So it is a very simple, rudimentary example of a QRF.
+[[start:1454760][end:1463324]] You have the sensory stage _here,_ I guess the degrees of freedom.
 
 24:26 [[start:1466260][end:1469490]] It's not obvious here what the boundary is, that's one thing.
 [[start:1470420][end:1481716]] But it is a good enough picture to see the resemblance to _here._ We have the measurement, which in this case you're trying to measure concentration of food.
@@ -285,7 +285,7 @@ date: "2023-07-29 Version 1.0"
 [[start:1504642][end:1513730]] So here you want to call it the action degrees of freedom that will steer this bacteria in the direction of food.
 
 25:14 [[start:1514180][end:1519840]] And likewise with cell division (this I understand even less), that the network appears more complicated.
-[[start:1520840][end:1536920]] But I think it's fair to say that at the end of the day, all these chemical networks, that appear super-complicated, somehow have to be mapped to this category-theoretical diagram.
+[[start:1520840][end:1536920]] But I think it's fair to say that, at the end of the day, all these chemical networks that appear super-complicated, somehow have to be mapped to this category-theoretical diagram.
 
 25:37 [[start:1537580][end:1539048]] That's all there is to it.
 [[start:1539134][end:1552750]] You're going to have the sensory input; and the action output; and you're going to have the default chemical concentration, which amounts to this node over here.
