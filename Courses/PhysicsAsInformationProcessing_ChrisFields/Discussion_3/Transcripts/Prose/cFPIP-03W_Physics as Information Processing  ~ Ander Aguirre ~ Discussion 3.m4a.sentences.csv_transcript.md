@@ -288,19 +288,19 @@ date: "2023-07-29 Version 1.0"
 [[start:1520840][end:1536920]] But I think it's fair to say that, at the end of the day, all these chemical networks that appear super-complicated, somehow have to be mapped to this category-theoretical diagram.
 
 25:37 [[start:1537580][end:1539048]] That's all there is to it.
-[[start:1539134][end:1552750]] You're going to have the sensory input; and the action output; and you're going to have the default chemical concentration, which amounts to this node over here.
+[[start:1539134][end:1552750]] You're going to have the sensory input; and the action output; and you're going to have the default chemical concentration, which amounts to this node over _here._
 
 25:56 [[start:1556320][end:1559304]] You remember this from last lecture, right, Daniel?
 
 25:59 _Daniel:_
 [[start:1559432][end:1559868]] Yeah.
-[[start:1559954][end:1566796]] In the **cone-cocone** we explored also in the [2021] Livestream #017, on the Bayesian semantic information flow. [Information flow in context-dependent hierarchical Bayesian inference](https://www.youtube.com/watch?v=o7sJ-5vFJGk)
-[[start:1566908][end:1580352]] But I'll kind of add a point about these biological systems in relationship to artificially specified systems and what that helps us understand about perception, cognition, action.
-[[start:1580496][end:1599272]] So the cone-cocone diagram has this bow-tie architecture, or this kind of like two pyramids touching point to point, where there's a preparation and a measurement which can be different dimensionalities or different scopes.
+[[start:1559954][end:1566796]] In the **cone-cocone** we explored also in the [2021] Livestream #017, on the Bayesian semantic information flow - [Information flow in context-dependent hierarchical Bayesian inference](https://www.youtube.com/watch?v=o7sJ-5vFJGk).
+[[start:1566908][end:1580352]] But I'll {kind of} add a point about these biological systems in relationship to artificially specified systems and what that helps us understand about perception, cognition, action.
+[[start:1580496][end:1599272]] So the cone-cocone diagram has this bow-tie architecture, or this kind of like two pyramids touching point to point, where there's a preparation and a measurement, which can be different dimensionalities or different scopes.
 
-26:39 [[start:1599416][end:1605388]] Like it could be multi-input, multi-output or multi-input, single output, vice versa, and so on.
-[[start:1605554][end:1611760]] But they come through this eye of the needle with C-prime, here.
-[[start:1611910][end:1623350]] Now, contrast that kind of architecture represented here abstractly, with what we see in the bacterial process and in the cell division process.
+26:39 [[start:1599416][end:1605388]] {Like} It could be multi-input, multi-output; or multi-input, single output, vice versa; and so on.
+[[start:1605554][end:1611760]] But they come through this eye of the needle with C-prime, _here._ [Formal interlude: Classifiers and CCCDs](../../../Lecture_3/Video/Slide13.PNG)
+[[start:1611910][end:1623350]] Now, contrast that kind of architecture represented here abstractly, with what we see in the bacterial process and in the cell division process. ![Example: Chemotaxis](../../../Lecture_3/Video/Slide11.PNG)
 
 27:03 [[start:1623720][end:1636680]] These have that kind of a bow-tie perception, cognition, action architecture; or measurement, cognitive integration, preparation architecture.
 [[start:1637580][end:1661516]] In contrast, we see, for example, an artificial neural network where the input and the output layers are usually lower dimensional, maybe an image coming in with several hundred pixels and a single output like a classifier coming out the other end; but a dimensional _explosion_ in those internal cognitive layers.
