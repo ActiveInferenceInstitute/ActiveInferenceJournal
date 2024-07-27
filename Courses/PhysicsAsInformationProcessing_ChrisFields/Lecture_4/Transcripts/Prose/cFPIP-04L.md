@@ -21,7 +21,8 @@ _Chris:_
  Thank you, Daniel, and welcome to this session.
  As Daniel said, this is about communicating observers.
  And fasten your seatbelts because we have a lot to cover in the next hour.
- 
+
+ ## Quantum information theory, the FEP
  So just to do a quick review.
  We've been talking about quantum information theory and we've been talking about it in the simplest possible setting of two systems, Alice and Bob, that exchange information through their mutual boundary.
  And we've assumed that everything is finite dimensional, so we don't need to worry about infinite energy transfer across this boundary.
@@ -46,6 +47,7 @@ _Chris:_
  And we'll use this extensively today.
  But the bottom line, last time, was that physics alone gives us compartmentalization in systems whenever the systems are complex enough to have multiple kinds of measurements that they can't deploy simultaneously.
 
+## Multiple agents in a social system
  So where we're going, today, we're going to start from this place we left off last time of the possibility of agents that are compartmentalized into compartments that have to communicate classically.
  So we're going to talk about agents that can be compartmentalized into multiple subagents that share an environment, the environment consisting of Bob and how those agents talk about that shared environment.
  So the motivation for this is simple.
@@ -76,6 +78,7 @@ _Chris:_
 
  So we're talking about all of life here as well as all of social systems and ecosystems and such things as that.
 
+ ## Quantum entanglement and the topological field theory
  So the first thing I want to do today is simplify the notation so that we don't have to draw quite such complicated diagrams.
  So the picture on the left here is a picture from the last session.
  It shows the structure of a very simple agent that makes some measurements using a reference frame called E and then writes some results of those measurements to memory using a reference frame called Y.
