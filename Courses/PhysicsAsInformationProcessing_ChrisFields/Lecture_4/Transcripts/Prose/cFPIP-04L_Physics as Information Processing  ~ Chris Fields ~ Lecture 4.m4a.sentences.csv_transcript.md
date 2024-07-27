@@ -1,3 +1,5 @@
+![image](https://github.com/user-attachments/assets/673e84ef-f65c-45a2-a546-8779b94a9a35)
+![image](https://github.com/user-attachments/assets/a5e0fe5d-2f36-4630-a7ac-5f575ebba8b5)
 ---
 title:  'Physics as Information Processing - Lecture 4, "Communicating Observers"'
 
@@ -51,7 +53,9 @@ date: "2023-08-10 Version 1.0"
 [[start:217050][end:219520]] And we'll use this extensively today.
 [[start:220450][end:233970]] But the bottom line, last time, was that physics alone gives us compartmentalization in systems whenever the systems are complex enough to have multiple kinds of measurements that they can't deploy simultaneously.
 
-03:56 [[start:236390][end:254470]] So where we're going: Today, we're going to start from this place we left off last time, of the possibility of agents that are compartmentalized into compartments that have to communicate classically.
+## Multiple agents in a social system
+03:56 [[start:236390][end:254470]] ![image](https://github.com/user-attachments/assets/7a9691fc-ea9b-4c47-97b1-0c889f4f8f79)![image](https://github.com/user-attachments/assets/aff9a9a2-89a4-4132-8022-04912c751bff)
+: Today, we're going to start from this place we left off last time, of the possibility of agents that are compartmentalized into compartments that have to communicate classically.
 [[start:255070][end:270830]] So we're going to talk about agents that can be compartmentalized into multiple subagents that share an environment, the environment consisting of Bob, and how those agents talk about that shared environment.
 [[start:271490][end:274000]] So the motivation for this is simple.
 [[start:274450][end:278250]] It's that what we do all the time is a group activity.
@@ -82,6 +86,7 @@ date: "2023-08-10 Version 1.0"
 
 07:30 [[start:450010][end:458780]] So we're talking about all of life here, as well as all of social systems and ecosystems and such things as that.
 
+## Quantum entanglement and the topological field theory
 07:40 [[start:460270][end:470490]] So the first thing I want to do today is simplify the notation so that we don't have to draw quite such complicated diagrams.
 [[start:470650][end:474618]] So the picture on the left here [[see slide "First, simplify the graphic notation..."]] is a picture from the last session.
 [[start:474794][end:490900]] It shows the structure of a very simple agent that makes some measurements using a reference frame called "E," and then writes some results of those measurements to memory using a reference frame called Y.
