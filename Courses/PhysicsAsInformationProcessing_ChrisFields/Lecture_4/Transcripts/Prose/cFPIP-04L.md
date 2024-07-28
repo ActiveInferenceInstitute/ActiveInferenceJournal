@@ -160,6 +160,7 @@ _Chris:_
  So all of these kind of no-go theorems lead off in interesting directions.
  And the only one that we're really going to be interested in here is the third one, the one about measuring Bob's entanglement entropy, because we want to talk specifically about how multiple agents, so multiple components of Alice can access information about Bob's entanglement entropy.
 
+## The nature of classical communication
  Okay, so recall from the end of the last session that the last thing we talked about was classical communication.
 
  And we talked about the fact that classical communication involves assumptions and pitfalls and that we have to be very careful whenever we talk about it.
@@ -190,6 +191,8 @@ _Chris:_
  It's full of hidden assumptions and surprises and things that aren't at all straightforward even though they look like they ought to be.
 
  So there's a challenge.
+
+## The history of entanglement 
  So why do we assume this?
  Why do we assume classical communication?
  We do it because we have to if we're going to talk about detecting entanglement.
