@@ -170,7 +170,8 @@ date: "2023-08-10 Version 1.0"
 17:41 [[start:1061310][end:1066330]] So all of these kind of no-go theorems lead off in interesting directions.
 [[start:1066690][end:1088610]] And the only one that we're really going to be interested in here is the third one, the one about measuring Bob's entanglement entropy, because we want to talk specifically about how multiple agents, so _multiple_ components of Alice, can access information about Bob's entanglement entropy.
 
-18:13 [[start:1093050][end:1101290]] Okay, so recall from the end of the last session that the last thing we talked about was classical communication.
+## The nature of classical communication
+18:13 [[start:1093050][end:1101290]] O![image](https://github.com/user-attachments/assets/334022b9-982b-425e-a541-5440ae0ef45b)at the last thing we talked about was classical communication.
 
 18:21 [[start:1101950][end:1111920]] And we talked about the fact that classical communication involves assumptions and pitfalls and that we have to be very careful whenever we talk about it.
 [[start:1112450][end:1117178]] And what we're going to do today is standard practice in physics.
@@ -201,6 +202,8 @@ date: "2023-08-10 Version 1.0"
 [[start:1258506][end:1266846]] It's full of hidden assumptions and surprises and things that aren't at all straightforward, even though they look like they ought to be.
 
 21:07 [[start:1267028][end:1268590]] So there's a challenge.
+
+## The history of entanglement
 [[start:1269890][end:1271374]] So why do we assume this?
 [[start:1271412][end:1273758]] Why do we assume classical communication?
 [[start:1273934][end:1278930]] We do it because we _have to_ if we're going to talk about detecting entanglement.
