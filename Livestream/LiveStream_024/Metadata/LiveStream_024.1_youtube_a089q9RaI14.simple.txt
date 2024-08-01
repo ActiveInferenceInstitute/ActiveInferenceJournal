@@ -1,0 +1,1898 @@
+SPEAKER_02:
+hello everyone thanks for joining and welcome to act in flab live stream number 24.1 today it's june 22nd 2021 and we're going to be discussing the paper and empirical evaluation of active inference in multi-armed bandits with several of the authors so thanks everyone for joining
+
+Welcome to the Active Inference Lab.
+
+We are a participatory online lab that is communicating, learning, and practicing applied active inference.
+
+You can find us at the links here on this screen.
+
+This is a recorded and an archived livestream, so please provide us with feedback so that we can improve on our work.
+
+All backgrounds and perspectives are welcome here, and we'll be following good video etiquette for livestreams.
+
+This short link has a schedule of all the live streams that we've been doing and will do for 2021.
+
+And we're here today on June 22nd in number 24.1, which is the middle of the three-part series on this paper about multi-armed bandits.
+
+the dot zero video 24.0 had some context and some background on this paper that we're going to be discussing an empirical evaluation of active inference in multi-armed bandits and today we're here with three of the authors so thanks so much for all of you who are joining today because we'll have a lot to discuss and learn about and
+
+in today's discussion for 24.1 we're gonna first just go for some introductions and then we're going to have a presentation by the author and then we're going to just open it up for discussion so if you're here on the video call or if you're watching live in the live chat just feel free to ask any question and we can go wherever people are interested in going
+
+that being said here we are in the introductions we'll just go around and introduce ourselves and say hello and then especially for the authors who are joining for the first time it'd be awesome to hear anything you want to say or we'll ask you questions as well so i'm daniel i'm a postdoctoral researcher in california and i'll pass to dave
+
+
+SPEAKER_01:
+I'm in the tropical mountainous rainforest, 120 miles north of Manila.
+
+My background is in cybernetic learning theory, general psychology and machine translation, but not much math.
+
+So I'm floundering with much of the active inference world.
+
+
+SPEAKER_02:
+Cool, we'll go to Sarah and then continue on.
+
+
+SPEAKER_00:
+I'm Sarah.
+
+I'm a postdoc in Dresden together with Dimitri.
+
+My original background is physics and biophysics, but I wrote my dissertation essentially about active inference, especially applied to habit learning.
+
+And yeah, that's it for me.
+
+I'm going on to Dimitri.
+
+
+SPEAKER_04:
+Should we let Pervoy introduce himself?
+
+I don't know.
+
+I'm not sure if he wants to do that.
+
+Okay.
+
+I mean, I can also introduce him shortly.
+
+So here was our colleague from UCL previously.
+
+So he worked in Max Planck, UCL Center for Computational Psychiatry and Aging Research.
+
+And currently he's switched to industry.
+
+So he's working in second mind on applied reinforcement learning there.
+
+So basically he's an expert on this other part of stuff, which doesn't cover active inference, right?
+
+I'm also a postdoc at the Technical University of Dresden.
+
+Both me and Sara are at the chair for neuroimaging.
+
+The head of the chair is Stefan Kibel.
+
+We have been involved with Active Inference for a while now.
+
+Since probably 2015, 2016.
+
+have been applying it to various questions regarding human behavior, cognitive control, decision making in dynamic environments, and similar.
+
+And yes, so should I kind of switch to the slides now?
+
+
+SPEAKER_02:
+Sure, we can go to the slides, or if I can just ask one general question to any of the authors who wanted to respond.
+
+Was it that you were interested in active inference and then looking for domains to apply it in, or were you interested in a domain and then sort of found active inference as a way to integrate what you were working on?
+
+
+SPEAKER_04:
+Well, I mean, so my background is also in physics, complex systems.
+
+and computational neuroscience.
+
+And as physicists, we like to think about this unifying theories.
+
+So in this sense, active inference has this appeal that it can connect a very kind of distinct way of basically thinking about decision-making, thermodynamics, stochastic dynamics, and very kind of different areas of understanding dynamical systems, so to say.
+
+and control.
+
+So that would be the appeal.
+
+I mean, definitely, as a tool to apply to decision making, understanding human behavior, this is kind of where this all started.
+
+So what new can we learn, basically, using this approach?
+
+
+SPEAKER_02:
+Cool.
+
+And Sarah, any thoughts about, especially I'm curious about the biology side, because we hear a lot about the math and the physics verging towards active inference, but it's also cool to hear about biology.
+
+And that was my background as well.
+
+
+SPEAKER_00:
+My background is rather in biophysics.
+
+So I'm only tangentially in biology.
+
+But what I like is also that it connects with some general information processing scheme in the brain.
+
+And actually, my master's thesis, I was working way, way down in the abstraction hierarchy on spiking neural networks and receptor dynamics.
+
+And actually, in this area, I find it easy to not see the forest for the trees.
+
+And I think actually connecting upwards and ask the question, what is the general information processing that's going on?
+
+And then connecting back downwards again is what also attracted me to Active Inference.
+
+
+SPEAKER_02:
+Awesome.
+
+So as usual, people will be, I guess, joining or leaving.
+
+I'll unshare this screen.
+
+And Dimitri, if you want to jump into the presentation, that'd be awesome.
+
+
+SPEAKER_05:
+Yes.
+
+
+SPEAKER_04:
+OK, so you see, I hope, the slides.
+
+
+SPEAKER_02:
+JOHN MUELLER- Yep, looks great.
+
+And I'll crop everything, so go for it.
+
+
+SPEAKER_04:
+MIHAI APERGHISONIUGUEVREHREHREHREHREHRE.
+
+Excellent.
+
+OK, so let me start with a bit of motivation for this work.
+
+So, well, you realize kind of our involvement with active inference came from this kind of cognitive neuroscience direction and originally not so interested in the technical or machine learning side of it.
+
+However, if one thinks about multi-armed bandits as a very general problem, which kind of generalizes resource allocation problems,
+
+then one realizes that this is most of kind of behavioral experiments can be cast into this kind of framework.
+
+And one sees this in a range of kind of experimental cognitive neuroscience domains like decision-making in dynamic environments, value-based decision-making, structure learning, and similar.
+
+One can also think about attention as a resource allocation problem.
+
+So there are many other domains where maybe they're not explicitly talking about multi-armed bandits.
+
+as such, but they can also be cast into this general framework.
+
+For example, from decision-making dynamic environments, one of the most well-known tasks is probably a reversal learning task.
+
+That's kind of used in hundreds of papers.
+
+And this is also kind of what initially motivated me to make this paper.
+
+It's a kind of just understanding.
+
+So if I apply active inference to reversal learning tasks, how does this compare to other alternative decision-making approaches we can apply to that?
+
+However, right beside this kind of cognitive neuroscience direction, multi-armed bandits have a range of industrial applications.
+
+They are really used starting from marketing to finance, like recommendation systems in finance for trading applications.
+
+Even in many optimization problems, like deep learning, there are lots of papers showing how you can speed up learning by finding better sets of examples for deep learning systems.
+
+And right, so basically the way this also kind of allows them active inference to bridge this into machine learning gap and find new applications there.
+
+If it's kind of shows to be useful for this kind of multi-armed bandit setup as kind of adding something new to the existing work.
+
+Right.
+
+And when we talk kind of multi-armed bandits have a range of different formulations.
+
+Today we will talk about stationary bandits and dynamic bandits, where it just means that reward probabilities either are fixed over time or change in different ways.
+
+However, people also discuss adversarial bandits, risk-aware bandits, contextual bandits.
+
+One can also talk about non-Markovian bandits.
+
+kind of rewards depend on a sequence of actions or have kind of some memory dependence in the system and so on, right?
+
+There's really like a range of different kind of structural definitions of multi-armed bandits which kind of then require a different way of thinking about the problem.
+
+And this is potentially something also interesting for the future, expanding what we did here into these other domains and seeing if, again, the results are generalizable to other definitions of multi-arm bending problems.
+
+OK, so just how I structured the slide so far.
+
+We have two parts.
+
+One is about stationary bandits.
+
+And then we will go to switching bandits.
+
+And given that we have two hours, I hope that will be enough time.
+
+But if not, we can also continue for the next session, for example, with switching bandits or so.
+
+Let's see how this goes.
+
+Okay, so what is stationary bandits?
+
+So the definition of the problem is as follows.
+
+On any trial, an agent makes a choice between K arms.
+
+Choice outcomes are binary variables.
+
+So we've kind of focused here on Bernoulli bandits.
+
+Outcomes can also be drawn from any other distribution.
+
+So then, for example, you talk about Gaussian bandits or
+
+depending on how the rewards are generated.
+
+We will just work with Bernoulli here, and we have fixed reward probabilities in a very specific way.
+
+So there is only one arm which has a reward probability associated with P max, which is one half plus some term epsilon, which is larger than zero, and all other
+
+all reward probabilities associated with other arms are just fixed to one half.
+
+This kind of allows us to control the difficulty of the task.
+
+So because the smaller the epsilon is, the closer to zero is, the more difficult it is to distinguish the best arm from others.
+
+And the more samples one needs to draw to kind of realize the difference.
+
+And beside this, like the best arm advantage term, one also realizes that the right number of arms, K, is also increasing the difficulty.
+
+The more arms you have, the more time you need to figure out what is the correct arm to play.
+
+So just to give you an illustration of the example, we have four arm banded here.
+
+So whenever an agent pulls one of the arms, it gets either zero or one.
+
+So we can think of this as a reward or absence of a reward.
+
+Beliefs about the reward probabilities.
+
+We will assume that these are beta distributed.
+
+So we will use beta distribution to model a representation of reward probabilities associated with each arm.
+
+And we will use Bayesian belief updating for all action selection algorithms.
+
+So this also kind of limits the range of algorithms which we want to compare here in the study.
+
+I will explain a bit later why we focus on that.
+
+So just to give you a kind of visual example of what this does.
+
+is whenever an agent starts with flat beliefs over reward probabilities associated with each arm.
+
+So this is like a uniform distribution.
+
+This is a special case of beta distribution.
+
+And whenever it pulls, selects one arm, it gets either 1 or 0 as an outcome.
+
+And it updates the beliefs about the reward probabilities in one of the directions.
+
+So in here, it's sampling one more often.
+
+So it has increased belief that there is a higher reward probability associated with this.
+
+So formally, how this is implemented, what you see here, is to a very simple generative model.
+
+So with each k-arm, we assume there is some associated unknown reward probability, theta k, which is just a number between 0 and 1.
+
+And outcomes of choices are either 0 or 1.
+
+So they are just binary choices.
+
+So these kind of constraints are like observation likelihood to a Bernoulli distribution.
+
+So this is just kind of product of different Bernoulli distribution, depending on which arm one is selecting.
+
+term below is our prior belief about reward probabilities.
+
+And this, we'll assume, is just kind of product of many beta distributions, where here alpha 0 and beta 0 are just fixed to 1.
+
+So this corresponds to the uniform rate prime.
+
+One can also start with other values, but I think this makes some sense, reflects no knowledge a priori about reward probability.
+
+So now, given some choice at trial 80, we just apply bias update rule, and we get from some prior beliefs, posterior beliefs.
+
+And the nice thing about the stationary case is if our priors are beta distributed, our posteriors will be also beta distributed.
+
+And the update, one only needs to take care about how we update the parameters of beta distribution, alpha and beta.
+
+And this just works in a form of accounting, basically.
+
+Alpha counts how many times you observe 1 as an outcome.
+
+And beta counts how many times you observe 0 as an outcome.
+
+And so because of all this, in this stationary case, inference is exact.
+
+Because both prior and posterior belong to the same distribution family, you have conjugate prior here set up.
+
+So you can just track effectively the updating.
+
+There is another kind of representation of the update rules one can use here.
+
+So for example, if we express the updating in terms of expected kind of outcome, mu, and the scale parameter nu here, we see that actually the expectations are updated in the form of a delta-like learning rule.
+
+So where this kind of learning rate is something which decreases over time.
+
+So basically, new is just increasing over time.
+
+Whenever you select a specific arm, new will just increase by one.
+
+And this means that the learning rate decreases over time.
+
+So the more you sample from one arm, the less you will update your beliefs about it.
+
+So this is practically what's happening here, but very, very simple.
+
+Okay, so basically this is everything we need to know about this, let's call it, perceptual part of the generative model.
+
+So how we update beliefs given some outcomes.
+
+Now we have to introduce how we select actions based on these beliefs.
+
+And for this, we can talk about action selection algorithms.
+
+And so...
+
+In the literature, there are lots of examples.
+
+One of the oldest ones is probably EpsilonGreedy.
+
+You also mentioned it during the first presentation, point zero.
+
+People also talk about UCB, upper confidence bound.
+
+This is also one of the oldest ones.
+
+KLUCB.
+
+kind of extension which uses KL divergence as an estimate of exploration bound.
+
+There is Thomson sampling, etc.
+
+Here we will focus mostly on this tree.
+
+We will use optimistic Thomson sampling as one kind of comparative example, and another is Bayesian upper confidence bound.
+
+So first, both of these algorithms have been extensively analyzed in the literature.
+
+And people just found that they work, in many examples, much better than, let's say, non-Bayesian approaches.
+
+And secondly, we can use basically for all three algorithms the same update rules because they're just Bayesian.
+
+They're just algorithms corresponding to Bayesian and bandit.
+
+So we can kind of... Our motivation here is to compare kind of action selection principles based on the action selection algorithm and not based on potentially different ways how you update beliefs about the history of observations.
+
+And so this would be kind of motivation and also a bit to simplify the comparison.
+
+I mean, you can add to the list at least 10 other ways of doing the action selection and even decision making in multi-armed bandits.
+
+Okay, so just a bit to kind of historic example, important.
+
+This is just like upper confidence bound.
+
+Although I will not directly compare it, it has some relevance to understand also what is happening kind of in active inference later.
+
+And this form here just corresponds to a version which is adapted to specifically Bernoulli bandit.
+
+So some people might be more familiar with other version which
+
+was derived from Gaussian bandit.
+
+So in this paper here, one can see these different derivations and examples how this works.
+
+What is important to notice here is basically that this first term is just the expected probability of reward on arm k. And the second two terms correspond to this exploration bonus or the bound.
+
+So this is typical for UCB is that the bound kind of increases over time logarithmically with the number of kind of trials you're doing.
+
+So basically the more you're not selecting one arm, the more you're kind of pushed again to select it at some point in time in the future.
+
+All right, so basically this necessarily increases over time if you are not interacting with the specific arm.
+
+But still, although the algorithm is very simple, it has nice theoretical results because it's an efficient algorithm.
+
+It converges in infinite number of samples.
+
+However, we'll talk on this Bayesian variant of the upper confidence bound, which actually selects arms.
+
+based on the upper percentiles of cumulative distribution function.
+
+So as time progresses, one is trying to estimate the extreme value of a belief distribution, which in this case is just like a beta distribution.
+
+And one gets this extreme by solving this equation, which just corresponds to inverse regularized incomplete beta functions.
+
+So basically, the more extreme point your beliefs contain, the more likely that you will select that arm.
+
+The more relevant is to select this arm because you're expecting that this high value is still possible
+
+as a reward probability in this setup.
+
+And so this kind of algorithm has a couple of parameters, but what authors kind of show in this paper is if you have very good results by fixing C to zero, so basically this term just becomes one,
+
+And so we just use their advice here in the paper.
+
+So we will not, and we didn't kind of try to analyze other possibilities or other kind of values of these parameters in this case.
+
+So for Thompson sampling, and this is again, one of the classical algorithms first probably
+
+with Bayesian bandits or with Bayesian decision making.
+
+And it's also extremely simple, right?
+
+Given some beliefs about probabilities at each arm, you sample one point.
+
+So if there are like 10 arms, you would sample from each arm one point and you will just select an arm which gives you the largest values.
+
+A variant of that which was shown in the last five to ten years that it works slightly better is this optimistic Stomson sampling, where one is constraining the samples only to values which are larger than the expectation.
+
+So one is first making a sample from each arm, and then if the sample is larger than the expected probability,
+
+of reward, then one keeps the sample.
+
+Otherwise, you just use the expected value as a value, a kind of reward probability associated with that arm.
+
+And you're just, again, all our different arms maximizing, selecting the arm which gives you the maximum reward probability.
+
+This is a kind of a very stochastic approach where this exploration actually kind of bonus to this algorithm comes from basically this random sampling from a probability distribution.
+
+And the broader your beliefs are about something, the more likely is that you will get the kind of large value.
+
+Hence, the more likely is that you will explore more, select that arm.
+
+in different routes.
+
+And basically exploration is kind of here completely driven by the noisiness of the sampling process itself.
+
+Okay, so now we come to basically active inference version of this.
+
+So, we are kind of simplifying here things from what people maybe know how Active InfoRates is used normally.
+
+So, first we will use like rolling behavioral policies, which means that agent is not like tracking history of actions it performed.
+
+It's just kind of repeating step of policies on every trial.
+
+And in this case, the behavioral policy just corresponds to a single choice.
+
+So in this type of bandit problems we are kind of analyzing here, like agent cannot change anything in the environment, hence planning is completely irrelevant.
+
+In a way, you cannot kind of position yourself in space better over time so that you kind of need to plan something, which means that just kind of single choice policy evaluation, a single time step in the future is sufficient to make
+
+good decisions.
+
+And generally, we will base our action selection on expected free energy here, where this would be a form which decouples into a risk and ambiguity term.
+
+But we can also think about this problem as estimating expected value.
+
+of different arms plus the expected information gain.
+
+So how much information we can extract from different arms if we select.
+
+So now let's assume that we know how to compute expected free energy.
+
+I will go through details on next slides.
+
+Normally, like right posterior of our policy,
+
+is estimated as a kind of mixture between expected free energy so kind of a future expectation about what behavior will do plus the kind of the second part which is the free energy about the past kind of outcomes however because we have like rolling policies this term is just constant for each policy it's the same it has the same value basically so the posterior policy or where action just corresponds then to the
+
+to the soft max over the expected free energy.
+
+And normally, when one thinks about choice selection, this is samples from the posterior.
+
+However, we are here only interested in kind of optimal choices.
+
+So for us, basically, gamma is just infinite value, and we are just making choices about actions which minimize expected free energy.
+
+So this is a useful parameter to have if you need to kind of fit a model to the behavior.
+
+But for this kind of practical application, there is not much gain in adding another source of noise here.
+
+OK, so how do we compute expected free energy?
+
+Well, that's, in a way, quite simple.
+
+So we just have a couple of terms here.
+
+posterior beliefs over reward probabilities, but given is this like Q term, this is just the product of beta distributions.
+
+We have marginal likelihood, so probability of observing OT outcome given some action AT.
+
+So this is just marginalizing likelihood over our current posterior beliefs.
+
+And another term is here just the prior preference over different outcomes.
+
+And this is really easy to parameterize because we work with binary outcomes and we can just define here a single parameter lambda.
+
+So the higher the lambda is, the higher the preference is of the agent to observe ones relative to zeros.
+
+And this lambda parameter also has a role of regularizing the amount of exploration an agent does because the larger the lambda, the more focus is set on the exploitation of making selections based on the expected value instead of expected information gain.
+
+And so this final term, computing ambiguity, is basically just computing expectation over the entropy of different outcomes, which also has relatively simple form here because of Bernoulli likelihood.
+
+So without going into all the details, this is basically how the expected free energy looks like.
+
+So this first term here,
+
+is correspond just to the negative of the expected reward.
+
+So because we are minimizing expected free energy, this effectively means that we are maximizing expected reward.
+
+And the second term is just a very complex set of equations, which gives you an estimate of the expected information gain rate.
+
+And in a way, kind of motivation is just because one cannot really understand what is going on here, right?
+
+We have kind of logarithms of expected reward probabilities, but then we have a D-gamma function of parameters.
+
+And so instead, we can kind of try to simplify the term by approximating effectively the information gain part.
+
+just to get a better understanding of how basically expected free energy scales with repeated choices.
+
+And so one ends up with a very simple form, where basically the exploration term just corresponds to one over two divided by the number of times one selected different arms.
+
+So this is in a way quite similar to...
+
+what we had in UCB algorithm, right?
+
+The first exploration term was also divided by something which is proportional to how many times you selected.
+
+But without this kind of expansion of exploration bonus with time.
+
+So there is no logarithm of t. And I mean, this will have a consequence on efficiency of active inference.
+
+So I will show you this in a moment.
+
+So how you want to achieve basically this simple form is just by assuming that for large, the big gamma function has this type of approximation when x is sufficiently large, right?
+
+So this just means when you sample sufficient number of time each arm, this will be more or less very accurate approximation.
+
+And we see that this approximate algorithm and the exact behavior is similar.
+
+So it is, in a way, a reasonably good approximation.
+
+Daniel, I think you asked a question about the scaling properties of this.
+
+Motivation for introducing approximation is that, in a way, the algorithm is much simpler, so it scales better.
+
+So you can kind of run it on much more arms easier.
+
+However, the advantage is not huge.
+
+So maybe it scales slightly better, but you are maybe gaining like 10% or 20% performance in computation time.
+
+So it's not something which destroys completely the exact form, at least not in this example.
+
+because the problem itself is simple.
+
+However, it helps us a bit understand, but just get intuition what is happening.
+
+And at least write how the exploration bonus changes with time.
+
+OK, so before I kind of just show some result, like comparison of different algorithms, I want to introduce just concepts which come from
+
+machine learning analysis of multi-armed bandits, which people use just to kind of rate and compare different algorithms, how good they are in solving this task.
+
+And this is done by using something, defining a regret.
+
+So basically, regret is simply a difference between what you did at trial T minus what was the best choice at that trial.
+
+So kind of assumption here is that there is some oracle which is solving the task, which knows exactly what was the best choice in every trial, right?
+
+And so normally people kind of consider two quantities, either a cumulative regret, which is just sum of regret from first trial till the current one,
+
+or a regret rate, which is just the average over time of cumulative regret.
+
+And we will here use both just for visualizing different aspects of the algorithm.
+
+And in a stationary case, at least, this is a very important result.
+
+Because for all good algorithms, one would expect that this regret goes to zero over time.
+
+So as you go to infinite number of trials, you should be able to always do like a good choice.
+
+And if this is the case, then one can show that algorithms which have this property, they are called also asymptotically efficient, and they scale for large Ts as something, some terms times a logarithm over T, right?
+
+And so this is kind of,
+
+one important aspect of, at least for stationary case of different decision-making algorithms, so multi-armed bandit algorithms.
+
+So they should at least scale as logarithm of T when you expand, right?
+
+When you go to large T limit.
+
+Otherwise, right, this first thing will not probably hold.
+
+Well, or they can also scale slower than logarithms.
+
+But for example, if they increase linearly with p, this will not hold anymore.
+
+Okay, so now let's go to the comparison, right?
+
+We will look into how optimistic Thompson sampling Bayesian upper confidence bound exact inference algorithm and the approximate one compared to each other.
+
+I will start first with just trying to see what would be kind of a good value for this lambda parameter in different settings.
+
+And also to give some kind of initial comparison of exact algorithm and the approximate one.
+
+So what I'm showing here is a regret rate for different kind of snapshots.
+
+So these dotted lines are after 100 trials.
+
+The dotted dashed line is after 1000 trials and the solid line will be after 10,000 trials, right?
+
+And so what one kind of notices here is that there is some obviously kind of minima for different lambda.
+
+So this kind of preference parameter.
+
+And that the longer kind of, well,
+
+The more trials you do, the smaller the lambda should be.
+
+So this is not quite nice.
+
+And this kind of has a consequence.
+
+However, we can just pick some value.
+
+So for example, this purple dotted line shows around 0.1, lambda 0.1, which seems to be close to minimum for most of these cases.
+
+So we don't want to kind of...
+
+have different value for different examples because this is just not practically feasible.
+
+You want to have a kind of general algorithm which can be applied to many different situations at the same time.
+
+So when we compare Bayesian UCB, optimistic Thompson sampling, and just the approximate active inference, so I'm just excluding this here, the exact one, because they will behave the same pretty much for this specific parameter value.
+
+If we compare them in terms of cumulative regret, we see that the approximate active inference is not asymptotically efficient.
+
+So this curve just goes, diverges over time.
+
+Versus if you look at the green and the yellow curve, they kind of flatten out after some time.
+
+And they get the slope proportional to this dotted lines, which actually shows the slope of this kind of asymptotic limit, what you should see for large t's.
+
+So why is this happening?
+
+So the thing is that...
+
+because this exploration bound is kind of just decreasing over time, active inference algorithm kind of gets stuck into the wrong solution with some probability, which depends on the difficulty of the task.
+
+So the smaller the epsilon is, the more likely and the more arms you have.
+
+Sorry.
+
+For smaller epsilon and for small number of arms, there is a higher probability that you get kind of stuck, right?
+
+And one can see this if kind of we take a snapshot of different runs.
+
+So this is kind of a distribution of cumulative regret.
+
+I'm just plotting logarithm here.
+
+So like making a histogram of over different runs of this is like 10,000 runs of different algorithms and just showing at what value for the logarithm of the cumulative regret they end up.
+
+As you can see here, there is four kind of
+
+active inference-based algorithm, you see this kind of, well, spike here.
+
+And in the tail of the distribution, which is proportional to just doing random choices.
+
+So that means that basically algorithm was just selecting wrong arm constantly.
+
+It never converged to a correct solution.
+
+In a way, it gets stuck to a wrong solution because the exploration was reduced too soon.
+
+Right.
+
+So this is kind of, say, a limitation for application of active inference to stationary problems, because this is not a feature of an algorithm you would like to have.
+
+In a way, normally, if you are kind of, so example of this would be, for example, optimization problems that you want to find the best solution for a set of parameters.
+
+For example, Bayesian optimization finding the minimum of some unknown function uses Thomson sampling.
+
+This seems to be a very efficient way of finding the minimum.
+
+However, if you would apply to such situation an active inference basis,
+
+kind of arm selection or sample selection, there is a chance that the algorithm fails, right?
+
+You'll just kind of get stuck in the wrong minima, wrong optima.
+
+It doesn't do sufficient exploration.
+
+So this kind of requires potentially some adjustments to how actions are selected, at least in the stationary case.
+
+So just to... Okay.
+
+Strange.
+
+I got some strange slide just to kind of show a bit what the short-term behavior looks like.
+
+So from the perspective of kind of cognitive neuroscience or like human decision-making, you don't really care about this asymptotic limit because you don't usually expect people to be in either stationary environment.
+
+Things always change.
+
+or rather they kind of have to repeat actions so many times.
+
+So what I'm showing here now just in a very reduced example, so if we have only three arms and we just use kind of different epsilon values, so task difficulties, what is the probability that for different algorithms that you select actually the optimal arm?
+
+And as one can see that right initially,
+
+So Bayesian UCB for first maybe 25 trials has the highest probability to select an arm.
+
+However, there is a range of trials like from 50 to maybe 1,000 where active inference based algorithm takes over.
+
+So in a way, because of this information game term, active inference is more efficient in
+
+targeting the arms which will give you the most information, it can recover the best arm in some intermediate interval with the highest probability.
+
+However, as you expand this after 1,000 trials or so, you see that this probability gets stuck, so it never converges to one, unlike the other algorithm.
+
+This is especially evident for this difficult problem, small epsilon.
+
+And so this is, in a way, explanation of what happens.
+
+So basically, algorithm, although it reaches good solutions with higher probability than other algorithms, there are still lots of examples in this kind of simulations, simulations, which get stuck to a wrong solution.
+
+And they cannot get out of this.
+
+So in a way, this kind of asks the question, OK, what can one do to make active inference also syntactically efficient?
+
+So how can the maybe either generative model be changed to support increasing the exploration bound over time?
+
+Or maybe introduce, instead of computing expected expectations of expected free energy, one can also just draw samples
+
+from a posterior and kind of also compute these two terms, like information gain and similar to like Thompson sampling.
+
+So right there are kind of different ways one can think of how to add exploration bonus.
+
+A third option would be to actually introduce learning of the lambda parameter.
+
+So that lambda itself kind of goes down over time.
+
+So it kind of goes towards 0 with specific rules.
+
+However, currently, we don't have a very good solution for this.
+
+So we just leave it at this.
+
+That is an obvious limitation of just applying active inference to this type of problems.
+
+Are there kind of maybe any questions?
+
+I think this would be like the half where we switch now to the other.
+
+
+SPEAKER_02:
+If anybody has any thoughts, definitely I could ask some things.
+
+Or also we'll ask if in the live chat people want to post any questions.
+
+But how much longer of a presentation did you estimate that you had so that we could kind of
+
+also address some general points here during this point one?
+
+
+SPEAKER_04:
+Well, I don't think there is more than maybe 20, 30 minutes max.
+
+I didn't really gauge it.
+
+But there is less less slides in the second.
+
+
+SPEAKER_02:
+Would it make more sense to go through it quickly here?
+
+Yeah.
+
+Or would it make sense to do it in the next weeks?
+
+
+SPEAKER_04:
+I think both are fine for me.
+
+I mean, maybe an additional 15 minutes.
+
+
+SPEAKER_02:
+Okay.
+
+So we'll complete the presentation and in live chat and on the video chat here, we'll compile our questions and then in the remainder after your presentation today, and then the next week we can have more open discussion.
+
+So please continue.
+
+Thanks.
+
+
+SPEAKER_04:
+Okay.
+
+Okay.
+
+So now we go to this like dynamic non-stationary problem.
+
+And on any trial, in this case, it's a very similar setup.
+
+On any trial, an agent makes a choice between K arms.
+
+Again, we are focusing on Bernoulli bandits, so outcomes are just binary variables.
+
+However, what happens here is that the reward probabilities associated with each arm change over time.
+
+And we differentiate between switching bandits.
+
+where we will assume that the changes happen at the same time on all arms.
+
+And furthermore, in switching bandits, they are kind of also called piecewise stationary.
+
+So there is like a period where nothing changes, and then there is just one moment in time when reward probabilities on all arms change.
+
+Or we can think of another variant of dynamic bandits would be restless bandits, where changes happen independently on each arm, and they are continuously changing over time.
+
+So for example, following a random walk.
+
+I will only talk about switching bandits, but from some testing I did, all the results generalize also to the restless case.
+
+And beside this number of arms and the difference between the best arm and the other arms of reward probabilities, epsilon and k, we have another task difficulty.
+
+This is the rate of change or just change probability.
+
+So the more often things change, the more difficult the task is, especially if you have many arms.
+
+And we will consider switching bandits with fixed difficulty, which is just the extrapolation of the stationary case by introducing changes to which arm is associated with the maximal reward.
+
+We will always have the same rewards on all arms.
+
+It is just that from time to time, optimal arm changes with probability row.
+
+And in this case, we have just three parameters which define our task task difficulty.
+
+We can also think about switching bandits with bearing difficulty, which then just means that with probability row, the reward probabilities associated with each arm either remain fixed on the next trial, so they are just kind of translated.
+
+Or they are sampled, sorry, with some probability one minus rho should be here, right?
+
+They are staying fixed or with probability rho, they are just sampled from a uniform distribution, in this case, beta distribution with parameters one.
+
+And in this,
+
+In this variant of the task, we just have k and rho as a fixed difficulty parameters.
+
+So epsilon kind of disappears.
+
+So you're kind of averaging over epsilon in the task.
+
+And just to give you an example, so we will not discuss this, but how restless bandwidth setup looks like is basically you can
+
+You assume, for example, that the logit transform of reward probability just follows a random walk.
+
+So it's just Brownian exploration in the logit space of the reward probability.
+
+And this would also require potentially changing the generative model, which I will introduce.
+
+But it's not necessary.
+
+So one gets pretty similar solutions and behavior.
+
+So now,
+
+To come back to the example from before, if we have multi-armed bandit with four arms, the setup is exactly the same.
+
+And in addition, we assume that the agent has access to the underlying probability of change.
+
+So this is not something which is unknown.
+
+This simplifies the learning rules and belief update equations.
+
+However, one can extend this, what I will introduce today, to the setups where the probability of change has to be learned also, or that the probability of change is also something which changes over time so that you can have to track how often reward probabilities change at different times.
+
+So this would be kind of example of decision making in volatile environments.
+
+So to visualize the algorithm, basically the only difference is practically that now you have an effective forgetting of what agent learned before.
+
+And one can see this, for example, if you look
+
+on this square to the left.
+
+As kind of time evolves and agent is selecting other arms, this value, which reward probability associated with the leftmost arm just decays back to uniform probability, right?
+
+So in a way, agent is forgetting information or expectations it had about this arm.
+
+And it assumes that with time, the reward probability will, beliefs about reward probability will revert back to a uniform distribution.
+
+And the algorithm is really a straightforward extension of what I already described before.
+
+So the generative model now is slightly more complex.
+
+So besides the likelihood term, so observation likelihood, which remains the same, is just the Bernoulli distribution.
+
+Now we have a kind of state transition term.
+
+which tells us how reward probabilities change over time.
+
+What this means is that if one believes that there is a change, reward probability will be independent from the previous values, and they just belong to a uniform distribution, so this kind of prior belief.
+
+And if there is no change, the transition corresponds to a delta function, which just means that the reward probabilities stay unchanged from trial t minus 1 to t. And finally, on each trial, we have the same prior about probability of changes.
+
+And this is just, again, a Bernoulli distribution with probability rho, which here we will just assume this is a known parameter.
+
+to the agents.
+
+So the problem here in dynamic cases, you can still apply the
+
+the bias rule and you can compute the posterior both for the change probability terms on JT and for the marginal posterior about reward probabilities.
+
+However, as you see here, the exact kind of form of the posterior is not anymore, doesn't belong to like conjugate.
+
+So the prior is not any more conjugate probability distribution to the likelihood.
+
+And this is not anymore a simple beta distribution, but it becomes a mixture of beta distributions.
+
+And as you are kind of evolving into the future, this becomes larger and larger mixture of beta distributions, which is, well, practically intractable, right?
+
+If you kind of expand this to open any number of trials.
+
+So because of that, we want to have something which is a bit more efficient algorithm.
+
+We can basically introduce a mean field approximation.
+
+when we now say that, okay, our probability distribution can be described as a product of a bunch of beta distribution and a categorical distribution, which just tells us the probability of change, right, on trial T. And how one, what this corresponds to here, so basically, what is actually, we are using here a bit of a,
+
+It's not a standard variational inference, so you would have to kind of compute the gradient over the ratio of free energy to find the optima.
+
+This simplifies the things because you just need one step to update parameters, both about the change probability and about reward probabilities.
+
+This makes it not super optimal, so there are better solutions how I can do this, but it's very efficient.
+
+In the end, for the Bernoulli bandits, there will not be much difference.
+
+You can use better algorithms, but this gives you just marginal advantage on the long run.
+
+just because the problem is very noisy, and it's very difficult to actually figure out the correct choice.
+
+So what this variational smile does, it was introduced by Vasiliki quite recently, in 2021.
+
+So they provide you a bit more detailed justification for what I'm saying here.
+
+I'm just paraphrasing a bit how the algorithm is defined.
+
+So basically, we can associate the marginal about change probability with the exact posterior marginal, because you can compute this analytically.
+
+And then we use this as basically
+
+known belief about change probability to estimate reward probabilities by averaging in the log space over different prior beliefs about reward probabilities.
+
+So basically, instead of averaging in the probability space, you're kind of averaging in the log space here.
+
+What this kind of results is in a very simple set of update rules.
+
+So on the left side, I'm just showing how omega t is updated.
+
+And this is just correspond basically to forming beliefs about change probability based on bias factor shown here, which is just the likelihood between
+
+observing OT given that the change didn't happen and observing OT given that the change happened at the current trial.
+
+And then using that estimate to update your beliefs about different arm probabilities and basically depending whether you selected the arm or not.
+
+So basically the omega term here plays as a forgetting rate.
+
+So the larger the omega, the closer to 1, so the larger the probability of the change occur, the more you will revert back to the beta 0 and alpha 0 parameter, so the initial prior beliefs, and less you will depend on your current beliefs from the previous trial.
+
+And this also has an important limit.
+
+If the agent believes that there is no change in the environment, you will revert back to the exact inference and the update rules which we had for stationary case.
+
+And that's kind of also a nice thing about this algorithm.
+
+It can be just generalized to any knowledge about change probability.
+
+OK, so the action selection algorithms did not change.
+
+So the learning rules will change, but we are practically doing still the same way of making action selection.
+
+So for Thomson sampling, we are just sampling from the posterior beliefs.
+
+For Bayesian upper confidence bound, it's slightly different.
+
+So we are using kind of the mixture.
+
+between again the mixture of possible parameter values to estimate the inverse because from the this predictive posterior it's difficult to inverse it it's a mixture of two beta distributions so this is just kind of approximation one can use for Bayesian UCB and for action selection in approximate expected free energy one gets with
+
+very same set of equations because basically row can just, so probability of change drops out.
+
+It can be ignored easily there.
+
+Okay, so now if we do kind of the same comparison, first of exact and approximate after inference algorithms, we see a slightly different picture to what we had before.
+
+First, it seems that as you increase the number of trials and you kind of compute this regret rate for this specific number of trials, the regret rate does not change.
+
+So in a way, algorithm converges very fast to a specific regret rate and for different
+
+And there is a clear kind of stable minima independent of number of trials you're exposing algorithm to.
+
+Similarly, again, we see very similar behavior between exact active inference algorithm and the approximate.
+
+And for this example, I just fixed lambda to 0.5.
+
+It just seems to be a reasonably well-valued parameter for many situations, which we see here.
+
+However, so here I'm showing for...
+
+10 arms if we go to 80 arms the picture slightly changes so it seems that optimal lambda parameter although it doesn't change with t it changes with the number of arms and obviously with all the other rho and epsilon all the other parameters so this makes things a bit difficult and basically
+
+suggest that it's important to kind of find potentially a learning rule, like self-optimizing way of estimating lambda.
+
+And there is some work actually in active inference literature which potentially has a solution for that.
+
+So we just have to test it out at some point.
+
+So however, we can still use the same value.
+
+This does not influence that much the performance.
+
+Later on, so what we see when we compare it to approximate active inference with Bayesian UCB and Thompson sampling is that for a range of settings, either with fixed advantage of the best reward probability advantage of the best time, we see that active inference just performs better
+
+already after 1,000 trials or so compared to the other two algorithms.
+
+This is just for different change probabilities.
+
+So for example, row 0.05 corresponds to a change every 200 trials.
+
+This would be every 100 trials on average.
+
+And the last step here is every 25 trials.
+
+So this would be the most difficult scenario.
+
+So one sees that the more difficult scenario, the differences disappear.
+
+So you're kind of losing the advantage.
+
+However, similarly, if we fix number of arms, for example, to 40, and we just change the epsilon parameter, a similar trend is visible.
+
+The more easier the task is, the bigger the difference in non-stationary scenario you get relative to other algorithms.
+
+Of course, one would potentially...
+
+kind of destroy this advantage if changes become very slow, like every 10,000 trials or something, where you are kind of approximately in the stationary world.
+
+and okay so this would be like this switching bandits with varying difficulty we can do the same kind of analysis for a switching bandit uh sorry previously we looked at the switching bandits with uh fixed difficulty similar analysis can be done for varying difficulty and uh interestingly one sees here uh knows because epsilon drops out one sees here uh actually for the exact active inference there is like a clear minima
+
+which seems independent on any of these parameter terms, so rho or k. So basically, we can fix lambda to 0.25 for the exact active inference algorithm, and we can still keep for the approximate active inference algorithm lambda to 0.5.
+
+And just to show what happens here,
+
+is that there seems to be, like in varying difficulty, there seems to be also advantage of using exact active inference decision-making algorithm.
+
+It outperforms the approximated quite clearly in these settings, and it doesn't require a fine tuning in this sense, right?
+
+For the range of problems, you can have much better performance with a single choice of lambda value.
+
+And again, so in this case, interestingly, the easier the problem becomes, so in this kind of quadrant, the less the difference between algorithms is, and actually Bayesian UCB algorithm becomes quite efficient in these settings.
+
+Also here, right, you see that
+
+Bayesian UCB also achieves quite good performance.
+
+Interestingly, much better than optimistic Thompson sampling, which for me at least, I didn't found any paper who previously showed something like this.
+
+So yeah, this is also probably new result for machine learning people.
+
+Okay, so just to conclude, active inference does not result in asymptotically efficient decision making.
+
+Additional work is required to establish theoretical bounds on regret and derive improved algorithms.
+
+In non-stationary bandits, however, we see better performance in comparison to other algorithms, and especially noticeable in more difficult settings.
+
+You are kind of getting
+
+the more difficult task is you're kind of forgetting the better results.
+
+A tentative to-do list for like next steps here is like introduce learning for the lambda parameter, establish a really like kind of theoretical bounds on cumulative regret.
+
+So what can one expect to see given different choices of the algorithm for action selection based on expected free energy.
+
+So this would hopefully improve behavior in stationary case and potentially also apply to some real-world examples.
+
+So this kind of, right, in machine learning field, I would say.
+
+This kind of recommendation systems optimization problems and similar.
+
+Just to see how it performs in this kind of scenarios.
+
+Yeah, okay.
+
+I would just like to thank all the collaborators on the project and the people who helped me with different advices.
+
+And you can also find the slides here and the code is available on my GitHub page.
+
+I would just not recommend to use it in the next two weeks because the paper is under revision and I'm breaking stuff constantly.
+
+
+SPEAKER_02:
+Yeah.
+
+awesome thank you you can unshare and we'll return to just um discussion for the last 45 minutes or so here but thanks for that awesome presentation with always good to get okay multiple um
+
+multiple times just to sort of see some of those figures in the paper.
+
+Then also there are some different figures and some different views.
+
+So again, anyone in the live chat is welcome to ask a question or anyone who's here in this Jitsi.
+
+I'll ask a question from the live chat first.
+
+And then if you're here in the Jitsi, please feel free to raise your hand.
+
+So it's written in a live chat.
+
+since the bandit problem here is not Markovian does this mean that we only need to consider the current time to calculate the expected free energy uh why why is it not to Markovian well let's let's actually clarify what makes a problem or a situation Markovian or non-markovian
+
+
+SPEAKER_04:
+OK, so for example, the problem is Markovian because the changes are only dependent on the last trial or the current trial.
+
+Right, so the reward probability in this non-stationary case
+
+will be a function only on the reward probability on the previous time step.
+
+And this is what makes the problem actually Markovian.
+
+So I didn't talk about, there are non-Markovian bandits, but this is not what we are discussing here, right?
+
+It is really just Markovian bandits.
+
+But this is not the case why you don't need, well, maybe yes, actually.
+
+I mean, if you would go to non-Markovian bandit,
+
+then you would potentially need to plan ahead for longer because that would require that there are kind of dependencies between your actions and outcomes, which you observe in a sequence and different sequences might result in very different outcomes.
+
+So right, because here we are in Markovian case and
+
+An agent cannot change the dynamics of the environment in any way.
+
+So it's in a way just kind of passive sampler from the environment.
+
+Then you just, there is no gain in planning ahead.
+
+So you can just reevaluate your beliefs on each trial.
+
+
+SPEAKER_02:
+So it's kind of like a...
+
+
+SPEAKER_04:
+memoryless process which you brought up and then what would have to change to maybe account for situations where sequence of actions does matter uh so for example one could introduce structural dependencies between different arms so that for example rewards uh reward probabilities depends on the location and allowing agent only to
+
+to make their choices from the nearby arm, right?
+
+Kind of introduce some spatial dependency.
+
+That would be one example where then depending on in which part of the space I am in kind of where I selected one arm, this limits me to what's the next arm which I can select.
+
+And this would require you to then plan depending on where you should be in different trials, depending on how you expect things to change, right?
+
+This would kind of introduce then the requirement for planning.
+
+
+SPEAKER_02:
+Cool.
+
+Very interesting.
+
+Blue or Dave or Sarah want to ask anything?
+
+Otherwise, I have some questions.
+
+mentioned a few industrial applications and a few ways in which people do use the multi-armed bandit this is just kind of like um a logistical question like what is the rate limiting step in those use cases deploying active inference agents is there a way to kind of wrap the inputs and outputs of multi-armed bandits uh in a way that's sort of
+
+interoperable like you talked about how the learning rules were similar but then you juxtapose different action selection approaches so in the context of pipelines that people are already using is there a way to kind of hot swap active inference and maybe have it be deployed in industrial settings very rapidly well yeah i mean that would be one idea and for example uh if you have this non-stationary problems
+
+
+SPEAKER_04:
+And you have already been using Thompson sampling, for example, or even like optimistic Thompson sampling as a choice of the algorithm.
+
+In a way, you already have a way to form beliefs about relevant aspects of the problem.
+
+Then you can really easily swap the two.
+
+And you just can then apply the difficulty just to figure out how to compute basically expected free energy and test it out.
+
+Or the different generative model that people might probably have there.
+
+Again, for stationary problems, that may be trickier.
+
+It might work in some situations, but you don't have this kind of nice asymptotic guarantees that you will always find good solutions.
+
+
+SPEAKER_02:
+in a way it's an advantage of active inference in a changing world.
+
+Like people's preferences for a given advertisement or the situation for trading is always changing.
+
+And so it's a false allure to have something that has extremely well-behaved
+
+behavior in the asymptotic or infinite case because we're not in the infinite case we're in the finite and dynamic case and so it's almost like the sort of strong pillar that purportedly is underpinning these other approaches isn't so much of a gain pragmatically so it's pretty cool to hear about that blue thanks for the raised hand what would you like to ask
+
+
+SPEAKER_03:
+So I have a question that was left over from the .zero video and something you kind of alluded today in your talk.
+
+Can you kind of detail the difference between the switching bandits and the restless bandits?
+
+I was like unclear on like the timing of the switching in the switching bandits.
+
+And then also just like a part B of that question.
+
+In the case of the restless bandits,
+
+What are the similar algorithms that are optimal for switching bandits, also optimal for restless bandits?
+
+You had mentioned the active inference was good, but what about the others that are commonly used?
+
+
+SPEAKER_04:
+No, it's the same, right?
+
+I mean, so let's say in restless bandits, the only kind of... So in switching bandits, we have a piecewise linear problem or piecewise stationary problem.
+
+Which means that between trial 1 and trial 10, everything behaves stationary.
+
+And then when the change comes, you're just getting new reward probabilities associated with each other.
+
+For example, that would be a kind of idea of a switching bandit, so that between changes, everything is fixed.
+
+And the restless bandit assumes that
+
+things continuously change.
+
+And here, the example I gave was one can assume, for example, that reward probabilities can be described as a random walk in this
+
+in this logit space of the probability.
+
+So basically, because probability is like between 0 and 1, you transform it to unconstrained space between minus infinity and infinity.
+
+You just have a Gaussian random variable, so to say.
+
+And then you map it back into the sigmoid function, for example, into the probability space.
+
+For example, the algorithm I showed for belief ablating, one could also just apply it there.
+
+One doesn't know what would be the role.
+
+What is the change probability in the restless case?
+
+In that sense, you would need an algorithm which can also infer the change probability.
+
+And restless case doesn't necessarily translate to potentially fixed change probability.
+
+So it's a bit more different problem.
+
+Because the maximum arm, the changes between arms which are optimal do not follow specifically the same structure as in the switching case.
+
+So one can either take a different generative model, which actually assumes explicitly the random walk and, for example, hierarchical Gaussian filter.
+
+is something which one could apply there.
+
+There are also other belief updating algorithms for that.
+
+
+SPEAKER_03:
+So the local or the global maxima and minima are changing in the rest list as well?
+
+
+SPEAKER_04:
+Yes, yes.
+
+So this would be kind of this case of varying difficulties.
+
+So the relative probability between the best arm and the second best arm varies all the time.
+
+um yeah i don't have i could have just drawn the lines to show but i don't know i didn't do that i could hear that i just don't have it right now something to illustrate this
+
+
+SPEAKER_02:
+The one other thought on the advantage possibly of active inference is that with a deep generative model using the same skeleton of maybe even the same code, it could be possible to do model testing between two different
+
+types of bandits, like what kind of scenario am I in, or even have deep temporal models.
+
+So it could be extended in a way where a sort of instantaneous sampler might be led astray.
+
+
+SPEAKER_04:
+Yes.
+
+Yes.
+
+Yes.
+
+I mean, in principle you can, any hierarchical Bayesian generative model, which consists of multiple models, potentially, you could also write generalized to Thomson sampling.
+
+or Bayesian UCB, I just wouldn't assume that this would be a very efficient way to figure out which is the correct model, which you should be currently applying to the specific task.
+
+And this is potentially also where active inference would provide an advantage in such scenarios.
+
+where you can also kind of learn about the generative model itself better over time.
+
+
+SPEAKER_02:
+And that made me wonder, what would it look like at the sort of human level as we're making decisions that are sequential in our day, our decision-making, what would it look like or what would we keep in mind if we were going to be making decisions more like an active inference agent than like a Thomson sampling agent?
+
+Like what would be, when you're in the grocery store looking at the cereals that you've had before or not, how would an active inference agent behave differently?
+
+Just kind of wondering.
+
+
+SPEAKER_04:
+Yeah, I mean, that's a good question.
+
+I mean, we could actually, we have some data sets which we could use exactly to ask these kind of questions.
+
+I mean, I don't have on top of my head any clear answer.
+
+What would be your expectation, Sarah?
+
+
+SPEAKER_00:
+Well, I guess it would tell you when is a good time to try a different cereal because you may like it even more, especially if cereal recipes change over time.
+
+And then you have some likelihood to be stuck maybe with the super bad cereal, but also high likelihood
+
+It's the one you like most.
+
+
+SPEAKER_04:
+Yeah, I mean, I guess this exploration would be more structured in a way, more directed, right?
+
+
+SPEAKER_02:
+Right, like when the ingredients change.
+
+You check the ingredients, and then now you've updated your likelihood of trying something new.
+
+
+SPEAKER_04:
+Yeah, right.
+
+I mean, Thompson sampling doesn't have directed part of the exploration.
+
+It's just a random exploration.
+
+Whereas here, the focus would be more on directed exploration and potentially thinking how to add randomness to the algorithm.
+
+
+SPEAKER_02:
+one other piece is like we're often comparing and contrasting active inference to reward learning and reinforcement learning so it's almost like instead of making that decision based upon the highest expected value like choosing something proportional to its relative value or always going with the one with the best likelihood of having the best tasting cereal
+
+There can be some other heuristic.
+
+And so it opens the door to just purely curiosity-driven sampling.
+
+Like, I've just never had this.
+
+And it's not even as much a reward-maximizing maneuver as it is just a purely epistemic gaining maneuver.
+
+And then as we've seen...
+
+when there's a pragmatic and an epistemic component to the function that's being optimized then those decisions can kind of coexist and be put on a common grounding unlike in a purely value-driven framework where even the exploration has to be kind of coerced back into reward
+
+
+SPEAKER_04:
+Yes, I mean, I think Saeed Noor, and she had like, as a first author, she had an interesting paper, Demystifying Active Inference, and they discuss a bit about learning the preferences themselves, right?
+
+And what kind of consequence this has.
+
+And this kind of puts a different perspective on understanding what the reward is, because in real world, you don't necessarily know
+
+Why should something be more rewarding than something else?
+
+But you learn this over time, and you just learn to prefer different outcomes.
+
+They don't even necessarily have to be somehow rewarding more in the absolute sense.
+
+You just build experience with some outcomes over others, and you start to prefer them.
+
+And this then appears as if you were doing reward-based decision-making, but, I mean, it's actually, in a way, preference-based decision-making.
+
+
+SPEAKER_02:
+Cool.
+
+I had another question about the approximation of active inference.
+
+Is that the only way to approximate active inference?
+
+Are there other moves that you could have made to approximate the sections that you did approximate?
+
+Are there other pieces that can be approximated?
+
+What can be swapped or approximated, but still retain this essential structure of an active inference model?
+
+
+SPEAKER_04:
+Well, I don't have many ideas what else one could do.
+
+I mean, the problem is, in this scenario, it's relatively simple, right?
+
+But for example, one can kind of think of, OK, given that we have to compute the expected information gain, and we are kind of having a way to estimate it efficiently, like just with this approximation, there is other way how you can compute this, just by sample.
+
+you can draw a couple of samples from your beliefs and you get some estimates on the expected information gain.
+
+So this will still be in the kind of active inference framework, but just slightly different way of how you actually compute expectations and what they will kind of represent there.
+
+This would be a way to add a bit of randomness to the decision-making process.
+
+
+SPEAKER_00:
+I mean, active inference is also general enough to work with many kinds of approximations, right?
+
+And you can do approximations and many different points, but as long as you, they get some sort of variation of free energy, I guess it's still within this framework.
+
+And he separated the inference part from the action selection part, but I think,
+
+Actually, you can use it as a model of both, right?
+
+And then you can do approximations and different points in this joint model.
+
+And as long as you can still write down a variation of free energy, I guess it counts as active inference.
+
+
+SPEAKER_04:
+Well, I don't know even if that's necessary.
+
+I mean, I would say any kind of Bayesian belief updating, even if it's not specifically motivated by variational inference.
+
+Would the consequence have minimizing variation of free energy once you compute it from some posterior which you obtain?
+
+And I mean, right, it will still be in a way active inference.
+
+So in a way, one can replace like SMILE variational updating with any belief updating rule.
+
+and still keep the same concept there.
+
+Because you are just getting a better bound on the marginal likelihood if you have a better posterior.
+
+
+SPEAKER_02:
+So what would you say anyone is necessary or sufficient for a model to be considered active inference versus not active inference?
+
+you know, just including sense and action or perception inference action or agents in a niche or blanket states.
+
+These things are sort of, we're in an overlap of Venn diagram with certainly many classes of models, different approaches.
+
+
+SPEAKER_04:
+and is it like that blurry intersection that we're looking at and that's where action and inference are being just applied together or is there something unique or something that we can use as a diagnostic well i guess the difference would be more than this kind of uh this action selection i mean planning is inference part not then not necessarily as perception is inference because as i said one can think of many ways how one can solve that part
+
+But once you go into this planning as inference part and also concept that your actions themselves will change beliefs and you will choose actions which are the best in changing your beliefs or what you want to achieve, then this is an idea of active inference.
+
+Let's say it's a circular inference program.
+
+It's not, in a way, I mean, more so easy to disconnect effects of choices and effects of perception.
+
+They all depend on each other.
+
+
+SPEAKER_00:
+And also being aware of your own uncertainties.
+
+And I think if you do standard reinforcement learning where you just calculate expected rewards, I don't
+
+think you're always aware of how certain or uncertain you actually are about your own generative model, for example.
+
+And then potentially with active inference, easier to know which action to take in order to better learn your model.
+
+
+SPEAKER_02:
+very interesting it's almost like by carrying and propagating our uncertainty and having a self model of action and learning then we get that almost like second order cybernetics where we're acting in a way where in the future we can expect to learn better or expect to act better
+
+as opposed to just this hungry search for the best action and then learning is only a one-step projection into like what action is going to be informative right now what's the next wikipedia article that's most informative rather than what's like the trajectory that i expect is going to be resulting in more effective learning or action again on a common grounding
+
+So that's pretty interesting.
+
+Looks like you have a thought, though, Dmitry.
+
+
+SPEAKER_04:
+DIMA VOYTENKOVSKYI- No, I mean, that's definitely an important part.
+
+I mean, I would then call Thomson sampling would also satisfy that.
+
+Bayesian UCB, right?
+
+I mean, they all kind of are any Bayesian decision-making algorithm would necessarily have to take into account uncertainty.
+
+if it's derived from Bayesian decision-making theory.
+
+But yeah, it is not that clear that right this aspect that, okay, the actions also have a consequence of reducing your uncertainty in the future.
+
+And this is what you can use also for as a gauge on which one, which action is better.
+
+So yeah.
+
+There are subtle differences and not that obvious always.
+
+
+SPEAKER_02:
+It's one reason why we're so interested in ontology and slowly scaffolding the research so that we can actually juxtapose different models and understand where they differ.
+
+Like, OK, it's like two road trips, and then this person just took a little extra loop, or this bridge they crossed this way versus this person took a different route right here.
+
+we can understand like you talked about the smile variational updating, but then just recently you mentioned that there's that's sort of like a module you can switch out.
+
+So what is smile or because I also noticed a very recent citation.
+
+So what does it do?
+
+Or what is it different in regards to other ways you could have fit that module in?
+
+
+SPEAKER_04:
+I mean, I have implicitly used SMILE for years now.
+
+It's just a very simple way of updating your beliefs.
+
+So the problem a bit with kind of variational inference, if you want to find the minimum of approximate posterior, you kind of necessarily need to iterate through several loops, like minimizing the gradient.
+
+So following the gradient of the variation of free energy, right?
+
+I mean, this also doesn't make it very efficient for this kind of applications.
+
+So for me, at least, this variation smile approach tight-taps this iteration so that we can kind of transform a relational inference into just a single update step.
+
+Just because there is a way part which you can compute explicitly, and you just assume, OK, this is now my fixed belief about that.
+
+And the other part, which you need still to update through variational approximation.
+
+And so this is, I guess, the small advantage here.
+
+But as I said, there are other approaches how you can update beliefs in these scenarios.
+
+And in the Bayesian sense, they can also be more optimal.
+
+But they just bring you closer to the exact posterior.
+
+But I mean we tested these things with some examples and the story remains the same so there is no gain on making things more complex on that level.
+
+But one can also imagine that in different environments better generative models and approximation rules
+
+would take you further.
+
+So for Bernoulli band, this is just not the case.
+
+
+SPEAKER_02:
+what kind of empirical data sets are almost whether they're open source or just obtainable are amenable to this kind of analysis like if somebody hears about the algorithm and they kind of want to see it in action or play with it themselves once you're you know two weeks from the recording of this when your code is available like is it pos is your code set up for more of a simulation
+
+Or is it something where we can plug in a type of data set that might already be structured appropriately?
+
+
+SPEAKER_04:
+It's currently just for simulations.
+
+But I mean, one could potentially play out with different algorithms, add other algorithms, both on the learning part and the action selection.
+
+That would be super useful for everybody.
+
+yeah if there are people interested in that repository is open and welcoming any contribution it was part of the structuring of your paper that like made us excited to juxtapose
+
+
+SPEAKER_02:
+with these other approaches is you kind of showed that you can directly compare active inference alongside other models obviously it's something we're coming back to because that's the crux of the results of the paper is really the different dynamics as time increased or as the relative challenge increased as the number of arms was changing between these different styles uh
+
+and the two styles of Bandit.
+
+So it's kind of a cool thing that people could both build on directly what you're working on, but also maybe more broadly, instead of just a single model being presented in a paper, people could just include multiple types of models in their sort of baseline paper so that we wouldn't just have to read the paper that says this algorithm works well,
+
+we could see them directly compared.
+
+And that's something that more and more papers are doing with active inference.
+
+
+SPEAKER_04:
+Yeah.
+
+I mean, the kind of also, the libraries we use is also, this is something which was developed relatively recently by Google Jaxx.
+
+It's kind of...
+
+acceleration for linear algebra libraries, which allows you to run very fast this code.
+
+And it also integrates well with the probabilistic programming language.
+
+So it's NumPyro, which was also
+
+developed recently.
+
+So one could, in practice, link this to any behavioral data or to create some test data very easily with few lines of code.
+
+So yeah, there is also this perspective.
+
+
+SPEAKER_02:
+What language is the code in, one or multiple?
+
+And then what areas of conceptual math do you think somebody would want to know before diving in?
+
+
+SPEAKER_04:
+So the language isn't, I mean, program language is Python and just depends on, as I said, a couple of libraries like JAX, NumPy, very standard stuff, except the JAX, that's new.
+
+So yeah, somebody interested in using it would have to learn a bit about JAX, but it's a long-term also useful, so go for it.
+
+But from the math side, yeah.
+
+Well, I mean,
+
+Maybe getting a couple of introductions to multi-armed bandits, that would be a good place to start.
+
+There is a recent, quite recent introductory paper on multi-armed bandits, which exposes many different algorithms in the stationary concept.
+
+provides a bit insights about this historic way how they analyze these problems.
+
+So I would suggest that that's a kind of potential place to start.
+
+
+SPEAKER_03:
+Cool.
+
+Blue?
+
+So I'm curious about this Google Jacks.
+
+I haven't heard about it.
+
+But I thought Google had their own language.
+
+Don't they have like Golang, right?
+
+Isn't that Google?
+
+
+SPEAKER_02:
+Or TensorFlow.
+
+
+SPEAKER_03:
+Right?
+
+
+SPEAKER_04:
+Well, yeah, TensorFlow.
+
+Yes, they have TensorFlow.
+
+And I think the basis is similar XLA.
+
+It's called Accelerated Linear Algebra for both TensorFlow and JAX.
+
+So what JAX is is basically accelerated NumPy.
+
+So you can just run standard NumPy code and in pure Python, more or less.
+
+and get very... so you get for free like computational gradients, so it's kind of autograd library, so you can kind of compute gradients on very complex graphs.
+
+This is also something which TensorFlow allows you, but this seems to
+
+provide more benefits for these dynamical scenarios.
+
+So I had problems when I tried learning or using TensorFlow.
+
+It's very difficult to think, to write code which is dynamic there.
+
+And that's why I never actually started using it.
+
+I started with PyTorch at some point.
+
+And now that JAX showed up, that has some speed up advantages, it's also kind of quite lucrative.
+
+
+SPEAKER_02:
+So one code question, just to stay on this theme and then ask a question from the chat.
+
+What about the Python implementation, like, I think, Infer actively or what Alec Shantz et al have worked on?
+
+What are the similarities or differences with their Python approach there?
+
+
+SPEAKER_04:
+I think currently none, because I'm also involved in that.
+
+So they will also start using text.
+
+
+SPEAKER_02:
+OK, cool, so that those threads will join together.
+
+MARIUSZ GASIEWSKI- Yeah, the threads are merging.
+
+
+SPEAKER_04:
+But I mean, this also code just reduces some of the, I mean, one could also write to use just the SPM code, but this is super complex.
+
+It would be super slow.
+
+So for example, just to examine numerically this stationary scenario, this would take months, probably.
+
+OK.
+
+That somebody is ringing.
+
+So yeah, right.
+
+That's kind of the problem there.
+
+And I wrote the code to be kind of very efficient in a way.
+
+So it just kind of removes lots of complexity that you don't need for this.
+
+
+SPEAKER_02:
+Cool.
+
+
+SPEAKER_04:
+In some scenarios, you want to have general description of the problems.
+
+
+SPEAKER_02:
+So here's a question from Steven in the chat.
+
+you think that parallel modeling processes might be used more in the future with different model approaches highlighting different patterns of behavior happening in different niche contexts i would say in some ways it's what your paper did but what do you think about yeah look
+
+
+SPEAKER_04:
+I mean, from practical side, yes.
+
+I mean, that's what you should be doing.
+
+Because just figure out what works best and just don't think too much about, well, the philosophical side of things.
+
+But yeah, I mean, I guess long term, one could imagine a scenario where more and more things become generalizable.
+
+to this description.
+
+So it's just, in a way, a difficult process.
+
+
+SPEAKER_02:
+Even for those who are just learning about the technical details, the visual tell for me was that the figures were a grid of graphs.
+
+So it was kind of like three different settings of difficulty or three or five different settings of arms.
+
+It wasn't just showing, we ran it with one parameter combination.
+
+Each of those graphs was a grid of combinatorics.
+
+And then you presented
+
+what I guess could be considered two different niches with the static and the dynamic.
+
+And then today in the presentation, we heard about all these other variations.
+
+And so those are like kind of toggles in the code.
+
+You can say, I'll take A1 alpha or I'll take A2 beta as far as the combinations of how to run it.
+
+And so as the code becomes more interoperable and pruned down to really the necessary pieces, then it becomes easier and easier to expand it back out so that we can choose amongst different options for a given piece.
+
+And so that's like this skeleton that so many variations flow off of.
+
+
+SPEAKER_05:
+Yeah.
+
+
+SPEAKER_02:
+um cool well in our last few minutes here where would you like to uh take it next week or Beyond I mean what are your current interests or curiosities well I mean for me it's just important to have this paper out so next time when a reviewer asked me what about that and that algorithm I can say okay look
+
+
+SPEAKER_04:
+We analyze this.
+
+It's like that.
+
+It's similar, different.
+
+You can get whatever you want, basically.
+
+Right.
+
+I mean, because you have these adaptive parameters, in a way, you can generate very different behavior.
+
+One can also think, okay, if you have an agent which behaves as a Thompson sampling, what would be the corresponding parameter in active inference framework which would emulate that?
+
+Can you actually even differentiate between them?
+
+So, I mean, this is a potentially interesting questions which one can try to answer and which are just from my work kind of relevant because of this constant questions I'm getting in during the review process.
+
+Yeah, but then there is also this like quite interesting side in like machine learning.
+
+where this can find potentially quite interesting applications.
+
+I got started a bit recently working with kind of Monte Carlo research.
+
+And interestingly, this is something which was applied in active inference as a way to compute expected free energy in complex problem.
+
+But turns out that if you have kind of very complex problems, you can also
+
+use Thompson sampling in Monte Carlo research.
+
+So that's a way to just figure out what is the best path to follow in a sample.
+
+And this potentially provides if this stationary scenario can be improved somehow.
+
+And this is also kind of, you can apply active inference to planning inside active inference itself.
+
+you know, in a kind of a hierarchical circular way.
+
+Right, so.
+
+
+SPEAKER_02:
+What does that look like or how does it get implemented or how is it different than just straightforward active inference?
+
+
+SPEAKER_04:
+So the problem is like that when you have quite a complex decision making in a planning problem where you have multiple branches in the future which you have to go, it's like not practical to compute everything.
+
+So what people do is a very popular way to do is Monte Carlo tree search, where you just sample different paths.
+
+You estimate on a sub-sample of possible paths what is the best path to go.
+
+And this would correspond in active inference, like you're estimating expected free energy of a path in the future just through a sample.
+
+then you have a problem okay how do i select the same the pets in the sample and then you can apply it active inference to the pet selection itself so right you can kind of choose which pets i should sample randomly when i'm trying to approximate uh expected free energy for this problem itself so that's kind of what makes it kind of interesting as a possibility to explore
+
+
+SPEAKER_02:
+And the way that you just framed it, as well as what we've seen, which is the relative strength of active inference in dynamic settings, it's consistent with a lot of the qualitative and philosophical ways that people are talking about active inference as like a sensemaking or a wayfinding or a navigation approach, rather than a sort of cut and dry approach.
+
+calculus of decision making just resulting in the total you know crystal path just being laid out before you it's really about the instantaneous actions that we take now in light of uncertainty about the present and really the past and the future as well so it's always cool to see how the technical developments while they're like kind of weaving and recombining
+
+they proliferate and then we see actually these three are kind of interchangeable or these three are complementary and then we get more technical detail and speed ups while we also get more and more clarity on what the structure of this sense making problem is.
+
+Yeah, I agree.
+
+any final thoughts here from anyone otherwise this was a super interesting presentation and questions so we really appreciate it thank you cool yeah yeah we're looking forward to for the next week
+
+Great.
+
+So thanks everyone for joining and everyone's welcome to join live for next week when we'll continue the discussion and the dot two is kind of like our jumping off into the unknown unknown instead of just the known unknown.
+
+So thanks again for joining and we'll see you next week.
+
+
+SPEAKER_03:
+Thanks.
+
+
+SPEAKER_02:
+Bye-bye.
+
+Bye.

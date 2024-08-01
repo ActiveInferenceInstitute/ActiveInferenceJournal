@@ -1,0 +1,1816 @@
+SPEAKER_00:
+All right.
+
+Hello, everyone, and welcome to ACT-INF Lab live stream number 24.2.
+
+Today is June 29th, 2021, and we're looking forward to this follow-up or jump-off discussion with some of the authors as well as other lab participants on this awesome paper, An Empirical Evaluation of Active Inference in Multi-Armed Bandits.
+
+Welcome to the Active Inference Lab.
+
+We are a participatory online lab that is communicating, learning, and practicing applied active inference.
+
+You can find out more about us at the links on this slide.
+
+This is recorded in an archived livestream, so please provide us with feedback so that we can be improving on our work.
+
+All backgrounds and perspectives are welcome here and we'll be following good video etiquette for live streams.
+
+It's great that there's so many on the call and I'm sure we'll have many questions and opportunities to raise our hand as well as for those in the live chat to ask questions whenever they feel like it.
+
+We're closing out June with this DOT 2 discussion on paper number 24.
+
+So last week we also spoke with Sarah and Dimitri and others.
+
+That was very informative.
+
+And now we're in the DOT 2.
+
+We're able to take it to a few different places and raise up a few questions that were asked over the last week.
+
+And the goal is really just to learn and discuss this paper and related topics.
+
+We have a few cool related areas that we're going to be going into.
+
+So we can just begin with a introduction round.
+
+Each person can say hello or check in, say anything that they're thinking about today, and then pass it to somebody who hasn't spoken yet.
+
+So I'm Daniel, I'm a postdoc in California, and I'll pass it first to Blue.
+
+
+SPEAKER_03:
+Hi, I'm Blue.
+
+I am an independent research consultant based out of New Mexico, and I will pass it to Ryan.
+
+
+SPEAKER_04:
+Hi, I'm Ryan Smith.
+
+I'm an investigator at the Laureate Institute for Brain Research.
+
+And I'll pass it to Sarah.
+
+
+SPEAKER_02:
+Hi, I'm Sarah.
+
+I'm a postdoc at the Technical University in Dresden, and I'm looking forward to the discussions today.
+
+And I pass on to Dimitri.
+
+
+SPEAKER_07:
+Hi, everyone.
+
+I'm Dimitri Markovich, postdoc at Technical University of Dresden also, chair of neuroimaging.
+
+And I pass it to Dave.
+
+I can't keep talking, actually.
+
+No.
+
+
+SPEAKER_01:
+I'm Dave Douglas.
+
+My background's basic psych and cybernetic learning theory.
+
+And I'll pass this to Stephen, please.
+
+
+SPEAKER_08:
+Hello, I'm Stephen.
+
+I'm based in Toronto.
+
+I'm doing a practice-based PhD around social topographies and immersive experiences.
+
+And I think I'll pass it back to Daniel, if I'm not mistaken.
+
+
+SPEAKER_00:
+Yep.
+
+Great.
+
+Thanks for the cool intro round.
+
+So Sarah prepared this slide, which we just want to start off with.
+
+So go for it, Sarah.
+
+How does this set the intention and the mood for what we're going to be going into today?
+
+
+SPEAKER_02:
+Wait, how can I make it so that I see it big again?
+
+So after the discussion last week and also the questions we've got, we thought it would be a good idea to just make a short overview slide about what we understand as active inference.
+
+And as cognitive neuroscientists, you said in the discussion before also, we are often or mainly interested in this action perception loop.
+
+that an agent or we as living agents are in with our environment.
+
+And that's what you see on the right in this loop.
+
+And on the left side, on the right, you see the environment that may have hidden states that are the states that you may know from Markov decision processes and reinforcement learning, but that may also be more abstract things that aren't observable to an agent like contexts,
+
+volatility parameters, anything that describes the environment.
+
+And these hidden states may also evolve with time.
+
+And then such an environment generates an observation that the agent then integrates together with its prior beliefs in order to infer the hidden states of the environment, which is what we call perception.
+
+Then you can use this information to plan ahead and select an action accordingly.
+
+And in turn, the action may change the environment the agent is in.
+
+And concretely, how the agent side of this works in active inference is so that you specify a probabilistic generative model that contains the hidden states,
+
+your a priori knowledge or your assumptions about how these hidden states relate to each other, which states may follow upon which states and so on.
+
+It contains observation generation rules.
+
+It contains actions or policies, which in active inference are also treated as hidden variables that need to be inferred.
+
+And additionally, the generative model may contain
+
+its own parameters as a random variable so that they can be inferred and therewith learned.
+
+Then you specify probability distribution of approximate beliefs.
+
+In theory, you could also solve the beliefs of the generative model analytically, but that becomes very computationally expensive really quickly or even analytically intractable.
+
+So what you do instead is formulate these approximate beliefs, which are supposed to be of a simpler form.
+
+And for example, in your approximate beliefs, you could assume that all hidden variables are independent random variables, which makes the beliefs very easy to calculate, but may not properly capture the temporal dynamics, for example, of your environment.
+
+And this
+
+Independence assumption is also called the mean field approximation.
+
+But you could also say, no, with some hidden variables, it's very important that they are allowed to co-vary and be dependent on each other.
+
+And then you would have pairwise dependencies in these approximate beliefs, which is then called the beta approximation.
+
+You may have different approximations for different variables.
+
+Some may vary together.
+
+Others are independent.
+
+Then you plug in the generative model and your approximate beliefs into the free energy.
+
+And then you find your approximate beliefs at the minimum of this free energy.
+
+And this way you can form beliefs about hidden states of the environment, which really can be anything, your location, volatility of the environment, the context you're in.
+
+You infer beliefs about policies, which is a probability distribution over actions from which you can then choose.
+
+And you can even form beliefs about parameters of the model and therewith update your knowledge of the model in each time step.
+
+And then in the end, you can use all this inferred knowledge to make actions.
+
+And yeah, we as cognitive neuroscientists are often interested in this whole loop
+
+But what Dimitri showed last week is also that in principle, this can be really modular, right?
+
+So in our paper, for example, perception was the same for all different agents, whereas Dimitri then plugged in different action selection algorithms, one corresponding
+
+to the expected free energy and active inference, but other well-known action selections algorithm too.
+
+So yeah, you can really also play around with this framework and use its modular nature.
+
+You could, on the other hand, use the same action selection algorithm and compare different learning algorithms, which is something we're also often interested about in our work.
+
+And yeah, with that, that's it from me for now.
+
+
+SPEAKER_00:
+Cool.
+
+Very interesting.
+
+And anyone can raise their hand.
+
+But I think the part that spoke to me there was just that it's a framework.
+
+And so it's kind of like the framework of a desktop computer.
+
+You can take out the memory or change out the hard drive.
+
+And so we can talk about changing the environmental dynamics.
+
+with respect to the hidden states and how they evolve through time we can talk about changing perception but we can also like lock in multiple of the components and then explore how different learning rules influence system behavior that's what we explored in this multi-armed bandit paper but it could be the same learning and policy selection rule but then a different perception rule
+
+And then those might map onto very subtle differences in decision-making of agents that we care about.
+
+Like what's the difference between somebody who has blurry vision, but they know the language versus clear vision, but then they're semantically unsure about what the symbols are representing.
+
+Yeah, Steven.
+
+And then anyone else who raises their hand.
+
+
+SPEAKER_08:
+Yeah, this is really interesting and helpful to see your thinking here.
+
+I would just be curious how action states or, you know, the idea of different types of states alongside these hidden states, just how that you treat those in your thinking, because they could be kind of the action states that are imagined and the action states which are part of the kind of
+
+
+SPEAKER_02:
+external environment that you're somehow immersed in so in the end yes actions are also treated as hidden variables i think they are very separate from other from the hidden states for example because the space of actions determines what an agent can choose and you cannot choose a state in terms of other hidden variables i think so for example if i think
+
+location versus context, then in my head the generative model becomes a hierarchical model instantly.
+
+And in the end, yeah, that's also what I meant when I said you plug in your a priori knowledge or your assumptions about the environment because different types of hidden states will have different relationships to each other and you really end up with a completely different generative model.
+
+
+SPEAKER_00:
+Just to follow up there, Sarah, you said that when location and context are differentiated, that it's a hierarchical model.
+
+So what does that look like on this layout?
+
+
+SPEAKER_02:
+You mean in this figure here?
+
+
+SPEAKER_00:
+Like what's the setting where location and context are identical and so it's a non-hierarchical model versus a case where they are differentiated and then it is a hierarchical model?
+
+
+SPEAKER_02:
+So for example, if I want to model myself walking through my flat, that wouldn't be a hierarchical model, where just each location, maybe the different rooms count as states that I infer based upon the curtains I see, for example.
+
+But then if I want to introduce another person's flat, then
+
+the transition dynamics may be different for their flat.
+
+So for example, in my flat, I can go from the living room into the kitchen, but in my friend's flat, I cannot make the state transition.
+
+And that's actually something I'm working with currently where an agent, like the underlying decision process is very similar, but an agent needs to infer which context he's in in order to then load the correct transition dynamics.
+
+
+SPEAKER_00:
+That reminds me of the SPM textbook, how it talks about hidden states being just the state that a process is in that generates outcomes.
+
+So we have a clear distinction between the hidden states which aren't directly observed, but there is this hidden state like which
+
+flat min and then that is going to change the transition dynamics between the rooms but the observations are what are um coming to the agent and then also there's like learning which we don't have here but that would reflect the prior beliefs being updated through time what about this planning stage like what is happening in this planning module
+
+
+SPEAKER_02:
+That's a good question, actually.
+
+Nowadays, so this figure is from my previous paper.
+
+Nowadays, I lump in perception and planning together because it's really not that easy separable.
+
+So in this case, what I meant is perception is really inferring past up into the current hidden states.
+
+to which I had the observations that belong to each state, whereas planning is inferring future hidden states and future observations and potentially future rewards.
+
+But in the end, it's all one model and it's a chain to go through the states, so the differentiation only makes medium sense, I think.
+
+It's rather one inference problem.
+
+
+SPEAKER_00:
+interesting things, Blue, than anyone else.
+
+
+SPEAKER_03:
+So just thinking about metacognition and where that might fit into this model.
+
+
+SPEAKER_02:
+Dimitri actually has some
+
+has published a paper on metacognition recently also.
+
+
+SPEAKER_07:
+So metacontrol actually, right.
+
+But yeah, I mean, one can just see, one can stack multiple agents on top of each other and imagine as a kind of higher level agent controlling what the bottom level agent is doing.
+
+And so this would be like, well, deep active inference models.
+
+And in one of the recent papers, we're also exploring this in a kind of meta-control approach for describing cognitive control.
+
+
+SPEAKER_03:
+So if there's some kind of downward causation, does that then inhibit what's going on at the lower agent level?
+
+
+SPEAKER_07:
+Yeah.
+
+So basically, you can see kind of actions on the higher level are
+
+defining priors on the lower level and hence selecting the policy space.
+
+So what kind of your lower level agent can actually do.
+
+This is now just kind of illustration of kind of separating maybe higher level cognition from the executive part, which is kind of moving arms or muscles on your body.
+
+
+SPEAKER_00:
+uh it's it's interesting about that like kind of like a virtual machine or a hypervisor that there's this like emulated agent you know what would my better self do that's a classic metacognition question and then also it was just interesting that you know blue you asked about metacognition and then dimitri you went right to meta control and so that really speaks to the way in which we're thinking about cognition as control
+
+and that's part of a control theoretic perspective which is that like the cognition planning as inference the cognition is about action selection but then one piece that differs potentially is inactive inference relative to just sort of the um way that control theory is often discussed is the insight of perceptual control theory
+
+which is that the planning as inference is being done in service of the expected observations.
+
+And so we're planning and acting in order to control our perceptions.
+
+And that's happening as part of this integrated loop.
+
+So it's kind of cool that there's like this like good regulator theorem in terms of cybernetics.
+
+And then it is like there actually is an emulated regulator agent
+
+And then yeah, pretty cool.
+
+Where does that play in with like our thought?
+
+Does that I don't know, what does that relate to our actual experience of thought?
+
+Or does this happen all at the sub personal scale?
+
+
+SPEAKER_07:
+Well, I mean, that's how I knew it is it's really like a problem of separating different timescales.
+
+And uncertainty associates it with different timescales.
+
+What you can do now, for example, in the next couple of seconds is very different from what you can do in the next couple of months.
+
+And potentially, your long-term goals and plans have an impact on what you're doing currently.
+
+And there needs to be a way how to resolve this uncertainty on different levels of representation.
+
+And from active inference, one solution for that is just like you stack agents on top of each other, which just representing increasingly longer timescales.
+
+
+SPEAKER_00:
+Interesting.
+
+
+SPEAKER_07:
+And I mean, as each agent, I mean, we can see it as a little, as something which is separated from
+
+an environment through the marker blanket, so basically through the actions and the observations it's making.
+
+I mean, you can also separate your brain in multiple nested blankets, right?
+
+Where one part of the brain just informs and sends information to other part and accepts signals as actions, right?
+
+And I mean, we know this from experimental research.
+
+Lots of this is hierarchically structured, so both temporal and spatial priorities.
+
+
+SPEAKER_00:
+Thanks, Dimitri, Stephen, and then anyone else.
+
+
+SPEAKER_08:
+Yeah, would I be correct?
+
+Between perception and planning, you've kind of got this more conscious belief awareness being sort of available.
+
+And the prior beliefs, once you get from around the observations to perceptions, might be below consciousness in the sense that it might be part of the visual system or whatever.
+
+And I was just wondering how you see that transition from below awareness to phenomenological consciousness.
+
+playing out with the types of models.
+
+I know sometimes like Ryan Smith uses some semi-Markovian processes which start with some, you know, self-reports about beliefs.
+
+So it's working at a level which is kind of building on top of the dynamics that might be going on in the kind of biology.
+
+So I was just wondering how you see those different dynamics playing out and where you fit your models with some other models if they were sort of to play with each other.
+
+
+SPEAKER_02:
+If I may say so, I think this relates back to Dimitri's statement about the hierarchy of timescales.
+
+Because if it's like my conscious thought is on a slower timescale, for example, than my visual perception is.
+
+And I think my conscious thought is maybe rather responsible for the slower timescales
+
+where it helps me to narrate through the slow Markov decision process, whereas it would be not useful if I have to critically think about any inference I make on my retinal image, for example.
+
+
+SPEAKER_00:
+it's interesting you said there that the conscious thought it narrates because first off we've talked about narrative and active inference but also just like you described how there was this hidden state of which flat i'm in and then that sets the transition probability of the rooms
+
+maybe you have a narrative that sets up like which policies you're transitioning between like in baseball you know there's a story to the alternation of the innings and then it's like okay we're going to be enacting this policy because we're in this phase and so there's like a higher level narrative that helps connect when policy transitions
+
+might be um plausible to be adaptive and then that is almost by definition at a slower time scale than the play-by-play because the play-by-play is going to be a lot more like motor control the eye cicading and then as you slow down you get slower transition dynamics that are more and more narrative in nature because they narrate like different phases of action but then the sub actions are very rapid
+
+
+SPEAKER_02:
+I mean, in a sense, it also has to do with a level of abstraction, right?
+
+If I see a leaf, it's just a leaf.
+
+It has a very concrete meaning in terms of my physical environment, whereas my study program, for example, is something a lot more abstract that is a lot harder to grasp without abstract states that you maybe need a narrative for more.
+
+
+SPEAKER_00:
+Ryan, and then anyone else?
+
+
+SPEAKER_04:
+Oh, I mean, I was just gonna say, I mean, you know, like, when we went through mine and Chris's paper on consciousness a couple months ago, or whatever, I mean, the question about how conscious, conscious processes relate to active inference, really any related kind of computational model is
+
+is a complicated one in part because what consciousness, what the word consciousness is used to mean can be different in different contexts.
+
+You know, I don't personally think that, yeah, I mean, the question of what processes are conscious or unconscious in and of themselves doesn't really fall out directly from active inference, right?
+
+All we're doing is modeling things at different timescales and their relationships to one another.
+
+You know, I mean, in the model of, you know,
+
+visual consciousness of you know in that paper that we published a few months ago um you know the idea is very similar to what other people were saying you know which is this idea about different time scales um but but here i mean the idea the idea was something more like you have a particular level in a hierarchy that operates over a sufficiently long time scale that you can do the kind of goal directed things that consciousness allows including generating verbal reports which themselves are very kind of extended
+
+um, you know, integrative policies.
+
+Um, but that, um, you know, but that also requires that it integrates information from enough different low level sources, right.
+
+To do that.
+
+Um, but beyond that, you know, talking about consciousness as itself, the slower timescale process can also, I think a little bit, um, sort of subtle, um, because what a lot of people being like consciousness, um,
+
+you know, has to do with the kind of subjective character of the kind of like moment to moment, you know, phenomenological aspects of experience.
+
+And that's clearly not happening on a slow time scale, right?
+
+Like those, the moment to moment changes in conscious perceptual experience are fast.
+
+You know, so what we're doing in this kind of higher narrative level that I think you're talking about is something about, you know, integrating evidence for those over time and, you know, using them to come up with
+
+certain sorts of longer timescale policies to infer certain sorts of longer timescale policies.
+
+And so the way that we've talked about it previously is just that you can have these sort of, depending on the precision of the interactions between the first and the second level in a model, if that precision is low, then the lower level can, to a certain extent, just kind of operate semi-autonomously.
+
+In which case the higher level doesn't really need to have all that much influence or know that much about what's going on at the lower level.
+
+So you probably have as a kind of selection process where the precision gets turned up or down at different times and for different hidden states.
+
+So the second level can kind of selectively become aware of and start integrating evidence with respect to certain lower level processes, which simultaneously allows this kind of top-down control
+
+over those first-level processes.
+
+You know, so with the perceptual phenomenology stuff, it's probably more about the moment-to-moment updates between lower-level perceptual processes and these higher-level solar timescale processes when the precision is sufficient for those updates to the second level to matter.
+
+But anyway, I mean, that's more long-winded than I meant it to be, but mainly just trying to point out that it's subtle and it means a lot and it depends a lot on what you mean by consciousness.
+
+and it's not specific to active inference necessarily.
+
+
+SPEAKER_00:
+Nice.
+
+
+SPEAKER_07:
+Great.
+
+I think the difficulty of talking about consciousness is I don't, I mean, we don't know what it is doing, right?
+
+What kind of problem is consciousness solving?
+
+What would be like a hyper-intelligent organism without the consciousness?
+
+
+SPEAKER_04:
+There are definitely a number of ideas in the literature.
+
+It's not like it's completely pinned down.
+
+There are things, for instance, requiring working memory maintenance.
+
+Extended working memory maintenance beyond a specific timescale looks like it can't happen unconsciously, at least in current experiments.
+
+Any kind of multi-step
+
+um mental processes like for instance like um you can get unconscious priming effects where people can do something like two plus two um but you can't then you but they can't unconsciously do two plus two minus four um right so anything that requires holding this kind of intermediate result in mind um to do a further operation on it is something that at least thus far nobody's able to do an experiment to um you know that people can do that unconsciously um
+
+
+SPEAKER_07:
+But would you then, Ryan, would you think that consciousness is like a zero-one state, I mean, from that perspective?
+
+I mean, for example, Giulio Tononi kind of sees this as a continuum, like consciousness is really a continuum of states where you can just have higher levels and lower levels of consciousness.
+
+
+SPEAKER_04:
+Well, so again, I mean, this gets back to what you're using consciousness to mean, right?
+
+So in consciousness research, there's a distinction between levels of consciousness and content of consciousness.
+
+Now, content of consciousness, I think most people agree, is fairly binary.
+
+I'm actually not totally sure what the IIT crowd would say.
+
+I'd have to look back at some of the more recent stuff there, but in terms of neuroscience,
+
+There's these very well characterized ignition events that are nonlinear, all or none sorts of processes where if something becomes conscious, you get this global nonlinear, just kind of broad activation widely across large scale networks.
+
+Whereas if you don't get it, you don't pass this ignition threshold, then you still get the local
+
+like perceptual, like local activation in like say visual cortex provision or whatever sensory cortex.
+
+But you don't get, but it's just kind of linear and it doesn't kind of percolate up or pass a threshold to cause this large scale kind of more all or none kind of thing where the information becomes kind of broadly accessible throughout the rest of the system.
+
+So that aspect I think has a fairly binary character to it.
+
+Um, that's different than this kind of levels of consciousness.
+
+Um, if you look at something kind of like the being in a predisposition to represent conscious contents, um, which would kind of be like a continuum from say like coma to like alert awareness.
+
+Um, and that, that probably just has to do with kind of like the state of protocol processing that, um, allows for, uh, uh, the, the kind of dynamics that support this kind of all or none, um,
+
+the stuff that allows for selective contents.
+
+But anyway, I mean, all of this is going pretty far afield from active inference in your guys' paper now.
+
+So I don't wanna detract it away.
+
+
+SPEAKER_00:
+It's fun stuff and it's important.
+
+So we'll go to a more applied question and then following this kind of round on an applied question, we're going to go into a few
+
+code walk slash talk throughs, as well as learn a little bit about a few approximations and some of other work by Sarah.
+
+So Lars asked us a question on Twitter, which anyone is always welcome to do, and wrote,
+
+I would love to hear any thoughts on how this work on the multi-armed bandit might be related to real world problem spaces or applications.
+
+How might active improvements in multi-armed bandit tasks translate to improving how some problems or decisions are currently solved?
+
+we talked a little bit about this in dot zero and dot one but I'll go to any of the authors for a first take and then everyone else is welcome to give any thoughts or like ask a follow-up question so when you present the work and somebody just goes to this kind of obvious applied active inference question what is your thought
+
+
+SPEAKER_07:
+Well, I mean, as I said, multi-armed bandits are applied to a super wide range of real-world applications.
+
+So I opened a survey on practical applications of multi-armed bandits and contextual bandits on Bonifof and Arish.
+
+Yurina Arish and Jalel Bonifof.
+
+So this is one of the recent surveys I found, 2019, on Archive.
+
+And here they list, for example, a couple of domains where they are applied.
+
+Healthcare, finance, dynamic pricing, recommender system, maximization, dialogue system, telecommunications, anomaly detection.
+
+And just by looking from that, I would first try things out with active inference-based bandits in kind of non-stationary problems.
+
+And this is, from what I see, dynamic pricing and recommender system.
+
+They are kind of in this domain, quite obviously.
+
+But one can also imagine that telecommunication systems would also be a non-stationary problem as kind of searching for the fastest routing path and similar, where different routes can change over time.
+
+And then you have constantly where to explore different channels
+
+for passing along the information more optimally.
+
+And these are kind of practical domains where one could first try active inference-based bandits.
+
+As I said, in non-stationary kind of problems, which is most of the other things I listed, this is a bit more difficult.
+
+One would have to see if
+
+there is a way to deal with this kind of bad asymptotic behavior, basically, all our optimistic information search.
+
+
+SPEAKER_00:
+JOHN MUELLER": Awesome.
+
+Sarah, any thoughts on that, or anyone else?
+
+Steven?
+
+
+SPEAKER_08:
+Could you just repeat that last bit?
+
+You said something about isotropic behavior or some sort of type of behavior.
+
+I didn't quite catch that.
+
+
+SPEAKER_07:
+Asymptotic, right?
+
+So this is like in stationary bandits.
+
+People are interested in the asymptotic behavior after like infinite many actions, so to say.
+
+and how different algorithms scale there, whether they converge to a good solution or not.
+
+And I mean, this is what we find in the stationary problems.
+
+Active inference is too optimistic in a way.
+
+It converges to a solution too fast.
+
+That's the way we define it, at least.
+
+And that's why it doesn't have good asymptotic behavior.
+
+So if you would apply it to a stationary problem,
+
+When you would like with high probability to find a good solution, I mean, active inference algorithm is not one to go for there.
+
+At least, again, we have some ideas how to change this.
+
+But I mean, just based on expected free energy, this is not something which behaves nicely.
+
+
+SPEAKER_08:
+So you almost have to do like a hack on it to keep bringing it back away from premature.
+
+
+SPEAKER_07:
+Yeah, exactly.
+
+It kind of just gets stuck prematurely into a solution which the agent believes it's a good one.
+
+And the reason for this one can see immediately just from this, from...
+
+the term which drives the exploration, which is this expected information gain.
+
+In reinforcement learning, this is called exploration bonus or something like this.
+
+And this doesn't increase with time.
+
+So in a way, all these previous algorithms, like upper confidence bound UCB,
+
+The reinforcement learning-based algorithms, they have a bound which increases with time.
+
+So if you are not sampling from one arm, this bound becomes bigger.
+
+So your algorithm is kind of forced to switch at some point.
+
+And this is not happening here.
+
+So either one will need a different generative model or a different way to introduce more randomness into the behavior.
+
+
+SPEAKER_00:
+One aspect of, it was figure one or no, it was figure two in the paper was that on the top left there, that the variance across active inference agents was increasing.
+
+So it wasn't that like every instance was slightly degrading in performance.
+
+It was actually that a small subset where you wrote there
+
+a small percentage of the ensemble did not find the accurate solution and were overconfident in their estimate.
+
+So it does suggest a few ways in which maybe, you know, when the variance of a few parallel instances of active inference starts diverging, that could be like a warning sign that some of them are getting too confident too early.
+
+And then also it was interesting how you explored that variation
+
+the learning rate or Lambda through time and just kind of said that, okay, there's no simple answer here, but it's an area of future work for sure.
+
+
+SPEAKER_07:
+Yeah, I mean, the problem with like parallel runs in practical applications, you don't have that, how do you say, that advantage in simulations, I can just run
+
+I mean, any number of simulations, just see how it behaves.
+
+But in practice, when you're solving the problem, you just have one trajectory.
+
+And then you have to provide an insurance that this sample or this sequence of actions will behave better than random or better.
+
+There is some probability to converge over a long run.
+
+And this is something which you don't get with
+
+with active, infinite, and stationary problems, at least.
+
+In non-stationary, we don't see this issue anymore because of basically the generative model itself.
+
+Because the less you're exploring, the more your uncertainty rises on the arms which you haven't observed because the agent believes that things will change over time.
+
+Simply, this is also what helps it shift between arms.
+
+And it's also very efficient to kind of extract information from them because agent picks up really fast what kind of arms were not sampled and it is aligned with its beliefs.
+
+
+SPEAKER_08:
+I wonder if this also might reflect the difference between optimizing the model for practical application in, I don't know, a computer simulation program and the way that organisms behave.
+
+It may be that we prematurely shut off and let things become a habit, but that may have downsides.
+
+It may be that organisms, just to minimize use of energy,
+
+prematurely converge on something inaccurate.
+
+And so maybe that's like gambling and that could, it could show a fragility at times.
+
+So there's maybe two ways that it's being applied, you know?
+
+
+SPEAKER_07:
+Yeah.
+
+I mean, I would say that organisms are never exposed to a stationary environment.
+
+So, right.
+
+I mean, in a way, if you are not doing that, you are suboptimal because you are living in an environment that changes constantly.
+
+Right.
+
+So in a way, you can exploit this by now creating situations where, well, people behave weird and have gambling issues and stuff.
+
+But I don't think that's kind of a disadvantage for what we evolved to do, actually.
+
+For that, we are very good in doing.
+
+Finding good solutions reasonably fast.
+
+
+SPEAKER_04:
+Yeah, sorry.
+
+I was just curious, I mean, because
+
+You know, I mean, this is something that, you know, like with some of our like empirical work we've run into, you know, so like when trying to model a like change point detection tasks, for example, um, using active inference where, um, yeah, like same thing, like the thing becomes too confident too quickly.
+
+Um, but I wondered, I mean, cause I mean, in, in a lot of other empirical work, like in neuroscience, especially like it's, it's pretty clear that people don't just kind of.
+
+learn and then unlearn the like reward probabilities or just whatever the kind of environmental statistics are.
+
+Like when there's like abrupt changes, right?
+
+I mean, what people do is instead they infer that there's some new hidden cause, right?
+
+There's some new latent context.
+
+And then under that new context, you basically just have really flat, low, you know, really, really small
+
+you know, like magnitude concentration parameters, and then you just build up, right.
+
+Like your beliefs a new under that new context.
+
+Um, and so there's, there's like something, so there's like that kind of approach, which either would require having some, something hierarchical or having some kind of like additional hidden state factor that would correspond to context.
+
+Right.
+
+Um, you know, it seems like you could do it either of those ways.
+
+Um, the, um,
+
+And then the, the other thing to do would be to have some kind of like in the HPF, like in the hierarchical Gaussian filter where you have some kind of, uh, like dynamically adjusted learning rate.
+
+Um, you know, or, or really something more like, um, you know, so then like recently when we were updating, um, some of the, with our tutorial paper, um, you know, like after talking with Carl, um, you know, it seemed like it would be a good idea to also include this kind of like forgetting rate parameter, as opposed to just like the standard learning rate parameter.
+
+which is just kind of like a scalar parameter on the actual concentration parameters prior to adding on the new counts.
+
+And so you could, that's not dynamic, but at least it does prevent, it can act as kind of like something like an implicit prior on volatility that can prevent the thing from becoming too confident too quickly.
+
+But yeah, I guess I just,
+
+I wondered if, you know, you guys had like thought about, or, you know, like played around at all with, with something like that, something like inferring, inferring new kind of like latent contexts, as opposed to just having to kind of like, you know, like the thing becoming too confident and having to spend a bunch of time overwriting.
+
+Right.
+
+It's a, you know, it's old, it's old beliefs, which happens way too slow.
+
+
+SPEAKER_02:
+I mean, in the end, um, I, my current model,
+
+It's actually based on such a hierarchical model as you described where my agent, instead of unlearning all the action-outcome contingencies, it opens up a new context.
+
+Have you inferred that the context changed?
+
+I think when we were looking for proper learning algorithms for the paper, we most definitely looked in contextual learning and
+
+I think in the stationary case, there are no contexts.
+
+That's why we didn't introduce it there.
+
+And I think the SMILE algorithm we used for the non-stationary bandit also has a forgetting rate.
+
+Just like you say, a forgetting rate on the concentration parameters, which I think is another reason why this algorithm worked well in the non-stationary case or better than in the stationary case.
+
+And in theory, I think we also tried some version of this where we have both contexts.
+
+I'm not getting parameters, but yeah.
+
+In the end, then, for the randomly moving bandits, we had also thought about then having another layer to this hierarchical model that in person volatility to adjust the learning rate.
+
+And if you start that, your learning model becomes very abstract really quickly.
+
+Maybe it's overkill.
+
+
+SPEAKER_04:
+So I guess what I don't completely understand still is,
+
+Even in the stationary case, if, uh, if you're getting ready to switch really high, I mean that all this is going to happen is your, the actual like magnitude of your concentration parameters are never going to build up to too high of a value.
+
+Right.
+
+So like, does that not still help with the overconfidence issue?
+
+I just sort of thought it would.
+
+
+SPEAKER_07:
+Well, we don't have a kind of forgetting parameter in non-stationary case.
+
+At least this shuts off because assume agent believes it's in a stationary environment.
+
+
+SPEAKER_04:
+Yeah, I guess you could still put an agent in a stationary environment, but it seems like it could be plausible that it has a kind of... Yeah, forgetting.
+
+Yeah, I agree.
+
+
+SPEAKER_07:
+I mean, that's one way one could try out, right, to resolve the...
+
+Uh, exploration from in stationary case, right?
+
+Just simply, uh, giving agent to the wrong beliefs.
+
+
+SPEAKER_02:
+So the things we use the same learning, the same Bayesian belief updating algorithm for all the different action selection methods that we compared.
+
+And then, um, it's a weird interplay between.
+
+The learning model that we chose for the stationary case and the action selection rule and I mean Thompson sampling which uses the same learning does not have this issue.
+
+
+SPEAKER_05:
+Yeah.
+
+
+SPEAKER_02:
+And that I think is also interesting.
+
+
+SPEAKER_00:
+So to the second part of the question, where how would that translate to improving how some problems our decisions are currently solved?
+
+I'm hearing a few things.
+
+We talked about speeding up computation relative to other approaches, but that's not a solved problem.
+
+For example, if there's a 10 times speed up, but then you have to run 10 agents in parallel to get a good ensemble estimate.
+
+then it's a wash.
+
+So potentially for speeding up just the computational requirements for certain challenges, a second would be that it might be possible to more rapidly lock in to dynamically changing regimes and to avoid some of the pathologies of model fitting
+
+in multi-armed bandit contexts and then a third way that it could translate to improvements would be it might reveal some hidden similarities between these different problems and settings like we already know that they're somewhat similar because we can apply multi-armed bandit to
+
+you know, health, finance, recommendation systems, et cetera.
+
+So we know that there's a lot of problems involving data that have similar enough structures such that a similar kind of general algorithm can be applied.
+
+But then it could be interesting once we have them on the common grounding of active inference to say, actually, you know, the structure of the decision making is similar across these two settings.
+
+or the telecommunications routing and the logistics routing are similar in this unexpected way.
+
+So maybe insights relating to what kinds of tweaks an agent could improve on their performance with, like what we're talking about here with the categorical hidden states or learning and forgetting tweaks, maybe some of those insights could be implemented in active inference and then more easily transferred across different domains.
+
+So hope that conveyed some of our thoughts on this question to Lars.
+
+Anyone else?
+
+
+SPEAKER_07:
+Yes.
+
+I mean, one issue there is that in different domains, you will, in principle, have different generative models.
+
+I mean, although the problem is the same, multi-ambient, I mean, you will need different representation of the environment.
+
+And this is then where the challenge comes, potentially.
+
+if you can represent it as a multi-embedded problem, you can choose different, whatever action selection algorithm you find towards best.
+
+And in non-stationary situation, at least for what we investigated, this seems to work well.
+
+This doesn't mean necessarily that this generalizes.
+
+One will still have to try out different things just to make sure.
+
+But in the end, the bigger challenge is like, okay, what is a good generative model for this dynamic problem which I have?
+
+And one can go there with many different things.
+
+I mean, for example, what Ryan also mentioned, this kind of open-ended contextual learning.
+
+I mean, one can represent simple in the environments where you don't know anything about what's going on.
+
+You can just do a non-parametric generative model, like Dirichlet process or Gaussian process.
+
+And you just try to learn even what
+
+
+SPEAKER_00:
+model itself should be awesome so let's go to this little sub discussion on sarah one of your previous papers and then we're gonna turn to some notebooks and walkthroughs of the bandit
+
+project but hopefully this will be informative because first off belief propagation and message passing and these types of approximations are of interest to the lab in the community and also we're seeing a few faces that we can ascend active inference mountain on we have ryan with a matrix based matlab approach
+
+We will walk through in just a few minutes with a Python-based approach of the bandit.
+
+And then this is a slightly different approach based upon the Beth approximation.
+
+So Sarah, anything you'd like to describe?
+
+I'm sure this will be new to many people, so it will be helpful to convey what you were working on here.
+
+
+SPEAKER_02:
+Sure.
+
+So in figure two, the upper one, what you see is
+
+the generative model of a normal observable Markov decision process.
+
+Where in the upper row, the unfilled circuits are the hidden states.
+
+Sorry, they were called S in the previous slide.
+
+And below are the observations.
+
+And then the whole dynamics of which states follow upon each other is determined by the policy pi on the left side.
+
+And then what people often do is assume in this Q that we saw two slides before, the mean-field approximation, which means, basically, which means that,
+
+For example, here we have a bunch of hidden states, HT, HT plus one and so on.
+
+And then if you assume the mean field approximation, the approximate belief distribution would be just Q of HT times Q of HT plus one times and so on and so forth.
+
+And there with you create an implicitly, yeah, you essentially treat all the hidden states
+
+as independent in your approximate beliefs.
+
+And then the dependencies will be averaged out.
+
+In figure three, you actually see the inverted model.
+
+And with M, you see the messages that are being passed in between nodes.
+
+So it doesn't matter what approximation you use.
+
+In the end, you can calculate your beliefs with some sort of message passing algorithm.
+
+Except that now, if you chose a mean fit approximation and you estimate all hidden sets separately, what we found is that actually they may not fit very well to each other.
+
+So for example, when my agent predicted how it will go through the grid and a certain policy, it actually often predicted it will jump.
+
+and go places that don't adhere to set transitions.
+
+And therewith, of course, leading to decreased goal reaching success.
+
+And then instead of doing this mean sheet approximation, we assume the beta approximation, which instead of having QHT times QHT plus one and so on, you have
+
+small pairs of joint distributions.
+
+So Q of HT and HT plus one times Q of HT plus one and HT plus two.
+
+And then doing the math, you can show that if you assume this type of approximation and you plug it into the free energy, you want to minimize the free energy, the belief propagation methods passing algorithm comes out.
+
+And so you can use the belief propagation message passing algorithm under the beta approximation to calculate beliefs.
+
+And this is actually exact on graphs without loops.
+
+And then you'll get a more appropriate joint representation in this case of temporarily dependent hidden variables.
+
+But I mean, in the end, yeah, what I do nowadays that I also
+
+I have a hierarchical model where now, for example, the parameters of the Markov decision process are context dependent.
+
+I look into my model and think which variables belong together, and then I apply the beta approximation in these parts.
+
+But then some slower varying variables like the context, I just use the mean fit approximation because it varies differently anyways.
+
+
+SPEAKER_00:
+Thanks for that breakdown.
+
+What is message passing?
+
+Like, who are the messages being passed between?
+
+And does that reflect a variant on active inference?
+
+Or is it the same exact active inference model can be approximated or can be calculated through message passing or through other mechanisms?
+
+
+SPEAKER_02:
+Correct me if I'm wrong, Dimitri, but I think in the end, all active inference agents do message passing.
+
+Depends on the approximation, which type of message passing algorithm.
+
+So, yeah, and the beta approximation, it's belief propagation, message passing.
+
+I think there are equivalences to some product algorithm also.
+
+You just get different messages that maybe
+
+better or worse, but okay.
+
+What other messages essentially each note in the graph.
+
+So each hidden variable since other hidden variables that it's connected to a message about which state it should be in.
+
+So HT would say, Hey, we're currently here.
+
+Then I think in the next day we should be there and then vice versa.
+
+HGPAS1 can send a message back that says, hey, we want to be there next time, Seb.
+
+Where should we be now?
+
+And so, yeah, these variables essentially send each other messages on what they should be so that they are in agreement with each other.
+
+And that's how you get essentially a probability distribution over what you think, which state you're in and will be in.
+
+
+SPEAKER_00:
+Yet, Dimitri, any thoughts on message passing?
+
+Or where do you see message passing fitting into Bayesian statistics and a few other topics?
+
+
+SPEAKER_07:
+DIMITRI LASCARISONI- I mean, as Sarah said, I mean, they would say all the algorithms are message passing.
+
+So when you talk about mean field approximation, this would be traditionally variational message passing.
+
+It's called the algorithm, right?
+
+Here, this is like belief propagation.
+
+message passing algorithm based on marginal probabilities instead of in the variational message passing you have like expectations of the log of conditional probabilities right i mean this is kind of the differences what you're what you're getting and losing and i mean we have another paper with thomas parr and carl neuronal message passing using mean field beta and marginal approximations
+
+where we kind of contrast these different ways.
+
+So who is interested in this topic can look into a bit unpacked discussion of similarities and differences.
+
+In practice, the difficulty with mean field approximation is, I mean, for dynamical problems, for dynamical decision-making, it's not really a good approximation.
+
+This is not something which one would use.
+
+And implementation-wise in active inference, mean field approximation is not used on the dynamical level.
+
+What they are using in MATLAB, for example, is all this marginal approximation.
+
+It's still kind of gradient-based method, but it's computed slightly differently.
+
+Sorry.
+
+
+SPEAKER_00:
+Continue, continue.
+
+
+SPEAKER_07:
+Well, I just wanted to wrap up.
+
+Basically, the more complex problem it is, the more uncertainties you have on the state transitions.
+
+the more difficulties you will have with mean field and marginal approximation.
+
+Basically, the beta approximation is the only thing which kind of corresponds to actually exact inference in non-cyclic graphs.
+
+So basically, this is theoretical solution.
+
+You know that you can be exact under specific conditions on the marginal.
+
+
+SPEAKER_02:
+There's a paper I can only warmly recommend by Yadidia and Weiss, I think in 2001, called Understanding Belief Propagation and Its Generalizations.
+
+And I find it very didactic.
+
+It helped me a lot.
+
+And they explain in detail how variational inference is also connected to message passing algorithms.
+
+
+SPEAKER_00:
+So just to capture that one interesting thing you said there about the gradients, the gradient, it's sort of like your models in a given spot on the landscape, and then it checks the temperature and it goes in the direction of the gradient.
+
+So we've talked a lot about gradient based methods with the straight line versus the ISO contour.
+
+Message passing kind of breaks that down into a process.
+
+So at each click of the model,
+
+Messages are being passed back and forth to one another which is both computationally tractable it's also shown through some work of
+
+the BIAS lab, Bert DeVries and others, that for specific categories of Bayesian graphs, that message passing algorithms are basically equivalent in the Forney factor graphs, the FFG, which we're gonna be learning about in the future.
+
+And also this topologically puts you more into touch with the predictive processing.
+
+For example, the messages that neurons are passing to each other.
+
+So it's one thing to say, well, it's as if the neurons are messaging to each other and that's doing a gradient descent.
+
+But it's another thing to actually saying we have a message passing scheme for modeling how these message passing agents do inference.
+
+So there's a few points of contact there that I think are pretty important.
+
+And it's also interesting that you brought up that early paper.
+
+So we'll check that one out.
+
+Steven, did you have a question?
+
+
+SPEAKER_08:
+I think it's been sort of covered really.
+
+
+SPEAKER_00:
+cool area though so thanks sarah for um sharing that just one last question on this before we go to the um bandit codes and walkthrough like where do these approaches um are they converging and they're going to weave together more closely or is one of them like an umbrella over the other such that work will continue mainly under the generalized form
+
+where do these different approaches that we're talking about to implementing active inference where are they heading like is it is more development happening on the message passing approximation or on other modes of breaking down active inference
+
+
+SPEAKER_07:
+I'm not sure I have the overview of hundreds of papers to publish every month to say something like that.
+
+As far as our motivation is here, we just want to have in different situations good enough inference approximations.
+
+In a way, for me, more important question is, what is a good representation of different tasks and environments to have rather than what is the best kind of inference algorithm to use?
+
+Because especially if, I mean, depending, again, on the environment you're working on, but in dynamic context, it's difficult to get lots of advantage with just
+
+improving slightly on the inference performance.
+
+Just because there's lots of uncertainty and things in any way change all the time.
+
+I mean, with this, we also kind of write for this multi-armbanded paper.
+
+We tested lots of different algorithms.
+
+There is one of the notebooks in repository just kind of lists different things we've tried out.
+
+But in the end, one doesn't see any reason why one algorithm would be specifically a way better than another.
+
+It's just they're very similar.
+
+Subtle differences.
+
+
+SPEAKER_00:
+Great point that there's a lot of work on the comparability of different approximations and different algorithms.
+
+But actually,
+
+it might be more beneficial for a given application to focus more on how they're specifying the generative model and making sure that that really captures essential features of the environment, because it's like, okay, let's just roll with active inference and spend our attention on the generative process and the generative model.
+
+rather than try to finesse potentially a a grossly inferior generative model with some better approximation there might be limited returns there so steven and then we'll go to looking at some of the bandit code yeah this is a kind of general question related to that is i often think about sort of didactic deontic q type um
+
+
+SPEAKER_08:
+sort of um ways of making inference um instead of um deductive thinking and such like and i'm wondering whether the message passing is is more present in those types of models because it's it's something that's been detected in the environment and decisions based on that are being made and you've got then you've got you kind of inductive where you're trying to narrow the gap
+
+between a goal and then you've got your abductive where you're trying to build something up and infer from like a landscape that you're trying to work out what is out there, so to speak.
+
+And I'm wondering if...
+
+This is correct in my thinking that the message passing is more used when you have like a particular deductive reasoning approach and inductive or abductive ones would be different.
+
+
+SPEAKER_00:
+interesting question about how those different modes and types of logic are connected to message passing one thought which might be on or off base is that we're thinking a lot about how variables in a model are like nodes and then there's edges connecting the nodes that reflect the relationship between those variables
+
+And message passing is just one way to describe as a model updates through time, which information is being passed between the variables.
+
+So it doesn't say anything about the mode of operation of an agent, which might be engaging in different kinds of logics.
+
+And I think that's a really excellent question.
+
+Like how do we break out of the known
+
+with respect to how our algorithms update and it does actually touch upon this mean field approximation for example if you think that all through all time past present and future that there's some stationarity of the hidden state then the mean field approximation will work but then if there's going to be a change in the state
+
+then the mean field approximation is potentially going to give a misleading outcome but in any case message passing is just describing sort of the mechanics of how the model updates and which information between variables is connected but importantly which variables are not connected like the observation at a time point doesn't influence the observation at a different time point directly
+
+but it could via a specified path of message passing.
+
+Let's look a little bit at the bandit code.
+
+So the links to the GitHub, Die Markov, you have the right name to work in the area.
+
+
+SPEAKER_06:
+I do, yeah.
+
+
+SPEAKER_00:
+So we have a few of these notebooks up.
+
+And is there, we can look at the overall notebooks folder or do you have a sense of which of the notebooks might be interesting to walk through?
+
+I could go to a few or if you want to jump to a first one.
+
+I think just this first one.
+
+
+SPEAKER_07:
+I think about this maybe.
+
+Oh, go ahead.
+
+Yeah, there are a couple of things.
+
+I mean, there are a couple of notebooks which are not immediately relevant for the paper.
+
+So we can focus just on the things which are part of the paper.
+
+Or I can just generally kind of talk also about these other things which were just process of thinking about the problem.
+
+
+SPEAKER_00:
+Okay, how about before we even, how do you as a researcher working on this area, keep that separate, like the paper specific developments, but then your overall developments?
+
+Do you find that you're on an overall development mood?
+
+And then you dip into specifying a paper?
+
+Or do you pursue the paper and find that you have more general insights while you're working through the problems?
+
+
+SPEAKER_07:
+Well, I mean, I pursued the paper, but I mean, then, I mean, there are lots of branching paths on that way, in a way.
+
+You have to figure out what's potentially interesting, what's relevant.
+
+And so part of this code is just exploration, a bit of things, topics which were interesting for me, but which turned out not to be so important in the end, just maybe for some other paper.
+
+And things which are just focusing exactly on the comparison of multi-armbanded algorithms.
+
+Discussing this part.
+
+In a way, it's difficult to combine lots of potentially unrelated things into one paper.
+
+One always has to make some favourites in the end.
+
+
+SPEAKER_00:
+I knew it would be a both type of question because it's something that researchers are often, you know, interested in general questions, but we need to deliver on specific research projects with a defined scope and conclusions as well.
+
+So it's just cool to see that this repository holds a little bit of both.
+
+
+SPEAKER_07:
+So for example, this notebook which you opened first, like expected free energy comparison, this was just my contemplation of just different ways you can define expected free energy.
+
+So typically, people will think about expected free energy in these terms of expectations of outcomes.
+
+But for example, other questions, OK, but why not computing in terms of expectations over states?
+
+And there is a relation between these two, right?
+
+One is an upper bound on another.
+
+So basically, you see this last relation.
+
+There is s of pi, there is g of pi, and there is i of pi.
+
+And basically, g of pi would be expected free energy in terms of expectations over latent states.
+
+So this first, and this is upper bound on what this would be like expected for me.
+
+in equivalence to the free energy being the bound or marginal surprise, like log likelihood or surprising.
+
+And then there is the I of pi, which is just KL divergence between posterior prior, which gives you then something else.
+
+And one can also think, well, we can select policies or make decision-making algorithm based on this quantities and what happens when you use one over another.
+
+So this is something which I was just testing out for myself.
+
+I'm still not clear what to think about this.
+
+So that's why I don't have a paper.
+
+
+SPEAKER_00:
+This is very interesting.
+
+It's all conditioned on policy with pi.
+
+And then we're approaching it from the top and from the bottom.
+
+And so the free energy is being sandwiched in between these other approximations.
+
+And then you wrote here that the minima of i and g of pi match.
+
+but S is giving a different minima.
+
+So what was curious about that to you?
+
+
+SPEAKER_07:
+No, at least in this example, right?
+
+So I just kind of build up simple example and one can see that optimal policy or like minima of these different quantities is different.
+
+And one can also think probably of different examples.
+
+Well, this will, I mean, this relation will not hold it.
+
+What I just wrote is a common there.
+
+But I mean, this is more like than practical question.
+
+So if you would then build an agent
+
+Which one of these quantities should you use?
+
+They are all kind of effectively can be seen as expectation over future surprisal and having different bounds on that.
+
+expectation as an approximate quantity.
+
+So just the question is... And I also found in different problems, depending how I formulate problem, one of these algorithms works... Well, not algorithms, but objective functions, let's call them, works better.
+
+So in this particular multi-ambedded task, which we explored, the g of pi is not
+
+So what should correspond to expected free energy?
+
+This is not behaving that well.
+
+In a way, you don't get such a good performance.
+
+But I can slightly change the task, and I can get better performance with G of pi or S of pi.
+
+So as I said, I'm not sure what to think about this still.
+
+So it's really like exploration of different things.
+
+
+SPEAKER_00:
+We'll have you back on this topic when you're in a different phase.
+
+Do you want to look at inference algorithms comparison?
+
+Well, yeah.
+
+
+SPEAKER_07:
+So inference algorithms, as I said, this notebook just lists some of the things which we consider in the literature when you think about this approximate inference problems in changing environments.
+
+One can think of different ways how to solve this.
+
+What we used here is this representation, which comes from change point models as an approximation for the task, which is a good approximation for this kind of pitching bandits, which is what you're showing here, right?
+
+For example, this is the question Blue had last week also.
+
+So this would be how probability changes in switching bandits on one arm over time, right?
+
+probability of generating one.
+
+Let's call this a reward.
+
+This is what this plot is showing.
+
+And this is the switching concept that whenever a switch occurs, we are just sampling a new probability for each arm.
+
+So this is this kind of setting with non-stationary difficulty.
+
+So basically this difference between the best arm and second best, it varies over time.
+
+And then you have like a drifting dynamics for which just like the different generative approaches model would also be better.
+
+But then one can also say, well, we can use any generative model for any of these problems and let's just see which does inference better.
+
+Are there any differences there?
+
+So can you just use different representations or different underlying environmental dynamics?
+
+in a way, misspecified in the model, but still doing reasonably well in the inference part.
+
+And when you look at the results, posterior expectations you get over time, different approaches lead to very similar results in the end.
+
+So there is no strong
+
+advantage or disadvantage of one or another.
+
+And that's the reason why we just picked the simplest thing, which kind of the most efficient, basically, algorithm.
+
+Because then it's much easier to scale to more arms, more time steps, and things.
+
+
+SPEAKER_00:
+OK, very interesting.
+
+This is a pretty thorough walk through the hierarchical variational smile.
+
+
+SPEAKER_07:
+Yeah, exactly.
+
+It just describes the generative model, some of the steps one needs to take to get to the posteriors.
+
+Then just implementation of the algorithm is unpacked there.
+
+But besides this, what we used in the paper, we also implemented some of other approaches, which are non-variational Asian inference.
+
+uh which is seems to be quite good and i mean right on average it performs better it's like more optimal uh representation now this comes from i think also recent paper on multi-armed bandits um do you remember sarah the first daughter louis et al maybe or uh unfortunately not i would have to look well we are citing the paper anyway so but right uh um
+
+
+SPEAKER_02:
+But yeah, pretty recent paper.
+
+
+SPEAKER_07:
+MARIUSZ GASIEWSKI- Pretty recent paper.
+
+And one can see that it does a slightly better job.
+
+So that would be, I guess, this algorithm you're showing now.
+
+Yeah.
+
+
+SPEAKER_00:
+What are the lines representing the red, blue, green, and then the sort of flat?
+
+
+SPEAKER_07:
+MARIUSZ GASIEWSKI- The green is just the posterior expectation over reward probability.
+
+So the perfect algorithm should just match green with blue.
+
+And the red is basically a change point inference.
+
+So there's a posterior probability that the change occurred at this specific moment of time.
+
+And as you can see, this process is quite noisy in a way.
+
+You have lots of small errors in a way or slight jumps in places where change didn't necessarily occur.
+
+
+SPEAKER_00:
+know what what this reminds me of is um the blue is some hidden true price of an asset and then the green is like the markets tracking that price or value and then the red are like orders like buy and sell orders on the market that represent the underlying situation changing and it's like just uh
+
+
+SPEAKER_07:
+Well, I mean, markets, yes.
+
+One can see markets as doing some kind of inference on the true value of the price.
+
+This would be kind of a distributed inference problem.
+
+
+SPEAKER_00:
+Yep.
+
+I mean, it's the whole no one knows the price of a pencil, but maybe the person making the eraser knows when the price of rubber changes a little bit.
+
+
+SPEAKER_07:
+But the colors are just a coincidence.
+
+
+SPEAKER_00:
+Yeah.
+
+OK.
+
+And then here we see something.
+
+
+SPEAKER_07:
+Yes.
+
+Here is this.
+
+If I remember correctly, this would be the hierarchical Gaussian filter applied to the same problem.
+
+So this is work from Matisse et al, Chris Matisse.
+
+He actually, in his first paper, he did apply to inferring the price of an asset over time.
+
+So when he introduced that.
+
+But it's found lots of applications in cognitive neuroscience and just understanding how people adjust to volatile environments.
+
+So what we have here is that this kind of change probability is constant over time.
+
+But you can also think of the environment, the change probability itself changes over time.
+
+so that you need to kind of adjust to these changes also.
+
+So that would be also kind of one straightforward extension of this multi-armed bending problem, different types of dynamics, and testing out then more complex generative models and approximations to deal with that problem.
+
+We are just comparing now how this algorithm tracks the underlying price value in different environments.
+
+
+SPEAKER_00:
+I have a question about what action does.
+
+So here, the underlying generative process
+
+is stochastic, but the actions don't change the process.
+
+Like choosing a different slot machine isn't changing the probability of slot machines.
+
+So it's almost like a little bit more of a niche modification setting, or can it just be directly put into the model that certain actions actually change aspects of the underlying generative process?
+
+Or is that kind of a feedback between action and then future hidden states?
+
+Is that like another module that has to be constructed in?
+
+
+SPEAKER_07:
+Well, for what we have implemented here, that would definitely need an extension, right?
+
+So we kind of this is more than this general representation, which of also implementation of active inference, which, for example, is
+
+implemented in SPM, which then helps you deal with these more extended problems.
+
+So here we really are working with the simplest algorithm just for having it very efficient and compact so that it can scale easily.
+
+The more general you are in trying to capture many different problems, the more difficult you have with scaling.
+
+
+SPEAKER_00:
+It's like inference all the way up or all the way down.
+
+And it's a theme that we'll return to many times, which is that it's all good to track the absolute value of what you're interested in, but then the uncertainty on that, and then the uncertainty on your uncertainty about that can get you into this infinite recursion.
+
+So you just go quick and dirty and just have a simple idea of how variance and higher order uncertainties propagate.
+
+Or does one fully specify all the possible ways that uncertainty can exist across multiple levels, which can get to an explosion of the computational requirements really fast?
+
+
+SPEAKER_07:
+Well, I don't think that necessarily hierarchy is the issue.
+
+But it's more right if you then start assuming that your actions change the state's
+
+state changes or transition matrices in this stuff, right?
+
+So basically you're effectively with actions, you're modifying the state transition matrices.
+
+Then this requires that, I mean, you also think about the planning problem and it's not any more simple action selection problem, but it's then becomes a planning problem.
+
+And this makes things more complicated if you introduce such an environment.
+
+Because then it depends where you are at different moments of time in different states.
+
+
+SPEAKER_00:
+Yes, because we've seen in the Markov decision processes that policy, pi, plugs into B, which is the transition matrix between hidden states.
+
+so that's like actions changing the way in which hidden states are inferred to change through time whereas the one step decision making is um doesn't have to be done in that same uh way but
+
+
+SPEAKER_07:
+Yeah, I mean, I think also, I mean, at least original implementation in SPM, what is used, this doesn't scale so very well for this type of problems and different groups or people have started exploring like Monte Carlo research and other methods, which actually allow you to then figure out potentially best policy in a very complex, high dimensional problems.
+
+But as long as you are in the domain of cognitive behavioral neuroscience, you can get away with this by just making your task reasonably simple.
+
+You have this control.
+
+
+SPEAKER_00:
+Yes, but even as Ryan pointed out earlier that real humans, even when you control the experiment or you think that you're introducing a gradual change in a parameter, they might actually be cognitively doing a different type of inference.
+
+
+SPEAKER_07:
+No, humans are problematic.
+
+I don't like them.
+
+
+SPEAKER_00:
+Oh, humans.
+
+
+SPEAKER_07:
+We should do experiments with robots.
+
+
+SPEAKER_00:
+Well, maybe that will be the... I mean, we brought up the conversation, of course, logistics, planning, motor behavior, exploration, exploitation spatially.
+
+Those are things where maybe having a defined digital twin for some robotics.
+
+And then we go from in silico to robotics to starting to introduce the element of the human and the unknown.
+
+Stephen?
+
+
+SPEAKER_07:
+Sorry, I think in behavioral experiments, you always have this problem of just convincing yourself that the model you're using is something which reasonably well represents what humans are doing.
+
+And you can be quite certain that this is not what they're doing exactly right.
+
+This is just an approximation of all the complexity which we
+
+uh have in well our non-parametric representation of the role uh right and i mean kind of there is this issue right you can kind of get people to perform very well on the task through lots of training but then it's like okay is this really what i want to kind of experimentally whether like how can cubans learn to do this task well or i'm actually interested what people are doing when they are solving any task how they represent the environment
+
+state time representation, how is this incorporated in their decision model.
+
+And I think it's, I don't know how other people feel, maybe Ryan can comment on this, but for me, it's always a difficulty to deal with.
+
+It's always uncertain whether you're doing the right thing, simply enforcing something, some task on people.
+
+
+SPEAKER_00:
+Yes.
+
+Thank you.
+
+Stephen?
+
+
+SPEAKER_08:
+Yeah, so talking about this, the problem with humans, but I'm interested in how the precision parameter, you talk about the precision parameter and it helps to determine whether someone's going to explore or exploit the context.
+
+And I'm interested in how exploration can become a pragmatic tool
+
+this precision about the usefulness of something that's exploratory, i.e.
+
+art or an experience of some sort, and how that meaningfulness in the future
+
+could offset a pragmatic gain in the near term.
+
+So I'm interested in this, the way that precision fits in with that and sort of the evolution of that.
+
+And they even talk about that a bit with the affective charge with Caspar Hesp, i.e.
+
+affective charge is how your precision about an expectation
+
+been violated or not you know it's not necessarily whether it's good or bad it's whether your your prediction of how well you could expect something to happen suddenly got violated and that amplifies everything um so i'm interested in that because i'm trying to create immersive experiences for
+
+theater and places like that.
+
+But I was just wondering what your thoughts about how that precision parameter fits in with that dynamic and how that could be extended or if there's other parameters that kind of can fit in there as well.
+
+
+SPEAKER_06:
+I'm not quite sure that I understand the question.
+
+
+SPEAKER_07:
+Are you asking, is precision always relevant?
+
+
+SPEAKER_08:
+Yeah, can you stack the precision with the pragmatic, if that makes sense?
+
+So say you've got low precision, but you have a high precision over the fact that exploring the low precision would be useful.
+
+So the two things kind of stack on top of each other as being a sort of pragmatic epistemic game.
+
+I can see that being the usual.
+
+
+SPEAKER_07:
+Yes.
+
+So, I mean, in this other paper on meta control, we are playing with it a bit differently.
+
+So we are saying that you can kind of control your exploration tendencies if you learn over time the exploration is bad.
+
+And this is kind of where this stacking of different levels of the hierarchy, like a higher level agent controlling the lower level comes in play.
+
+Because simply if this higher level observes that over time the agent is not performing well, in a way it's not reaching the goals efficiently, then it kind of punishes exploration and learns just to be more exploitative in the specific settings.
+
+And the other way around, right?
+
+We can make kind of a setting where the exploration is beneficial always.
+
+And then the agent learns to kind of behave in this way better.
+
+So one can then assume in real situations, this is something which people learn, right?
+
+So just if they observe that depending on what they do, they gain more or less, they will also adjust their tendencies and associate this with different contexts, right?
+
+
+SPEAKER_08:
+So you could have almost like, it's not just precision, you could have like another generative model managing those.
+
+
+SPEAKER_07:
+Yeah, exactly.
+
+I mean, you can just have another kind of higher level representation which controls
+
+
+SPEAKER_00:
+uh priors or precisions on the lower level so right and basically inducing different behaviors through that to connect that to the um ostentative cues it's almost like if you had a a sound or a cue that said okay now we're in a brainstorming period okay now we're gonna drill down
+
+And by alternating between a brainstorming period and by drilling down, we're going to have the right kind of outcomes, but giving a cue for when one should be in a more exploratory mode versus potentially like more working with what is already known.
+
+But this looks like an interesting paper, this meta control of exploration, exploitation dilemma.
+
+And also framing it in terms of the hierarchy of time scales, whereas often it's framed in terms of, I guess, just instantaneously what maneuver would be best, whether one is instantly preferring exploration or exploitation rather than through deep time.
+
+
+SPEAKER_07:
+Usually the interaction with reviewers during that paper is what motivated this paper.
+
+So that's like, OK, I really need something to just explain, unpack some of the similarities and differences between Active Inference and everything else around.
+
+TINA WISDOMLENKO- Nice.
+
+
+SPEAKER_00:
+Well, if there's any other sort of closing thoughts, this has been an awesome set of discussions.
+
+I think we'll have a lot to think about, and hopefully people will work through these notebooks.
+
+keep an eye out for when the final paper is published.
+
+So you got this one fully published while the multi-armed bandit is still not ready.
+
+
+SPEAKER_07:
+ROMAIN PIQUOTIERI- It's still under review, so we are finished.
+
+Yeah, hopefully soon.
+
+It's the first revision around, currently.
+
+
+SPEAKER_00:
+Well, to anyone who's on here, any other thoughts or questions?
+
+Or what do we take moving forward?
+
+I'm just thinking about different tabs I could be having a regime of attention on as the multi-armed bandit, you know?
+
+Do I check something I haven't checked in a while because I'm uncertain?
+
+Or should I pull back to my higher level and be like, you know what?
+
+It doesn't even matter if I'm uncertain about that tab.
+
+I should just stick on this one.
+
+I'm sure there'll be some fun.
+
+Yeah, Dimitri?
+
+
+SPEAKER_07:
+Well, I mean, it's a very general problem, as I said.
+
+So most of the problems are multi-armed bandits.
+
+It's not surprising, right?
+
+
+SPEAKER_00:
+Awesome.
+
+Sarah and Dimitri, thanks so much.
+
+It was great to have your engagement from the dot zero on through.
+
+It really made it awesome for the lab.
+
+So thanks everyone for watching and until next time.
+
+
+SPEAKER_06:
+Thank you for having us here.
+
+
+SPEAKER_00:
+Thank you.
+
+Yep.
+
+
+SPEAKER_06:
+Yeah, thanks very much.
+
+
+SPEAKER_00:
+Until next time.
+
+Bye.
+
+Bye-bye.
+
+
+SPEAKER_06:
+Bye.

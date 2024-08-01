@@ -1,0 +1,1660 @@
+SPEAKER_00:
+Hello and welcome.
+
+It's ACT-INF Livestream 52.2 on March 9th, 2023.
+
+Welcome to the ACT-INF Institute.
+
+We're a participatory online institute that is communicating, learning, and practicing applied active inference.
+
+You can find more information on these links.
+
+This is a recorded and archived live stream, so please provide feedback so we can improve our work.
+
+All backgrounds and perspectives are welcome, and we'll be following video etiquette for live streams.
+
+Head over to ActiveInference.org to learn more about getting involved with projects and learning groups.
+
+All right, we are back in live stream 52.2.
+
+In our third discussion on the paper Geometric Methods for Sampling, Optimization, Inference and Adaptive Agents,
+
+we had a dot zero background and context video and last week lance joined for 52.1 where we had a great overview discussion on the paper so today we're going to see where it goes see where our last week has taken us and how we're thinking about it or curious about it if you're watching live of course feel free to write questions in a live chat
+
+Otherwise, let us pick up on a mostly blank slide.
+
+And just thanks again, Lance, for joining.
+
+If you want to give any sort of introduction or recap opening here, go for it.
+
+
+SPEAKER_01:
+Well, yeah, I mean, thanks a lot, Daniel, for organizing this.
+
+I'm super happy to be here.
+
+I think, well, last time we went through most of the paper.
+
+We discussed a lot about sampling, I guess, the idea of sampling.
+
+We discussed a bit less about Hamiltonian Monte Carlo, which is one of the, I guess, state of the art methods for sampling in continuous space.
+
+We discussed a lot about optimization.
+
+There's a nice figure actually that we can discuss today, which gives some nice intuition about the kind of optimization methods that we reviewed in the paper.
+
+And then there's another section on statistical inference.
+
+So this is a bit of a different section than people in the free energy principle literature and active inference are used to, because here the goal of inference
+
+is about approximating expectations as opposed to just approximating distributions in and of themselves.
+
+These two perspectives turn out to be dual, but I guess here we want to develop notions of divergences and discrepancies that are a bit more general than the KL divergence and that can be used to solve problems that the KL divergence cannot.
+
+And I guess the overall picture for what we want to do that is the KL divergence soon turns out to have a lot of really nice properties that we can discuss.
+
+One of them is that if the KL divergence is reduced, it means that the two distributions in play are more similar in terms of information.
+
+So there is this idea of information monotonicity where the KL divergence sort of gives an ordering as to what extent two distributions quantify.
+
+I mean, so if you have three distributions and you compute the KL divergence between them,
+
+And now KL is lower than KL .
+
+It means that B is more closer in terms of information to A than C is to A. So you have this really nice thing that is captured by the KL divergence, which makes sense when we're dealing with information.
+
+The KL divergence also has so many other nice properties.
+
+it it's not a distance but it turns out to behave a bit like a square distance so you have this kind of like really nice pythagorean theorem um and i won't get into the exact statement but it's like if you have a b and c distributions then k l a b plus k l a c equals k l b c if you have like a rectangle triangle if a b c define a rectangle triangle in information space
+
+You have other properties that the KL divergence gives and so on.
+
+So the KL divergence is, in general, I would say the divergence of choice, but it turns out that in many cases you just can't use it.
+
+For example, when you have samples and you want to approximate some samples with a distribution, then the KL divergence just is not going to work there.
+
+So you need to derive from other things.
+
+So this is to say that we're considering statistical inference a bit more generally than what we do in active inference in general.
+
+And so this speaks to why the section here is a bit different from the standard inference literature that we usually consider.
+
+then i think there's the well then this section five which is about active inference and i think we should discuss that a little bit more because the formation of active inference that's presented there is to my mind the most general and also the simplest concept conceptually that's been out there i mean we sort of like recap the derivation of active inference and also like
+
+The properties of the expected energy properties of active inference and also how to scale active inference and so on, and we do that in just seven pages or five or five pages, I mean it's just very short.
+
+So it stands sure it's like a really concise summary and actually from there, you can really write a lot of you know technical papers on active inference it's like to me it's the most general and if.
+
+If you as a reader can understand that section, then you can sort of really understand what active emphasis is about.
+
+So yeah, this is kind of the overview for today.
+
+I would really like to be discussing questions because last time we really discussed about most of the papers.
+
+So, but yeah, whatever comes up.
+
+
+SPEAKER_00:
+Awesome.
+
+All right.
+
+Great.
+
+Well, let us...
+
+talk about some of the more foundational pieces Hamiltonian Monte Carlo and then on through section four
+
+with the points that you raised about the kl which generalized inference beyond how it may have been brought up in other active and then we can spend most of the time in section five and looking at some of those figures connecting some of the intuitions about the ball rolling down the bowl to the person running so sounds good on hamiltonian monte carlo where do you want to pick up
+
+
+SPEAKER_01:
+Sure, I mean, so last time we discussed a lot about the problem of sampling and why that's a difficult problem.
+
+And we arrived at the conclusion or presented like Monte Carlo methods, how they work.
+
+So you're basically running a stochastic process, like a random motion and sort of the distribution defining the process is gonna convert their target distribution, which means that when you run the process long enough,
+
+then every point that it's going to be in is going to be like a sample of the distribution that you want to sample from.
+
+Now there's a lot of issues with that.
+
+I mean conceptually it's not so difficult, but actually when you want to implement this in practice, it turns out to be really hard because if you just implement the simplest stochastic process to sample your target distribution,
+
+it's going to be extremely slow and I think that's the main bottleneck when developing Monte Carlo methods.
+
+Monte Carlo sampling in general is slow and that's also one of the reasons why one might want to do variational inference instead of sampling.
+
+So sampling is slower, but it's also more accurate.
+
+It can approximate distributions that are completely arbitrary.
+
+So if you care about accuracy and you have time and computational resources, then for sure go for sampling.
+
+If you care about speed, about doing things online, and you don't care about accuracy so much, then variational inference is the way to go.
+
+At least that's my understanding right now.
+
+So let's say you wanted to sample a distribution in a continuous space.
+
+So it could be just as last time, let's imagine the state space is the desk where I'm at.
+
+And you sort of had this distribution, which could be like multimodal, very weird.
+
+And you just want to take samples from there.
+
+Hamiltonian Monte Carlo is probably the state of the art method to do that.
+
+There's a lot of other methods out there, but Hamiltonia Monte Carlo typically just works very well and in a wide variety of situations.
+
+And so the idea of Hamiltonia Monte Carlo is you're going to augment
+
+The state space with.
+
+So let's let's say that the original state space you start with are the positions.
+
+And so you're going to augment that with a velocity state space, so you kind of if your original state space was Euclidean space of n dimensions you just end up with an Euclidean space of two n dimensions, so you double the size of the state space.
+
+And now you say, OK, well, the distribution that I want to sample from actually defines an energy landscape.
+
+So technically, it's like if you have a distribution which is p, then minus log p is an energy landscape.
+
+So points where minus log p is low are points where p is high.
+
+And so these are points that you want to sample a lot from.
+
+And contrary wise, if minus log p is very high, then p is low and you don't really want to go there so much because these are points of low probability.
+
+So I think this minus log p, actually there's many reasons why minus log p is meaningful in physics, but just note for now that minus log p is just like a function and the minima of the functions
+
+of that function at a high probability point and these are high energy points where you basically don't want to go there so much.
+
+So let's call this minus log p potential energy and so this is what this really is in physics.
+
+Technically in physics p would
+
+distribution.
+
+Last time we saw like softmax of minus something.
+
+The something is the potential energy.
+
+Anyway, and so minus log p would be the potential energy.
+
+And then if you add kinetic energy on your velocities, then you get what's called a Hamiltonian, which is the sum of the potential and kinetic energies.
+
+So
+
+What is exactly the kinetic energy?
+
+The kinetic energy is like velocity squared, pretty much.
+
+So if you add, remember that your state space is position and velocity.
+
+If you add, and you take a point in state space, so you would have kinetic energy, which is velocity squared, and a potential energy, which would be minus log t.
+
+Now, if you add the two together what you get is a Hamiltonian, which is the sum of the kinetic energy and potential energy, and this is just standard physics Hamiltonian is a sum of kinetic and potential energy and it gives us the total energy of the system.
+
+So why we started with the problem of sampling and here I just told you something very complicated where.
+
+we get a Hamiltonian, there's actually a good reason why we want to do that.
+
+And it comes back to the idea of geometric integration that we talked about last time, which is that typically
+
+Maybe I have a process that I know will give very efficient sampling, but actually when I implement it on a computer in discrete time, I just lose all the properties that make that sampling efficient.
+
+So actually it turns out that most people working in Monte Carlo sampling, they're working on
+
+efficient discretizations of continuous processes as opposed to on the continuous processes themselves.
+
+Really the bottleneck and the difficulty here is the implementation part.
+
+Implementing processes on a computer like you and I had in such a way that we retain all the good sampling properties.
+
+So one very powerful idea is that of geometric integration, which is preserving geometric properties of a system.
+
+I mean, geometric integration is the field that develops computational methods of numerical integration and numerical discretization in such a way that they preserve important geometric properties of the system.
+
+Here, the geometry in play is the Hamiltonian.
+
+And so you might think, well, that's pretty weird.
+
+I mean, a Hamiltonian is an energy.
+
+And here we're talking about preserving the geometry and preserving the Hamiltonian.
+
+How do these two things fit together?
+
+And so it turns out that the presence of a Hamiltonian and the fact that we have a state space that has positions and velocity
+
+Technically, in mathematics, what we then get is what people call symplectic geometry.
+
+So symplectic geometry just arises when we have those state spaces that comprise positions and velocity, and when you have Hamiltonians.
+
+So this is just a way of explaining why the Hamiltonian is closely and intimately related to geometry.
+
+So geometric integration enables you to discretize processes in such a way that the Hamiltonian is preserved.
+
+Now, when you think about the Hamiltonian, the Hamiltonian gives you the energy of a particular point in state space.
+
+And so if you simulate trajectories that preserve the Hamiltonian, what you're effectively doing is
+
+sampling from the contours of the probability distribution, contours that have the same probability.
+
+So you're basically going around, let's say, for example, in circles in a region that has the same probability.
+
+When we want to sample, we want to go everywhere.
+
+I mean, we want to sample regions of high probability, low probability, and want to be able to go from one to the other.
+
+So what geometric integration allows us to do is to simulate dynamics that are going to preserve the contours of the probability distribution, and they're going to do so very well.
+
+The advantage here is that when we use geometric integration to simulate Hamiltonian dynamics, which are conservative and, again, stay in the contours,
+
+What geometric integration allows us to do is to take time steps that are very long, so it enables us to travel very far in the landscape, while still preserving the Hamiltonian.
+
+So you don't need to take very small time steps to remain accurate and preserve the Hamiltonian, but actually geometric integration allows you to take very long time steps and still preserve the Hamiltonian.
+
+Now we have a dynamic that's Hamiltonian preserving that's just very good, because you can take very long time steps and that enables you to go around the contours of the probability distribution.
+
+So what you want to do next is, you know, to change contours, you want to go to contours that are
+
+of high probability, contours of lower probability, and you want to do so in a way that the contours of high probability are sampled much more and much more often than the contours of lower probability.
+
+So what you do is that you augment your Hamiltonian dynamic with what people call a velocity refreshment or a momentum refreshment.
+
+And so this is how it works.
+
+So you're going to simulate your Hamiltonian dynamic for some time.
+
+And then after a while, you're going to be like, OK, well, now I'm going to change the velocity at random by just drawing a new velocity from a Gaussian distribution.
+
+And so by drawing a new velocity from a Gaussian distribution, you're just going to change contour completely.
+
+And then there's the constraint that I just talked about, which is,
+
+You want to change contours of the probability distribution in such a way that contours of high probability are visited much more often than contours of low probability.
+
+So you want to preserve that.
+
+You want to do that proportionately in a way.
+
+So the third ingredient of Hamiltonian Monte Carlo comes in, which is Metropolis Hastings.
+
+And so Metropolis Hastings is this accept reject that we discussed briefly last time.
+
+And so Metropolis Hastings is just super clever and it enables you to say, it just tells you whether this momentum refreshing step is actually a good one or a bad one and should be rejected.
+
+A momentum refreshment is good if overall your sampling is going to remain faithful to the target distribution, but it is bad if it remains unfaithful.
+
+So actually, running these metropolis things, except reject step, allows you to
+
+change contours of the probability distribution in a way that remains faithful to the target distribution.
+
+And so there you go.
+
+That's basically Hamiltonian Monte Carlo.
+
+So to recap, you amend the state space by adding velocities.
+
+This allows you to build a Hamiltonian
+
+by declaring that the original probability distribution gives you a potential energy and you add a kinetic energy on the velocities, which is just velocity squared.
+
+Because you have a Hamiltonian, you can use geometric integration to simulate Hamiltonian dynamics very accurately and with very long time steps.
+
+very long time steps is a crucial thing, because it means that with very low computational costs, you can sample very far.
+
+So it means that you don't get stuck in a region of the probability distribution, but you can actually visit it much more fast and efficiently.
+
+So that's the first part.
+
+The problem with those dynamics again is that they
+
+remain on the contour of the probability distribution, and so you want to sample the whole probability distribution.
+
+So what you do is every once in a while, and I think that's a hyperparameter in your sampling algorithm, let's say every 10 iterations of the Hamiltonian dynamic, every 10 time steps of the Hamiltonian dynamic, you're gonna sample, you're just gonna randomly take a new velocity,
+
+So you're going to change contour in the probability distribution.
+
+And the crucial point there is you want to change contour in a way that's faithful of the probability distribution.
+
+And that's faithful of the sampling problem that you want to do.
+
+There comes the last thing, which is Metropolis Hastings, which ensures that the momentum refreshment will be good for sampling.
+
+I mean, we'll,
+
+preserve your target probability distribution.
+
+So with that, you just get a very efficient sampling algorithm.
+
+And so it seems a bit convoluted, right?
+
+The one bottleneck, of course, is that you need to double the dimension of the state space.
+
+And if your state space is already extremely large, that could be a bottleneck.
+
+It could be the case that actually
+
+doubling the dimension to add velocities, it could be a computational bottleneck.
+
+So that's a problem.
+
+But still, in most cases, that's not a problem.
+
+So again, Hamiltonian Monte Carlo is convoluted, but the overall take-home message, I would
+
+want you to take from this is that it is a method that remains faithful to the probability distribution they want to sample, and this is crucial.
+
+And it is also a method that through geometric integration, it enables you to take time steps that are very long and still get accurate sampling.
+
+So this is the really cool thing.
+
+Um, if you, you could come up with a whole bunch of other methods that did not require to, you know, double the dimension of the state space or that didn't use geometric integration.
+
+The problem that you would probably run into is that the over that, that the thing that you came up with when you implemented in the computer, it doesn't exactly preserve the, the, the probability distribution that you want to sample.
+
+And so the problem with that is that this would lead to bias sampling.
+
+And bias sampling is like you're going to sample a different probability distribution, which might be just a bit different, but still a different probability distribution than what you really want to sample.
+
+And this would bias your predictions.
+
+So the really cool thing of Hamiltonian Monte Carlo is that you're actually able to
+
+have unbiased sampling through the Metropolis-Hastings step.
+
+And this is a crucial thing.
+
+So it's computationally implementable.
+
+In general, there's no computational bottlenecks apart from this doubling of state space.
+
+And it leads to unbiased sampling.
+
+It's also relatively simple.
+
+So this is why this is really used all over the place.
+
+there's um there's another few perspectives that might explain why it works so well so in in the paper in in section in the last subsection of of uh of section two which is about optimization um so the the section on optimization is about how to accelerate optimization how to
+
+derive an optimization algorithm.
+
+Yeah, yeah, 2.6.
+
+Yeah, that's the one.
+
+So the whole thing about section two is about deriving an optimization algorithm that accelerated in a physical way.
+
+And by I mean, accelerate what I mean by accelerated, it's not about just going faster, but it's about having acceleration.
+
+which means that, so if you go slightly up in the paper on the figure, I think this figure is great.
+
+And by the way, I wasn't the one who came up with this figure, but I think this figure is great.
+
+It really gives a lot of intuition for what acceleration really is.
+
+So if you look at the green cup, I don't know how you call this, the green well on the left,
+
+This would be like a bowl rolling down the well, and the well is filled with honey to a certain level.
+
+And so there you get a lot of friction.
+
+So your bowl would just roll down very, very slowly, and the speed of the bowl would be proportionate to the slope of the well.
+
+um so this is not accelerated because there's a lot of friction and so the speed is just proportional to the slope of the well and this so this is actually what grade in the sand does but now if you go on the right you get what people call in physics on under them system which is also an accelerated system a system that's meaningfully accelerated so if you replace the honey
+
+in the well by some water, then there's going to be way less friction and your bowl is actually going to accelerate and overshoot the minimum of the well, and then sort of stabilize.
+
+But the point here is that this, this bowl is just going to get so much faster to the minimum.
+
+Now, um, so let's say that we just, um, I mean, so this optimization, this idea for optimization is, is just extremely powerful.
+
+And, um, and by the way, on the right hand side, in the graph, you can see the improvements that you get when you, when you implement these sort of ideas.
+
+So this was on... I'll come back to sampling in a bit, I promise, but this is actually very related.
+
+You can see on the graph on the right what kind of improvements you get when you go from an under...
+
+damped first order gradient descent system to an underdamped second order accelerated system.
+
+And so you can see the curve, right?
+
+So the black slash orange curve is overdone.
+
+There's no acceleration.
+
+It's very slow.
+
+The last curve, the blue one, it's accelerated and it's just super fast.
+
+So you can see it sort of gives you quantitative data as to how many improvements you can get by implementing this acceleration in a physically meaningful way.
+
+
+SPEAKER_00:
+Could you just describe the axes of the graph and also what the Lie group is here?
+
+
+SPEAKER_01:
+So the Lie group is, so in the figure legend in the fourth line, you see the Lie group is S-O-N.
+
+So technically that's the special orthogonal group of dimensions N.
+
+And so if I, if I remember correctly, these are all the matrices, all the square matrices of size N by N that have a determinant equal to one.
+
+So the determinant is just like, um, a function where you give it a matrix and it gives you a number.
+
+The fact that, um, the fact that the determinant is equal to one
+
+means that here we're just taking matrices which produce not translations but changes of coordinates that preserve the geometry in a system.
+
+So just to elaborate on this a little bit because for people who are not intimately familiar with matrices it might seem a little opaque.
+
+So when you have a matrix
+
+A matrix can multiply vectors.
+
+So a square matrix takes in vectors of dimension n, and it outputs vectors of dimension n by multiplication.
+
+So if you have a square matrix, it just induces a transformation of your state space, because each vector, each point, which is a vector, gets converted into another point, which is another vector.
+
+Now, so there's a lot of, I guess, properties there, right?
+
+You could have all sorts of translations of state space or rotations in state space or transformations of state space.
+
+If the determinant of the matrix is equal to one, it means that the transformation of state space that the matrix induces will preserve the geometry of the state space.
+
+It will preserve distances.
+
+if you and it will preserve crucially orientation as well because if if you only asked um the determinant to be equal to one or minus one then you would the the matrix transformation would preserve the geometry but it would not preserve the orientation it could like mirror things
+
+So if you only asked the determinant to be equal to 1 or minus 1, you would get a Lie group that's called the orthogonal group, which is usually denoted O .
+
+And here we require the determinant to be just equal to 1, and so you get the special orthogonal group.
+
+And so it's this group of matrices that have this property.
+
+Now this is not
+
+really i mean this is not really important for the example here because you could have taken any other d group and got something similar and got a similar difference in performance but but um yeah i guess it's just interesting for its own take um and so the graph though the k is the number of iterations so the number of time steps so that's the x-axis and the um
+
+The y-axis is how close you are from the minimum.
+
+And it's in log scale.
+
+So as you can see, the blue curve is going to get like, in 100 iterations, it's going to get basically 10 to the minus 4, 10 to the minus 5 distance from the minimum.
+
+So it's like super, super close.
+
+It basically gets there in 100 iterations.
+
+When you take the other normal gradient descent methods, where you see that it's going to
+
+So yeah, this is really the advantage of using second order methods.
+
+And what I mean by second order methods is that by second order means that you actually double the state space to introduce velocities so that you not only have a dynamical system over positions, but you have a dynamical system of velocities.
+
+And so it means that you have a physical notion of acceleration.
+
+because acceleration is a movement of velocities.
+
+And so if you double the state space by saying, this is position, this is velocities, and you say, I have a motion in this, like a state space that's twice as big, then you have a meaningful notion of acceleration.
+
+And this is really powerful.
+
+And so you can see already a parallel here, which is that
+
+Antonio Monte Carlo also has this notion of acceleration in some way, at least just intuitively, because we also double the size of the state space to introduce velocities.
+
+And so it turns out that this intuition is actually, you can make it into a formal correspondence.
+
+And this is, I think, this is something that quite interests me, to be honest.
+
+so if you if you remember if we come back to the intuition for sampling the intuition for sampling through monte carlo methods is we have a target distribution that we want to sample from so we're going to run a dynamic a random dynamic towards that towards that distribution now what makes sampling efficient
+
+is that the distribution that characterizes the process, because again the process is random, so that each time it is at a random location that is characterized by a distribution, what makes sampling efficient is that the distribution characterizing the process just converges as fast as possible to the thing that you want to sample from.
+
+So there is
+
+This is to say that you can think of sampling as an optimization on the space of probability distributions.
+
+You want to move your probability distribution of the process as fast as possible to your target.
+
+And so you can see from there that sampling is actually not so different from variational inference.
+
+It's just the same idea.
+
+Only variational inference, you're typically going to take a parameterized family of distributions and approximate the target, while here you have a non-parameterized family that's given by your dynamic that's going to perfectly match the target.
+
+So again, so with that, I want you to have the take-home message that sampling, you can think about it as an optimization on the space of probability distributions in the sense that you have a target distribution and you want to get there as fast as you can with the process.
+
+Now, let's suppose, and so here is the crucial connection between sampling and optimization in the way that we've described it here.
+
+Let's suppose that you run this accelerated optimization scheme on the space of probability distributions.
+
+Then the process, so you would get the dynamic on the space of the probability distributions that has a meaningful notion of acceleration through the accelerated method that was shown here.
+
+So if you look at what kind of dynamic this really gives you,
+
+It gives you a process which is given by a stochastic differential equation that is known as underdumped Langevin dynamics.
+
+So there's an equation for it in, I think, subsection 2.8.
+
+But the point is underdumped Langevin dynamics is a stochastic differential equation whose density or probability distribution stalls this accelerated optimization problem on the space of probability distributions.
+
+So just from there, you know, that under that long dynamics is going to be a very efficient sampler because it meaningfully accelerate and it gets to the target.
+
+I mean, quite fast.
+
+The problem is under large band dynamics, you cannot simulate it accurately.
+
+Well, you can simulate it accurately, but you cannot simulate it exactly on your computer in practice.
+
+So this comes back to the numerical integration problem that we discussed just before.
+
+um and so you have to to find a way to to discretize or or in other words implement underdumped longer bound dynamics on your computer in such a way that you retain that the thing that you implemented on the computer retains this meaningful notion of acceleration and so it turns out that you can see
+
+on Hamiltonian Monte Carlo as a faithful numerical discretization or numerical implementation of underdamped Langevin dynamics that's going to preserve these acceleration properties and therefore this efficient sampling.
+
+So this is all like a lot of interesting connections.
+
+But basically what I want to get at is you really have this notion of acceleration that permeates, well, I guess physics, but here it permeates sampling and it permeates optimization.
+
+And so the method that was shown here about optimization and Hamiltonian Monte Carlo, they're just the same in a way.
+
+Only one is applied to optimization.
+
+The other is applied to optimization on probability distributions.
+
+sampling great i guess last question on this part what is the shadow hamiltonian and why does it sound so cool i know right yeah it's uh it's really cool um it's a really cool name so the shadow hamiltonian is um okay so so let's go back to the hamiltonian
+
+Um, so we have a Hamiltonian and I want to simulate the dynamic that preserve the Hamiltonian.
+
+We want to implement that on the computer.
+
+We're going to do that through geometric integration.
+
+Geometric integration gives you a bunch of algorithms to preserve the Hamiltonian.
+
+I mean, a bunch of algorithms they can implement on the computer and they're going to preserve the Hamiltonian.
+
+Um, do they actually really preserve the Hamiltonian?
+
+It turns out that no.
+
+So what I, what I said before is a bit of a shortcut, like because the numerical integration or that you get through any, any numerical methods, including geometric integration is not going to exactly preserve the Hamiltonian, but it's going to preserve
+
+what people call a shadow Hamiltonian, which is almost the same as the Hamiltonian, but with extra terms that sort of vanish if the time step is very short.
+
+So this is to say that your numerical dynamic implemented through geometric integration is going to exactly preserve the shadow Hamiltonian and approximately preserve the true Hamiltonian.
+
+And so in the papers, we show, I don't know if it's, well, it's probably algorithm dependent.
+
+But basically, depending on the algorithm that you choose, you want to show to what extent the shadow Hamiltonian truly approximates the true Hamiltonian.
+
+The virtue of geometric integration methods is that actually the shadow Hamiltonian turns out to be extremely close to true Hamiltonian.
+
+which means that you can take a very long time steps and still be very good at preserving the true Hamiltonian.
+
+So here you don't, when you implement these methods, you don't exactly preserve the true Hamiltonian, but you do, you still do it pretty well.
+
+And so in Hamiltonian Monte Carlo, the momentum refreshment and Metropolis, crucially the Metropolis Hastings accept rejects that.
+
+is going to correct for those failures of truly preserving the Hamiltonian.
+
+So even though you don't exactly preserve the Hamiltonian in your numerical integration in Hamiltonian Monte Carlo, the Metropolis-Hastings accept-reject step is going to correct for this inaccuracy.
+
+And so this is really the true beauty of Hamiltonian Monte Carlo.
+
+is that even though you get a lot of things that are not exactly preserved when you implement things on a computer thanks to metropolis hastings overall your sampling is going to be perfect in the sense that you're going to truly preserve your target distribution so this is really the key
+
+Now a follow-up question to that is, okay, well, if Metropolis-Hastings is just so crucial and it just gives your dynamic...
+
+the property that it's going to preserve whatever it does even if it samples really badly if you add metropolis hastings it's still gonna um preserve your target distribution then why can't you just come up with the average process like whatever kind of process and that metropolis hastings at the end
+
+and so you can do that you can take any kind of process um and after and so let's say you take a random process it could be the worst in the world let's say you wanted to sample from a gaussian and you actually take a brownian motion now this is clearly not going to work because brown emotion just goes all over the place it could go infinitely far brown emotion it's just like random motion right completely random motion
+
+No, there is structure to it, but there's no, the structure in Brownian motion means that it's touched that Brownian motion is just going to just spread really, really far.
+
+So Brownian motion is not going to preserve your target distribution.
+
+So it's going to, and it's also going to be very slow by the way.
+
+So it's not going to be a good sampler.
+
+If you add Metropolis Hastings on Brownian motion, which is
+
+You integrate Brownian motion, so you simulate a step of Brownian motion on the computer, and then you do Metropolis-Hastings to know whether you should accept or reject that step.
+
+Metropolis-Hastings will tell you whether you should do it or not.
+
+You either accept and you stay and you keep going from that new position or you reject and you start from where you started from and take a new sample, accept, reject.
+
+If you accept, you keep going.
+
+If you reject, you go back and you sort of go like that.
+
+So if you do metropolis hastings there, your stumbler is going to be exact.
+
+So it is going to preserve the target.
+
+And so you're going to have accurate sampling.
+
+And so this is crucial.
+
+This really highlights the importance of Metropolis-Hastings.
+
+But, and there is a big but, your stamper here is going to be extremely slow.
+
+And it's going to be extremely slow, first of all, because random motion in and of itself, it doesn't at all preserve the target distribution.
+
+I mean, it just goes all over the place and you just want to sample a lot around the mode of the Gaussian, for example.
+
+So it means that Metropolis Hastings will reject a lot of your steps, because a lot of your steps will try to go further away while you want to stay around the mode, typically, of the Gaussian.
+
+So you're going to do a lot of steps for nothing.
+
+And also, Brownian Motion just does not have the qualities that make a sampler efficient.
+
+And so the reason why Hamiltonian Monte Carlo is so good is because it's able to integrate Metropolis Hastings and still preserve a lot of other properties that make the sampler efficient.
+
+So if we remember Hamiltonian Monte Carlo has this geometric integration that does not exactly preserve the Hamiltonian, but
+
+it still does it pretty well, approximately, by preserving a shadow Hamiltonian.
+
+So this means already that integration step is going to be really good.
+
+So there's going to be a lot of acceptance in the metropolis Hastings.
+
+So and also the way the way the scheme is set up, there's going to be a lot of acceptance step in the Metropolis Hastings.
+
+So it means that most of the samples that you would draw will actually be used instead of being rejected and you have to start over again.
+
+So that's one advantage.
+
+The other the other advantage of Hamilton and Monte Carlo, and this is a crucial one, and we kind of discussed this last week, is that
+
+One crucial thing to be a good sampler is this idea of time irreversibility.
+
+And so I'll emphasize it again because it's really crucial and there's a lot of literature on this and it's something that we reviewed also in the paper.
+
+So a sampler that is time irreversible is always going to be
+
+better or it's at least not going to be worse than a than a sampler that is time reversible so what do we mean by this a sample is time irreversible um if and only if uh were you to play the dynamics
+
+forward or backward, there will be... So going on your bullet point here, a sample is time-reversible if and only if you were to play the dynamics forward or backward in time.
+
+So forward in time, and then maybe you would play them by reversing the movie, by playing the movie backward.
+
+uh if you were to do that then you um then the the two movies that you would see would be qualitatively the same and statistically the same so the process is time reversible if and only if the process if you run it forward or backward it's basically statistically the same now what does this mean in practice well if your process is time reversible then it's going to backtrack very often actually
+
+So it means that you would be somewhere in the probability distribution just sampling there and you will go forward and then you probably go backward and so on and you kind of get stuck in a region until you go somewhere else, but it's just going to be very slow to move around.
+
+It's going to be very slow to get good sampling because it's going to take you a long time to visit all the regions of the probability distribution.
+
+In other words, the distribution characterizing the process is going to move very slowly to the target distribution.
+
+That's another way to look at it.
+
+If the process is time irreversible, on the other hand, then it's a lot less likely to go backward during the sampling process.
+
+So it means that it's going to visit the target distribution a lot more.
+
+I mean, it's just going to go around.
+
+Imagine if you're not allowed to go backward just as a human being and you're walking around, you're just going to end up in many more places than if you were allowed to go backward.
+
+And if you were just going backward all the time to where you started, then you wouldn't be able to do a lot of visiting, so it would be a bad sampler.
+
+So I guess there's some straightforward intuition there.
+
+So one idea in sampling is we want to optimize the extent to which a sampler is time irreversible.
+
+increase time irreversibility as much as we can to force the sampler to just move around as much as possible so that's an idea and and it is explored currently i guess it's a bit of an open problem of how do you really do that and how do you implement that on a computer in a way that you know works and preserves all the properties um but the point i want to i wanted to get to is that
+
+Um, Metropolis Hastings is a blessing and it's also a curse.
+
+It is a blessing because when you add it to any kind of process, you will make your sampling unbiased.
+
+So it means that you will sample the right distribution, even though you're implementing this on a computer and there can be a lot, uh, so many issues with the numerical, numerical integration, numerical approximation and so on.
+
+But it's also a curse because whenever you add Metropolis Hastings on a process, it's going to make it time reversible.
+
+So actually, yeah, if you just took a random process and added Metropolis Hastings, you would get something that's inevitably going to be quite low.
+
+Um, and so now you get to the, you know, the problem or the conundrum where, what, what do I do?
+
+Um, do I go for unbiased sampling?
+
+Do I care about accuracy?
+
+Um, and then I should add a metropolis Hastings or do I not care about accuracy so much?
+
+Um, and then I should not have metropolis space Hastings and it's going to go faster generally.
+
+Um, and so Hamiltonia Monte Carlo actually.
+
+of the blessing and does not have the curse.
+
+And this is why Hamiltonia Monte Carlo is just so good.
+
+again it's also complementary to all of the things that we've been discussing and the reason why hamiltonian monte carlo is blessed and not cursed is because the momentum the how do you call this the metropolis hastings is just done on the momentum refreshment step as opposed to being done on the overall dynamic
+
+So, because if you remember, you do geometric integration to simulate Hamiltonian dynamics.
+
+Now, every once in a while, you will take a momentum refreshment and then do Metropolis Hastings on that momentum refreshment, as opposed to doing Metropolis Hastings on both the Hamiltonian dynamic and the momentum refreshment.
+
+So it's not something that I can really explain how that works.
+
+But it turns out that by just doing the metropolis, I mean, not only Monte Carlo is a way of having metropolis Hastings in a way that you preserve the unbiasedness so that your sampling is accurate.
+
+But you don't sacrifice the time irreversibility, and so you get both.
+
+And this is because the metropolis hitting is just on one of the components and not on both.
+
+
+SPEAKER_00:
+To kind of connect that to an example, as we move into active inference,
+
+here we have some probability isocontours some we have the high probability carpool lane and then we have some lower probability lanes and uh we can go different speeds in these lanes and we want to have a full accelerated model here
+
+it's almost like the mh is is refreshing our velocity just asking when we want to change the lanes but it's not our full self-driving car metropolis hastings algorithm but we're able to use our position and acceleration when we're in our lane
+
+to take full advantage of the acceleration following the shadow road, not necessarily the true road, but the shadow road is close enough or the shadows on the road.
+
+And then lane changes are these computationally costly and reversible, but still super useful propositions.
+
+
+SPEAKER_01:
+Exactly.
+
+And they're actually not computationally costly.
+
+They would be if you were to reject many samples.
+
+But here in Hamilton and Monte Carlo, typically you don't get to reject many samples.
+
+So yeah, that's such a great picture.
+
+So the car follows the shadow road by just doing geometric integration and following the shadow Hamiltonian.
+
+Every once in a while, you get a momentum refreshment, a velocity refreshment, which is, oh, now I move to the first lane or the second lane, third lane, and so on.
+
+And you get a Metropolis Hastings correction step that says, do I accept this proposal of lane change or do I reject it?
+
+And so on it goes.
+
+
+SPEAKER_00:
+So how does this connect to active inference?
+
+
+SPEAKER_01:
+well i mean great question uh so in active inference in active inference proper you don't have any sampling in active inference uh whenever you want to scale active inference to implement it to solve any kind of problem in the world you want to do something because there's a lot of computations that are not going to be tractable otherwise and so one
+
+One cool example is in the figure after this, actually.
+
+So for any kind of decision-making in active inference, you need to approximate the expected free energy.
+
+This figure?
+
+No, the one just before.
+
+Here.
+
+Yeah, perfect.
+
+So if you look at the second equation there, you get this minus log p of an action sequence equals expectation of something.
+
+This minus log p of the action sequence is our notation in this paper for the expected free energy.
+
+So the expected, I mean,
+
+you probably all know this the expected free energy is given by the expectation of something now typically and when you have a very high dimensional model which happens in in most applications i would say you get a very high dimensional expectation what is an expectation an expectation is an integral with respect to a probability distribution
+
+How do you compute expectations?
+
+Well, you do that through sampling.
+
+Or at least, sampling is the way to compute high dimensional expectations that's the most efficient in statistics.
+
+And this is the reason why sampling is studied in statistics.
+
+It's because that's how you solve these problems.
+
+I mean, expectations just come up everywhere.
+
+just like so many things about machine learning boil down to computing expectations and so here in particular the expectation that is very dear to to us very close to our hearts is the one that gives you the expected free energy the expected free energy is the expectation of something so how do you compute that in a high dimensional model uh where you have to use something and so
+
+There comes the usefulness of Hamiltonian Monte Carlo.
+
+If you have a discrete state space model, you're not going to be able to use Hamiltonian Monte Carlo because Hamiltonian Monte Carlo is on continuous state space models.
+
+It's on continuous state space, right?
+
+We talked about continuous positions, continuous velocity.
+
+I talked about sampling of probability distribution on my desk, which is a continuous state space.
+
+So you're not going to be able to
+
+use Hamiltonian Monte Carlo if you have a partially observed Markov decision process and you're doing active inference there.
+
+But if you have, for example, I've been talking recently to Ryan Smith who does a lot of active inference and he's really leading a lot of the modeling work with active inference and real data of patients of all sorts.
+
+Many medical data and also using active inference to
+
+model psychological experiments.
+
+And one of the things he told me about, well, is, okay, well, I have a bunch of data and partially observed Markov decision process is just not going to do it.
+
+Why is it not going to do it?
+
+Because the data that he has lives on a continuous space.
+
+I don't remember exactly what it was, but let's just say for the sake of example, that that data was, you know, the temperature in the room.
+
+And people had to, the subjects had to infer the temperature in the room based on their sensations.
+
+So that's a continuous state space problem.
+
+Now imagine that you asked someone to infer the temperature in a room, then maybe you would change the temperature in the room or not, and you would ask them again, change the temperature or not, and ask them again, and so on.
+
+In when you have this sort of setup, you have a discrete, you have a phenomenon that unfolds in discrete time, because you just repeatedly ask some question and some time elapses between the questions.
+
+But you also have a state space that continues.
+
+When you have this sort of data, then the kind of model that you want to use is a partially observed Markov decision process that like we know and love, but the state space is going to be continuous instead of discrete.
+
+The time is still going to be discrete.
+
+Now, when you have this sort of model, I just want to say it as an aside that
+
+For the moment, a lot of the modeling work and simulation work in active inference uses discrete state space POMDPs, partially observed Markov decision processes, just because it's been sufficient.
+
+And when you simulate agent, it's often like in grid worlds.
+
+And when you maybe have state spaces in experiments, they often by design discrete because it's just easier to handle.
+
+But that's not an assumption, a simplifying assumption that we're going to be able to keep for that much longer.
+
+There's just so many things that you cannot account with these sort of models.
+
+So one other model that is interesting to have is a partially observed markup decision process, but with a continuous state space.
+
+with those you get the problem of you know estimating the expected free energy which would be then an expectation or in other words an integration an integral in a continuous state space and so how do you do that efficiently if you are in a high dimensional state space where you use Hamiltonian Monte Carlo i think this would be really the the best method so this is how you join the dots
+
+In this paper, we didn't talk about sampling in discrete space because the methods are quite different.
+
+So we really had to choose what to focus on.
+
+There's, of course, a lot more methods in the literature than there are in this paper.
+
+We just wanted to sort of review what were the main ones and what people really used in practice.
+
+But, you know, when you have the expected
+
+computing the expectation that defines the expected pre-entity can often be a little bit easier because it comes down computationally to a bunch of matrix multiplications, matrix vector multiplications, which generally is doable unless
+
+I mean, the state space is enormously high.
+
+And then we'd have to think of sampling methods in discrete space.
+
+But as soon as you move to a partially observed Markov decision process with a continuous space, which I argue and Ryan Smith argues, and I'm sure a lot of people have run into this, as soon as you have this kind of model,
+
+Well, yeah, you just have an integration problem in continuous space.
+
+And so Hamiltonian Monte Carlo is the way to go there.
+
+
+SPEAKER_00:
+Awesome.
+
+And your 2020 paper was a synthesis on some of the discrete state space formalisms of active.
+
+So it's very interesting to see how you're now talking about where continuous time, continuous state spaces can come into play.
+
+And
+
+How interesting that active inference has the capacity to deal with discrete and continuous state spaces.
+
+And sometimes we lean on one leg or the other leg more, but it spans the gap in a way that's actually like a value adding, not like there's some sort of missing piece from one side or the other.
+
+
+SPEAKER_01:
+Yeah, yeah, definitely.
+
+I think active inference is great because it's so flexible in the sort of models that you can consider.
+
+But yeah, I mean, historically, the first models to be developed were continuous space and continuous time.
+
+And then it works quite well because you can take gradients of the free energy and just minimize them over time.
+
+So you could get around basically everything by doing a gradient descent on free energy.
+
+And then after that, around late, so that was like 2010.
+
+And then around 2015, people started thinking, Okay, well, how do I model discrete time decision making with active inference.
+
+And typically, the decision making tasks, at least the simple one, there's
+
+studied in behavioral neuroscience, just to make things simple, the number of actions that you have is discrete.
+
+So you have a finite number of actions, which is pretty small.
+
+You would also have a finite number of states, which would be pretty small.
+
+And then people started to think, okay, well, how do we use active inference to actually account for that?
+
+And so that's how the whole expected free energy and partially observed market decision processes came into play.
+
+And now the community has grown a lot and there's more and more data that we want to account for.
+
+There's more and more projects that are going on.
+
+And you know, people are realizing, and I think, I mean, it's an obvious realization.
+
+It's just not surprising at all that these two models developed in 2010, 2015, they're just not going to account for everything.
+
+Think about other kinds of models.
+
+It really depends on what kind of data you have at hand.
+
+important and obvious type of model would be partially observed Markov decision process with continuous space.
+
+And actually, this is not a new thing.
+
+I mean, people have been using these kind of models in reinforcement learning and control for a long time.
+
+I don't know to what extent they've arrived at practically, I mean, they've arrived at practically implementable algorithms.
+
+I don't know to what extent they're used to what extent they're state of the art.
+
+Um, but the point is they, it's something that it's a kind of model that, you know, has existed for a long time.
+
+Um, and so this sampling is, would be a way to actually practically implement this and scale it when you want to put that within active inference.
+
+So I think, yeah, it's an important thing to think about.
+
+
+SPEAKER_00:
+Awesome.
+
+Yeah, Thomas Parr also recently in a discussion on the textbook was sharing some timelines and it's just so interesting how these things have been developing and from continuous through characterization of the discrete.
+
+in a sense, not culminating, but being synthesized in your 2020 paper.
+
+And now there's, with an increased emphasis on empirical data, the desire to bring in a lot of these methods that actually help us implement it rather than just think about it really parsimoniously.
+
+So what is your active inference method?
+
+representation in the figure of the running person and then how do the variables and the processes described in this figure relate to all of this you know five hours of talking about shadow hamiltonians and all of this
+
+
+SPEAKER_01:
+Right.
+
+Yeah, that's a broad question.
+
+We might need another 10 hours to answer that in detail.
+
+But just very short, well, so the active inference section was meant to be as complete as possible, even though it was very short.
+
+And by completeness, I mean that we started by deriving active inference.
+
+And deriving active inference from first principles
+
+So this is really what the Free Energy Principle does, even though we weren't able, of course, to review the whole Free Energy Principle in like one or two pages, but we
+
+What we focused on was deriving the expected pre-energy from first principles.
+
+And then from there you get the full active inference algorithm.
+
+So proactive inference algorithm, I think you just went past it.
+
+It's just below.
+
+If you go slightly below, I think maybe page 29 or page 30.
+
+Yeah, still I think next, yeah, realizing adaptive agents.
+
+Yeah, so this is the active inference algorithm, like 0.1, 2.3 or something.
+
+So just from a duration of the expected free energy, you actually get as a corollary from there, the active inference algorithm that we know and love.
+
+This is actually a more general version than what people use.
+
+And I'd be excited.
+
+And I'm actually talking to people to actually implement that.
+
+But this is actually the most general version that has been established in the literature.
+
+It is more general in a meaningful way, in the sense that all the beliefs, all the probability distributions, they are over trajectories or sequences of events.
+
+So it means that all the computations, they not only consider events at a particular time,
+
+in the future, for example, where they consider trajectories, so sequences of events.
+
+And so this is equivalent to considering different events at different points in time and their kind of independencies and dependencies between them.
+
+So this is just to say that if you would take then this algorithm and you would perform a mean field approximation over time, which is saying that all the things that you see in the future are sort of independent of each other at different points in time, then you would recover what people typically use in the literature, which is easily implementable.
+
+The point I want to make here is that you can actually not have that limitation and have things that are a bit more complex, that are able to capture more complex relationships in the time series and input that they might be receiving, like the kind of sensory data that they might be receiving, and the kind of generative models that they would have.
+
+So anyway, this is the active inference algorithm, the most general one.
+
+We derive that from first principles by deriving the expected free energy from first principles.
+
+And so this relates us to that figure that you just showed.
+
+So that figure that you showed with S, O, and A is the starting point of the free energy principle described in this paper.
+
+And so the point is that we want to describe decision making.
+
+We want to describe actions as a function of sensations.
+
+And we want to come up with the most general description of actions as a function of sensations to be able to account for everything.
+
+That's kind of the idea of the 300 Principle.
+
+So what do we do is we consider a world, a world in which there is an environment and an agent.
+
+And so the environment here is denoted by S.
+
+and S is a stochastic process.
+
+Why a stochastic process?
+
+Because a stochastic process is the most general type of dynamic that exists, at least as far as I know.
+
+It's really a random dynamic and it could be random in all sorts of ways.
+
+It could also be non-random.
+
+We sort of take the stochastic, the random aspect as an extra ingredient just to include a lot more types of scenarios and things you can be confronted with.
+
+You partition the world into the agent, which is O and A, and the environment, which is S. And the agent, then you subdivide it into two more components, which are O and A. O are what we call the observable states.
+
+So these are like the sensations of the observations that you get at any point in time.
+
+Also a stochastic process.
+
+And finally, you have the autonomous states, or you could think about it loosely as the active states.
+
+They turn out to be the active states in the implementation.
+
+But so the active states, they're really, you know, like the models, the things you can actually activate and make.
+
+and then activate to influence the world.
+
+So we just partitioned the world into these three sets of states that interact and evolve in some way.
+
+They're both really stochastic processes that interact.
+
+And then the goal of the theory principle, at least when applied to decision-making, is that you want to describe A as a function of O. So what happens as an organism,
+
+you have control over A,
+
+you have access to O but you don't have direct control of O over your sensations and you don't have access to S because that's the environment and beyond the mark of like it beyond you beyond your envelope so you don't have access to S you know O and you can control A, A is what you can choose from and so the free energy principle just answers the question okay well if I take this very general description of the world
+
+what is the equation of A as a function of O?
+
+How can I describe A as a function of O?
+
+And so it turns out that there's some mild assumptions in this, and these assumptions, they're guided by physical considerations about how humans are and how humans interact with the world.
+
+they're very mild but whenever you take these assumptions you get that the active states or the autonomous states minimize expected free energy so so this is like a very succinct um derivation of the expected free energy from first principles we start with the partition of the world we describe active states as a function
+
+of observations.
+
+And so it turns out that the expected free energy is what describes the active states as a function of observations.
+
+And so the basic active inference algorithm which everybody uses and which we have also in the paper is about, it's all about computing the expected free energy and then selecting actions that minimizes expected free energy.
+
+So the expected free energy
+
+As we saw, I think it's in the next figure, so the one with all the panels.
+
+We've seen it a couple times already.
+
+It's an expectation with posterior distributions in it.
+
+What I mean by posterior distributions here is that these are distributions conditioned on the history of the agent, so on the observations that he has already seen and on the actions that he has already taken.
+
+In any case, so you have the expected free energy is an expectation with posterior distributions within.
+
+So it means that to compute the expected free energy, you have two problems.
+
+You have computing posterior distributions through Bayesian inference, Bayes rule, and you then, once you have them, you can plug them in into this equation, and then you need to compute the expectation.
+
+and then you get the expected free energy.
+
+So the first thing is about computing the posterior distributions.
+
+Now, what has been proposed in the literature so far is, well, how do you do approximate inference?
+
+How do you actually approximate distributions?
+
+You do that through variational inference or approximate inference by minimizing free energy.
+
+The treatment here, the derivation, and our aim was to provide a derivation that was as conceptually simple as possible.
+
+Actually, it highlights that the free energy is not the most important thing here.
+
+The important thing is really the expected free energy.
+
+The free energy is just a tool to approximate the posterior distributions to then get the expected free energy.
+
+But you could actually use any other type of divergence.
+
+The free energy is just like a KL divergence plus some term that makes the whole thing tractable.
+
+And so you can minimize the KL divergence to approximate the targeted distribution.
+
+But actually, what this view highlights, and by the way, I'm not at all against the free energy.
+
+I think it's really cool.
+
+And there's so many methods to minimize free energy.
+
+and if you can do that then fine and sure go for it like way to go but imagine you could not do that it would not at all be a problem because you could use any other kind of divergence to solve those inference problems um so so that would be the first step you're going to approximate those procedure distributions by doing some kind of approximate inference which would be through minimization of the energy or through minimization of something else
+
+And then you have the second step, which is computing the expectation.
+
+Now, either you're in a low number of states, discrete states, POMDP-like thing, and it's all a matter of vector matrix multiplications that are tractable.
+
+Either you have a very, very high number of discrete states, and then you need to think about sampling in discrete states, which we didn't discuss in this paper.
+
+either you are in a continuous state space and then you have an expectation in continuous state space, and then you want to think about Hamiltonian Monte Carlo, for example.
+
+So now with these two steps, you have now an estimate of the expected free energy, which gives you the quality of any action sequence.
+
+And so it's not only the quality, but it's actually the
+
+negative log probability of any action sequence regarding in this formalism because if you remember the you know the premise of all this was to describe actions as a function of sensations in a physical system in not even a physical system but in interacting stochastic processes um
+
+And so the answer to that was, well, the expected free energy gives us, you know, gives us how actions relate to sensations.
+
+The expected free energy, and this is why we used the letter, we used minus log P of A as opposed to G to emphasize that the expected free energy is not just like a function of action sequences, but it is
+
+really the negative log probability of an action sequence, given some sensations.
+
+And so once you have computed the expected free energy, you had this minus log probability of an action sequence.
+
+If you take the exponential negative of that, the exponential negative of the expected free energy, you get the probability distribution over action sequences
+
+And so, by the way, this exponential negative of expected free energy is what we use all the time.
+
+You might recognize this as the softmax of negative expected free energy.
+
+This is just all the time kind of fundamental thing in active inference models.
+
+So I'm really talking about the same thing here.
+
+So once you take the softmax of negative expected free energy, you get p , which is the distribution of reaction sequences.
+
+And now you have two possibilities.
+
+Either you want to stimulate the most likely action sequence, in which case
+
+you want to simulate the action sequence that maximizes the probability distribution.
+
+So in effect you have an optimization problem.
+
+You need to find the action sequence that is going to maximize this probability distribution that's given by the expected free energy.
+
+or um or you want to simulate a typical action so what do I mean a typical action a typical action or a typical action sequence is just a sample from the distribution and so if you want to sample from I mean if you want to do that then you have a sampling problem
+
+over action sequences given by the expected free energy.
+
+So this is really how all these methodologies connect.
+
+Yeah, I think that's kind of it.
+
+Yeah, one last thing is typically when we simulate active inference, we never do the sampling at the end.
+
+We always take the action sequence that minimizes expected free energy.
+
+In other words, the action sequence that maximizes that probability distribution.
+
+And this is because when we simulate
+
+things we it turns out i mean this is how people have done in the literature people are more interested in the most likely action sequence that um that an organism or an agent would produce but if you want to model data if you want to use active inference to model data then you actually want to not just simulate the most likely action sequence but simulate
+
+any kind of action sequence that would fall out of this and so this is really the case where you need to sample from that final distribution as opposed to do optimization so depending on the use case you either have a sampling or an optimization problem
+
+after you've um you've computed the expected free energy so this is how these whole things um fall together and and so you might be asking okay well you talked about sampling and optimization there's also a section about inference where does that fit in and so it fits in to uh it fits in on on the remark i gave that
+
+you know, we have these posterior distributions within the expected free energy.
+
+How do we compute them?
+
+How do we approximate them?
+
+One way is by minimizing free energy.
+
+Another way is by minimizing any other kind of divergence.
+
+And in that section over there, we just reviewed some kind of divergences that are very popular in the statistical inference literature, mainly because they have desirable properties.
+
+And so if you weren't able to use the variation of free energy for some reason, or maybe something to be explored,
+
+is just to use other types of divergences and just see what happens.
+
+So the open problem to be explored is whether we can get better performance by using different kinds of divergences and see what we get.
+
+Maybe there's powerful algorithms that are out there with these other types of divergences that we can make use of to do better performance, to get better performance.
+
+Can we actually describe and quantify the improvement in performance that we get by using these other types of algorithms?
+
+When would these be appropriate and useful?
+
+These are all open questions.
+
+Another open question that I think is interesting is, can we model maladaptive behavior by using different kinds of divergences that would not work as well as the free energy?
+
+And there's an interesting paper on that by Noor Sajid, I think, and colleagues.
+
+I think it's called Bayesian Brains and the Rainier Divergence.
+
+It's been published on neurocomputation, I think, last year or the year before.
+
+And so in that paper, instead of using the variational free energy to approximate all these posterior distributions, she used the Rennie divergence, which generalizes the KL divergence in some way.
+
+and showed that for different rainy divergences, you get different types of approximate posteriors.
+
+And she basically looked into what kind of differences you get from there in terms of perception, in terms of decision making.
+
+And she showed that for that particular divergence, I think the conclusion was that you basically get different phenomenology.
+
+You get different behavior.
+
+So just something to be explored.
+
+I think the upshot was that maybe, I don't remember how far the paper went in this, but I think kind of the goal was to model maladaptive behavior using some kinds of random divergences that did not work as well as the free energy.
+
+so this is to say so this is an interesting work um one could examine other kinds of divergences and see whether you actually get better or worse performance than with the free energy uh one thing one word of caution though is the the free energy is is just so good in the sense that it uses the kl divergence
+
+And as I mentioned at the beginning, the KL average has so many properties and it's just so fundamental.
+
+It's not straightforward to see that when you first come up with it, but I guess the more I read,
+
+in different disciplines and the more the KL divergence comes up and the more I see properties of KL divergence in different disciplines that just make it so interesting.
+
+Like for example, the KL divergence in statistical physics is the relative entropy.
+
+So it quantifies the amount of entropy that a distribution has with respect to another.
+
+Entropy, as we know, is just a very fundamental thing.
+
+In information theory, the KL divergence quantifies the difference in information between two distributions, the amount of bits that you would need to... I mean, if you take two distributions A and B, the KL between the two
+
+quantifies the amount of information that it takes to go from one to the other.
+
+So now you might object and say, okay, but KL A and B is different from KL B and A. And so how can it be that, you know, it quantifies the amount of information they need to go from A to B or B to A because it's not symmetric.
+
+So the answer is,
+
+It's either KL of A and B that has this meaning or KL of B and A that has this meaning and I just can never remember which direction.
+
+But it's one of them that has this interpretation in terms of the difference in information.
+
+Anyway, so KL is just like something, it just comes up everywhere and it's just...
+
+so useful and it has all of these nice properties which makes the free energy really a construct of choice.
+
+Um, but that said there's other divergences, one of them, which we describe a bit in the paper, call them the maximum mean discrepancy, which I think also has nice properties.
+
+It's not necessarily, well, it's a bit different.
+
+It's very different in terms of how you construct it from the KL divergence.
+
+But I think my current understanding right now.
+
+And my current understanding right now is that if you cannot use KL, then maximum mean discrepancy is just really nice.
+
+But yeah, so the word of caution was that probably most divergences out there are not going to do as good of a job as a free energy, but some clever ones might.
+
+And it's an open problem of determining which
+
+And yeah, so this is how we get the link between all these different sections.
+
+So to do perception, we need inference.
+
+To do decision making, that is computing the expected free energy, we need sampling typically.
+
+And then to do action selection, we either need sampling or optimization.
+
+And also inference is...
+
+An optimization of beliefs sampling of that we as we've discussed is also an optimization of probability distributions.
+
+You can see that as an optimization of beliefs as well.
+
+So it's all very tightly interconnected.
+
+
+SPEAKER_00:
+Wow.
+
+Thank you, Lance.
+
+That's very informative.
+
+brings up a lot of
+
+ways to go and it it really shines a different light on even what learning active inference or learning free energy principle it was a roller coaster just listening when you describe the figure of the running person
+
+And the new generalized representation here, which is so sparse, it looks like it's pseudocode, but it's actually basically necessary and sufficient to describe action.
+
+
+SPEAKER_01:
+Yeah, it is pseudocode, and it is also exact.
+
+This is really what active inference boils down to.
+
+And that was kind of where we got at.
+
+We're like, okay, well, we have this mess of papers of active inference,
+
+not that they're actually a mess but you know there's so much information and we're you know really thinking reading
+
+free energy principle literature that I've also worked on a lot and also the active inference literature and really thinking okay well how do we strip all that of the neuroscience how do we strip all that of the cognitive science how do we just retain the math and present it in the simplest way possible that would be appealing for a mathematician and also hopefully for a computer scientist it turns out that we got a way simpler perspective than anything that's out there I think
+
+And really, yeah, so this is the active inference algorithm in pseudocode and in detail also in a way.
+
+
+SPEAKER_00:
+So I totally agree.
+
+Again, thanks for the work and for sharing it this way because it is the fewest pixels for the highest resolution picture.
+
+So then to describe the...
+
+fundamental cybernetic challenge as a partition an axiomatic partition which one can then say also has grounding in the spatial temporal boundaries of the world or in geometric boundaries in informational spaces but the particular partition is used to separate
+
+in the map not necessarily making claims about the territory and the actual nature of the objects and their articulations or anatomy but on the map which we get to construct we make it in a way that's amenable to the particular partition which is not too much more than the separation of figure from ground or agent-based modeling it's just a separation of some autonomous entity from some external process
+
+then the task of the free energy principle applied to decision making as you said was to describe action as a function of observation and everything in between is broadly considered cognitive but for any given system it's going to play out in this immensely nuanced way with a lot of bespoke mechanisms and why do we take that particular partition step
+
+Well, it's kind of like read, write, access in the computer system.
+
+There's things we don't have access to, hidden states, and also the reverse of that, which is we can't access hidden states, nor them influence or affect us.
+
+So I think of that as like no telekinesis, no telepathy.
+
+You can't go directly across the blanket.
+
+You have to intermediate through the blanket of observation action.
+
+And then with respect to our particular states,
+
+our blanket and internal states.
+
+We have access to observations, but not direct control, nor necessarily would we want to, because if we had the lever to change what we directly received, then algorithms might learn strategies that basically self-deceive so that the observations look good, look good, look good until the whole system crashes.
+
+So we want access to observations, but not direct control.
+
+And then the autonomous states are what we in the optimal ideal situation have total control of, which is like our mind and our body, what we think and what we do.
+
+It turns out,
+
+through the pragmatic turn and the inactivist insights in cognitive science that a lot of action sequences have to do with changing what observations are sought after like epistemic affordances so there is an enmeshment of action but it's also really important that we have access but not control of observations we don't want to have like our control on the thermometer
+
+but we want the best possible thermometer, and then we want to control the best possible interpretation, that's like signal processing, and the best possible action sequence, which is like decision-making and control theory.
+
+And then free energy principle is addressing that question.
+
+What is the equation of action as a function of observation?
+
+But then it was quite a roller coaster when you said that the free energy wasn't even necessarily the only way to do it.
+
+But it's absolutely true.
+
+The properties of the free energy are inherited from one of the terms being KL divergence and the other having the ability to basically ignore in certain relative expected free energy calculation contexts
+
+so then in that situation differences in free energy do come down to differences in the KL which does have all these properties but that doesn't mean that the free energy is itself axiomatically posited it's actually downstream of the particular partition to use free energy or anything like that at all and other discrepancies may have other properties in different ways
+
+
+SPEAKER_01:
+Exactly.
+
+And so there's a bit of a nuance in the sense that
+
+describing decision-making, as you summarized, describing A as a function of O. And by the way, about that, we didn't even talk about Markov blanket in this paper.
+
+I would say that the Markov blanket is under the hood because we're saying, okay, well, these are the states that you have access to, and these are the states that you do not.
+
+The states that you have access to are A and O, the states of the agent.
+
+The states that you do not have access to are the environment.
+
+So in some sense, there is a Markov blanket, but we didn't even have to mention that in the paper.
+
+It's just you partition the world into three sets of states, S, O, and A, that are by definition A. And you just, yeah, just from this tripartition, you want to describe one as a function of another, ignoring the third.
+
+And so that, yeah, that
+
+how you derive expected free energy, you see that action sequences are described by the expected free energy, and this is a function of sensations.
+
+If we went further in the, and so this is just what you need, crucially this is just what you need to derive the active inference algorithm.
+
+if you if we went further in reviewing the free energy principle then we would see the fundamental role that the free energy plays and so actually when you know reading the latest papers on the mathematical theory of the free energy principle the role of the variation of free energy is pretty clear
+
+But here, the point is that if we just care about decision-making, if we just care about the normal active inference algorithm, then we don't even need the variation of free energy.
+
+So sure, the free energy should be preferred.
+
+Why not?
+
+If it is available, but if it is not for some reason, then there's no reason why not to use another kind of divergence.
+
+
+SPEAKER_00:
+So, very interesting.
+
+It's making me think about linear regression.
+
+and the sum of squares the l2 norm is one approach that's often used to fit a regression line because it has good optimization properties there's good software packages there's good education there's good communication around it and so on but one can select other norms and choose to fit a linear regression with an l1 norm or with an l3 norm and so that
+
+entire question of fitting the linear regression is a degree of freedom how the regression is fit that's downstream of a commitment to for example model a system in a generalized linear modeling framework
+
+so analogously the upstream commitment or the first principles which yes can be understood as axiomatic and also have some empirical status in terms of this partitioning a figure from ground the particular partition can simply be accepted axiomatically which is to say without appeal to evidence or somebody might have another upstream axiom and choose to model uh things according to a particular partition
+
+from there just like we could have chosen the l123 norm there are different discrepancy criteria or measures that we might want to use and some of them apply better or worse or not at all depending on what software hardware data set and generative model we have
+
+And so it makes sense to pull back into the upstream understanding of active inference as a process theory for particular partitioned systems.
+
+And then for those who want to engage in the modeling to have that
+
+a discussion about the garden of the branching paths well you could use a discrete time or you could use a continuous time and then from here you could do this sampling or you could do that one and if we have this computer access we can do that but if we have to do it this way we'll do it like that
+
+And that's all operational and logistical, but it's actually all under the umbrella or under the auspice of the theoretical or conceptual commitments that are actually not being questioned once one is in that modeling discussion.
+
+Just like you could have the L123 norm conversation and maybe a reviewer asks you why you chose the two norm versus the three, but it's a broader level of questioning
+
+why one took on the linear modeling framework at all.
+
+And our analogous upstream bottleneck, not in terms of rate limiting, but just in terms of like eye of the needle, is the particular partition.
+
+
+SPEAKER_01:
+Yeah, definitely.
+
+And I just want to add something actually about the choice of divergences or the choice of discrepancy that you might want to use to solve the inference problem.
+
+I think the analogy with linear regression is a really good one.
+
+When you do linear regression, yeah, you can use all types of norms, and it's really a design choice.
+
+And here in the algorithm, you also have that design choice.
+
+Are you going to use KL, so free energy, to do these inferences?
+
+By the way, the inferences are really equation 43 and 44, which are approximate.
+
+Actually, you had them in the slide already.
+
+
+SPEAKER_00:
+Oh, 43 and 44?
+
+Oh, here, got it.
+
+
+SPEAKER_01:
+Yeah.
+
+Which are approximate, you know, some posterior distribution with an approximate posterior distribution.
+
+So you can do that with the free energy, which is the same as the KL divergence, or you could do that with a whole bunch of other divergences.
+
+One that I mentioned and that I think is particularly interesting is the maximum mean discrepancy.
+
+And so
+
+Here's the difference between KL and maximum mean discrepancy, at least, I guess, an important conceptual difference.
+
+So the KL, when you look at distributions that are very close to each other, it's basically going to become symmetric when the distributions are very close, and it's going to measure the amount of information that differs between them.
+
+The maximum mean discrepancy, when you take two distributions that are very close, it reduces to what people call the earth movers distance, also called the Wasserstein distance.
+
+So here is the intuition.
+
+If you take two distributions that are very close, just imagine distribution A as a pack of dirt and distribution B as a pack of dirt or sand with some shape.
+
+the maximum mean discrepancy is gonna tell you the amount of work that you need to put all that dirt from distribution A and pile it in the shape of distribution B. So of course there's so many different ways in which you could take all that dirt
+
+from distribution a and remodeled in distribution b but you're interested in the minimal um the minimal energetic cost that would take so like the optimal way of doing that movement people call that optimal transport um now if you're if you're familiar with optimal transport you know that the vasterstein distance um is a distance between probability distributions that regardless of how far they are
+
+is going to give you this cost of optimal transport.
+
+So the energetic cost of moving all that pack of dirt from place A to place B in the optimal way.
+
+So the Wasserstein distance is something that we could use here.
+
+But maximum mean discrepancy, it has a lot of very nice properties and basically reduces to the Wasserstein distance when we consider very close distributions.
+
+So this is not something that just a mathematical curiosity, but it says that when one builds
+
+When one builds a distance out of a divergence, what one does is one takes very close distributions, measures the divergence between them, at which point the divergence is pretty much symmetrical.
+
+and then you basically keep adding divergences along a trajectory until you get to the final one and this way by aggregating divergences between very close distributions and doing that and you know adding that along a trajectory you get a distance a meaningful distance between you know distributions that could be very far if you do that with the KL divergence you get what's called the Fischer information distance which measures really the
+
+the amount of information that took you to go from one distribution to another distribution, regardless of how far they are.
+
+If you do that with advanced search time distance, you will get the optimal transport cost, so the amount of energy that you need to put all that dirt
+
+they say to place me in the optimal way.
+
+If you do that with the maximum discrepancy, you would also get that.
+
+You would also get the optimal transport thing.
+
+So I just want to say that the maximum discrepancy, minimum discrepancy between two distributions that are far away will not coincide with the Wasserstein distance, which gives you this optimal transport cost.
+
+but when you actually derive a distance from these divergences the distance derived from the maximum new discrepancy and the Wasserstein distance will end up being the same and this distance that you actually get or the topology
+
+that is derived from the distance, so by topology.
+
+But topology is really a notion of closeness.
+
+And so to understand closeness, you need to understand infinitesimal distances.
+
+So the infinitesimal distances derived from Wasserstein or MMD, they're the same.
+
+The topology that results is the topology of what people call weak convergence, which is the standard topology that's considered in probability theory.
+
+So MMD and Wasserstein, they are very natural in that sense, in the sense that they
+
+People say that they match rise with convergence, like they give rise to the standard topology between probability distributions.
+
+So coming back to the choice of divergences, if you're interested in approximating distributions in the sense of approximating their information content,
+
+then KL is very natural.
+
+But if you were, for some reason, and maybe it would not be in this kind of application, but another kind of application, if for some reason you're interested in approximating distributions for the sake of how close they are when you look at them, then you would use MMD or Wasserstein.
+
+
+SPEAKER_00:
+Wow.
+
+Great.
+
+information and i'm just thinking about we're switching lanes on the highway we're trying to get from here to there yes we want to know about the informational closeness of this tale of two densities but we also want to know about the transport closeness because we have a schedule and a budget and decisions to make and there are trade-offs so being able to move the earth
+
+optimally while we're switching lanes and accelerating and slowing down i know this is mixing many angles informally we want to have a lot of options for how to think about that challenge of moving dirt between the tail of two densities and make sure everybody is driving in the right lane at the right time
+
+
+SPEAKER_01:
+Definitely.
+
+And yeah, it's a, it's a design choice and it's an important one because it depends on, you know, what kind of properties we want to preserve.
+
+And, um, yeah, so all these, all these divergences, some, some are not so useful, I guess, but, um, some of them, they're, they're just very natural and, um, Western shine and MMD, they're very natural in that sense.
+
+Um, so yeah, very important to keep in mind.
+
+And not only for active inference, but just in general for any kind of inference problem.
+
+
+SPEAKER_00:
+Well, let us each have a closing round or reflections.
+
+Any thoughts or any next steps or any suggestions or other information you'd like to provide?
+
+
+SPEAKER_01:
+it's hard to say i feel we've you know we've covered so much already um there's still i think to me what's most exciting about is um scaling active inference right now um because you know you get this active inference algorithm in the paper
+
+that's derived from first principles.
+
+And just from the derivation, you see, okay, well, there's actually so many things.
+
+I mean, the assumptions are so small that there are so many things that you can model with this active inference algorithm.
+
+And basically you, and all the heavy lifting is done by the generative model.
+
+So if you use one generative model, you will get one behavior.
+
+If you use another generative model, you will get another behavior, but all the equations will remain the same.
+
+um so so it speaks to generality now in in having something that's very general you get something that's also very non-specific and i guess for for neuroscientists and people who are interested in intelligence you just um generality comes at a cost of being you know non-specific and non-specific about the brain in general
+
+So really the big question to me long term is what kind of genitive models do we need to simulate brain-like behavior because this is really the interesting behavior or the most interesting behavior.
+
+So it speaks to a big research program that a lot of people are carrying and have been carrying for a long time but you know it's about what kind of representations do we have
+
+of the world what kind of priors do we have what kind of can we identify the priors that we are born with there's a lot of research on computational or just playing cognitive science like normal cognitive science just studying babies and seeing what kind of priors what kind of you know basic information they have when they come out of the womb there's a lot of things that they can already do there
+
+our genetic code is preconditioning us to operate efficiently in this world and be able to flexibly adapt to any kind of situations that might arise in the natural world.
+
+And so it's a huge research program to understand and model these priors and not only the priors, but also the likelihood, all the representation, all the state spaces.
+
+So I think that's the way forward.
+
+The free energy principle is very elegant because it gives you a very succinct description in terms of a generative model that enables you to simulate pretty much everything.
+
+But we're not interested in simulating anything.
+
+We're interested in simulating brain-like behaviors.
+
+So now we need to drill down even more onto the kind of generative models that would be amenable to that.
+
+
+SPEAKER_00:
+great my closing reflection i feel like i know less about fep but more about something else for what we've discussed earth was moved bayesian mechanics were called in decisions were made
+
+And it's been a really great series.
+
+So I'm appreciative and thankful that you suggested this paper in our correspondence as one to discuss.
+
+You were absolutely right that it is relevant to bring to the attention of the active community.
+
+And I hope that everybody who reads or listens this far has
+
+
+SPEAKER_01:
+shifted lanes so they can be where they want to be too well that yeah i mean uh thank you so much um i also really enjoyed this session and i think we had a really cool discussion um so thanks again and hope to just do this again soon excellent anytime you'd like farewell see you lance yes

@@ -1,0 +1,2384 @@
+SPEAKER_01:
+hello and welcome everyone it's november 16 2023 we're in active live stream 55.2 and it's our second discussion with magnus here on the message passing papers in this dot 2 we're gonna begin with some code explorations
+
+see where it goes, and then in the last section, have more open discussion and see where that goes.
+
+So thank you for joining again, Magnus, and looking forward to seeing this code.
+
+
+SPEAKER_00:
+Yeah, thanks for having me.
+
+So one of the things we talked about last time was that it would be nice to go through what all of this theory actually looks like in code.
+
+So I brought along something that I prepared
+
+earlier, which is basically the experiments that go with the papers.
+
+And I think the one that makes the most sense to look at is the one where we do direct policy inference, because that's one of the really novel things, where we don't encapsulate prior algorithms.
+
+We actually get something new.
+
+So that is what we hopefully have on screen right now.
+
+All of this is implemented in Julia, and it is all publicly available.
+
+For anyone who's interested, you can go and mess around with this on your own if you want.
+
+But basically, the model we're going to be looking at is the same discrete POMDP that we all know and love, but instead of computing expected free integers and comparing them to find a policy, we're just going to infer the policy in one go as part of optimization.
+
+Would it make sense if I just go through it cell by cell?
+
+
+SPEAKER_01:
+Yeah.
+
+Maybe make the font a little bigger and then go cell by cell.
+
+Yeah.
+
+Perfect.
+
+Thank you.
+
+
+SPEAKER_00:
+All right.
+
+This better?
+
+Yeah.
+
+Sweet.
+
+So all this is in Julia and runs in the notebooks.
+
+There's instructions for how to do it in the repo.
+
+So the first thing we do is we just load a bunch of things that we need.
+
+These here are all message passing rules for the transition mixture model.
+
+The transition mixture model is what allows us to do policy inference.
+
+It's basically saying, instead of having one transition matrix, one B matrix, we have a number of candidate ones, and then we have a variable that just picks one.
+
+So let's say I have either one transition matrix, another transition matrix.
+
+If my indicator variable is one, zero, I pick this one.
+
+If it is zero, one, I pick this one.
+
+That's sort of the logic here.
+
+Then we have this goal observation node, which is a goal-constrained observation node.
+
+And this is where we do the GV-based message parsing.
+
+So this is where we have the p-substitutions going on that we talked about last time and where we get to get all our epistemics.
+
+And then we have a bunch of helpful functions to set up priors for stuff, whatever.
+
+So what this code implements is the T-Maze experiment.
+
+And again, I think we all know how the Team Maze works.
+
+But just for completeness sake, actually, I think I might be able to pull up the paper and show the graphic for the Team Maze, because then we can see exactly what it is we're modeling.
+
+We can see how that corresponds to the graph and everything.
+
+Just give me two seconds.
+
+I'll do that.
+
+
+SPEAKER_02:
+Here we go.
+
+
+SPEAKER_00:
+So this is the TeamMaze environment.
+
+And this is the repo where you can find the code.
+
+In the TeamMaze environment, the agent starts in one of four positions, which we like at one.
+
+And it's designed to simulate a rat looking for cheese in a maze.
+
+There's a reward at either positions two or three, so either one of these arms.
+
+The main point is the agent doesn't know which arm has the reward at.
+
+To learn that, it needs to go to position four, and position four has a queue that tells it whether the rod is likely to be to the left or to the right.
+
+This means we need four transitions, one to go to states one, two, three, and four, and then we need a...
+
+a likelihood matrix that sort of maps through different observations that we can get, i.e., where are we at, location, do we get a reward, that kind of thing, from all these four different locations.
+
+So I think I actually have, yeah, so I can actually show the constraint FFG of the model that we're building, and it looks like this.
+
+So what's going on here is that we have a vector d that parameterizes where we start, this is this prior.
+
+Then we have this transition mixture node that transitions from a latent state at time t to time t plus 1.
+
+It has four candidate transition matrices, again, because we need to move to either 1, 2, 3, or 4.
+
+And then we have this indicator variable that we call u. And that just picks whether we go to 1, 2, 3, or 4.
+
+Down here is where we have, to me, the really interesting bit, because this is where we perform this p-substitution that you can see here.
+
+We have a mean field factorization and a p-substitution.
+
+And we have this composite node, this goal observation node, with a goal prior.
+
+So what this says is, do GFE-based optimization around this node.
+
+And the goal is given by this categorical down here.
+
+So it's going to have some c vector that parameterizes it.
+
+This is the same kind of notation you're going to find in most of the tables.
+
+And we're going to infer a two-step policy.
+
+So we need to go from initial point, zt, to t plus 1, to t plus 2.
+
+I think I actually need to put t plus 2 in here, but no matter.
+
+Does this model and this graph make sense?
+
+Perfect.
+
+The thing that I want to sort of point out is that we can see all these things, where we do the EFV-based things, the kind of messages that we need to pass, effecturizations.
+
+All of this is something that we can see from the graph because this is a constrained FFG instead of a normal FFG.
+
+So let's look at what this little guy looks like in code.
+
+And it looks like this.
+
+So we have our categorical with a D vector that starts.
+
+We have C, which is going to be our goal priors.
+
+We have our latent states, and we have our indicator variables.
+
+Each indicator variable gets a flat prior.
+
+That's what this does.
+
+Yeah, so for all time steps, for all future time steps you want to plan over,
+
+We need an indicator variable with a flat prior.
+
+So we are a priori indifferent as to which state we want to go to.
+
+We have a transition mixture that maps from z at the previous time step to z at the current time step, t. And it takes us input the indicator variable, or switch, and our candidate transition matrices.
+
+We have the same thing.
+
+Now we have the next node, which is this goal-constrained observation node.
+
+It has a likelihood matrix, i.e.
+
+this A here, and a goal prior, which is the C here.
+
+See?
+
+See?
+
+Input from the state and the likelihood matrix.
+
+This here is some plumbing that we need to get the messages to work out.
+
+So don't worry too much about this.
+
+And this is actually the model specification.
+
+This is all there is to it, which to me is kind of nice.
+
+Because if we do inference in the back end, then if I want to build models and want to design agents, all I really should have to worry about
+
+is to set up my model specification correctly.
+
+All right.
+
+This is another little bit of plumbing.
+
+And these are optional constraints that we are going to introduce later.
+
+What this basically says is that we want to point mask constrain the switch variables, the indicators.
+
+So instead of saying,
+
+I'm sort of indifferent between going to two and three.
+
+I put equal probability on them.
+
+We're forcing the agent to make a choice.
+
+We're saying you can only pick one.
+
+And this is identical to having a point mass constraint or a delta constraint as described in part one.
+
+That's what this thing does.
+
+So then let's set up everything we need.
+
+We have a planning horizon of two.
+
+We want to run 10 inference iterations because this optimization procedure is an iterative thing.
+
+Then we also need to set some initial marginals, like a VMP thing.
+
+And we need to construct our A, B, C, and D matrices, which for those of you that worked with PyMDP or SPM or similar, these work the exact same way.
+
+And then all we need to do is call the inference function with the model, with all our parameters.
+
+So the team image model we just defined with our A, B matrices, our D vectors to start with, and our time horizon C. We set our goal prior as data inputs, which is just a convenience thing we did to make life a little easier, sort of programmatically.
+
+And then we're off to the races.
+
+So let's actually see what happens when we run this.
+
+So if you just load everything, should be up to date in a minute here.
+
+Yeah, so let's create a model, create our constraints, configure our experiment.
+
+And now we are here, so we can run inference.
+
+So do you have any guess as to how long this is going to take?
+
+11 millifristons.
+
+It's pretty accurate.
+
+So it actually takes a little bit the first time because the model needs to be compiled.
+
+Now you can see we have new posteriors available for our switch variable, our state variables, and our initial state variable.
+
+Let's see what we got.
+
+What we're printing here is just the distribution, the posterior marginal over the indicator variable, i.e.
+
+the probability of choosing go to one, go to two, go to three, or go to four.
+
+What we get is this long number that we could round to about 25% chance of going to four, about 20% chance of going to either two or three,
+
+and 35% chance of going to four.
+
+That means quarter of the time, i.e.
+
+just as much as we put in our prior, we're staying put.
+
+About 20% of the time, the agent wants to go and explore either arm because there's still reward there.
+
+And the most likely option with a grand 35% probability is that we should go and investigate the cube.
+
+So go to position four.
+
+If we then compare what that looks like at t equals two, that is, what does the agent believe it should do after the first time step?
+
+So if it goes and visits the queue, what should it do next?
+
+Here we see that it is quite unlikely to stay put, sorry, to go to the starting position.
+
+It doesn't probability there, it's coming from the prior.
+
+It is indifferent between going to either two or three, because even though we know that we're going to get information at the queue, we still don't know whether it is going to be right or left.
+
+And that's represented here by these two being equally valuable.
+
+However, combined, it means we have about a 60% chance of going to n arm, which is probably going to be the right one.
+
+And then with about, again, the quarters, about what we put into the prior probability, we're going to go and look at the Q again.
+
+And this is the same result.
+
+
+SPEAKER_01:
+Yeah?
+
+Yeah.
+
+So as you pointed out, one of the big contributions here is this direct policy inference.
+
+So let's just say that we have the probabilities of different state occupancies at time one and time two.
+
+But how do we really retain the fullness of a path?
+
+For example, time one and time two might not be jointly independent.
+
+So for example, yeah, the probability of being at the queue in the, at time one and time two might not be just 0.35 times 0.26.
+
+No, no.
+
+
+SPEAKER_00:
+So what this is, actually, I think we can take a look at this.
+
+
+SPEAKER_01:
+Let's see if this is actually a washer.
+
+Just to clarify the question while you're typing it,
+
+if we're not explicitly tracing the branching paths of specific sequences of states and rather we're getting over each time step, then how do we know that just because something is 10% likely on here and 10% likely there, but then that doesn't mean it's one in a hundred together that those both happen.
+
+It might be more or less depending on how the paths actually flow.
+
+
+SPEAKER_00:
+Right, so the thing is here, we're inferring a distribution over possible futures.
+
+So we don't have any observations available.
+
+We don't actually have a full action perception loop.
+
+We're just doing planning.
+
+And since we don't have any observations available, the best we can do is get a distribution over all the different possible futures that we have.
+
+Now, we could do that, but get that by an exhaustive search.
+
+Say, yeah, I want this, and I cite this probability.
+
+Or we could just infer it.
+
+So what this tells us is it's not a sophisticated scheme.
+
+It doesn't have this counterfactual thing going on.
+
+What it tells us is that if we want to optimize this combination of Bethy and generalized free energy, expected free energy,
+
+Before we get any observations, what is the optimal distribution over paths that we could take?
+
+
+SPEAKER_01:
+Okay, so the T2 distribution is basically T2 distribution as viewed from T0.
+
+Yes.
+
+And then when we get to T1, we'll update, but we're basically taking...
+
+something like a mean field or an aggregate over all possible paths to T2, and those may radically shift.
+
+Obviously, once we go to the queue and find out some information, then we're going to update from 0.3 to 0.3.
+
+Okay.
+
+
+SPEAKER_00:
+Yeah, so this is at T equals zero.
+
+This is the agent saying, well, if I have to make a decision right now,
+
+for the whole game, for all my timestamps, for my whole plan, what is sort of the most likely thing that I should do and how should that distribute itself?
+
+Once we actually start to get observations in there, then yeah, these are obviously going to shift.
+
+
+SPEAKER_01:
+Yeah, then it's very notable that the two arms do have this...
+
+high quantity taken together, but absolutely equal.
+
+And that's that kind of like being precise about uncertainty that we would want such a planner to have.
+
+
+SPEAKER_00:
+Yeah, exactly.
+
+What this is saying is the agent is really confident that it needs to go to one of the arms, but because it hasn't got an observation, because it hasn't actually seen the queue yet, it doesn't know which ones it assigns them equal probability.
+
+But it is pretty damn sure that it needs to go to one of them.
+
+Which, again, makes sense if we think of this as doing planning at t equals zero.
+
+
+SPEAKER_01:
+Yeah, it's really cool, especially after so much expected free energy, branching time active inference, exhaustive tree searches, just to see this kind of non-path-based direct policy inference.
+
+That's the contribution of the paper.
+
+
+SPEAKER_00:
+Yeah, I mean, I would say this is closer to a path-based formulation.
+
+What you don't get is a search tree.
+
+
+SPEAKER_01:
+Thank you.
+
+Thank you.
+
+Yes.
+
+Consistent with the path-based formulation of Bayesian mechanics, but not necessarily resulting in an exhaustive search tree.
+
+
+SPEAKER_00:
+Exactly.
+
+So what we can actually do here is we can look at the schedule.
+
+What's going on here?
+
+This actually shows us the exact way that messages are flowing under the hood in the code.
+
+The main thing that's different to most other approaches is that we have things flowing backwards.
+
+We have these red guys here, and we have these here flowing in the opposite direction.
+
+This is information flowing from what we think the future is going to be towards what the present is.
+
+What this is telling us is, given that I want to end up here,
+
+And I reason backwards.
+
+What should I do?
+
+And that is why we don't need a side street, because instead of having to run forwards, we can do a forward sweep here.
+
+Say, well, this is my distribution over things that I'm going to do if I don't know anything.
+
+And in the other direction, we have, well, this is distribution over what you should do, where you expect to end up.
+
+And if you have where you expect to be and where you expect to end up, figuring out what to do.
+
+is what happens here.
+
+And that's how you do the policy inference.
+
+It's because you have an idea of where you're going to be, and you have an idea of where you want to end up.
+
+If you know those, then inferring what you should do is, at least in these simple cases, quite straightforward.
+
+And again, one of the contributions here is that because we do this backwards smoothing sweep, we don't have to do a forward search tree.
+
+Because around each of these nodes, all we have to do is care about a message flowing in here, we get a message flowing in here, and then we can do our inference.
+
+It also means that every time we add a time step, if I were to take this guy here and extend it once more to the right, I wouldn't have an exponential explosion.
+
+I would have to evaluate the messages flowing around inside one of these slices once more.
+
+So we need another backwards message, another backwards message, another forwards message.
+
+And that's sort of where one of the things I want to do, that we didn't get around to doing for these papers, is investigate how this behaves when we scale to longer horizons and larger models.
+
+Because this should scale much nicer than having to do an exhaustive search tree, because every time we add another slice, we just add the same number of computations again.
+
+All right, so let's go back here.
+
+So what we do here in the last experiment is that we add these point mass constraints to the switch variables.
+
+So what does this mean?
+
+So on a graph, it looks like this.
+
+This is the exact same graph, but now we add these little constraints here, these little delta form constraints in the beads.
+
+And this means that when we compute our posterior here, it has to be a delta.
+
+So we need to pick one of the options.
+
+We can't say indifferent between going right or left.
+
+You have to pick one because you have to be a delta spike.
+
+So in practice, this ends up being the same mistake in the argmax of the distribution over actions.
+
+So you're effectively, as part of your inference procedure, picking the best policy and doing inference only with the most likely thing.
+
+So let's run that.
+
+And again, this gives us a much sort of clearer picture where we are now 100% certain that we're going to go to the Q at t equals 1 before we observe anything.
+
+And then in this case, it picks 2.
+
+But if you change the random seed a little bit, it picks 3 because it's indifferent between these two guys.
+
+It just has to pick one because we're enforcing that.
+
+
+SPEAKER_01:
+Yeah, it's still a T0 speculating it.
+
+And so it's kind of like a bifurcation where depending on its random seed at T0, it might symmetry break to imagine it going left or imagine going right in that implementation.
+
+But either way, after T1, it's going to have the empirical decision.
+
+
+SPEAKER_00:
+I might actually be able to show this as well.
+
+do this so part two actually has an example of the kind of protocol where we have these this thing i want to show we have these updates going on this this one reminded me this one reminded me of the fire escape plan of a hotel i didn't think of that but i can actually see it
+
+So effectively, what's different between these experiments and the ones we just looked at is that these u's here are clamped.
+
+So they're little black squares in P. That means we are picking a transition matrix.
+
+So we are fixing whatever our transition should be.
+
+And this here, t equals 1, is before
+
+the agent observes anything.
+
+So this is effectively the same situation we just looked at, except now we are evaluating a policy.
+
+We're doing the same search tree kind of thing instead of doing direct policy inference.
+
+So again, these are just transitions, and these up here are fixed.
+
+So we're no longer doing direct policy inference.
+
+We're just computing the free energy, including GV terms, for this model without any observations.
+
+And the thing I want to sort of point out is these composite nodes down here.
+
+They're the exact same that we just had.
+
+But you'll see there's nothing going on here.
+
+These x variables have nothing on them.
+
+But once we get an observation, it's the same as adding this constraint down here.
+
+So we advance the time step.
+
+It goes from one to two.
+
+And then we clamp our observation.
+
+And then we do the same protocol again, because the model hasn't changed.
+
+What's changed is that we constrain one of the variables to be equal to our observation.
+
+And then you keep on going, it's equals two and so on and so forth.
+
+Every time you get a new observation, you just add these little constraints to the model.
+
+
+SPEAKER_01:
+And then you'll essentially get... This reminds me of scientific pre-registration.
+
+Like we have the whole experimental plan laid out.
+
+We know what kind of information is going to flow in.
+
+And we have a distribution or prior over the data.
+
+And then when the data do come in, we just clamp the format that we expected.
+
+And we don't need to do any structural changing to...
+
+factor graph and so it's like as we're moving forward and collecting data we're just clamping timelines on the past and then leaving open what hasn't happened slash what we don't know yeah that's exactly what's happening um like beautifully because except that's exactly what's happening as we get data we're just saying well now i know that this variable in my graph that corresponds to my observation
+
+
+SPEAKER_00:
+I didn't know what it was before, but now I know that it was this value.
+
+So I need to put that observation into my inference problem somehow.
+
+My model is still the same.
+
+It doesn't change the structure of how I think the world works.
+
+Some parameters might have shifted and stuff.
+
+But the main thing that's changed is that I now have a data point that I need to add in.
+
+And you can do that by adding these little data constraints, we call them.
+
+So this here actually shows the exact type of thing that you were just talking about.
+
+How does the model change once we get data points?
+
+So this case here would be pure sort of speculation, pure planning ahead of time.
+
+And this here is, well, once you start observing stuff, how do you actually add the information into your inference problem?
+
+
+SPEAKER_01:
+Yeah, one other angle on this again, because I think this is really important.
+
+The structure here is kind of like the timeless action perception loop.
+
+And then we can be anywhere from at the top, we have purely speculative, purely anticipatory.
+
+On the bottom, we have purely retrospective.
+
+All the data are already in hand and it's kind of like a solved issue, like looking at something that already played out, or you could be kind of the in media res
+
+in the middle, which is basically just to say that part of it is already clamped in with the past, and then part of it is speculative.
+
+And all of those settings from the purely anticipatory to the purely retrospective to in the middle of things with a little bit of both, all those are structurally described by the same formalism.
+
+
+SPEAKER_00:
+Yeah.
+
+And again, that's because the model doesn't change.
+
+What changes is just we need to add in
+
+the data.
+
+And what is kind of nice about this is that it also allows you to talk about doing different things at different times.
+
+So one thing that we, for instance, looked at is once we have all the data, should we do our parameter updates then?
+
+Because you can imagine a situation where you run an episode of something, like you are trying to do some psychophysics experiment, and you have your participant run
+
+an entire episode of an experiment.
+
+And then you expect them to go and update their beliefs about, say, some parameters for what occurs where.
+
+You can model that by saying, once all my observations are clamped, then I send messages towards my parameters, like my thetas down here.
+
+So this sort of highlights the kind of things that you can start to be very, very explicit about.
+
+When do you do certain updates?
+
+What should the graph and the constraints look like?
+
+all these things that often has a tendency to get swept under the rug a little bit that you can now be very, very explicit about.
+
+
+SPEAKER_01:
+Yeah, that's super important.
+
+Again, keeping with this theme of kind of like looking forward, looking back, being able to plan out the message passing logistics and scheduling means that you can have a sense of the computational requirements and so on forward looking.
+
+And then also looking back, have a better sense of the way that variables were generated and trace back their kind of informational supply chain so that
+
+system that's what makes it fully synthetic if it were fully synthetic chemical we could trace from the precursors how it were generated this is fully synthetic active inference agent and so that means for every variable we should be able to say well here's how we brought it onto the table and then here's exactly how the messages were passed from once it was placed
+
+
+SPEAKER_00:
+What is the model, what is the inference problem, what is the data, and what are the constraints?
+
+We should have everything be completely transparent.
+
+Because that's, in my opinion, that's good.
+
+The more we're allowing scrutiny of all the little different bits and pieces, and the more we can investigate how everything is going on, the better.
+
+
+SPEAKER_01:
+And this is kind of
+
+the ground floor, like you could keep digging and ask, well, how is addition carried out?
+
+How is multiplication carried out in Julia or however, but this is kind of the layer that is the foundation layer for building then more elaborate graphs.
+
+Like we don't need to go finer scale or do it.
+
+Yeah.
+
+
+SPEAKER_00:
+That's actually kind of funny, because each of these messages, we're drawing those just as arrows, but each of these messages is a computation.
+
+You mentioned that you need to do a multiplication.
+
+One thing we need to do for these models, we also do for this thing here, is we need to multiply a categorical variable by a transition matrix.
+
+That is an inference, that's an operation, that is a message.
+
+There's a whole computation and a whole derivation that you can go and find.
+
+for how to do that operation.
+
+So everything should be completely transparent here.
+
+
+SPEAKER_01:
+Yeah.
+
+All right, I'll ask a question from the live chat.
+
+Andrew writes, if the model is claimed...
+
+
+SPEAKER_00:
+Stop the screen share.
+
+Oh, no, it's fine.
+
+I'll just ask it here.
+
+
+SPEAKER_01:
+If the model is clamped in this manner, how does the generative model evolve?
+
+Is there a way that new variables can be introduced during the inference generative loop?
+
+
+SPEAKER_00:
+That's a thing that's actually quite interesting.
+
+The short answer is not with this formalism.
+
+There is some nice work on structure learning and how to
+
+like to Bayesian model comparison, Bayesian model reduction and expansion that you could use in this context.
+
+But as is, what we've done is we've found a way to write down a model and an inference problem and the corresponding messages that allow you to do GFE-based optimization.
+
+It doesn't tell you how to expand your model.
+
+Again, if you want to combine this with something like Bayesian model reduction or expansion,
+
+That would be cool.
+
+I think someone should really go and do that because that would be an interesting sort of avenue to go down when we can start to combine these things.
+
+And one of the sort of things that I wanted out of these two papers is that I wanted to be able to get this kind of thing explicit.
+
+I wanted to have a language that is not too difficult to pick up that allows people to ask these kinds of questions.
+
+Because there's a very different, at least in my mind, I don't know whether you agree, Andrew, but to me, there's sort of a different vibe to philosophically thinking about what does the model evolve like and saying, well, how do I add a node?
+
+One is a very concrete problem that you can start to talk about, while the other can end up being very, very abstract if you let it.
+
+I like things that are concrete and transparent.
+
+So I'm really glad that this kind of question pops up because that's one of the things that I wanted to do with these papers is to get people thinking along these lines.
+
+
+SPEAKER_01:
+Awesome.
+
+I'll kind of give another angle on that question.
+
+So there's a implicit or unprincipled or ad hoc strategy here, which would be, we're going to be operating our model and then we're going to have some extracurricular diagnostic.
+
+Like if it's taking too long, then we're going to do something else outside of the generative model and change the generative model.
+
+Like, oh, maybe we should add another variable.
+
+So it's kind of like the...
+
+non-principled approach of which there's an infinite amount of these types and they may or may not be documented in the paper whereas the principled approach would be to bring that structural learning that learning structure explicitly in through bayesian
+
+structuring so then you could say okay well there's either one two or three factors in this regression and then we're gonna have a distribution a prior over whether there's one two or three factors and then we're gonna clamp eventually and find the best fitting model whether it is one two or three with the appropriate um
+
+penalization, and then someone says, well, what if there's four?
+
+It's like, great.
+
+Now we're going to explicitly bring that possibility into the model so that we have a unified approach to talking about the kind of sensory motor, lower level parameters, and arbitrary nestings of structure learning.
+
+Those shouldn't be outside the perimeter of the fully synthetic agent.
+
+Otherwise, to the extent that it's outside the perimeter, the engineering perimeter, it's out of control.
+
+
+SPEAKER_00:
+Yeah, I think we should be a little bit wary about what we attribute to the agent and what we attribute to the engineer here.
+
+Because when we set this approach up, an agent is just a graph that receives some observations and is allowed to emit some actions.
+
+So there is still an engineering aspect here about how do you construct the graph?
+
+What should the graph look like?
+
+What should the model look like?
+
+which is not addressed in these tables.
+
+But you're absolutely right.
+
+There should be a principled way of doing that, which something like Bayesian model comparison is a way to do.
+
+But the agent, the graph that does inference, just does inference on the graph.
+
+At least out of the tools that are in here, you would need to add something more to do, like an organically growing graph or something.
+
+
+SPEAKER_01:
+does the graph ever undergo structural evolution or does the structure of the graph change but then through clamping and parameter updating the graph can even with a fixed topology represent structural differences or do are there ever actual structural changes in the factor graph
+
+
+SPEAKER_00:
+So I think that's one of the nice things about the CFG approach to writing down models is that you can write, like you need two things to do to minimize free energy functional.
+
+You need a P and a Q. That's what you need to write it.
+
+And writing P is done with a standard phytograph notation.
+
+So you write out your boxes and your edges until you construct your graph, your model.
+
+And the constraints are then done in queue.
+
+That is, you write them separately.
+
+So you can talk about what happens in terms of constraints and what happens in terms of the structure of the graph separately and explicitly.
+
+So the graph, at least what we've done here, doesn't intrinsically undergo any
+
+like topological or structural changes.
+
+It's just the model you write down that you, as an engineer, as a scientist, is interested in.
+
+What you can change is you can change the constraints.
+
+That allows you to do different things with the same model.
+
+For instance, incorporate data points as your agent sort of progresses through time.
+
+What you can do then with this type of notation is you can be explicit.
+
+You can be explicit about when you're doing something with the constraints on the model, sorry, constraints on the inference problem, I should say, where you're defining your Q, and when you're doing something structurally with the generative model, A, when you're defining your P. Because one is done in terms of this bead overlay notation, and the other one is done with standard factor graph methodologies.
+
+So in that context, what's the main advantage of these two papers is that you can be explicit about what you're doing.
+
+
+SPEAKER_01:
+Yes, very interesting.
+
+Yeah, I hope so.
+
+Continue with the code here?
+
+
+SPEAKER_00:
+Yeah.
+
+Yeah.
+
+We've actually reached the end of the notebook.
+
+This is all that is to the policy inference experiments.
+
+But one of the things that you can do with this type of thing, if we go back to the generative model specification, is that this here is just defined in terms of nodes and edges.
+
+I have my variables, and I have my nodes that define them, and I have my goal observation with the P substitutions and everything.
+
+But these units, they're sort of atomic in nature.
+
+All a node cares about is its own marker blanket.
+
+So these things are composable, meaning that if you want to build them with, say, hierarchies or heterarchies, you want to add multiple modalities, all these kinds of things you might want to do.
+
+That still works with the caveat that there might be some coding bugs and stuff you run into because it's still just still software after all.
+
+But theoretically, once you have these different things as little building blocks, you can sort of Lego your way through to any model.
+
+But something that we hint at in the papers as well
+
+that we not really explored in the experiments, which is that this type of active inference works for freeform generative models.
+
+That means because it's local, all the little changes we do are local on the graph.
+
+Everything else can just be whatever it wants to be.
+
+So you're no longer limited to using a POMDP model, which is an awesome model
+
+There's loads of things you can do with it.
+
+It's a great model.
+
+But there are things that might be easier to do, like operate with continuous variables, for instance, that might be easier to do with a different type of model.
+
+And if you can sort of LEGO block your way to a generative model that represents how you think your agent should think that the world operates, that is something you can now do.
+
+because model space has become much, much larger.
+
+
+SPEAKER_01:
+Right there with the how you think an agent should think is the articulation between the engineer and the agent.
+
+That's the second level inference problem.
+
+The first level inference problem is what the synthetic artifact will be doing in its runtime.
+
+And then the engineering question is how to create that.
+
+And so it's almost like the engineer is only interfacing with the inference challenge or environment through the blanket of the fully synthetic agent.
+
+
+SPEAKER_00:
+Yeah, in my opinion, that's how it should be.
+
+I guess if I put on my engineer's hat for a bit, I'm a lazy engineer.
+
+If I have a problem to solve, I could go to the literature, and I could find 57 solutions, and I could pick one, and I could implement it, tweak it a bit, and now I have 58 solutions.
+
+That's one way I can do it.
+
+I have several solutions for every problem.
+
+That becomes unwieldy real quick, because every problem, you have a boatload of solutions.
+
+What I like to do is say, I want only one tool.
+
+I can only do inference.
+
+I believe that everything can be solved by inference if you set up the problem right.
+
+And the trick then is how you set up the problem right.
+
+So as an engineer, what I would sort of take from this way of approaching problems is that my task is to build a generative model that does the thing that I want it to do.
+
+And there's going to be some iterations and trial and error and some tweaking of things and all these nice sort of practical challenges that we all run into when we try to actually build things.
+
+But the tool should always be the same.
+
+If I want to control a robot or track an object or localization or preference learning or filter an audio signal or whatever you might want to do,
+
+The tools should always be the same.
+
+All I should need to do is do inference.
+
+It's my job as the engineer to figure out what is the model structure that produces the results that I want.
+
+Because it's clear if I want to, say, move a robot arm, and I have a generative model that can only move to the right, I'm going to run into issues.
+
+Now, again, you sort of also hint that there's an extra level that you can go to where it becomes about structure learning.
+
+Now, if you want to learn the structure of the model, you want to learn P, you want to sort of build your graph organically, which would be amazing to solve, but I'm not going to claim that we're anywhere near there with these papers.
+
+These papers is just a way to accurately write down what I, as the engineer, want to happen.
+
+
+SPEAKER_01:
+Is there any more code you want to show?
+
+
+SPEAKER_00:
+We can take a look at the other ones.
+
+But they basically work the same way.
+
+So this is for generalized free energy with an action perception loop, i.e., and then a fixed policy.
+
+This simulates the kind of things you would get in something like PyMTP or SPM.
+
+Excuse me.
+
+So again, the setup here is very, very similar.
+
+Define our model, which has a policy that we want to evaluate.
+
+It has two timesteps.
+
+It has our goal priors.
+
+It has our initial state prior.
+
+But now we're also interested in learning the parameters of our observation matrix.
+
+So we put a prior, a Dirichlet prior, over our A matrix, over our likelihood matrix.
+
+And otherwise, these here move.
+
+They look very much the same.
+
+Instead of mixing models over transitions, it's just fixed transitions.
+
+And this here is calling the exact same sort of p-substituted mean field constraint, all that goodness, node that we used for the last direct policy inference simulations.
+
+And then we do the same thing.
+
+We load up our priors, we load up our matrices.
+
+And because we want to repeat this over and over and over and over, we're actually going to run an agent for 100 episodes.
+
+So it's going to play the game 100 times and try to learn the likelihood matrix.
+
+It does so by inferring an action, as we're doing infinite and missing passing the model, taking an action, executing it in the environment here and here.
+
+And then getting back an observation.
+
+And this getting an observation does this clamping operation that we talked about.
+
+So this is literally the thing that's shown here, t equals 0, t equals 1, t equals 2, and in this case, t equals 3, because that's how many steps is in the t base environment.
+
+Oh, sorry.
+
+And if we do that and we run this 100 times, so every time the agent has completed an episode, so it's two steps, it gets to send messages towards the parameters.
+
+It gets to learn about the A matrix, the likelihood of the observations given the states.
+
+And if we do that, we can look at the differences from
+
+the very flat priors that it gets initially versus the n posteriors to look at what has this agent learned.
+
+And the way to read this plot is that O refers to the origin location, so location 1 in this thing here.
+
+Whoops.
+
+Yeah, location 1 in this thing here is the origin.
+
+We have the left arm and the right arm, L and R. And then we have C, the Q location.
+
+RW means reward.
+
+You get a reward.
+
+NR means no reward.
+
+And this here says is the reward to the left, is the reward to the right.
+
+Q points left, Q points right.
+
+What we can see is that nothing really happens in the origin state.
+
+We're always moving, so we don't really get much.
+
+We can see if we're on the left arm and the Q points to the left, the reward is also on the left arm, we are pretty likely to observe a reward.
+
+If the reward is on the left, we're likely to observe a reward if we go to the left.
+
+Same thing over here.
+
+The reward is on the right, pretty likely to observe a reward on the right.
+
+An interesting thing up here, so what happens at the Q location, right?
+
+Because this says that if the Q points to the left, the reward is also pretty likely to be on the left.
+
+If the Q points to the right, the reward is also pretty likely to be on the right.
+
+So this shows us that if we do this iteration, the agent can actually learn a really good likelihood matrix that predicts where things are and how all the relations actually work in the T-Maze experiment.
+
+Which is nice, because that means that we don't have to put all this in.
+
+We can actually do parameter learning using this GV-based message parsing as well, which is really neat.
+
+And here we have some free energy curves.
+
+So this shows the free energy at the initial time step, so before any observations have been received.
+
+All right.
+
+Yeah, and when the first observation has been received, and then after the second observation has been received, then we do parameter learning.
+
+You'll see everything is nice and decreasing, but there are these spikes here.
+
+And these spikes indicate when the agent predicts a win but gets a loss.
+
+So the agent, the cue says the reward's to the left.
+
+The agent goes to the right, so to the left.
+
+But it doesn't get a reward.
+
+There's a bit of stochasticity in the teammates environment
+
+So it's not always 100% sure, even if the cue points the right way and everything, that the agent actually gets a reward observation in the end.
+
+And this to me is pretty nice because it shows that if the agent's predictions are violated, we can actually directly see that in the free energy of the model.
+
+We get these prediction error spikes.
+
+which I think is really nice.
+
+We have a similar setup, which is completely identical, except we don't do the p-substitution.
+
+We don't introduce a GFE term.
+
+We just run Park-standard variational bethe-free energy minimization.
+
+And the model looks the same.
+
+We just use some bethe options for
+
+this composite node.
+
+What is meta?
+
+So meta is a way, this is all done in RxInfer.
+
+Meta is a way to pass options to a node.
+
+And in this case, a Bethy meta tells this sort of joint node composed of a likelihood model and a goal prior whether it should optimize generalized free energy or Bethy free energy.
+
+So you can think of it as, if we look at the graph again, and we've had this node here, I have to make this a little bigger.
+
+We have this sort of composite node here inside the dashed lines.
+
+There's a difference between if we draw a circle here or we draw a square.
+
+Square would indicate that we do a p-substitution, which turns this locally into a generalized free energy.
+
+Don't do that.
+
+Draw a circle.
+
+Don't do the p-substitution.
+
+What we're left with is a mean field factorized bethy-free energy.
+
+And the way we do this switch between a circle and a square is through this meta object.
+
+You can also use it for other things, for other nodes in RxInfer.
+
+If you have, say, a nonlinear function that you want to use somewhere in your graph, you want to pass messages through it,
+
+We're going to need to do some approximations most of the time.
+
+So you can say pass your approximation method through the meta object.
+
+And if you run some iterations or you need to do some sampling or something, that kind of information is something you can feed in through the meta object.
+
+So what this thing is really saying is just swap the square for a circle.
+
+so that we do beta-free energy instead of generalized free energy.
+
+And then everything else here is exactly the same.
+
+This is literally a copy-paste of the other notebook.
+
+Because again, we're not changing the model.
+
+We're just messing with the constraints.
+
+The model is the same.
+
+All we're doing is messing with the constraints and the p-substitution.
+
+And if we, instead of saving the figures, actually create these, yeah, you'll see this agent only gets stuff around the outcome.
+
+Because it starts with uninformative priors over the A matrix, doesn't really know what the reward is, has no incentive to go and explore.
+
+It just doesn't really accomplish much.
+
+You can see the same thing.
+
+Free energy is flatlining, nothing is happening, and it is consistently not performing well.
+
+It has just endured 100 trials of loss, and I don't think it is particularly enjoying itself.
+
+And again, so the thing that we can illustrate with this is the power of messing with constraints and messing with p-substitutions and messing with these local adaptations to the free energy.
+
+Because the model in both cases, the p, the graph, is actually the same.
+
+There's no difference.
+
+The thing that's different here is we're messing with the constraints, and we are messing with turning this local Bethy free energy into a local generalized free energy.
+
+And that produces these quite drastic changes in the behavior of the agent.
+
+
+SPEAKER_01:
+Yes, the Bethy.
+
+free energy agent does not do well here just changing that one aspect moves the epistemic phenomena into the present that's that kind of like efe like component of the gfe that we discussed last time
+
+
+SPEAKER_00:
+Yeah, exactly.
+
+So what this thing does, basically, if you do the battery-free energy, you end up with an agent that does KL control.
+
+This ends up being a completely standard control problem, like controls inference.
+
+There's nothing fancy going on here.
+
+And crucially, that does not include an epistemic component.
+
+We get no information seeking.
+
+And we see that here.
+
+There's no information seeking anywhere here.
+
+This little guy is just flatlining.
+
+But once we start to mess with the function, let me introduce a ZipStem component.
+
+We get expiration, we get good performance, we get this active curiosity, information seeking, all these nice goodies that we know and love about Active Inference Agents.
+
+And we can show that very, very directly by simply saying, well, I'm going to change this little circle to a square.
+
+And then we have some aggregate experiments that we also ran, which is just repeating the same thing over numbers of agents, because there's some stochasticity.
+
+Sometimes they get rewards, sometimes they don't.
+
+If you want to compare how this does in the aggregate, you need to do multiple runs.
+
+I'm not going to run this, because this takes a long time to run.
+
+You can see I ran it earlier today, and it took like an hour and 20 minutes.
+
+But what we can do is we can look at the distribution over when, say, how many times per run does an agent obtain a reward.
+
+And you can see that it is very much sort of skewed to the right, which is good.
+
+That means the agents learn.
+
+They learn the parameters.
+
+And after they learn the parameters, they consistently get rewarded on their trials.
+
+It doesn't always happen.
+
+There's a bit of a tail end down here.
+
+And what this tells us is that sometimes these agents, because there's stochasticity in the rewards, they're just going to get stuck in some unfortunate minima.
+
+They get some conflating information, and they never quite manage to recover.
+
+And that can happen.
+
+Sometimes you learn something that's wrong, and you end up sticking to it.
+
+So it's not a bulletproof thing.
+
+The same thing here, we can show this is the ideal expected reward you can get, that as the trials progress, on average, agents start earning more and more and more and more reward.
+
+How you get closer and closer to this line.
+
+There's some wiggling in here, and that's because we have to use a sampling approximation when we send the message towards the parameters.
+
+So there's some stochasticity in here, which is why we get this bit of wiggling, that and the reward stochasticity.
+
+This basically shows that as an aggregate, agents get better.
+
+They get consistently better.
+
+But again, the model is all the same.
+
+Nothing changes.
+
+
+SPEAKER_01:
+Cool.
+
+Good with the code?
+
+
+SPEAKER_00:
+Yeah, I don't have any more code.
+
+Not for these tables, at least.
+
+Cool.
+
+Yes, thank you then.
+
+So I'll stop the screen share.
+
+
+SPEAKER_01:
+OK, I'll share screen.
+
+I guess just to sort of transition into this second component, when you sit down at the table, where do you begin?
+
+
+SPEAKER_00:
+Usually I begin where I left off the day before.
+
+That's worked for quite a while now.
+
+So there are other things that I'm working on right now that I can't really talk about yet.
+
+
+SPEAKER_01:
+But just as a general building your own generative model, if you had a new, fun, non-proprietary study, where would you begin with sketching out what to be on the road to working with it this way?
+
+
+SPEAKER_00:
+The first thing I would do is that I would start drawing graphs.
+
+I would start drawing my constrained FFGs.
+
+and see if I can figure out what is the problem that I want to solve and get that real accurate.
+
+And that is not a trivial exercise.
+
+Because once you have your model specification and your inference specification in place, then to me, the hard part is done.
+
+Because again, if I put on my engineer's hat,
+
+The main thing that I have to do if I want to build an application, want to solve something, is that I have to come up with a graph, and I have to come up with the constraints that define my inference problem.
+
+Once I'm there, I need to figure out, are there any parts of this problem that I can't solve?
+
+Is there a message that I need to work out?
+
+Is there some approximation that I need to figure out to put in there?
+
+And if so,
+
+It's nice that's sort of a research question on its own quite often.
+
+But if there isn't, then the next thing I would do is I would try and run inference in my model.
+
+Actually, does this model actually behave as I think it does?
+
+Especially if you're in the game of designing active inference agents, sometimes these things have a mind of their own.
+
+There are several reasons why that could be.
+
+It may be your intuitions about the thing that you wrote down don't actually quite hold up to how things manifest in the real world.
+
+Or there might be bugs in your code, all these sort of very practical things.
+
+But once we're at this place, to me, a lot of the heavy lifting is done.
+
+Because the hard part, if you want to build something, is specifying the model and specifying the constraints and figuring out how to solve the inference problem.
+
+Once I have that, then everything else is implementation details.
+
+Actually, funny story.
+
+We had this during the design of the experiments that we just looked at.
+
+So if you look at the transition matrices that we use,
+
+If you have the original teammates transition matrices, they let the agent get stuck in positions two and three.
+
+It's sort of attracting states.
+
+Once you go there, you can't go anywhere else.
+
+And the way that is done practically is that the transition matrix sends you from state two to state two, whatever transition matrix you choose.
+
+If you do that with our setup,
+
+That means you're allowed to send backwards messages that say, well, if I pick action one, which is no go to state one, and I'm coming from state two, I would also go to state two.
+
+Does that make sense?
+
+
+SPEAKER_01:
+So then what's the issue or what did that result in?
+
+
+SPEAKER_00:
+The result is that the agent starts inferring some very, very nonsensical policies.
+
+because it'll say, well, I know the goal is at position three, but I'm going to confidently go, like, pick the matrix that corresponds to go to one, or go to four, go to two.
+
+And that's because all these things, all these matrices, allow the reverse mapping from, say, state two, where you think the reward is, to any of the other states.
+
+
+SPEAKER_01:
+Why is there no reverse constraint?
+
+
+SPEAKER_00:
+So because if you're reasoning backwards, you have to think about how do your model run in reverse?
+
+What does your transition mean the other direction?
+
+And the way we solved this was that we let every sort of invalid transition send it back to the beginning.
+
+So every...
+
+basically, if you end up in one of the rewarding arms, every transition that you pick is going to send you back to the start.
+
+It's just going to reset the whole episode.
+
+And if you do that, you get rid of this problem of the backwards message not corresponding to your intuitions as an engineer.
+
+Because we're designing this thing to say, well, one matrix is go to one, one matrix is go to two, and so on and so forth.
+
+But
+
+The math doesn't really care about our intuitions.
+
+The math does what the math does.
+
+It's up to us to make sure that we write things down accurately.
+
+
+SPEAKER_01:
+Okay, just to kind of confirm this.
+
+So the initial strategy was you used, as kind of classical in POMDPs, you just had the state of reward be absorbing.
+
+However, it was almost like you could get in, but then you didn't want it to leave with the absorbing state.
+
+But you actually, you had like a ladder out with the backwards message.
+
+And so that was leading to some weird things.
+
+So instead you change it so that the reward state brought you back to the beginning, essentially tucking in the end of the trial to something like the beginning of the next trial.
+
+And then that...
+
+better cohered with intuitions around how policy should be selected.
+
+
+SPEAKER_00:
+So you can think of it also as the backwards message saying, if I go here, where should I come from?
+
+If you are in, say, the rewarding arm, where should you be coming from?
+
+And if you allow the rewarding arm to map from itself to itself, because you make it absorbing,
+
+The agent can, correctly, because that's what you put in, infer that it should be coming from the rewarding arm when it is in the rewarding arm.
+
+
+SPEAKER_01:
+Yeah.
+
+How do you get a million dollars?
+
+Step one, start with a million dollars.
+
+
+SPEAKER_00:
+Exactly.
+
+And that's not the kind of inference that we want our agents to make.
+
+It's right.
+
+If you have a million dollars, the most likely way you got them is that you had them a second before.
+
+You had more a second before.
+
+Had at least a million dollars a second before.
+
+But yeah, that kind of inference is something that we want our agents to not do.
+
+And that's an issue that doesn't, at least for now sort of research, did not arise when we only did the sort of forward rollout version.
+
+Because if you never reason backwards, this kind of thing just doesn't pop up.
+
+But if it's not, then you need to consider this kind of circular step one, start with a million dollars type of reasoning.
+
+This is an example of something that we ran into in the course of this experiment where we were pretty sure that everything was set up correct, and it was.
+
+But the agent did not behave in the way we anticipated and how we wanted it to behave.
+
+So we had to go and look at, well, what is actually happening?
+
+Not what we think is happening, but what is actually happening when you sort of start to look at the code.
+
+
+SPEAKER_01:
+Let me ask a related question from the chat.
+
+Andrew says, what you are saying is there's no conditional probability placed on where the agent thinks it is when doing that reverse message?
+
+
+SPEAKER_00:
+Is when, I think is the question.
+
+
+SPEAKER_01:
+Is there a conditional probability placed on the agent when it is doing the reverse message?
+
+
+SPEAKER_00:
+Yes, but it's conditioned on the future.
+
+You're doing everything backwards.
+
+So it is conditional on where you should be in the future.
+
+You can think of the forward rollout approach as saying, well, if I am here and I do this, then I go here and so on and so forth, then you have this large tree that expands to where you could go.
+
+And then you look at all the places you could go and say, well,
+
+That one, that's the one I like.
+
+You can also think of doing the same.
+
+I'm sort of approximating a little bit because we don't actually do search trees.
+
+But you can also think of doing the same thing in reverse, right?
+
+You can say, well, if I have already obtained everything that I want in my life, where is it most likely that I came from?
+
+And I say, all right, if I go one step back, where is it then most likely that I came from, and so on and so forth?
+
+And that distribution, that kind of logic, is what we're doing with the backwards pass.
+
+So then when you have the forwards pass saying, well, this is where I'd like it to end up, the backwards pass saying, well, this is where I want to go, you're solving that difference is what you do when you infer the action.
+
+You have two messages colliding, and they spit out something towards your action variables.
+
+
+SPEAKER_01:
+yeah okay what that's making me think about is we classically think about new data coming in we're conditioning on the existing conditions and then new observation comes in things update so that's the sort of march forward then there's this kind of aspirational or fulfillment based conditioning conditioning on not what has been sedimented and brought forward but conditioning on what is
+
+anticipated or preferred and then let's think about the the um three time step case where there's a clear last step and there's a clear first step and they just meet in the middle and it just like the sort of um
+
+the conditioning from both ends results in just this obvious solution.
+
+However, also, it could be more ambiguous at the beginning or the end, or it could be more than three time steps.
+
+And then that's where we get this message passing and kind of annealing as data are getting clamped through time.
+
+And that has a
+
+relationship with the search tree based methods in that like the territory of what they're explaining is the same sequences of action but again to be really clear this is not doing
+
+policy-specific evaluations followed by comparison of expected free energies or any kind of enumerative search at all, it's solving one direct policy inference problem as this kind of annealing process.
+
+
+SPEAKER_00:
+So I think the beauty of this approach is that you can do both.
+
+I like to do direct policy inference because I think it's, to me, it feels like the right way to go.
+
+But one of the things we do in part one, and to an extent demonstrate in the experiments in part two, is that you can recover these forward rollouts, these classical algorithms, as special cases by only passing messages forwards.
+
+Because when you have these p-substituted goal observation nodes with your mean field constraints and everything, the energy terms of those nodes ends up being equal
+
+to one, that's what we talked about last time, into being equal to one term in the EFE of matching policy.
+
+So you can reproduce the forward rollout method by saying, I'm only going to pass messages in the forward direction.
+
+I'm going to fix all my action variables.
+
+And then I'm going to compare all the energy terms of these little GFE nodes.
+
+And that will reproduce the exact algorithm that
+
+we've all been using for years.
+
+What you can also do is you can add a backwards pass.
+
+What you can also do is you can say, well, now I want to infer my policy, and so on and so forth.
+
+But because this is a toolbox, it's just a way of thinking that allows you to do different things.
+
+So the policy inference is not inherent.
+
+It's something that you can do.
+
+if you want, because it's just an inference problem.
+
+If you don't want to and you have good reasons for doing something else, you can go and do something else.
+
+But sort of to go back a little bit, to me, this idea of reasoning backwards also works with
+
+So my intuitions on at least how I, as a person, often operate, like I'll have some idea in mind.
+
+I have some goal that I want to achieve, which could be, you know, I want to get a PhD or I want to make a tasty dinner or something.
+
+And then I reason backwards.
+
+Well, I need to do this.
+
+I need to do this.
+
+I need to go and buy all the things that I need.
+
+I need to set aside time for cooking and so on and so forth.
+
+There's sort of a backwards reasoning that if I want to go here, I need to do this, this, this, this, this, this.
+
+And then there's the forward planning.
+
+If I am walking out the door, I need to go to there and then there.
+
+And if I keep walking, I'll end up in the right place.
+
+So there's both components to it if you want to put sort of a more anthropomorphic, intuitive spin on it.
+
+In practice,
+
+What this ends up being is just inference on a graph.
+
+And if you're an engineer, it's up to you to design your model and your inference procedure in a way that you end up with the results that you're looking for.
+
+
+SPEAKER_01:
+Yeah, this about the policy selection here.
+
+the forward pass policy is basically habit coming forward because in the absence of any aspiration or preference, policy is just, well, there's various ways you can select policy.
+
+Still, you could select maximum information gain, you could select different things, but the prior on policy, the E vector is habit.
+
+So it's kind of like, that's the starting position for what actions are selected from now.
+
+And then it's just really interesting to think about this forward and backward solving, which is, of course, a classic technique.
+
+But again, being done in this way where you could recover tree search, but it isn't tree search.
+
+
+SPEAKER_00:
+So the thing you would recover is a trajectory, so an evaluation given a particular policy.
+
+The tree search comes about
+
+when you want to try and expand this and be smart about how you compute things given different policies.
+
+Because obviously you can do that for every single policy one at a time and evaluate everything, but that's even more inefficient.
+
+So what you do practically is every time you sort of reach a branching point, you need to select a new policy.
+
+You say, well, I'm just going to take my prediction here of where I would be
+
+And we're going to branch off into all the different policies that I could pursue.
+
+And that'll give me sort of a new set of branches on my tree.
+
+And then you do the same thing.
+
+So that's how the search tree comes about.
+
+But each sort of path through that search tree would correspond to a forward rollout on one of these models.
+
+
+SPEAKER_01:
+Yeah.
+
+You said inference is something that you can do.
+
+
+SPEAKER_00:
+I want to go a little bit back because you mentioned this thing about the E vector, which I actually think is really, really interesting.
+
+I don't know, since you have the screen share, I don't know if you have the papers available.
+
+
+SPEAKER_01:
+Which papers?
+
+Oh, of these, your two?
+
+Yeah.
+
+
+SPEAKER_00:
+Yeah.
+
+Do you have a part one?
+
+Yep.
+
+All right.
+
+Can you go to page 33?
+
+Of course.
+
+Thank you.
+
+Here, this is the one I want.
+
+So if you look here, we actually have an E vector sitting right on top as a parameter for the indicator variable.
+
+And what we're saying here is just we're literally putting a prior on which action to pick at each timestamp.
+
+That just comes about because we're building it out of these little graphical building blocks.
+
+So if you wanted to, you could put a prior in E, and then you could learn E. That's absolutely something you could do.
+
+Or you can, say, have a shared E with its own dynamics.
+
+So now your habits are time-dependent.
+
+And that'll be another sort of thing that moves along at the top with its own state space dynamics and everything.
+
+These are the kinds of things that you can start to do.
+
+We used flat priors here, but you could just as well say, I'm going to sort of intrinsically have my agent be really, really biased to go for the goal, whatever it takes.
+
+We could even say it's going to prefer the leftmost goal more than anything in the world.
+
+And that is something you can do.
+
+But what you can do here is you can be explicit about it, exactly how your habits work, exactly how your E-works practice.
+
+The sort of semantics, the intuition you can attach to it is the same as they've always been.
+
+But you can start to look at, well, I'll just look on my graph.
+
+What is the thing that I'm updating?
+
+What does this actually sort of specifically, concretely mean?
+
+And you can draw it.
+
+And if you wanted to do something else, you can.
+
+For instance, imagine that you have hyperpriors for E set by another agent.
+
+That means you extend the graph and maybe that agent has his own observations and so on and so forth.
+
+So then you need to attach that to the edge that is currently clamped with E. And now you're having an agent that sort of influences prior preferences over policies or habits.
+
+If you want to say, well, now these need to update at different rates, that's you having to mess with the schedule in which you pass messages.
+
+Sometimes you pass more in one agent than you do in the other.
+
+But these kinds of things can be explicit now.
+
+That's, to me, one of the big contributions that we wanted to put forward with this paper, is that you can now put all of this directly on the page, unambiguously, what exactly is happening.
+
+You notice, for instance, here we have different E vectors for E and E .
+
+That's also a choice.
+
+You could, for instance, have these be linked together and say they have to share the same thing, and that same thing now has a prior.
+
+That's something you could do, and that would be a completely valid graph, and you could figure out how to do inference in that.
+
+So the idea of opening up free-form models means that model structure, it doesn't have to be like A, B, C, D, E, F, G, and so on and so forth.
+
+We can do whatever model we want.
+
+The space has opened up for things we can try out with active inference.
+
+
+SPEAKER_01:
+All right, I got a little bit of a challenging question.
+
+Nice.
+
+You're talking about active inference and the toolbox, and that sometimes is seemingly not what people expect.
+
+They come to active inference or the free energy principle looking for an account of a human
+
+experience or of a certain cognitive system which of course isn't to be found in the toolbox you know any more than the blueprint or the house itself is to be found in the toolbox so could you from your view going back as deep into history as you like can you give an account of the active inference toolbox what tools have been brought in when which tools were versioned how which tools were deprecated how
+
+Like, when would you trace the Active Inference Toolbox coming to existence?
+
+With what?
+
+Just to get a little bit of a run-up to the state of the toolbox today.
+
+
+SPEAKER_00:
+I think pretty much anyone you're going to ask is going to have a different answer to that.
+
+There are some sort of big fixed entities that we can all look at.
+
+The biggest one, of course, being SPM.
+
+which has been the go-to tool for many, many years and in many ways still is because it is sort of the battle-tested version with all the bells and whistles that Carl himself has in large parts written.
+
+That would be sort of my proposal for a grandfather, grandmother software package for how to do active inference.
+
+This should be the gold standard.
+
+in my opinion.
+
+And later on, we've had pyndp, which was largely implemented by Connor Heinz and Alec Chan and a couple of other collaborators, which is a great project.
+
+I've used it.
+
+It's awesome.
+
+Which is a Python implementation of many of the routines that exist in SPM.
+
+So this sort of brings many of the tools
+
+to Python instead of MATLAB, which is a lot more accessible, a lot more popular these days.
+
+And that was sort of, to my mind, the two big active inference toolboxes.
+
+In BIOSLAB, we have RxInfer, which is a general purpose message passing toolbox.
+
+So it is not specifically an Active Inference Toolbox.
+
+You can use it to do inference, and you can use it to do a lot of things that we would like to do for Active Inference.
+
+But it is a message passing, so a Bayesian inference engine first, before it is a specialized Active Inference Toolbox, which is great.
+
+Because then you can use it to build your Active Inference
+
+parts, like we did with this constrained goal observation node that we used for the simulations we just looked at, that's using mostly stuff that is in RxInfer, and then one little node that we added on that does this GFE-based thing.
+
+I think what to my mind is a more interesting question is the types of algorithms that have been employed.
+
+Because again, and I'm going to miss some here, and for everyone that I don't mention, I'm sorry.
+
+But from the original sort of inception in 2015 of the first active inference routines with the sort of forward search tree through to
+
+something like branch-in-time active inference or sophisticated inference.
+
+There's been a lot of really, really interesting work with Monte Carlo tree search and the whole deep active inference field that I haven't touched on at all in any of these discussions because, again, it's a different approach.
+
+There's been an explosion of really, really interesting algorithmic work
+
+on how to solve the active inference problem in a smart and interesting way.
+
+And the things that we introduce here are sort of more in that tradition where we're saying, instead of trying to find ways to be clever about the search tree or trying to sort of either sophisticated inference for one is a really, really interesting idea, but it's a different thing.
+
+So to be clear about the search tree, we want to introduce this backwards pass so that we can solve everything as part of the inference problem.
+
+Parts of this is also something you can find in, there's actually sort of an interesting thing as well that's mentioned in the papers.
+
+If you go and look at PAR and, for instance, 2019 paper where they introduced the generalized free energy,
+
+Everything is still conditioned on a policy, but the message passing schedule, the forwards-backwards thing, is actually present.
+
+And the update rules are based on generalized free energy.
+
+So they end up looking a lot like the update rules that we derive.
+
+It's quite interesting.
+
+You can sort of see the seeds of what we based this work on quite clearly.
+
+You can look at the equation side by side.
+
+which to my mind is really, really interesting, because that was sort of the inspiration.
+
+You have these update rules, you have this forwards, backwards thing.
+
+What if we try and do this, but we come at it from the point of view of doing message parsing and graphs?
+
+So I agree, this is a big question, and I'm not sure I can do it justice, because there's been so much interesting work on
+
+software and algorithms and simulations for active inference that whatever parts I bring up, I'm bound to have missed something.
+
+But if you put me on the spot, these are all the things I would highlight.
+
+I would highlight SPM, I would highlight PyMDP, and later on, the message passing toolbox from Bias Lab.
+
+And algorithmically, I would highlight the original algorithm, along with all the things we have here, like branching time, Monte Carlo, sophisticated, deep sampling based, all these kinds of things.
+
+And then put our work in that field more as a different approach to solve the problem that we're interested in when we want to design active inference agents that do planning in interesting ways with all the epistemics and what we like.
+
+I don't know who asked that question, but you're right.
+
+It's a tough one.
+
+
+SPEAKER_01:
+It's kind of a perennial question.
+
+I mean, even with some familiarity, sometimes I find myself grasping at how simple and clear the problem is and how we have all the tools to work towards it.
+
+And then there's just this interesting moment.
+
+Like we know what we're interested in and what we want to do.
+
+We also know how to do it.
+
+So then like, what do I do then when we know what we care about and how we prefer it to be and seemingly have no limitation on the actual composability and the implementation, these developments happen year by year.
+
+
+SPEAKER_00:
+Yeah, I mean, there's always going to be more.
+
+I expect that our method is also going to be superseded by something that's even cleverer and even smarter.
+
+And I look forward to figuring out what it is, whether we figure it out or whether someone else figures it out.
+
+Whatever it's going to be, it's going to be awesome.
+
+But I sort of want to dwell on one of the points you just mentioned, which is the idea that if you have what looks like a terribly simple problem, it doesn't mean the solution is simple.
+
+Because most of what we're doing, like 90% of everything we care about here, is really just solving Bayes' rule.
+
+Bayes' rule is pretty simple to write down.
+
+The trick is that it's really, really, really hard to solve.
+
+That's why we have whole fields of variational inference trying to come up with approximate solutions that are good enough.
+
+Why we have all the...
+
+really brilliant, interesting work on Monte Carlo samples and all these kinds of things.
+
+It's all because we know what the problem is.
+
+The problem is easy to state.
+
+The problem is just solve base.
+
+The solution can be really, really difficult.
+
+And that's sort of where the devil in the details and all the work goes in.
+
+Same as saying, I just want to minimize free energy.
+
+It's easy.
+
+Well,
+
+and paper edges, but if you actually have to solve it, you need a lot more paper.
+
+
+SPEAKER_01:
+Easier said than done.
+
+That was probably true about the first rocks being chipped into blades.
+
+Just make it narrower.
+
+Just make it sharper.
+
+
+SPEAKER_00:
+Yeah, it's easy.
+
+It's easy.
+
+Just go hunt the mammoth.
+
+It's easy.
+
+Just make it lie down.
+
+You can take all the food.
+
+No, but I think this is sort of, to me, one of the really, really interesting parts about working in this field that oftentimes it's really easy to state what you want, at least for me.
+
+I want to be really, really good at updating beliefs.
+
+I want to do that in a way that's consistent with all these things that we like.
+
+But really, when it comes down to it, we just want to update beliefs in a good way.
+
+How to do it and the details and how the belief updating should work and whether we should introduce all these extra little bits and pieces like information gain terms, all this kind of stuff.
+
+To me, that's where you get to dig down and immerse yourself and find all the cool things and try stuff out.
+
+That's where the work is.
+
+That, to me, is really the exciting part.
+
+But I like that I can always step back and say, well, I just care about doing inference, man.
+
+
+SPEAKER_01:
+let's look at where you left the papers off as we kind of think about where we go so other than broadly summarizing all of the acronyms and terms that's a lot you
+
+clamp the paper in a very interesting way at the end yeah so what what would you say about this final paragraph and like how did the different authors perspectives um arise to result here so this is this actually interesting point um because I think I want to come at it in another way um
+
+
+SPEAKER_00:
+What we're trying to do here is we're trying to provide tools.
+
+We're trying to build really, really good tools for doing active inference.
+
+But as you mentioned earlier, people come to active inference and the free energy principle for all sorts of different reasons and for all sorts of different backgrounds.
+
+Maybe not everyone is interested in building tools.
+
+And the measure of whether our tools are useful are whether they end up being used by other people.
+
+If you or others pick up this notation and pick up these types of message parsing, pick up this Lagrangian action-vention formulation, then this paper is going to have the impact that we'd like it to.
+
+If nobody picks it up, it's just a cool hammer that keeps lying on the shelf.
+
+paradoxically, I think one of the barriers to uptake could be that a lot of the people that come to active inference come from, say, neuroscience or more sort of philosophically bent, which is great.
+
+We need everybody on this train.
+
+But they might be concerned with other things than we are.
+
+And
+
+We didn't make any claims as to whether this is a biologically plausible update algorithm, which may be something that you care a lot about if you're a neuroscientist.
+
+We don't have any claims about how this ties to experience or qualia or consciousness or all the kinds of things that you might be more interested in if you come at it from the more philosophical side.
+
+So these tools is the best we could build as engineers trying to make good Hamels.
+
+But if what you're looking for is not here, if your priorities lie somewhere else, then these might not be the right ones.
+
+And that's OK.
+
+So yeah, I think, paradoxically, one of the things that could hinder uptake and the impact of these papers is that the people for whom we're building tools might care about different things than what we built.
+
+If you really, really, really want to use a screwdriver, it doesn't matter that we have the best hammer in the world.
+
+You still need a screwdriver.
+
+So because this is a
+
+Again, a tool building exercise.
+
+Because this is about doing things from an engineering point of view, that means they are tools for engineers.
+
+So we don't make any claims as to biology or consciousness or all the other things that people are studying under the heading of active inference and the free energy principle.
+
+We'll let people who are better qualified and, in many ways, smarter at these things than we are take care of that.
+
+What we want to do here is just say, here's a really, really good hammer.
+
+If that's what you want, then we got you covered.
+
+
+SPEAKER_01:
+These are really important.
+
+I really respect that approach.
+
+I think in terms of the active inference ecosystem, even if there seem to be like some barriers or hindrances associated with really the articulation of the tool and what it's used for, this is how we bring more perspectives in.
+
+And if...
+
+hammer is oh yeah but then we also included this and here's this proprietary phone home and it only does this type of nail and it only makes houses all of a sudden it's it's not really a hammer anymore it's become welded to a larger apparatus um and yet if the head of the hammer and the handle aren't connected it's not a hammer so then it's a fine line between like what algorithmically and implementationally
+
+does this essential active inference tool do?
+
+What is it?
+
+And then what can be done with it?
+
+And I think actually RxInfer and BiasLab, other than Burr and Ural's incredible work over the last years, by situating within a broader Bayesian message passing framework,
+
+that has helped first off bring in insights from the broader bayesian inference space related to literally four knee graphs message passing reactive message passing and so on and then also it helps us separate out the active inference models from other models and there's nothing wrong with other models if you are building a model you find that your system of interest doesn't require like an active epistemic agent for every single component
+
+No one in the active ecosystem is going to get mad at you for just doing what the situation demands.
+
+And so that's very cool.
+
+
+SPEAKER_00:
+And again, one of the things besides the new messages and everything that allows people to do this type of message-passing-based inference, one of the things we wanted to stress is that we wanted this constrained FFG notation to be something that is quite easy to pick up.
+
+It's easy to write down your graph.
+
+And if you want to do just box standard belief propagation, you don't really have to do anything.
+
+It looks 99% like a normal factor graph.
+
+But if you want to, say, do a factorization here and there, you can just draw that in by adding a little thing for each of the parts of your graph that factor together.
+
+So we really stress this should be something that is intuitive and usable.
+
+Because we want this to be applicable for people who don't care about working out the intricacies of message parsing and factor graphs, this should be a tool for everyone.
+
+And if you come at it from a different background and what you want is a nice and clean modeling tool, it should be that for you.
+
+
+SPEAKER_01:
+What else do you think could come into play, even just totally speculatively or arbitrarily?
+
+What do you imagine in the preferred active toolbox, even if it's some sort of synthetic intelligence fantasy?
+
+What would be the coolest thing that we could bring a new colleague to the table and set them down to?
+
+
+SPEAKER_00:
+To me, I would like to generalize all of these update rules that we have derived, like the general form of the GFE-based messages, to a point where you don't have to worry about whether the thing you need is there.
+
+And then I would want it to be so that I can give it to you, or I can give it to a neuroscience colleague, and I can sit them down and they can draw their graph in their C15 notation.
+
+And all of that should get translated into executable code.
+
+Because then we end up in a situation where if what you want is a modeling language that solves your problem, you can do that.
+
+You don't have to be a technical expert.
+
+And for those of us who want to work on the technical side of things, there's a code base that we can open up and dig into.
+
+But in terms of a toolbox that I would like to have in existence,
+
+It should be something that is really, really easy to use, generic, and fast, because fast is cool.
+
+
+SPEAKER_01:
+You see any difference or reason to build sketches in the factor graph form or in the base graph form we know there's an analytical relationship that links them.
+
+But is there any reason to like work on building intuition about factor graph specifically or would it suffice to build intuition for learners about base graphs knowing that they can be rendered to factor graphs later.
+
+
+SPEAKER_00:
+I actually had this, we had a long conversation about this with a colleague of mine just this week.
+
+And I think if you dig deep enough, the representation doesn't matter that much.
+
+The update rules end up becoming the same.
+
+I would say factor graphs, to me, they're preferred.
+
+I mean, obviously, I'm biased because that's what I work on.
+
+But I also think they allow you to write down more.
+
+If I have a base graph, I can see that two variables are related because I have a node here and I have a node here and an edge between them.
+
+With a factor graph, I can also see what the relation is, because I literally have a little square with a simple end that tells me the relation.
+
+And also, if you adopt the CFFD notation, you don't just write down your generative model.
+
+You also write down your constraints on Q. So you can write down the exact inference problem that you're trying to solve.
+
+And that is something that I
+
+I'm not aware of a way to do on Bayesian networks.
+
+So to me, I think there's more information contained in a factor graph, especially if you adopt constrained FFGs.
+
+And then again, as you say, you can always have a one-to-one mapping between a Bayes net and an FFG.
+
+
+SPEAKER_01:
+Okay, to kind of replay this, because there's different ways to constrain a given Bayes graph, there's actually like a few to one projection of factor graphs as constrained.
+
+down to a same unconstrained base graph and so in that sense they can convey more information if you use the cffg and yeah so again they don't call it bias lab for nothing it's definitely your fellows take but
+
+
+SPEAKER_00:
+Again, this is also one of the things we introduce with these papers is that we identify a need to write down more than just the generative model if you want to be clear about everything else you're doing.
+
+Because if you don't have a graphical relation, you need to put it in equations, you need to put in text, and you need like half a page of hieroglyphics to convey what you want to do.
+
+And again, that's a barrier if you want this to be an accessible tool for everyone, which is one of the things that I want.
+
+So we augment FFG notation specifically in a way that I'm not aware of anyone that has done for base nets.
+
+They might be able to.
+
+So in that way, you're right.
+
+There's more information definitely in the CFFG than in the base net.
+
+In general, there's also more in a factor graph because you have to be explicit about the relation between variables more than you do with at least the versions of Bayes' nets that I'm familiar with.
+
+Again, I would say, as I put on my practical hat, you should use whatever is best for your problem, whatever you're most comfortable with.
+
+Because a lot of the math you end up having to do comes out to be the same.
+
+In the end, it's just a picture.
+
+Yeah.
+
+But there's more, to my mind, there's more information in especially constrained FFGs, which means you can be really, really accurate and precise about what you want to do by just writing down the picture.
+
+
+SPEAKER_01:
+Yeah, a lot of thoughts there.
+
+One, great, you left the door open to somebody introducing a graphical or other than graphical notation for Bayes' graph to create a true one-to-one map between Bayes' graph and the constrained Forney graph.
+
+It's not impossible.
+
+It might even be trivial.
+
+And then it just makes me think of like a learning language that's more broadly...
+
+used base graphs where the nodes and edges have a semantics that are equivalent to what is usually considered as structural modeling yeah and then you enter into the learning language and and play space and toolbox and then there's this
+
+strong relationship between the learning language again just kind of hyperbolizing this and the engineering implementation or specification and then from there it's actually anchored in message passings like that's how we connect the base graph as
+
+sketched to the message passing is like enter the problem into the base graph if you want to enter at that point transfer over to the cffg and then run the messages from there however if you wanted to you could just work directly from the fact graph and a base graph would have never had to enter into it
+
+
+SPEAKER_00:
+I think that's doing a little bit of a disservice to base graphs.
+
+I have my favorites, but if you go and look at the original Wayne and Bishop papers, for instance, where they originally derived the VMP algorithm, it's all done for base graphs.
+
+It's all done for Bayesian networks.
+
+So it's not that you can't do message parsing.
+
+Again, this is just different representations of a generative model, and sometimes one is more useful.
+
+I find that generically,
+
+Factor graphs are more useful when I want to work with message passing, but some other people might disagree.
+
+What I can say is that the versions of base graphs that I've seen contain less information than a constrained FFG because you don't write down the exact inference problems, i.e.
+
+the constraints and the data points and everything.
+
+So I wouldn't say that there isn't a room for base graphs.
+
+Base graphs are great.
+
+But I would say for the kind of work that I'm interested in, factor graphs feel more natural.
+
+
+SPEAKER_01:
+Thanks for that.
+
+That's great.
+
+Let me ask one more question.
+
+In the
+
+Graphical Brain 2017 paper.
+
+There were three graph types mentioned.
+
+So we've spent a ton of time talking about the complementarities and the transformabilities of Bayes graphs and 40-factor graphs.
+
+Could you say a little bit about this last form of graph, the neural network or neural circuit?
+
+
+SPEAKER_00:
+I am not...
+
+intimately familiar with the formalism of neural circuit graphs.
+
+So I don't think I can add anything above and beyond what's here, especially if I want to make sure that I don't say anything wrong.
+
+Fair enough, fair enough.
+
+Okay, just wanted to check.
+
+Yeah, that's fine.
+
+
+SPEAKER_01:
+They're all like different projections, but just wanted to ask.
+
+
+SPEAKER_00:
+I think if you wanted to try and tie a bow on it, I would say that different graphs, different graph types and different types of graphical notations are useful for different things.
+
+And whatever you need to do, you should pick what is best for the kind of problem you're trying to solve.
+
+If all I'm interested in is dependencies between variables, I just want to know which variable depends on which others, baseNets might be the best way to represent that.
+
+And that might be the case for the problem that someone is working on, that this is the central information that they care about.
+
+I also want the relations between the variables to be explicit, and I want to do message parsing.
+
+maybe an FFG or a CFFG is a better representation.
+
+And if I care about, say, neural implementations, maybe like a neural circuit is the right choice.
+
+Again, I don't want to sort of come out and tell people what they should do, because I think everybody knows what they should do better than I do.
+
+What I want to propose is that there is a type of notation that has these nice properties.
+
+You can easily represent the relationships between your variables, and you can represent the constraints in Q, thereby also the resulting message parsing algorithm, which is something that I find really useful and that I hope other people would.
+
+But if that is not the type of problem
+
+that you're interested in and something else works better for you, you should use something else.
+
+Again, this is all pragmatics.
+
+This is just notation for how we want to get our ideas across clearly.
+
+And in the end, what all this is really designed to do is to communicate information in a nice way.
+
+And the language we would use to speak in should reflect what we want to say.
+
+We could try you and I and have a conversation in German, but I don't think it would end well for either of us.
+
+At least not for me.
+
+
+SPEAKER_01:
+I'd be there to hear, but I wouldn't listen.
+
+Or do you speak German?
+
+
+SPEAKER_00:
+No.
+
+
+SPEAKER_01:
+Nor do I. There you go.
+
+
+SPEAKER_00:
+So again, we could try, and some ideas might be more expressible in German than in English.
+
+But if none of us speak, it's not going to aid us in transmitting
+
+information so for this setting english is probably the right choice of language for other settings it might be baseness and for other settings it might be cffgs i have a bias towards cffgs because i think they are the nicest way to represent everything that we want to do but for other people it might be different and that's okay
+
+
+SPEAKER_01:
+yeah we just did a very long unpacking of the hammer and again as discussed if you're not looking for that function it's not the right language or process i mean it's just such an important higher order point that that clarifies the contribution of the paper and the research direction and
+
+offers up something to hopefully many people who will use it.
+
+At least from my side, only in spoken English, active inference ontology dialect.
+
+I hope that people do use these tools.
+
+There's only seemingly a few individuals who are
+
+working in rx and for making active inference models it is very few relatively so having that number broadly increase yes also training up different kinds of synthetic intelligences to do active inference modeling that enriches and enlivens our ecosystem of shared intelligence
+
+And the engineers also need to have hands-on experience and know and work through simpler examples to build intuitions for larger systems, less larger systems be so far beyond our understanding that it's not useful or helpful.
+
+
+SPEAKER_00:
+Yeah.
+
+And so before we end up wrapping up, I want to reiterate the invitation that I gave last time as well.
+
+If anyone out there is interested in working on these things,
+
+Hit me up.
+
+I'll be happy to help you work on your graphs.
+
+Because I think it's important that a measure of a tool, whether it's useful, is whether it's being used.
+
+So if I can assist people in picking this up, I'll be more than happy to.
+
+
+SPEAKER_01:
+That's the most helpful and pragmatic thing, I believe, I guess, just in closing.
+
+What loads up on pragmatic value for you?
+
+What loads up on epistemic value for you in our field as we head into like 2024?
+
+
+SPEAKER_00:
+I think I'm in the very privileged position that I can do research for a living.
+
+So my pragmatic value and my epistemic value tend to overlap a lot.
+
+If I can figure something new out, that's pragmatic because that means I can
+
+write a new paper, and that's the thing that I'm producing.
+
+So I think that would be my answer.
+
+I want to try and see if I can make this practical as I work it out for more models and try it for more things.
+
+But it is a very privileged position to be able to do research.
+
+where we basically get to spend our days trying to figure things out with all the admin and all the academia things and all the stuff that goes on.
+
+But at the end of the day, I do get to spend a large chunk of my time figuring things out.
+
+And that is really, really nice.
+
+So the epistemic and the pragmatic value tend to overlap, which is nice.
+
+
+SPEAKER_01:
+Well, thank you.
+
+It's a beautiful sentiment.
+
+So it was a great series.
+
+This is really a mega tech tree direction for the ACT-AMP ecosystem and beyond.
+
+So good luck with your continued work and play and research, Magnus.
+
+It was awesome.
+
+
+SPEAKER_00:
+Thanks.
+
+I had a blast coming on here.
+
+It's been some really, really great discussions.
+
+And for those of you who participate in chat, got some hard questions.
+
+That's good.
+
+
+SPEAKER_01:
+Yes, and it will continue in the Institute Discord.
+
+
+SPEAKER_00:
+Excellent.
+
+I'll see you there.
+
+
+SPEAKER_01:
+See you, Magnus.
+
+Bye.
