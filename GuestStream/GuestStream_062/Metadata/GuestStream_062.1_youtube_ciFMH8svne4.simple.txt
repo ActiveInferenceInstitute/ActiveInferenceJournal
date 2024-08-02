@@ -1,0 +1,1472 @@
+SPEAKER_00:
+Hello and welcome.
+
+It is October 30th, 2023.
+
+We're here in Active Inference guest stream number 62.1 with Michael Karl and friends.
+
+Today the talk is called Deep Temporal Models of the Translation Process, a Translation Agent Grounded in Empirical Data.
+
+we're going to have a presentation by Michael followed by a panel discussion so if you're watching live please feel free to write any questions in a live chat otherwise we're looking forward to this presentation and discussion so thank you again for joining Michael and friends to you for the presentation
+
+
+SPEAKER_01:
+Yeah, good morning.
+
+So I talk deep temporal models of the translation process.
+
+I would like to outline an idea for an architecture for the translation process.
+
+And to do this, I have three points here.
+
+First, I would like to introduce translation process research, what this is, and the data that we have collected.
+
+I will show the data acquisition tools,
+
+visualization and segmentation, then I will come into an architecture that is based on these partial observable Markov decision processes and that uses the free energy principle.
+
+And in the end, I will talk about an experimental implementation and initialization of those parameters.
+
+Okay, before starting talking about translation process research, here is a small contextualization of this field of research.
+
+So it started around 40 years ago, and it's all about investigating what happens in the mind of the translator.
+
+So how do translators produce translations?
+
+How is it possible to have two languages in one mind?
+
+what makes translations difficult, and so on.
+
+type of research started around 40 years ago with Krings around the beginning of the 80s.
+
+And they were using introspection and think aloud protocols.
+
+That was a laborsome manual analysis that went along with this.
+
+Then 10 years later, about Antluke Jakobsen devised a key logging tool called TransLog that would record keystrokes.
+
+Translator would sit in front of an editor.
+
+and type in the translations and the keystrokes would be locked.
+
+Then 10 years later, in 2005, eye tracking devices were added to this device.
+
+So with an eye tracker, the gaze on the screen would be recorded in time and
+
+with a keylogger the output.
+
+So we have an eye tracker recording where on the screen a translator looks and the keylogging log what the translator writes.
+
+And so we have somehow an input and an output.
+
+And then in 2010, around that time, I started collecting all this data into a database.
+
+putting the data that we had collected by then in one database.
+
+And a couple of years ago, we started having this with a browser interface and Python and R interface.
+
+And so I like to call this translation data analytics because it resembles a little bit data analytics.
+
+So we have these Python tools and the large database that I will talk later a little bit about.
+
+and so this our research is on behavioral measures means keystrokes and gaze data but there's of course also other kinds of data acquisition like brain activities eeg fmri and so on but i will talk about this part where we have key key logging data and eye tracking
+
+Okay, so how does it work?
+
+So this is a picture of the kind of setup that we have used quite frequently in this research.
+
+So you see here on that screen Transloc2 that is an editor.
+
+So on the top of this window here, you have a source text window that a translator is supposed to translate in the lower editing box here.
+
+And by typing there, the keystrokes would be locked in time.
+
+So every keystroke comes with a timestamp.
+
+And one could then look into the rhythm of translations.
+
+When does a translator type fluently and so on?
+
+When do they pause?
+
+And then in addition, we have here an eye tracker.
+
+We have light bulbs here.
+
+This light is reflected in the eyes of a translator.
+
+And there's a device, a camera tool here, which then would record and calculate where on the screen the translator is looking.
+
+And so we have the two things.
+
+We have the input to the translator, so basically the data
+
+that goes into the translator's mind and the keystrokes that come out.
+
+And this data can be then processed and represented in several ways.
+
+And one way of representing this is shown here.
+
+So this is a translation progression graph
+
+where we have on the y-axis here on the left side, we have the source text that consists of 160 words.
+
+It's an English source text.
+
+And that is translated into a target language.
+
+And then on the x-axis horizontally, we have the translation process data.
+
+And then first, we see here that the translator quite tightly, quite nicely reads the entire source text.
+
+The blue axis here are fixations on the source text.
+
+You can see how the translator reads the source text.
+
+That's the orientation phase.
+
+Then we have here drafting phase where the translator basically drafts types in the translation and the green dots are then fixations on the target side.
+
+So the blue dots are the fixations on the source text.
+
+The green dots are fixations on the target side.
+
+You can see how the translator goes back and forth between the source and the target side.
+
+And then behind here, you have black dots and red dots are the insertions, black, red are deletions.
+
+So we can trace how the translation evolves.
+
+This would be the drafting phase.
+
+And then in the end, we have a revision phase where again,
+
+the translator reads, in this case, almost the entire text, mostly with the eyes on the target side.
+
+So we see many green dots pluses in this case here.
+
+So this is one translation style where we have nicely these three faces, but other translators behave quite differently.
+
+So for instance, this translator here
+
+as you can see here, reads a little bit one and a half segment and then starts typing in the translation.
+
+Then again here in segment three, reads the segment here, the source segment, and then types in and then goes on quite fluently with only very little look ahead in the source text, immediately reads and types out the translation with no larger orientation phase and also no revision whatsoever, it seems.
+
+so if we zoom into this part here of this process it looks like this again we can see on the left side here the source text english source text and on the right side a translation to spanish in this case and you can see here that all these words are aligned so the source english source words and the spanish
+
+target words are aligned on a small level here we for instance we can see that there is two words in the spanish side aligned to three words on the source on the source side so we see on the here on the horizontal axis we see the word alignments between the source and the target text and again on the
+
+Here in the graph, the translation data, so the process data.
+
+So first, in the first couple of seconds, the blue dots signal or indicate a reading on the source side, a source text chunk.
+
+So we can see that the translator takes in some new information from the source side here.
+
+from the source text, and then types out here a translation with the eyes on the target side reading here these words.
+
+Then something happens, and you can see there was something typed, an O, and the deletion of an O, and so on.
+
+So there seems to be some kind of typos, a little bit of problem.
+
+And then in this moment, the translator then moves with their eyes from the source text to the target text, presumably to check what happens on the screen here.
+
+and then goes on smoothly typing.
+
+Here again, something seems to happen, but it looks like something different a little bit because maybe the translator has an intuition that something went wrong here.
+
+So we see these refixations on the target site, Las Normas, around here.
+
+And this whole stretch, and then there is a deletion.
+
+And once this deletion is somehow this translation hurdle or kind of a small problem is solved, the translator goes on smoothly.
+
+OK, so we have two kinds of streams here.
+
+We have a stream of keystrokes.
+
+the translator types in translation.
+
+And we have a stream of gaze data where the translator reads stuff.
+
+And these two streams are synchronized, as you can see on this slide here.
+
+But they can be also fragmented, segmented in different ways.
+
+And one way of fragmenting the stream into units, into units of translation units here in this case, is by looking into the pores.
+
+So here we can see there is a pause, a keystroke pause.
+
+No keystrokes occurred for more than one second.
+
+This is the white stretch here.
+
+And then in black, these black striped boxes here would indicate coherent typing.
+
+So no keystroke gap more than one second.
+
+So it's kind of coherent typing.
+
+And we see that there's pausing and typing, pausing and typing.
+
+which is an observation for all kinds of text production that text production occurs in in form of pausing and typing and it's assumed that in the pausing in the pauses the translators or the writers take in some new information or think about a kind of a problem or something and then they you have these bursts these typing bursts in which the text is produced
+
+And the sequence of this pauses and typing would be a translation unit.
+
+And Fabio Albers here in this panel has started looking into those a couple of years ago with some interesting results.
+
+So you can see here in this case, there's not only a sequence of pausing and typing, but also we have here the gaze going from the source to the target, to the source to the target.
+
+and this looks like quite independently while the guys move from the source to the target and so on the eyes the hands type out stuff or not so we can then chop up this kind of data also in smaller units depending on the coordination of the eyes and the hands and here we have called this a translation unit
+
+sorry, activity units, where we can see here a unit or a stretch of time where the eyes are on the source text only.
+
+Here we can see a stretch of time where
+
+the eyes are on the target side, activity unit of type two.
+
+And then we see here different units where the eyes go back and forth between the source and the target side of the window of the screen while typing.
+
+So we have activity unit five is typing while reading the source text.
+
+Six is typing while reading the target text.
+
+So you can see that the eyes go back and forth between the source and the target while typing.
+
+or while reading with no typing.
+
+So this is one way of chopping up the translation process data.
+
+And recently, we have also started annotating what we call higher level translation states.
+
+So the assumption is that the translator can be in a phase of orientation.
+
+So the translator can take in information and orientation.
+
+Or they can be in a state of flow, in a flow state, in a state of fluent production where the text is produced.
+
+Or just like here, there can be hesitation.
+
+So some surprising things pop up.
+
+Some intuition is something went wrong, and they come into a state of hesitation until the hurdle
+
+is solved and then they go on with again a fluent translation or an orientation.
+
+So this was a kind of an annotation that we had previously, but before now going into the modeling in terms of hierarchical architecture, I would like to show how we have already annotated or analyzed this data previously.
+
+Here you can see that we looked into these activity units, means these types of
+
+units and we can make a distinction between reading a translator can read the source text the translator can read the target text translator can write while can write or they can pause so where there is no input and it's a completely connected graph as you can see
+
+where a translator can switch from any one state to another.
+
+So it means we can look then into bigrams of these activity units here to figure out what kind of typical situations we can see.
+
+And some time ago, a couple of people
+
+did this kind of research, so looking into biograms of activity units and then see what are the typical transitions between these activity units, and we figured out that expert translators, for instance, move more frequently from the source text reading to typing, so they cycle around this way, where when the text becomes more difficult, we can see that there is reading and source text reading and target text reading
+
+we see somehow slightly more cycles around this way.
+
+And then in post-editing, the eyes are more often on the target side and writing, so we can see the translator cycling around this way.
+
+OK, so this was one type of analysis that has been conducted.
+
+But as you can see, all this is on one level.
+
+So this is just a flat kind of a bigram architectural assumption.
+
+There were other ideas of that there is
+
+probably multiple concurrent processes going on in the translator's mind.
+
+And this is the MONITOR model that we suggested like around 10 years ago, Moritz and I and others too.
+
+And here the idea is that we have two different kinds of processes.
+
+One horizontal process in which a translator engages in kind of automatized routines.
+
+by producing a translation.
+
+And while producing these translations, a monitor would loom in the background and in the back of the mind and check whether the produced translation
+
+works out whether this is in line according to the translation goals and to the requirements of the translation.
+
+And if something goes wrong, the monitor would interfere and stop this kind of horizontal processes and
+
+and interfere with remedies or with changing the output.
+
+So the MONITOR model is not the only model that has suggested this kind of architecture.
+
+There's actually quite a few similar suggestions.
+
+Here is one from Anthony Pim in 2017.
+
+He talks about a cruise mode and a bump mode.
+
+And then he says the cruise mode is the default mode.
+
+That's where the translator usually wants to be, in a cruise mode, in a flow state.
+
+And then they will stay there in this flow mode or cruise mode until something goes wrong, a bump occurs, and then the translator
+
+is pushed into this bump mode, which requires some attention.
+
+And he suggests that there is a couple of strategies how a translator can come out of this bump mode back into a cruise mode.
+
+And he has several suggestions from simple to more complex here, low effort to high effort.
+
+And then the translator interferes more or less in the output, in the target text.
+
+And here he has a couple of strategies how to do this.
+
+There were other suggestions already from 87, this Koenig talk about ad hoc mode, ad hoc block and rest block are good, about S-mode and I-mode, but there is a, so you can see there is a couple of similar ideas, people named this slightly differently.
+
+So before going now into the architecture, I still want to talk a little bit about the translation process database, which we have used in our study.
+
+So the translation process database is an effort, as I said before, that started around 2010, so 13 years ago or so.
+
+And it has lots of data from different studies.
+
+uh translation uh phd projects and similar studies so more than 90 studies are collected there there's more than 6 000 translation sessions with mostly they all have key logged data so all these translation sessions are logged with keystrokes in different not only in transloc2 but there's different kinds of data acquisition tools and mostly they have also eye tracking data so all these data together makes up several hundreds hours of
+
+process data, there is a very many different translators and we have different translations into more than 10 different languages.
+
+Mostly this is from English into all these different languages that you can see here.
+
+and in different kinds of modes also mostly from scratch translation but very much also post editing machine translation post editing that's a situation where the translator instead of producing a text from scratch already has a pre-translated output from a machine translation system and then posted its means takes out the errors and so on so but we also have a spoken translation interpreting side translation and dictation
+
+So this is the internal contents of the database.
+
+And this database is publicly available.
+
+It can be downloaded from SourceForge free of charge.
+
+And all this data, all these more than 6,000 sessions are aligned on a segment and a word level.
+
+And we have extracted features from this data that is represented in 11 tables.
+
+I wouldn't talk about this here with more than 300 features.
+
+So a very rich database.
+
+publicly available, but if researchers are interested, they can also have a private account with a browser interface, they can upload their own data, and then we have an interface to Jupyter with R and also Python and some toolkits to extract the data, all this data from the public part and from their private
+
+and integrate this and we have a toolkit to work with this data.
+
+Now, I would like to come back to this data that we have annotated here.
+
+So we have these three phases, orientation, flow state and hesitation.
+
+And we have in an experiment annotated six texts with these three states.
+
+And we had two annotators, T and Y. They annotated both these six texts.
+
+So six texts, each text about 150 words.
+
+So this is almost around a thousand words or so.
+
+And these six texts consisted of
+
+1,815 activity units of type 1 to 8.
+
+So we have six different types of activity units.
+
+T1 is reading on the source text.
+
+T2 is reading on the target text.
+
+This is typing only, typing with eyes on the source text, on the target text.
+
+And this is pausing.
+
+So we have a total of this 1,815 activity units.
+
+And they were annotated.
+
+with the S, O, and S labels from these two annotators.
+
+And you can see here that mostly in the S state, so in this flow state, we have one of those states that go along with typing, so T4, T5, T6.
+
+Whereas in this hesitation phase, we have mostly 42
+
+percent chance that we see the ice on the source or the target site, whereas the orientation phase is a little bit undecided here.
+
+Then we also checked how well these two annotators coordinate, how well is the, how good is the
+
+translator inter inter annotator agreement and they agreed best in the flow state eight uh so you can see here that the internal data agreement is best in this fluent translation that was the most easy to detect and less least controversial and according to this chart here they were most confused where this orientation phase
+
+which then sometimes the other translator would consider this to be an s or an h state okay so this part then about the data and i would like now to talk about how we
+
+managed to get this into this architecture.
+
+And first, a word about this free energy principle and what that could mean for a translator.
+
+Here is this picture shows that there's a translator.
+
+working on a text and then we have this text in the environment.
+
+And the idea of this free energy principle is that a translator comes into a situation with some expectations.
+
+So a translator usually is told what this text is about, what is the target language, what is the topic or the domain of the text and so on.
+
+So they come with some kind of expectations.
+
+a distribution of predictions and then they come and have some observations and there can be a discrepancy, there can be a larger or a smaller gap between the observations and the predictions.
+
+and then there are two ways to reduce this free energy so the amount of discrepancy between this this expectations and the observations is a free energy and this is supposed to be or should be minimized this discrepancy and one way to do this is to interfere with the text a translator can interfere with the text so they can produce a translation
+
+According to their preferences, thereby changing the environment and then observe something that they expected.
+
+And they can then also change their internal model.
+
+which would then change the predictions and ideally a translator would be in a situation where they have some predictions, then some actions that goes along with their preferences, then they observe something that they have predicted,
+
+they go along the minimally change the beliefs again and they would be in a flow state going like this smoothly predicting continuations of the translation and observing that it was also correct their predictions.
+
+This can be formalized in the free energy principle with a free energy principle as follows.
+
+So we have this Q is the distribution of the predictions.
+
+The P is the distributions of the observations.
+
+And if these two distributions are identical, these divergence would be zero, which would mean that the two distributions are identical.
+
+And the other part is the evidence, which is a translator produces something.
+
+There's an action, this alpha here.
+
+And if a translator would try to maximize the probability that an observation of a translation increases,
+
+right within the given context of the source text.
+
+So this would be the evidence.
+
+So a translator would try to maximize this evidence or to minimize this divergence in order to arrive into a state, into a flow state, or to maintain this flow state.
+
+OK, how can this now be modeled in an architecture?
+
+So I would like now to go through these three states here in a drafting phase.
+
+So I'm talking about a drafting phase.
+
+We have the orientation, a flow state, and a hesitation.
+
+I would like to go and look into how this could be modeled in this partial observer hierarchical model.
+
+And so here we can.
+
+model this or assume that there is a kind of a Markov process here.
+
+We have an observation, then a transition into a successive flow state, then a transition into a state of hesitation here.
+
+And in this orientation phase, a translator would read a piece of source text.
+
+And by reading this, they would allocate some internal resources.
+
+They would think about how the translation could be.
+
+They would have an idea whether they first should look up some resources, some words, and a lexicon or so.
+
+They would read in a chunk of source text.
+
+get a gist of it how to translate it and in initialize some kind of internal resources that i will look into in a moment and then execute and then be in this flow state and execute or produce this translations more or less fluently while doing this a monitor process would run in the background and whenever something goes wrong or is they have the intuition that something
+
+thought to be different the monitor process would stop this flow this fluent translation and kick the translator out into another state in this case here in the hesitation phase again we have an initialization of the resources and so on so we have on this level one kind of a markov process and if we zoom into this part here
+
+Then we can see that according to this partial observable Markov decision processes, we have these four resources, the ABCD matrices, and the translator would then initialize those matrices, first check the translation, whether there's a translation hurdle here in the observation, then initialize somehow translation equivalences and these matrices here.
+
+Okay, how would that work?
+
+If we look again into this part, so a translator comes out of this orientation phase and goes into this state of fluent translation here, we can see again that the translator reads or types in the translation while reading, while the eyes stay at the places where they type here, in this case on the source side, then goes to the target side and so on.
+
+So if we look into this, we have here a small segment
+
+the breakdown of traditional norms in English, which is translated into Spanish.
+
+And you can see that the typing in of the translation is in the order of the Spanish word order.
+
+so they would translate in the spanish word order while going with the eyes back and forth to try find resources what is the next word to be translated okay so how could that be formalized in this formalism again we can we can think of
+
+this as a transition of alignment groups so the translator has initialized these alignment groups and then in the order of the target language syntax so in the order of the french final outcome okay and then
+
+there would be initializations of these transition matrices and the likelihood of recognition of the observations and so on.
+
+So this would be an initialization of this process.
+
+But in addition, we have active inference that predicts
+
+the sequence in the future.
+
+So if a translator is at a certain stage here in alignment group two, for instance, to produce a translation for this alignment group, the idea of this active inference is that at each moment,
+
+there would be a possible path in the future and the translator would then compute what is the best, the most likely or the most effective path to proceed.
+
+So what are the transitions in the future?
+
+And this is called the expected free energy that is computed here based on a set of preferences.
+
+And so basically, if you put this together, I will come back to this a little bit later when I talk about the initialization of these matrices here, but to have an overview here.
+
+So we have here on this level, we have these alignment groups and transitions from one alignment group to the next one here.
+
+And on this level here, we have this active inference part where kinds of best path is computed based on preferences.
+
+And if you plug this part into our previous architecture, it could look like this, where we have again here allocation of resources.
+
+So checking whether the alignment groups, how these alignment groups could be initialized.
+
+Then we have here initialization of these matrices and a kind of a fluent state in which a translator
+
+um goes over uh produces the translation while monitoring what comes or whether they are in a good shape here okay we can see that there are two levels one level here a state level and another level
+
+an activity level where these activities actually take place.
+
+So assume that the translator was kicked out from this flow state and ends up in a hesitation state here.
+
+Something very similar could happen, the initialization of these parameters first.
+
+And then if you look back into this part of the process here, the assumption is that something
+
+The translator has a feeling that something is wrong with Las Normas, with this part of the translation, and therefore looks very often back and maybe thinks about how to go on with this, does some remedy and then goes on.
+
+So how could that be represented?
+
+During this phase, a translator would think about all kinds of adjustments of the model, so it could imply the adjustment of the transitions, so maybe a completely different
+
+translation would be chosen, so adjust the translation and then accordingly adjust the actions, what to do next, and accordingly change also beliefs, what the translator will observe when changing all these parameters here.
+
+So we could plug this into this overall model again, and we can see that we have here these two kinds of levels, one state level and one action level, and switching back and forth between these two states, or better say, a concurrent activation of these two levels.
+
+of activation.
+
+So to sum up this part of my talk, here is the idea of the three states.
+
+So we have an orientation phase where a translator takes in new information.
+
+That is an epistemic affordance, basically adjusts internal model, checks whether all the resources are available to go on to start with the translation.
+
+Then we have this fluent production, which is a flow state, which is a pragmatic affordance where the actual work is done.
+
+So here we have a fluent typing where
+
+the observations, where the production, the actions that take place, are in line with future observations.
+
+So these actions here do not produce surprise or something like this.
+
+And then we have this third state, a hesitation, where a translator is kicked out somehow from this flow state because something went wrong.
+
+And then this hurdle needs to be remedied.
+
+So something needs to happen in order for him or her go back to that flow state.
+
+Okay, so this is basically the idea so far.
+
+And we have now tried in a small experiment to initialize these parameters in this partial observer Markov decision process.
+
+So I would like to talk about this part of the process where we have initialization of the translation equivalence, the alignment groups here.
+
+right in this reading.
+
+And then these ABCD matrices are initialized.
+
+I would like to talk about this, how this could be done.
+
+And then, in particular, also look into this place here, where we use this E parameter to supervise, to indicate whether everything goes wrong according to some habits and goals.
+
+Okay, so first, if a translator allocates these resources, we can see something like this.
+
+Assume that we have a situation where the person translates from English into Spanish.
+
+So we have here an English sentence.
+
+translated into, and this is happening in the mind, so the translator allocates some kind of resources and has an idea to translate this sentence into this Spanish one.
+
+And we can see here that we have alignment groups, one to eight in this case,
+
+but they are ordered already in the order of the target language syntax.
+
+You can see here these three first words are quite monotonous translation, but then there is some kind of reordering here in the end.
+
+But the translator mentally reorders these alignment groups into the Spanish order and allocates somehow this Markov process here.
+
+This would be perhaps the first step.
+
+And then we have in this model here a kind of a prior.
+
+So this D1 is the prior.
+
+What is the prior of the first action to be taken?
+
+And this prior would be that the translator starts with the first word to translate in their allocated chain here.
+
+So all the probability masses associated with the first word, there is actually not a choice to start somewhere else.
+
+Of course, that could be different if they break up somewhere in the middle, then this probability mass would be somewhere else.
+
+But right in the beginning, all the probability would be on word zero.
+
+Next, we have the initialization of these preferences.
+
+And here, if we assume that the segment has eight words, so zero to seven here,
+
+Then the preference is that the translator goes through the segment from the first word to the last word, where the last word has the highest probability.
+
+So this kind of probability distribution would prefer the ordering going through the graph in the order of the alignment groups.
+
+Then the initialization of the transition matrices, the B matrices, could look like this.
+
+So for the moment, we have in this toy implementation three kinds of actions.
+
+We have insertions.
+
+A translator can insert something, delete something, or read.
+
+Three kinds of actions.
+
+So we have three kinds of different...
+
+transitions from one state, from one alignment group to the next one.
+
+And here, when inserting, the translator would like to go from one state to the next, from one alignment group to the next alignment group here.
+
+So it means that, for instance, they are in alignment group two.
+
+After the insertion, they would find themselves in alignment group three.
+
+But it could be also the case that
+
+the writing process, the word is long, for instance, or the translator only writes a small part of the word, that after a writing event, after a typing, after an insertion, the translator still finds itself in alignment group two.
+
+because they didn't finish it so some probability mass is still left over for this possibility here or it could be that that this word was very short or maybe it was a very strong collocation and the translator wrote in one go more than one word and they could find themselves after typing in alignment group translation for alignment group two
+
+they could find themselves in alignment group four here.
+
+So there's some probability mass left over distributed for different kinds of possibilities.
+
+Something very analogous here with the deletions, when deleting, the translator would go backwards now from alignment group four, for instance, to alignment group three.
+
+But it could also be that there's a half a word deleted or that there's a couple of words deleted.
+
+So there's a probability that the translator will end up in a different alignment group.
+
+So they can cycle around the same alignment group or they can jump over one and so on.
+
+And if reading something, nothing happens in the output, so they would stay in the same alignment group.
+
+But there's also a probability that actually they will find themselves in a different kinds of alignment group.
+
+And this can be the case, for instance,
+
+when here this likelihood of recognition is the a initialization of this a parameter so that is the probability of the observation being in a certain alignment group given they are in a certain state here so assume the translator is in alignment group one they could it could well be that they have input
+
+and they observe that actually already word number three is produced or something else.
+
+So that would be this probability, but the highest probability would be, according to this initialization, that the observation is that they would always see, observe they are in a state which they are actually in, right?
+
+But it could be differently too.
+
+okay so that would be the initialization of abcd matrices and now i would like to talk a little bit
+
+about this E-matrix and we have used this.
+
+I don't know whether this was intended to be so in this architecture.
+
+We have used this E-parameter to indicate whether a translator should perhaps jump out of
+
+leave this flow state and go into another state and in the following way.
+
+So the idea would be that if something
+
+Here, the future is planned, right?
+
+So the translator thinks what is the best possible path to pursue in the future.
+
+And if there is no clear distinction, if there is no clear idea what happened in the past or in the future, there would be some confusion, some kind of high entropy perhaps.
+
+And this would indicate that maybe something goes wrong and the translator would leave that flow state and go into another state.
+
+And I tried several ways of how that could be kind of computed.
+
+And one way would be to look into the past.
+
+So we assume we are in this alignment group 2 here.
+
+And this pie would then predict what the next state and the next alignment group is here.
+
+And it would take into account the past, what was already produced.
+
+And so we have the past, the alignment activity unit one and two with their respective states.
+
+And from this past observation, they would predict what is the next state, what is the next state, the top level state here.
+
+And it turned out that this doesn't work very well.
+
+So this probability distribution just gives us by chance distributions.
+
+But if we take into account also the future, so means what is anticipated, how this path continues with activity unit three and four in the future, then this gives us
+
+a probability above chance whether a translator should stay in this flow state or go out and do something else.
+
+Okay, and that's basically what I would like to say.
+
+I just thought this is very surprising,
+
+that the anticipated future helps a translator to decide whether they should move from a flow state into a hesitation in this case.
+
+Okay, my conclusion would be like this.
+
+So this is a very preliminary implementation.
+
+And then the idea would be that we actually would need to implement still a layer zero.
+
+where the actual insertions and deletion takes place um so this has not been done or only very roughly i didn't present this then we would need an evaluation so eventually we have this a large database more than five thousand actually more than six thousand sessions and we could train all these parameters on the different sessions and we have and then we would need an evaluation
+
+method somehow to evaluate the output of this agent and to see whether they can simulate the real data, to what extent they can simulate this real data that we have.
+
+Then we have also a fine-grained, that's what we are trying to work on right now, a finer-grained classification of a hesitation.
+
+A hesitation could be due, as we have seen in this particular instantiation, that the translator re-reads the target language, target word very many times, but we also have instances where the translator goes back and forth from the source to the target side, compares obviously something
+
+or where they reread pieces of text and so on, and all these different kinds of patterns would indicate different cognitive activities, and maybe they could give some indication what leads to the hesitation, what happens there, and how to model this in a more fine-grained way.
+
+Then eventually, if we have an evaluation method, then we could also implement some learning, so we can learn all these ABCD matrices dependent on translation styles, expertise, and text difficulties, for instance.
+
+So in this database, we not only have the data, but we also have metadata.
+
+So we have, for instance, information about expertise, who was it who produced this translation, so we could model expertise and we would assume, or we already know, that expert translators produced translations in different ways than novice translators do.
+
+Then we have different translation styles.
+
+Right in the beginning, I showed two styles.
+
+We have this planner who carefully reads first the text and then starts typing, or we have this head starter, different translation styles, and we could see how we could modify this ABCD matrices in order to model these different translation styles.
+
+Then we have this
+
+planning horizon, this pie, so how much in the future does a translator look and what are the effects?
+
+How, for instance, does linguistic structure play a role?
+
+There's some kind of controversy in the translation community as to whether translators take in full
+
+linguistic phrases or whether they only look into some words ahead and to what extent.
+
+So the linguistic structure plays a role in planning the horizon.
+
+And then of course, we have this whole other work package to annotate the data.
+
+So as of now, we have six texts annotated.
+
+but we can also do this this is all the six texts are for english into spanish and we have very many different languages we have also different translation modes we are also considering to look into post editing right now how does this whole idea scale over to post editing modes
+
+And there are certainly many more ways to analyze the agent in future.
+
+And that's my conclusion and my end.
+
+Thank you very much for listening.
+
+And if you have some comments or questions, please go ahead.
+
+
+SPEAKER_00:
+Thank you, Michael.
+
+That was awesome.
+
+That was really cool.
+
+And it's cool to see how it's developed from many times talking with you about it in the textbook group.
+
+So to kick off the discussion, how about Moritz and or Fabio, please feel free to say hello, introduce yourself and give any opening remarks or thoughts, whichever one of you wants to go first.
+
+
+SPEAKER_02:
+Can I start?
+
+Please.
+
+All right.
+
+So, okay.
+
+So hello, Michael, Daniel, and everyone watching us from
+
+Well, as you know, Michael, I work with...
+
+translation process data, you mentioned some of the work I did on micro and macro translation units.
+
+But what I was really curious to discuss with you is just this final idea that you talk about planning horizons, right?
+
+So, and in your example, I mean, from a human perspective, right?
+
+Not from the kind of implementation that you're proposing here, but how we could just see one thing in relation to the other.
+
+so um people usually talk about you you talked about linguistic structure for the planning horizon thing right people usually talk about function and content words which is perhaps kind of easier for people to understand but in the work i do and then you and moritz have already taken up on it so we talk about
+
+conceptual encodings and procedural encodings and hybrid encodings.
+
+So in terms of inferential processing, conceptual encoding would constrain inferential processing.
+
+And an example you gave there was just like las normas traditionales, the traditional norms, to what extent syntactic priming, you know, so in a way, guides this kind of planning horizon in there.
+
+The other thing would be conceptual encodings.
+
+These expand inferential processing to a sense that they can be enriched.
+
+And just like that, you could say instead of for normas, less normas traditionales, you could have guidelines or rules or instructions.
+
+So this would be open, right?
+
+So to what extent this idea of conceptual and procedural encodings
+
+constraining or expanding inferential processing would have an effect or an impact on the planning horizon that you propose at the end?
+
+Is that something that you have taken into consideration or is it something that one should take into consideration as far as the work was implemented your proposal is concerned?
+
+So that is for me.
+
+
+SPEAKER_01:
+Yeah, certainly.
+
+So I would assume
+
+that this function words go along with a whole frame, maybe.
+
+They're not standing alone, but they modify a frame.
+
+So yes, so we didn't really
+
+We didn't really look into this.
+
+So all this, I mean, we are a little, I mean, quite ahead.
+
+So this is something for the future.
+
+But I think, yes, your idea is a good idea to see to what extent function word and content word would change the horizon.
+
+And I would assume if there's a function word that would imply their horizon would be further
+
+further, right?
+
+So there's some ideas from this construction grammar that a whole frame must be available before a translator can actually produce a translation.
+
+So they must have a whole frame, whatever that is, whether it's a noun phrase or a clause or sentence or so that must be available before a translator can produce a translation.
+
+So I was thinking in this line, but of course, this also implies your idea with function words and content words, right?
+
+They are somehow encoded in these frames.
+
+Yeah, so this would be maybe one idea one could look, one could see to what extent these horizon requires complete
+
+linguistic structures, or maybe only partial.
+
+So we are talking here about the source segment, the source segment.
+
+But yeah, I guess there's much that one can do and experiment with and see also the interaction of this horizon with the other kinds of initializations.
+
+How does this interact?
+
+I believe there's much interesting stuff to test when this agent works a little bit better as it does right now.
+
+
+SPEAKER_02:
+Yeah, most certainly.
+
+I would be interested in following it up because I think there is kind of a very interesting thing in there for us to look at.
+
+Yeah.
+
+
+SPEAKER_03:
+Okay.
+
+Yes.
+
+So I think it was 2011 that I saw my first ever progression graph in Copenhagen.
+
+And it was like seeing the light and suddenly there was
+
+there was a possibility of of um yeah working with a kind of data that wasn't available before then so i think um the the database which back then wasn't a database of course it was just scattered experiments and and so on so it has come a long way and i think that's great and soon we'll have an agent possibly um so so yeah i hope so yes exactly so so
+
+I have one comprehension question, and your slides weren't numbered, but where you essentially map the data onto the free energy principle, situating the translator as an agent in this equation, right?
+
+The source text reading takes the place of perception, right?
+
+
+SPEAKER_01:
+Yes.
+
+
+SPEAKER_03:
+Yes.
+
+And maybe I'm naive in that sense, but reading or generally comprehension of linguistic material, there's quite a bit of evidence that comprehension engages the very same production mechanisms that are at play during language production.
+
+I've always found it difficult, theoretically or empirically indeed, to separate source text reading processes from target text production processes.
+
+But obviously,
+
+Right, typing is typing and reading is reading, but still the kinds of processes that take place while reading the source text.
+
+I mean, we have co-activation that is a reality.
+
+It's, I guess, beyond doubt that target language aspects play a role during source text reading.
+
+And on several slides in your talk, you've intimated this quite close link between the two processes.
+
+So how do you deal with that in this agent or in this framework?
+
+
+SPEAKER_01:
+Yeah, so they're separating out into these two factors.
+
+This is only one possibility, how this free energy could be reduced.
+
+But both kinds of parts contribute to this reduction.
+
+Yeah, so there is some kind of anticipation in the reading.
+
+That's, I guess, what you're saying.
+
+So you read something that you want to read to reduce that free energy.
+
+And I think that's implied here in this evidence.
+
+I'm not really very sure what your question is, but the idea would be that we have these two kinds of possibilities.
+
+It could be factored differently.
+
+or formalized differently.
+
+But basically, there are these two possibilities.
+
+Either you change the world to make it more closely to your preferences,
+
+Or you change your internal model to make it come closer to what you observe.
+
+So how the external world or the observations present themselves.
+
+Of course, there is a kind of a dependency between these two.
+
+So there's a predictive processing.
+
+I guess that's what you're talking about, right?
+
+Predictive processing.
+
+
+SPEAKER_03:
+Exactly.
+
+So I mean, also in your publications, you talk about adapting the world as
+
+producing a certain target text or adapting the target text once it's written and so on, right?
+
+But that very same principle, I think, can apply to the source text reading process, right?
+
+I mean, I don't think it's a problem for this model or anything.
+
+I just wonder how you would translate that into your implementation.
+
+If I'm correct, the action part of your model is the actual typing, right?
+
+But if reading is an action, then it might change how you implement the whole thing or not.
+
+
+SPEAKER_00:
+Maybe I'm misunderstanding.
+
+Could I give a thought on that?
+
+Hmm.
+
+Please, yeah.
+
+Yeah.
+
+Well, there have been many active inference models of reading.
+
+And in those settings, the action, the affordances are the isocate.
+
+And so there's isocating across.
+
+This is even finer scale than the progression graphs that were shown here to differentiate letters.
+
+to reduce uncertainty about words differentiation of words within a sentence and so on within a broader narrative context so that's the kind of action as ocular motor movement and then the hidden state the external world state is like the semantic position of the sentence and then on the outbound from the agents the actions could include typing
+
+And so one could either abstract or coarse grain away and just say, we're just gonna accept the words as observations, or you can go finer scale with the actions being the ocular motor circadian, which might be important in the case of like dyslexia, or can just accept the word straightforwardly as an observation.
+
+And then it's really interesting to think about what is the task of translation?
+
+in that setting and how do the language models that we have today help us understand this kind of semantic transposition from one language to another which many have written about and thought about like if there's a
+
+street called main street do you translate it as main street or do you change main but leave street or do you leave one but not the other there's a lot of degrees of freedom in the understanding of the task
+
+But you're absolutely right that every model and active inference, you have a kind of inbound observation like modality and outbound action selection approach.
+
+And then for hierarchical metacognitive models, there can be action that is internal like attention.
+
+So then those don't need to be overt activity like typing or eye movement.
+
+
+SPEAKER_01:
+Go ahead, Moritz.
+
+
+SPEAKER_03:
+So in that sense, in these models, I guess, reading a text is understood in the terms of generating that text, really, right?
+
+
+SPEAKER_00:
+The eye saccade could be understood as...
+
+not seeking out necessarily the most rewarding section of text, but reducing uncertainty.
+
+And so the agent has some generative model of text, a deeper structure of language, or even the deeper structure of the world, their core knowledge priors, and then their activity is selected to reduce their uncertainty about the text.
+
+And so their generative model is kind of reconstructing the semantics of the text as they sort of, it's like picking up an unknown object and just touching it to familiarize oneself with the semantic shape in this case.
+
+And that's a generative active process.
+
+
+SPEAKER_03:
+It sounds to me like a deconstructive process of reading, right?
+
+The text is not a static entity.
+
+You're actually changing it by reading it and so on.
+
+But I'm sorry, I interrupted you, Michael.
+
+
+SPEAKER_01:
+Yeah.
+
+So I think this could happen in what I call this layer zero.
+
+So we didn't really address this.
+
+So this would be something still on a lower level.
+
+And yes, so I'm not really sure to what extent gaze data should be modeled there and typing.
+
+So certainly in this layer 0, we have typing activities.
+
+But to what extent we also should model their gaze activities, maybe that's possible too.
+
+And how they interfere, maybe that could be modeled inside this layer 0 down there.
+
+letting basically unaffected the stuff that I have presented so far.
+
+But perhaps it's also like this, that if we implement this and have some ideas, it could maybe affect the other layer.
+
+So this architecture could be open and stuff can be changed.
+
+So I don't know.
+
+One would need to try all this.
+
+But also, our data that we have, the
+
+granularity that you suggest is not really suited.
+
+So this, I guess, if we look into saccades and exact reading patterns and so on, our data that we have is too noisy for those kinds of modeling, I think.
+
+We have rough, so there's often drift.
+
+And as you know, there's often drift in this gaze data.
+
+The gaze toward mapping is not always very precise, only approximately.
+
+So I'm not really sure how these things could be modeled in this lower level, layer 0 or so.
+
+But maybe it could also be like this.
+
+If we have a set of data that is very precise, that you have recorded with
+
+with much more controlled experiments, maybe this could form a kind of this kind of processes that you allude to.
+
+And then on top of this, there could be the other processes.
+
+I don't know, but this would be even a step further.
+
+
+SPEAKER_03:
+Yeah, I mean, there is definitely noise in the data, but it's certainly less than 50% noise, right?
+
+I didn't.
+
+I mean, it's difficult to assess this.
+
+
+SPEAKER_00:
+It's difficult to... With headsets coming into broader use, there may be millions of eye tracking, speech recognition and production data sets.
+
+So...
+
+articulating the structure and the kind of adjacencies these models is very important.
+
+Also, you could model that noise in the eye tracking assignment as a kind of sensor noise.
+
+And so, yeah, of course, noise is going to degrade the quality of inference relative to a noiseless observation, but there's still vastly more information than not.
+
+Right.
+
+I'll ask some questions from a live chat.
+
+okay dave douglas asks english default noun phrase word order is precisely the opposite of that of spanish which we saw in the example uh a naive natural language processing theory transformational grammar for example would predict that translators use a stack in their brains to push and pop phrase components do your data see fulfillment of transformational grammar
+
+Or does the stack hypothesis match behavior for short phrases but break down with longer phrases?
+
+
+SPEAKER_01:
+Well, we didn't.
+
+I mean, in this architecture, we don't talk about these linguistic theories.
+
+But it could be.
+
+So that alludes to a little bit the same question that Fabio had.
+
+What is about the prediction, the pie?
+
+What is the horizon, the prediction horizon?
+
+and whether we can use you know relevance theory with with with with function words and with content words or we use a construction grammar with frames and these frames should be fulfilled or we use chomsky stuff well this could be tried i don't have any reservation with respect to any of those so
+
+All possible.
+
+Or we could just look for n grams, right, irrespectively of the type.
+
+But yes, so that's what we often see in the data, actually, that a translator, if there is a reordering like this, right?
+
+So assume that inside a monotonous kind of a translation, there is suddenly required a reordering of the words into the target language.
+
+Then we can see that the translator looks ahead exactly
+
+that amount of text in the source language that accounts amounts to that reordering.
+
+So a translator has a very good feeling
+
+for the structure and for the restructuring and from where to get the necessary data in the source text, where the eyes need to go to get the necessary data to continue translation.
+
+So this is amazing how precisely translators can look into this data and pick out this information that they need in order to continue.
+
+I mean, in experienced translators, I find that very surprising.
+
+
+SPEAKER_03:
+If I may, I have one other question about how likely it is you think that
+
+the kind of agent you will hopefully soon produce generalizes to other tasks, other than translation.
+
+Daniel brought this into mind, but I mean, you know, sort of the task of translation, I mean, there's Jakobson, the very old sort of quote from Jakobson, right, sort of, not Antlik Jakobson, but Roman Jakobson, right, I mean, sort of, you know, it's comprehending the world, an act of translation, I mean,
+
+
+SPEAKER_01:
+you know that general but but to what other tasks can you see an application of this agent and the principles that govern it well i'm first of all busy with trying to understand the situation right now and applying it to our data um yeah so i don't know well i mean basically all kinds of text production first of all but i don't know
+
+So we are talking about linguistic events here, I guess.
+
+Yeah.
+
+
+SPEAKER_03:
+C-sharp coding?
+
+
+SPEAKER_01:
+Oh, I was not thinking of this.
+
+
+SPEAKER_00:
+It was a question from the live chat from Upcycle Club, wrote, I also have a question, would it be possible to extend or modify this model to cover transcription?
+
+So transcription, where there's an auditory modality, so different sensory input at the kind of embodied layer of the model, but after it propagates into a semantic layer,
+
+there might be something like a more general linguistic nexus, where whether it came in through the auditory sense or the visual sense, and then whether it was going out through typing or through speaking, there might be some shared skills, or it may be a hypothesis to test that where do these different language skills...
+
+relate to each other one model would be there's a single linguistic Nexus sensory input independent sensory or action output independence another extreme hypothesis would be that there are totally different or very different cognitive architectures that are apt for these different linguistic tasks
+
+
+SPEAKER_01:
+Well, we actually have spoken data in our database.
+
+And the way we have done this is, so there is a speech, a spoken signal, and we have assigned a timestamp for every word.
+
+So we have a transcription of the spoken signal into text.
+
+and then assigned a timestamp for each word.
+
+And then it really doesn't matter in this database.
+
+It just looks like typed translation, right?
+
+So because there's a timestamp and there's a word, you know, a sequence of characters,
+
+And whether that was initially typed by the translator or spoken doesn't matter.
+
+So we know, of course, in the analysis, and the analysis is different, and there's a couple of papers also that we have with the spoken data only recently.
+
+One paper where we have a site translation with text, site interpretation with text, a quite complicated setup.
+
+So it's possible.
+
+And well, I guess that's the assumption.
+
+Somehow similar processes take place in the mind of a translator, whether they use this mode or that mode.
+
+Well, maybe not.
+
+Maybe it's different.
+
+But in the database, at least it looks the same.
+
+And I don't see a problem to model this in a way.
+
+But then also, this architecture is not meant as actually a translation.
+
+system so this is not a replacement of a machine translation system it's not meant to be like this it's rather meant to assess the effort so what is the process of of the translation so so it assumes i mean in this example that i gave we i assume that there is a translation available and this agent would then just
+
+reproduce how effortful it is to produce that particular translation.
+
+So where does the eye go, for example, where are pauses, where do problems occur, where does the translator get stuck, all this.
+
+But given that there is already a translation, it would not be a new way of machine translation, but rather orthogonal to this, to looking into the process, how the translation comes into being.
+
+That's what the agent would model.
+
+Well, at least that's currently my idea.
+
+
+SPEAKER_00:
+Or both of those orthogonalities could be embodied in an architecture that does translation as a cognitive process and observes its own translation metacognitively to track its efforts or maybe to improve its learning.
+
+Because definitely as a language learner, English and otherwise,
+
+when you had policy, oh, just plan for longer, or just, it's like, but tell that to a beginner language learner.
+
+It's like, well, I may not have the agency to simply plan longer, or I might not have the linguistic affordances to conjugate this word in this way.
+
+So how do you think this kind of model of linguistic effort helps us understand language learning?
+
+
+SPEAKER_01:
+Yeah, so there you have it.
+
+There you have another application.
+
+And I can completely see that fit.
+
+So how does language beginners...
+
+learn this, what kinds of processes go on there, how can we model this in this agent, and what consists progress in language learning, so what kinds of parameters change as a language learner goes from the very beginning stage to a more advanced stage, how can we model this in the ABCD matrices, also in the look-ahead parameters and so on.
+
+i think that that could be a completely fine example different from translation how this agent could be used yeah interesting good idea who would who would own the agent own yes so intellectual property rights yes i mean this is worth money right i mean who benefits from this
+
+oh yeah well it's still long time ahead but until now all the database was made available free and openly and but on a non-commercial basis i think that's the license but first it would need to be developed but if it's really worth money so i'm very happy if you're
+
+want to buy a share.
+
+
+SPEAKER_00:
+But this is a very interesting question and it's pragmatic.
+
+It's not linguistic conceptual or ontological, but this balance or blend of what is open source in the active inference ecosystem, the packages like PyMDP and the analytical framework and the education and these components are open source and then how does that work with what people develop
+
+in what ways is the active inference generative model development ecosystem similar or different than say the linux open source development environment maybe some people do just want to put things out there with a creative commons or with a with a purely open or with a non-commercial open license but these are major major questions that come up
+
+in every area of modeling.
+
+
+SPEAKER_03:
+Yeah, I think it's a big question and there's no easy answer, right?
+
+
+SPEAKER_01:
+Well, my...
+
+My impression is, I mean, it's far away right now from that situation, but there could be an open version of this agent.
+
+And then if somebody wanted to use that for special purposes, there could be somehow, I guess there are many business models like this.
+
+They rely on open source stuff.
+
+And if they fine-tune this to special applications, then the kind of business interests come in.
+
+I think there's many ways and many templates how to go about those things.
+
+
+SPEAKER_00:
+Yeah, it's an interesting question.
+
+Just one last point on that is there can be an open source generative model that uses proprietary data.
+
+So then you can say, this is how the eye saccades work, this is how the attention mechanism works, but also we have this curated data set that is our product.
+
+On the other hand, there could be an open source data set and someone could say, we have a generative model that's our proprietary work, or there's the quadrant with both being proprietary or both being open.
+
+that's just one way to kind of slice up the space and people who have academic backgrounds or other might prefer or dwell in one of those areas i'll read another comment from the live chat and see if any of you fellows have a thought so dave writes
+
+will be a hard one to read speed pitch and volume within individual spoke words in addition to pauses are critical to know what exactly is being said how do we model these features of speech and language
+
+that on one hand language models are showing us well you get a ton of semantics out of just the string of tokens and yet this abrades away the pauses and the tonality and these features that in terms of our recognition and generation of speech can be almost dominant factors
+
+
+SPEAKER_01:
+Yeah, so if you want me to say something with respect to this, I guess, well, if you transcribe this manually,
+
+the speech, there is Elan that could be used and one could add those kinds of additional annotations in another track, for instance intonation or speed.
+
+I don't know whether there is tools to figure this automatically, so usually speech recognition systems only have the transcription of the words, but not additional information.
+
+For our experiments that we transcribed, we used Watson IBM system that speech recognition system was the only one that we found that produces a timestamp for each word that was produced.
+
+And that was very interesting because we could then compute the time when a word was spoken and
+
+heard, so we could compute an ear voice span with this kind of information.
+
+But they would not produce this kind of additional prosodic information or something like this.
+
+So of course, from the timestamp, you can see the speed.
+
+Right?
+
+That would be somehow an implicit encoding, I guess.
+
+But the pitch and all this, there is no such information.
+
+I don't know whether there is speech recognition systems that produce this kind of thing.
+
+But once this is there, it's just an additional feature for a word.
+
+And it could be taken into account just like any other super
+
+segmental feature perhaps, like for instance, a phrase tag or something like this.
+
+And it could then be also compared with linguistic structure and the prosodic structure and so on.
+
+All these nice things could be done if these features are there.
+
+I don't see a problem.
+
+I mean, from that point of view, I don't see a problem how that could be or that it could be tackled in this approach.
+
+I see a problem more of from where do we get this data and whether we have tools to produce this automatically or semi-automatically maybe.
+
+
+SPEAKER_00:
+Interesting.
+
+Yeah, Dave writes in the chat, assembly AI also captures word onset and termination to millisecond granularity.
+
+So that's what we use for the active inference journal.
+
+Like when we transcribe and curate this guest stream or any of our streams, we have that kind of timing data.
+
+And then it's kind of like reading between the lines.
+
+could then add another track like pitch deviation or volume deviation and then do some kind of affective inference okay what if we only saw the volume deviance or if we only saw the the pacing patterning and then okay now what if we have this kind of sensor fusion with the tokens and then these prosodic elements of speech
+
+then do model comparison and as you point out this is this isn't trying to reconstruct a translator in order to make a translation algorithm but it can give us some diagnostic information on the translation the effort yeah
+
+Fabio or Moritz, any kind of other thoughts or questions?
+
+So where does the research go or how can people get involved if they're curious in these topics?
+
+
+SPEAKER_01:
+So I think we have now...
+
+Well, I outlined in the beginning the trajectory of this translation process research.
+
+And I think this agent is really a new way of modeling this.
+
+And I see much potential there to actually model this.
+
+So we looked into, we analyzed the translation process data that we have for many years.
+
+And I think the time is ripe now, also with all your fantastic institute and the activities that go on.
+
+in this institute.
+
+I mean, that fits somehow.
+
+I think it's a timely kind of a thing.
+
+So that's, I think that's where the research goes.
+
+I mean, at least from my side and to anyone who is interested in joining in, very welcome.
+
+So there are so many open ends that could be put together.
+
+I've tried to outline a few ideas that I was thinking about.
+
+And of course, the code that is there can be made available to anyone who would like to continue there.
+
+
+SPEAKER_00:
+Yeah.
+
+Bob, you or Moritz, where do you go from here?
+
+
+SPEAKER_03:
+Well, I'm interested in that level zero.
+
+I am.
+
+I like the small things, and I think they are promising.
+
+I find them interesting.
+
+And yeah, so I hope to contribute on that level.
+
+Thank you.
+
+Excellent.
+
+
+SPEAKER_02:
+Whereas for me, I mean, I've always been interested in human influential processing.
+
+and the question of the planning horizon and the pie in there is what really attracts me at the moment so to see what the relationship would be between you know so uh planning horizon or implementing that in the mall that would somehow emulate things we know about human influential processing
+
+
+SPEAKER_00:
+Awesome.
+
+A closing note from Dave.
+
+This is the kind of high volume, highly granular data needed to scrutinize and improve the active inference and free energy principle frameworks.
+
+Expert behavior especially is really valuable to study.
+
+Cool.
+
+Well, thank you all.
+
+Thank you, Michael, for this great presentation work.
+
+Till next time.
+
+Thank you so much for having us.
+
+Thank you.
+
+
+SPEAKER_04:
+See you.
+
+
+SPEAKER_01:
+Bye.
+
+Bye.
+
+
+SPEAKER_04:
+Bye.
