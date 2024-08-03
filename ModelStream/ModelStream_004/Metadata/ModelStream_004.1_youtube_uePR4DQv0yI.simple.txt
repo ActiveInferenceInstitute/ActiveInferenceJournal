@@ -1,0 +1,1986 @@
+SPEAKER_03:
+a signal processing group uh so i designed my trade wait sorry actually i i just one thing changed could you just restart that but go for it okay uh thanks for the introduction dan my name is bertha fries i'm a professor in eindhoven at eindhoven university of technology in the netherlands um i'll be a part of a
+
+an electrical engineering department in a signal processing group.
+
+So we designed signal processing algorithms.
+
+And about six, seven years ago, I read for the first time a paper by Carl Fuston.
+
+It was called a rough guide to the brain and struck me that this could be fantastic for signal processing.
+
+So since then, I'm really trying to work with people in my lab.
+
+on realizing agents that will design, will automate the design process of signal processing algorithms.
+
+And as you know, we're doing this by message passing, and we want to talk about it today.
+
+
+SPEAKER_02:
+Thijs?
+
+Yeah, my name is Thijs van der Laag.
+
+I'm a postdoc with BIRDS Lab.
+
+I did my PhD also in active inference and how to automate those processes.
+
+And also together with Marco Cox and all the colleagues from our lab, we built a toolbox called Forney Lab.
+
+And I'll be talking and walking you through how we apply that in an active inference context and do some cool things with that.
+
+So that's for later.
+
+
+SPEAKER_01:
+yeah hello everyone so my name is dmitry bagaev i'm a phd candidate in bias lab also in atu in university and yeah my work is mostly about reactive message passing based bayesian inference that we hope will help with active inference as well but that's also for later i will talk about it on my time yeah on my slot cool thank you okay um
+
+
+SPEAKER_03:
+Shall I go, Dan, and do a little introduction, a few slides?
+
+Perfect.
+
+Yeah, okay.
+
+Let's see if I can share my slide.
+
+
+SPEAKER_00:
+Yep, looks good.
+
+
+SPEAKER_03:
+Yeah, okay.
+
+So, first slide is Eindhoven, because you may wonder, where is Eindhoven in relation to Amsterdam?
+
+Well, it's about 100 kilometers south of Amsterdam,
+
+close to the Belgian border, and not so far away from Germany either.
+
+So it's sort of a high-tech city.
+
+Philips originated in Eindhoven.
+
+On the right bottom, you see a picture of the center, and the right top is a view of the campus of Ireland.
+
+It's the University of Technology.
+
+Here's an aerial view of... Oops, going too far.
+
+Here's an aerial view of...
+
+uh, our campus.
+
+And, uh, so here, let's see if I can share a pointer.
+
+Yeah.
+
+So, uh, this is the building for electrical engineering.
+
+So this is where we are.
+
+IS lab is short for Bayesian intelligent autonomous systems.
+
+That's what we tried to build.
+
+Uh, we have about three, let's say staff members, faculty members, and currently six PhD students.
+
+Uh, Dimitri is one of those PhD students.
+
+And we have open positions if there are people watching that are interested in probabilistic programming or how to make active inference work.
+
+Then what are we trying to do?
+
+This is a picture that's probably familiar to everybody in this forum, right?
+
+This wants to show that, well, the only thing that's really going on in the brain is free energy minimization or expected free energy minimization to do everything.
+
+And that's a huge inspiration to us, to us engineers.
+
+So what we try to do is basically this.
+
+We want to put this in an iPhone or on a Raspberry Pi and let a robot learn how to ride a bike.
+
+But the beauty of this framework for engineering purposes is that it's almost a one solution approach to any problem.
+
+If we can teach a robot how to ride a bike by free energy minimization, probably we can also apply this in virtual reality and design algorithms for hearing aids or even self-driving cars.
+
+The big, let's say, promise or the attractiveness for engineering is that it's just one, always the same thing.
+
+You just have to propose a model and minimize the free energy, no matter what the application is.
+
+But it's very, uh, appealing.
+
+The problem for engineering is that is, um, the energy functional is a function of observations and observations are streaming data coming usually.
+
+Well, it could be at every millisecond.
+
+So it's a highly time varying function and the number of latent variables that say the space of latent variables is usually very high.
+
+So we have a very high dimensional function that is time varying, and we want to minimize that.
+
+Now the brain is very good at it, right?
+
+The brain has, what is it, 10 to the power of 14 synapses, 100 billion neurons.
+
+But a normal optimization library in model lab or will not cut it.
+
+You cannot minimize a time varying
+
+function of thousand variables in Matlab.
+
+It's not going to work.
+
+So we need something quite radical here.
+
+And the idea we go with is not that radical.
+
+Again, we just take inspiration from the brain, right?
+
+The brain is a network of message passing.
+
+It turns out in my own field, in signal processing or information theory to be exact,
+
+This has been formalized.
+
+There is a paper here by Dave Forney in 2001 called Some Graphs, Normal Realizations.
+
+He called it normal factor graphs.
+
+In honor of David Forney, today they're called Forney-style factor graphs.
+
+And so this is the origin of the factor graphs that we are talking about.
+
+And a few years later, Hans-Andrea Ludiger at the University in Zurich
+
+I have made this popular in the signal processing community.
+
+And already around 2007, you see in his papers these typical structures like this that we will show also later.
+
+These are Kalman filters.
+
+This is really also what Tristan talks about, these kinds of structures.
+
+So this is what we want to do in our lab, which is to combine what
+
+active inspiration from the neuroscience community and combine it with what we know in signal processing and information theory about factor graphs and use these tools to implement this.
+
+So today, we have two presentations, one by Thijs van der Laar on how to do message passing by Forney Lab.
+
+Forney Lab is the toolbox that we wrote.
+
+The name, of course, refers to Dave Forney.
+
+uh and thanks for sharing how to do active inference with this toolbox um then we're also working on a new version it's called reactive message passing and dimitri is the main person there and dimitri also uh i'll talk about that a bit and that's all for me um i'll get it back to you then or maybe uh thanks can continue what is your preference i'll stop sharing my screen let's see
+
+
+SPEAKER_00:
+Super interesting.
+
+Thanks a lot for the context.
+
+And it will be awesome to hear from the authors with maybe any reflections on those general points you raised and how it gets applied in a really specific way.
+
+Because you brought up a ton of topics that we talk about all the time, like the simplicity of one unified approach and the challenges of ongoing optimization problems and drawing inspiration from nature.
+
+So great things.
+
+I think we can just jump to whichever of the presentation you all prefer.
+
+
+SPEAKER_02:
+All right, then I'll go ahead and I'll try to share my screen, see if that works.
+
+Select screen, entire screen, okay.
+
+
+SPEAKER_00:
+Practical screen.
+
+
+SPEAKER_02:
+I think you can see my screen now.
+
+
+SPEAKER_00:
+Yep, and you can make it look just large on your side and I'll resize it.
+
+There we go, looks great.
+
+
+SPEAKER_02:
+There we go.
+
+All right.
+
+Well, thanks again for having us.
+
+Can you click away?
+
+
+SPEAKER_00:
+I'll be giving a little introduction.
+
+Sorry, where it says you're sharing your screen, you could hide that little jitsy thing.
+
+
+SPEAKER_02:
+And it's gone.
+
+
+SPEAKER_00:
+Thank you.
+
+
+SPEAKER_02:
+So, yeah, I'll be giving a little introduction on how to do message parsing with ForneyLab in the context of active inference.
+
+and to give a little bit of motivation for this talk.
+
+This is kind of the situation where we're interested in.
+
+So we have some kind of an environment, and we have an environmental process that's running in that environment, and we want to develop an agent that has some purpose or does some purposeful task within that environment.
+
+And the agent is allowed to send actions to the environment and manipulate that environment, and it will receive observations.
+
+And in the environmental process, there is some function RT that is running there, and it might be a simulation that we run and we interact with that, or it might be even a real-world process of which, of course, we don't really know what RT is running in the real world.
+
+And somehow we want to build an agent that does something in that world.
+
+So where do you start with that?
+
+There's this paper from Conant and Ashby in the 1970s, and they have an interesting theorem that says that every good regulator of a system must be a model of that system.
+
+So that actually means that if you want to build an agent that regulates or manipulates our system, the environment, then we have to model that system.
+
+So as an engineer, we are in the business of building models, generative models to be precise.
+
+And this model represents our belief about how observations follow from our manipulations.
+
+We represent that by a function f, that is a function of y, the observations, the controls, u, and also some latent state, hidden variables, x, that act as intermediate between observations and controls.
+
+Now, reasoning forward is one thing.
+
+But in the end, what we want to do is observe things and then propose controls that lead us to favorable states.
+
+And that is where the idea of the free energy principle and active inference comes in.
+
+So if we want to say this is the hypothesis for that, if we want to build an agent that does something purposeful, then we can do that by minimizing a free energy bound on surprise.
+
+So we want to build an agent that avoids surprises and by that we can do Bayesian inferences about that environment.
+
+So we have to build some kind of free energy functional for the agent to optimize and by that do Bayesian inferences for actions and controls.
+
+And we define this for energy functional as a KL divergence between the generative model that we have and some kind of an approximate posterior that we postulate that we here define QUT.
+
+And minimizing this energy functional will then allow us to reason backwards from observations towards controls.
+
+And that's kind of the general idea.
+
+Having postulated this, I have choices to make.
+
+So for example, one big choice that I want to make is how do I choose my model?
+
+How do I choose my F in such a way that is useful to me?
+
+And also, how do I choose my QT?
+
+How do I choose the factorization of that such that I can make my inferences?
+
+And that process is kind of a thing of trial and error.
+
+And as an engineer, I want, of course, to build the best model that I possibly can.
+
+But how do I go as quickly as possible through a process of trial and error that gives me the best model?
+
+This is where the idea of a model design cycle comes in.
+
+And this was, again, made popular by David Bly in his paper in 2014, Build, Compute, Critique, Repeat.
+
+And he proposes a cycle where an engineer proposes a model.
+
+And then with that model, you want to infer your quantities of interest given data.
+
+And if you have inferred a model like that, you want to criticize it.
+
+And based upon the performance that you have evaluated, you want to reiterate, rebuild your model, infer
+
+again and see how well it then performs until you're satisfied and you can apply it in your agent in practice, maybe in a real world setting.
+
+And then the challenge becomes, then how do I go through this design cycle as quickly as possible?
+
+So we want to be flexible.
+
+We want to automate things.
+
+And making model proposals itself is something that, well, you have to do as an engineer.
+
+You have to come up with a proposal of how you believe the world functions.
+
+But once you have that, everything else can be automated.
+
+You can infer these quantities by probabilistic programming.
+
+You can evaluate different energy as a measure of model performance.
+
+Automating this cycle will be the key to making model proposals for an agent that will be useful in practice.
+
+So you want to go through this as quickly as possible.
+
+So that's why we choose a specific method.
+
+We choose factor graphs to represent our factorized models because in a graph you can do manipulations, you can add nodes, delete nodes, you can rewire things very quickly.
+
+And once you have a graphical representation of your model, you can do message passing on that graph in order to automate the inference.
+
+And you can even evaluate the free energy by local contributions in that graph.
+
+So that is why we choose a graphical representation, and that is why we want to do message passing, because we want to design models quickly so that we can design effective agents.
+
+Now, how do these graphs kind of work, right?
+
+How do you build an effective graph, and what does that look like?
+
+So we choose a specific representation of our model, and this is an example where we have a generative model of five variables, X1 through X5, and we have three factors, F, A, B, and C. And here in the picture on the right is the graphical representation of that model.
+
+And as you can see, the edges correspond to the variables and the nodes correspond to the factors.
+
+And the edges are connected to the nodes of which the factors are an argument.
+
+So here you see node FA with connected edges x1 and x2.
+
+Well, that is because x1 and x2 are arguments of FA.
+
+Same for FB and FC.
+
+Now, how do we do inference in this graph?
+
+So suppose that we observe x5, which is indicated by this little solid square, and we want to compute our belief over x2 given x5.
+
+Well, what do you do?
+
+Well, you marginalize everything.
+
+And by marginalization, I mean you integrate out every variable except the one that you're interested in.
+
+So except x2, you integrate everything out, and you add this constraint that you observe x5.
+
+Now, if you have a big model, then this integration becomes very cumbersome because this here is, you have here four variables over which to integrate.
+
+So this room, this integration space, that really explodes if you want to do this naively.
+
+But you can be smart about this.
+
+you can reshuffle these integrals according to their respective terms.
+
+So, for example, this integration over x5, well, there is only one factor where x5 is an argument of.
+
+So I can use the distributive rule to bring this integral inside.
+
+So that I divide these integrals up into smaller parts, which are manageable.
+
+And this is where message passing comes from.
+
+Message passing is essentially solving these integrations one by one.
+
+So I can first integrate out X1 here, for example, which, as we say, summarizes all the information inside this orange box.
+
+And it gives us a message, the first message here that exits this orange box.
+
+And then I can continue for the bottom.
+
+So integrate out X5.
+
+and I get a second message.
+
+And I can use this second message in the computation of the third message.
+
+So this way you get a nested solution approach where I use the solution that I have for message two in the computation of message three.
+
+And you see that in the end, the multiplication of these two colliding messages on the edge for x2 will give me my proportional belief, my proportional posterior over x2, given what I have observed.
+
+So to give a little example of a specific node, how that works, here's an equality constraint node, which we use as a constraint to constrain the beliefs upon the adjacent edges to be equal.
+
+And what that does is, that will follow if we go through the math here,
+
+This is what the node function looks like.
+
+So I say, okay, this is a function of three variables, x, y, and z, and I constrain z to be x, and I constrain z also to be y. So then x will also be y if I constrain those two to be the same.
+
+So let's see if we can derive messages based upon this.
+
+So if I want to summarize the information into this orange box, I can use the sum product rule for that.
+
+I have the two messages coming in here from the left and from the bottom, message one and message two.
+
+I multiply that by the node function of the equality node, and I want to perform this integration.
+
+Now I substitute this node function here within the integration, and then I can use the sifting property to kind of replace the arguments here of X and Y with the arguments of Z. So what I have essentially done here is saying I can compute this message three by multiplying the two messages that are incoming from the left and from the bottom.
+
+Now, if you squint your eyes a bit and you look through your eyes, you can kind of recognize a proportional Bayes rule in here.
+
+So essentially, you can say, well, if message three here represents my posterior, then message one can represent my prior, and message two, my likelihood.
+
+And then I have a proportional posterior, message three, and that I can pass on to the rest of my model.
+
+And this node is also often used to kind of combine information that's coming from the left and from the bottom.
+
+So that's a very quick introduction to message passing.
+
+We have derived lots of rules also from the literature, also implemented a lot of rules that are already derived.
+
+into into phony lab which is basically uh well a software probabilistic programming suite that does the scheduling and this message computation for you so you don't have to think about that too much how to redistribute these integrals and how to derive um well a lot of updates for specific nodes um so that's kind of the things that that we can we can automate
+
+on that side of the design cycle.
+
+Now, are there any questions about this?
+
+Because I'm going through this very quickly, and what I'm going to do next is kind of want to walk through an example.
+
+So maybe this is kind of a natural point where people have questions that they can kind of stop me and think, hey, you're going too fast here.
+
+
+SPEAKER_00:
+I think it'll be good to see the example.
+
+And then we have some questions in the live chat and also anyone's welcome to add more.
+
+
+SPEAKER_02:
+All right.
+
+Sure.
+
+Sure.
+
+So how do you do this in practice in an active inference context?
+
+So this is a little example.
+
+It's called the Bayesian thermostat.
+
+Where we have an environment, so where we have a heat source, here on the left, and we have a little car that can move around, it can move away from the heat source, or it can move towards the heat source.
+
+Now, the position relative to the heat source is what we call X. And at every position, there is a specific temperature.
+
+And the temperature that we measure at a specific position is what we call Y.
+
+And we have a preference of being at a temperature of four.
+
+Why four?
+
+I don't know.
+
+It's something we choose.
+
+And we control this car by moving it left or right.
+
+And our control is the velocity that we move left or right with.
+
+And it's called u. So this is our environment.
+
+And we want to build a model for that.
+
+In active inference, what we want to do is we want to reason from states where we would like to be towards controls that we have to apply at this current time in order to get there in the future.
+
+So what we want to do is we want to reason forward from the current time, time t, up into some time horizon, big T, and
+
+In the future, we want to consider how the agent will move and where we want that agent to be at that time.
+
+And in the end, we will want to be at a temperature of four.
+
+And it's a state-based model that represents our belief for how this agent will move itself through the world.
+
+So at time t, we have an observation coming in of a specific temperature, and maybe we have already made an action.
+
+And we say that the current state, Xt, relates to the previous state in the action that we have by adding.
+
+So basically, ut here is a velocity that we add to our current position.
+
+in one time step and then we get kind of our next position by just adding that and also applying some Gaussian noise.
+
+So we have a state transition that is additive with duty, saying I want to move forward to the left or forward to the right.
+
+And then we add some Gaussian noise saying, okay, we're kind of uncertain about how this agent might move in the environment.
+
+We have an idea about that, but let's add some variance in order to account for some uncertainties.
+
+And then we say here with this vertical line that if we have an observation or if we have a position, then it relates to an observation of the temperature by, well, minus one.
+
+It's kind of a rough guess.
+
+It's just saying, well, if I move to the right, if I move away from my heat source, then my temperature will decline with a slope of minus one.
+
+And it's kind of a really rough guess.
+
+In the real world, there will be a very nice temperature gradient that maybe will move very slowly downwards.
+
+But we're just saying, hey, we don't really know what that is.
+
+Let's make a rough guess.
+
+We have a belief.
+
+This is our generative model, our belief about the world.
+
+Let's just say that temperature decreases with position.
+
+And again, we're not very certain about that.
+
+So let's, again, add some Gaussian noise.
+
+And now I extend this into the future.
+
+So I say, actually, well, I believe that in the future, my environment will also evolve according to this.
+
+But I also have some ideas about where I want to be.
+
+And this is where gold priors come in that constrain my future observations of the temperature to be around this desired temperature of four.
+
+And I'm saying then here with some added noise, well,
+
+I want to be around 4.
+
+It doesn't have to be exactly, but I want to be pretty certain that I will be around 4 at time t plus 1, and I will continue to remain there until sometime in the future.
+
+Now we have a generative model.
+
+We can define our energy functional and we can solve this energy functional by message passing on this graph.
+
+And we pass these messages towards our next control because we're interested in inferring what we have to do next, like from next time.
+
+And this is where we can do message passing.
+
+We can summarize all the information that we have from the past.
+
+So this will be an estimate of the current state of the agent.
+
+And it will be biased by our beliefs about the future, saying where we want to be.
+
+And that will influence or determine which control that we will take at the present time or at the next time.
+
+All the details of this are described in this paper from 2019 by Bert and me.
+
+And there you can also see kind of how we applied it within the action perception loop and things like that.
+
+Because you will have to do this at every time T Because your state estimate will change the word will change according to your actions So you will for every time you will have to recompute a new action for what you're going to do next And this is kind of the The main idea now, of course, we don't want to do everything of this by hand So what we want to do is well, we want to use a tool for that So now
+
+I'm going to show a little demo of how you would implement this using the Forney Lab probabilistic programming tool.
+
+So let's see if I can open our little demo.
+
+So this is readable, actually?
+
+Or should I zoom in more?
+
+
+SPEAKER_00:
+You can zoom in a little bit more.
+
+Maybe like this.
+
+Uh, yeah, I can resize it.
+
+Yeah.
+
+Um, that that's pretty good.
+
+Oh, that's perfect.
+
+That's pretty good.
+
+Yep.
+
+Thank you.
+
+
+SPEAKER_02:
+So this is, um, so, so it's kind of set what we, what we want to do.
+
+Um,
+
+So this is kind of our definition of the environment itself.
+
+So this is the real world, where we have this temperature gradient, which is a very nice function, so a very smooth function, where at the heat source we have a temperature of 100, and it goes down with position from that heat source.
+
+so this is a real world we don't really know this so this is the one that we're going to approximate with this very rough minus one and then we'll see whether that will work or not now this is my wonderful husky art that has now been resized of basically the model that i've just shown in slides and this here is our model definition so actually i have to zoom out a bit to make it more readable
+
+
+SPEAKER_00:
+Yeah.
+
+
+SPEAKER_02:
+So we want to build a graph for this, right?
+
+So here we have our observations, states, controls.
+
+And we define a prior belief about t minus one.
+
+So where have we been?
+
+Which we're going to say is a Gaussian with some mean and some variance.
+
+And then for every time into the future, from one to the horizon,
+
+We will have a prior belief about controls, which basically says, well, what am I allowed to do?
+
+And I say, okay, well, I'll have a Gaussian prior about controls with a mean of zero.
+
+I'll substitute that there and then maybe some variance.
+
+And here I say, well, I have my position of the agent.
+
+It relates to my controls by just this addition.
+
+um with some added precision gamma so this is our transition model this is horizontal line and this is our observation model which is very rough estimate minus one of the temperature gradient times current state and also some some some precision observation precision and this represents my goal prior
+
+So note that I haven't really put in any specific values here yet.
+
+I just have placeholders for the actual statistics and values that I'm going to put in.
+
+Because the actual derivation of my algorithm, it doesn't really depend upon the statistics.
+
+It's just something that we can put in later.
+
+So this is what I want to do, build a free energy functional.
+
+And in ForneyLab, that's actually just basically four lines of code.
+
+So this posterior factorization that defines my factorization for Q, saying that I'm just going to have a joint variational distribution over the entire graph.
+
+I don't really subdivide it into a structured factorization.
+
+Some people are familiar with that.
+
+But I'm just saying, okay, I'll just have this posterior factorization of the variational distribution to be my entire graph.
+
+And then with just one command, I can derive a message passing algorithm that propagates all the messages towards control U2, which is the control for the next time step, T plus one.
+
+And I want to evaluate my free energy.
+
+So also give me at the same time an algorithm that I can execute in order to evaluate my free energy.
+
+And this line will convert this to source code that I can then load in my environment.
+
+And what this does is it builds a message passing algorithm for us.
+
+So this is the code that executes the message passing on our graph.
+
+And here you can see that it computes all these messages by some product rules and other rules that we have pre-derived and we have implemented in ForneyLab.
+
+And you can see that these messages, they depend upon the statistics.
+
+So this is, for example, the mean of our prior overstates and the variance of our prior overstates.
+
+And we have other messages that depend upon previous messages in the way that I explained message passing.
+
+And this builds an entire list of, in this case, 26 messages.
+
+And in the end, we're interested in the marginal beliefs.
+
+So in the posterior marginal beliefs about, for example, our controls.
+
+And you get these beliefs when multiplying messages together.
+
+So, for example, to get a new belief over the following control, you multiply messages 9 and 25.
+
+And you also recognize this from the little introduction, message passing introduction, where you have colliding messages on the edge that you multiply in order to get your posterior beliefs.
+
+And that's what we return in the end.
+
+That's what we're interested in.
+
+So this is the execution of that algorithm.
+
+And notice that we've made an entire schedule here.
+
+And they can be very cumbersome.
+
+um can be very long very long schedule and so that makes it expensive maybe to load and to execute and dimitri has a solution for that and he'll explain that in a minute um so i'm very happy about building schedules um dimitri not so much uh he tries to find uh find a solution for them get rid of them
+
+because in the end that will be the fastest to really don't have a schedule that not really have recipe but just cook by whatever is given to you so now we execute this algorithm in practice so this is our action perception loop for every time step we want to
+
+We want to act, we want to evoke an action from the agent.
+
+We want to execute that action in the environment.
+
+So this is sending the action towards the actual real world or kind of simulated world in this case.
+
+And what we get from that is an observation.
+
+And from our action observation, we want to infer our new action and also return the variation of free energy.
+
+um and then prepare for the next step so in every step we propose an action to the environment the action gets executed we observe a new outcome we infer new action and we evaluate how well we did with that action and then you get uh well nice plots like this so um this is the velocity of our agent we start at zero and you can see that it moves very quickly to the right
+
+and then it also moves back a little bit until the end it comes to a stationary point more or less and you can see actually here what it does so it starts out at a temperature of 20 then it moves very quickly to the right away from the heat source it overshoots its mark and
+
+and then it actually goes back and then it settles around this desired temperature of four that we have encoded by by our goal priors um so why does it overshoot well our model of the environment wasn't perfect right we had this very rough estimate of minus minus one um and in the real world was this very nice smooth kind of complicated function um that is this kind of bell shape
+
+So even though our generative model of the environment wasn't perfect, in the end we paid for that by overshooting a little bit, but still we were able to get to our desired state of the temperature of four.
+
+So in the end, it kind of worked pretty well.
+
+And you can also see that the free energy of the agent also decreases with time.
+
+So we start off at around 1,000.
+
+So the scale is logarithmic here.
+
+And it decreases very quickly towards some value that's rather low.
+
+And then we have some noise that induces some unexpected changes or some unexpected surprises.
+
+So that's why you have these little ripples here.
+
+But in the end, we're minimizing free energy, and it's decreasing drastically.
+
+So we actually have this free energy minimizing agent.
+
+And yeah, that's basically all I have, the story and the demo.
+
+
+SPEAKER_00:
+awesome thank you very much we can uh with screen share on or not ask a few of the questions from the live chat and also give people a few seconds to type more so i'm just going to jump into the questions first let me stop my screenshot great so i'm still sharing your screen story um we see just the jitsi so go just click the screen share button again and jitsi
+
+So awesome, thank you.
+
+So the first question is from John, and John writes, how does the factor graph approach work if the graph structure is not known beforehand?
+
+Is structure learning possible?
+
+
+SPEAKER_02:
+Yeah, so that's a good question.
+
+So is structural learning possible in graphs like these?
+
+So that is actually something that is still an active field of research.
+
+It would be awesome if you can automate also the structural learning of the graph itself.
+
+But there are a lot of challenges there.
+
+So how do you parameterize this graph structure?
+
+And how do you do that, actually?
+
+What is your search space in terms of graphs?
+
+How do you learn node functions if you don't have a node function given for your graph?
+
+So these are all very difficult questions and you don't have a straightforward answer.
+
+So that's why this actual model design step in the design cycle itself is still kind of a creative process.
+
+There is an engineer that has to come up with a model.
+
+And as an engineer, you also have to think about how to adjust that model if you're not satisfied with it.
+
+So if your energy is still high after you run your agent, well, something is going on.
+
+Something is wrong with your model.
+
+It's not an accurate representation of what is the environment.
+
+And then you might adjust that.
+
+How do you adjust that?
+
+Well, currently, it's still just trial and error.
+
+So maybe you can say, okay, I think here is still something that I can improve.
+
+Maybe remove a node.
+
+Maybe the model is too complex.
+
+But structure learning in itself is...
+
+It is something that is also, it can be addressed.
+
+So there are methods like nested model comparison and things like that that you can do in factor graphs.
+
+So you can, for example, if you have a nested model, compute Savage-Dickey ratio and then kind of prune your model based upon that.
+
+So those are things that you can do to find a complex model and see what you can cut away.
+
+
+SPEAKER_03:
+um but adding to that model is still difficult so once you've cut it away well how do you add yeah i i don't i don't really know so that's that's a good question and uh i don't have a very straightforward answer as you can hear from my rattling so yeah perhaps i can say something about it um i mean i i totally uh agree with uh with tennis i mean generally when you design a system or a signal processing system you have to design the structure
+
+You have to estimate the parameters and then you have to infer states, right?
+
+And the states change very fast.
+
+It leads to a Kalman filter and that's very well known in factor graphs.
+
+Then the next stage would be, can we also over the long term learn parameters?
+
+And our factor graphs can do that pretty well.
+
+Now the next stage in biology, I mean, we know the structure is also learned over even longer times, right?
+
+And so that's not working at the moment in formula.
+
+You can compare, like Ty says, if you have two examples, you can compare the free energy and just pick the best one.
+
+But we are working on that.
+
+I mean, we're taking, again, the lead from Carl's idea on Bayesian model reduction.
+
+But how to implement that in a factor graph is a research project.
+
+So we're working on that.
+
+And I'm not sure where that will end, but that's our goal.
+
+
+SPEAKER_02:
+Did you have PSD position available Bert?
+
+
+SPEAKER_00:
+Also to bring it back to the example of the motor car getting to an optimal temperature, it's like if every hour you notice that there was a bump in the free energy, then you go back to the drawing board and you go to the people who are on that car in that area and ask, well, what happens every hour?
+
+Or maybe we do need to include this other source of information, but the model that you had does its job.
+
+So you could include the wallpaper and other features of the room, but that's kind of this art and science of engineering.
+
+and that's why it's always interesting to work because often in research it's like let's finish the analysis but really there's this cycle that the entire model is embedded within that helps us always keep an eye out for those patterns that are precluding being captured by our current models here's a very well put here's a second question from the chat
+
+How does the factor graph approach work if the goal temperature in this example is not defined beforehand?
+
+Can the goal be abstract?
+
+So kind of a similar question, but rather than structure learning, how does preference and goal orientation arise?
+
+
+SPEAKER_02:
+Again, excellent question.
+
+So that kind of relates to the question, well, who sets the goals?
+
+Or how do you set goals?
+
+So, yeah, the plain answer to that is, well, it's an engineer that defines that.
+
+But it can also be a higher level agent that does inference and sets those goals.
+
+So then you get to kind of turtles all the way down argument in the sense, well, you can put layer upon layer upon layer upon layer and layers to goals and other layers as the goals for that layer, et cetera, et cetera.
+
+So how that will work in practice, yeah, that's still, again, active research area.
+
+But in the end, it should come down to minimizing free energy.
+
+So that's kind of the central theme of this.
+
+We want to minimize free energy.
+
+We do it by perception.
+
+We do it by model learning.
+
+But also, learning of the goals should be driven by minimizing free energy.
+
+So you should choose the goals that minimize free energy.
+
+Well, how do you do that?
+
+I don't know.
+
+You tell me, right?
+
+Yeah.
+
+
+SPEAKER_00:
+One more question that was asked was how, or does this integrate with graph databases or with large data sets?
+
+Is this something that scales for is already integrated to work with that kind of empirical data or what?
+
+
+SPEAKER_02:
+I think it depends on what you mean by large data sets.
+
+So.
+
+When I hear large data sets, I usually think about big data, things like that.
+
+So this toolbox is specifically built for dynamic modeling.
+
+So it's not in the sense that you have a lot of features in your data, but it's signal processing.
+
+So data might come in very quickly and you have a model of how these data change over time.
+
+So in that sense, you want to do processing quickly.
+
+So you want velocity.
+
+It's based on processing with velocity and not processing with volume, as, for example, other programming toolboxes are excellent at, like PyTorch and things like that, sampling-based toolboxes.
+
+All great toolboxes if you have volume in terms of data and you have, for example, an IID model that you want to fit.
+
+In our sense, if we talk about large data, we talk about volume.
+
+So data that come in very quickly.
+
+And we try to be good at that.
+
+phonylab is not yet that good at it to be honest but reactive message passing is going to be the bomb at those kind of data sets there's also a bit of that
+
+
+SPEAKER_03:
+what we really try to build this toolbox to build active influence agents.
+
+And the idea that you just put these agents in an environment, they make actions, they select their own data.
+
+So we don't really try to build a toolbox that is really good at just doing machine learning for a fixed set database, but rather we try to build models that
+
+let's say dynamic models that can adapt and that can make actions and that can in real time process streaming data.
+
+And in that sense, over time, if you wait long enough, yeah, there's a lot of data streaming through it, but it was sort of generated by, or at least affected by the agent itself, right?
+
+We don't try to optimize for big fixes.
+
+streaming data in an environment.
+
+
+SPEAKER_00:
+It's a really fascinating point because there's a lot of time-dependent tasks like autonomous driving where it's like, okay, here's the 500 terabytes of video, or here's this, now give me the best possible score in a time snapshot.
+
+And it's every single time with an active inference agent, we're always including action and policy selection in the loop.
+
+And so...
+
+How are we going to deal with that?
+
+But that's why the inspiration from biological systems becomes so important.
+
+It's kind of like when people go, oh, well, the brain must have this processing power.
+
+And then if it were a light bulb or if it was this kind of a silicon computer, it would take up this much energy.
+
+Ergo, its efficiency is such and such, but it's predicated upon energy.
+
+kind of computers that we're used to seeing instead of kind of starting with what already exists and then looking for an answer that rests in that rather than how do we make lower power transistors so that we can fit them into the brain so awesome topics i think we're ready for the next presentation yeah hello everyone let me also share my screen uh for a second
+
+
+SPEAKER_01:
+I hope it should work now.
+
+Looks good.
+
+So can you see my slides now?
+
+Yes.
+
+So OK, so yeah, hello again.
+
+My name is Mitri Bagayev and I want to introduce you like this new reactive message passing based framework for Bayesian inference in Julia that we called reactive MP.
+
+It's more like our future vision on solutions for active inference.
+
+Forneylab.jl is like more like mature
+
+framework, it works, and ReactiveMP is our research project for now.
+
+And we are going to start with a question, what is actually reactive message passing?
+
+And in most senses, it's the same message passing as in foreign lab, but reimplemented in reactive paradigm.
+
+So basically, the major issue with traditional approach as in foreign lab
+
+is that in order to run inference for our model, we need to create this shadow of messages in advance.
+
+So we need to pre-analyze our graph.
+
+We need to pre-analyze everything, basically.
+
+And we need to do it every time we change our graph structure.
+
+And if graph is big, this graph analysis time and shadow creation may take a lot of extra time.
+
+And it might be not a big issue, but as an engineer, you may want to test a lot of models until you're satisfied with the performance.
+
+And these extra delays in shadow creation times, they may be just a bit of annoying.
+
+And reactive message passing allows us to eliminate this predefined shadow.
+
+And also it gives us a lot of other benefits and possible future research directions.
+
+So instead of having a fixed shuttle, we cast our graph to like an event-based system where everything can react on its neighbor environment.
+
+And in terms of message passing, nodes react on incoming messages.
+
+And also it reacts on updated posterior marginals over our parameters.
+
+and the whole model becomes reactive we can also react on changes in this system and basically do whatever we want so we may perform some action based on new updated posterior marginals it also in message passing a natural starting point is our data or observations and the model itself reacts on changes in our data or in our priors
+
+and it also changes posteriors accordingly.
+
+So here I've outlined some extra benefits from the Active Message Passive implementation.
+
+So first of all, we may outline biological plausibility, because in nature, we probably don't have any predefined scheduler for our information flowing on neurons in our brain, for example.
+
+They are driven by some chemistry, physics, and in a sense, it's also a reactive system.
+
+It constantly adapts the changes in an environment, and also it reacts only if needed.
+
+And in terms of message passing-based inference, it may be unnecessary to even react on some events, like some messages, if they aren't really important.
+
+uh with fixed predefined shadow you're forced to do all computations even if you don't really need them another great benefit of reactive message passing is that it scales very nicely for very big graph so it's more like an answer for previous question uh so it supports like hundreds of thousands of factor nodes even millions are possible
+
+I will show you an example in a couple of minutes, but just to give you a bit of context.
+
+So in this plot, we modeled just some moving object with non-linear dynamics.
+
+And the idea was to estimate hidden states given noisy observations.
+
+In this example, I used Kalman smoofer with 50,000 observations.
+
+And this model contains roughly about 150,000 factor nodes.
+
+so based inference on this kind of a model is impossible on sampling based inference but with reactive message passing it takes only about like eight seconds on just a home macbook laptop so we can go further a bit and make reactive system robust and tolerant to some let's say failing nodes or missing data from let's say failed sensor
+
+With fixed predefined shadow, if something like this happens, we need to do everything from scratch.
+
+We need to recreate our model, we need to again make a shadow, and it will just take some time.
+
+With reactive message passing, we may just stop reacting on some missing data or maybe failing sensor, and we can just wait for them to be available again.
+
+It makes it very robust in that sense.
+
+It also gives us an opportunity to change our graph structure in runtime and still perform inference without stopping.
+
+So there is a slide about how we actually do that.
+
+We use Julia as main programming language in our lab roughly about a year and a half ago.
+
+We wrote a library for reactive programming in Julia.
+
+So it's completely unrelated to message passing in just a general framework for event-based systems.
+
+But that allowed us at the later point to build reactive MP.jl package.
+
+And it implements free energy minimization by message passing.
+
+We also introduced graphppl.jl package that is a high level and user-friendly probabilistic model specification language that we use in our demos.
+
+Yeah, here I want to show you an example, just in a second.
+
+So you can see my screen, right?
+
+
+SPEAKER_00:
+Yep, maybe one little size larger or two.
+
+I hope it will not break.
+
+Yeah, make it a little larger, and then if it looks unexpected, you can pull back.
+
+
+SPEAKER_01:
+Okay, here we go.
+
+Better?
+
+
+SPEAKER_00:
+Yep, thank you.
+
+
+SPEAKER_01:
+So here is our example.
+
+So assume we have some moving object.
+
+It has some hidden states.
+
+And just assume that we know its linear dynamics for simplicity.
+
+And we don't have a direct access to its location, but we have a noisy observation of this moving object.
+
+And we wish to estimate the true location of this moving object by only observing its noisy measurements.
+
+And we may use a linear multivariate Gaussian state space model.
+
+Like equations looks like this.
+
+These are equivalent notations.
+
+They're the same.
+
+And basically here we say that, okay, we have a state X time step K, and it depends only on the previous time step.
+
+through some linear operator a and we also have a transition noise which is a gaussian with covariance matrix p and our observations are basically modeled also as a gaussian with covariance matrix q and basically this is our model and we can simply create a factor graph out of it and as you can see that
+
+Our model specification resembles very closely to the equations defined above.
+
+So here we have our state xk, and it's modeled as like a Gaussian over previous state with some, let's say, known covariance matrices.
+
+And this is how we build our model.
+
+And under the hood, this code, it generates factor graph.
+
+And we can later on use reactivemp.jl API to estimate hidden states of our system.
+
+But here's our example.
+
+It looks a bit off, probably because I zoomed in a bit.
+
+But it's fine, I believe.
+
+And in this example, I performed a Kalman smoofer for 500 points.
+
+And I just decomposed the trajectory of this moving object into two axes, x-axis and y-axis.
+
+And we can see that Kalman Smoofer predicted the real hidden states of our system correctly, even though we have a lot of noise in our system.
+
+So these blue dots are noisy observations.
+
+And we can go further with this.
+
+So because our system is reactive, we can estimate our states in real time.
+
+So here's our example.
+
+Let me try to run it.
+
+I hope it looks smoothly on my computer.
+
+It's actually very smooth, but I know that maybe recording is not that smooth like screen sharing.
+
+But here in this example, what we see is that, OK, we have an infinite data stream of a moving object that the blue is a real one and the red is an estimated one.
+
+And we can see that.
+
+Yeah, let me reload it because it's kind of off.
+
+And we can see that
+
+Reactive MP is able to perform invasion inference in real time.
+
+And it actually adapts to changes in the environment and also changes the posterior over the current estimated state.
+
+And we can go even further.
+
+You probably noticed this orange line here is just inactive for now.
+
+But we can also incorporate prediction for this model.
+
+So we can just extend a little bit our graph
+
+And we can also predict future state of our system like this.
+
+So now in this example, I do Bayesian inference in real time.
+
+And I also predict the future state of my system like an orange.
+
+And you can see that prediction also adapts to the new observations.
+
+And yeah, it changes basically its future beliefs over future states.
+
+Yeah.
+
+let me stop it and continue with the presentation so um yeah i'm going to talk about like when reactive message passing is available actually it's already working uh we have a fully working stable backend and api for exact and variational bayesian inference we also support expectation propagation but that api is not yet stable so it may change
+
+We support for now only conjugate models from exponential family.
+
+We support extra constraints for variation optimization procedure, such that form or factorization constraint.
+
+So rocket.jl library, it naturally supports infinite data streams, for example, from an internet or from some sensor.
+
+And framework itself is able to handle missing data, but that API is also not yet stable.
+
+Here are some of our future plans for this platform.
+
+So we want to extend it to support non-conjugate models as well.
+
+Basically, ForeignLab already supports it.
+
+We just need to carefully port all of the available existing functionality from ForeignLab to ReactiveMP.
+
+And we also want to integrate with other probabilistic programming libraries that exist in Julia community.
+
+reactive message passing gives us an opportunity to try to integrate parallel inference and react in different parts of the graph simultaneously using like multi-core capabilities of our cpus we want to extend graph ppl to support modular model specification for now it's unfortunately not possible also reactive message passing naturally gives us an opportunity
+
+to run inference where different data streams have different update rates.
+
+That's what I was talking about in the very beginning about robustness.
+
+But it's also interesting how far can we push it and maybe it's possible to automatically adapt models graph structure in runtime based on free energy.
+
+But it's like a research project.
+
+We don't really know if it's possible or not for now.
+
+We have some ideas about interactive visualization for message passing based algorithms and free energy minimization visualization.
+
+And eventually we are planning to release this new platform as a stable version of ForneyLab, possibly in 2.0.
+
+And that basically is everything I wanted to show you in my slides.
+
+And thank you for your attention.
+
+I would be happy to answer your questions.
+
+
+SPEAKER_00:
+Awesome.
+
+First question was, is there a paper on this reactivemp.jl or how does that work?
+
+
+SPEAKER_01:
+There is, but it's in progress.
+
+So it's not publicly available, but we are working on that.
+
+So there will be eventually a paper about all of this approach.
+
+I will describe everything, how it works and how we use it.
+
+So, yeah.
+
+
+SPEAKER_03:
+I mean, of course, if anybody writes us an email who wants an early copy of the paper, I'd be happy to share it.
+
+I'd be happy to share.
+
+
+SPEAKER_00:
+It's very interesting development.
+
+Maybe to the other authors, what other epochs of Forney Lab were there?
+
+How did we get to this reactive programming paradigm?
+
+And also, it seems like you did a lot of the foundational work in the lab on the reactive programming.
+
+
+SPEAKER_01:
+that just in the julia implementation or in the more conceptual grounding um yeah we did actually really a lot of work to support reactive programming in julia basically julia is like a young language and it has no like good capabilities to run reactive based like systems so we basically we build it from scratch
+
+Yeah, but we used a lot of, let's say, ideas from other programming languages that we had experience with.
+
+
+SPEAKER_03:
+I mean, I know that the Active Influence community, MATLAB, and MATLAB is fantastic, but if you want real-time processing of streaming data,
+
+then Julia is a better option because Julia almost has the syntax of MATLAB from a user's viewpoint.
+
+But out of the box, it's almost as fast as C.
+
+And so it was a better combination for if you are in engineering and you actually want to build systems that run in real time, you want to make demos, Julia is a better one.
+
+Dimitri also makes use of some really advanced
+
+dispatch, but it doesn't matter what it is.
+
+But it's quite advanced and it's not available in MATLAB, but it's extremely useful for what we do, for doing a toolbox.
+
+It seems to be, if you look at a graph and message passing, it seems to be like, oh, this is actually not so hard to implement.
+
+but there's a reason why there are extremely few toolboxes for factor graphs.
+
+Microsoft has built one, infer.net, and it's great, but it's not really a real-time toolbox.
+
+And so as far as we know, there's not much competition at the moment for us.
+
+Not that our toolbox is very advanced yet, but I don't see a lot of people working on this.
+
+I see a lot of people working on...
+
+Multi-color sampling, but multi-color sampling will not work for the sizes of systems and for the real time data streams that we want to do with active inference, right?
+
+We are working with systems where we want to make actions and influence our data.
+
+So this is a real time system.
+
+Um, and so we have to go to, you want to actually scale up.
+
+We have to go to build a really high quality professional toolbox
+
+that automates message passing.
+
+I hope this will be one of those toolboxes, and hopefully there will also be other toolboxes.
+
+But yeah, that's why we're doing this.
+
+
+SPEAKER_00:
+Very interesting answer.
+
+How has the dialogue between the math and programming and computer science side and then the active inference side been?
+
+Like what has each side kind of contributed?
+
+Because it sounds like some of those real time insights of active inference are kind of propagating back to the design of algorithms.
+
+And then we see both directions.
+
+So how has that played out maybe for any of each or each of you?
+
+
+SPEAKER_01:
+I can also answer maybe this question.
+
+From my point of view, I mostly like doing programming, but I still learn something new every time because we like in this constant dialogue with math guys in our lab, let's say, and I learn something new every day.
+
+And of course, it reflects like our design choices for our software as well.
+
+So it's kind of but sometimes it's very hard to fit this high level mathematical ideas to the actual implementation.
+
+And also, it's very hard to make it efficient.
+
+So
+
+
+SPEAKER_03:
+Yeah, we are not, uh, we're not done with this.
+
+Um, I mean, the toolbox is available for anybody and all the nice Tori examples, the business thermostat, the tic-tac-toe, and it all works very smooth.
+
+Um, our, our hope is that with reactive message passing, we can actually, you know, get a pass to scaling this up to, to serious applications.
+
+And that's, I mean, we're an engineering group.
+
+We want to build systems that really do something useful.
+
+I also work for a hearing aid company, so I want to build real time audio processing algorithms.
+
+And others may want to use this for robotics.
+
+So yeah, but that's not going to work in real time MATLAB.
+
+It's not going to work.
+
+Yeah, and with all the Monte Carlo sampling.
+
+So this is our effort.
+
+And it's quite, it takes a long time because it's very multidisciplinary effort, right?
+
+We have in my group, we have mathematicians and neuroscientists and computer scientists, because it's difficult.
+
+There's a lot of different expertises
+
+
+SPEAKER_02:
+that that you need to build a good toolbox for active inference i think because it's so difficult there is a lot of like um like cross fertilization between the active inference community and the engineering that we do the community is mostly interested in explaining biological systems right they see energy principle and active inference as um as model for biology
+
+And I think that's very interesting because, well, nature has a certain way of doing things efficiently.
+
+And if this is a model for that, then it's also a good idea to take that to engineering.
+
+And that's kind of where we come in.
+
+So we kind of take the ideas that are available in the active inference community and the way they explain brains and think about brains and think, hey, how can we take these ideas and use them to build an engineering system?
+
+And I think that's kind of the main interaction between it.
+
+And hopefully then we build tools that the community can also use then in their research eventually.
+
+
+SPEAKER_00:
+What that made me think about was it's really a reframing of some of the main challenges, like seeing signal processing as a real-time event or seeing the causal relationships between action and future data, all these kinds of reframings of the problem.
+
+It's not like the active inference algorithms
+
+take massive matrix calculations to do per se.
+
+They can be very simple or not, but it's actually that reframing and the embedding of action within every step that then ends up solving the scaling, some of the scaling challenges, some of the resilience challenges, because like resilience of a transportation network in a city, they would do sampling or they would take something that's an unfolding dynamic process and then try to roll out a million iterations of it statically.
+
+Again, it's not that the calculations inside of the loop have to be challenging.
+
+It's just a reframing of prioritizing action ended up going down these roads of scaling and real-time capacity.
+
+
+SPEAKER_03:
+Yeah, I like that thought.
+
+Perhaps I can say something about it in the context of what I work on, because I work on designing.
+
+Basically, I'm a hearing aid engineer.
+
+And if you ask a hearing aid engineer, signal processing engineer, so what is your task?
+
+Well, our task is to build the best hearing aid algorithm.
+
+And so then what happens is that a hearing aid client goes to the store and buys a hearing aid and usually is very happy and goes out and then two weeks later sits in a restaurant and cannot understand her conversation partner because
+
+there's noise and this wasn't expected and there's nothing she can do because she can't ask a client a hearing aid client to fiddle with hearing aid parameters so if this happens a few times then she throws or she puts her hearing aid in the drawer and this indeed about 10 20 percent of hearing aids end up in the drawer they're very expensive and
+
+And 20% ends up not being used, so really sad statistic.
+
+So rather, you can turn it around and say, okay, what is the real hearing aid design problem?
+
+The real hearing aid design problem is send somebody out with any hearing aid, but what do you do when she's unhappy in the field, in the restaurant?
+
+And what we want to build is an agent that will
+
+So she just slaps her wrist, which I'm happy.
+
+And now this agent needs to make an action and give her new parameter settings that are the most interesting for her and the best compromise between information-seeking and goal-driven, goal-driven making her happy.
+
+So hearing a design from my viewpoint now is just build an agent
+
+hearing aid proposals when she's unhappy.
+
+And if she's unhappy and then the hearing aid makes a proposal, says, no, that's not good.
+
+Well, the agent gives another proposal and then she says, okay, that's better.
+
+And then we move on.
+
+And maybe a week later, the same event, and this goes on continually, but there is at least a procedure to keep moving on, to keep improving over time, right?
+
+Um, so that's the, the real thing of design is the, is then the, the, the action in the field in situ, which is very different from what's currently happening, which is hearing aids engineer sitting at the desk with model up, not in the environment.
+
+So that's a, it's, it's paradigm shift and active inference agents, um, can maybe make it happen and could really, I think, uh,
+
+create a pivoting point for something like signal processing design, which is, you know, it's not something that you think about when you're a neuroscientist, but this could really mean something big for engineering.
+
+And not just for signal processing, but also in different engineering disciplines.
+
+And so that's why I think over time, you'll see more and more people coming from different fields
+
+getting an interest in this active inference and the free energy principle, even the non-neuroscientists, right?
+
+The engineers, yeah.
+
+
+SPEAKER_00:
+Cool.
+
+We hope so.
+
+And that really reminds me of the pragmatic turn, which is, it's a little bit like a horseshoe theory with the engineers and the philosophers often talking about pragmatism.
+
+in different ways different communities different tools and now there's a way to kind of close that gap or at least map across it where we can embed some of those insights about really an activism the role of design science anticipatory design science with
+
+take it or leave it philosophy, or there's the toolkit to develop.
+
+Maybe it's interesting five years after working with a toolkit or maybe five years of philosophy, and then you're curious about the toolkit.
+
+So one question was, how do these graphs account for temporally deep models?
+
+How are those specified or what is different about the graph?
+
+Because it's just calculating the next action to take in the examples that you provided.
+
+
+SPEAKER_02:
+maybe you can show your graph again how how the future is represented um and how do you add temporal thickness to that for example that's kind of so if you have if you have a graph um like share screen yes if you have a graph like this then how do you add temporal thickness for example um that's that's just about adding layers so
+
+What is shown here is one layer, and this layer, it acts at a certain clock time.
+
+Observations come in discreetly.
+
+But you might have a layer above this that is somehow connected to this layer below that acts at a higher temporal time scale.
+
+So it evolves slower, but it regulates or influences the parameters of, for example, a transition model here or an observation model here.
+
+So you get a time varying observation model that is influenced by a slower evolving layer.
+
+On top of that, you can get an even slower evolving layer, right?
+
+And that's the way you can build hierarchies.
+
+And actually, there is also a PhD student in our group, Ismael Senos, who has done some very interesting work on that, and he has investigated how you make hierarchical Gaussian filters, so hierarchical Gaussian systems, where you have one top layer influencing the variance of the transition model of the layer below.
+
+you can see that you can model very natural signals with that.
+
+So in nature, you have signals that are time-varying, the statistics, they are time-varying, and the statistics of those models are time-varying.
+
+So a hierarchical model in that sense can be very useful for that.
+
+And of course, that's also how our brains are structured.
+
+So again, there you have this inspiration from nature on how to structure the models that we try to build.
+
+With factor graphs, at least in theory, this should be pretty easy because you can just connect them.
+
+You can connect layer on top of this and see how it behaves.
+
+And eventually the complexity of your model will become very high and you'll get penalized for that automatically.
+
+So there will be a cutoff point given your data.
+
+That will be the optimal amount of layers that you need in order to explain away all the variance that you observe.
+
+So that's kind of how we think about temporal thickness and time dependence in dynamical models like this.
+
+
+SPEAKER_03:
+Dan, can I share my screen also?
+
+Yep.
+
+Sure.
+
+Okay.
+
+Let's see.
+
+Because this... Awesome.
+
+Yeah.
+
+This is a graph from a paper a few years back in Frontiers.
+
+It's called, I think, Deep Temporal Models in Speed Factor Graphs or something.
+
+And here you see a three-layer system.
+
+I mean, don't bother about the details now, but here you see at the top layer just basically has one section, one time step.
+
+And in that time step at the top layer, you have two observations or two steps at the middle layer.
+
+I need, yeah.
+
+I'm not sure if you can see my.
+
+
+SPEAKER_00:
+Yeah, we see it.
+
+We see it.
+
+
+SPEAKER_03:
+Okay.
+
+And then again, for the, let's say the third layer, whenever the middle layer takes one step, we have two steps here.
+
+So, so there is sort of a finer granularity at each layer.
+
+Right.
+
+And so we can build hierarchical, uh, models really.
+
+And, uh, so we're doing that also in, uh, and we also, yeah, if you, you,
+
+you look at some of the papers on our website, you'll find a lot of papers on the hierarchical Gaussian filter from Chris Matisse.
+
+We've implemented that in, but also, I mean, you can also do it for active inference things like, and then it will look like this.
+
+Thomas Parr has also graphs like this in some of his papers.
+
+
+SPEAKER_00:
+very interesting and we see a lot of the same variables like g d b like we can it's kind of a different representation of active inference so yeah this is kind of also going back i think to the earlier frontiers paper what are some of the big equivalencies or kind of like airtight mappings from and to 40 factor graphs because there's probably some broad areas of application
+
+that could almost be hot swapped for this underlying it, perhaps.
+
+So what like are the equivalencies with just Bayesian graphs in general versus factor graphs versus other topics at that level?
+
+
+SPEAKER_02:
+I think a phony style factor graph or a bipartite graph or a Bayesian network
+
+They aren't really different.
+
+They can be used as, they're just a representation of a factorized model.
+
+And the way you represent that can have an impact about how you think about those models.
+
+So for example, if you choose a four-inch style factor graph representation, it's very suited for signal processing because you kind of can see these messages as signals that flow over your graph.
+
+So for us as engineers, this is a very intuitive representation.
+
+In Bayesian networks, it's a bit more, the model representation itself is more compact in that sense that you only have variable nodes and you see how they relate.
+
+So it gives you a good idea of model structure.
+
+So it can be very nice to have a quick overview of a model like that.
+
+And then you have, for example, a bipartite graph, which also shows a relation between variables as an additional kind of vector nodes in between.
+
+And it gives you a bit more granularity on how these are connected and gives you room to talk about, well, what is the relationship between these variables?
+
+And so in the end, they're equivalent.
+
+you can take one model and represent it in three different ways, maybe even more.
+
+But I think it does impact the way how you think or how you think about these models.
+
+So that
+
+that usually comes up when writing a paper.
+
+And then you have to think, okay, what is actually the best representation for my idea?
+
+Sometimes it's a barbed wire graph.
+
+Sometimes it's a Bayesian network.
+
+Sometimes it's a point-style vector graph.
+
+It just depends upon your story.
+
+Yeah.
+
+And hopefully that answers your question.
+
+
+SPEAKER_03:
+I do find though, I mean, in my experience, when we think about systems and a whole set of equations, if you read that in a paper,
+
+Or if you write it down, it gives more insight if you draw, to me, it gives more insight if I draw the graph.
+
+And there must be an exact correspondence between the graph and the equations.
+
+And very often, if you draw the graph and then you write down the equations, there's not an exact correspondence.
+
+So you learn from it.
+
+You basically know there must be an exact correspondence and basically you often find out you have an error in your equations or in your graph.
+
+But I think the end goal is to make a toolbox for
+
+let's say, for the community to design their own active influence agents.
+
+And what I envision there is something like Simulink, I'm not sure, or LabView, I'm not sure if people are familiar with that.
+
+But these are graphical models.
+
+You want to actually also define them graphically, right?
+
+You want to have a palette with nodes and just draw your graph and say, this is my model, and now go, run.
+
+You don't want to worry about the inference.
+
+The inference is under the hood.
+
+Dependence passing should be done by the designers of the toolbox, but you should just be thinking about your graphical structure.
+
+That's the, and this run, connect it with your mouse to your microphone of your computer or to your camera, and maybe to,
+
+You know, there is also connectors in the toolbox for robots, and then it should just go, right?
+
+
+SPEAKER_02:
+That's the Bob Ross of graphs.
+
+
+SPEAKER_03:
+That's how you want to design, I think, right?
+
+You just want to draw the brain and at least the generative model of the brain and just let it go.
+
+And don't worry about how inference takes place.
+
+
+SPEAKER_00:
+what you just said there about viewing the equation and then maybe going from the pen and paper to the programming language, to the graphical representation, and then kind of cross-checking.
+
+It's like when you reverse translate languages and when you lock in where two words map back to each other, you've made a map.
+
+But if you're on this infinite loop, you're lost in the word space.
+
+So when you move across sectors like that or across modalities with a...
+
+analytical, the simulations on the computer, and then the graphical, it kind of embeds action in what otherwise might be seen as a knowledge product, a product of inference, and then a final action.
+
+And that's a similar fallacy to train the dynamic process in a snapshot and then expect that it's going to work in real time.
+
+So it's like embedding this real-time flow in the production of knowledge.
+
+Yeah, yes, yes.
+
+Which is very important.
+
+
+SPEAKER_03:
+Yeah.
+
+Yeah, we're implementing active instruments while we are trying to design this stuff, that's true.
+
+
+SPEAKER_00:
+One general question was just about factorization.
+
+So the factorization, the way we go about it is starting with our intuition and looking for residuals or how of all the ways to factorize a model do we find one that works?
+
+
+SPEAKER_03:
+Yeah, there's two kinds of factorizations.
+
+There's a factorization in, let's say, in the generative model, right?
+
+And that's the graph that we draw.
+
+And so, I mean, let's say most people or the most common models are these Markov models, right?
+
+Where you kind of retain a current state that summarizes everything that happens in the past.
+
+And you use the current state to basically to summarize the past.
+
+And then that's all the information have about the past.
+
+So you don't need to remember the past.
+
+You just remember your state.
+
+And with that, and you make a new observation, you combine the information, make a new state and so forth.
+
+So hidden Markov models,
+
+POMDPs, all these models have that same structure, this microstructure.
+
+So that's for the generative model of these dynamic systems.
+
+Then there is a second question.
+
+If we now do inference, then there's often what we call the mean field assumption for the variational posterior, but there are also variants on that structured mean field.
+
+So you can...
+
+still decide if you want your posterior to be even more structure let's say even more factorized than the generative models but in the end yeah it's a it's a proposal uh you just run it and if you have another proposal you just run it and the one that has the lowest free energy wins
+
+That's it, right?
+
+The challenge is to automate that process, go from the, let's say, the poorer structure to the better structures, just by guarantee minimization, just by message passing in real time without stopping the whole process, doing an analysis.
+
+Right.
+
+It should just keep moving, right?
+
+Structure adaptation should be like state estimation.
+
+It just keeps moving over time.
+
+There's no resetting.
+
+Maybe there's a bit of a thing like a dreaming stage, right?
+
+But in principle, time moves on.
+
+And that's the challenge, and we don't know that in our factor graphs, but we have one PhD student who is currently looking into that.
+
+
+SPEAKER_02:
+Like as an engineer, I think the question is, well, what do you start out with?
+
+What will be your initial model proposal?
+
+So if you talk about factorizations of your generative model, you think, so every factor then kind of represents a prior distribution or conditional distribution, and that's how you kind of build up your model.
+
+Where do you start?
+
+And it starts with how you believe the world generates observations.
+
+So in that sense, you think about
+
+what is the causal structure of the environment?
+
+And you might have some idea about how physics works or how states transition in your environment or at least how you believe these transition.
+
+And that's kind of where you start.
+
+And you think, okay, well, maybe let's try a very coarse note.
+
+It's minus one, for example, in my talk.
+
+Let's try that here because I don't really know what I want to put there, but I have to put something.
+
+Let's try something.
+
+and see how that works it kind of models how i believe the world works um and that's that's how you start out and then you start thinking well i actually know a bit more about it i'm not satisfied with how this model proposed how this model works and i can change this minus one
+
+for example, with something that's a bit more complex, because I know the physics, I know how temperature degrades with distance, for example, and I can build that in.
+
+So that's how you go to a second proposal.
+
+And it's always inspired by how you believe the causal structure of the world is
+
+is how that works.
+
+So in that sense, it's kind of theory building.
+
+You're building a theory or an explanation of your environment.
+
+Or maybe if you're really, really good, if you have an excellent model, then you can find something that kind of improves upon the state of the art because you can always improve.
+
+Just find something that gives you a lower free energy or better model performance in that sense.
+
+And you can keep tweaking and tweaking these models and these factorizations and things like that.
+
+
+SPEAKER_00:
+Free energy minimization has been described just as a way to rank the different models and as an imperative on these multiple different fronts.
+
+How do we know that free energy minimization is making the policy that
+
+is going to be like resilient?
+
+Is there a way where similar to a local optimization getting trapped somewhere in a bigger optimization space, there might be some avenue of free energy minimization that
+
+makes the system just like break down, like we'll get there faster, let's just accelerate.
+
+And then there's some kind of one-time failure of the system.
+
+I'm just wondering how can one metric that's a number and can be sorted, how can it evaluate such radically different chess strategies or driving approaches?
+
+
+SPEAKER_02:
+At the end, it's just probability theory.
+
+And probability is also just a number, right?
+
+And the free energy kind of approximates your evidence, which is the probability, according to your model, of observing the data.
+
+So if you make a model that gives you the best evidence, then it's a good explanation for your data.
+
+So in the end, it's just you try to do approximate probability theory.
+
+And the free energy...
+
+is then bound upon your evidence.
+
+And it also takes into account this posterior divergence term, which kind of says the price that you pay for approximating Bayesian inference.
+
+So it has two parts to it.
+
+It has the model evidence part, and it has the posterior divergence part.
+
+And both play a role.
+
+One says, OK,
+
+this is the quality of my solution.
+
+It's how well your model explains the data that you observe.
+
+You can get a number for that, the surprise or the negative log model evidence.
+
+And you have the other part of posterior divergence that says, well, this is the price and information that you pay for making this approximation.
+
+You can also put a number on that.
+
+It's just a KL divergence that you re-evaluate.
+
+um and then you add those two and you get a number um so yeah so the question is how can one number kind of represent uh everything in terms of quality well you might care about different things than how well your model predicts or evaluates the the observations right and then if you care about other things um then then
+
+then you might use a different number.
+
+But in our sense, in our work, we want to have this Bayesian measure of quality.
+
+I don't know if that really answers your question, but it's still a good question.
+
+It's kind of, is free energy or that number that you get, is that enough?
+
+That's kind of what's behind this.
+
+And probability theory says yes.
+
+But if you apply it in practice, then you care about maybe other things.
+
+You care about how many people survive or how many mistakes you catch from something.
+
+And if you care about that, well, then you should use that as a performance metric, I think.
+
+
+SPEAKER_03:
+I mean, the free energy, of course, has many decompositions, right, in complexity minus accuracy and surprise minus the KL divergence.
+
+But I'm not sure if I interpreted the question correctly, but if you say, like, how do you know that it does well in practice in the field?
+
+Well, you don't, right?
+
+The only thing you can say is that, I mean, what the system does, it will look for a configuration that minimizes free energy.
+
+But you don't know what you don't know.
+
+You don't know if there is another model that will do better.
+
+If we haven't simulated that model, then we don't know.
+
+And the only learning opportunities there are
+
+is to generate errors.
+
+So the only way to really improve the model is to actually hit indeed, let's say situations where it's not working.
+
+And then you need to adapt your parameters and even more over time you adapt your structure.
+
+So yeah, it's, I mean, building a good system is a process, right?
+
+It's not a matter of just,
+
+You have to be extremely lucky if you just build a system and it completely works, right?
+
+What we, as active infants, describe is a process towards better systems, but it doesn't describe a system that doesn't make mistakes.
+
+In fact, it needs the mistakes to learn.
+
+It describes the process.
+
+
+SPEAKER_00:
+Awesome points.
+
+It's that operational insight that if you're getting 100% on the test, like something is at the very best, less than informative.
+
+At the very worst, you're way down the wrong path.
+
+And then it reminded me of like a grocery store.
+
+Is it that we're ranking the different objects according to one measure?
+
+Yeah.
+
+No, not really.
+
+It's like balancing strategies for finding preference.
+
+And that's where all of these assumptions like the factorization in the mean field, and it's not guaranteed to give you the best object every time.
+
+And there's still the stochasticity of the real world and the ability of the grocery store to change.
+
+Like it's not the end of the story.
+
+It's actually just a practice and a process that has some of those features of reactive graphs and biological systems.
+
+
+SPEAKER_04:
+That's right.
+
+
+SPEAKER_00:
+Yeah.
+
+um if any of you have any final comments this was just really one of the coolest times to learn about this but you're always welcome back to join anytime as a participant or to present and if you have any final comments you can note them well it was a real pleasure to be here and uh if we have new stuff we would love to come back um i think it's a fantastic fantastic show here our show it's a
+
+
+SPEAKER_03:
+forum or whatever it's properly called, but I really enjoyed it and we really enjoyed being part of it.
+
+
+SPEAKER_02:
+Thanks a lot for the discussion.
+
+Some food for thought there as well.
+
+It's really cool.
+
+
+SPEAKER_01:
+Good questions for the opportunity to present, yes.
+
+
+SPEAKER_00:
+Great.
+
+Okay.
+
+Until next time.
+
+Bye.
+
+Bye-bye.

@@ -1,0 +1,3178 @@
+SPEAKER_00:
+And we are live.
+
+Hello, everyone, and welcome to Active Inference Lab.
+
+This is the third part in a four part series.
+
+It is model stream 3.0.
+
+And today we are here with Ryan Smith and Christopher White and Max Murphy.
+
+And we're going to be having a really interesting discussion.
+
+So thanks, everyone, for joining.
+
+Just to quickly introduce ourselves before we go to points of process and then into the material.
+
+I'm Daniel Friedman.
+
+I'm a postdoc in California.
+
+
+SPEAKER_07:
+I'm Ryan Smith.
+
+I'm an investigator at the Laureate Institute for Brain Research in Tulsa, Oklahoma.
+
+
+SPEAKER_03:
+Hi, I'm Christopher White.
+
+I'm a PhD student at the MRC Cognition Brain Sciences Unit in Cambridge, England.
+
+
+SPEAKER_01:
+Hi, I'm Max Murphy.
+
+I'm a postdoctoral fellow at Carnegie Mellon.
+
+
+SPEAKER_00:
+Awesome.
+
+Thanks, everyone, for joining, for our panelists and the authors, for Max for contributing your experience, and also for everybody who's going to be live and in replay asking us questions.
+
+This is the third in a four-part series that is going to be highlighting different perspectives and addressing questions related to the Active Inference tutorial paper of Smith et al.
+
+from, I guess you could say 2020, but it's been versioned several times.
+
+and that tutorial is called a step-by-step tutorial on active inference and its applications to empirical data so if you have any questions during the live stream you're more than welcome to type it in the live chat and we'll try to get to it if you have questions after this live stream just leave a comment and we're going to try to address it as well to learn more and to find out about participating check out active inference.org
+
+That's all.
+
+So for today, in our third session, we're going to be picking up with just a brief overview, even shorter than the second part's overview.
+
+And then we're going to be diving into two main sections today.
+
+Ryan is going to be leading a section on the neural process theory.
+
+And then Christopher is gonna be leading a section on hierarchical models.
+
+So two very interesting topics.
+
+Let's just start with one warmup introductory question before we go to the neural process theory.
+
+And my question would be, let's say somebody were sent just this third part of this four part series.
+
+What would you say is the summary of the first two parts that we can catch them up with right now before we jump into these next two parts?
+
+So what happened in the first two parts that led us to want to talk about the neural process theory and the hierarchical modeling today?
+
+
+SPEAKER_07:
+Okay, well, I can try to start to take a stab.
+
+Chris, feel free to add anything, but it's obviously a lot to summarize in just a couple seconds here.
+
+But in session one, primarily we went over the kind of like broad
+
+broad stroke sort of description of active inference, the ideas of how you can do approximate Bayesian inference to solve problems with perception and learning and decision making using free energy minimization and expected free energy minimization, where exact Bayesian inference just becomes intractable for most kind of real world problems when you're trying to do something cognitive or perceptual.
+
+And then we went over how to build specific task models.
+
+And specifically, we used an explore-exploit, a simple sort of explore-exploit model, similar to a kind of behavioral task that you might use in an empirical study.
+
+And we just showed how, at the level of matrices and vectors and things like that, how you specify a generative model in order to simulate behavior on that kind of task.
+
+And that's more or less what we've covered so far.
+
+So the kind of general mathematics and motivation of active inference and how to apply it to model tasks.
+
+But that was all, like I said, at the kind of computational and algorithmic level of description.
+
+Whereas one of the really nice things about active inference is that you have not only the computational and algorithmic level, but you also have an attached
+
+what's called a neural process theory, which more or less corresponds to a specific hypothesis about ways that neurons and neural populations can be connected up in plausible ways to implement the active inference algorithms, and specifically the variational updating algorithms that are used to solve the sorts of tasks that you use to model with active inference.
+
+So that's kind of where we're picking up is
+
+now that we can build models and understand their background and motivation, how can we actually move this into neuroscience and make trial by trial predictions about what neural responses you ought to see, which you could, for example, feed in to like an fMRI experiment to see if you can actually find correlates of those predicted trial by trial responses.
+
+
+SPEAKER_03:
+And just kind of add to that, I think the general way that you would feed it into an fMRI experiment would just be the standard way that people usually do this stuff.
+
+So you just put it in and add it as a regressor into a GLM.
+
+Yeah.
+
+
+SPEAKER_07:
+And as you'll see, we can also do, it's not just fMRI, you can also do it, I mean, the most direct predictions it makes are about ERPs and EEGs.
+
+
+SPEAKER_00:
+And we're going to talk about what the ERP is and the biology of it a little bit along the way and other frameworks for how people have interpreted it.
+
+But yes, as we've kind of looked at a few different times, there's the observables, which are the behavior or the neuroimaging.
+
+whether it's a fMRI or EEG or some other type of measurement technique.
+
+And then there's the measurement of behavior.
+
+And we're talking about models that start from those observables and then do some interesting generative modeling under the hood.
+
+And that's where the power arises from.
+
+So any other comments on that, Max, before we jump into part one with the neural process theory?
+
+
+SPEAKER_01:
+No, I'm just, like I said last time, I'm excited to hear about tying in relating specifically, you know, gradients on, you know, variational free energy to, you know, dopamine expression and just hearing about like the links between those and why that might be an elegant way to kind of express things in terms of the neural process theory and what we know about the connectivity of these regions and things like that.
+
+
+SPEAKER_00:
+Sounds good.
+
+Then Ryan, take it away.
+
+
+SPEAKER_07:
+OK, so let me just share my screen here.
+
+OK, so just as a kind of very brief, you know, sort of just catch people up a bit.
+
+Uhm?
+
+So we started out, you know, like describing active inference, like I said, at the level of generative models.
+
+And those, sorry, I'm trying to find the right figure here.
+
+And those have this particular sort of graphical structure.
+
+And just focusing on the one on the bottom right here, which is the full generative model,
+
+you have a particular set of observations over time, this 01, 02, 03 thing.
+
+And then you have particular hidden states, so beliefs about what's going on out in the world outside of the brain.
+
+And so you have your beliefs about what happened at time one, and then time two, and then time three.
+
+And this A matrix thing is what encodes the likelihood mapping or the belief about what outcomes will be present if particular states out in the world
+
+are the case.
+
+And then you have beliefs about how, in this B matrix thing here, about how if you're in particular states at time one, how that's going to transition into different states at time two and so forth.
+
+And this D thing is just an initial prior about what states you're going to be at time one.
+
+And then you have policies pi up here, which control, which allow the agent to control some of the transitions between states.
+
+So for instance, the transition of moving my leg up versus down, right, would be something that the agent could control.
+
+And then policies are selected based on this G thing, which is the expected for energy, which is a function of C, which is your preferences.
+
+So the outcomes that you prefer over others.
+
+So policies are selected that are going to transition between states that generate outcomes or observations that are as close to preferences as possible.
+
+And then policies are also in part controlled by E, which is a prior over policies that acts as a kind of influence of habits.
+
+And this gamma thing, which will be important in the neural process theory I'll talk about, which is essentially it's like a temperature parameter, more or less on like a dynamically updated temperature parameter that basically controls how much the expected free energy
+
+contributes to policy selection.
+
+So it's basically saying, if I don't trust my model very much, then policy selection is going to be influenced by expected free energy less and by habits more.
+
+And the way the gamma is updated is through this hyperparameter beta, which again, we covered this all in a lot more detail last time, but I'm just kind of reminding the reader about the elements
+
+that are going to correspond to different aspects of the neural process theory.
+
+
+SPEAKER_00:
+My only comment on this is, again, think about incremental layers of complexity in the model.
+
+On the top left is static perception, hidden states, observable states, and you're doing inference on the hidden states S given your prior D. So instantaneous
+
+hidden state inference given observables.
+
+Bottom left, you're talking about hidden states changing through time with the inference of a B matrix.
+
+Top right, you introduce the idea that PI policy is going to intervene into how states change through time and that that policy is selected by a preference
+
+C that gets transmuted into a free energy G. And then the bottom right is the full fleshed out skeleton where we also see E, gamma, and beta as described by Ryan.
+
+So just start top left, bottom left, top right, bottom right.
+
+And that's adding up one more thing for each layer of the model.
+
+And then now we're going to be working with the bottom right model.
+
+
+SPEAKER_07:
+Yep.
+
+And the last sort of important thing is about the underlying way.
+
+So each of these equations on the
+
+at any of these boxes.
+
+The way that you infer beliefs about states based on observations is through a set of equations that correspond to approximate Bayesian inference through minimizing free energy and expected free energy.
+
+So the idea is more or less how the system, how in the neural process theory does the system settle on a set of posterior beliefs over states
+
+through free energy, free energy minimization, and how in the brain that's going to correspond to the neural process theory to minimizing particular types of prediction errors.
+
+Now, but I want to be clear, though, that these sorts of prediction errors are not identical, right?
+
+This is not the same process theory as what's associated with predictive coding and perception, where predictive coding is a continuous states-based model as opposed to the discrete states-based models we're talking about that have categories.
+
+you can only be in state one, state two, state three, as opposed to the sorts of continuous state spaces associated with things like brightness, for example.
+
+So this has a similar kind of prediction error minimization flavor to predictive coding models, but it's not the same thing.
+
+So now, to start with, kind of abstractly, the way to see how prediction errors come in really naturally
+
+is just to remember that free energy, right, one decomposition that we've talked about in previous sessions is you can think of free energy as being decomposed into a complexity term minus an accuracy term, where accuracy just means basically how close your predicted outcomes are to the observed outcomes, and complexity corresponds to basically how much you have to move your beliefs
+
+from prior beliefs to posterior beliefs so minimizing free energy means coming to the beliefs that Change your beliefs as little as possible while also maximizing accuracy So so that's the kind of idea and a very kind of intuitive way to think of free energy and so given that definition of
+
+you can think of the gradients or the way that free energy changes with respect to these approximate posterior beliefs that we're trying to come to, right?
+
+These can always be expressed as a particular mixture of prediction errors.
+
+And you think about this as pretty intuitive because complexity, like I said, is just the average difference between posterior and prior beliefs.
+
+So minimizing that difference can be seen as a type of prediction error.
+
+And minimizing and then accuracy is similarly just the difference between predicted and observed outcomes.
+
+So minimizing that difference can also be seen as a type of prediction error.
+
+So active inference can be implemented then as this kind of prediction error minimization that just corresponds to a minimization of these two differences at a computational level of description as opposed to an algorithmic or neural level description.
+
+So the kind of standard and fairly daunting looking figures that you'll typically see in active inference papers associated with the neural process theory look something like this.
+
+So on the left, you have a bunch of initially pretty scary equations that correspond to the actual kind of dynamics that a neural system is gonna have to implement.
+
+And then on the right, these kind of little fun kind of schematic ball neuron setups
+
+where you have particular layers that are supposed to kind of, you know, kind of heuristically perhaps correspond to different layers of neurons and cortical columns.
+
+And each of these layers of neurons are sort of proposed, again, very just kind of like schematically, to correspond to different variables.
+
+And the equations over here and the synaptic connections correspond to particular mathematical operations.
+
+So here kind of the easy way to think about it is that these red connections here are excitatory or excitatory just means addition in the equations.
+
+Whereas these inhibitory bluish purple connections with the balls at the end instead of the arrows are inhibitory, which just means subtraction in the equations.
+
+Whereas the green modulatory connections
+
+that just corresponds to multiplication in the update equations on the other side of the panel.
+
+So the idea is that using this kind of scheme, you can just follow along, just follow the synapses and the ball neurons that correspond to the particular variables.
+
+And you can kind of get a sense of how you can just connect up neurons like this to solve the equations that need to be solved to implement active inference.
+
+
+SPEAKER_03:
+say one thing about this I think makes it a little bit more intuitive.
+
+Because all of the updates are done in log space, addition and basically adding or putting probability distributions together is just addition and subtraction, which is nice thinking about in terms of this scheme.
+
+Then generally speaking, the modular tree connections will correspond to some precision parameter.
+
+which will modulate the precision of the distribution, if that makes sense.
+
+So that's kind of how you can think about the, or I find that helpful in thinking about the relationship between something like this and the actual update equations themselves.
+
+
+SPEAKER_07:
+Yeah, absolutely.
+
+Thanks for adding that.
+
+
+SPEAKER_00:
+It's almost like the anatomy of the model.
+
+We're doing a schematic neuroanatomy that's simplified or abstracted based upon the actual patterns of neural connections.
+
+And then we're looking at the anatomy of this computational model and thinking about how it could be plausibly carried out on neural systems, neural processes, but also it stands alone.
+
+And so this is just another way that we can look at it.
+
+
+SPEAKER_07:
+Yeah, so another thing that I really want to be clear about is that active inference per se isn't committed to this particular implementation.
+
+There's quite a few different ways that you could come up with to connect a bunch of neurons together to solve these equations.
+
+So there's not kind of a one-to-one mapping between the way that the equations look and the way that neurons could solve those equations.
+
+So this is an example.
+
+But ultimately, it's a separate empirical question.
+
+What way the brain is actually set up to solve these equations, even if those equations are what are being solved?
+
+
+SPEAKER_03:
+Yeah, exactly.
+
+And even if so, then we can also, let's say it turns out variational message passing or like marginal message passing is just a really bad metaphor.
+
+Well, that's fine because we've got all sorts of other things like belief propagation, blah, blah, blah, blah.
+
+And they can all
+
+I think the main thing is that you're minimizing variational free energy and expected free energy.
+
+The rest is part of specific parts of a process theory that we can hopefully falsify or at least more realistically not find useful anymore.
+
+
+SPEAKER_00:
+And just sorry, one more note on that.
+
+You brought up how there's the computational and the algorithmic levels and we're in the process theory realm.
+
+So for those who might not be familiar with process theory or Mars levels of analysis, the computational level is like the function.
+
+Like you have to sort a list from the biggest to the smallest.
+
+You can't falsify that idea.
+
+It's computational, it's functional.
+
+Then you go one layer down into the algorithm.
+
+So you say, I have a sorting algorithm.
+
+There's many sorting algorithms, but this is the implementation as it's actually going to be written in a certain pseudo code.
+
+So that's one of many possible algorithms that do a certain computational task like sorting.
+
+And then the process theory is like the specific program you can think of.
+
+It's the actual implementation.
+
+Now, as to whether it's actually being implemented that way, you might be right or wrong.
+
+So that's what we're talking about with the falsification of the process theory.
+
+But at the computational level, it's what Christopher just said.
+
+It's the imperatives that there's a free energy minimization happening.
+
+And now we want to be building up specific plausible examples to work within that framework for.
+
+
+SPEAKER_01:
+Just to jump in real quick, it sounds like in the next stream we might be discussing more of these empirical examples and instantiations, but just to say that from the biological standpoint of what's going on, for example, when we talk about a modulatory layer, that could happen in a multitude of different ways in terms of changing what the membrane potential of the cell is and making it more responsive or receptive to being activated.
+
+or it could happen through, you know, gradual plastic processes that recruit more receptors to the surface and cause it to become more responsive to any individual message.
+
+So it's really going to be context-specific and depend on the experiment and what circuit we are specifically studying.
+
+
+SPEAKER_07:
+Yeah, absolutely.
+
+And I mean, the thing you mentioned about plasticity makes an important point that I should make sure that I, you know, I might have forgot to mention, but
+
+But so in the context of inference, right, over the shortest time scales, we're just getting observations, right?
+
+And based on the way that these, the current weights of all these connections, the system is just going to settle on a free energy minimum, right?
+
+Like a prediction error minimum.
+
+And then the activation patterns in these neurons, specifically these ones at the top here, the S pi T and S or S pi tau and S tau are going to be the posterior beliefs about what states you're in.
+
+Um, and, uh, but that's, again, just given a fixed set of synaptic connections that corresponds to your generative model now.
+
+Um, but with learning, like we discussed last time when we showed learning simulations, learning corresponds to slowly changing the synaptic, the strength of the, uh, each of these synaptic connections themselves.
+
+Um, so you also over slower timescales minimize expected free energy, um, and variational free energy, um,
+
+through changing these connection strengths, again, over slower timescales via kind of synaptic plasticity processes like long-term potentiation and long-term depression, for example, as a way of improving the accuracy of your generative model.
+
+So just to kind of reiterate, inference corresponds to changing activity levels, whereas learning corresponds to changing synaptic strengths.
+
+So if that's...
+
+helpful.
+
+Um, so, so again, yeah, I mean, like, like they were saying, you have basically three different levels of hypotheses to test.
+
+One is at the computational level, does the brain, uh, minimize free energy and expected free energy, or at least is it helpful to describe it as doing that?
+
+Um, and then second question is given that that first one is true, which of several different algorithms is the brain using?
+
+And then question three is given that it's using a given a specific algorithm,
+
+how is the brain set up to implement that algorithm?
+
+So there's kind of a one-to-many mapping between each level.
+
+And a final point to make is actually some people talk about these different, quote-unquote, Marian levels of computational level, algorithmic level, and implementation level.
+
+People talk about them as though they're entirely independent, but they're actually not necessarily independent in all cases because sometimes the algorithm can depend a bit.
+
+There can be dependencies.
+
+between the algorithm and the implementation, because some of the things that the algorithm is going to have to compute are things about, for instance, like energy costs, which are going to depend on the implementation.
+
+So anyway, just as kind of a side point.
+
+But in general, just to kind of walk you through a sense here, so you might start out with these observations at the bottom.
+
+These are going to go up through these excitatory connections to this pink layer three here, which is going to correspond to the state prediction error we'll talk about.
+
+These excitatory connections are going to drive increases in activity in these pink guys.
+
+Those are going to be inhibited by prior beliefs about states at this higher level, which jointly is going to lead this level to decrease
+
+while the system finds states up here at the level above that best account for or predict those observations.
+
+So these red arrows going up here can correspond to interactions between A and O in these equations.
+
+And so you can walk your way through kind of step by step, and we do this kind of step by step in the paper,
+
+where each of these, um, interactions, um, corresponds to elements in the equations.
+
+So for instance, like to get States, to get States up here, right.
+
+That corresponds to this fourth equation down.
+
+And that's by multiplying policies, um, by States given policies, right?
+
+So pie here, multiplying the, uh, um,
+
+the S's and the T's here that are added.
+
+So we'll lead to the posteriors over states, just as one example.
+
+And then another thing that's important to stress is a lot of times you'll notice in these diagrams that there are kind of multiple rows kind of going backwards.
+
+So there's like these three pink ones and then these three other pink ones behind them.
+
+And that's because
+
+each of these posterior beliefs over states the system's trying to come to are with respect to a particular policy.
+
+So the thing is actually calculating what its beliefs would be under each of many policies where each of these rows corresponds to a policy.
+
+And that's what allows it to then infer a distribution over policies based on the states that are expected under each policy and the outcomes that they are expected to generate.
+
+Um, so, so again, I'm not going to kind of do this for you now, just cause it would take forever.
+
+But if you just kind of look at each of these equations, um, you know, where addition is, where multiplication is, et cetera, then you'll find, um, that these connections, um, you know, basically reiterate or, or show how, uh, uh, how this can implement, uh, how the neural connections can implement each of these equations, um,
+
+But to kind of go into certain aspects of how this would work and where the neural processor really comes in in terms of making empirical predictions,
+
+
+SPEAKER_01:
+Just to jump in real quick, for the sake of moving forward, just to help me thinking about what the biology is as we start to talk about the neural process theory.
+
+Here, you have pi, and you have kind of like, you know, connections that are inhibitory, excitatory.
+
+Sometimes when I think about phenomena in the biology, you know, you have an emergent concept that's the result of kind of a population of cells.
+
+In this case, would it be
+
+better to think of this, like, a policy as the actual, like, you know, the activation, I'm looking at a single neuron, or am I going to be thinking about that, like, at a, you know, a layer or a population level?
+
+
+SPEAKER_07:
+Oh, yeah, yeah, no, very, very good point.
+
+I mean, like I said, these are very schematic, and in any active inference paper, you'll see that, you know, the statement is that HG's balls are supposed to correspond to a population of neurons.
+
+
+SPEAKER_06:
+Okay.
+
+
+SPEAKER_07:
+Right, so a population where, I mean, just as one example, right, like,
+
+one subset of neurons in a given population might encode the expected free energy of each policy, right?
+
+So activation across the population of neurons would encode, for instance, a distribution over all the policies being considered or something along those lines.
+
+So yeah, no one's thinking about this as each of these being single neurons that are solving all of this.
+
+I mean, that would be a really vulnerable system.
+
+Very little damage to that system would
+
+knock the whole thing out.
+
+So, yes, definitely they're supposed to correspond to populations, but a lot of the details of that is really kind of underspecified in the theory as stated.
+
+It's still fairly abstract, kind of at the level I'm showing here.
+
+So, is that helpful?
+
+
+SPEAKER_01:
+Yeah, yeah, that does.
+
+
+SPEAKER_07:
+Okay.
+
+So, okay.
+
+So the first ones here to focus on the left are so this epsilon pi tau thing.
+
+And this is what's called state prediction error.
+
+And more or less what this does is by minimizing this, we end up with a posterior over states.
+
+And then the actual variational free energy for each policy is just calculated based on beliefs about states and that error signal.
+
+So, and this corresponds to layer three and layer two here in the schematic on the right.
+
+So to give you a sense, so in the paper we show a specific example, like a worked example of calculating this kind of prediction error.
+
+And so what this says, so this is the prediction error for each policy, for each time point tau.
+
+And the first part here, this one half ln b pi tau s pi tau minus one, et cetera, all the way over, the whole thing here with the b's that are multiplied by one half, you can think of this whole entire thing as your prior expectation.
+
+So b from pi tau minus one, this is saying what do I expect about my current state given the state that I was just in before?
+
+Um, whereas this one is something a little more interesting.
+
+It's saying, um, this is saying sort of beliefs about, um, expectations that come from the future.
+
+So, you know, what are my beliefs about a state at a given time, given my beliefs about the state after that?
+
+Um, and, um, you know, this, this might seem a little bit counterintuitive, but, um, it allows for a retrospective inference, um, which is something that humans definitely do.
+
+So think about.
+
+Think about a case where you're sitting in a room and it's dark and you don't know whether the room is the green room or the red room.
+
+But you sit there for like five minutes and then all of a sudden you turn on the light and you see that the room is red.
+
+You don't just infer I'm in a red room now, you infer I've been in a red room the whole time.
+
+So your beliefs about the past are updated based on your beliefs about the current time point.
+
+So what this
+
+Second B here, so expectations propagating from the future to the past allows you to come to beliefs about the states you were in at earlier times based on beliefs about later times.
+
+And so it's important to also reiterate here that each of these S's, S for pi, you know, S pi tau minus one, these beliefs about each S at each time point are updated at every time point.
+
+So at time three, I can observe something and update my belief about the state at time one.
+
+Um, so this is kind of being recomputed, um, at each time point with a new observation, but about each time point, um, you know, in both the past and the future, um, as well as the present.
+
+Um, so, so broadly then this whole thing, this one half times both of these, um, B's and S's is your prior expectation.
+
+Um,
+
+And then that gets added to the likelihood function here, which is so A times O, which is the actual observation at a given time.
+
+And so this is like your, this thing together is like your likelihood.
+
+So this, again, is very similar to just kind of another form of representing Bayes' theorem, where you have priors and you have a likelihood.
+
+and you're trying to come to something that will inform your posterior beliefs over states.
+
+And then that whole thing is subtracted from beliefs about the current state at that moment.
+
+And more or less, if you just kind of run this over and over again, you'll settle on a set of beliefs about states that minimizes this thing.
+
+And just to show an example of that, we specify here what A could look like.
+
+So in this case, state one versus state two, the two columns, state one would generate, say, observation one with 0.8, whereas state two here in the right column would generate outcome one with 0.4 and so forth.
+
+So that would be your likelihood.
+
+Now, B here, like I said before, this is your prior from based on the previous time point.
+
+And here we're just saying column again, here is state at time tau and row is at time tau minus one or, uh, you know, from tau minus one, or this is basically, this is saying, given that I was in a, given that I was in a state at time tau, what is my belief about the state I'll transition to?
+
+So this is saying, I believe if I'm in state one, I'm most likely staying at state one.
+
+But there's a 0.2 probability that I could move to state 2.
+
+Whereas the b pi tau is 0.3, 0.3, and 0.7, 0.7, which means no matter what, I expect it's more likely I'm going to move to state 2.
+
+And then what I actually observe is outcome 1.
+
+And my prior beliefs are just 0.5, 0.5.
+
+So I have no
+
+I didn't have a strong prior either way to start with.
+
+And this V thing is just a depolarization variable, which doesn't come into this predictionary equation.
+
+So I'll just kind of leave that for below.
+
+So this is just an example of how if you plug in each of these things into this equation, then just kind of follow along with the numbers, eventually you'll end up with
+
+this prediction error, this negative 0.2231, negative 0.99163.
+
+And you can think about, so then if we move here, then we can take this V, which is your initial kind of depolarization level in a given neuron.
+
+Then you add the prediction error to that.
+
+So the depolarization,
+
+depolarization level changes.
+
+So this would be a change in the activity level of the neuron in terms of depolarization, but then posteriors over states then correspond to normalizing, putting a softmax over this depolarization, which then turns it into your actual posterior over states.
+
+So this ultimately says my posterior belief is that I'm more likely in state one, 0.66767,
+
+then in being in state 2.3333.
+
+And this then would correspond to the firing rates in the process theory associated with each possible state.
+
+So V is going to be your depolarization and S is going to be the resulting firing rates.
+
+Just add something to this.
+
+
+SPEAKER_03:
+So generally thinking E here, or sorry, not E. Epsilon, yeah.
+
+Epsilon, yeah, a little epsilon.
+
+is a free energy gradient.
+
+It is a variational free energy gradient.
+
+And then what we end up doing here when we're adding, essentially when we have V, when we're plusing our negative free energy gradient, we're essentially just doing a gradient descent on variational free energy.
+
+That's exactly what this is actually.
+
+And that's how it's implemented in the code.
+
+The only difference between this and what we're doing in the code is that we have a little step
+
+So we divide our epsilon by like two or whatever our time constant for gradient descent is.
+
+
+SPEAKER_01:
+So when, you know, tying it back to that previous schematic that we had, where we had the arrows that we're excited toward in here, we're adding this on to the putative, you know, memory and potential that we have described here that might reflect these kind of probabilities.
+
+then if we have this kind of, perhaps if this were an excitatory interaction that we were looking at, then maybe if that excitatory interaction from one particular layer to another was representing that variational free energy gradient, we might expect to see this kind of response and we might measure that in terms of some kind of related biomarker of interest.
+
+Is that more or less the gist?
+
+
+SPEAKER_07:
+Yeah, I mean, so, well, I mean, just to go back to the kind of schematic here, like where this is happening is like right here, right?
+
+So you have B from time one, right?
+
+Which is this purple guy.
+
+So S through B from the previous time point adds on to the prediction error at the current time point and S from the future, uh, belief about the future also adds here.
+
+Whereas the likelihood a, um,
+
+Yeah, is added from, oh, there's this inhibitory thing here.
+
+Anyway, I mean, so that's the, I have to walk through a little bit to figure out where this inhibitory one is coming from.
+
+Oh, this is the minus LN.
+
+Yeah, the current state.
+
+Yeah, yeah, okay.
+
+But anyway, so that's kind of as an example.
+
+But yeah, so.
+
+So by doing that, you get this posterior overstates that gives you both predicted depolarization levels in cells and predicted firing rates.
+
+That being said, those in and of themselves are not that easy to measure empirically unless you're doing like single cell recording or something like that.
+
+So the idea that gets taken sort of from here is how you can get from these predicted firing rates to something that you can measure
+
+like event-related potentials in doing EEG or electroencephalography, where you have a bunch of electrodes basically attached to somebody's scalp, and you're measuring changes in neural activity, changes in potentials through the scalp from the brain when a person is exposed to a particular stimulus.
+
+And the neural process theory, the kind of prediction is that the
+
+ERPs are going to correspond to the rate of change in beliefs, which is going to be the rate of change in, where is this slide?
+
+The rate of change in V, the rate of change in this depolarization thing, which is going to be the prediction error.
+
+So just to show an example of this that me and Chris published recently,
+
+in the literature on visual consciousness, you know, there's a big interest in what ERPs are specific to having conscious experience.
+
+And an example of an ERP that in the past has been linked to conscious experience, but more recently there's been some sort of controversy because it looks like you can get these P3 potentials in a way that's
+
+not specific to conscious experience.
+
+Um, and so we were interested in seeing whether the neural process theory, um, would allow us to kind of show, um, where this is coming from and could reconcile, um, these sorts of results.
+
+Um, and so it was based on this really kind of simple paradigm where you start out, um, the person starts out looking at a stimulus like this, where there's just these red discs and these, um, kind of slanty lines.
+
+Um, and then,
+
+In some trials, what will happen is they'll kind of transiently be a little square here that comes up in the midst of these slanty lines.
+
+Then it'll go away.
+
+And basically what the manipulation is, is in some cases you have the person focus specifically on these red disks on the outside to see if they change color.
+
+And then you ask at the end, did you ever notice these square things that pop up?
+
+And there are cases when they do see the square and cases when they don't, and you're looking for differences in ERPs corresponding to when they do versus they don't under conditions of different sorts of attention.
+
+And so what we were trying to do is to see whether when you built an active inference model,
+
+that um that corresponded to this particular um attention uh task um it's called an inattentional blindness task um you know could we reproduce the the p3 pattern so this kind of in red here this extra um um dip um in uh neural activity as measured by eeg that
+
+looks like it typically only happens when a person consciously experiences something, but with these recent exceptions, where it looks like it depends just on whether a stimulus is task relevant or not.
+
+Chris, actually, I think this was primarily your work, so maybe you could describe this in a little more detail.
+
+Yeah.
+
+
+SPEAKER_03:
+First of all, I think that just give a shout out because we forgot to reference it on the slides, is this paradigm was designed by Michael Pitts.
+
+And he has done a lot of really incredible empirical work on visual consciousness.
+
+So just kind of important to acknowledge that.
+
+Anyway, so generally they speak, there's three phases in this experiment.
+
+So phase one is they're not told there's going to be a square kind of self-assemble.
+
+And they're asked just to monitor the disks on the outside and then
+
+there's a huge literature on this, but generally speaking, inattentional blindness, when you have a setup that's kind of analogous to that, about 50% of people are inattentionally blind to whatever your manipulation is.
+
+So I think the really famous one is like a group, if you ask people, like monitor how many times a basketball is being passed back and forth between a group of people, a gorilla can walk past and wave at people.
+
+And about 50% of them don't report seeing it.
+
+So the idea here is just kind of
+
+operationalize that a little bit more carefully and then in phase two is after everyone's kind of been because like literally when you ask people after phase one hey did you see a square you're kind of alerting to them the fact that there was a square present there but it's still not the square is still not task relevant so in phase two they just do exactly the same task monitor the external disks and in phase three the manipulation is they then say okay well we now want you to count how many times or like hit a button whenever the square appears
+
+And so the idea was, was that if you kind of see here, when we say percent scene, we basically set a hierarchical model, which we're going to look at in a minute.
+
+And we just had it kind of report what type of trial it thought it was in.
+
+Did it see a line or not where a line was just like a cat of this categorical variable, or did it see a square?
+
+Um, and essentially we just, in the same way that you might in psychophysics, like titrate the stimulus or the contrast of a stimulus or whatever,
+
+until people see it 50% of the time.
+
+Basically what we did was we titrated it until the model saw it 50% of the time or titrate the precision of the A matrix kind of corresponding to contrast or whatever.
+
+And then we just manipulate attention where attention corresponds to basically how precise the model's A matrix was.
+
+And what we showed was that when attention, which we operationalized as basically like we had two steps of attention, we had focal attention and like,
+
+super precise task-relevant attention.
+
+When there was just the focal attention condition, the model reported seeing the thing 99% of the time, so basically all the time.
+
+And when there was precise task-relevant attention, the model reported seeing it 100% of the time again, but we see a dissociation between the presence of the P3 in line with empirical results.
+
+
+SPEAKER_07:
+And so the idea... So I can actually just highlight this since I'm the one with the cursor.
+
+So in this first condition, so this is when, like Chris said, the thing had no...
+
+expectation that there's going to be any square there, and the precision of the A matrix was low because there was no attention.
+
+So as a result, the ERP, the simulated ERP is flat.
+
+And similarly, the second dip here, which is what would correspond to a dip here, is absent.
+
+And here at the bottom are the simulated firing rates.
+
+So in the first level, basically when black at the bottom changes to black at the top, that just means it starts to believe the upper row is a belief that the square was present and the bottom is the belief that the square was absent.
+
+So basically what this means is when it goes from black at the bottom to black at the top, that the belief changes so it's more likely that the stimulus was present.
+
+And then, um, but you can see because the A matrix is, uh, imprecise, then, um, which corresponds to like a low stimulus strength, then this, um, then this is not very, uh, you know, it's still pretty blurry.
+
+And then at the second level, these are beliefs about sequences that are what's actually going to, in other words, did it go from no square to square and back to no square?
+
+Um, and so you can see that the beliefs remain really imprecise, um, because it's not, uh,
+
+It's not attending to it.
+
+It's not task relevant.
+
+In this case, though, like Chris was talking about, you can see that even though it's not task relevant, the beliefs at the higher level ultimately do converge onto this top row, which is the one where the square was present.
+
+But you can see that the beliefs change pretty gradually.
+
+Whereas when attention was precise because it was task relevant,
+
+then you can see that the belief changes from being kind of flat over these two possible top states to being black, fully confident that the square turned on and off.
+
+And that really quick change in beliefs is what corresponds to the strong ERP.
+
+And in this case, because of the higher level, it's a kind of late ERP corresponding to the P3.
+
+So really what's going on is the prediction of the neural process theory
+
+is that it's going to be the rate of change in beliefs, basically, that is what's going to be measured as an ERP.
+
+Do you have anything further you want to say about that, Chris?
+
+
+SPEAKER_03:
+No, not at all.
+
+I mean, one thing I just want to highlight is the only difference between phase one and phase two is a very slight difference in the precision of the A matrix that we took to basically be the addition of some slight focal attention.
+
+But you can see just looking at the figures, it really made a very minor difference, but it still bumped it up above the threshold just enough for it to basically go from 50 percent report to basically 100 percent report.
+
+
+SPEAKER_00:
+Just also one point on the ERP or the event-related potential.
+
+It's defined on the bottom left of the slide.
+
+It's like a population-level measure of the electromagnetic activity in populations of cells in the brain.
+
+And so it's kind of like on the left, if something's passing under the radar, the population is not changing in...
+
+broad strokes but then when there's this event that's task relevant it transiently synchronizes the population to be doing certain things in a certain timing and then that's reflected by changes in the population level electromagnetism patterns reflected by what are called ERPs but there's a whole literature with Friston and many others on this topic yeah so basically ERPs are just depolarization of dendritic trees um
+
+
+SPEAKER_07:
+Yeah, which corresponds to the prediction error.
+
+
+SPEAKER_03:
+Yeah, which corresponds to prediction error.
+
+
+SPEAKER_07:
+Cool.
+
+So basically, as prediction error initially goes up and then goes back down, then that would be the predicted ERP.
+
+And this is kind of related to pretty standard neural mass models that are used in the literature that make pretty similar assumptions.
+
+they assume that the average firing rate of a population can be treated as a sigmoid function, so a function that looks like this, of the average membrane potential.
+
+And you can do things like, for instance, shift this function to the left or the right based on things that control the firing rate threshold, which could relate to inhibitory interneurons, or there's a bunch of different neural mechanisms involved.
+
+But basically, the point is just that
+
+this idea about where you get firing rates from average membrane potentials is not kind of out of nowhere.
+
+It's something that's kind of used as a standard assumption in
+
+
+SPEAKER_00:
+these sorts of models.
+
+And one interesting note is the softmax, that sigma that we use to kind of renormalize probability, it's actually utilized in artificial neurons in neural networks as also a probability renormalizing trick.
+
+So we're thinking about it in kind of like the intersection of the physical thing and the instrumentalist approach, realism and instrumentalism, and we're sailing our active inference ship together through there.
+
+
+SPEAKER_07:
+Yeah, so that's, and, you know, later Chris will show specific simulations based on an actual task that will produce predicted ERPs that are consistent with existing literature when he goes through the code in the second part of this session.
+
+But, so I'm going to sort of stop talking about the state prediction errors at this point, which, again, Chris will pick up in his part.
+
+The second thing that's kind of commonly talked about as part of the neural process theory in active inference is this idea of expected free energy precision being associated with dopamine.
+
+So I want to say right from the start that to be technically correct, we call this expected free energy precision.
+
+In the literature, it's often just called policy precision.
+
+But that can be slightly confusing just because
+
+The precision of the actual posterior distribution of our policies, right, this bolded pie here, corresponds not just to the precision of expected free energy, G here, but also to F and to E. So there are ways in which the expected free energy precision, this gamma thing that scales G, you know, could be precise or imprecise while the actual posterior distribution of our policies could still be precise or imprecise.
+
+
+SPEAKER_00:
+in a way that differs from the precision of G. Yeah, so you can be not sure what to do, but have very clear understanding of two policies and their implications.
+
+It's two separate levels of uncertainty.
+
+
+SPEAKER_03:
+No, it's not quite that.
+
+
+SPEAKER_07:
+Yeah, that's not, yeah, like, so a good example would be, for instance, so in the, you know, in, you know, the paper, you know, that I wrote with Casper and others on the, on deeply felt affect, so deeply felt affect, so the idea about
+
+um, changes in emotional states or affective states, um, relates specifically to this, uh, beta, um, term here that controls the expected for energy precision.
+
+Um, now when expected for energy precision goes down, um, and that will often correspond to write a negative or when expected for energy goes up, sorry, then that will correspond to a decrease in expected for energy precision.
+
+Um, um, but, uh, or,
+
+difference between F and G. But there will be cases where gamma will go down, meaning the model becomes less confident in its beliefs about its ability to minimize expected free energy, essentially.
+
+It decreases its beliefs, its confidence in its action model.
+
+But there are cases when that can happen despite the fact that the actual posterior distribution over policies becomes really precise.
+
+So, so a kind of nice example of this would be, you know, say you're kind of walking around in the woods and at the moment you're really confident in the walking around policy, right?
+
+So there's a precise distribution over, you know, I should be walking around.
+
+Um, but now you unexpectedly see a bear.
+
+Um, now immediately you're going to switch to having a very precise posterior distribution over the runaway policy.
+
+Um, so.
+
+you're gonna have two distributions of our policies that are both very precise, but they change rapidly.
+
+So the policy that the model was confident in before is very different than the policy that the model was confident in after.
+
+So despite that the posterior distribution over policies is still precise, that thing's very confident what to do, gamma will still go down.
+
+So the thing will feel negative.
+
+like emotion, despite being very confident in running away.
+
+
+SPEAKER_03:
+So the thing that's driving that is F. I think that's important to put in, or to say.
+
+If you want to cash it out, Ryan.
+
+
+SPEAKER_07:
+Oh, well, I mean, yes.
+
+I mean, just in the sense that, so F is going to be, so based on a new observation, F is the kind of evidence for each policy at the time of the new observation.
+
+So if F strongly contradicts G,
+
+then that means that the distribution is going to change in a way that, um, suggests that you ought to have less confidence in G. Um, and, um, and we can, we can, I'll show a specific example of that below, um, when we actually show simulations of the, um, you know, uh, postulated dopamine responses.
+
+But so the idea here is, is that, um, dopamine or phasic dopamine responses correspond to
+
+changes in this parameter beta, which controls gamma, which is the expected free energy precision.
+
+And the way that these updates in beta, so this equation here, just corresponds to the initial beta, so the non-bolded one here, plus this thing, so the posterior distribution over policies minus the prior distribution over policies, so basically how much did beliefs about policies change, and then dotted with
+
+the negative expected free energy that corresponded to that trial, and then minus the previous beta, which allows this thing to just continually iterate.
+
+But because the change from posterior beliefs over policies from prior beliefs over policies just adds F, basically.
+
+The prior over policies, we don't show it here, is just LNE minus gamma G. So the F only comes in to turn the prior
+
+over policies into a posterior over policies.
+
+And so this change is driven by F. And so the more that F is consistent versus inconsistent with G is what controls the agent's sort of changes in confidence about its G estimates.
+
+And so changes in that are what are expected or proposed to correspond to phasic dopamine responses.
+
+And then the kind of tonic level of beta is also proposed to be associated with tonic dopamine levels.
+
+
+SPEAKER_03:
+So if I can just very briefly say something.
+
+So essentially gamma is a, gamma is a rate, or beta, sorry, is a rate parameter from a gamma distribution.
+
+And essentially, you get this derivation, so beta dot.
+
+Technically, that's a temporal derivative, right?
+
+And so it's a little misleading, kind of, because this actually is a variational derivative of gamma with respect to variational free energy, if that makes sense.
+
+So the idea is that updates or changes in essentially this beta value will minimize variational free energy.
+
+And if you want to see like that, so the actual, um, the actual derivations of that get kind of, kind of gnarly, but if you're interested, if anyone's interested, I would just say, um, go and read and the appendix of and sales paper that's in PLOS computational biology on the locus cerulea, ceruleus and, um, learning rate and prediction error.
+
+Um,
+
+
+SPEAKER_07:
+where they show the derivations of all this.
+
+Yeah, Anna's, the appendix in Anna's paper is, like, actually really great for this because plus CB basically, like, required, it looks like, that she spelled, like, every little detail about deriving everything in active inference.
+
+So it's a really great paper, both in the main text and in the appendix, for showing kind of exactly where you get each of these things.
+
+Yeah, like, pretty much as clearly as I've seen it.
+
+
+SPEAKER_00:
+anything else to add on the neural process front because there's some questions and then we'll head into the second section but this is awesome uh there's a lot more actually let's keep going then then so yeah we'll do more neural process theory however much and then we'll be taking questions we'll have a intermission with a few questions that are really nice and then christopher will launch into the hierarchical modeling so so to actually give examples here because you know everything we've said about the
+
+
+SPEAKER_07:
+about dopamine and beta updates is still pretty abstract.
+
+So, you know, in the tutorial, we give specific numerical examples of this as well to show and give a kind of like geometric, actually, intuition about this.
+
+And so here you can see, so here we show, right, that the prior over policies, this pi zero, like I said, is just the softmax of ln e minus gamma g.
+
+And then the posterior is the softmax of LNE minus F minus gamma G, which we showed before.
+
+And so, and these are the equations for quote unquote dopamine, phasic dopamine responses.
+
+And so if you just take a specific, really simple example, so let's say there's no hat.
+
+So let's say that beta zero and therefore gamma zero and the initial beta posterior, those are all just one.
+
+So we're just starting out, you know, totally,
+
+flat, basically.
+
+And we'll say that the agent has no habits.
+
+So there are two possible policies here, I should say.
+
+So the agent has no habits, so it's just one and one for counts over policies.
+
+Now, let's say that G is 10 and nine.
+
+So in other words, there's slightly higher expected free energy for the first policy than the second policy.
+
+So now let's say that F, the agent gets a new observation and the free energy for each policy corresponds to 20 and one.
+
+So as you can see, this is still consistent with the 10 and nine, right?
+
+It's not like contradicting the, you know, policy one still has higher free energy than policy two.
+
+So when you calculate pi zero using this equation and these numbers up here,
+
+you end up initially having a probability over policies of 0.218 and 0.728.
+
+So policy two is the one that is more likely given the expected free energy because it's lower, right?
+
+Expected free energy is nine.
+
+Now the posterior over policies after we put in F just ends up being zero one.
+
+And so if you take the difference here, so we just called pi diff, so pi minus pi zero,
+
+that ends up being negative 0.218, 0.218.
+
+And then if you do this, so dot pi diff with negative g, and these two betas just cancel out, because it's just one minus one, and so you end up with 0.22.
+
+And then if you compute the update, then yeah, what the change will be, then gamma ends up equaling 1.28, which went up from one,
+
+which means that you'd have a positive phasic dopamine, predicted positive phasic dopamine response.
+
+And a way to kind of think about it geometrically is whether or not the vectors corresponding to pi diff, so the difference between pi and pi zero, point in the same direction as negative G. Because that implies that they're consistent with one another, that implies that essentially
+
+G was on track.
+
+
+SPEAKER_00:
+That's worth a rerun.
+
+So what is this geometric space?
+
+And then what would it mean if the vectors were totally correlated and they were like pointing in the same exact direction versus here they're almost at 90 degrees or what would it mean for different arrows to be pointing in different directions?
+
+
+SPEAKER_07:
+So these are the vectors corresponding to the vectors here in G and the vector
+
+that corresponds to pi minus pi zero.
+
+So this is, and I should say that these are scaled so that they're similar lengths, but the same directions, because otherwise one arrow would be way, way, way longer than the other, and the kind of point isn't clear, wouldn't be clear.
+
+But so basically pi diff, right, is negative 0.218, 0.218, so it's pointing left and up.
+
+So negative x, positive y.
+
+Um, whereas G is, um, negative G would be negative 10, negative nine.
+
+So it will be down and left.
+
+Um, and so the, the general kind of, um, intuition that's supposed to be given is that, um, when these two vectors point in the same direction where that just means that the angle is less than 90 degrees, um, then, uh, the gamma update will be positive.
+
+Um, whereas if for instance, instead we do a different example.
+
+Now the only thing we're going to do here is we're going to change F. We're going to change F from 20 and 1 to, or no, sorry, we're going to change G. So G is going from 10 to 9 to only being 1 and 9.
+
+So in other words, while in this case the first policy had higher expected free energy, now the first policy has lower expected free energy.
+
+Now, if you run through the exact same set of steps to solve the equations, you're going to end up with a gamma of 0.14, which means there's going to be a negative, there should be a drop in dopamine.
+
+In other words, the agent should become less confident in its G estimates.
+
+And you can see that if you look at where the vectors are pointing in this case, then the angle difference is 128 degrees.
+
+0.66 degrees, so more than 90 degrees, so therefore they point in different directions, so therefore they provide evidence against G, if that makes sense.
+
+
+SPEAKER_00:
+yep let me try with the dopamine so we're thinking of dopamine as a tracker of confidence it has many roles and colombo and others have talked about pluralism in dopamine so we're not this is not a lecture on dopamine we're thinking about dopamine as like confidence and we're headed in a direction we're on our road trip and the dopamine's coursing through our brain and we want to know how confident we are that we're on the right path as new observations are coming in
+
+Now, as we've seen from the earlier sections, we're doing a lot of matrix math.
+
+And just like a vector is a simpler version of a matrix and a tensor is a more complicated version of a matrix, they're all kind of in the same math space.
+
+And a given vector
+
+From computer science, it's like two numbers that are in a column, but also a vector has this arrow interpretation.
+
+So if someone says the coordinate three comma three, it's like a vector from zero zero pointing to three three.
+
+So lists of numbers like a computer science vector is basically the same thing as a vector with a.
+
+start and then ahead and at the end.
+
+So it's physics and computer science, and we're thinking about vectors and matrices and tensors.
+
+And then we're laying out after scaling and renormalizing which direction these different vectors are pointing.
+
+And then it's kind of like, are we headed on the basically the same path?
+
+Is the vector of the evidence sort of pointing us in a similar direction that we're already believing in?
+
+Or is the new evidence coming in like a tailwind or a headwind that's kind of surprising us and it's not in line, it's not headed in the same direction as what we're already believing?
+
+And then this meta with the gamma, the hyperparameter, is about how much reliance we're putting in to G versus our observations.
+
+
+SPEAKER_07:
+Yeah, so I mean, another kind of a nice thing here is that so as gamma goes down, right?
+
+So if you look at this posterior distribution of our policies equation,
+
+as this gamma value gets lower, right?
+
+So as the agent becomes less confident in its action model, more or less, it's less confident that its model will be good at minimizing expected free energy, right?
+
+As that goes down, then G contributes less, which means that F and E contribute more.
+
+So if an agent has built up really strong habits, then its beliefs and its model will control action
+
+if gamma is high, but if gamma is really low, then the agent will just kind of choose whatever it's habitually chosen in the past.
+
+So habits will kind of take over if it's not confident in its model, which is kind of a nice way to think about.
+
+It has some kind of analogs to like model-based versus model-free algorithms and reinforcement learning, for example, that, again, you can think about in terms of actually making decisions based on
+
+you know, explicitly simulating what's going to happen in the future if I make one choice versus another versus just doing what's typically worked in the past is another kind of way to think about what Gamma is arbitrating.
+
+
+SPEAKER_03:
+Did you want to say anything else, Chris?
+
+No, I was just going to say there's some really nice numerical results.
+
+So I think I've forgotten, I'm sorry if I've forgotten their name.
+
+I think it's Thomas Fitzgerald is the lead author on this, but they have some stuff just showing that
+
+related schemes, I think the equations have changed a little bit since then, but they're pretty much the same, that this scheme gives very, very similar answers as something like temporal difference learning, which is a very simple model-free algorithm in reinforcement learning.
+
+And that's also, I think, the gold standard model of phasic dopamine at the moment.
+
+Ryan, you can correct me on that.
+
+
+SPEAKER_07:
+No, I mean, yeah, I mean, it's like temporal difference account of reward prediction error and stuff.
+
+Yeah, we're treating,
+
+phasic dopamine responses as reward prediction errors in temporal difference learning models is definitely a very standard and kind of like widely supported view.
+
+And this, I mean, the idea is that this sort of active inference model of dopamine is kind of saying something different.
+
+It's not saying it's a reward prediction error, but it's something that will have the same kind of dynamics as reward prediction error.
+
+Because if you think about it,
+
+So say, you know, I'm walking along and I'm not expecting a reward.
+
+Um, and then all of a sudden I get a cue that makes it.
+
+So now that I expect now I expect, um, reward.
+
+Um, so, you know, for instance, like, or say like in like a simple kind of like experiment, like a, like operant condition, experiment conditioning experiment with like a rat or something, you know, it learns that every time it sees a light, it's going to get a reward in five seconds.
+
+Um,
+
+then the reward prediction error story would say, oh, you're going to get a reward prediction error when the rat sees the light, because now it knows it's going to get a reward that it wasn't expecting.
+
+So in this case, though, you'll get something kind of similar, but for a different reason, where you can think about the rat initially just kind of wandering around, not being super confident in any particular policy, but then it gets that cue that it's going to get rewarded
+
+if it goes up and pushes the lever, right?
+
+Is the standard way this works.
+
+So instead of it being a reward prediction error, what would be happening is the queue is actually unexpectedly making the rat a lot more confident in what to do, right?
+
+A lot more confident in the policy of going and pushing the lever.
+
+So you're gonna get something that looks just like a reward prediction error, at least in that sort of setup, but actually has to do with an update in confidence about what to do.
+
+So that's kind of in part, that's one kind of intuitive way to think about where similar looking dynamics come from.
+
+But I should also kind of be clear that, I mean, this is definitely not meant necessarily to be kind of a universal unifying account of dopamine, at least
+
+at least as far as, um, you know, I can tell at present, there's lots of other things that dopamine does that, um, you know, look like they couldn't be explained by just this sort of model, but this sort of model, um, looks like it's decent as a contender for thing, making sense of things like, um, why dopamine doesn't just respond for prediction errors, but also response for events that are salient.
+
+Um, for example, um, this kind of saliency versus reward prediction error sort of thing.
+
+There's a couple others, but, but, um,
+
+So this is not necessarily meant to be a, you know, this is all dopamine does.
+
+But anyway, so just making that clear.
+
+So now the kind of last thing to show, and this is the actual figure in the paper that just shows both of these things, is that if you do the actual variational updating where just beta continually changes, then the actual kind of gradient, like the changes look
+
+like this, where the thing would start out, for instance, at around, at a certain value.
+
+And then for this case, right, so it starts at, you know, down coming from one, and then it will gradually go up and converge after 16 iterations is what's set in the code to that posterior value over what gamma ought to be.
+
+Whereas in this case, it will drop coming up from one, down, and then converge
+
+over those iterations onto this value of 0.14.
+
+So it's not as though in the neural model this is kind of happening with one little step.
+
+It's kind of a – it's a convergence that you can think of as related to a kind of prediction error, essentially kind of like an expected free energy prediction error.
+
+Some people have talked about it that way in previous papers.
+
+
+SPEAKER_01:
+For those following along in the code, would this be in the EFE precisionupdating.ms?
+
+
+SPEAKER_07:
+Yeah, thanks.
+
+To play around with this exact example, as well as ones where you can specify bigger policy spaces.
+
+When the agent has five policies to choose from instead of one, it's just a little more realistic.
+
+It's hard to show vectors.
+
+started to illustrate those in like five dimensions.
+
+So we went with two for these simple examples.
+
+But yes, in that EFE precision updating, you can reproduce these results and then try changing like private beta values or changing G and F to C to get more of an intuitive sense of the dynamics.
+
+And so like in the, whatchamacallit, when we were showing in the explore exploit test model last time,
+
+these sorts of simulated behaviors, right, where the agent either chooses to take the hint and then go left or right to get a reward, or it's just risk-seeking and just goes left versus right automatically instead of taking the hint first.
+
+In the previous session, we went over this, but we kind of ignored this bottom right section on expected free energy precision and these dopamine plots.
+
+But now that we've kind of walked through that a little bit,
+
+Um, you know, we can kind of come back to that and see that in this case, um, the agent, uh, started out in the beginning and it chose to take the hint.
+
+Um, and then it knew, um, whether to, uh, choose left, uh, choose the left machine or choose the right machine.
+
+So you can see what happens here is when it takes the hint, then it becomes a lot more confident about what to do.
+
+Um, and so it's at that point that you simulate a big jump in dopamine.
+
+So in this case, it's not because it's got a reward immediately, it's because it got a cue where it learned what to be able to do to get a reward.
+
+So then it chooses left and then it observes a win here at the third time point or this third column.
+
+So this is an example.
+
+Then in the learning simulations that we showed last time as well.
+
+
+SPEAKER_01:
+Before we leave that slide, could I just jump in real quick and add a quick clarification about that figure?
+
+So in that middle panel for win-lose, and you look at that matrix, it actually looks like if that's the expected probabilities for win-loss at any given time epoch, one, two, and three, it actually looks like in this case, the way that the simulation goes, it's more confident about winning on this time step when it knows to take the hint, and then after it's taken the hint, it becomes less confident about winning.
+
+
+SPEAKER_03:
+It's actually to do with the fact that those aren't.
+
+So they're probabilities, but they're not probabilities in the way that the rest of the model is probability.
+
+So these are preferences where we model preferences as a probability distribution.
+
+I see.
+
+
+SPEAKER_01:
+So that has to do with more of the, it's had more observations at time three.
+
+So as you're going, since it's an accumulator in that optimization process,
+
+
+SPEAKER_07:
+No, it's just, so when you're trying to encode essentially what's rewarding for the agent, right?
+
+You're just setting, you're just saying that it has a particular distribution over each possible set of outcomes for each outcome modality.
+
+And that distribution just encodes which observations are more preferred than others.
+
+And formally, that's just a fixed probability distribution over the different observations you might get.
+
+where the higher the probability is, quote-unquote, the more the agent prefers that observation.
+
+So this is just saying, like, for the first outcome modality, it's just all gray here because the agent doesn't prefer a hint or not a hint.
+
+And in the third one here, observed action, it doesn't prefer innately to observe itself do one action or another, but in this middle one, observing wins versus losses versus null, just not observing an outcome yet,
+
+At the first time point, so the first column, it just doesn't have any preferences.
+
+At the second time point, so this middle column, the thing has a strong preference for win, so this black one, which corresponds to high probability.
+
+It has a strong preference against losing, observing a loss, which is a very low probability.
+
+And then the null state is just this kind of like intermediate thing.
+
+It's not bad like a loss, but it's not good like a win.
+
+
+SPEAKER_03:
+And so the reason it chose the null there, or the reason is because it chose a hint because of the epistemic value of the hint, I should say.
+
+
+SPEAKER_07:
+Yeah.
+
+So basically what's happening is if you remember that this distribution is a little lighter at time two because the value of winning is higher at the second time step than the third.
+
+Remember, because it can win $4 if it tries to get the, if it just chooses one right away.
+
+But at the third time point, this is a little,
+
+less precise.
+
+It's a little flatter, which is why it looks darker gray, because the black here only corresponds to winning $2 instead of $4.
+
+So the difference between winning and losing isn't quite as stark.
+
+I see.
+
+
+UNKNOWN:
+Okay.
+
+
+SPEAKER_07:
+Yeah.
+
+But the point is, it's not actually getting a big bump in dopamine when it wins.
+
+It's getting a big bump in dopamine when it observes the hint, because that's when it becomes confident in what to do to get the win.
+
+
+SPEAKER_00:
+And that's to re-emphasize that we're doing this trajectory of policy, which is what ties it to the path integral as well.
+
+So at each time point that it's being evaluated at, it's in the past and in the future, and it's conditioned on policy.
+
+So it's almost like the reward, if you always expect the envelope has the paycheck, if you get it and then you open it, it's like neutral with respect to what you already believed about the way the world worked.
+
+And you'd get a negative if it was less than expected and a positive if more than expected.
+
+And so in that way, the reward of what is initially just pure stimuli that could be rewarding or thought of in that way gets moved up.
+
+That's kind of like reinforcement learning or reward learning.
+
+And that's why we're in this area of thinking about stimuli and policy and rewards and risks.
+
+
+SPEAKER_07:
+Yeah.
+
+I mean, the idea is just that in that context, uh,
+
+these dopamine responses, the simulated dopamine responses here correspond to changes in confidence about what to do or changes in confidence that your model will give you the right answer about what to do.
+
+And that will look, that will have the same dynamics as a reward prediction error from a cue that predicts reward.
+
+So the dynamics will look like a reward prediction error even though in these models it corresponds to something different.
+
+
+SPEAKER_00:
+So it's kind of like in behaviorism, everybody can agree on the behavior.
+
+We agree that if we train up the animal, it learns to do this after X experimental paradigm is carried out.
+
+And then now we're talking about internal.
+
+We're thinking either at a neural process level, like which regions of the brain or computationally, like what is happening.
+
+And then here, there's a common trunk with the predictive processing, the reward prediction error, all of that, and the active inference models we're talking about, and reinforcement learning, which is that over time, the reward gets moved up to be associated apparently more with the queue than with the actual stimulus delivery.
+
+But we're taking a point of divergence in that we're adding in a few different pieces that differentiate an active inference free energy gradient descent driven policy selection from just Q association, even though they do have some similarities.
+
+This is like a generalization or a much more nuanced way to approach similar situations.
+
+
+SPEAKER_07:
+Yeah.
+
+And, you know, ultimately, right, the hope is to find situations
+
+where active inference and reinforcement learning models are going to make different predictions about what dopamine will do.
+
+Because that's where you can actually say which model has more empirical support.
+
+Thomas Fitzgerald, I think it was the paper that Chris was talking about before, he did show there are interesting findings where when you get rid of dopamine, when there's dopamine depletion and there's some lack of dopamine in the system for one reason or another,
+
+that doesn't actually get rid of reward learning.
+
+Like an agent can still learn about rewards despite the dopaminergic function being impaired, you know, which makes it look as though, you know, dopamine might not be serving this reward prediction error function, at least if you think that reward prediction error is necessary for reward learning.
+
+And so there was, he showed some simulations, again, with a slightly different formalism than the current one,
+
+showing how you can get the same dopamine responses as you would expect in a reinforcement learning model, but it explains why you don't need dopamine to do the reward learning.
+
+But like I mentioned, the formalism isn't exactly the same as it is now, because that was a slightly older paper.
+
+So I think there's just a lot more kind of empirical work to do to try to kind of find differential support for one model of dopamine over another here.
+
+Very cool.
+
+Any other comments, Chris?
+
+
+SPEAKER_03:
+No, I think just looking at the time, do you want to speed through the slides and then we can get on to the stuff?
+
+
+SPEAKER_07:
+Yeah.
+
+I can skip or just skim over a lot of this.
+
+The last thing I was going to talk about is that this isn't used as much because it's not actually implemented in this way in the code.
+
+But Carl has made this point that you can also implement minimizing expected free energy,
+
+using a different kind of prediction error called an outcome prediction error.
+
+And that just corresponds to the different elements in expected free energy.
+
+So, which is here just, here is just minimizing the expected difference between the preferred outcomes, C, and the outcomes that you expect under a policy, right?
+
+So, under some policy, for under some policy, the state for that pi
+
+multiplied with A will give you the expected outcomes of a policy.
+
+So you're just trying to, this prediction error, minimizing this prediction error just corresponds to finding the policy that minimizes the difference between basically what you want and what you expect, given what you choose to do.
+
+And the second term is the ambiguity or information seeking term.
+
+And it effectively, you can think about it as the expected difference between beliefs about states
+
+before and after a new observation.
+
+So you're trying to find basically a difference that like the state that maximizes how much information you gain about what state you're in.
+
+But formally, it's the entropy of the likelihood distribution for a state or how kind of flat or uninformative the distribution is of expected outcomes given that you're in one state versus another.
+
+And in the paper,
+
+We go through numerical examples of computing these sorts of outcome prediction errors as well.
+
+But the basic point, again, I won't go through them in detail, is just if you have some policy that is going to generate the state one with probability 0.9 and state two, probability 0.1, and your preference is perfectly precise over observing outcome one, and that's your likelihood mapping,
+
+then policy, whereas policy two is expected to just generate 0.5, 0.5 over states, and the outcomes that are associated with those states look like this, then what you're going to get is policy one is going to end up, if you just do the math out, policy one is going to have a value of 2.4,
+
+for that term, whereas policy two is gonna have a value of 7.3.
+
+So this difference is gonna be a lot bigger and therefore there's gonna be more outcome prediction error.
+
+And so the policy that, the first policy that's gonna generate the outcomes that are closer to what you want is gonna minimize that prediction error more.
+
+And so again, we just show examples.
+
+We also show examples of this part, but the basic idea here is if this is your likelihood function,
+
+then state one here is kind of imprecise in what it predicts, right?
+
+It predicts one outcome with 0.4 and another outcome with 0.6, whereas state two has a more precise distribution.
+
+It generates outcome one with 0.2 and outcome two with 0.8.
+
+So the agent would learn more if it moves to state two because the outcomes are more informative.
+
+And so basically these work examples just show how the agent should, to minimize outcome prediction error, the agent should be
+
+driven to choose to move to state two.
+
+And so finally, and I'm not going to go into this at all, but we also show this panel here that corresponds to another kind of element that's been proposed in the neural process theory that has to do with model reduction and sleep.
+
+And the basic idea is that sleep allows you to search for other models that you might entertain
+
+that can produce the same experiences you've had during the day, but can do so in a simpler way.
+
+So sleep is basically still trying to minimize free energy, but not with respect to new observations, but just with respect to your model based on the experiences that you already had earlier.
+
+And that corresponds to internal dynamics that can essentially prune away or reduce the weights of synaptic connections that are contributing less
+
+to explaining what you did.
+
+So essentially kind of noise, like if there's a bunch of kind of coincidental connections between different things you observe, then there's some kind of noise in what you've learned.
+
+And so during sleep you can reduce that.
+
+And here's just a few papers that have talked about that and shown simulations in case people are interested.
+
+Now, moving on to what Chris is going to talk about are hierarchical models.
+
+And the idea here is you can just take the same exact structure of the model here that we've shown before, but put a layer kind of below it.
+
+That's the same kind of thing, but instead of the observations being actual outcomes, the observations are just whatever the states, the beliefs over states are,
+
+at the lower level, or the observations for the second level are just the posteriors over states at the first level.
+
+And so that just looks like this, where you see here that you still are selecting policies at the higher level, although you can also select policies at the lower level, but states at time two here just generate states at time one and states at time one, or states at, sorry, states at level one,
+
+act as the observations for level two.
+
+As you can see, necessarily these operate over a slower time scale as well.
+
+So for instance, at time one, level two, the first state, state of time one is gonna generate the first state at time one at the lower level, but then the lower level is gonna move to its beliefs at state two over a faster time scale.
+
+And so this whole thing is going to repeat at the lower level.
+
+So the thing is going to infer posteriors over states based on two observations at fast time scales.
+
+And then the posterior beliefs over states at the lower level are then going to propagate up and act as the observations for state one at time one at the higher level.
+
+And then that's going to transition through a second level B matrix to beliefs over states at time two.
+
+which then is just going to provide priors to a second trial, to the start of a second trial at the lower level, which again operates over a faster timescale.
+
+So essentially this whole lower level model completes its belief update before the higher level transitions to its next state.
+
+And in the neural process theory, it really just involves taking the first level, just kind of tacking on another level of neurons on top,
+
+and making the observations of the second level, the things that drive the prediction error and the states, as just the posteriors over states at the first level.
+
+So it's just kind of repeating the same thing, but at a higher level and treating the interactions between the second and the first level the same way that observations feed into the first level.
+
+
+SPEAKER_00:
+And so I raised a question on this slide from the chat.
+
+Someone asked, can you please explain the relationship or difference between models based upon deep active inference versus sophisticated inference?
+
+And how is that related to the current discussion around
+
+dopamine signaling, whether it's phasic or non-phasic.
+
+So two questions.
+
+One is what is deep active inference and how is that related to sophisticated active inference?
+
+And how are those related to what we're discussing now about dopamine?
+
+And I have a thought if, but you can go ahead.
+
+I can answer all these very quickly.
+
+This is perfect answer.
+
+Go for it.
+
+
+SPEAKER_03:
+So deep active inference can kind of correspond to two things.
+
+You can talk about it in terms of using deep neural networks to parameterize your essentially your A's and B's and B matrices or your policies.
+
+That would be kind of like a machine learning application.
+
+And when I say deep active inference, what I generally and what other people have talked about, like the paper that first came out called like deep whatever, deep active inference, it was just one of these hierarchical models, whereas deep in the sense that there's this temporally deep or temporally thicker
+
+one could say uh time time scale stacked on top and so then in terms of sophisticated active inference that's just to do with policy selection um and where you're essentially doing something that looks more like a tree search um so i would just say i don't know it's it's equivalent to backward induction and reinforcement learning uh so you essentially instead of saying kind of
+
+propagating forwards on a tree, you start at your terminal node and then you propagate backwards.
+
+You say, given where I want to go, how do I best get there?
+
+Then propagate backwards.
+
+Then I don't really know what the phasic, non-phasic thing means.
+
+
+SPEAKER_04:
+Yeah.
+
+
+SPEAKER_07:
+Yeah.
+
+I'm not aware of anybody saying anything about if there's any change in the dopamine story in sophisticated active inference.
+
+I mean, in sophisticated active inference, you're still obviously updating beliefs about policies when you make a new observation.
+
+But yeah, I mean, the main difference, like Chris said, it's just how you come to post your beliefs over policies by doing this sort of more thorough tree search where you have this additional element where you say, you know, given that I observe a thing at time two at a given branch in a tree, what will my beliefs be at time two?
+
+And like, like, like Chris said, it's equivalent to backward induction.
+
+Um, and, uh, it's, it's, um, anyway, yeah.
+
+So I, without, without, again, I don't think anyone's talked about this much, but presumably you still make new observations that update your beliefs over policies as you move through time.
+
+Um, and so I don't necessarily see how the dopamine story would need to change.
+
+Um, but, uh, but yeah.
+
+Um, and I will say in addition to what Chris said, um,
+
+there are really two kind of related meanings independent of the kind of machine learning deep neural network thing that Chris talked about.
+
+One is, and like you said, the standard one is talking about deep temporal models.
+
+And that's just exactly what I was showing here, where the second level necessarily operates at a slower time scale than the first level, because the first level has to kind of complete all of its time steps before
+
+it can provide an observation to the higher level and then the higher level.
+
+So basically each higher level state corresponds to a whole lower level trial.
+
+You know, so if you wanted to, you could make a lower level trial, have 10 time steps, but the posterior over beliefs at that lower level, at the end of those whole times to all those time steps would be, you know, what the observation is that, you know, provides evidence for the first state at the first, that the state at the first time point at the second level.
+
+So, and then,
+
+second level states transition, and then the second level state.
+
+So they're basically one trial at the higher level with two time points.
+
+Each of those time points corresponds to providing priors for a whole trial at the lower level.
+
+So you're going to have as many trials at the lower level as you have time steps in one trial at the higher level.
+
+So that's what deep temporal models means.
+
+It's just that the second level operates at a slower time scale than the first and provides priors for initial states at the first level.
+
+Another meaning that some people use, like in the deeply felt affect paper, is just deep parametric models, which basically just means the first level, things that happen at the first level can be used as evidence for updating hyperparameters for the higher level.
+
+And like in the deeply felt affect paper, basically we had second level states that corresponded to valence, but those were updated, not by first level beliefs, but by changes in beta at the lower level.
+
+So when gamma updates were positive, right?
+
+When the confidence and expected free energy went up, there was a ascending signal though, then updated beliefs at the second level that corresponded to feeling better, right?
+
+So positive valence and those also,
+
+that state could also act as a prior on what the beta update should be, right, how confident the agent should be at the lower level as trials go forward.
+
+So it can also have to do with Kenneth's quote unquote deeper parameters as opposed to just deeper levels that control priors over states at the lower level.
+
+But that's not as commonly used.
+
+By far the most common is just deep temporal models.
+
+
+SPEAKER_00:
+Do you have any more to add on the neural process or can we do our switch over?
+
+
+SPEAKER_07:
+No, neural process is pretty done.
+
+The only thing is that before Chris starts, because what we're simulating when we're doing this example in the code of a hierarchical model, the example we're using is an empirical task called a local global or oddball paradigm.
+
+So Chris is just going to... I'm just putting up this slide so that Chris can walk us through the...
+
+the design of this task.
+
+
+SPEAKER_00:
+So just before we cross over, just while we take a breath, I want to make one ultra-rapid summary for just contrast, and then ask one question from the chat.
+
+So the brief summary is we're dealing with the Active Inference Framework.
+
+We are within free energy principle.
+
+We're talking about active inference.
+
+That's why it's Active Inference Lab.
+
+Now, we've heard about a couple of adjectives, deep, sophisticated, affective, and even inactive inference.
+
+And those have been in the titles of papers or they've been the titles of models.
+
+We heard about just very...
+
+concisely about what deep can mean, whether deep neural networks or deep time.
+
+And then there's a third definition of deep meaning like fully or radically parametric.
+
+And that is interpreted within the affective valence framework within the paper that Ryan just mentioned.
+
+So that's deep and affective, which are related.
+
+then sophisticated is related to this tree search counterfactual policy and state estimation we talked about the sophisticated inference in a previous stream and inactive is highlighting more from an ecological or even a philosophical perspective about the embodied and enacted aspects of cognition so that's just a summary about a few of the flavors under the umbrella of active inference and
+
+They don't necessitate a renaming of the lab because they're like variants or paper titles.
+
+But this is the total umbrella that we're working under.
+
+And then the general question from the chat, which I hope that set it up for.
+
+And then we'll address this question.
+
+Each person give a very short response.
+
+And then we launch into Chris's.
+
+When preparing a model for exploring free energy principle active inference in MATLAB, do you often sketch out equations with sample Bayesian calculations for each term to help clarify your thinking and track what will happen?
+
+Or in other words, how do you go from thinking or specifying the generative model of even a experiment into what you do when you're talking, like you go from this behavioral example to the code, how do you do that?
+
+
+SPEAKER_07:
+I mean,
+
+So for me, honestly, when I'm actually setting up a model for a task, I don't really think about the equations hardly at all, because you don't need to, right?
+
+I mean, what you need to focus on is just what the necessary elements are in terms of states and observations and policies that are just in a task, right?
+
+So you have to think, okay, in a task, what are the observations that
+
+the participant has, right?
+
+Is there just one possible observation modality?
+
+They either observe this or that, or are there multiple observation modalities?
+
+Like maybe they observe a cue and then they observe a reward, right?
+
+And so then you need two observation modalities, right?
+
+You think about how many in each modality, right?
+
+Is it just cue or no cue?
+
+You know, is it just reward or no reward?
+
+Or is it no reward, reward or loss?
+
+You know, so you just think, okay, what are the different types of observations and how many observations within each type?
+
+Just, you know, what does the actual participant observe?
+
+And then you have to think about the states, right?
+
+What are the, what is the participant's beliefs?
+
+What is the minimal set of beliefs they need to be able to make a decision, right, about how to get reward if it's a reward task?
+
+You know, so that might be beliefs about what trial type it is, right?
+
+Or it might be beliefs about
+
+what are the different choices I might make, right?
+
+Like moving into the state of choosing, say, option one versus option two, you know, and then you have to think, okay, what are the different action sequences, right?
+
+Like, does the agent just push a button and get lucky, you know, reward or no reward?
+
+Or, you know, does the agent have to, you know, make a couple choices in a row?
+
+You know, just what are the actual options, right?
+
+And so, I mean, that's really what it boils down to is just figuring out,
+
+What things do the participant observe?
+
+You know, what beliefs do they need to make choices?
+
+What choices are available?
+
+You know, and I mean, it kind of builds itself beyond that.
+
+I mean, you have to realize that the update equations in active inference, you know, we've actually been showing are very general, right?
+
+They don't change at all, depending on what task you're implementing.
+
+So you're not changing the equations.
+
+All you're doing is using the exact same update equations on a generative model that
+
+can successfully simulate behavior on a task.
+
+So I mainly think you just have to think about matrix and vector structure.
+
+
+SPEAKER_03:
+So I can actually answer this question just by building or showing you how you get from this task structure to the coding question.
+
+Perfect.
+
+So just to basically build on that, all that you'd think about is the structure of the generative model because the update equations are totally generic.
+
+Unless you're doing something like fairly advanced,
+
+where you actually do need to specify some type of addition to the generative model, use a new type of distribution, whatever, then you would need to re-derive the update equations, and you're going to have some time on your hands taking a lot of functional derivatives and setting the result equal to zero and figuring out what the answer is.
+
+But I have never had to do that personally, and I think very, very few people in the active inference literature have had to do that.
+
+Okay, so...
+
+In terms of this task, this is a local, global, or basically like auditory, modified auditory oddball paradigm.
+
+It was kind of, I think this was the first paper that used it, although I'm not completely sure about that.
+
+But basically they just have play you a series of tones and there are four possible conditions.
+
+And what they're trying to manipulate is your level of, or the time scale over which your expectations operate.
+
+because they're trying to get at expectations at different levels of the cortical hierarchy.
+
+And so the idea is that you can have regularities at two timescales.
+
+So the first timescale is the local timescale, and that is just the series of five tones, say.
+
+So it might be... And these tones can be two different frequencies.
+
+So it might be beep, beep, beep, beep, beep, beep, beep, beep, beep, that type of thing.
+
+And the idea is that...
+
+let's say you violate an expectation on this local timescale.
+
+This might be something like the bottom row here.
+
+This would be beep-beep-boop, beep-beep-boop, beep-beep-boop, beep-beep-boop, beep-beep-boop.
+
+And if that happens 80% of the time or in 80% of the trials, you would have, like, a global expectation or expectation over a long timescale that there would be a violation on the fifth beep, if that makes sense.
+
+But on a local timescale, for neuronal processes, say, in primary auditory cortex or wherever, that are operating over this very rapid timescale, they are blind to this more global regularity.
+
+And so you will get essentially what this...
+
+will give you is global expectations and violations of global expectations, particularly give you a P300.
+
+So essentially that is a large positive potential over kind of like frontocentral electrode sites.
+
+And that corresponds to a violation of global expectations.
+
+regularities.
+
+Whereas mismatched negativity correspond, which is kind of a negative, I think, I actually haven't, I'm not an auditory neuroscientist, so I'm sorry about this if I get it wrong, but broadly speaking, it's kind of over association courtesies, like auditory association courtesies.
+
+Not 100% about that though, sorry, I should have looked that up.
+
+Anyway, and that's a negative going potential that corresponds to violations of local expectations.
+
+And so just the reason we use this is because it's kind of the simplest possible model that gives you some type of realistic dynamics and also kind of highlights the face validity of this computational framework, if that makes sense.
+
+So any questions?
+
+Would you like to add anything, Ryan, before I...
+
+
+SPEAKER_07:
+pull out the code i mean i guess you know just just because i'm the one in control of the slide and the pointer here i mean i just just want to make sure that people understand exactly what what's corresponding to what you say so so basically the idea is just that at each short time scale right you could have each green one corresponds to a beep and the red one corresponds to a boop right so at the fast time scale you could be surprised that there's a boop at the end of four beeps um for instance if if most of the time for example it was just beep beep beep beep
+
+then whenever there's a beep, beep, beep, boop, then that's unexpected, right?
+
+So that's an expectation violation at a low, fast timescale.
+
+But what Chris is saying is that you can also have a long timescale thing, which is like how many times in a row is it beep, beep, beep, boop versus beep, beep, beep, beep, right?
+
+So one longer timescale pattern would be four beep, beep, beep, beeps in a row.
+
+And so if you come to expect four beep, beep, beep, beeps in a row,
+
+Then if you hear a beep, beep, beep, boop, then your belief about the expected sequence of these four trials is what would be violated or not.
+
+So at the fast timescale, you can have violations for each series of beep, beep, beep, beeps.
+
+At the higher timescale, you can have expectation violation about the sequence of beep, beep, beep, beeps.
+
+So that's the idea is you can have long timescale violations and short timescale violations.
+
+where the short test timescale ones correspond to the low level and the high level, the second level of the model corresponds to the beliefs about the sequence of beep, beep, beep, beeps.
+
+So anyway, so that's what's called global regularity versus local regularity.
+
+
+SPEAKER_03:
+Yeah.
+
+Just for simplicity, I just simulated the local deviation global standard condition.
+
+So that would be, if you kind of look, the third from the bottom on the right-hand side of the screen.
+
+Imagine that.
+
+And the local standard global deviation.
+
+So that might be, yeah, exactly.
+
+Which is the very top on the right-hand side of the screen.
+
+And so I'll just pull out the code.
+
+Okay.
+
+
+SPEAKER_07:
+So now we've got to switch screens.
+
+
+SPEAKER_03:
+Yep.
+
+
+SPEAKER_00:
+Cool.
+
+Nice.
+
+Very interesting so far.
+
+Thanks a lot, everyone.
+
+And great questions, too.
+
+
+SPEAKER_03:
+So can everyone see my screen?
+
+
+SPEAKER_00:
+Yeah, looks good.
+
+It's coming.
+
+Looks like cool.
+
+Okay.
+
+
+SPEAKER_02:
+Let me just, okay, cool.
+
+
+SPEAKER_03:
+Um, so I now cannot see the chat or any of the anything.
+
+So if you need to get my attention, just like you'll have to shout out.
+
+Cool.
+
+Okay.
+
+
+SPEAKER_00:
+Or just ask us periodically.
+
+
+SPEAKER_03:
+Yeah, that's yeah.
+
+So at the first level, um, so there's two levels to this model.
+
+at the first level it's very simple the model there are there is one hidden state factor and it has two mutually exclusive states um high and it just corresponds to the tone of the stimulus and just high or low um then in terms of we then separate the generative model from the generative process here like we talked about in the previous code walkthrough um
+
+And then as we're going through kind of in terms of likelihood mapping, it's again, really simple.
+
+It's just an A matrix.
+
+So the A matrix is just an identity mapping where, sorry, these just to go through it very briefly to revise a bit, the columns correspond to the hidden states and the rows correspond to the observation.
+
+So this is saying when you are in a hidden state, high tone,
+
+what is the probability that you will see a high tone?
+
+Well, it's an identity matrix, so it's probability one.
+
+When you are in state low tone, what is the probability that you will see a low tone?
+
+And it's again, hidden state one.
+
+We can then separate the generative model from the generative process.
+
+And the reason we do that is because this idea of there being a, so the generative process, it is going to be the probability of a high tone hidden state or high tone state out there in the world, giving rise to a high,
+
+toned observation is probability one.
+
+But our generative model is noisy.
+
+And if you want to actually simulate having an in silico brain that's at all realistic, you need to have some level of noise in that.
+
+So what we do there is we just run it through a softmax function, run the A matrix through a softmax function with a temperature parameter that will very slightly turn down the precision.
+
+So if I just kind of, I'll just run all this.
+
+And then if we just open up little A, we see that it's now not a perfect identity mapping, but it's something pretty close.
+
+By the way, so the reason I do that is because one, it's realistic, but also if you want to get ERPs at all, where ERPs are essentially changes in belief, if you have a perfect identity mapping, you'll never get ERPs because the agent is 100% confident all the time.
+
+So you never have to change your beliefs if you've got perfect beliefs.
+
+Um, okay.
+
+Then in terms of transitions, um, this is just the bees.
+
+It is again, a identity mapping.
+
+So that's just saying these that that's perfectly stable, uh, high tones don't turn into low tones, low tones, don't turn into high tones.
+
+And at this first level of the model, this is now we essentially plug all those variables into our MDP structures that we saw last time.
+
+And at the first level of the model, the thing that we need to specify is this T, how many time steps are going to be at the first level per time steps at the second level.
+
+And we only want there to be one.
+
+So I'm just going to set that to one here.
+
+And again, ERP, we need to set that to one.
+
+This is essentially a resetting parameter.
+
+mdp.erp is the extent to which you reset your beliefs at each time step, at each new time step.
+
+And the reason, so say you are modeling a human being wandering through a maze where your time steps correspond to, say, a couple of seconds in between things.
+
+You actually should, to be realistic or to have a realistic model, you should have a little bit of resetting in your posterior expectations.
+
+If, however, in this case, we're on the scale of seconds or milliseconds,
+
+then it makes absolutely no sense to have resetting going on in your posterior expectations.
+
+
+SPEAKER_07:
+So we set ERP equal to one, and that will determine... Yeah, the only thing I'll say here is this is something that you've got to kind of watch out for because for whatever reason, the default in the standard routines in the SPM underscore MDP underscore VB underscore X script, the default is four.
+
+The default value for ERP is four if you don't specify it.
+
+And so you'll get pretty funny, probably inaccurate, um, simulations for ERPs.
+
+
+SPEAKER_00:
+Um, if you don't set it back to one explicitly, there's a time scaling factor for how things are playing out at the neurophysiological versus the behavioral timescale.
+
+
+SPEAKER_07:
+Well, I mean it affects behavior too.
+
+It's just saying, it's just saying basically like, yeah, like Chris said, it's just how much do your beliefs go back to baseline?
+
+Um,
+
+compared to your posterior beliefs about that time about the you know like after the first observation um so like you could be just as surprised or more surprised at time step two even if your beliefs at time step one already favored what was going to happen at time step two yeah and a lot of cases you just don't want that you want priors to carry over um um so
+
+
+SPEAKER_03:
+You could have something like complete resetting, which would be completely ridiculous, but you could do it if you wanted to.
+
+Or you could have no resetting at all, which is what makes sense in this situation, because you want there to be complete carryover.
+
+
+SPEAKER_00:
+You could do model fitting on empirical data and ask whether it's a better fitting model to have empirically a 0.6 or a 1 or a 1.5.
+
+
+SPEAKER_03:
+So you could fit this.
+
+You could treat this as a parameter that you fit as well.
+
+Yeah, if you were fitting to match ERP waveforms or something.
+
+Yeah, I would definitely fit it.
+
+Okay, so this next part is where there are two key points in this where there is a separation from how we would do a first-level model or a single-level model.
+
+So we need to clear.
+
+So essentially, usually, you'll just clear all of your A's, B's, and D's because you're going to reuse those matrices at the second level.
+
+And then you'll save your MDP structure.
+
+and run it through this little MDP check thing, which should give you some nice little error, like very usually pretty helpful error messages telling you if you've got some weird shape matrices or I don't know, if I just have a zero here and ran it, for example, it would tell me, hey, your B matrix doesn't make any sense.
+
+So then you'll then generally clear this MDP structure and save the MDP one into this little MDP, this other MDP structure here.
+
+So then moving on to the slower time scale or second level beliefs.
+
+So this is where things get a little bit more complicated.
+
+And so there are three hidden state factors where these are all independent probability distributions.
+
+The first is sequence type.
+
+And so this this is essentially there are three sequence types where this corresponds to sequences of tones at the first level.
+
+So there can be a whole sequence where it's just beep, beep, beep, beep, beep.
+
+There's no boops.
+
+And so that would be all high.
+
+There could be all low, so it's all boops.
+
+There could be a high and then a low, for example.
+
+And there could be a low and then a high.
+
+So this would be, does that kind of all make sense?
+
+And this corresponds to different sequences of hidden states at the first level.
+
+
+SPEAKER_00:
+Got it.
+
+Not all of them have to be used in each experiment, but that's the whole state space.
+
+
+SPEAKER_03:
+Yep, exactly.
+
+Then this is actually where things get interesting.
+
+So you have to specify, when you build this type of models, you have to specify a time in trial hidden state factor, which is essentially the agent's beliefs about how things evolve over time.
+
+And there's actually some really, it seems kind of like when I first, Ryan first taught me how to build these things, I kind of just had the assumption like, oh, this is just like a,
+
+it's just something that you need to build for the model to work, but it doesn't, it's just kind of a bit of mission formal machinery that doesn't track what the brain's doing to my delight and surprise.
+
+There actually is quite a bit of neurophysiological evidence that there are factorized representations of task phase in both medial temporal lobes and lateral prefrontal cortex, which is really cool.
+
+But essentially this would be something like the time in trial of
+
+So I'm at time point one, regardless of what stimulus there is.
+
+I'm at time point two, regardless of what stimulus there is.
+
+I'm at time point N. Or I'm in the final time point where I have to give a response, regardless of what my response will actually be.
+
+Does that kind of all make sense?
+
+Cool.
+
+And then the last hidden state factor is just the agent's response.
+
+So to make this interesting, so we could have just set this up as a hidden Markov model and not had the agent give responses, which would have been fine, just would have been a very passive model.
+
+And just kind of to make this interesting and then so that people can read it and then build their own more sophisticated models and see how you would specify policies in a deep model.
+
+I basically just had the agent at the last time step, so the sixth time step,
+
+just say whether the last beep or boop in the trial was the same as or different from the previous beeps or boops.
+
+Is that all clear so far?
+
+Yep.
+
+So the idea is that these sequence types, the agent has no prior expectations over all of them.
+
+It's totally flat.
+
+So when this first D1 gets run through a softmax function, this will just be a completely flat vector.
+
+But the agent always has a perfect prior belief that it is in state one.
+
+It also has the perfect prior belief that it doesn't know or it doesn't have any response prepared in terms of what report it will make.
+
+Again, what we do here is essentially we separate the generative model from the generative process.
+
+Just put little D2 just so it's not to confuse people with these different levels.
+
+We multiply, this is actually really crucial.
+
+So when you specify a D and separate it, there's a little flag in the VBX script or the model inversion script that tells it, okay, you are now learning D and you'll get updates to D. But sometimes you don't actually want to simulate learning.
+
+You want in the very same way that you want to like simulate some process outside of learning or some process independent of other things.
+
+In a lab, when you actually run experiments, sometimes you just want to isolate one process in simulations
+
+So to essentially turn off learning, you just make the concentration parameters in these, which are concentration parameters from Dirichlet distribution, like really massive.
+
+And so the difference between, say, 100 and, adding a count of one will essentially do nothing to the agent's behavior then, if the concentration parameter's already at 100, which is why we specify it this way.
+
+
+SPEAKER_07:
+Yeah, so if you think about it,
+
+depending on the type of task, if the thing thinks that learning is going on because you're separating the generative model from the generative process, then if you have low concentration parameter values, then the epistemic value for parameter exploration will make a big difference, right?
+
+The thing will actually be driven to move to states that will help it learn something about what those concentration parameters should be.
+
+So it can affect behavior in ways that kind of
+
+problems for the kind of tasks that you're trying to model.
+
+So one thing, yes, is that having them at really high values means that the agent just isn't going to do any seeking information about parameters because it just thinks it already knows them really well.
+
+But also, it still is going to add counts to those distributions after each observation.
+
+So changing a distribution from 100 to 100
+
+two 100s to 100 and 101 the actual distribution is like still basically the same whereas if it was like one and one and you add a count so it's now one and two that's a very big change in the distribution um so both of those things together just kind of make it as though it doesn't think it's learning anything cool okay um is that clear to everyone all good to move on
+
+
+SPEAKER_03:
+So then the next thing, so I think the hardest part of doing active inference or building these models is factorizing the A matrix.
+
+So these are all independent distributions, right?
+
+But they interact in the A matrix.
+
+And so you have to think about that when you're specifying it.
+
+And so what this one, what this matrix says is, so remember that our first hidden state is sequence type.
+
+So this is just, and our first outcome modality is just the stimulus.
+
+And I'm just going to quickly dip down so you see how this level is connected to the bottom level.
+
+We have to specify something called a link function.
+
+And this will just be a little matrix or a vector, depending on how many hidden state modalities you have in the first and second level, where the rows in this matrix correspond to lower level hidden state factors.
+
+And the columns correspond to high-level outcome modalities.
+
+And so all that we're saying, and so when you specify these things, you actually need to be careful that, say, the number of hidden states you have at the higher level, or sorry, the number of outcomes that are possible in your outcome modality match the number of hidden states that you have in your first level, at the first level.
+
+Does that make sense?
+
+because your second level of your model is treating those first level hidden states as observations.
+
+So here, the two observations are high tone or low tone.
+
+And all this is saying, so this first column is high tone, second column is high sequence, second column is low sequence, third column is high, then low, and last one is low, then high.
+
+This is, and we're specifying this for time step one to three.
+
+So what we're doing here is we are going to, so we have set up our A matrix where there's four hidden states corresponding to sequence type and two outcomes, just to reiterate.
+
+And then what we're gonna do is we're gonna loop over the six time point in the trial and loop over all the states in the report.
+
+And so then we're just gonna step but,
+
+then basically I'm just gonna set this up so that there's just an identity mapping essentially between hidden states and observations.
+
+And I've done this, I've looped this overall, but this is actually not an accurate generative model because we want there to be an odd ball at the fourth time step.
+
+And so I just specify that here.
+
+So I take this I set, which corresponds to this kind of second hidden state factor, and I set it equal to four.
+
+And then what you can see here is that there's now a change in the mapping.
+
+So remember, this first column is high, second column is low, third column is high-low, and then fourth column is low-high.
+
+So we now see a change.
+
+So this is then saying when you're in a high hidden state, at the fourth time step, you'll see a high tone.
+
+When you're in a low tone, the same thing.
+
+But it gets interesting, or you get a change from the matrix above.
+
+fourth time step because when it's in a high-low at the fourth time step, it will hear a low tone and in low-high, you'll hear a high tone.
+
+Is everyone pretty clear about that?
+
+Yes.
+
+We're looping over all this j equals one to three in both of these is just saying we're looping over all possible responses.
+
+We're not making that mapping between those hidden states between
+
+the first hidden state sequence and in any way dependent on the response.
+
+So it's independent of that.
+
+So then the second outcome modality that we need to specify is just report feedback.
+
+So with the agent, we're going to have it make an action or specify policy allowing it to make an action at the fifth time step, at the end of the fifth time step.
+
+Sorry, the sixth time step rather.
+
+And we then need to kind of give the agent feedback.
+
+So there are three hidden, and this is no longer, this feedback modality is not connected to the first level.
+
+And so there are three outcomes, null, which is just, we don't give the agent any feedback.
+
+So it just has a totally flat preference distribution essentially over this, over null, doesn't care.
+
+for the first five time steps, and then at the sixth time step, we need to start messing with whether it thinks it's going to be, whether agents thinks it's going to receive wrong versus right feedback.
+
+So this would be saying something like, okay, so here you report that they are the same.
+
+So this is response two, so J equals two, and I equals six correspond to the sixth time step.
+
+So these, where these correspond to,
+
+what we're indexing into elements of these hidden state factors.
+
+And then, so the idea is then, what this is saying is that at hidden state for 1 and 2, if you say they're the same, remember this is all highs, all lows.
+
+If you then say it's the same, you will get correct feedback.
+
+And because this is high-low and low-high, if you say it's the same, it will give you incorrect feedback.
+
+then we see this is reversed when we say the agent is going to give the agent the option to report different.
+
+So these two, it'll be incorrect for high and low sequences and correct for low-high and high-low.
+
+Is everyone with me?
+
+Yep.
+
+Cool.
+
+Okay, then again, just like we did before, we're gonna reduce the...
+
+we're going to separate the hidden states, sorry, the hidden generative model from the generative process and reduce the precision with a temperature parameter of two, which is super precise.
+
+It's just not a perfect identity mapping.
+
+And we're then going to disable learning again, because we're not interested in learning at the moment.
+
+By the way, you do get fairly similar results if you do learning.
+
+So I'm not kind of like cooking the books.
+
+It's just that
+
+In terms of the tutorial, it didn't really make sense to add an extra several lines on learning for a fairly simple simulation.
+
+
+SPEAKER_00:
+It's awesome, and just to highlight, that is a similar design move as when you mentioned several times separating the generative process from the model.
+
+It allows you to have a cue that isn't always associated, like high tone is the high tone, they hear it perfectly, but now it's a situation where they can't really tell if it's one shade of a color or another, so it allows a lot of expressivity, and it will just be really awesome to, in the coming months and years, see and return to the code
+
+to understand exactly how different groups are implementing it to model different specific situations that kind of just go down these roads that you're just pointing out.
+
+But we're staying on the freeway, but you're pointing out different exits that really are interesting.
+
+Yeah, exactly.
+
+
+SPEAKER_07:
+There's lots of, I mean, there's quite a few different, like in previous papers, you know, for instance, like we've modeled things like noisy learning, right?
+
+So where, for instance, like in the generative process, it is, you're always being presented with one object, right?
+
+And that's like 100% true.
+
+But
+
+the the a matrix and the generative model you know you kind of soft max it with some precision parameter like chris was doing so it's it's um not very precise so it's kind of like for instance like seeing an object but having it be blurry you know or something like that um you know so it's how well do you learn uh from stuff even if what you're seeing is kind of imprecise or like for instance figuring out where a whether a tone was present in some like white noise you know like and there's some experiments to do that kind of thing so it
+
+Yeah, I mean, these models are incredibly flexible for whether you want to do just perception or just learning or just decision making with or without learning.
+
+So it's, I mean, that's part of why they're so nice.
+
+
+SPEAKER_03:
+Yeah.
+
+And so then just kind of moving on to the transition probabilities.
+
+So B, B2, this is just, so this corresponds to our first sequence of tones, hidden state factor.
+
+And this is an identity matrix, four by four identity matrix, because there are four hidden states.
+
+This is just saying that our sequence doesn't change to another sequence halfway through.
+
+That makes sense.
+
+Now, things get interesting in terms of specifying the transition functions when we talk about the second trial phase transitions and our policies.
+
+The idea here is that we then specify this trial phase transition function so that
+
+it will kind of deterministically step through all of the phases in the sequence.
+
+So this is state one, or row, sorry, columns are state, hidden state one, rows are, will be kind of hidden state one, hidden state two.
+
+So what this is saying is that at time one, hidden state one transitions to hidden state two, hidden state two transitions to hidden state three, and so on.
+
+And if I wanted to, if I wanted to simulate some infinite number, like it's not actually infinite, this is a finite horizon MVP,
+
+But if I wanted to simulate some very large number of these trials, I could put the last one so that this last trial, or sorry, when it's in the last report phase, it will transition back to the first phase, for example.
+
+But I don't want to do that.
+
+I just want to have the last time step in the trial as an absorbing state that the simulation will stop on.
+
+And then simulate each trial as kind of a separate thing.
+
+But just to highlight that in case you wanted to do it.
+
+If you want to like simulate, there are some ways of simulating kind of heartbeats and things like that where you specify a transition function that has an orbit built into it.
+
+So then in terms of report, this is the controllable hidden state factor.
+
+And these, it will add, will now have like a multidimensional matrix where the third dimension in the matrix just corresponds to basically the control state.
+
+So this would just be I am in null and I am going to stay in null.
+
+I'm not going to do anything.
+
+The second one would be you can get from any hidden state, you can transition yourself into reporting same.
+
+And this third one is from any hidden state, you can transition yourself into reporting different.
+
+Then in terms of the policies, there are six time steps.
+
+So we specify that here.
+
+We specify the number of hidden state factors.
+
+So remember, again, there's sequence type.
+
+time in trial and report modality.
+
+So three.
+
+Then we've got two policies.
+
+So these are the number of options that the agent will have.
+
+And then these are deep policies, which are consistent throughout the whole trial.
+
+And so basically, or this is to say the agent will be computing these over the course of the whole trial, if that makes sense.
+
+And so all this is saying is that the agent stays in state hidden kind of action one, which is just null.
+
+It doesn't do anything.
+
+It doesn't do anything.
+
+It doesn't do anything.
+
+Can't do anything.
+
+And at the last time step, we allow it to choose.
+
+And that just corresponds to kind of, you can imagine not actually presenting the participant with in psychos and psychophysics experiment or whatever, not presenting it with an option to actually move, change the key, hit a keyboard or anything like that until the last time step of the trial.
+
+Okay.
+
+So.
+
+Last bit, any questions so far?
+
+Nope.
+
+
+SPEAKER_00:
+Looks pretty good though, thank you.
+
+
+SPEAKER_03:
+Okay, so then we've got the first C matrix.
+
+This will just be a two by T or two by six matrix of zeros.
+
+So if I just kind of hit go on this, we can take a look at it.
+
+Whoops.
+
+So I'm going to hit run at some point soon.
+
+We can check out everything.
+
+But this is just what the C matrix looks like.
+
+So this is the agent's preference for hearing a particular tone.
+
+So this is just saying agent doesn't care at all.
+
+It has no preference for tone.
+
+Then our report hidden state.
+
+This is, again, it's going to be completely flat, essentially, except for at the last time step when it receives feedback, it has a preference for not being incorrect and a
+
+preference for being correct.
+
+
+SPEAKER_07:
+I just want to make sure people understand that the brackets, we went over this last time, but the brackets are what say what output modality corresponds to what A matrix.
+
+C2 brackets 2 means that that corresponds to the observations in the A matrix with brackets 2.
+
+That's how you know that
+
+this is the one that corresponds to observing feedback, whereas the first one is the one that corresponds to just observing tone.
+
+So just to make it clear that you use the bracket numbers to assign to the outcome modalities.
+
+
+SPEAKER_03:
+Yeah.
+
+And then, so then that's basically what built our MDP.
+
+So we're just going to specify it.
+
+So we've now got our earlier MDP structure, if we remember.
+
+So this is MDP one.
+
+And this is the thing that we specified all the way back when we were talking about level one.
+
+And we then plug that into our new MDP structure.
+
+So we'll have MDP dot MDP.
+
+So this is the Markov decision process at the lower level.
+
+We then plug it into our new MDP structure.
+
+Or this will just be a subordinate MDP.
+
+And we have to specify a link function.
+
+And we talked about that before, but just to reiterate, rows here are... Sorry, I'll start with... Rows are...
+
+lower level hidden state factors and columns are high level observation modalities.
+
+So all that we're saying here is that we want the lower level observation modality or lower level hidden state one to plug into observation modality one.
+
+So the hidden state to the first level will be treated but as observation to the second level.
+
+Okay, then we just plug in all of our variables that we saw before, time, our likelihood mapping, the generative
+
+model for our likelihood mapping, et cetera, et cetera.
+
+And so Cs, Ds, and our V, which is our policies.
+
+And then again, we need to set our decay slash reset parameter to number one.
+
+Then in terms of MDP, we can just specify names for our outcome modalities and our transition functions, which will just kind of make interpreting the plots a little bit nicer.
+
+And then lastly, you just plug the whole thing, this whole MDP structure into our SPM MDP check thing, which will again give you some nice informative error messages, which are extremely helpful.
+
+I still use that thing all the time.
+
+And then we can just run it.
+
+And so let's do that right now.
+
+And by the way, so I do have a lot of, I'm just gonna run it and kind of show you what it looks like, and then I'm gonna go through how I simulated each of the specific conditions.
+
+because we did something similar to how Ryan simulated learning.
+
+
+SPEAKER_02:
+Cool.
+
+
+SPEAKER_03:
+So I'm going to hide this stuff for now.
+
+
+SPEAKER_02:
+Slight spoiler.
+
+
+SPEAKER_03:
+Okay.
+
+And so this is just, I'll just look at one of them.
+
+
+SPEAKER_02:
+Sorry.
+
+
+SPEAKER_03:
+Just so we get an idea of what's going on.
+
+So this is just hidden state sequence.
+
+The sequence is the same.
+
+The agent believes it was the same throughout the whole trial.
+
+Great.
+
+That's true.
+
+Time in trial transitioned to the next point, just as we expected it.
+
+And then at the last time step, because this was a all kind of all high sequence,
+
+It just said they were the same.
+
+And so then it got the answer right.
+
+
+SPEAKER_07:
+I think it's only sharing your... Yeah, it's only showing the MATLAB window.
+
+We don't see the plots.
+
+
+SPEAKER_02:
+Oh, really?
+
+Okay, let's see if I can... God damn it.
+
+
+SPEAKER_01:
+If you dock them, you might be able to pull it up.
+
+
+SPEAKER_00:
+Yep, slide into the IDE.
+
+Or share a whole screen.
+
+
+SPEAKER_03:
+Can you see the screen now?
+
+Yep.
+
+Now we see them.
+
+Thanks.
+
+Now we get to the block.
+
+Sorry.
+
+I was just talking to myself then.
+
+That sucks.
+
+It was fine.
+
+Yeah.
+
+Okay.
+
+So again, this is the stable hidden state.
+
+Hi.
+
+Hi.
+
+This is our time in trial thing, stably transitioning from one point to another.
+
+This is our report hidden state, which just says at the second time step, the agent reported same.
+
+Then it got feedback that it was correct.
+
+Then I'm just going to quickly go through
+
+Essentially how I simulated all the conditions because remember we want to simulate local deviation then global standard and local standard global deviation That makes sense.
+
+So I'm going to simulate ten trials where that's ten collections of beep beep beep beeps or beep beep beep boops in a row And what we want to do is essentially
+
+have the agent, it is going to be doing some learning.
+
+It's going to be learning a prior expectation over what sequence it should be in, if that makes sense.
+
+And so, yeah.
+
+
+SPEAKER_07:
+Just to make sure they understand this, so go back up to the d's.
+
+So if you notice, he's only multiplying d2 and d3 by 100.
+
+Yeah.
+
+So d1, d2 brackets 1, the first state factor, is still 100.
+
+just one, one, one.
+
+So, which allows it to learn one, but not learn state factor two and state factor three.
+
+Yeah, exactly.
+
+
+SPEAKER_03:
+And so what we should have at the end of our local deviation thing, for example, so we have two, sorry, wrong part of the code.
+
+Okay.
+
+So for our local deviation, global standard manipulation or simulation, what we're going to do is just the first nine trials will all be a high low.
+
+So it will be,
+
+Beep, beep, beep, boop.
+
+Beep, beep, beep, boop.
+
+Beep, beep, beep, boop.
+
+And then the global, so then our 10th trial, however, is going to be the same because it's a global standard.
+
+So the global standard is the beep, beep, beep, boop, but we should get a kind of local deviation and we should always get a mismatch negativity because there's the last one deviates from the kind of the local temporal regularity, if that makes sense.
+
+Then in our local standard global deviation, we're going to invert that structure.
+
+So the first nine trials are all high-low.
+
+So again, we've got beep, beep, beep, boops.
+
+But at the last time step, there is a beep, beep, beep, beep.
+
+And when we do that, we won't get any type of mismatch negativity or first-level ERP to that last
+
+kind of surprise response at the last time step.
+
+We will, however, get a global deviation because the second level is now really surprised that there wasn't a deviation at the first level.
+
+Does that all kind of make sense?
+
+Nice.
+
+Cool.
+
+And basically what we do is we'll just specify n equals 10, this number of trials.
+
+We'll get our MDP structure that we kind of put together before.
+
+We'll put it into our MDP deal.
+
+So that will just give us 10 MDPs which are to start with all identical, and then we're just going to choose to select the 10th one and change, either have and mess with the hidden state factor.
+
+So here we're not actually changing it.
+
+It's the same as the first nine.
+
+But in the second example, we're changing it.
+
+We're changing it from a local deviation to a local standard or
+
+which will give rise to a global deviation.
+
+I'm actually not going to, for the sake of time, I'm actually not going to go through all of the code for just plugging this stuff in because this is literally just putting our structures into a plotting script.
+
+Here, things get more interesting.
+
+Here is where I make some custom ERP plots, which I think are cool.
+
+But again, I actually don't think walking through the code is particularly helpful.
+
+I think just the type of thing, the way I learned this was I just spent a day
+
+or half a day just reading through someone else's code and figuring it out.
+
+
+SPEAKER_07:
+So the only thing that I would make sure is that so when you're doing this U1 underscore one, sorry, like it's just, these are ways of indexing and pulling the actual simulated firing rates and ERPs.
+
+out of the MDP structure after you run it through the VBX code.
+
+So this is just representing kind of the most straightforward way of pulling those simulation results out of particular cells in the MDP structure after it's run.
+
+And we have a table in the tutorial, I think it's table three, that explains the structure of each of those cells and where each of those...
+
+each of those simulation results are.
+
+Yeah, exactly.
+
+
+SPEAKER_03:
+And so then I'm just going to hit run and we'll kind of walk through what this stuff looks, what these plots look like together.
+
+
+SPEAKER_02:
+Nice.
+
+Cool.
+
+
+SPEAKER_03:
+Okay.
+
+So these are my custom ERP plots on the right.
+
+And so I'm going to start
+
+Start there, actually, because I think they're kind of nicer.
+
+Okay.
+
+
+SPEAKER_02:
+Cool.
+
+
+SPEAKER_03:
+So far left, we have a, or top left, sorry, we have a
+
+global standard versus a global deviation.
+
+And the way you calculate the mismatch negativity is you just subtract the global deviation from the global standard.
+
+And then you get this nice, that's what we have on our top right.
+
+We have this nice kind of negative going ERP that looks exactly, I mean, I'm not going to show you this, but if you want to satisfy yourself with this, this looks like kind of, for such a simple model, it's kind of shocking how much this looks like a standard mismatch negativity.
+
+And so that's really cool.
+
+Then on our second one here, this is our two, this is our global standard, which is in blue, and our global deviation, which is in red.
+
+And then we can subtract them from one another.
+
+And we can just look at kind of the, we get a nice, large, positive going potential that looks a lot like a P300.
+
+So then in terms of
+
+I'm just gonna show you a couple of the local deviation, local standard things.
+
+
+SPEAKER_02:
+Sorry, I'm gonna close these and these.
+
+Just kind of clean up the screen.
+
+
+SPEAKER_00:
+It's nice, though, that someone can just download this, and also an important note is installing all of the SPM prerequisites.
+
+Maybe we could do a standalone in the future, but once the packages are installed, someone can just run the script and have also all of these figures be spit out, and then it looks like there's enough commentary, and hopefully these videos are enough of a walkthrough, at least of early versions of the code, where you can tweak different things and start seeing how it plugs into other...
+
+things you might want to explore with the model.
+
+But all these figures just come out in one batch and you're just fighting them away over there, Christopher.
+
+
+SPEAKER_03:
+Yeah, exactly.
+
+So I guess one thing to say is one reason why I'm not particularly motivated to make a big standalone kind of thing is even if I were to do that, which I don't want to do, but even if I were to do that, by the time I'd rewritten all of the functions, I would essentially have a package of
+
+that is as cumbersome to download as SPM.
+
+But SPM is written in a really nice way and it's super easy to install.
+
+So it would actually be a lot easier.
+
+It's just a lot easier to install SPM that would be to go to my GitHub say and
+
+put all of this stuff onto your laptop, make sure all the parts work.
+
+
+SPEAKER_00:
+Nice.
+
+Maybe a future supplement could just be start with a virtual machine and let's just install the prerequisites and just actually do a full clean installation.
+
+Could be a good point of reference, but thanks for that point.
+
+Continue.
+
+Yeah.
+
+
+SPEAKER_07:
+I mean, it's, I mean, it's really very, it'd be very short and sweet to do.
+
+I mean, downloading SPM like is, you know, it's freeware.
+
+I mean, it doesn't just takes a couple of minutes to download and really all you have to do
+
+is just once you download it, is just go into MATLAB and set the path.
+
+Like that's it.
+
+
+SPEAKER_03:
+It'd be like five minute tutorial.
+
+I think there's a function called install SPM.
+
+So you go into MATLAB and run the function and install SPM.
+
+Okay, but returning to this.
+
+So each of these points kind of, can everyone see my pointer?
+
+
+SPEAKER_02:
+I'm hoping.
+
+
+SPEAKER_03:
+Yes.
+
+Each of these pointers, this is all a time step at the first level.
+
+And so this is kind of local standard
+
+and a global deviation, right?
+
+So this will be, we see there's a little ERP each time there's new stimulus presented, but there's not a major one that makes sense because it's the same.
+
+And this is trial 10, by the way.
+
+I should say this is trial 10.
+
+So I have trial one versus, maybe I'll just contrast all the trial 10s because otherwise things get messy.
+
+Okay, cool.
+
+This is trial 10.
+
+Um, and so this is trial 10 for local standard, um, global deviation.
+
+And so we see kind of no first level ERPs really, or no enhanced ERPs.
+
+They're all the same, but this last one, because this last or sixth ERP, right?
+
+Because it disconfirmed a prediction, essentially, there is a enhancement
+
+in higher level beliefs when the model suddenly changes from thinking it was a high high low high high high low to a high high high high if that makes sense and then if you compare that second level erp to this one over here which is just local deviation global standard it's smaller that p300 there is smaller amplitude but at this first level
+
+because it kind of confirmed that there was a deviation at this first level.
+
+And you see at this first level, there's this massive deviation response.
+
+So is that all fairly clear?
+
+Because I think that's just about all I have to show.
+
+I do think this stuff is really cool.
+
+It's kind of nice to chat about it.
+
+
+SPEAKER_01:
+So just to – I want to be very clear that I am understanding with the event-related potentials that you're showing that you superimposed and you got, based off your hierarchical model, you could then superimpose those ERPs, which are related to gradient descent on the variational free energy, which is related –
+
+to dopamine expression and as we showed uh way at the beginning of this video um that relationship between membrane voltage and expected firing rate mean population firing rate and we're taking all of these things together to provide the superimposed traces of the local fuel potentials at any given instant
+
+And we're showing how this oddball paradigm could play out conceivably by, you know, with a simulated version of this model, how it could be realized.
+
+Is that?
+
+
+SPEAKER_07:
+Yeah, exactly.
+
+The only thing I would say is that these simulations have like nothing to do with the dopamine stuff.
+
+
+SPEAKER_03:
+Yeah, I was about to say the same thing.
+
+With the exception of like dopamine having to do with how you choose policies.
+
+So if we just like blew up the dopamine receptors or sorry, this like in silico dopamine and just made it like we could make the agent behave totally randomly or we could make it behave in a super precise, impulsive way or something, something along those lines.
+
+Sorry, I shouldn't have said that.
+
+Impulsivity is a bit complicated, but we could make that happen.
+
+agent behave in a totally random way and choose random actions, which would again have effects on the sensations that the agent would receive, so it would indirectly affect the ERPs.
+
+But there's nothing about that gamma term that would affect state prediction error.
+
+
+SPEAKER_07:
+You could just turn off gamma, and it wouldn't make any difference to this.
+
+Exactly.
+
+
+SPEAKER_01:
+So then, just so that I'm getting it correct, the more important thing then would be the membrane voltage, which is related to the free energy minimization and your schematic diagram of those excitatory, imputative, and inhibitory connections that you're realizing in this model.
+
+Exactly.
+
+
+SPEAKER_07:
+Yeah, it's just about rate of change and posteriors over states.
+
+
+SPEAKER_03:
+Okay, totally.
+
+So I'm just going to stop sharing my screen at this point.
+
+So hopefully you guys can no longer see my screen.
+
+Nope, we're back to just seeing it.
+
+
+SPEAKER_00:
+Cool.
+
+Wow, what a fun and interesting session.
+
+Let's...
+
+First, just really appreciate everyone for coming on because these are extremely didactic and it's really just something else to be walking through the code and seeing how many degrees of freedom there could be and also how real it can be when we actually specify it.
+
+So any closing thoughts or and what can people look forward to for part four, which is the final part before the semester begins for some of us?
+
+
+SPEAKER_07:
+Yeah, no, I mean, like I said, I mean, the last one is just the last section of the tutorial, which is kind of where we're building to this whole time, right?
+
+is how to actually apply this stuff to empirical data and do real experiments.
+
+
+SPEAKER_00:
+Can I ask a question on that?
+
+Someone asks, can we use this tutorial to construct a generative model of metacognitive control of attention or meta-awareness, i.e.
+
+modeling task-free conditions, say, while doing meditation, for example?
+
+So we talked a lot about task modeling.
+
+How does this generalize?
+
+
+SPEAKER_07:
+Yeah, so I mean, you kind of have to, so I mean, you know, the first question is just how do you make that, you know, like,
+
+really concrete.
+
+Right.
+
+So, I mean, there's there's very easy ways, you know, like I've published a couple of papers and so has, you know, several other people doing something like cognitive actions, selecting cognitive policies as opposed to behavioral policies.
+
+And these are things like where you selectively choose what to pay attention to, you know, or selectively choosing, you know, what to kind of hold in working memory.
+
+or things along these lines that don't involve any kind of overt observable behavior, but involve selecting cognitive, fully internal actions.
+
+Something like selecting ways of manipulating lower level representations, things like that.
+
+So that's certainly possible, but what you would need to do then is say, okay, what does a meditative action look like?
+
+It could be something like, for instance,
+
+making a, like, choosing a policy at a higher level that say, like, for instance, like, really, really, really reduces the precision of, like, an A matrix or something, right, if you wanted to completely, you know, like, cease to attend to anything, like, in the external world, you know, for example, you know, or, for instance, maybe the opposite, right, maybe, like, mindfulness, you know, has to do with actually paying really, really precise attention to the present, but, like,
+
+making your transition matrices super imprecise.
+
+So essentially it's all about the present and you're not thinking about anything in the past or the future.
+
+I mean, I could think of lots of different ways you might do something like that, but to really make it, you have to turn it in to something task-ish, right?
+
+You have to define actions, even if they're really internal actions, you have to define the way they relate to perception, the way they manipulate the processing perception.
+
+I guess you have to ultimately boil it down to something really concrete with an exact quantitative structure, but all the resources are certainly there to do it if you're creative enough to come up with a regenerative model.
+
+
+SPEAKER_03:
+I have two things to add to that.
+
+First is that I think there's a really cool early preprint.
+
+I'm not sure if it's been published anywhere.
+
+It's called Towards a Formal Neurophenomenology of Metacognition.
+
+Lars Sandervald-Smith is first author.
+
+Maxwell Ramstead, who I think has been on
+
+the podcast before, right?
+
+He's the senior author.
+
+They actually do try and model metacognition and specifically in a meditation context.
+
+I would just say one thing that I am personally skeptical about.
+
+I encourage everyone to do this kind of work, but this probably highlights my biases.
+
+But I think if something is hard to study empirically, that is to say it's very hard to
+
+study in terms of neuroimaging, for example, and creating an event-related design where you can get precise time locking between neuronal responses and cognitive processes, for example.
+
+If something's hard to do that in an experimental context, it's going to be extremely difficult, if not more difficult, to do it meaningfully in terms of a generative model.
+
+Because I think these generative models are only meaningful and helpful to the extent to, and other people are free to disagree with this,
+
+This is just very much me going off on my own kind of tangent.
+
+
+SPEAKER_00:
+That's just to say it's almost like you need to get more rigorous.
+
+It's no longer just like, well, this one thing happened with this one setup.
+
+It actually demands a higher standard, but things that it lets above that higher standard are very cross-referenceable, very interoperable.
+
+So very nice statement.
+
+
+SPEAKER_07:
+Yeah, I mean, I should say that, like, I guess you can think about these models as, you know, beyond the kind of more specific applications we've been talking about,
+
+is doing kind of two, you know, doing like a couple of like broader things.
+
+One is, is that you can use them for kind of theory, making theories precise, right?
+
+So for example, like, um, so a lot of my past work, like I focus a lot on like, like theories of like emotion and emotional awareness and how that relates to relates to like, you know, psychiatric, you know, like clinical context and things like that.
+
+Um, but you know, prior to doing
+
+a lot of this modeling stuff, it kind of comes out of these like fairly hand wavy conceptual review papers, right?
+
+Where it's like boxes and arrows and, you know, like it's, and sometimes in those cases, it's hard to go from kind of the theoretical boxes and arrows.
+
+You know, even if you assign say neural regions or systems to them, it's hard to make those things really precise.
+
+So that like, it's very clear that one,
+
+empirical result would actually confirm or disconfirm it um whereas so you can take you know like a kind of conceptual you know somewhat hand wavy model like that and then turn it into an exact generative model um which can just make your theory really precise you know so so like one day you know it'd be really cool if instead of like review papers it's like review paper plus actually here's a model you know like a precise quantitative model that we think comes out of
+
+unifying all the results as opposed to less precise theories.
+
+
+SPEAKER_03:
+One other nice thing you can do with these models is just like have a total proof of principle.
+
+Someone might make a radical claim like there is no way that you can conceivably do X. And then the response to that is here is a model that does X. And that's useful, right?
+
+It might even not be an empirically tractable example.
+
+Like I think the dark room problem is an example of this, right?
+
+Like you could say, there is no possible way of designing an active inference model that will escape the dark room.
+
+And then you can build a model and say, here is an example of an active inference agent escaping the dark room.
+
+That would be a really shitty, boring experiment to run.
+
+I hope no one does it.
+
+
+SPEAKER_00:
+It's an argument by construction.
+
+but especially when people have these edge cases or perceived to be edge cases, but that's how philosophy is at the fringe and at the border and expanding and critiquing and improving all these different metaphors that have come up in discussing like 14 was what is the dialogue between science and the modeling and the actual quantitative components of it and the empirical work and philosophy.
+
+So it's really just, we're coming at that same question from a little bit of a different angle.
+
+So I think this has been a great,
+
+length and a great session ryan christopher max really appreciate all of you for coming on so that's going to be it for today but it will be our final session next friday um at the same time at 9 00 a.m pacific on february 5th is going to be number four so thanks everyone for watching live and replay thanks again to authors and participants so peace out everyone thank you bye

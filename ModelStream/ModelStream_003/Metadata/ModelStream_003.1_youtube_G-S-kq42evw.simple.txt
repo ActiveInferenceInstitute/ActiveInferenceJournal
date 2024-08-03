@@ -1,0 +1,1322 @@
+SPEAKER_02:
+Hello, everyone.
+
+Welcome to Act-Inf Lab.
+
+This is Act-Inf Lab model stream number 3.1.
+
+It's May 27th, 2021.
+
+And we're here with Tim Verbellen and Ozan Katal.
+
+Today, we're going to have a model stream on some of their recent work on learning generative state space models for active inference.
+
+We're going to have a presentation followed by some time for question and answer.
+
+so please feel free to write any questions in the chat and we will get to them in the conversation so thanks again to tim and ozon for joining us today we're really looking forward to what you have to share so please take it away and thanks again so thank you daniel for having us um
+
+
+SPEAKER_00:
+So I'm Tim Verbeelen and together with Rozan Katel we will talk a bit on our paper on learning alternative state space models for active inference.
+
+So we are both researchers at IMech Kent University in Belgium.
+
+If you want to know more about what we do you can read about it on our blog or follow us on twitter under the smart robot.
+
+So
+
+before we dive in maybe a short introduction on what we do what our goal is so basically we want to build intelligent robots so in our lab here in Ghent we have a pretty big pretty pretty large space where we have some room for robot manipulators on the one hand but also driving and flying robots on the other hand and we typically attach all kinds of sensors on these things and then we want to
+
+process the sensor information and infer some useful actions for these things.
+
+And of course, active inference is a cool methodology to try out and to further investigate.
+
+And it's in this context that basically this work is being done.
+
+So why would you bother learning the state space?
+
+So if you look at active inference papers from the recent years,
+
+then typically you will find a figure like the ones that are on the slide so you have this figure of what is the kind of environments that you're modeling that you're investigating and then a whole description on how the model should look like so you define the state space and then
+
+Possibly, in the case of discrete state spaces, you define the so-called A, B, C, and D matrix that defines the likelihood model.
+
+So what is the likelihood to see a certain observation when you're in a certain state?
+
+Or what are the transition models?
+
+How do you transition from one state to another?
+
+And so forth.
+
+um and recently while we were doing this research research we saw some other people also thinking about yeah um
+
+can we do more learning using these kind of novel deep learning techniques in these active inference methods?
+
+So you had, for example, Kai Ulshofer, who proposed to basically learn kind of a state space for the mountain car, but then still he needed to explicitly
+
+in the state factor.
+
+There was also some work from Baron Millich, who basically did some learning, but more on learning the policy rather than the state space.
+
+So he basically used Markov decision process with small state spaces where you could basically just deal with the raw state space, the raw observations that the environment gave you where
+
+where we're basically suited as a state space and you could then you would then investigate how to learn the actions given given these states but so our work is basically on what if you don't know the state space what if your observations are high dimensional and you cannot really use these directly as your state space how do you define the model how you can come up with it
+
+And maybe as a concrete example, suppose we have one of our driving robots in the lab.
+
+So this is the first person view of the robot.
+
+This is the kind of observation that you get.
+
+It's just a square of pixels.
+
+And then, yeah, what is your state space in this case?
+
+It might be an XY position on the map.
+
+That might be something relevant for a robot as a state.
+
+It might also be, watch out, you're approaching a cable gutter.
+
+So there might be a problem.
+
+That might also be something useful.
+
+Maybe the items that are stored in the racks are relevant for whatever task you have.
+
+So that might also be part of the state space.
+
+Maybe there are human workers that walk around that you also need to model these.
+
+So depending on your robot and the use case you have, it does get hands and what can happen in the environment.
+
+It becomes non-trivial to define a concise set of states that you want to track, let alone that you need some model that models this, like how do you get from pixels to your x, y position.
+
+There are certain methods in robotics that do part of these things, but none of them really just figure out what is the complete state space that you need for whatever you want to do.
+
+And especially not in kind of an active inference system.
+
+So before we go into our methods, I'll briefly talk about active inference.
+
+Probably most of you are already familiar with the topic, but I'll just rehearse some of that stuff, even if it's just to get accustomed to our way of notation, let's say, because everybody has his own notation, and at least it will put us all on the same page for the next part.
+
+So, it all starts with having an agent that needs to interact with the environment, and the agent is assumed to be kind of separated from the environment from the so-called Markov blanket.
+
+So on the one hand, the agents can perform actions.
+
+These actions, these will impact the environment, which is kind of a generative process that has some hidden states that provide you, given your action, it provides you with some sensory observation.
+
+So in this case, an action could be for the robot to drive around,
+
+and put some currents on the motors and observation could be some pixels from the camera.
+
+And then the goal of the agent is to build a generative model where he has his own, he builds his own state space basically, he derives how actions have effect on the states and how these states then would generate these observations.
+
+So the question is, how can we build a generative model that actually comes up automatically with kind of a proper state space to learn this model?
+
+So basically, the generative model then looks like a POMDP, a partially observable Markov decision process.
+
+So it just means that we assume that a state at a given time step, it only depends on the previous states and the action that you were doing.
+
+And each state gives rise to a certain observation.
+
+And so then we end up with the so-called free energy principle that
+
+basically what we want to do is we want to build a model that maximizes log evidence.
+
+So here you see the formula for the free energy and you can unpack it in several ways.
+
+So the first way is basically by stating that minimizing free energy is actually maximizing the
+
+evidence lower bound let's say and if you're at this free energy minimum then basically you have your approximate posterior that this is actually equals to your or very close to your your crew posterior
+
+But then the third line is basically what we typically use for optimizing our model, which is basically, on the one hand, a complexity term.
+
+You want to have your states explain the way as simple as possible, whereas you want to have the highest accuracy to predict whatever
+
+So in this case, our variational approximate posterior is something that maps observations and actions into inferring your current state.
+
+But what about the future?
+
+So in the past, you basically knew which actions you were doing and you saw the observations that came in.
+
+So you could kind of infer which states would have given rise to the observations.
+
+So that's basically the reality of the past.
+
+But then in the future, things change a bit because now you don't know what you will observe.
+
+And also you have to select the actions you will do.
+
+so the actions we will basically denote them as being generated by so-called policy but in in this case the policy is basically just yeah what is a certain sequence of actions basically and you now have to create some expectations not only on future states but also on future observations so what
+
+which states do i think i will visit by doing some actions but also what kind of observations do i think that i will see if i visit these states so then the free energy becomes the so-called expected free energy and again you can unpack this thing
+
+as follows.
+
+So basically what happens is again you have on the one hand the log probability of your posterior model minus log probability of your
+
+of your kind of model and now the difference is that that you don't know yet the observations in the future so yet you condition it on the policy so everything will depend on the actions you will do and you also have to take the expectation over all kinds of of outcomes you expect
+
+And then going to the second line, you basically make the move that if your model is sufficiently trained, then basically your approximate posterior will be very close to the true posterior.
+
+And this then basically allows you to rewrite the final term.
+
+I see now that I wrote it in a different way, but you can rewrite this either as an information gain on your states and moving towards preferred outcomes.
+
+You can also rewrite it the way we did here, where you basically state, okay, at some point in the future, I will visit some states.
+
+So this is this log P of S star given the policy.
+
+And you basically replace this by some prior belief that regardless which policy I'm actually choosing, I believe that some point in the future I will realize my preferences.
+
+So that's why you lose the conditioning on the policy in the last equation.
+
+So this then basically becomes a KL divergence that says, okay, I want to find the policies that actually bring me close to the states that I prefer, that I like to be into.
+
+And then on the other hand, you have this ambiguity term that says, okay, what I don't like is to visit states that can give me any observation that I cannot predict.
+
+So I don't like these ambiguous states where I don't really understand basically what's
+
+so that that brings us to the the whole active influence scheme so at each time step you basically evaluate your expected free energy for each of your policies
+
+And you then basically assume that you will choose the policy that will actually minimize your expected free energy.
+
+So you take the softmax over minus g, and you also weigh this with this gamma parameter, which is just like the precision.
+
+So if you have a high precision, then basically you will have a very peaked output of the softmax function.
+
+So the softmax will basically become a max.
+
+So you then definitely
+
+choose the policy with lowest expected free energy if you relax the precision a bit then basically you allow for some more randomness in the system and then basically you end up inferring the next action according to what is the next action that I should take according to this policy
+
+but so in the word follows the actual the action selection given the policy is basically just a deterministic mapping so so the policies are just like certain sequence of actions so given once you choose the policy the action is basically fixed but in theory you could also make this a probabilistic mapping so let's now go to the the real interesting parts of the work and
+
+spaces with with deep neural networks in such an an active inference key well basically um
+
+have two components one is the generative model that i rehearsed from the first slide and we have our approximate posterior model and basically you can see that there are three parts in these equations and the first part is basically a transition model so it outputs the probability of your state
+
+given your previous states and the action you did in that state second part oh yeah and also the the initial state is basically also part of the transition model but then you just provide with a zero action for example just to bootstrap it the second part is then the likelihood model so given state you want to have a model that that predicts what kind of observation you will you will see
+
+And then finally, you have the posterior model that, given the previous state action and your current observation, also has to predict which state you're in, or also has to infer which state you're in.
+
+So basically, the posterior model has to come up with the same thing as the transition model, but in addition, it has access to your observation.
+
+And again, similar to a transition model, to bootstrap this for the initial observation, you don't have any action, but it can be modeled by the same thing.
+
+So all these three components, we basically instantiate these as deep neural nets where they have to basically be trained to come up with these three modes.
+
+So if we put it in a schematic, we basically have something like this.
+
+So given your state and action from the previous time step and the observation from the current time step, you on the one hand provide the previous state and action to your transition model.
+
+which will then output a distribution over the current state.
+
+And in this case, this distribution is basically modeled as a multivariate Gaussian distribution.
+
+So basically, the output of the neural net will be the means and the standard deviations of a Gaussian.
+
+And then we basically use this distribution to then generate samples for the next time step.
+
+so the posterior model gets also as input the state and the action from the previous time step but also in addition the current observation it also does a prediction on the the current time step and after sampling
+
+you basically have the likelihood model that can then generate a prediction of the outcome.
+
+And then this state is put to the next time step, and the story repeats.
+
+So as I already mentioned, the output of each of our neural nets is basically some mean and some deviation of a multivariate Gaussian with
+
+with a diagonal covariance matrix.
+
+And we use the reparameterization trick to generate samples.
+
+So basically, we generate a sample by having the means and then add the standard deviation times some standard normal noise.
+
+And this basically allows you to backpropagate gradients all the way through this neural net also if you draw samples from the models.
+
+And then, of course, for the next time step, you just propagate a sample and then the story repeats.
+
+So creating such a model is then basically first collecting data sets of action observation sequences, so you
+
+You take your agent, you either let it randomly generate sequences in the environment, or in the case of a real robot, for example, you drive it around yourself in the environment while you record the actions and the observations.
+
+And while the models aren't converged, you sample some sub-sequences from your data sets, you estimate the states that are visited, and you reconstruct all the observations.
+
+and then you basically back propagate the free energy loss so this is the the same formula as the free energy in the start so on the one hand you have the kl divergence between the output of your posterior neural net and your prior neural net
+
+and on the other hand you have this reconstruction error that basically scores how how good you're reconstructing the actual observation and using this loss function you just update the parameters of your neural nets and you basically build a model that is able on the one hand to
+
+To infer your current state, given your observation that is able to generate new observations, if you know which state you're in you can reconstruct these observations, but also you have the transition model that you can then just use to.
+
+In the state space plan ahead what would happen if I if I would do this action and it will give you distribution over over the next state is.
+
+So then we come to the planning part.
+
+So once you have this model, how can you use it to let your agent do useful things?
+
+So there we will use Monte Carlo sampling.
+
+So one of the things, one of the limitations of these kind of architectures is that
+
+basically only approximate the distribution for the next state so given the sample from uh from the previous state and given the action we approximate the distribution for the next state but then we sample during training as well so we will never have like a good distribution for let's say 10 steps ahead
+
+So to predict them in distributions for further in the future, we approximate these by doing multi-carrier sampling.
+
+So for each of the policies we want to evaluate, we sample n trajectories that all do the same actions, but that due to the sampling might give us different results in terms of future states and observations.
+
+So for each time step, we then have a bunch of states and a bunch of predicted observations.
+
+We then fit a Gaussian distribution using the sample means and variances.
+
+And then we estimate the expected free energy as follows.
+
+So on the one hand, we have this KL divergence.
+
+If you remember that scores, how good your distribution of states is according to some prior preferences of states.
+
+So you use this normal, this Gaussian distribution to calculate the KL divergence with respect to these priors.
+
+On the other hand, you have this entropy term that scores the ambiguity of these states.
+
+So here we basically use the entropy of the observations generated in our trajectories.
+
+We also added a scale factor row to just kind of weigh two terms from one another.
+
+which allows you to make an agent more risky let's say if it's it's more weight on realizing preferences early whether you could also make a more cautious agent let's say that's that's really does not want to end up in some some ambiguous states and crucially here we also have kind of this recursive notion in here so
+
+We do this rollout for K time steps ahead.
+
+And then for the future, you could kind of recursively look further into the future, let's say, and aggregate also expectatory energies from that point.
+
+And to make it a bit more clear, let's try to visualize it a bit better.
+
+So suppose at some current time, step t, you're in this state.
+
+Then basically what you do is you use your transition model to say, OK, given that I follow C1,
+
+what will be the next state, and you draw a sample from the distribution.
+
+So this is then s by following policy 1.
+
+And this thing you can repeat for k times.
+
+So we put in this k to just have some kind of
+
+course grading of actions, let's say.
+
+For example, in the case of a driving robot, it might not make sense to switch action every 10 milliseconds, let's say.
+
+So if you decide to drive forward, you want to keep on driving forward for at least some time.
+
+So that's basically where this K comes from.
+
+So you follow the same policy for some time steps.
+
+And you basically sample this n times.
+
+So you repeat this process n times.
+
+So you have now at each time step n samples for the kind of states you think you will visit after following the first policy.
+
+And then if you have a second policy, you can do the same thing for that policy.
+
+So in this case, we only consider two potential policies.
+
+For instance, go left or go right, let's say.
+
+And then at this point, so at time step E plus K, we can basically repeat this procedure and say, OK, what if after K time steps I switch policy?
+
+Maybe I first have to go left and before turning right.
+
+Or maybe I should turn left twice.
+
+So then basically you repeat this process.
+
+And this you can basically keep on adding to the search tree for as long as your computation power allows you, let's say.
+
+So then how do we calculate the expected free energy from this?
+
+So we take our formula.
+
+So basically what we do is that each time step, we first use likelihood model to also predict what are the observations that I expect in these states.
+
+And you then look at all your state samples from a certain time step, and this then gives you this approximate Gaussian distribution for both the states and the observations.
+
+So you plug these into the formula, and this then gives you kind of a number that says this is the expected free energy if I think I am in states t plus k, and I will follow along with policy 1 from thereafter.
+
+And then basically you can do this for each of these sub-branches.
+
+And this is then where the recursion comes in.
+
+So then we basically state, well, I assume that my active inference agent also at that time step will most likely choose the policy with the lowest free energy.
+
+So basically we combine
+
+uh the the free energy for policy one and policy two according to uh the rates that that are provided using the softmax function so if one of the uh if policy one has a very very low um expected free energy compared to policy two then basically only
+
+the expected free energy of policy one will be added um thereafter if they are kind of the same then they they will both have kind of 0.5 weight or if the other one is the clear winner that will mainly be the contribution of this thing but so we basically combine these assuming that your agent will at that point also select the the
+
+policy with the least free energy.
+
+So now we basically have an estimate of what will be the expected free energy for the future given that we are at time step e plus three
+
+And then we can further go up the tree.
+
+And so then for each branch, again, we will use the first part of the formula to estimate these gaussians, to calculate the KL divergence and the entropy term, and then add this together with what we already had for the remaining part of the tree, basically.
+
+And this is very similar, I think, to what Paul Friston proposed in his sophisticated inference paper.
+
+So basically, at each step in the future, you kind of only consider the free energy of the branches that you think will basically be the best ones.
+
+So in the end, you'll end up with an expected free energy for both of your policies, and you then select the best one and start acting accordingly.
+
+So I'll now turn to Ozan, who will give some more details on the various experiments that we did that hopefully give some more insights on how this can work in practice.
+
+So take it away, Ozan.
+
+Yeah, hi.
+
+
+SPEAKER_03:
+I have some echo on my end.
+
+Maybe it's resolved now.
+
+
+SPEAKER_02:
+Yeah, sounds fine.
+
+Thank you.
+
+
+SPEAKER_03:
+Okay.
+
+So I'll go briefly through our initial experiments.
+
+So these are the experiments we did in the past one or two years.
+
+And so one of the first experiments we did and reported on was the mountain car.
+
+which is a fairly well-known benchmark, I think.
+
+So the goal is to have this undirectuated car, so it does not have enough power to reach the top of the right-hand mountain, but you want to reach it anyway.
+
+So ideally, your agent should learn here that it should first go back a bit to the left to gain enough momentum so it can climb the steeper mountain on the right.
+
+And even though this is such a low dimensional problem, it only has positions and velocities.
+
+It is actually a very interesting benchmark to experiment upon because there's no greedy solution.
+
+So any agent that is just wants to realize its preferences immediately will fail at this because it will always fail to drive up the mountain.
+
+Now for our experiments, we made it a bit more difficult.
+
+we made the fully observable mountain car partially observable.
+
+So what we did was we omitted the velocity information and only provided some noisy estimates of the actual position.
+
+So the agent actually had to learn two things.
+
+It had to learn, first of all, what its precise position was, and then also how this position relates to the momentum by its velocity.
+
+And then if we start from the setup and we train the model that Tim explained a bit earlier in its most basic form, you can actually learn a state space that closely mimics these physical constraints of the system by minimizing energy.
+
+So if you look at the right utmost figure, you'll see that
+
+And you see these sinusoidal state space dimensions, and these closely mimic the actual observations of the real world in the lower image.
+
+So as you can see in the lower image, we have the ground truth in green, which is an actual trajectory through its position of the cards.
+
+And then also our state transition model estimates.
+
+So our prior estimates on the position
+
+without observing.
+
+And then also in the blue line, which is a bit harder to see, you can see the same estimate, but now corrected with the observation.
+
+So it's actually just the posterior model outputs.
+
+And you can see these shapes returning in the state space, which in itself does not say that much, but it gives you at least an kind of vague idea that at least the state space is capturing something relevant for the problem.
+
+And I think there is one more animation on this.
+
+So yeah, it's the same conclusion.
+
+As I said, right now you can predict the future as you can see in the orange line and it appears to learn the velocity in its state space.
+
+Now, if you can go to the next slides.
+
+Yeah.
+
+Now we want to actually figure out how
+
+how we can use this model that we learned for active inference.
+
+And typically in RL, you would get some sparse reward for driving up the mountain.
+
+But in our initial experiments, we were more interested in how an agent could learn from human demonstrations.
+
+so we recorded seven i think yeah five sorry five um human rollouts in the environment just like driving around with the cards so you go first left and right
+
+And then we, uh, push these trajectories through our models together to our, through our, um, posterior model to get a preferred state distribution.
+
+So here on this figure, you can see the eight different dimensions, how these evolve through time.
+
+If you follow these trajectories.
+
+So in the spread, of course, give you, gives you the standard deviation at each time point for, for that state value.
+
+And then.
+
+If you use this preferred state distribution and you calculated the G or even only the KL divergence between your posterior and your preferred distribution for different trajectories through time.
+
+So here every different color, every different trajectory is a different rollout in the environment.
+
+or imaginary rollout through the environment, you can see that you can actually use this preferred distribution to rank trajectories according to lowest free energy.
+
+So you see that the blue curve is the only one that reaches the top and is also the one that the model seems to prefer.
+
+And then in the next slide, yes.
+
+We experiment a bit what this means in terms of the actual free energy.
+
+So also compensated with the entropy.
+
+And what we did here was we had the agent observe the world for one time step.
+
+So we give it an initial observation to get a sort of bootstrap latent sample.
+
+And then we will only use the prior model to imagine what will happen if you follow certain policies.
+
+So here we considered three policies or like two possible policies that you can switch at three time steps.
+
+So you either go left, right, right, left, right, left, et cetera, or you can start with right and then these are the blue curves.
+
+And what we see that if there is no initial velocity, then you see that agent imagines that the optimal policy, which is left, right, right.
+
+So first go as far up left and then just,
+
+blast your way to the top, gives actually the least amount of spread, and also he believes that this will reach the top earlier than any other policy.
+
+Inversely, if you look at the policies that first go right, then you see that there is still a little, there's close to no spread due to the lack of initial velocity, but the agent already knows that it's impossible to reach the top.
+
+Now, if you go to the next slides, the site.
+
+So here we do the same experiments, but we add some random initial velocity.
+
+And again, we let the agent observe the world for one time step, and then let plan according to the same policies as before.
+
+And first of all, you see that the agents has a lot of much larger spread on its believed outcomes.
+
+This is due to this external extra uncertainty on
+
+what the initial velocity is.
+
+And also, this initial velocity might render previously infeasible policies feasible, as you can see at the bottom, because now if the agent thinks, yes, my initial velocity is high enough, even with one of the more suboptimal policies, it might still be possible for me to reach the top.
+
+And if you go to the next slide, please.
+
+Here we can then see this in action.
+
+So this animation, we collapse the imagined trajectories to the actual trajectory.
+
+And you see that in the beginning, if we can maybe play it again, in the beginning, it believes that more red policies will reach the top.
+
+And then as it gains more momentum,
+
+Oh, it will believe that all blue policies will reach the top.
+
+And even it will know that if I now go left, so I decelerate, then I will less likely reach the top.
+
+So I think, yeah.
+
+So as you can see now, he knows that red will not reach the top and yes.
+
+And then another experiment we did building upon this was, what if we take this same approach, but now we move to the task, the kind of problems we want to solve.
+
+So the high dimensional observations that you cannot model by hands.
+
+So we took another OpenAHM environment, the car racer, and here the goal is to drive the red car.
+
+As you can see on the high resolution image on the left,
+
+on the road for as long as you can.
+
+And then we trained our model on a handful of human demonstrations of this.
+
+And then you can see that in the reconstructed image on the right, even on a handful of observations, it can learn to predict this.
+
+So we did exactly the same thing as before.
+
+And I think this is an animation now.
+
+Yeah, so if you then use the planning tree that Tim explained on this little card, it will have learned that the road, so the gray area is important and it should stay on this.
+
+Now, this agent is a bit more greedy and it tries to shortcut corners to get quicker on the gray part as you can see here.
+
+Okay, if we can go to the next slide maybe.
+
+Now, and also an important point here is that our active inference approach, which is model-based, seems to be a lot more data efficient than, for example, a baseline RL agent.
+
+So we took DQN, since this is also an off-policy algorithm, to be able to compare it kind of similar to our approach.
+
+as you can see in the first graph so for the mountain car um our model quickly um so sorry our models are in is the orange our model quickly learns that
+
+at least some method to reach the top.
+
+And then afterwards it just improves upon this.
+
+Whilst due to the sparseness of the rewards, DQN is not able to learn as quickly.
+
+And even after having thousand times more, thousand times more observations, it still isn't capable of climbing the mountain.
+
+And even for the car racer, it's even worse.
+
+So here we trained on seven or 10 rollouts and immediately we're able to get a reward of 600.
+
+whilst DQN just fails to get that same level of performance even after thousands of rollouts in the environment.
+
+So if we can go to the next slide.
+
+And then a final experiment I want to discuss today is the robotic navigation or like maybe more accurately robotic control.
+
+So here we took our KUKA platform and we mounted some sensors on top of it.
+
+and then also put it on a laptop for good measure to have some compute.
+
+I don't think the sensors are really relevant for what we're going to discuss now.
+
+So then we drove around with the robot in our lap, as you can see on this movie, just like with the joystick and captured a lot of data.
+
+And we just drove up and down the aisles with the robot.
+
+Now this environment is also a bit challenging for robots since all these aisles are super similar.
+
+Like for a robot, knowing if it's an aisle one or two, it's nearly the same thing.
+
+It's very difficult to comprehend for the machine.
+
+So then in this slide, you see what a recording might look like.
+
+So you have LiDAR and radar feed and some images.
+
+Yeah, sorry, Tim.
+
+This is not a correct slide.
+
+And then the goal is to, again, train a model that will be able to generate future observations for the robots.
+
+I don't know if there's an animation on the slides.
+
+So yeah, so you saw the first, the high resolution image was the real observation, and this is then what the model thinks will happen if the robot first turns right and then continues to drive.
+
+The little ghost artifact you saw a bit, a couple of frames ago.
+
+So yeah, we'll firstly look at it again.
+
+So we drive and then it will turn and suddenly you will see a ghost theme appear.
+
+Um,
+
+This is because the model doesn't actually know what will happen.
+
+It can only try to guess based on its previously learned experiences in the model.
+
+And there's a lot of people walking around in the dataset.
+
+So there was some chance that somebody would be walking there.
+
+So it just might imagine that there's somebody there.
+
+Then maybe if we go to the next slide.
+
+This is also an animation.
+
+So here you can see, for example, how these imaginary samples deviate.
+
+And this is also the reason why we need this sampling.
+
+So the different sampling in the planning tree for different outcomes.
+
+So you see that given the same starting position and observation, the model learns that turning left might have different outcomes depending where it is in there, in which aisle it is and where it is in the aisle.
+
+For example, the top right,
+
+then the robot imagines that it is at the end of the aisle, whilst in the bottom two, it imagines that it is in the aisle, so it just imagines some stuff on the racks.
+
+And here is then how we can evaluate policies.
+
+So we typically, we provided three possible policies, turn left, forth, and turn right.
+
+And then you can imagine what all these things will do in the environments.
+
+And then similarly as before, you can,
+
+calculate the G and select the one that will most likely bring you to your preferred sequences.
+
+Yeah, right.
+
+Also the nice thing of our model is that
+
+You can, because it's a neural network, you can put multiple types of observation into a posterior model.
+
+You can fuse them in various ways.
+
+So what you can see here is that, similar to the camera feed, the robot will also learn the effect, for example, in a LiDAR scan, and also it will learn the effect on the velocity bands in a radar scan.
+
+And this gives you, of course, extra robustness in your planning because you can now reason on multiple modalities.
+
+That may be in the next slides.
+
+There are, of course, still some limitations to doing robotic control this way.
+
+First of all, our robot is extremely short-sighted in time.
+
+It can only learn to predict as far as the length of the sequences we provided during training.
+
+And also the longer you roll out, the larger your search tree becomes, the more computational limits you will reach.
+
+So this is also then an area we are now actively working on.
+
+And then currently our models still require that we prerecord the data set.
+
+So our models require that we drive around ourselves and then fit the model.
+
+So there's also a point we're currently at this moment working on.
+
+And then tying into this, our models currently do not really know how to explore whilst there's probably a sensible way to do exploration based on the free energy principle since
+
+your model uncertainty can be baked in.
+
+I think, I don't know if we have any more slides actually now.
+
+
+SPEAKER_00:
+Awesome.
+
+
+SPEAKER_02:
+can um unshare and we can ask some questions so i wrote down a bunch of stuff and also anybody who's watching live please ask some questions so nice presentation though and awesome very instructive videos
+
+hopefully made us think made us laugh a little bit when it cut corners.
+
+So maybe just a starting question while people are writing their question.
+
+What brought you to be studying this topic in this way?
+
+Were you coming from active inference and saw robotics as an interesting application?
+
+Or were you in the area of robotics and then found active inference to be a useful model?
+
+
+SPEAKER_00:
+Yeah, so basically we were in the area of robotics and reinforcement learning, basically.
+
+And we were working on building better low-dimensional state representations to feed into a reinforcement learning algorithm, let's say.
+
+That was our initial idea.
+
+So just building representations
+
+or or better reinforcement learning and then we stumbled upon the active inference framework which which basically not only gave us a way of um of how to uh to build degenerative models because basically we need
+
+We found ourselves, let's say, the free energy of the past.
+
+We were basically already doing that.
+
+But we saw that it also gives us, in the same mathematical framework, a way of how to project these things to the future and use these for planning, for...
+
+resolving ambiguity and also for scoring novelty and all these nice properties that are basically lacking in RL.
+
+So that's why we basically started digging into this mathematical framework to go through all the papers of call and see how all the ends are tied together and see whether this would still work if you don't have
+
+your state space defined prompt, but you just learn it from data.
+
+So that's how we started this endeavor and that's pretty much where we are at this point and still investigating it further.
+
+
+SPEAKER_02:
+Awesome.
+
+That was going to be my second question was like, what differences or advantages would you describe for active inference over reinforcement learning or other machine learning frameworks?
+
+If you answered it previously, that's great.
+
+Or do you want to add any other thoughts?
+
+
+SPEAKER_00:
+I think the nice part is that you automatically get the...
+
+the nice properties of resolving ambiguity and of potential exploration if you also estimate posterior distributions over your parameters, for example.
+
+So these are very interesting properties mathematically
+
+however it's still um it's there's still a gap to to actually um get this out of um these real world cases if you if you if you don't have the degenerative model uh predefined let's say so there are still some challenges but the theory at least this is is very much appealing um and i but i think if you look at what's going on at the rl site that we report during sites then
+
+there's not that big of a gap between the two fields, I think, because you look at all the curiosity bonuses that they tried to come up with in reinforcement learning, and if you look at the model-based stuff from Danny J. Hafner with his Dreamer approach, then everything is kind of
+
+similarly converging to it's a good idea to build a model of your world and get more sample efficiency and it seems like a good idea to have some planning in there and maybe there is some gaining curiosity and so you see that a lot in a lot of different independent research tracks we all converge along the same lines
+
+and i think what's what is so appealing to active inference is that basically it brings this all together from from a single principle which makes it a very nice framework to to to work with i think anything to add on that i was on no yeah i was before tim mentioned that i was already thinking along the lines of the work of the ninja helper so
+
+
+SPEAKER_03:
+I mean, if you look at his models, and I think that is currently almost state-of-the-art and model-based RL, then you'll find that the models they are building are very similar to the models we are building or other active inference researchers are building.
+
+So yeah, I mean, it makes sense that all these approaches converge on a single idea if the idea works.
+
+
+SPEAKER_02:
+yep very interesting that like plan to dream and dream or imagine so that you can sample appropriately why put that as a second layer on the model or have to incentivize it in a sort of ad hoc way why not have that be the basis of the model so that's a very nice point
+
+so dean in the chat asks have the authors heard of the missionary and cannibals game slash problem which is moving um two kinds of mutually incompatible agents back and forth from two sides of a river and um if they have heard of this or thought of any kind of analogous cases do you see any applications
+
+
+SPEAKER_03:
+Yeah, I haven't heard of the game before.
+
+I think it's probably similar to crossing the river with a chicken, a fox, and a goat, or what was it?
+
+
+SPEAKER_02:
+Yeah, there's animal versions.
+
+There's all kinds of versions of this one.
+
+But going back and forth with different kinds of incompatible agents, and you need to sort of go to the left before you can make it up the hill, but it's a little bit of a different setting.
+
+So what does that make you think of?
+
+
+SPEAKER_03:
+I haven't actually really considered it for our models, but it might be
+
+
+SPEAKER_00:
+we find a way to mold it in an environment and then maybe collect some data on it yeah i think this is a problem that is is very nicely suited for for doing it let's say the the vanilla way where you basically write out all the different states that can happen
+
+kind of observe the outcomes that you can have.
+
+So I think you could actually formalize it in such a way and then run an active instrument simulation on that and see what happens.
+
+So that's less of our interest because in our cases, we are mainly interested in what if your observations are so high dimension
+
+that you can't even start thinking about writing out the joint model, let's say.
+
+The only thing you can do is interact with your environment and try to learn it from the data, which is a slightly different take on the active inference problem.
+
+
+SPEAKER_02:
+Great.
+
+Another question is you are all deploying these models sort of real time with physical agents, embodied agents.
+
+So what surprised you or what was interesting to note as far as going from the simulation only
+
+Where you can sort of put everything in a box and know exactly what's going to influence what to the world of embodiment where, I don't know, some dust could get into the robot or I saw a person walk by.
+
+So what comes into play when you actually deploy physically and how does the model deal with that?
+
+
+SPEAKER_03:
+For me, it's actually the thing I... Well, first, I played around a lot with the mountain car and the car racer.
+
+But the first thing actually was a real hurdle for me personally, was deploying it on a real robot.
+
+You suddenly have all these hardware constraints.
+
+You don't have infinite memory.
+
+You don't have server-grade compute anymore.
+
+And you all have to... Yeah.
+
+Yeah.
+
+Fitted, for example, I think Tim and I spent a lot of time to make a demo working where we could roll this out real time.
+
+And just the hardware constraints of doing something as complex as Active Infants real time on a real power constraint robot is another challenge in and of itself.
+
+
+SPEAKER_00:
+Yeah, so I think if the question was, what do you get from doing it on the real system?
+
+Well, a lot of frustration and pain, I think, is the answer.
+
+But likewise, if it then works, then the satisfaction is so much higher.
+
+So I still remember Ozan and me cheering in the lab because
+
+He gave the robot a preferred state of being nicely in the center of the ale.
+
+And it was actually moving along the ale.
+
+And then at the very end, it decided, hmm, this is not the center of the ale anymore.
+
+And it just made a 360 degree turn and started driving back.
+
+And we were like, oh, this is awesome.
+
+So I think there's lots of pain and frustration to get it to work, but then once something comes out, then the satisfaction is so much higher than when you see a mountain car reach the software.
+
+
+SPEAKER_02:
+Interesting.
+
+You could set up a physical valley, maybe make a physical mountain car, because there's so much comparison of the software realization, but maybe that would be even taking it to the next level.
+
+So another...
+
+thing that you talked about repeatedly, maybe even in every example was actually training the model from just a handful of human cases.
+
+Like you drove the car, you had people play the mountain car game.
+
+So what exactly is happening there and how does the model like not overfit to the few trajectories you show
+
+or not just say hey you only gave me three what's the deal with these three totally different trajectories like what exactly is being learnt or updated in the model when you provide just a handful of human examples i thought them was going to answer this one
+
+
+SPEAKER_00:
+So basically, I think overfitting is clearly an issue.
+
+No matter what you do, you're constrained to the data you provide to the model.
+
+So it cannot really learn anything else than what it discovers.
+
+So that's also what we pointed out at the last slide.
+
+It's a severe limitation of our current work, clearly.
+
+There is no other way when there's a real robot involved to get started, say, that is the easier way to get started.
+
+So that's mainly the driver.
+
+But at the moment, we're actually working both in simulation but also on real robots to see, can we actually get these systems to decide how to gather their own experience, what is
+
+interesting to learn from, because that's actually one of the, to shortcut to one of your previous questions, what does active inference give you, well, that it actually can deal with these kind of things, like my robot needs to collect its own experience, what will it do?
+
+Will it explore, or these kind of things.
+
+So these are really some active areas of research.
+
+But then, so to come back to the overfitting problem,
+
+So one thing that mitigates overfitting a bit is the fact that you have all this stochasticism in the system.
+
+It becomes in sample states, which makes it a bit more... It's not like a classifier that overfits to the test set.
+
+Let's say there's always some kind of noise in there.
+
+But you're right, it is in some sense overfitted to the data in the sense that it cannot predict scenarios that it clearly hasn't seen before.
+
+But so one of the nice things of having this expected energy formulation is that you actually punish
+
+you're planning with this entropy term, which basically means that if you plan ahead in some space that the model wasn't trained on, then typically you will have
+
+some more variation some higher entropy for that area because typically your your observation becomes very bad or very blurry or out of distribution and so so in some sense the the model is kind of robust against that and it will also if you then deploy a policy
+
+or like do the planning it will kind of try to stay close to where the model to the regime where the model was was trained okay because there you basically get the the better predictions so in some sense that also mitigates the the problem also i want to add that um
+
+
+SPEAKER_03:
+the by we we could use as little of the rollouts as we did because actually if you let a human do the rollout you solve the exploration problem for the agent you already get a very good coverage of the relevant feasible state space you get like for the car racer
+
+If you let a random agent drive around as exploration, 99% of your day is still just be grass and the agent will learn nothing about roads.
+
+So by having a human drive it, you know, okay, this is a road and apparently this is important because it's in every observation I've had.
+
+
+SPEAKER_02:
+That almost makes me think of two ways that we're seeing these large models be trained with a sort of mentor, like a human who says, you know, here's the first places you want to be sampling.
+
+Here's how you drive the first time.
+
+That's the driving instructor side by side.
+
+And then there's the degenerative adversarial approach, which is just the almost opposite.
+
+Like we're going to be passing the model the most confusing possible data.
+
+And so it's sort of like with this carrot and the stick or the push and the pull, these models from both of them, maybe one or maybe both, they figure out how to be on that razor's edge.
+
+And then in the race car example,
+
+it was cutting corners.
+
+So that just made me wonder about autonomous vehicles.
+
+And you'd say, okay, well, the goal is to stay on the road and to get there fast.
+
+But then sometimes get there fast is going to take priority.
+
+And then all of a sudden you're way off the road and maybe now your car is ruined or something like that.
+
+So if these were to be deployed, like how will we even know what kind of preferences to instantiate the model with?
+
+
+SPEAKER_00:
+Yeah, and that's a very good point, in fact, because how nice active inference might look in theory, I think it's not a silver bullet to autonomous agents because a lot of the subtlety is still in how do you provide it with the preferred prior distribution.
+
+And that will be crucial in a real-world system of
+
+It's similar to a reward, basically.
+
+It's a bit more informative than just a scalar reward signal, let's say.
+
+But it suffers from the same issues as in if it gets away to shortcuts,
+
+you get this preferred state that you didn't envision before as a designer of the experimented state.
+
+It basically has the same issues as reinforcement learning.
+
+So I don't see it as a silver bullet of solving autonomy, but at least it has some
+
+turning knobs that you can use to at least avoid some cases like avoid these ambiguous states or at least make it first learn the model properly.
+
+So it has some nice properties, but it's not a silver bullet to solving autonomous systems, I think.
+
+
+SPEAKER_02:
+Anything to add on that, Ozan?
+
+
+SPEAKER_03:
+I think Tim said it very well.
+
+
+SPEAKER_02:
+Yes, the model is not a silver bullet.
+
+Definitely recognized.
+
+What areas might be interesting shooting ranges?
+
+First applications where we can at least explore it.
+
+Are those the same use cases that people have been talking about before?
+
+just more broadly in terms of autonomous vehicles or might there be a sort of divisional labor where active inference is going to specialize like in those ambiguous scenarios or i just was curious about that
+
+
+SPEAKER_03:
+I was also still thinking, but for us, I think the real next application we're targeting is just still the constrained navigation.
+
+For example, a warehouse where the impact of misplanning is still fairly limited.
+
+So actually more realistic versions of the situation we have in our lab maybe.
+
+It's also the trajectory we're currently still on.
+
+So I think we still believe that there is some value in developing autonomous active interest agents for this more industry-like settings where you can at least separate it from general public and more, where you have also some level of control of the environments.
+
+
+SPEAKER_00:
+Yeah, I think it's similar to mitigating the same problem in reinforcement learning.
+
+It's basically that before you just let the system randomly pick actions or pick any action it wants, you kind of...
+
+or an environment where at least as a human you can you can shortcut the system and say okay you want to drive forward into this rack that's not a good idea so you have at least some some ways of defining some rules to keep it within some safety range let's say and within this boundary it can it can for example move autonomously but still then you you might have the
+
+nicer properties of the active inference agent that if you're driving around in some ales and somebody just dropped off a box in the middle of the ale, it will not freak out because the SLAM map is no longer consistent with how the robot was programmed, for example, but will just say, okay, this is another case.
+
+either it experienced this before and it has in its in its world model an idea how to cope with this or it will just be intrigued and start learning on about this new situation so i think these are the nice properties you have in this agent and you kind of bypass the all um
+
+It's getting too greedy to realize its preferences because you kind of shortcut these situations by having this more rule-based system in place that kind of limits the choice of action in this space.
+
+
+SPEAKER_02:
+Thanks for the answer.
+
+Here's a question from the chat.
+
+As the code is not disclosed, would you say sticking to what you write in your paper is sufficient to reproduce your results, or are there any further tricks you use in designing and training the models?
+
+
+SPEAKER_03:
+Sorry, go ahead, Tim, first.
+
+
+SPEAKER_00:
+Yeah, I think that together with the appendages, it should be sufficient.
+
+What do you think, Ozan?
+
+
+SPEAKER_03:
+Well, we had some experience where I tried to help somebody out who was trying to replicate our results.
+
+I think we had some tricks for the planning.
+
+That isn't as straightforward to replicate, but the model prediction part...
+
+we explained the architectures and pretty detailed in the appendishes.
+
+So I think, and we don't do any extra tricks, for example, on data processing or our loss terms.
+
+So these should be easy to mimic, but I think the planning is a bit more involved as we sometimes ourselves have difficulties replicating it.
+
+
+SPEAKER_02:
+Planning is hard.
+
+Yeah.
+
+um okay if anyone else has questions in the live chat they can type that um another piece that i thought was really fascinating in the mountain car example at least was how you talked about the noise allowing for the previously implausible policies to become possible like we saw a broader spread of the of the trajectories when there was noise um
+
+how how is that being like integrated in real time or how are the noise which are often very small how does that change the model's understanding of where it can go and what it should do yeah so in the mountain car example there are basically two sources of noise let's say one is on on the
+
+
+SPEAKER_00:
+noise on your observation that you get so you get a noisy estimate of your position and so this is typically not not so large because yeah you need to have a sufficient signal to noise ratio just to to learn anything let's say um
+
+but the second part was whether your agent starts with a zero velocity or with a random velocity.
+
+And these are basically two separately trained models.
+
+So either you have an agent always starts with a zero initial velocity, and then basically the model learns that the initial observation has zero velocity and it basically knows how to properly predict
+
+from from the first observation on let's say if you train the model where the agent constantly has a random velocity then it basically learns yeah from the first observation still a lot of options can happen depending on my velocity and the more observations get in you see how the model kinds of
+
+um picks up okay this is now my velocity and from then on you see how the the wide range of options collapses to the most uh the most likely ones anything on that ozon well i was just also thinking for example in the robotic planning example we gave
+
+
+SPEAKER_03:
+um there you also see this spread but then it's more as in that the model learned that at different at similar state values different outcomes are possible so it will try to maybe make the gaussian and the latent speeds a bit wider so that if you sample from it you might get a slightly different sample value and that will then generate the different outcome you want you want to visualize
+
+So that's also, so even though the standard normal you're sampling from initially for your reprioritization trick is very as just standard normal, the model can learn to inflate or deflate this distribution so that you get a wider coverage
+
+
+SPEAKER_00:
+For example, what you also saw in the navigation example is that basically the model, since we train it on pretty short temporal sub-sequences of like I think one or two seconds in real time, so it's not able to have a very consistent prediction for longer
+
+and also given the fact that every ale in the lab looks very similar it learns the general structure like there are racks left and right and there might be boxes or you saw that kind of the boxes or the stuff in the actually in the racks is kind of very blurry and it's kind of brownish blackish but there's no real
+
+you don't really can identify what is in that wreck for example and it's so it has basically no spatial awareness of where in the wreck where in the ale am i am i at the very end or in the beginning or in the middle it has no idea and that's why you saw if you then say okay
+
+turn right for a certain amount of time then it will either predict i'm in the middle so the next if i turn 360 it will still be ale after me or i'm at the very end so if i turn around i will see a wall um so it it basically has no um consistent knowledge of of where it is and so the
+
+This is basically modeled as kind of noise in the solutions.
+
+And if you draw different trajectories, it will either think it's at the wall or it's facing the other ale or there's a human passing by.
+
+So I see some shady people-like structures.
+
+So all these kind of things are then modeled as kind of noise in your distribution that just appears to be happening there.
+
+
+SPEAKER_02:
+makes sense, what might be helpful or required for long-term planning?
+
+Because the tree that you had with the multiple, I guess bifurcations or whatever they represented, that was very interesting how you had a very fully fleshed out tree and then you showed kind of how you recursed to prune back down to make a policy selection.
+
+So as you suggested that exponentially explodes the computation.
+
+
+SPEAKER_00:
+what might be helpful or how can long-term planning be achieved with reasonable hardware yeah so so the the key thing here is is hierarchical models i think and that's what we're uh we're pushing very hard on now is basically that you given your given a model like we trade now
+
+You basically put a new model on top of that, that now as observations does not get pixels, but it gets state samples from this model basically.
+
+and the the time step now is not to predict the next time step ahead but like to predict 10 times of the head or 20 or whatever or however you want to course green basically and once you're at that point then you have basically a system that can can plan um if you plan 10 time steps you're actually planning 100 time steps for the lower level model and so this way you can keep on course draining that uh you only have to
+
+um explore a few policies at each level and then down below again you only have to predict for like one second the apps because the other plan was made for the by the models on top and so this way you can you can easily uh bypass the and scale down the complexity of the planning procedure
+
+
+SPEAKER_02:
+It reminds me a lot of driving where it will be like, okay, in five streets, take a right turn.
+
+So you're not pre-saging the right turn.
+
+Okay, one, two, three, four.
+
+All right, now I should get ready.
+
+What about symbolic information?
+
+Like what if the aisle had a color gradient or if it had one dot, two dot, three dot?
+
+Could that be learnt in an unsupervised way, a symbol in that pixel-level model?
+
+Or is that where a hierarchical model would come into play?
+
+
+SPEAKER_03:
+Well, I think the problem currently is for us, architecture-wise, our model isn't capable of capturing very low-level details about the environments just because
+
+We are based on a VA approach and then the mean squared error objective we use for reconstruction and the way we sample is already inhibiting, for example, recognizing dots in your inputs.
+
+Maybe, I don't know what Tim thinks about it, but I think color gradients is something like the model might learn if given enough data and incentive.
+
+
+SPEAKER_00:
+Yeah, so I think there's a number of problems with the approach in the sense that we're now doing prediction in pixel space, let's say, and the way you calculate the likelihoods, you evaluate the likelihoods and you calculate the reconstruction error, it basically means that
+
+you want to have each pixel independently predicted on average quite right which means that if you have very fine grained details it easily ignores these you also have the the complexity term that basically says okay i want to have the the the least complex representation for for reconstruction for reconstruction but this basically also means that
+
+depending on how much you put pressure on restricting the complexity, the less information you will actually encode and the more blurrier basically your reconstruction will become.
+
+So it's very similar to the beta VIE, for those familiar, where you have this beta parameter that attunes how much weight you put on the GAL divergence term versus the reconstruction term.
+
+And this also has an impact on what the model will actually put in the state representation and which details will be ignored.
+
+So yeah, I think a lot of these things are very difficult for the model that's straight now, just because of the way we built and parameterized the likelihood model.
+
+
+SPEAKER_02:
+very interesting um how might somebody go about learning or exploring this like is there a textbook or the citations that are in your paper or hands-on what would you encourage somebody who is curious about this and wanted to over the next maybe few years be following
+
+
+SPEAKER_03:
+Yeah.
+
+I mean, we had a lot of like in the active inference parts, I think when we started out, there wasn't that much information on how to do active inference.
+
+So we had to figure it out the hard way by trying a lot and failing a lot.
+
+But now currently I think even in this model stream, there was some cool information and accessible information on active inference.
+
+So, and I mean, specific implementation wise, if you want to build a model
+
+like this, I think the current state of the art in RL and active inference, I learned active inference is all pretty similar.
+
+
+SPEAKER_00:
+Yeah, I agree.
+
+So,
+
+A lot of things have changed regarding how accessible the information on active inference has become.
+
+If you look now at the tutorial from Ryan Smith, for example, which was also extensively covered in one of your videos,
+
+so i think that really really knows the the the entry uh bar to just get to know the theory and how everything works or should work and to play around with some small toy examples and simulations that you can get some insights on on what does this thing do and how does it work
+
+the deep learning part, let's say, to build these models, then probably the resources to go to are just like tutorials on variational autoencoders.
+
+I think these are the
+
+the things in deep learning that are most relevant for the active inference work we discuss here.
+
+And if you can build a variational autoencoder, and you know how active inference work, and you put the two together, together with some details from our paper, for example, I think it should be pretty straightforward to get to the first working example.
+
+
+SPEAKER_02:
+Cool.
+
+Any closing thoughts or even questions for our lab or just to leave for people to be thinking about as they dream in preparation for action?
+
+
+SPEAKER_03:
+Yeah.
+
+Maybe I just want to continue a bit on what Tim said earlier that, for example, if you want to build hierarchical models,
+
+you don't have to build an active inference model on top of an active inference model.
+
+We did some preliminary experiments on, for example, just using our active inference model as dynamics model for a SLAM algorithm.
+
+And then you also already get hierarchical modeling and some of the long-term benefits.
+
+So maybe that's also interesting to think about is how this active inference model fits in in already existing techniques.
+
+
+SPEAKER_00:
+Yeah, so I think what Ozan wants to say is that
+
+In this case, we use these deep neural nets to parameterize this transition model, likelihood model, and posterior model.
+
+But you shouldn't always revert automatically to these deep learning techniques.
+
+So these are kind of very popular right now and very cool.
+
+But in some cases, it might be sufficient if you know your environments, then
+
+Yeah, you shouldn't bother learning the state space model.
+
+If you know the state space model, just use it.
+
+I know we used the mountain car example here.
+
+This would be a good example of why we shouldn't just use the deep learning approach.
+
+This was basically just to have a proof of principle for us to get some simple example working.
+
+off i think if you have like these real high dimensional observations uh and you don't you have no clue how to parameterize your state space model but it's not that this is like the the default way to go let's say and we're also like kind of evolving especially uh if you move to these hierarchical models
+
+that we're kind of looking at how can we make a more kind of discrete style parameterized state-based model on top where we basically
+
+try to put the whole state space into discrete parts and then have a simple transition model.
+
+You gave the example yourself, Daniel.
+
+If you think about navigating yourself, you're not thinking about predicting all the pixels of all the houses, but you just think about, I need to go forward now, and then the second street to the left.
+
+So you basically chunk up
+
+the whole continuously state space into some relevant parts and then your transition model also becomes like a very simple matrix with transition probabilities.
+
+So I think the future is in hierarchical models and the future is in a mixture of some learned parts but also some very discretized intuitively comprehensible parts.
+
+
+SPEAKER_02:
+Just two points on that.
+
+One is something that's always drawn me to Active Inference is that it's inference conditioned and about action.
+
+So you're not going for that 4K Google Street View, what does every house look like?
+
+And again, when that's the input data, even if you have a generative model, that's the output data.
+
+So active inference is a really principled way to just sort of reduce what you're predicting to like, which way should my elbow move?
+
+Not what will the pixels look like when my elbow moves, which may be just taking gigabytes of data, but if it's just reduced to the state space,
+
+then it's easier to learn.
+
+And that's why it was such an interesting contribution with your paper to actually learn that state space in the context of high resolution and real time and heterogeneous sensors.
+
+And then also it's something that we've seen many perspectives on in the lab and in these discussions is there's the philosophical discussion map and territory.
+
+Who's really an active inference agent?
+
+Is it
+
+everything a dust particle bacteria you know is the world built this way and then there's this sort of engineering approach where you have your preferences for how you want to see the robot work and then whatever you can tinker and cobble together
+
+that satisfies you and it reduced your uncertainty about performing the task you're trying to perform.
+
+So it's sort of sidesteps, but then it sidesteps those questions in a way that actually brings us to a higher level of understanding.
+
+Because I know that many listeners who are not as advanced in the machine learning will be inspired and have qualitative thoughts based upon what you brought here today.
+
+So thanks again for this awesome presentation and conversation.
+
+And we'll always appreciate hearing any follow-up whenever the time is right.
+
+
+SPEAKER_00:
+Yeah.
+
+Thank you, Daniel, for having us.
+
+It was really nice discussion.
+
+
+SPEAKER_02:
+Okay.
+
+Peace.
+
+See you later.
+
+See ya.
+
+Bye.
+
+Bye.

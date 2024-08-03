@@ -1,0 +1,2226 @@
+SPEAKER_00:
+Hello and welcome.
+
+This is model stream number 007.2.
+
+It's the 18th of January, 2023.
+
+We're back in our second session on PyMDP.
+
+Welcome back, Connor.
+
+Thanks for joining again and off to you for a presentation that you will weave together with some code examples and the notebook that we'll use is in the video description.
+
+So thanks again, Connor.
+
+Off to you.
+
+
+SPEAKER_03:
+Great.
+
+Thank you, Daniel.
+
+It's great to be back here again.
+
+I think I've been here maybe four or five times now, so it's always a pleasure to be with you all.
+
+So yeah, as Daniel said, this is the second
+
+um model stream in a two-part series where we'll be discussing implementing active inference with pyMDP so um just like there's some background that I'm assuming you either know from your own research into active inference and POMDPs in particular or because you've watched the first part of this series so um I'll just say that to start with like if you want background I would encourage you to go watch the first part where we talk about pyMDP
+
+the motivation for the package, what you can do with it in kind of sweeping terms.
+
+And then today, we're actually going to go in and use it to code up an active inference agent performing a task, like a reinforcement learning style task.
+
+That's very similar to classic active inference tasks that you can find in the literature.
+
+Yeah, so as Daniel said, I'm going to step through these slides.
+
+I have pauses for questions and stuff, but we also have pauses for code, live coding or side-by-side coding.
+
+So I'll take a pause from the slides and I'll go over to the Colab notebook.
+
+The link is in the description of the YouTube video.
+
+And we'll kind of code up this agent based on things that we discussed in the slides.
+
+It's not that I'll be actually writing code.
+
+I'll just be running cell blocks.
+
+And yeah, so if anyone who's viewing wants to do it themselves, you can open the Colab notebook.
+
+Actually, let's start by doing that because... So this should be the Colab notebook that you get brought to when you click on the link.
+
+And then, and this is one copy that you need to have a Google account to use this because collab is linked to your Google drive of your Google account so if you're doing this.
+
+On your own, this is a shared link but it's not you can't edit it you can't write to it, so what you have to do is go to file up here and then save a copy and drive and then you'll get your own personal private copy.
+
+notebook and i'll do that right now because i'll create a run copy where we can like manipulate it all together in real time so i'll just call it run copy um and i'll start by just uh installing into this collab environment uh py mdp so collab is kind of like jupyter notebooks it's an interactive cloud-hosted notebook for running different kinds of code but mainly python code
+
+So while that's installing, and I'll run that as well, we can start with the slides.
+
+Okay.
+
+So I'll just start with a quick review from last time.
+
+And again, go back to the video if you want to see the full picture of what we discussed.
+
+So the generative models, the kind of brains of the agents that we'll be constructing are these partially observed Markov decision processes or POMDPs.
+
+They have various parameters and it's kind of up to you how to parameterize them.
+
+But under active inference, we typically have these four main components.
+
+There's fifth and sixth, depending on how complicated of a model you want to create.
+
+But these components kind of represents the agent's beliefs about the world that it's operating in.
+
+So these are usually hand designed or at least generally structured on a case by case basis, according to the behavioral task that you're trying to model.
+
+So we have the A,
+
+matrix or a array which encodes the agent's beliefs about how hidden states of the world that it's doing inference about relate to the observations that it gets.
+
+You have the B array which encodes beliefs about transitions or beliefs about dynamics.
+
+So how do hidden states relate to each other over time?
+
+You have the C vector or C array, which encodes agents prior preferences for seeing certain sorts of sensations.
+
+So this kind of plays the role of a quasi reward function.
+
+And it has the effect of biasing agents action selection, such that it's more likely to visit states of affairs that it
+
+a priori expects to see, i.e.
+
+goal-directed behavior.
+
+It wants to achieve some goal.
+
+And then we have the D vector, which is kind of a baseline prior about what is the state of the world before I get any observations, like what do I believe the hidden state distribution is.
+
+And again, I'm glossing over this because I assume that you know about things like categorical distributions
+
+All the details of these different arrays are explained more in the first video.
+
+And just again to show the graphical model, we have the A array relating hidden states in red to observations in blue.
+
+We have the B matrix or B array that relate hidden states to themselves over time.
+
+So how does the world change?
+
+And then we have policies, pi, which are sequences or collections of actions that affect transitions and thereby change the state of the world.
+
+And then you have this critical quasi pseudo value function to active inference in POMDPs, active inference in general, which is the expected free energy.
+
+And the expected free energy is the thing you try to minimize as you optimize your beliefs about policies.
+
+So the best policies are those that minimize expected free energy.
+
+And that has a bunch of interesting terms that lend active inference all of its interesting, curious, information-seeking behaviors.
+
+And then this prior over-observations factors into the computation of that expected free energy.
+
+So if you have a particular prior preference to see some observations, that will affect which policies get more or less expected free energy.
+
+And then you use that to actually choose a policy.
+
+And then, of course, we have the d vector, which parameterizes the initial beliefs about hidden states.
+
+So today, we're going to actually dive in and write out our own a, b, c's, and d's for a particular generative model.
+
+We don't have to worry about writing out our own functions that do inference or do planning.
+
+All of that will be handled by the abstractions provided by a PIMEDP, particularly in the agent class.
+
+So the agent class takes the components of the generative model.
+
+It gives you this very kind of black box API that you can just use to perform active inference.
+
+This is a very... In the last video, we talked about different levels of abstraction.
+
+This is like the top level of abstraction in PyMDP, where you're just passing a generative model to an agent and then kind of pressing go on the agent.
+
+having it interact with the task environment.
+
+So typically, this is another class, like an environment class or a task class.
+
+And then you just kind of string the two together in an action perception loop.
+
+And you get a simulation of behavior under active inference.
+
+And this is a standard thing you'll see in like open AI gym or other reinforcement learning packages you'll have usually like an environment class and an agent class and they exchange actions and observations and so we we designed the API of time dp very much inspired by that.
+
+Okay, so.
+
+Before we start writing down the generative model, so that A, B, C, and D, I want to spend a little bit of time exploring the idea of factorized state spaces.
+
+And this is important because not only the model we're working today, it's important to understand factorization in both observations and hidden states.
+
+But for almost all the most interesting POMDP models you're going to want to build, it's going to be really crucial to factorize your system in some way.
+
+Not only because it becomes easier to reason about and work with when things are factorized, but also it handles a lot of computational explosions that happen if you don't factorize your state space.
+
+So it's often useful to categorically separate observations into different modalities and hidden states into different factors.
+
+So what this means is that when we get an observation, we're actually getting a collection of different observations, one coming from each distinct sensory modality or channel.
+
+So similarly for hidden states, at any given time, the hidden states are described by a distinct set of different features or what we call hidden state factors.
+
+And so we refer to this as a factorized representation because the different modalities are independent of each other, and the different hidden states are also independent of each other.
+
+Their dynamics are.
+
+So they evolve in time without affecting the other hidden state factors.
+
+So that's formally written down as follows.
+
+The modalities are conditionally independent of each other given the hidden states.
+
+That's what this factorization of the likelihood looks like.
+
+So you can think of the different modalities as different sensory channels like vision, audition, somatosensation, and they provide their own distinct type of information which are then integrated together during inference.
+
+And factorizing the hidden states is like the idea that at any given time the world can be described by independent features, like an object being described by both its location in space as well as its identity.
+
+And factorizing the state's representations of the model in this way allows for a few different distinct advantages.
+
+One is computational efficiency, both in terms of memory and CPU.
+
+It simplifies the structure of the generative model itself, so it lends it a bit of interpretability and transparency.
+
+So there's only certain sets of variables that represent the agent's beliefs about one feature of the environment, for instance.
+
+And then finally, some would argue it has a degree of neuronal or biological plausibility and is consistent with the idea of factorized
+
+what others would call modular representations in the brain.
+
+So this part of this group of neuronal populations deals with representing where something is in space.
+
+And this group of neuronal populations deals with representing the identity or what the thing is.
+
+So that's kind of the reason we do this factorization.
+
+So one of the most classic examples of the early examples we do in pyMVP, and this can be found on the
+
+documentation and on the main page is this grid world example where the agent is kind of navigating in a 2D grid world space.
+
+In the notebooks online, we do like a three by three grid world, so there's nine total locations.
+
+And in a fully unfactorized, or what we call an enumerated state-space representation, every location in GridWorld has its own particular identity or state.
+
+So we just arbitrarily can label them, like location 0 all the way to location 8, and that covers all
+
+nine levels of grid world um this is fine but it especially for a small state space like a three by three grid world but it leads to some it kind of taxes our our memory and our uh
+
+Our interpret ability, a little bit because we have to remember exactly how our nine indices map to our.
+
+The different places in grid world so like if i'm in the middle of the grid, I need to like have some kind of lookup table to say okay location for is.
+
+Like zero or one comma one I either middle location, the grid in a factorized representation.
+
+The grid could be represented as two orthogonal or independent hidden state factors.
+
+One is something like the x displacement or the horizontal displacement, which now just takes three values, like which column of grid world are you in?
+
+And then vertical displacement or y position, which is something like which row of grid world am I in?
+
+And so now each hidden state is not a single nine dimensional vector, but it's actually a combination or a pair of two hidden state factors.
+
+So two, three vectors instead of a single nine vector.
+
+And then a given hidden state itself is picked out by a coincidence of these two hidden state factors.
+
+So if the X position is one and the Y position is two, then it means I'm in two or one comma two.
+
+So like the middle bottom of the of the grid world.
+
+And then once you do this, so once we have a factorized hidden state representation, it has implications for the way we construct the generative model.
+
+So in a kind of simple generative model, you would just have one B array that in the original GridWorld example just is like nine possible hidden states, the nine possible locations of where I just was.
+
+that maps to the nine possible subsequent hidden states.
+
+So the nine possible locations I could be going to.
+
+And then you'd have that nine by nine matrix conditioned on the different actions.
+
+So in the GridWorld demo, the actions are typically local, like move up, move left, move down, move right.
+
+but once you factorize things you're going to actually now have a collection of b matrices and this is a consequence of the factorization across the transition models that we discussed a few slides ago so you're going to have one b matrix or one set of b arrays for the x displacement so how does the agent move in the x direction so these are what each of these x these x displacement
+
+B matrices look like conditioned on different actions.
+
+So this is what it looks like for moving left.
+
+This is what the B matrix looks like for moving right.
+
+And this is what it looks like for stay.
+
+And then similarly, you have another B matrix that encodes the agent's abilities to move in the vertical direction or Y displacement.
+
+And similarly, they actually look identical because the world is like rotation and translation invariant.
+
+And you'll have another smaller be array just for why movement, this is a very simple example we're not going to actually do this in code because it's kind of trivial but it's just an example of how instead of having a location only a new very representation, you can split that up into basically a y axis and an X axis.
+
+So now we're going to.
+
+We're not going to simulate an active inference agent, but we're just going to play around with these data structures to get you used to the idea of factorized representations and how that manifests in the code.
+
+So now we'll go over to Colab.
+
+So if you've been running this on your own, this should all be downloaded.
+
+So you've installed infractively-PyMdp.
+
+That's the whole name of the package.
+
+that's now in your environment.
+
+And then you should also run this some basic imports like numpy and pyMdp, which is now in the environment.
+
+Okay, and so the basic variables that you'll see are things like
+
+yeah so there's a few variables that are almost always part of any PIMDP workflow and this is very much mirrored on how it's done in SPM in the DEM toolbox so typically you'll have a list that specifies the dimensionalities with a number of different levels of each hidden state factor so for our three
+
+our 3 by 3 grid world, nine possible states, we have one x factor of three levels and one y factor of three levels.
+
+And then the length of that list tells us the total number of hidden state factors.
+
+So in this case, we have two hidden state factors.
+
+And then similarly, you have hidden states are factorized.
+
+And then similarly, you factorize your control states.
+
+So for every hidden state factor, there's also going to be a control state factor.
+
+And the fact that these are also three-dimensional each just basically means that the agent has three possible actions in the x-axis and three possible actions in the y-axis.
+
+And then the number of control factors is also going to be two in that case.
+
+And so we have some nice utility functions that can quickly build a B array given the two things that are necessary, the numStates and numControls variables.
+
+So you just do initialize empty B.
+
+B, numStates, numControls.
+
+And then you'll have a B matrix that has the correct shapes and stuff.
+
+So three rows, three columns, and three possible actions for the x direction and similarly for the y direction.
+
+So this is just basic setting up your variables.
+
+And often we'll have these solution cells that are hidden underneath each little quasi exercise.
+
+So that's something you can do as well.
+
+Okay.
+
+And so that's just initializing an empty array, right?
+
+So we don't actually know what those contingencies are that we saw in the slides.
+
+But if we want to populate this thing,
+
+So this is what each factor-specific B array looks like.
+
+Then we have to go into these matrices and actually fill out the rows, columns, and third order slices with numbers.
+
+So for instance, this loop where we loop over factors and we fill out the different entries of the B array, what this will do is just encode those local actions, like move left, move right,
+
+for the x factor and then move up move down for the y factor and so once you've run that code you basically filled out all the numbers in that that big empty b array that you started and then you can use things like the plot likelihood function to to plot these uh likelihood distributions action conditioned likelihood distributions as
+
+matrices so this is move left for instance if we're in the x hidden state factor if we change this to a one we've changed the action index then this is move right and then similarly if we change this this is move down if we're doing action one here
+
+Oh, and just so darker colors, whether it's grayscale or red or whatever, almost unanimously in PyMDP, the darker colors represent more probability.
+
+So that's just for.
+
+So instead of having to display numbers, we'll just show darker numbers.
+
+Okay, so now let's go back to the slides and talk about the A arrays.
+
+So in our unfactorized fully enumerated grid world example, and again, I'll refer you to the documentation of PIME-BP if you want to play around with that example, the hidden state factors, which are just these nine kind of arbitrarily labeled locations,
+
+map to an observation modality, which is like the agent's sensation of its own position, kind of a proprioceptive GPS modality.
+
+You could think of it as like they're sensing where they are at any given time.
+
+And so there are various ways you could encode that, but let's just pretend that they have a
+
+a very high fidelity GPS.
+
+So they're getting precise GPS readouts of where they are at any given time.
+
+So in a fully enumerated world, that A matrix, that likelihood modality would look like this.
+
+When we start factorizing things, so splitting up the hidden state factors into an X factor and a Y factor, that choice not only manifests in the B arrays, but it also manifests in the structure of the A arrays.
+
+And I think this is one of the most key things to understand, because when it comes to coding these things up yourself, understanding how these arrays are structured is really important to getting things working
+
+like successfully.
+
+So it's basically getting used to multi-dimensional indexing.
+
+So briefly, in summary, when you have multiple hidden state factors, that manifests as extra lagging dimensions or extra
+
+higher order dimensions in your A array.
+
+So it's not really an A matrix anymore, it's an A tensor.
+
+So that means if you have two hidden state factors, the number of lagging dimensions, i.e.
+
+excluding rows, that's what I mean when I say lagging dimensions, will be two.
+
+So you have columns and slices in addition to rows.
+
+So this is really important to understand when either using SPM or PyMDP to do POMDP-based active inference.
+
+And another way of saying this is for each additional random variable that we're conditioning our observations on, we have an additional lagging dimension in our array.
+
+So this is the same principle as with the B matrices because we condition the next state both on the past state and the past action.
+
+That's why the B arrays are also tensors.
+
+So we have two extra dimensions in the B array, one for each conditioning variable, past state and past action.
+
+So now in the x and y factorized grid world, we have two lagging dimensions, where the first lagging dimension, the columns in blue, index a particular x location.
+
+And the second lagging dimension, the slices, if you will, index a particular y location.
+
+So now what I'm going to do is unwrap these slices of the multidimensional A matrix.
+
+And so you can see that each slice of the A matrix, so that each purple indexed third order slice corresponds to conditioning on a particular setting of y. So a particular conditional distribution over observations for the three settings of x for a fixed value of y. So each slice is exactly this conditional distribution.
+
+where we're looking at the conditional distributions over observations for each setting of x. So those are the columns indexed by the blue numbers at the bottom.
+
+But we're fixing to one value of y. So that's the conditional distribution over observations 0, 1, and 2.
+
+So being in the top row, given that we're in the first row, y equals 0 for the three possible settings of x. And then we move down to this next set of observations and the next slice of y. And it looks like that.
+
+And then finally like that.
+
+So this is the case where our GPS is noiseless and high fidelity.
+
+That's why we have hyper dark cells and then everything else is white is because the agent believes that its observations are high fidelity signals of the actual hidden state, namely the x comma y location.
+
+So then when we pack these back together,
+
+we see how this full A matrix or set of conditional distributions will be represented by a nine by three by three tensor, where again, each lagging dimension exists to encode the conditional dependencies between that particular hidden state factor indexed by the lagging dimension and the observations for this modality.
+
+So when I index into the i-th column and the j-th slice of this A matrix or A tensor, I'm basically slicing out a particular conditional distribution over observations where I'm deciding what settings of the conditional distributions or the conditional random variables I'm interested in.
+
+OK, so yeah, that's a kind of critical concept.
+
+And to just make it more
+
+um tangible and clear and I mean to be clear this isn't the only way to encode conditional dependencies in categorical distributions but it's just the way that was originally uh used in SPM to encode these dependencies and then we just borrowed that convention when building a pine BP and it's pretty useful because it makes
+
+generating things like conditional expectations pretty straightforward using linear algebra operations like higher order dot products and stuff like that.
+
+So we have this kind of unwrapped representation of the ARA here, and we can use this to refer back to when we're building our ARA.
+
+One thing I didn't mention that is also important is that in the same way we can factorize hidden states, we can factorize modalities so we'll have we'll talk about that in a second.
+
+But just for now let's assume we have one single GPS sensing modality of nine possible levels of where I am in grid world so it's just a list of one number nine.
+
+and then the number of modalities will trivially be one, the length of that list.
+
+And then we can use similarly this utils initialize empty A array, which takes the number of observation modalities, their dimensions, and the number of hidden states,
+
+And then it creates the A array with the proper dimensions and everything.
+
+So I've also created this combined list called A location dims, which is a combination of the number of observation modality dimensions and the number of hidden state factor dimensions.
+
+So that's, as we said, going to be 933.
+
+And so then we can populate the entry of our first modality in the A matrix, which is trivially here the only modality, with a matrix of zeros.
+
+This is actually what's happening under the hood in this thing, so we don't need to do it here.
+
+But then if we just run that, then we'll see that the shape of A0 is the same as A location divs.
+
+okay so that's just initializing it so we now have one
+
+a array that has one modality whose shape is 9 by 3 by 3.
+
+And then we just go and fill it out like we saw up here.
+
+So I'm filling it out under the assumption of this noiseless, high-quality GPS sensor.
+
+So you can see when I'm indexing into the lagging dimension here, the y dimension, which is the third dimension of the tensor, I'm saying for this particular value of y, which is when y is 0,
+
+we're in the first row of grid world, then the conditional distribution over the three settings of the GPS, given all the settings of X, is just an identity matrix.
+
+So I'm just coding that little chunk right there.
+
+And then we can go through each of the slices iteratively and do that.
+
+So yeah, one of the things I think is a disadvantage currently of both PyMDP and the SPM is I think we need better ways to make people not have to do these
+
+multidimensional indexing operations to encode a particular conditional independency structure.
+
+And I thought of ways to do that, but it's actually pretty hard to do that in a generic, flexible way where people can just come to the table with their own semantics and then all this gets done for them.
+
+So for now, you still have to kind of do this by hand or write some algorithmic way to do it that's specific to your task.
+
+But yeah, that's just something to mention.
+
+It's not ideal that we have
+
+users doing this.
+
+But at the moment, I can't really think of a better way to do it.
+
+And then once we've encoded that, we can look at our little conditional distributions given different settings of y. And that's just one choice.
+
+We could also condition on x and look at for all settings of y, x equals 0.
+
+You can slice this up however you want, right?
+
+That's just a visualization choice.
+
+And these are our three collections of conditional distributions, one for each setting of y. OK, now let's go back to the slides.
+
+Yeah, so one thing I didn't mention or I said I would mention is we just had a single observation modality.
+
+But just as for hidden states, we can factorize
+
+and we don't have to fully enumerate our observation space.
+
+So we can separate the grid GPS observations into an X and a Y GPS.
+
+So now you're observing a pair of different observations at any given time, one X observation and one Y. So just like we had a separate B array for each hidden state factor, similarly, we now have a separate A array for each observation modality.
+
+So we would populate one big A object array with these different
+
+modality-specific A-arrays.
+
+So in this case, if we had X observations and Y observations, we would have two A subarrays.
+
+Each one would have size three by three by three, because three observations, and then for the two possible states of the hidden state factors.
+
+So yeah, that wraps up the slides I had on
+
+multi-factor, multi-modality factorized representations and how that affects A and B arrays.
+
+So before we move on to the contextual multi-armed bandit, let's open it up for questions or comments.
+
+If anything was unclear and someone wants to contribute their own way of explaining something, I'm happy to talk about that now.
+
+
+SPEAKER_00:
+Awesome.
+
+Jakob, Ben, Adam, and Karl, if you'd like.
+
+
+SPEAKER_05:
+Yeah, thanks a lot for the great overview.
+
+I had a question on initializing the B matrix.
+
+So in this case, we initialized it with the simplest policy, just all of the available actions the agent has.
+
+Is there
+
+Would there be any particular use case in the GridWorld example where we would want to initialize it with a sequence of policies?
+
+And is that needed if we want to do planning of different temporal depth?
+
+
+SPEAKER_03:
+So when you say sequence of policies, can you give me an example?
+
+
+SPEAKER_05:
+Instead of conditioning it on just move up, you would condition it on move up and down.
+
+Fixed sequences of actions.
+
+
+SPEAKER_03:
+Right, right.
+
+That's interesting.
+
+Typically, when we're building these transition likelihoods, this is more of a consequence of the fact that it's a POM
+
+a POMDP with an emphasis on the M. So it's Markovian.
+
+So if you want to encode something like, what is the predicted next hidden state given I did move up and move down in the last two time steps?
+
+If I'm understanding correctly, you're saying condition my B matrix, my next hidden state, on a sequence of two possible past actions.
+
+Then we're breaking the Markov property of the dynamics because we're saying the next instance not just depends on what I did at the last time step and the state, but it depends on also what I did two time steps ago.
+
+So now you have a higher order temporal dependence, like a semi-Markov model or really just not a Markov model, but a higher order model.
+
+And that's not something that's currently supported in PyMDP.
+
+The natural way you get around that is by building
+
+a hierarchical model.
+
+So at each individual level of the hierarchy, you have a POMDP.
+
+But then when you look at a single layer, like the bottom layer of this hierarchical model, it is a semi-Markov model or non-Markovian if you take into account what all the other layers are doing.
+
+But that's not currently supported at the level of a single Markov model.
+
+You can't build a B matrix that's dependent on more than what happened at the last time step.
+
+It always has to... Yeah, you can't have an extra lagging dimension that encodes also what were they doing two time steps ago.
+
+So that's one interpretation of... When you say policy, like up-down, I think of...
+
+two actions that happen in sequence.
+
+But maybe another thing, and correct me if I'm reading too deeply into your question, another thing would be, can I have actions in a different control state factor affect the dynamics of a particular hidden state factor?
+
+So say I had one hidden state factor, which is move up,
+
+and another, or I said one factor, which is y displacement, another factor that's x displacement.
+
+Can I have the dynamics of the y factor not just depend on my y action, but also on my x action?
+
+So that's the idea of basically breaking this conditional, sorry, this independence property.
+
+Where is it?
+
+Here.
+
+I don't know.
+
+Let me find it.
+
+Here.
+
+So if you allowed the lower right shows that the dynamic, the state of one factor over time only depends on the state of that factor at the previous time step.
+
+But if you said, I could also make this conditionally dependent on not just factor f, but say factor i or q at t minus 1.
+
+This is something that's also not currently supported, but I think is an interesting idea, which is you would actually have interactions between maybe pairs of hidden state factors in hidden state space.
+
+This actually can be accommodated under PyMDP.
+
+Like mathematically, I haven't built in the functionality to do it, but I think there's nothing that stops you in principle from doing this.
+
+So this would be as if I can have actions from different control factors
+
+all influencing the next state of one hidden state factor.
+
+And that is something that will probably make the message passing a little bit more, maybe not more complicated, but maybe its convergence properties wouldn't be as guaranteed.
+
+I don't know what it looks because you're introducing weird loops in your graph.
+
+in the fact graph that represents the generative model.
+
+But that's something in theory could be entertained.
+
+But I don't know if that's actually what you had in mind.
+
+Maybe you had more in mind of breaking the Markov property when you say condition them.
+
+
+SPEAKER_05:
+yeah it was um thank you for the answer it was more of a clarification also on the mathematical notation uh because uh pi uh is interpreted as policy which i guess can mean both individual actions and sequences of actions um so just wanted to clarify that yeah that's a good point so when i said pi up here i meant um
+
+
+SPEAKER_03:
+I meant, yeah, so if Pi was a sequence of actions,
+
+any given time, the B matrix that you're indexing out is conditioned on the action that's entailed by the policy at that particular time.
+
+But the B matrix will never be entailed on what's going on in the full policy, but just by, okay, at time T, I take out this slice of the B matrix because at time T, this is the action entailed by this policy of sequence length H or something.
+
+But yeah, that's a good point.
+
+So
+
+In a trivial case, policy length is one, and it's just one action.
+
+The policy is just an action that comes down to slice out the B matrix.
+
+
+SPEAKER_00:
+Thanks, Jakob.
+
+Adam, anything you'd like to add, go for it.
+
+
+SPEAKER_04:
+Yeah, a couple of follow-ups.
+
+Thank you for this very clear presentation, Connor.
+
+So first, just to follow on what Jakob just asked,
+
+It seems like another potential way if you wanted to do this sort of two-time step model would be to actually condenser or kind of permute those two time steps into a single variable.
+
+The same way that you could condense the row and column into a single nine-row
+
+vector or you can break it down into two could you similarly break down the last two moves and sort of combine them into a permutation of all possibilities of the last two moves and have those be the hidden states yeah uh you could do that as well I don't I haven't seen that actually done in practice the only thing is you'd have to actually have to somehow change the um
+
+
+SPEAKER_03:
+You have to change the scheduling, I guess, of the message passing and the action to accommodate the fact that before I determine what my last hidden state was, I need to wait two time steps so I can get not only the proximal action I did, but also have this memory of the action two time steps ago.
+
+
+SPEAKER_04:
+Yeah, I was imagining that you'd have some special case for the first move where it's like undefined and then the last move.
+
+Then after that, you'd have the last two moves, a separate matrix for those or something.
+
+
+SPEAKER_03:
+Yeah, like a moving window kind of.
+
+So it's always remembering the last.
+
+Yeah, I could see that working.
+
+I think like the active, like kind of the canonical active inference
+
+answer to that is instead of having to kind of manufacture this special way of represent of basically baking memory into a Markovian system, the classical way to handle that is just to build a hierarchical model because the hierarchical model handles that memory easily by just having
+
+like nested Markovian processes, where if you were to look at a single process, it looks like it has memory, but that's just because its priors for its own Markovian process are evolving as a function of another POMDP that's operating at a slower timescale.
+
+So I could imagine doing that exact thing that you're talking about if you had a
+
+low-level POMDP that was moving twice as fast as the top-level POMDP.
+
+And so basically what the top-level POMDP is doing is setting an initial prior over one action that then allows this low-level POMDP to condition whatever it does next on a belief that whatever I do next, I know that I just took this action two time steps ago.
+
+But you don't actually have to handcraft that.
+
+It's just by building
+
+uh one palm dp like within another palm dp um but i don't see that there's anything in principle going against what you're describing as well it's just yeah i like your approach a lot better yeah this is this is um i mean essentially what i learned from from working with carl was that like anytime you're trying to imbue a system with more complex non-markovian memory full dynamics
+
+or higher order dependencies, that's when the natural move is to go to a hierarchical model because it kind of handles it all naturally.
+
+
+SPEAKER_04:
+So my next question is about the
+
+what you were sort of tweaking in that formula just a couple minutes ago where you were suggesting the possibility that there could be feedback loops between the hidden states in theory, but as currently implemented, if I understood correctly, that's not the case.
+
+The state of one of the hidden states depends only on
+
+the previous states of that the previous state of that hidden state as currently now what i want to make yeah hidden factor what i want to make sure i understand is that is that also something about the markovian assumption or is that just sort of an implementation or design decision completely separate from the markov
+
+
+SPEAKER_03:
+Yeah, that's a good question.
+
+That's separate from the Markovian assumption.
+
+So that's something having to do with just how the graph that represents the generative model, which you could think of as a Bayesian graph, like a bunch of nodes that affect a layer of observations.
+
+So you say a bunch of hidden state nodes that all have
+
+all the observation nodes conditionally depend on the state of all the hidden state factor nodes.
+
+By constructing it this way, you basically have a graph that it's very easy to do inference on that has stationary fixed points.
+
+So the inference does not depend on initial conditions of the posteriors and things like that.
+
+The way the generic model is set up right now is like a bipartite graph that resembles a classic
+
+um uh model from machine learning called like a restricted Boltzmann machine so this is where all the hidden states can all affect one uh observation modality but there's no interactions between the observation layers so there's no
+
+lines going between observations within one modality, and there's also no lines going between hidden state factors.
+
+So that's kind of what one of the advantages of this assumption is, is when you have the hidden state factors be only dependent on their own past state and their own past action within that control factor, then you're not introducing these loops in the graph that make inference a little bit harder.
+
+So you'll see this structure when people are using restricted Boltzmann machines or even deep neural networks.
+
+It's very hard to get fixed point solutions for the posteriors when you have interactions between nodes in a single layer.
+
+So it's not quite the same thing as the Markov property.
+
+It has more having to do with generating an acyclic graph so you can do a fast, efficient, and fixed point inference on it.
+
+I mean, that's my general answer to that.
+
+Because if you actually draw out the factor graph for these things, it looks like that.
+
+But there might be another reason this is done that I'm actually not aware of.
+
+Maybe that's something that Carl would know, or someone else.
+
+
+SPEAKER_00:
+If you want to add anything, Carl, otherwise... And then after this, we'll head into the script.
+
+Go for it, Carl.
+
+Thank you.
+
+
+SPEAKER_01:
+Yeah, I think everything that needs to be said has already been said very, very clearly and very usefully.
+
+But yes, Conor's absolutely right.
+
+So I look at this in terms of the overall architecture of the graphical model you bring to the table.
+
+It can only have a number of different attributes.
+
+How deep is it?
+
+How many levels does it have?
+
+We're not in this presentation talking about deep MDP or generative models based upon hierarchically composed Markov decision processes.
+
+below and that lends this attribute of depth to any given generative model but probably more important certainly from the point of view of the current discussion is the breadth and the breadth basically the number of conditionally independent factors in physics this is simply known as the mean field approximation it's you know it's just the factorization of a joint distribution in this instance
+
+what we're aiming for is an approximate post-trade distribution, but it's a factorization into conditionally independent factors that incidentally also induces certain Markov blankets and resolves a lot of the message passing and means that sort of variational iterations are more robust.
+
+But from the point of view of why do you do that?
+
+Well, you do that because to maximize the marginal likelihood of the evidence for your
+
+generative model, you have to carve the nature out there at its joints in the right kind of way.
+
+So if the world you're trying to navigate or exchange with or explain does have this factorization, these conditional independences, it is carved in this way, then your model has to comply in order to have the maximum evidence.
+
+So when learning that particular factorization or that structure, you would normally apply a process of basic model
+
+selection or structure alone to get the number of factors right.
+
+And that is getting the right kind of mean field approximation apt for this world and these data.
+
+And the right factorization will simply minimize variational free energy and therefore minimize the computational complexity and also the computational complexity expressed in terms of thermodynamics, for example.
+
+So it's a really important sort of thing.
+
+Just a couple of little endorsement comments.
+
+Conditioning any one state with any one factor on states from other factors destroys that particular factorization.
+
+So you don't have to worry about introducing loops and things.
+
+All you're doing is saying that particular factorization has gone away, you've coarse-grained, and you now have to lump together all the elements of one factor and the other factor into one bigger factor, and now you've got a more coarse-grained factorization and
+
+a more mathematically complex model because you haven't done as many carvings to leverage the conditional independences that you're trying to model.
+
+The first question about the policies, that was an interesting one.
+
+I suspect it may be an artifact of the way that we condition everything on pi without forewarning people.
+
+Pi is actually quite a complicated variable
+
+First of all, it's basically an index or a name for quite a complicated combination of things.
+
+So not only is it a sequence of actions upon which you condition each individual transition at any point in time, over time.
+
+So it's a sequence of actions.
+
+So in answer to Jacob's question,
+
+energy is exploring lots and lots of different sequences as you roll out into the future um but also um induced by the factorization as Connor was saying um the that pie actually has to now entail
+
+an action for every factor of a fixed combination.
+
+So if you change the combination of actions for two factors, you now have a different policy, even at one time step, even for one step ahead.
+
+So the notion of a policy as a combination of actions is still in play when you have a
+
+factorized mean field approximation of the hidden states.
+
+So it's a subtle point.
+
+Usually one would resolve it by actually explicitly writing down, usually using the variable u, the thing that you're conditioning the state transitions on.
+
+And then u comes from a family of combinations of u's over factors and over time.
+
+so you can have deep and shallow policies, but even if you've got very shallow policies, one step ahead or one look ahead policies, there's still a subset of combinations of actions.
+
+So it could be that you can either only move up or down, sorry, up or to the left, but you can't move diagonally, for example.
+
+And that will be placed in terms of priors over pi, namely combinations of actions.
+
+Oh, sorry, one final just for Adam's benefit.
+
+That notion of...
+
+including semi-Markovian dynamics.
+
+And again, Colin's absolutely right.
+
+The way that, as a physicist, the way you do that is by appealing to the depth of the hierarchical model, which always entails time.
+
+And that's an absolutely crucial observation.
+
+There's no point in adding depth to a generative model unless you are mindful it is introducing a separation of temporal timescales.
+
+And I think that's a profound,
+
+this sort of structural insight into the nature of generative models and has all sorts of implications.
+
+But then you're just speaking to this notion of sort of having combinations or little histories or little caches of legacy states as, if you like, a super state.
+
+Strictly speaking, that is exactly what is done effectively in continuous state space models.
+
+with Kalman filters.
+
+So you, you, you actually have now two kinds of random variables, the position and the velocity.
+
+So you, you, you've now got a sort of dual representation.
+
+And if you generalize that, you get a generalized course of motion.
+
+So, you know, um, um, and technically, um, when you're doing variational message passing, you now use something called a chef phase, uh, free energy as opposed to, which is a variant of variational free energy.
+
+Um,
+
+However, when you move to discrete state spaces, those generalised coordinates now actually are replaced just by having states that unfold in time under the probability transition matrix, so that you shouldn't in principle ever need to do that, but you can now regard, if you like, the little local history, the little packet or trajectory or orbit, the path that you're taking at this point, at this
+
+temporal scale as sufficiently discretized and coarse-grained with the different probability transition matrices.
+
+And then at the slower timescale, then it's a succession of initial states.
+
+That's normally how we would think about that.
+
+But it's an interesting game to think about what kinds of structures in these discrete states-based models echo the equivalent moves one has to make in continuous states-based
+
+
+SPEAKER_03:
+i'm thinking here particularly of generalized filtering and basing smoothing and basing filtering and the like yeah thank you that's really it's really nice to have uh those afterthought like because that clarifies i think and justifies a lot of the preceding slides so what what carl just said um yeah that's that's a good i i so you can kind of map the depth of the hierarchy think of the depth of the hierarchy as a discretization of
+
+what is smoothly handled with generalized filtering and generalized coordinates of motion.
+
+So states evolving at this POMDP are kind of like a quasi-velocity variable, because they are evolving slower than the position variable, which is like the low-level, faster clock POMDP.
+
+
+SPEAKER_00:
+One just tiny footnote there is it relates to the continuous and differentiable free energy landscape and the discretization that is required on modern digital hardware around sampling and the discretization problem on a continuous but hidden function and the approaches that we have to take to discretize the continuous nature of time especially.
+
+
+SPEAKER_03:
+Absolutely.
+
+Okay.
+
+So I think we should proceed to the multi on bandit.
+
+Okay, so now having discussed these kind of factorized representations, we're in a position to build our multi factor generative model for
+
+what I'm calling a contextual two-armed bandit or contextual multi-armed bandit.
+
+This is coming from the reinforcement learning literature, this term contextual, but it's based directly on a kind of gambling task that was introduced in Ryan Smith, Christopher White, Carl Friston's step-by-step tutorial on active inference.
+
+So you basically have a multi-armed bandit, two-armed bandit, but you have to first find a clue
+
+or forage information to figure out which of the two slot machines or arms of the bandit is more favorable.
+
+And this is echoed as well in the original tea maze example, where you have a rat that has to choose between two arms
+
+one is more rewarding than the other, but you don't know which one is rewarding.
+
+So you have to visit a informative queue state first that tells you the left one is rewarding right now, or the right one is rewarding.
+
+So this, I'm just kind of gathering all these things into the term contextual bandit, because that's kind of analogous term for this problem that you'll find in like reinforcement learning world.
+
+Okay.
+
+So in the multi-armed bandit or two-armed bandit task, an agent has to choose to play one of two slot machines, and they can only play one at a time.
+
+So one of the slot machines gives more reward than the other, but the agent doesn't know which is the better one.
+
+So at any given time, the agent can choose to play the left or the right machine, that's what we'll call them, or can choose to ask for a hint.
+
+And if it chooses to ask for a hint instead of playing the machine, it receives information about which of the two slot machines is better.
+
+So this already sets up the basic dilemma of tasks like this, the so-called explore-exploit dilemma.
+
+So you first forge for information that will ultimately lead to getting more reward.
+
+Or do you gamble immediately in order to get rewards sooner, but at the risk of not having enough information to know which slot machine I should actually play?
+
+So to encode this task structure into a generative model for a POMDP, we equip the agent with three observation modalities.
+
+First, we have this hint modality, which is the sensory channel the agent uses to perceive the hint.
+
+So just what is the state of the hint?
+
+Then there's a reward modality, which tells the agent whether it won or lost at the selected machine.
+
+And then finally, there's a choice modality, which is just the agent's proprioceptive observation of its own choice.
+
+This is equivalent to the GPS modality that we were working with in GridWorld.
+
+And in terms of hidden state factors, we first have a context factor, which is a binary variable encoding which slot machine is the more rewarding one.
+
+either the left machine is better or the right machine is better.
+
+So those are the names of the two context variables.
+
+You could just arbitrary enable them like context A, context B, or something like that.
+
+And then we have a choice hidden state factor, which is simply encoding the choice state that the agent currently occupies.
+
+And finally, as Carl was just explaining, for each hidden state factor, you also have a control factor.
+
+So we'll have a context control factor, which as we'll see is trivial since the agent can't control the context in this particular simulation, and a choice control factor, which is the control factor that allows the agent to model its own actions or choices.
+
+So even for a shallow policy horizon, as Carl was explaining,
+
+a policy will still be comprised of two actions so it'll be there'll be a context action and a choice action but as we'll see the context action will always be to do nothing or basically to not be able to interfere in the dynamics of the context hidden state factors so basically action selection comes down to just choosing the state of the choice control factor on that u choice variable so now we're going to look at the different levels of the hidden state factors
+
+So as we said, the context one is a binary, or you could think of it as like a Bernoulli variable.
+
+So it's either left better, right better.
+
+It's a distribution over these two states of the context.
+
+And this is just the unchanging state of the world for a particular trial.
+
+Either left machine has a better payoff probability or the right one does.
+
+And then the choice hidden state factor has four levels, which correspond to the four possible choice states that the agent can be in.
+
+So this can either be the neutral starting location
+
+the hint state, which is the location they occupy when they're acquiring the hint.
+
+Or they can be playing the left machine, or they can be playing the right machine.
+
+And so now for the control state factors.
+
+The control state factor for the context only has one level.
+
+You can call it do nothing, or it's just a trivial one-dimensional variable, and the agent will always take this action with 100% probability.
+
+So, in other words, the agent has no control over the state of the context and then the choice control state has four levels corresponding to the decision to change.
+
+The s choice the hidden state factor for the choice state in one of four different ways either can move to the start location, it can move to the hint location.
+
+it can play the left machine or it can play the right machine.
+
+So what choice state the agent is in is kind of obviously under the agent's control, which is encoded by the fact that this U choice variable has four levels.
+
+So optimizing a posterior distribution over this choice control state factor, that's what action selection and planning boils down to, is basically choosing what level of U choice I'm inferring
+
+what the distribution over U choice is, and then sampling or taking the argmax of that distribution to actually make an action.
+
+Okay, so now let's review the observation modalities and their different levels.
+
+The first modality is the hint modality, which can either give the outcomes of null, like I'm not at the hint state, so I'm getting no sensory information from that channel.
+
+A left is better hint.
+
+hint left or right is better hint.
+
+And they're just named that because we'll see in the A matrix how seeing that observation relates to seeing the state of the context.
+
+We have the null observation because, as I said, if the agent isn't in the choice state of getting a hint, it still needs to receive some information from that modality.
+
+So that's why we often have in both the SPM and the PIME VPN implementations, we have this null observation that just encodes an observation that has no information about hidden states within some particular factor.
+
+And then we have a reward modality, which similarly
+
+has a null observation for when the agent isn't playing either slot machine, and then two possible reward observations, either a loss or a reward.
+
+But this is a choice that depends on what you're trying to do.
+
+You could also make a reward have like 10 different reward levels that have different like magnitudes of reward.
+
+It's just a choice to call these like loss and reward.
+
+The point being that one is preferred relative to the other.
+
+And then finally, we have the choice modality, which just allows the agent to unambiguously infer what choice state it's in.
+
+So it just allows it to infer what it's doing.
+
+And this is important because remember, in active inference, everything has to be inferred.
+
+Everything is in the game of minimizing free energy and
+
+um coming up with uh posteriors approximate beliefs about the state of the world including your own choice state so that's why we often equip agents with a proprioceptive sense of where where i am like a gps
+
+um yeah okay and and so that that's the three observation modalities we've done the hidden states and the controls so now we're in a position to start building the a arrays for this agent's generative model so for each modality specific a array we're going to have as many rows as there are levels of that modality and then two columns and four slices
+
+And so why is it two columns, four slices?
+
+Because each column corresponds to a setting of the context hidden state factor, and each third order slice corresponds to a setting of the choice state hidden state factor.
+
+And these lagging dimensions of two columns, four slices will be the same for every single A matrix, not the values in them, but that shape.
+
+So the only thing that will change across modalities, the modality-specific A arrays, is the number of rows, which is the number of observation levels.
+
+So for the hint modality, each slice of this A matrix tells us the mapping between the two possible context states and the observations in the hint modality for a fixed choice state that the agent could be in.
+
+So for instance, if the agent is in the start choice state, what we're seeing now, regardless of whether the left or the right machine is better, the agent will always get the null observation, which has zero information about the state of the context, as you can see, because given an observation of the null observation,
+
+observation in the hint modality, you have no idea whether the left is better or the right is better.
+
+However, if the agent is in the visit a hint state or acquire a hint state, then the mapping between the context state and the two hint observations will be informative.
+
+And when I say informative, I just mean that the columns of this matrix will be independent from each other, and they will be low entropy.
+
+So another way of saying that is that there will be low entropy in the observation-conditioned rows of the matrix.
+
+So briefly, what we're seeing here, where gray scale, darker colors means more probability.
+
+If the slot left's machine is better, that's the context, then the agent is more likely to see the hint left observation.
+
+And if the right machine is better, they're more likely to see the hint right observation.
+
+So this slice of the A matrix is what gives those observation levels their meaning.
+
+The very reason they're called hint left and hint right is just because of the kind of diagonal structure in this slice of the matrix.
+
+And then finally, for the other states,
+
+If I'm playing the left or the right machine, I'm never getting any informative observations from this modality.
+
+Okay, and then we move on to the reward modality.
+
+So again, two columns and four slices, like for all the ARAs.
+
+But now we're looking at the mapping between the two contexts and the reward observation levels.
+
+So no loss reward for each possible choice state the agent can be in.
+
+So as we can see, if the agent is in starting location or getting the hint,
+
+they're not getting any reward observation.
+
+They get the trivial, meaningless, null observation.
+
+However, if the agent is playing the left or the right machine, there's a probabilistic mapping between the context, the left machine or the right machine being better, and the expected reward.
+
+So if the context is left is better, then the agent is more likely to see the reward if and only if they're playing the left machine.
+
+Likewise, if they're playing the right machine, this matrix is the same.
+
+So if you're playing right, then you're more likely to see reward.
+
+So this sub-matrix within this big A tensor is what determines the payoff structure of the task.
+
+Or the agent's beliefs about that payoff structure, I should say, because this is the A array.
+
+It's not the actual rules of the game.
+
+So now we're finally up to the choice modality, which again is just their observation of their own
+
+choice state, which you can see only depends on the state of the choice that they're making.
+
+It doesn't depend on the context.
+
+So it just means that they'll always unambiguously infer whether they're playing the right machine or they're in the start state or whatnot.
+
+So this is just an example of going through those slices and really seeing how that looks.
+
+So now we can code this up in Colab.
+
+And again, we won't be doing it by hand.
+
+We'll just be
+
+um we'll just be running some predefined code so one useful thing to do often with control factors and observation modalities is get some semantic labels like create a list of strings for instance so the context names will have these two states left better right better choice names will have these four possible states and then we can automatically create these lists of dimensions that are needed to create your a and b matrices just by looking at things like the length
+
+of this list of strings or the length of this list of choice names.
+
+So if you run this, then we'll have our numStates variable, which will be two possible contexts and four possible choice states.
+
+And then you'll have numObs, which will be three possible hints, three possible rewards, and four
+
+appropriate receptive location or choice state observations.
+
+And then we can use this function to initialize our empty A matrix.
+
+And then the next few chunks of code basically just fill out these A matrices like we saw in the slides.
+
+So one thing we'll do is we will have two parameters.
+
+And this is, again, arbitrary.
+
+You can choose to do this however you want.
+
+will parameterize the A matrix with a probability of hint or a hint accuracy, which will effectively just fill out that slice of the hint modality A array that corresponds to how accurately the hint signal indicates the context or lends evidence to the context.
+
+So if the hint is 100 is 1.0, p hint is 1.0, it means whenever they visit the hint state, they immediately know, OK, the left arm is better.
+
+But this doesn't have to be 100%, right?
+
+The hint itself could have some noise or uncertainty associated with it.
+
+So we'll parameterize that just with this probability.
+
+So this is the probability of the two hint types for the two game states.
+
+And you see the null has zero probability.
+
+And then hint left has more probability when the context is left, indicated by the column.
+
+And then hint right has more probability when the context is right.
+
+And then we'll just go through and fill out this choice stuff.
+
+Oh, the reward modality will have a similar thing, a P reward.
+
+So this will determine the payoff structure of both banded arms.
+
+So if P reward is high, it means if the context is left is better and you're playing the left slot machine, you'll have an 80% chance of getting the reward.
+
+And this thing itself can be changed to determine basically how
+
+how rewarding the bandits are.
+
+So this is the payoff structure.
+
+If you're playing the left arm, the payoff structure for the two contexts.
+
+And there's an inverseness that I didn't discuss.
+
+So if I'm playing the left arm but the right arm is better, then I'm also more likely symmetrically to get punishment or negative reward with the same probability that I would get positive reward if I was playing the right arm.
+
+So that's also a choice, but just to make this a single parameter, that's how we did it here.
+
+And then finally, the choice observation modality is just filling out that high fidelity GPS sensor.
+
+And that's pretty, if you slice it along any context hidden state factor, since it doesn't depend on context, this could be a 0 or a 1, then we'll get an identity mapping, which just allows them to infer their choice state.
+
+And then we wrap this all into one function.
+
+So we just have two parameters, P hint, P reward.
+
+And then we can see once we start doing simulations how manipulating those things messes with their behavior.
+
+So now we'll move on to the B arrays.
+
+Oh, yeah.
+
+So let me go here and talk through some slides.
+
+This will be quick.
+
+The B arrays are pretty simple.
+
+So we're going to mess with this later, but we're going to start by saying that
+
+the context hidden state factor is stationary over time.
+
+So they can't change that hidden state factor.
+
+And even in the absence of their ability to intervene, it stays in the same state over time.
+
+So we parameterize this with a p change probability that just fills out the diagonal of this kind of trivial transition matrix.
+
+with 100% probability.
+
+But later on, we can mess with that parameter and decrease it so they believe that the context can actually change with some stochasticity over time.
+
+But for now, we just assume they don't believe the context changes.
+
+And then this is their ability to... So unlike GridWorld, where you have local actions, they can only move up, down, left, right.
+
+Here, they can move from any other state to any other state.
+
+So this is like a signature thing.
+
+If you want a controllable hidden state space so the agent can go anywhere from any other place, that will manifest as these dark bands in your B matrix or bands of 100% probability.
+
+So this is another way of saying that the transition graph is fully connected, that you can get anywhere from anywhere.
+
+But that's also not sure.
+
+We could have made it such that once they leave the start state, they can't return there.
+
+So that would correspond to having the absence of one of these.
+
+Basically, the start state is a source, but it can't also be a sink, or there's no in arrows going to it.
+
+So that would affect the structure of this.
+
+OK, and then we can quickly code that up.
+
+um so b0 is the context hidden state which as we said is just going to be stationarity and then the choice hidden state is this fully controllable and then we will parameterize this all as a create b function which will for now have this p change thing so we can make the
+
+agent's belief about the stationary of the context different, like if the context is likely to change.
+
+But for now, by setting it to zero, it just means that they believe the context is fixed for a given trial or set of time points.
+
+then finally very basic stuff this is just how we establish the semantics of the reward modality so the reward modality is as we said the null the loss and the reward and we can encode the c vector which is kind of like the reward function um the prior preferences or prior over observations directly in terms of log relative log probabilities so we can encode punishment by having
+
+the prior expectation about loss be much lower in relative log, in natural log units, much lower than the reward observation within that modality.
+
+And then the other ones are just going to be uniform distribution, so you can leave them empty.
+
+And this is just what allows them to want to see reward as opposed to loss or punishment.
+
+And yeah, so just as I think we discussed this last time, Daphne had a question about that.
+
+So why do we encode things in relative log probabilities rather than sheer probabilities?
+
+It's just more analogous to the reward construct from reinforcement learning.
+
+That's one benefit.
+
+And they're unbounded.
+
+They don't have to be bounded between 0 and 1.
+
+So if you just encode them that way, it becomes easier to make one thing x times more rewarding or punish or aversive than another thing.
+
+And that directly relates to how reward is calculated in
+
+or expected utility of the expected free energy is because it's always kind of an expected it's kind of like an entropy or a cross entropy so it's always um it's you its units are in in natural log space okay so yeah
+
+And then the D vector, again, they can have prior beliefs about which context is better.
+
+So that will also be a collection of vectors, one over the context factor and one over the initial state of where they are, which we can make it start, but it doesn't really matter because they have precise observations.
+
+And then that's very easy to do in PIMEDP.
+
+We'll just create some functions that parameterize how rewarding the reward observation is and how punishing the
+
+punishment observation is.
+
+And then we can plot those.
+
+And this could be 10.
+
+And then the reward is much better than the punishment, or the punishment could be very bad, in which case the punishment is much, much lower than both the null and the reward.
+
+And here I'm showing the prior directly in terms of probabilities.
+
+So when you convert the log probabilities to probabilities, these things will become bounded between 0 and 1.
+
+OK.
+
+And then the D vector similarly will just create a quick function that parameterizes how much they believe the left is better context is true at the beginning of the simulation.
+
+And if you just set that to 0.5, it means they have flat, unbiased, uninformed prior beliefs about the context.
+
+um yes okay all right so now i think we are good to actually do this after all the build up um so like 95 of the work is in encoding the generative model and this is something carl will tell you as well spm like most of the work is not actually running active inference maybe computation wise it is
+
+But in terms of the time and the intellectual energy spent, it all comes down to the generative model.
+
+That's where all the information is.
+
+The rest is just optimization, basically.
+
+So we've written down our A, B, Cs, and Ds.
+
+Then we just basically plug them into this agent API from PyMDP.
+
+And then we create an environment class, which could be something as
+
+uh ad hoc as i'm getting a list of observations from some like api that's talking to the internet or like from a robot sensors or you can actually write down an environment class that generates observations like like another agent for instance um and then you plug the observations from the environment into the infer states function you do infer policies and then you sample an action according to the expected free energy stuff that we talked about uh last time
+
+Okay, so now we're actually going to do this.
+
+So we have our nice nifty functions for creating A, B, C, and D. We can just run those with desired levels of P hint and P reward, and then create our agent.
+
+And this is something we discussed last time, but an important distinction is the generative model versus the generative process or the environment.
+
+So the things we're putting in A and B right now and C are just the agent's beliefs about, for instance, the hint accuracy or the payoff matrix of reward.
+
+That can be arbitrarily different from the actual structure of the environment.
+
+And later, we'll see how you can adjust.
+
+The agent can actually learn the correct reward statistics through a process of learning.
+
+So even if they start out with the wrong generative model, they can adapt their generative model online so that they match the generative process better.
+
+Okay.
+
+And then we'll define this quick class, the two arm bandit, which will be the generative process, the real world for our agent.
+
+We're not going to step through the code, but the link is available.
+
+So if anyone wants to look at this, this is basically just encoding the rules of the game.
+
+So when the agent is in the left arm, they'll get reward or loss depending on the P reward and P hint values.
+
+And as we said, these values can be different than the agent's beliefs about them, which will be in their A matrix.
+
+So this is the generative process, the actual reward.
+
+And then the generative model are the parameters you give to the A constructor.
+
+And then we'll just have a function here that runs the active inference loop.
+
+It looks a little bit more complicated than those three lines I showed on the slide, but that's just because I'm storing things like the history of their choices, the history of their beliefs.
+
+I'm having optional plotting of beliefs, things like that, and plotting of actions.
+
+But this function, basically, the key things are you get an observation from the
+
+You start with an observation, which will be from the generative process.
+
+You do hidden state inference using that observation to get your posterior over hidden states.
+
+And this you can return if you want to plot it, but you don't have to.
+
+And then you'll do inference about policy.
+
+So this is optimization of a posterior over policies, which then gets translated into a marginal posterior over control states or action that you sample from.
+
+and you sample from them if this next line with the sample action.
+
+So the main three lines of any active inference process are inference about states, inference about policies, and then action selection, which can be either deterministic or stochastic depending on your application.
+
+And then the rest is just basically code that converts observations from the generative process into like the terms that the agent can understand and vice versa.
+
+And then we have this helper function that plots the history of choices and beliefs in the true context over time.
+
+So yeah, I just blazed through that quickly because it's not very important.
+
+But if anyone has questions, we can go back and dissect that code a little more.
+
+So now all we have to do is to find the, oh, Jakub, you have your hand up.
+
+You want to ask something?
+
+
+SPEAKER_05:
+Yeah, maybe this is better suited for the end.
+
+But in PyMDP, there's also modules that are adjacent to the agent class.
+
+So I was just wondering how we could make use of the different modules in the action perception loop.
+
+Because I haven't seen many examples
+
+of using, for instance, the inference module or the learning module and how that would augment the run active inference?
+
+
+SPEAKER_03:
+Yeah, that's a great question.
+
+So I have another demo that we can maybe do another time that's building a hierarchical model in PyMDP, so building a two-layer model.
+
+It's a visual forging hierarchical model based on a paper that we did back in 2018, 2019.
+
+And there, you're in this inner loop over time.
+
+You're making use of these submodule functions.
+
+So say you wanted to do some special kind of inference that's not just the standard infer states.
+
+You could actually say, OK, I want to do this particular weird thing that's specific to this inference process.
+
+And you would just add lines here.
+
+Like, I want to take a function from the inference module and run
+
+like, I don't know, a different kind of message passing on it, like run MMP or something, inference dot, or there's an algos module too that has different message passing algorithms.
+
+And then you could optimize your hidden state beliefs using that message passing algorithm and then set them equal to the special thing you did just with that.
+
+Oops.
+
+So yeah, there's no examples here.
+
+But I haven't done that here, but it's definitely something that can be done.
+
+Or yeah, there's another example I did, like simulating an active inference equivalent of an evidence accumulation drift diffusion style task, where the policy selection was done in a particular way, where you're only using certain components of the expected free energy.
+
+And yeah, so basically, there's other demos where you can zoom in and not use the agent class and use submodules.
+
+But I haven't written those in a publicly accessible way yet.
+
+But the hierarchical one, I can just easily make public.
+
+I just haven't had time to put it on the docs yet.
+
+But yeah, that's a good question.
+
+Because yeah, you're right.
+
+Most of the stuff right now is just the highest level implementation with the agent.
+
+OK.
+
+And now to just run the active inference process, I've made a distinction between generative process parameters, like how accurate the hint is, how the payoff structure is, and then generative model parameters, which are used when creating the A matrix.
+
+So the P hint end is the true hint accuracy.
+
+P reward end is the true payoff.
+
+And then just choose some time horizon and run the active inference loop with that time horizon.
+
+And then plot the history of beliefs.
+
+Okay, so here's an example.
+
+The top plot shows the agent's behavior.
+
+So white squares indicate what it was doing at any given time.
+
+So time is on the x-axis.
+
+So you can see it started in the start state, then it gathered information at the hint.
+
+And the reason this wasn't immediate is because its beliefs about accuracy were only 0.7.
+
+So it needs to actually do some evidence accumulation before it's sure what the state is.
+
+Then it played right.
+
+But as soon as it played right, because that's what the hint was telling it, as soon as it played right, it probably had a loss.
+
+a loss observation, which then messed up its inference and made it go back to the hint to accumulate evidence again before being, okay, the hint is really suggesting that I should go right.
+
+So then it goes back, revisits the right arm.
+
+And then over time you see here, the red dot is the actual true context and the gray scale indicates the agent's beliefs about the hidden state.
+
+So here the hidden state beliefs are now converging to believing that the right arm is better.
+
+I know I said at the beginning that all probability would be darker means higher probability, but it's actually the opposite here.
+
+So sorry, that's confusing.
+
+So yeah, right better is higher probability and their beliefs get more and more confident as they play.
+
+So this is, you know, this is the exact same thing you'll see with the teammates, right?
+
+They first
+
+forage for information that's driven by this epistemic value component of the expected free energy as their posterior over hidden states becomes more precise epistemic value goes down and then the expected utility component goes up which is bolstered by the fact that they now have confident beliefs about the context and then that drives them to forge information um
+
+And then so like that kind of exercise that I would have people do if this was like in a classroom context is start messing with the bandit probabilities and also mess with the agent's sensitivity to punishment.
+
+So up here, we made them have plus two relative nats in their reward function and minus four for punishment.
+
+But if you made this even lower, let's say it made it negative six, what would happen?
+
+So now because they're more risk averse,
+
+the risk of getting a loss observation if I was to play immediately becomes higher.
+
+So now the agent basically requires more confidence before it's willing to actually play the left arm because the risk of getting it wrong and getting a loss is too great because their reward function is now shaped more risk aversely.
+
+And then if I decrease this even more,
+
+down to negative eight, you can see that they never even go for playing because even once they're very certain that the left arm is better, it's still too risky given their beliefs about the payoff structure because their beliefs about the payoff structure are such that they believe that there's still a 20% chance that they'll get loss.
+
+But if we change this and said, what if their P reward was 1.0 or say 0.99,
+
+then they're willing, even despite the great risk of being punished, because the expected reward, given you know the context, is high enough, they will still end up risking it.
+
+And they acquire the hint for some time, and then they start risking it.
+
+But the observations will, because P reward is so high, their beliefs about the payoff structure, their beliefs will kind of oscillate as the observations actually change, because the true observations are generated much more stochastically, because this is the P reward of the bandit.
+
+So you can mess around with this.
+
+And I would encourage if anyone
+
+listening now or afterwards wants to mess with these parameters, I would encourage you to just go crazy and mess with parameters and see what different kinds of behaviors you can get.
+
+Yeah.
+
+Okay, so that pretty much wraps up the main brunt of the tutorial.
+
+Let's pause there for questions because I have additional material about learning parameters that we discussed last time would be good to
+
+to get into, because that's something that's really under-documented right now with PyMVP.
+
+So we can move into that, but I think we should first break for some questions.
+
+
+SPEAKER_00:
+Awesome.
+
+Thank you.
+
+Jakob, if you want to ask, or Karl, otherwise I'm happy to hear about learning.
+
+
+SPEAKER_01:
+Cool.
+
+
+SPEAKER_00:
+Let's do learning and then we'll have any closing questions at the end.
+
+
+SPEAKER_03:
+Perfect.
+
+Okay.
+
+I'll have some quick slides.
+
+So learning under active inference is cast as
+
+updating beliefs about the generative model parameters itself.
+
+So inference is one thing.
+
+Inference is saying, given my generative model, so my beliefs about the way the world works, what is the best explanation in the sense of posterior over hidden states and policies that explains my actual data?
+
+And you get that by minimizing variational free energy.
+
+Learning becomes much more complex, but also
+
+uh more interesting in the sense that if the agent's generative model itself is wrong they can change the generative model to also optimize variational free energy so learning and inference can kind of cooperate to or sometimes interfere with each other as we'll see to um to minimize uh variational free energy so the way we have to start by doing this is now
+
+treating the parameters themselves so the parameters of the a array which are categorical likelihood parameters b array d array c array those themselves now become random variables over which we can have priors and of course variational posteriors um so we can go back to our original a or palm dp representation
+
+So now what we see is in this third column next to ABC and we have parameters that are priors over
+
+the categorical parameters of the A, B, C, and D. So a natural prior for these sorts of categorical variables is called the Dirichlet distribution, which is basically a conjugate prior for a categorical likelihood distribution.
+
+That's why it's very nice.
+
+And also the values of its parameters have a very nice intuitive feeling and interpretability to them.
+
+So now the agents will have priors, which are updated by this P of phi at the top.
+
+And phi is just a collection of all these Dirichlet hyperparameters.
+
+They're also called prior parameters.
+
+And these are parameters or priors over random variables that themselves are the likelihood distributions and priors of the generative model.
+
+So we're just going to do a few instances of learning today.
+
+I don't know if we'll have time to do B or D learning.
+
+We'll start with A matrix learning.
+
+But the principle applies the same.
+
+So here's an example of a Dirichlet prior distribution over some categorical parameters.
+
+So let's say our A matrix or A array, let's just say it's a matrix.
+
+So now the random variable itself are the entries of the A matrix.
+
+A prior over those entries is something called a Dirichlet distribution, which is just a vector of positive real numbers.
+
+And here we've reshaped it so that it has the shape of an array so let's say this area represents like the payoff matrix in our bandit task.
+
+So the two columns are two possible hidden states our context one context to and then the two observations are punishment and reward.
+
+So if this is our prior, which is measured by these dear slay parameters.
+
+the likelihood distribution that they parametrize.
+
+Also, you can express this as the expected value of the Dirichlet distribution is a categorical with these values.
+
+So what you can see is that the Dirichlet counts, like the scalar magnitude of the Dirichlet parameters, represent a prior confidence about the probability of the different contingencies encoded in the A matrix.
+
+So I made these very simple.
+
+here like the the deer slave priors are nine counts for seeing punishment given context and one count for seeing reward given context one but you can change those to very very high numbers so for instance
+
+if that 9 on the left was changed to a 10,000, then on the right, the probabilities would become like 0.9999 to 0.00001.
+
+So the scale of the Dirichlet, also known as pseudo count parameters, encodes something like a belief about how many times that particular coincidence of observation and hidden state has been observed, which you can also think of as like a prior confidence about that contingency.
+
+And the expectation to create your A matrix via this going from a deer slate to an A array is very simple because you just take each deer slate count and divide it by the column wise sum, which is this A naught variable on the lower right.
+
+So it's just that particular value of the A array and divided by the sum of the counts.
+
+So that's how you go from a deer slate prior over a categorical likelihood distribution through the expectation.
+
+and then inference.
+
+And I'm not going to go into the variational posterior, but it's very simple.
+
+So when you're doing learning and you're trying to actually update these Dirichlet parameters as a function of observations, what essentially you have is a new posterior that's now not over hidden states of the world, but you have a variational posterior over the parameters, the categorical
+
+or rather a variational posterior over the Dirichlet distribution, the Dirichlet distribution that parametrizes your A matrix.
+
+So that's what's represented in the lower right.
+
+So let's assume that our beliefs about the Dirichlet parameters were as it is now, so your beliefs about the A matrix.
+
+And then we get an observation.
+
+And let's say that we saw the observation of punishment.
+
+And that can be represented by this one-hot vector.
+
+Now we want to update our beliefs about the A matrix given the observation.
+
+But to do that, what you also need is a hidden state or a belief about hidden states.
+
+And let's say that the agent was very confident that the hidden state was context 1.
+
+What ends up happening to the resulting posterior over the A matrix
+
+is a very simple associative, quasi-associative learning rule where the update to the Dirichlet represented by this bold A sub Q becomes the prior over the Dirichlet parameters plus
+
+the outer product between the observation vector and the hidden state belief vector.
+
+So this is kind of like a form of coincidence detection where you just see what parts of the hidden states line up with what parts of the observations and you increment your beliefs about the A matrix accordingly.
+
+So in this case, if I really believe the context was one and I saw a punishment, then my belief about that particular contingency seeing punishment under context one would just be incremented by a plus one.
+
+And that's what this outer product at the lower right calculates.
+
+It computes a matrix that is the increment to your beliefs about the A matrix.
+
+So in this case, the matrix would have one in the upper left and then zeros in the other three entries.
+
+And you use that to kind of increment your A matrix.
+
+Technically, you're incrementing a Dirichlet kind of conjugate prior over your A matrix, but it's really a variational Dirichlet posterior.
+
+But you can imagine if your hidden states are also contaminated with uncertainty so say you had 50% your 5050 whether it's context one or context to then similarly with this a matrix update the update would then be spread over the two.
+
+Possible contingencies, so if you saw an observation, but you weren't sure what the hidden state was in both.
+
+that just the overall probability of seeing punishment under your generative model would go up because you would increment that entire row of the A matrix within this case 0.5.
+
+So that's just an important thing to note is that uncertainty in your own hidden state beliefs will bleed into the updates to the Dirichlet parameters.
+
+And oftentimes alongside
+
+I mean, optimally, alongside a matrix learning or parameter learning, you're also going to be augmenting your expected free energy because your generative model is now different.
+
+So you have these new priors and posteriors with a so-called parameter information gain term or a novelty term.
+
+So while you're pursuing learning, it also makes sense to choose your policies such that you'll maximize the information you get based on the consequences of your policies about the parameters of the generative model.
+
+So this expected KL divergence exactly quantifies how much a given policy will lead to a good Bayesian update of your parameter beliefs.
+
+So intuitively, this quantity might be
+
+described as, how much do I expect the consequences of my actions will update my beliefs about parameters?
+
+So consequences of actions is represented by that Q of O given pi, the thing that the KL divergence is taken under expectation of.
+
+And then the actual KL divergence is saying, how much surprise will I get given these observations
+
+relative to my current beliefs about the parameters of regenerative model so this is what's called in the literature the novelty term and it's very easy to experimentally turn off or on this novelty term
+
+using simple flags in the agent class.
+
+And this goes for the other components of the variation or the expected free energy as well.
+
+You can kind of turn on flags that say, do I want to use this novelty or parameter information gain?
+
+Do I want to use the state info gain, which is the same as the epistemic value or the Bayesian surprise?
+
+And then do I want to use the utility?
+
+So for the learning simulations, it makes sense if you're doing learning to make sure that this parameter is turned on.
+
+um yeah okay so that's that's the kind of um slides on on learning and now we can actually get into implementing this in pine vp um so we first will create an a matrix and we'll let the agent have very slight positive beliefs about the reward contingencies
+
+And I'll explain later why this helps.
+
+It helps with learning if they don't have total ignorance about the reward probabilities, but they have some bias in some direction.
+
+It doesn't actually have to be 0.51.
+
+It could be the other way.
+
+And then there's utility functions that allow you to create Dirichlet variables that have the same shape as some base A array.
+
+So here, this PA
+
+variable is basically the prior, that bold A sub P variable that represents the agent's Dirichlet prior over the A matrix.
+
+So this is now a new variable that we're going to pass in to the agent constructor.
+
+So if our A matrix is like, let's look at the reward contingency.
+
+reward modality so that's a1 so this is the agent's current beliefs about the the payoff structure right so under choose left and choose right those are the two contingencies given the two hidden states pa will have the same structure except that it'll have those contingencies encoded in terms of deersley pseudo counts so if i made them made the pseudo count scale 10
+
+then they're relatively confident that the payoff probabilities look like this.
+
+But again, these are not probabilities.
+
+They're Dirichlet parameters that parameterize a categorical likelihood.
+
+So you can use the normalized distribution function to actually then visualize the Dirichlet distribution in terms of actual categorical parameters.
+
+So taking the expectation, i.e.
+
+the normalization of the Dirichlet prior, will give you exactly this.
+
+So if I say, are these two things the same, they should be the same.
+
+OK, maybe down to numerical differences, they're not.
+
+But yeah.
+
+OK, so yeah, that's how you parameterize that.
+
+So we'll create it.
+
+This is an important point that's also used in SPM.
+
+Often we want certain contingencies to be unavailable to learning.
+
+So we assume these are contingencies that are baked into the agent's beliefs about the world and thus not adaptable.
+
+So one way, and this is just borrowed from the SPM way of doing it,
+
+to encode that is to bake in a kind of really precise confidence or very high confidence that certain contingencies are the case.
+
+And you can just do that by adjusting the scale parameter for particular indices.
+
+So for instance, by doing this, I'm just telling the agent that it essentially doesn't learn the contingencies related to the null modality.
+
+So for instance, if
+
+If you're in the start state, it believes with really high confidence that you'll always get the null observation.
+
+And we just operationalize that by creating very, very high pseudo count or Dirichlet priors over that particular slice of the A matrix.
+
+So that's an important point to do.
+
+And then we'll just write all this stuff, so this prior count about the null observations and then the scale that determines their general confidence outside of this null thing.
+
+We'll write that all into a function so that we can then parameterize our PA.
+
+And then we now write a new active inference with learning loop, where instead of just storing the history of choices and beliefs, we also store the history of their beliefs about the Dirichlet parameters.
+
+And an important thing that you can also do in PMBP, which is nice, is you can say, I only want to learn particular modalities.
+
+So when you're creating the agent class, there's a bunch of arguments you can pass in.
+
+But one of them is, I only want to be learning the reward payoff modality right now.
+
+And this can change, you could have them learn the
+
+the hint accuracy as well.
+
+But by passing in a list of which of the modality indices that you want them to learn, you turn off learning on all the other modalities, which normally in SPM or what we used to have to do in PyMDP is you just have to turn up those Dirichlet pseudo counts super high on all the modalities that you don't want to learn.
+
+But if there are other modalities
+
+that you don't want to learn now, you can just pass in this list of modalities that you want to learn, and it'll only focus learning onto that.
+
+So now I'm setting up an agent that has these particular beliefs about the world via A and now has a prior that it's going to update through doing variational inference or learning.
+
+And then so we'll create the generative model here, including this new prior over A, and then we'll run the active inference loop with learning.
+
+which involves creating an agent that can only do learning on the payoff structure modality.
+
+So we want the agent to now learn which arm is best, basically, because it doesn't know the payoffs and then also to use parameter information gain to motivate its decision.
+
+And there's another thing I forgot to mention, which is the learning rate, which is how much they increment their beliefs about
+
+the posterior or about the A matrix using this update rule.
+
+So there's something I didn't mention.
+
+There's often a learning rate that's added here that basically scales how big this update is.
+
+So that can be, you know, you can experiment.
+
+It depends on the application, what the scale of that is going to be.
+
+But the default is one.
+
+Okay.
+
+So in this example, the agent gets the hint for one time step.
+
+it's got the standard like negative four punishment and then it goes straight to the right because it believes the um the hint is accurate so it gets a reward is right then it goes and starts playing the right arm and you see its posterior beliefs instantly go to right and now so since what we've also spit out of this active inference loop is the beliefs about the
+
+A matrix in this QA posterior over A history, we can plot its beliefs about the A matrix probability over the contingency of seeing reward, given that I was in the right arm.
+
+And what you see is that even though they start with basically 50-50 beliefs, as they gather observations, their beliefs about that posterior probability over that particular entry of the A matrix get bigger and bigger.
+
+An interesting consequence of this is their beliefs about the left arm contingencies don't change because they don't ever experience that state of the world.
+
+So that's like an interesting what you might call in machine learning like a, it's not really a bad bootstrap, but it's the idea of like selective sampling.
+
+So you only learn those contingencies.
+
+that are selective to the part of the world that you're sampling.
+
+So the agent doesn't know what that other slice of the A matrix looks like because it's never experienced what it's like to be in the left is better context and playing the left arm.
+
+So its posterior beliefs about that part of the A matrix remain the same.
+
+But you can see that over time, its beliefs start to converge to 0.8, which is what we set in the generative model.
+
+This is just basic statistical learning, right?
+
+It's just getting reward observations over time, and as it gets a sequence of reward and punishment through this very associative basic mechanism, it's just incrementing its Dirichlet beliefs.
+
+And what I'm showing is the normalized, i.e., the expectation of those beliefs over time.
+
+So you get something that's 0.8.
+
+But the actual Dirichlet parameters themselves will be growing linearly in time, effectively, depending on the observations they get.
+
+um yeah so that is just the basic learning and then there's another thing you can do which is take advantage of this change probability so now we allow the context to change and this is one way to get them to actually be able to explore and learn more about both reward probabilities in the landscape is allow them to have
+
+not only to make the environment change, but they also entertain beliefs in their B matrix that the environment can change.
+
+So you could use this to do B matrix learning as well by defining a PB variable.
+
+But here we're just going to have A matrix learning as we were doing before.
+
+I've changed a little bit the parameters to make things like a little more stable because sometimes you get weird behavior.
+
+I mean, that's something we can play around with too.
+
+So now they allow the
+
+the environment itself can change.
+
+And they also in their B matrix, they think the environment can change.
+
+And then I'll plot the history of beliefs and choices.
+
+So now they instantly go for playing the arms.
+
+They kind of risk it.
+
+They don't, the parameter information gain actually outweighs the epistemic or state information gain.
+
+They start playing, they gather observations.
+
+they're not very confident about what the state of the world is because they only are getting information about the hidden state from the actual sequence of rewards and losses and then eventually they go to the hint because probably the utility becomes low because they don't know what their reward probabilities are and they're building their own beliefs
+
+Then they get the hint.
+
+Then the hint is accurate.
+
+So they have very precise beliefs about the hidden state of the world.
+
+And then the world actually switches.
+
+So you see the red dot is the actual switching statistics of the bandit.
+
+And now they've kind of explored both bandit arms while also updating their beliefs about the
+
+bandits and you see that their beliefs about the left arm are kind of bad because they they it seems like they've probably mostly gotten negative data while they're in the left arm and they didn't explore it very much um and and yeah or no i guess at the end they're exploring it quite a bit but their their beliefs about it go down because they have i guess a bad experience with it
+
+Yeah, that's the left arm.
+
+That's the right arm.
+
+But you can keep trying this and mess around with different parameters, and you'll get different sorts of beliefs.
+
+So here in this example, there's some switching going on.
+
+The posteriors aren't tracking very well until they actually visit the hint, and then their posteriors start getting much more precise.
+
+And then at that point, they can start making more precise beliefs.
+
+In this case, they ended up kind of doing poorly on learning on both of them because the true reward probabilities are PA.
+
+Yeah.
+
+So everything I've talked about so far is an example where learning can often lead to suboptimal outcomes because it's done in an online fashion.
+
+So this is an interesting point of departure between SPM and PyMDP.
+
+But I mean, you can do all the same things in SPM that you can do in PyMDP.
+
+So here what I'm doing is I'm updating the A matrix every time I get an observation.
+
+So they do hidden state inference, they select policies.
+
+They select actions and then given the last observation and the last hidden state belief, they do one step of parameter inference and they use the next A matrix.
+
+That's what's handled in this updateA function of the agent class.
+
+They update their beliefs about the A matrix and they use that for inference at the next time step.
+
+Another way you could do this is you could do an entire trial.
+
+and then update your A matrix at the very end of all the time steps of action selection and observation sampling, and then use that A matrix for another trial.
+
+So this is kind of the difference between like a more EM, like a separation of time scales EM or expectation maximization approach, where given a set of observations, then I update my model.
+
+And then I go back and I do more trials
+
+without updating my model, but using the same fixed one.
+
+And then you can kind of do that in epochs.
+
+And that's typically how it's done in SPM because you only do parameter learning, basically this part outside this time loop.
+
+So you do it like down here.
+
+But then what you do is you run multiple trials
+
+And the nice thing about that is it kind of makes the A matrix updates less likely to, in the moment, bias your action selection.
+
+So for a given set of time steps,
+
+you're locked into what your a matrix police are and you don't do the update until a set of time steps has elapsed.
+
+And yeah so for the purposes of this tutorial I just did this online learning thing, but, as you can see that can lead to actually weirdly sub optimal behavior where they don't learn the true reward statistics very well.
+
+it depends on a bunch of things too like the learning rate and you know there's a i haven't explored this demo as much as i would like but there's a lot of interesting kind of side effects like here they're actually learning very weird statistics about the bandit landscape like they start kind of learning it well but then as their observations keep going they don't they don't actually learn very well here they just avoid
+
+playing because they have a bad early experience.
+
+So this is an example of like a bad bootstrap.
+
+And then they go and just play the hint because they're too scared of anything else, even though their hidden state inference is perfect because the hint perfectly tracks the hidden state.
+
+So yeah, this is just kind of meant to be an example of what you can do with learning.
+
+But there's going to be examples where learning actually causes suboptimal behavior, but in an interesting way.
+
+So here's an example where they actually kind of are learning the correct reward statistics.
+
+Things are starting to converge to 0.8 for both bandit arms.
+
+But it's very stochastic, as you can see.
+
+And I also chose action selection to be stochastic.
+
+With deterministic, I wonder what you would get.
+
+Yeah, here they're just arg maxing the expected free energy or arg minning.
+
+So hint is always the most safest option, given their history of observations.
+
+
+SPEAKER_00:
+If I can make one remark on that kind of diversity behaviors that we're seeing.
+
+YMDP and active inference are providing us a space and a approach to composable generative model construction that we can then sift through and co-evolve with to find different strategies and behaviors.
+
+So active inference or even any specified generative model, it's not an answer or a solution, for example, to the explore-exploit dilemma.
+
+we see this like empirically right now active inference is not in general resolving explore exploit any gm in general is not resolving explore exploit any parameterization is not resolving explore exploit even for one environment it just is equivalent to saying like well we have a linear model of healthcare data so we've resolved the healthcare issue and um
+
+this really viscerally shows the space that we build in and what remains to be built is so open yeah absolutely yeah i mean because optimality
+
+
+SPEAKER_03:
+is not really a function of what the generative model is or what the algorithm is.
+
+It's more guaranteed to be optimal based on how analogous the generative model and the generative process are.
+
+So if the generative model is a perfect model of the generative process, then doing Bayesian inference with respect to that generative model, that is optimal for everything.
+
+how you learn the generative model.
+
+That's what we're seeing here.
+
+If you learn the generative model in an online fashion, it's not guaranteed to learn the right generative model.
+
+In many cases, it learns the wrong one.
+
+And this is something that a lot of people in active inference world have explored.
+
+For instance, Nora Sajid, who's also a student of Carl's, has explored a lot the limitations and the boundaries of parameter learning and things like preference learning.
+
+Like what if you were learning the C vector itself?
+
+How can that be learned online in an adaptive way?
+
+Yeah, and also Alec Chance has that paper action oriented models where they're learning the B matrix.
+
+And in that thing, they're showing how the agent learns kind of suboptimal strategies, depending on its exploration of parameter space.
+
+But that also actually is kind of a one of the
+
+benefits of active inference that paper shows because it shows if you have an agent that does have epistemic value the model it learns of the world is like better than agents that don't have epistemic value but again that the models are always action oriented they're always based on what parts of the full state space is the agent driven to sample awesome jacob any closing comments and then all the closing comment and then connor with the last word
+
+
+SPEAKER_05:
+yeah well thank you very much for the great um overview what particularly uh was
+
+I found particularly interesting was both how you touched on how it could be modified with the action perception loop could be modified with the other other modules even though as you mentioned there would be more opportunities to go deeper in that but also on the on learning the
+
+the Dirichlet parameters, and I would be interested to see how that also influences planning.
+
+if you would up if you would do like um kind of pseudo update of your dirichlet parameters when you're calculating your expected free energy as in what would i uh i'm calculating my expected free energy whilst also taking into account that my b would change on each in on each step and uh how that how that changes like the optimality of
+
+the temporal depth that we do planning with.
+
+I think it's super, super interesting and really looking forward to hopefully another model stream.
+
+
+SPEAKER_03:
+Yeah, so is it OK if I quickly respond to that?
+
+Yeah, please, please.
+
+Yeah, that's a very interesting point that you just made about
+
+this fictive or imagined update.
+
+Where is that?
+
+I had a, yeah, this slide.
+
+So that term, that novelty term, in theory, that does capture exactly what you're saying, Jakob, is that this thing says, how would my tier site parameters update if I was to take this policy pot?
+
+And then I use that term to actually choose where to explore next.
+
+So if I turn on the parameter information gain term in the agent class,
+
+they'll much more quickly skip the hint and go directly to sampling the bandits because they're driven by novelty.
+
+Ooh, I want to know what the reward probabilities are, so I'm going to go explore.
+
+However, what it doesn't do, and what I think you're intimating with your comment, is that if I did multi-step planning, two time steps in the future, will I be able to do my planning given how I...
+
+think I updated my parameters at the first time step.
+
+So that's what the equivalent of sophisticated inference, sophisticated inference is saying, how would I plan at time step three, given how I think my beliefs would update up to time step two.
+
+And that's done right now for hidden states.
+
+But I haven't seen that done for parameters.
+
+And I think there's someone like a student of Ryan Smith's is working on that now.
+
+is like this propagation of counterfactual beliefs about how my parameter beliefs would change in the future.
+
+And that's like, that's like a really cutting edge, I think, active inference.
+
+It's like not only novelty, but how would my like perspective sophistication about how your own parameter beliefs will have evolved by time point T, and then using that to do planning for time point T plus one.
+
+That's like really sophisticated stuff.
+
+I think getting just even bare bones sophisticated inference with hidden state counterfactual stuff in PIME-VP, that would be a huge accomplishment too.
+
+And then of course, incorporating it to be more with the parameter sophistication as well.
+
+And then another quick thing is I can quickly show you an example of one of those other
+
+
+SPEAKER_00:
+Let's see.
+
+While you're finding it, that last discussion on sophisticated planning,
+
+It's something that at the semantic level we engage with every day.
+
+What courses should I take this quarter so that I can learn what I don't know today so that next quarter I'll be able to make a better plan for which classes to take so that in three years when I graduate, dot, dot, dot, dot, dot.
+
+But it's already phrased
+
+at the semantic granularity that these models are rapidly converging towards and they're not converging towards it by scaling is all you need they're converging towards it with a factorized actually semantic approach which is very exciting yeah that's a great analogy it's like if you were a naive active inference agent without sophistication you would never plan with like a 10
+
+
+SPEAKER_03:
+time step planning horizon, you never plan to take, or let's say a three semester planning horizon, you never plan to take multivariate calculus in your third semester, because you would not have anticipated by the second semester, I now have enough linear algebra to take.
+
+I know that by the time I finish the second semester, I will now know linear algebra.
+
+So I'll be well suited to take multivariable calculus.
+
+Whereas what we as humans do is we do have that parameter sophistication.
+
+I can plan as a freshman, as a first year, to take in my third or fourth semester some high advanced physics, because I know by that time I will have the requisite multivariable calculus or whatever.
+
+So that's a really nice analogy that I never, I think that's a good example.
+
+
+SPEAKER_00:
+Welcome to Act-InfU.
+
+
+SPEAKER_03:
+Yeah, exactly.
+
+Um, so here, uh, I just wanted to show you, um, here's an example of a hierarch hierarchical active inference demo.
+
+I can share this too.
+
+It's another collab notebook where we're exactly doing, um, we're composing to PalmDP.
+
+So there's like a high level PalmDP.
+
+then there's a low level palm dp and for example when you're doing a step of updating the empirical priors at the high level before you pass them down to be empirical priors at the low level we use the control module for example to do get expected states we use the high level beliefs the high level b matrix and then the high level chosen action
+
+to propagate forward the next posterior beliefs at the high level and then those things themselves parameterize a low level empirical prior for this faster palm dp that's going on at the low level so this is an example where you're composing like agent class calls like this but you're composing them with functions that are built from sub modules and adjacent modules of pine dp
+
+So that's an example of the thing you were talking about.
+
+But yeah, that's very brief.
+
+We can get into that later on.
+
+A different stream or something like that.
+
+
+SPEAKER_00:
+Awesome.
+
+Yes.
+
+Dot three, whenever the time is right.
+
+I'll just give two closing areas.
+
+Again, really...
+
+appreciate coming back on and sharing this development in progress already it feels more powerful and documented than when we were in the dot one just a few weeks or months ago i think two areas that are going to be really exciting to discuss and see how they're implemented and also the plurality of ways that they're implemented
+
+The first area is structure learning on cognitive models from the outside.
+
+So as a ethologist, as a behavioral researcher, how do we do structure learning on cognitive models
+
+for systems that we actually know about their cognitive architecture or not, but also the view from the inside in terms of structure learning and metacognition.
+
+Like, how should I change the dimensionality of my B matrix?
+
+Or should I turn on that flag
+
+to engage in this kind of sophisticated inference.
+
+So structure learning on cognitive models, view from the outside, view from the inside is one exciting area.
+
+And the second more experimental area is statistical power analysis, pre and post hoc statistical power analysis along the lines of the design matrix in SPM.
+
+so that you put 15 time steps and 0.8, 0.2, and punishment is four, and then you could sweep across parameters and learn about how well it did.
+
+But if there was certain interfaces, analytical or numerical approaches to be like, yes, with 25 time steps,
+
+we have this much of an expectation of convergence or this differential in rewards should be resolvable by an adaptive agent over this long and just understand how long should these experiments be because there are such interesting results with one-shot learning
+
+and with being able to generate someone's voice from just 10 seconds of them talking or make a video of somebody as a deep fake with just a still image and so it seems like it's possible to learn a lot from a little and if we can learn a lot from a little and have a semantic cognitive model that would be quite great absolutely yeah like
+
+
+SPEAKER_03:
+It's almost like hyper parameter optimization on the landscape of active inference models.
+
+How do I choose the parameters of an active inference model in a smart way?
+
+Yeah, there's several methods for doing that that we could definitely explore.
+
+Yeah, and data efficiency is the main thing, like you said, making it so you don't have to train it on a trillion images, like with a deep neural network.
+
+
+SPEAKER_00:
+perfectend.007.2.
+
+And whenever you want to join, you and any colleagues are always welcome to share the next spiral in PyMDP development.
+
+
+SPEAKER_03:
+Awesome.
+
+Thank you so much again for letting me come on and listening.
+
+I hope it was helpful.
+
+Yeah, and I'm glad that it's recorded.
+
+It's really an amazing resource that you guys are developing here.
+
+So thanks again.
+
+
+SPEAKER_00:
+Thank you.
+
+Till next time.
+
+Bye.
