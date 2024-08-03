@@ -1,0 +1,3994 @@
+SPEAKER_11:
+all right hello and welcome everyone welcome back to the second applied active inference symposium it is the second interval and it's july 31st 2022 in this second session we are going to first feature a presentation by bruno lara prediction error dynamics a proof of concept implementation following that we'll hear from matt brown who
+
+with a presentation, Real-time Robotic Control Through Embodied Homeostatic Feedback.
+
+The third presentation will be by Adam Safron on Generalized Simultaneous Localization and Mapping, GSLAM, as a Unification Framework for Natural and Artificial Intelligences.
+
+And the final presentation will be by J.F.
+
+Klottier, Towards a Symbolic Implementation of Active Inference for LEGO Robots,
+
+We'll then have some of those presenters rejoin us in the final two or so hours of this interval for a roundtable discussion.
+
+We'll also be joined by Carl Friston there.
+
+So thanks everyone for watching live or in replay.
+
+Hope that you add any comments if you would like into the live chat.
+
+
+SPEAKER_09:
+and otherwise thanks to all of our presenters and co-organizers for their awesome work and thanks so much for joining bruno please take it away yeah thanks a lot uh then for the invitation um i was very surprised uh as as most of our work so far it's not directly related um well it's not actually active inference of course it's related
+
+But since we published a couple of years ago, a paper that actually I'm presenting a bit of these results here.
+
+Well, lots of nice and interesting people started to look into this implementation of predictor aerodynamics.
+
+And it's actually the part where
+
+where we could say it's a part that we are taking out of all this framework to try to implement in our robots, in our agents.
+
+for for i i i i don't know how much or how many times you've heard this story of of why we are doing this kind of cognitive robotics or why we like to call all this all this research or this area cognitive robotics and i like a lot this slide which kind of summarizes what it's usually a long introduction on the history of artificial intelligence and robotics
+
+And it just tells this story of 50 years of research trying to figure out how can we have machines that are as intelligent as humans.
+
+And it comes out that actually this upper part of the image quite got resolved rather fast.
+
+We cannot say easily, but it was more or less fast.
+
+And then we have the second part of the slide, like the bottom part, which is what comes out to be the most difficult challenge for robotics.
+
+So what has to do with interaction with the world.
+
+You have a small child that is capable of handling these objects in the environment.
+
+And then you have this other robot that can do it.
+
+But at the moment that you change the size, the weight, the position, whatever you want of the pieces or of the chessboard, you actually have a child that
+
+with no problem can adapt himself to the challenge.
+
+And the nerd joke is then on the other side you have another PhD that has to solve it if you do the same for the robot.
+
+So, in reality, what was supposed to or was thought to be kind of the hard problem, which was having a robot reason and solve problems, it came out to be quite the not so difficult to solve task.
+
+And we can talk about more difficult challenges that have already been passed
+
+um such as I don't know playing go which is way harder than than chess and we had Alpha go a couple of years ago um well winning against uh the human the human champion so
+
+We like to think that we are doing now things differently.
+
+We are having robots that interact with the world, that interact with what's going on around, and they learn through this interaction.
+
+And of course, that gives us lots of challenges and lots of things that we have to solve.
+
+So now I come from this, yeah, you could think now as an old school of internal models.
+
+We work in this field for quite already some years.
+
+And it's this part of the world where there is inverse and forward models.
+
+for control, of course, and they are thought to be behind all these important issues in humans.
+
+Since the beginning of my career, we've been doing implementations of different types of tools for these robots, but always based on these inverse and forward models.
+
+So just a quick reminder for those that might not be very familiar.
+
+uh much into this this type of of models so we had a sensory situation whichever it is whatever it is and we have a desired sensory situation we have an inverse model that takes us input those those two things the the the sensory situation at time t of course
+
+the sensory situation at time t plus one, which is the desired, and the inverse model is going to tell us what's the motor command that needs to be performed to go from here to here, right?
+
+And then we have a forward model that takes the sensory situation at time t and the motor command at time t and gives us the prediction of what's going to happen with this sensory situation.
+
+And so we have a prediction error when we, well, we have lots of errors, but, um, we, we are interested on, on, on particularly this, um, error, which is the difference between what we actually predicted and what happened in the world.
+
+So we've been doing this for, for quite a while.
+
+Uh, um.
+
+Well, we've also used this prediction back as a sensory situation, and we can get long-time predictions, what we call, we can do lots of comparisons between what we wanted and what actually happened, and lots of different errors.
+
+But as you know, and well, now everyone works with, it's actually this error, like the difference between the world and what actually I predicted.
+
+Yeah, and so that's what we can say we have in common.
+
+Some years after, well, some years ago, actually, we came across all these ideas of predictive processing.
+
+And we started to dig into it to see what actually we could use for our models, what could be useful for improving our models and our agents' behaviors.
+
+And we have lots of doubts, lots of questions.
+
+But one of the first things that we've done so far is to look into what happens with the error as an agent is executing an action.
+
+Sorry.
+
+But first, I'd like to walk you through one of our implementations.
+
+Well, first, where is actually what you could call the cross areas of what we believe is important in this case when we have active inference and prediction error minimization?
+
+So most of us are very familiar with this kind of representation of what's happening actually during action.
+
+And we actually believe that minimizing prediction error is what leads to belief updating.
+
+So like the change in a prior belief encoded as a posterior belief.
+
+And this is actually informational gain.
+
+So this means learning, right?
+
+So in active inference, the expected future states are fulfilled through action execution, we know, and this associated expected prediction error is minimized by actively sampling sensory information.
+
+And so the important part for us is this expected prediction error.
+
+And we believe the attribute of a policy, which can be epistemic and instrumental, in case this action is novelty searching, it's reflecting its epistemic affordance, and we could say it's acting for information.
+
+In case of preference searching, this reflects instrumental affordances and its action for reward.
+
+So in words of Kirchweinstein, we can think of active inference as the process of selecting relevant affordances.
+
+So those which are expected to minimize prediction error in a context sensitive manner.
+
+Yeah.
+
+So what we've done actually, or what we wanted to actually implement is
+
+how these expectations about the dynamics of the error
+
+cause or are related to feelings, to these embodied feelings.
+
+And we believe they allow a sensitivity.
+
+So how well or how bad an agent is doing at improving the grip on what is relevant in the landscape of affordances.
+
+So the sensitivity to changes in the rate of prediction error reduction is what we call prediction error dynamics.
+
+And we can say the steeper the slope, the faster the rate of reduction.
+
+And we see some examples, just very simple.
+
+So in black, we could see the actual error as the action is executing.
+
+And then we have a slope associated to this error.
+
+what we don't want what the agent doesn't want is this error increasing having a positive slope and on the other hand the error is decreasing then we have this slope and this is actually what we what we are looking for
+
+So prediction errors are manifested as changes on affect.
+
+So if the rate of prediction error is faster than expected, we have a positive balance and we have an action policy which is more precise.
+
+In the case that the error is lower than expected or is increasing unexpectedly, we have a negative balance and an action policy which is less precise.
+
+So,
+
+Just walking you through a couple of implementations that we have done.
+
+The first one is just kind of an example of this mix that we're trying to have.
+
+The error is used for learning, but we have a very simple implementation of self-organizing maps.
+
+We call it the self-organized internal models architecture.
+
+The nice thing on this architecture is that it actually sort of doesn't have to have an inverse model.
+
+What we have is a self-organizing map that organizes the motor sensory information.
+
+And on the other hand, we have a visual sensory information, which is also organized.
+
+In the same, another self-organizing map.
+
+And then we have what we call a multimodal representation.
+
+And in this multimodal representation, we have associations.
+
+We have associations between a sensory situation, another sensory situation, and a motor command.
+
+So you could think of this as an inverse forward model pair, but it's actually not encoded as such.
+
+So we just have associations between sensory situations and motor commands.
+
+So we thought this was very interesting, and we use it, for example, for saccadic control.
+
+So the robot has some...
+
+initial sensory situation, which is the stimulus somewhere in its field of view.
+
+And what we need, or what the robot wants, is to foveate the stimulus.
+
+So this is the sensory situation, the desired one.
+
+And we ask this self-organizing maps architecture what we need to do to bring the stimulus from here to here.
+
+And it's executed.
+
+It's not very precise, so it comes close to the center of the image.
+
+And then we use this as the new sensory situation.
+
+Then we have the same target.
+
+We again ask the architecture, what do we need to do?
+
+And then it comes very close.
+
+So after 100 runs, you can see that the robot, this is the starting situation.
+
+In red, we have the first prediction and execution.
+
+And in green, we have the second prediction and execution.
+
+So it's a very nice, simple architecture that actually works, as I said before.
+
+It works like a forward model, but it can also work as an inverse model.
+
+We use prediction error to learn.
+
+And so we could use it as some kind of modular architecture.
+
+We can put more maps.
+
+And in this case, we have the position of the head, visual stimulus, the position of the arm.
+
+And what the robot can actually do is find the stimulus somewhere in the space and then bring it to the center, kind of obviate it, and then actually bring the arm also there.
+
+So we have all these associations between movements of the head, movements of the arm, movements of the eyes.
+
+And all these get associated and are coded as initial and ending positions.
+
+Okay, so the next question or the next thing we tried to do was how can we use prediction aerodynamics to guide learning?
+
+And this was this paper we presented a couple of years ago in Epirog.
+
+It was actually Guido Schilacci that presented it, which is our co-author.
+
+So it's a work by Guido Alejandra Siria, which is also a colleague and myself.
+
+And what we did there is,
+
+I won't tell you much about the maps or the kind of networks that were used in detail.
+
+The important part is what we see here.
+
+So we have
+
+A very simple robot.
+
+This is what you could see here.
+
+It's a two degrees of freedom camera mounted on a sort of artificial field where we have lots of plants.
+
+And the robot moves towards a specific destination.
+
+So it wants to look at some image, at some plant.
+
+And so we have for each movement, for each goal, we have a prediction error here.
+
+So we organize the goals in a sum.
+
+Of course, the goals are encoded using an autoencoder.
+
+We use the middle part of the encoder to have represented the goals here.
+
+And the important part is each one of these goals has some prediction error dynamics.
+
+And so we go back again to our inverse model and forward model and execute the command, the motor command, and we do our prediction and we get an error between what we wanted and what happened.
+
+The interesting part, and what became kind of nice, and that was what we wanted to implement, what we were thinking about, is we append this prediction error to a sort of a buffer, and this buffer
+
+Once that it contains more than four predictions, we do a linear regression, and actually what we get is an indicator of the progress.
+
+How good are we doing?
+
+So it's kind of a tendency for...
+
+for learning.
+
+So when we have a negative slope, it actually means we are going towards the goal.
+
+We are doing fine.
+
+So progress is increasing.
+
+It means there is a positive emotion and we remain on this goal.
+
+So learning is going fine.
+
+When the slope is positive, so the activity is away from the goal, there is no progress.
+
+The error keeps increasing.
+
+So we have what we could see as a negative emotion.
+
+Something that can be encouraged is then to switch goal.
+
+So we have a positive slope means increase the size of the prediction error dynamics buffer.
+
+This was one of the... Sorry, that was something of kind of interesting and very...
+
+Yeah, new in this field, in this area.
+
+We haven't thought about it before.
+
+And what we actually did is, okay, what happens if my slope is positive?
+
+It means I'm doing very bad at this task.
+
+And what I'm going to do is I'm going to increase the size of this buffer, yeah?
+
+when we have a negative slope, it means, okay, I'm doing fine.
+
+So I'm going to decrease the size of this buffer.
+
+So what we are actually doing is adjusting dynamically the size of this monitoring window.
+
+And we're doing that depending on how things are going with respect to what we are actually expecting.
+
+So if the prediction error increases, we have a positive slope, and we do a more frequent evaluation of the feedback.
+
+This allows a quick correction of the action, and it can lead to satisfaction in case we manage to do it better, and induces abandoning the goal.
+
+So in this case, after a number of interactions,
+
+where the error is not decreasing, the error keeps increasing, then we can change, we can switch goals, and we could say we are trying to avoid frustration.
+
+So through intrinsic motivation, what we try is search for a new goal.
+
+When the prediction error decreases, we have a negative slope.
+
+We don't need to be evaluating the feedback so frequently, and we can free resources for the agent to do something else.
+
+There is no more prediction error.
+
+So that means we've achieved our goal.
+
+So learning happen, learning occur.
+
+Again, we search for a new goal now.
+
+So when we select a new goal, we give priority to those that have a negative slope, which is kind of steep in the prediction error dynamics.
+
+And we have some examples here of how the error moves as we are moving in the world, and how the buffer size increases when the error increases, and then it decreases when the slope now again changes.
+
+So that was one of the first things we did.
+
+And now, actually, Adam invited us to this special issue that he did in Frontiers.
+
+And we published there a paper which is actually, well, at the beginning, it was about something else.
+
+And then we ended up with this model, presenting this model.
+
+This is just an idea that we have, which actually encloses this part that I talk about, about the slopes and the expected error.
+
+So what we are suggesting here is that...
+
+I don't know how much time we have, if I can go into detail on this, but let's try something very fast.
+
+So we have an agent that has maybe physiological needs.
+
+In case the agent doesn't have physiological needs, through intrinsic motivation, we want to do something new.
+
+We want to do...
+
+search around the world, then we go to what we call the environmental context, which brings us to this field of affordances, where there is lots of actions and each action, each task has some expected error dynamics.
+
+We go to a task-related context, which comes from selecting the task, and then we do some planning of sensory motor sequences, we start acting on the world, and we get some error.
+
+As we execute this task, then we have two types of monitoring.
+
+We have the typical...
+
+momentaneous error that helps us go through the planning and correct the execution of the task.
+
+And we have a window of prediction error dynamics, which is compared to the expected error that this section had.
+
+And according to that is that we are going to go to these emotions
+
+that tells us, no, the error is increasing.
+
+We have this slope here.
+
+So we go back to another task before checking then if something has changed, we still have physiological needs or we don't.
+
+If the error is not so greatly increasing, it's more or less going fine.
+
+Then we go back to this same planning, to the same action.
+
+So it's a very nice model that we thought of.
+
+It's on the make.
+
+And we have many ideas from bringing this box diagram into the world and in our idealistic dream.
+
+What we are thinking on is something actually based on SOIMA.
+
+We haven't implemented this yet, but it's something based on this SOIMA.
+
+But now we have lots of other modules.
+
+We have some interoceptive modules.
+
+internal model representation, exteroceptive model representation.
+
+This is actually wrong.
+
+But anyway, so in this side, we have all the exteroceptive information, the interoceptive information, and we have some policies and a task and some error
+
+This error is going to tell us how we are doing, how we can stay on the task.
+
+If the error is too big, then we can change tasks.
+
+So it's a bit of a mixture between the previous thing I told you, and this is how it could look in what happens on a top-down.
+
+So when we have a task, this task is going to activate some policies, and these policies are going down
+
+to act on the world.
+
+We have, again, some error coming up, and this error is somehow coded here.
+
+There is some monitoring so that we can go on in our policies.
+
+This is the momentaneous error.
+
+If the error is very big, then we can go back here.
+
+Sorry, so this is top-down, and this is actually bottom-up.
+
+It's actually the error coming up all the way and coding here.
+
+And this is how we start the cycle with some task policies and everything else that is happening in the world.
+
+So I think that we can stop there.
+
+I hope it's clear.
+
+We don't have direct questions from the audience as I'm not seeing anyone or...
+
+
+SPEAKER_11:
+I'll ask one question.
+
+Otherwise, no, we have no direct questions, but we can definitely accumulate them for the roundtable.
+
+
+SPEAKER_04:
+Yeah.
+
+
+SPEAKER_11:
+What is the relationship between prediction error minimization and free energy?
+
+
+SPEAKER_09:
+um well i i think it's just like part of the process uh i i don't know what you mean i mean within the whole thing of of whatever you want free energy um everything that is happening the difference between the expected um states and what's actually happening in the world
+
+So we always have, in active influence or in free energy, you always have an error happening in what's happening, what is happening in the action in the world.
+
+So through this prediction error is how we believe it's going to happen, like the learning is going to occur.
+
+
+SPEAKER_11:
+don't know i don't know if yes that's awesome well yeah yeah thank you very much hope to see you very soon yeah we'll see you like in two hours or so excellent see you soon yeah okay thank you very much hope to see you very soon
+
+all right welcome everyone we are back this next presentation is going to be by matt brown real-time robotic control through embodied homeostatic feedback so matt thank you very much for co-organizing and for also joining to present and please take it away
+
+
+SPEAKER_00:
+Yeah, thank you for having me here.
+
+And that was a really great talk, Bruno.
+
+I have some follow-up questions for later.
+
+But yeah, thanks for coming.
+
+And my name is Matt.
+
+I'll be talking a bit about a long-running research project.
+
+And I hope you guys find this interesting.
+
+Here's a quick high-level description of the project.
+
+It's kind of an alternate way of looking at the generative modeling process built around homeostasis from the bottom up.
+
+This approach is very different, a bit of an unorthodox approach, and I'll be going into a bit of detail about how this works.
+
+You can probably read it, but the short version is based on theories of Ross Ashby and his homeostat, and it's a new kind of adaptive model that learns via homeostatic feedback through an environment, and it's
+
+and I'll be showing some demos about applying this to Robotic Control that I've been working on lately.
+
+Just a quick agenda.
+
+I'll be talking a bit about the project background, where it came from, because it is kind of unusual.
+
+I figured some background might be useful.
+
+Then I'll be talking about how homeostats build network self-models and what that means and how those function.
+
+And then I'll be talking about plugging those into environments and how embodiment works and how synchronization functions in this process.
+
+And then I'll be doing some demonstrations showing this working with robotics.
+
+Yeah, so just to give you background on myself, I'm a computer scientist, mostly.
+
+I'm not much of an academic.
+
+I have a few published papers, but not on this particular topic.
+
+I've been obsessed with the mechanisms of thought for most of my life.
+
+I...
+
+I've worked in the video game industry for about a dozen years, and then worked in deep enforcement learning for a number of years.
+
+And also, about 20 years ago, worked in software radio at the Spectrumware project, which became Genie Radio.
+
+That'll be relevant later.
+
+Today, I'll be talking about work that's now ongoing at my startup, Thoughtforge.
+
+And talking a bit about the history will help explain what I'm doing, I think.
+
+This started about 2006, 2007.
+
+with deep learning was kind of new and was kind of the new hot thing.
+
+I did a big deep dive into it, really excited about it.
+
+But I was, in fact, quite dissatisfied.
+
+And I felt that deep learning and this approach of using neural networks didn't really provide much insight to how learning works in natural systems.
+
+And even in the last few years, I feel like we have this amazing hammer with deep learning and everything suddenly looks like nails.
+
+And I feel like we need to take a step back and look critically at what we're
+
+what problem we're trying to solve.
+
+So for me, I was looking for new approaches in the nature of agency and goals.
+
+Goals in terms of what are they and how do they manifest in nature?
+
+Semantic information versus raw information.
+
+How do raw sensory signals become meaningful?
+
+And also I wanted more insight into how time played into this learning process.
+
+And I was particularly looking for medium agnostic approaches, not neuron-specific.
+
+How do plants and single-celled organisms deal with their world?
+
+So I started by reading a lot.
+
+Going back in time, chaos theory, I was a big fan of.
+
+I ran into Maturana and Varela and autopoiesis, and I was really excited about that, but it was too abstract for me as an engineer, I think, to tackle.
+
+And so I kept going until I got to homeostasis and cybernetics, and particularly a cyberneticist named Ross Ashby.
+
+And I basically became obsessed with Ross Ashby and still am to a certain degree.
+
+And he's not a part of most computer science programs.
+
+So he's quite well known outside of computer science, but I felt is not part of my own education.
+
+And he's most known for things like the law of requisite variety and the good regulator theorem.
+
+And those will be common themes.
+
+in the next 30 minutes or so.
+
+So what I started doing is pouring through Ashby's technical journals, recreating his work in a particular device called the Homeostat.
+
+So this is just a quick slide to tell people about the Homeostat and Ashby.
+
+No doubt many people watching this probably are familiar with Ashby and perhaps the Homeostat.
+
+But it's worth going over briefly, regardless.
+
+If you look up on Wikipedia, it'll say homeostasis is one of the first devices capable of adapting itself to the environment.
+
+And it exhibited behaviors such as habituation, reinforcement, and learning through its ability to maintain homeostasis in a changing environment.
+
+Ashby viewed learning as adaptation and stability and was described as an isomorphism generating machine.
+
+And most importantly for me, I use his feedback to generate hemostasis via a property called ultrastability.
+
+So I'll be talking about that here.
+
+There's a description here from one of his books about it.
+
+But it is quite tricky to reproduce.
+
+I had to go to his personal technical journals and lots of iterations before I got it working.
+
+Um, the key for me, uh, was ultra stability, which is a very strange kind of property, but it is the individual node property within this four node homeostat that enabled this general property, this group property of homeostasis to take place.
+
+Uh, and it's core to the function of how, whoops, let me go back.
+
+It's part of the function of how the homeostat works.
+
+And it's in the property implemented by individual nodes using a simple set of rules that gives rise to group homeostasis.
+
+It's comprised of a double feedback loop where like the low level feedback loop performs like a linear transformation and then a high level feedback loop
+
+modifies this linear transformation.
+
+And it's designed to seek equilibrium, meaning output of 0, which is, if you think of each of these nodes as seeking equilibrium of a state of 0,
+
+every choice of the linear transformation is a prediction of a type.
+
+And so the result of this linear transformation at every moment accumulates prediction error as it seeks a zero prediction error.
+
+So it's kind of an interesting goal driven process that works through multiple group process.
+
+This is just a more in-depth description of the homeostat, basically constructed of four individual ultra-stable nodes.
+
+And the network as a whole creates an adaptive dynamical attractor set as a self-consistent reinforcing self-model.
+
+Ultra-stability powers its race of stable state space exploration through the law of represent variety and can be seen as a network of reciprocal constraints.
+
+This is just an interesting letter from Alan Turing to Ashby back when they were members of the Ratio Club and Ashby was getting some notoriety.
+
+Turing basically disagreed with Ashby's approach and this letter here, he suggests that Ashby simply
+
+simulate his homeostat in his Turing machine.
+
+And while true, I think this actually was a bit taken aback by this because it kind of misses the point.
+
+At the time, the debate was all about analog versus digital computation.
+
+And what was useful to the war effort was most critical.
+
+But there was a bit of a conflation here, I think, in terms of what Ashby was trying to create, which was something more along the lines of universal adaptation or universal cognition, maybe, versus Turing's universal computation.
+
+And I feel like this conflation of issues still haunts us today with deep learning and whether or not they're intelligent.
+
+So how do you build them?
+
+So essentially, I took Turing's advice and simulated it.
+
+In particular, 20 years ago, I was part of the Spectrumware project, which kind of pioneered software radio, which is now called Genio Radio.
+
+And so I kind of stole methodologies from this approach, where I created the homeostat as a digital simulation of a continuous analog system or device.
+
+And so that's kind of the approach I took.
+
+I started by pointing through Ashby's technical journals, you know, and experimented with different implementations and approaches of his direct analog machine.
+
+Once this was functional, it was simple enough to abstract down to very simple kind of minimal process.
+
+Once it's functional, you can start taking pieces out and see what breaks it and what doesn't.
+
+And eventually this effectively simplified down to a dynamical attractor definition for ultra stability.
+
+that could be connected into arbitrary network topologies.
+
+And the network as a whole can be kind of seen as a self-model.
+
+Each node is trying to predict its neighbor as it seeks equilibrium.
+
+And the local ultra-stability tunes a node's local connections and the resulting positive and negative feedback loops that it is personally a part of.
+
+And
+
+UltraSpility tunes these as a group of these overlapping feedback loops such that they reach the homeostatic equilibrium.
+
+And that means that the local community prediction error drops to zero as well as the output from each node.
+
+And these overlapping loops become self-reinforcing and self-repairing.
+
+And it's this final self-predicting set of loops that maintains a self-model.
+
+At homeostatic equilibrium, this model converges and is considered self-consistent.
+
+It is composed of...
+
+these homeostatic feedback loops that maintain the network at a critical state, meaning that the network is highly sensitive to prediction error.
+
+I mean, the smallest prediction error can trigger global structural changes amongst these feedback loops.
+
+And this process can also be seen as synchronization, which I can talk about a bit later.
+
+um so let me show a quick demo I'm going to skip the original homeostat here and I'm going to um uh show a quick demonstration of what this actually looks like for a 20 node homeostat it takes a bit longer uh and it's a little bit more demonstrative so let me let me switch briefly here and apologize for the delay while I get this up um
+
+
+SPEAKER_06:
+Cool.
+
+
+SPEAKER_00:
+All right.
+
+So let me just describe what you're seeing here.
+
+You're seeing 20 single dimensional graphs.
+
+This is the accumulated local prediction error at each node of the 20 node homeostat.
+
+You can also think of this as one 20 dimensional dynamical attractor or 20 single dimensional
+
+dynamical tractors.
+
+These are also considered phase-based graphs for each of the nodes.
+
+So what you're seeing here is... I have it paused.
+
+I'm going to move it along slowly.
+
+This is slowed down on purpose.
+
+And what you'll see is they start off very chaotically.
+
+And what will happen is a couple nodes will start stabilizing, then more will start stabilizing, and then eventually the entire network will converge to zero prediction error.
+
+Now, this is unconnected to an environment, so it's just...
+
+predicting itself.
+
+One thing I like to do here, and I don't know how many people else are going to find this interesting, I want to show a little in-depth look at what this final convergence and collapse to zero looks like.
+
+So what I'm going to do is I'm going to change this to auto scaling the graphs.
+
+meaning that as it goes to zero, you'll see the graph ranges drop.
+
+And what you should see is usually there's a pattern forms amongst the output nodes that is kind of consistent with every drop.
+
+What you'll see is that it's kind of hard to see with 20 nodes, especially I've gone a little too far.
+
+We're already at E negative 20 here.
+
+But what you're seeing is you're seeing the 20 dimensional drop to zero.
+
+And there's kind of like a cyclical pattern to this.
+
+And every time it goes to this pattern, it drops down another order of magnitude.
+
+And this will go all the way down to
+
+the floating point error of my computer, which is about negative 46, I believe.
+
+And then it basically fails to function at that point, because it can't tell the difference floating point error, it can no longer function.
+
+So and the whole thing kind of falls apart there.
+
+But that kind of shows you a bit about the process.
+
+Let me go quickly back to the slides.
+
+So yeah, that just kind of showed you a slowed down version of the 20 dimensional homeostat.
+
+And I wanted to show the 20 dimensional because it happens a lot slower and it's a little easier to see what's going on with four nodes.
+
+It's almost instantaneous and it's hard to see the progression.
+
+That seems like a lot of work for a model that doesn't really do anything and isn't connected to the environment.
+
+We have this model that can adapt its internal structure to reach homeostatic equilibrium through a self-synchronization process.
+
+How do we use this to drive behavior?
+
+This next step took me a few years, even though it's conceptually simple.
+
+But don't worry, it'll get complex really quickly.
+
+The short version is sensors and motors define how the agent is embedded into its environment.
+
+and the network topology defines the adaptive capacity of the homeostatic agent's model.
+
+Sensor definitions provide a mechanism to influence the behavior of the system by providing priors in the form of preferred environmental states.
+
+These act as kind of like Thiele dynamic priors, externally defined dynamic set points for the homeostatic adaptation.
+
+The motor definitions provide critical affordances for modifying the environment that provides the basis for future sensory predictions.
+
+The preferred states of the sensors become the preferred outcomes of the motors, and the model's behavior is biased as desired.
+
+This is probably most people on this active inference symposium are probably familiar with this idea.
+
+This slide is put together for the benefit of people who are kind of familiar with traditional deep learning and neural network approaches to contrast how these networks function differently, because it's a bit hard for people to get their head around.
+
+The first is probably the most obvious.
+
+There's no back propagation here, only ultra stability, which is kind of a local rule.
+
+This leads to huge sample efficiency and the learning is very structured, meaning you don't have to diffuse learning across thousands or millions of parameters.
+
+You only have to update the part of the model that
+
+is mispredicting or is part of a misprediction.
+
+The other thing to notice is that this is not atemporal.
+
+Most neural networks and deep learning networks are kind of disembodied atemporal processes.
+
+This is very much a temporal process.
+
+Signals take time.
+
+to move from one node to another, which makes it inherently the whole thing very temporal.
+
+The resulting temporal relationships are important, actually.
+
+Spatial relationships of sensors and motors end up getting encoded into relative temporal relationships within sensory signals, and also vice versa.
+
+Signal timings of the propagating signals within the network can translate into different physical spatial relationships amongst the output motors, for example, or the input sensors.
+
+So there's a relationship between temporal location, relative timing of signals, and the spatial location of sensors and motors and the physical embodied agent.
+
+And just to kind of push on that a little farther, the different regions within this larger homeostatic network will then be sensitive to different sets of sensors based on their physical relative location.
+
+And by contrast, deep learning, deep reinforcement learning, for example, is an attempt at adding temporality to an otherwise atemporal static deep learning models.
+
+The other way to compare these two is deep learning models are generally trying to be general function, universal function approximators, where this is much more...
+
+generative and inherently temporal.
+
+The learning is very, very different.
+
+And just to expand a bit more on the topics from the previous slide, the network diagram here on the right is very oversimplified network, and it's just meant to visually explain how to think about some of these networks.
+
+There's no forward or backward, no front, back, top, bottom, only kind of relative location from other nodes and from sensors and motors, perhaps more relevantly.
+
+And it is...
+
+common for people to look at the learning process as a sequential flow of processing, like sensing, perceiving, then acting, or planning, then acting.
+
+And instead, you have to kind of think of this as all happening at the same time, merging together as kind of one whole perceptual motor system, not a traditional sandwich.
+
+model time simply advances, and we simulate the analog systems as signals propagate across the network.
+
+And so you don't get input from the sensors, calculate the network, and get output from the motors.
+
+You send the input to the sensors, you get output from the motors, and those motor actions are basically based on the generative model's prediction of what it should be doing already before having even sensed the world.
+
+So what's interesting here from the model point of view in terms of how this homeostasis works is the network's homeostatic feedback loops come to be dependent on the expected sensory signals, meaning that the sensory signals become entrained in the homeostatic self-maintenance processes, which kind of naturally makes it grounded in the embodied experience.
+
+This homeostatic self-maintenance process is composed of the environmental signals themselves as part of its predictions and expectations.
+
+Expectations and predictions for the consequences of motor actions are embedded in the signals sent to the sensors from deeper in the network, like on the right here, and they're sent to the sensors where expectation meets reality and prediction errors cascade backwards and modify the internal structure of the model as polygons model update.
+
+And then motor actions are accompanied by these parallel sensory prediction signals that flow from the deeper in the network.
+
+The actions taken at any moment are not based on the latest input, but based on predictions driven from deeper in the network, from the same places that the sensory expectations are sent from.
+
+This may be familiar to those who are, you know, thinking like...
+
+familiar with predictive processing or perceptive control theory.
+
+And the idea here is that where the sensors and motors meet the network, the network itself is trying to make those local prediction errors zero, meaning it's trying to anticipate the actual sensory experience through kind of inverse modeling.
+
+So another just kind of quick look at how to look at this homeostatic process is through synchronization.
+
+This process can be seen as generating an adaptive synchronization manifold between an agent and an environment around minimization of prediction error.
+
+This is kind of looking at synchronization as prediction.
+
+You know, when two systems are synchronized, they can be thought of as predicting each other, anticipating the other's motions.
+
+And individual nodes using ultra-stability are using ultra-stability to learn how to predict their neighbors.
+
+And when at equilibrium, these nodes are kind of synchronized through these feedback loops.
+
+And the synchronization spreads from individual nodes to whole network synchronization, and ultimately out from the motors and back in through the sensors in a synchronization manifold between the agent and environment.
+
+To say it another way, the overlapping feedback loops interact and synchronize with each other as part of this homeostatic self-maintenance, and as these feedback loops extend from motors through the environment to the sensors, the model gains the ability to anticipate the consequences of its own actions.
+
+and the capacity to synchronize internal states with something in the external world.
+
+The synchronization means that, you know, internal states will come to resemble, one will come to resemble the internal states of the other.
+
+This is kind of along the lines of, you know, the good regulator theorem.
+
+when at this synchronized homeostatic state, it's also in this critical state, I've mentioned this earlier, where it's stable, but it's sensitive to local prediction error.
+
+So the meaning that the model, this critical state is maintained as long as local prediction error is maintained within a certain threshold.
+
+But otherwise, the smallest prediction error can trigger global kind of structural changes within these feedback loops in order to better predict the future.
+
+In order to maintain a synchronization network must be able to converge to equilibrium faster than the environment can destabilize it.
+
+And so there's network update rates where we have to maintain this kind of fast movement.
+
+And this kind of is in line with the law of requisite variety where we have to make sure that we can explore state spaces faster than the environment we're attempting to control.
+
+And as long as the homeostatic network can re-establish the stable feedback loops faster than this synchronization manifold will be maintained.
+
+And synchronization is kind of an interesting thing, especially in the context of robotic control.
+
+Because once two elements are synchronized, let's say you have a subnetwork that's synchronized, then two nodes that are not directly connected
+
+can end up coordinating without any kind of communication between the two because they've been previously synchronized.
+
+Their behavior will end up being correlated as well.
+
+In the case, it's interesting to think about what is the structure of these feedback loops and this generative model.
+
+The way I like to think about it is a dynamic hierarchy, meaning a hierarchy is like a top-down construction, but a dynamic hierarchy is more like a bottom-up construction where the parents are composed of the children and dynamic in that as the children change their own self-definitions, the parents are likewise changed.
+
+It's kind of constantly shifting and changing over time as the children redefine themselves.
+
+And this structure is very useful as a gender model as well as a small number of individuals to, you know, kind of reshape the hierarchy very quickly as it's part of an ongoing dynamic process.
+
+Um, cool.
+
+So I'll switch over and do some quick kind of, uh, demonstrations showing how this ends up, you know, why would you actually want to do this?
+
+Um, you know, yeah.
+
+Why would you actually want to do this, especially in the context of robotics?
+
+Um, so the first thing I'm going to show is, um, let me just share here quickly.
+
+This is the demo I put together, um, a couple of years ago.
+
+Actually, let me, let me shrink the screen a little bit.
+
+So it's not quite so much to share.
+
+This was put together a couple years ago to kind of demonstrate, you know, why would you do robotics like this?
+
+You know, what is the point?
+
+And what does robustness mean?
+
+And what does adaptivity mean in the context of robotics?
+
+So hopefully you can see now my screen.
+
+This is just a simple...
+
+modification of an OpenAI gem called Reacher.
+
+It's been modified to add a single texture joint here, and the reasons will be obvious here in a minute.
+
+But this is just a simple task.
+
+The model has to get its end effector to the target position, and this is using these homeostatic models here.
+
+But here's what's interesting I can do, and this model hasn't seen this situation yet.
+
+I can disable the outer motor, for example.
+
+And it will basically, on the fly, figure out how to achieve the goal just by updating its internal model and saying, oh, this motor doesn't work anymore.
+
+Let me modify my model of the world.
+
+I can turn that back on, and it will start using it immediately.
+
+I can do the same with the internal motor.
+
+It can turn that off.
+
+
+SPEAKER_07:
+And so, oops, I did not turn it off.
+
+There we go.
+
+Now it's off.
+
+
+SPEAKER_00:
+And it just kind of figures out, oh, OK, the inner motor I no longer have access to.
+
+Let me update my model.
+
+And I can, again, turn that back on, and it'll start using it again.
+
+So this was just kind of a simple demonstration I made a couple of years ago to show why you would want to do robotics this way, in that you can kind of get this real-time adaptation to unexpected situations due to the generative model that's constructed this way.
+
+Now, let me just scoot forward a little bit to more recent work.
+
+And hopefully the frame rate won't be too bad over Zoom.
+
+
+SPEAKER_06:
+Let me just shrink the window a little bit in hopes that helps.
+
+OK, let me share this.
+
+
+SPEAKER_00:
+The frame rate feels a little rough over Zoom here, but this is all just running locally on machine.
+
+So this is something a little more recent, a little more complicated.
+
+We made the goal a little bit more complex, and we've used a full six degree of freedom arm here from like, this is actually a fetch robot mobile arm, but something a little more realistic than like a toy problem.
+
+And I'm just, you know, periodically here retargeting the
+
+the desired angle for this valve.
+
+And so this is a robot that turns valves.
+
+And what I've done is that I can periodically change the set point for how it sees the world.
+
+Basically, you define goals by defining preferred states of the world.
+
+And then the homeostatic model basically figures out how to control the robot to affect the state of the world that it wants.
+
+I'm hoping here every 30 seconds it will randomize the valve shape.
+
+The square one here is the simplest one.
+
+But let me add some random motion and random orientation.
+
+The model has not seen this before either.
+
+So it just kind of learns on the fly how to deal with this kind of moving shape as I do it.
+
+I can also do the sinusoidal motion here.
+
+So imagine it's on a floating platform.
+
+um where the rotation and the uh position is kind of moving through space um here we go now we got something more interesting so now we have it still moving through space it's a circular valve here something a little harder to turn um and what i'm going to do is i'm going to make it very slippery so imagine i've just poured oil over it so now it's having to deal with a really really slippery valve here that it has to turn and still manages to do it even though it's really hard
+
+But you can get the idea here.
+
+If you do the generative model in this sample-efficient way, you can get natural adaptation to whatever it's experiencing in the moment here.
+
+Maybe I'll do the random motion again.
+
+Maybe that's interesting.
+
+But yeah, there's all sorts of stuff you can throw at this, and it'll deal with it.
+
+I apologize for the frame rate.
+
+I'm going to blame Zoom for that.
+
+so cool.
+
+All right, good.
+
+Um, I don't think I have too much left.
+
+Um, but you know, um,
+
+Uh, next steps are, uh, basically improving automation and tools.
+
+Um, I'm working, uh, my startup is basically developing this for, um, for real world use, uh, in adaptive situations where you need, um, fine motor control, uh, and kind of, uh, dexterous object manipulation in uncertain environments.
+
+Um, you know, it's on the technical side, we're looking at, you know, scaling up goal specifications and topologies, which are related as well as, you know, deeper temporal horizons, uh, in both directions, planning, uh, and, uh, head and recall.
+
+Um,
+
+But yeah, that's about all I had for today.
+
+And I look forward to the questions during the roundtable in a little bit.
+
+If anybody has questions now, I can talk to it as well.
+
+I went a little fast.
+
+I apologize.
+
+I'm a fast talker.
+
+
+SPEAKER_11:
+It was great.
+
+Just maybe one preliminary question.
+
+What settings do you see these kinds of implementations occurring in first?
+
+And then the other question in order or if it's your preference is how do you see the homeostatic network related to the analytical first principles foundations of active inference as we know it today?
+
+
+SPEAKER_00:
+Yeah, no, those are really good questions.
+
+You know, I didn't talk much about active inputs because I figured everybody else had kind of done it pretty thoroughly.
+
+Use cases, your first question, use cases we're looking at are things that are just beyond the ability of current robotics.
+
+The idea here is this software could be put on, you know, any old robot and kind of provide, you know, adaptive capabilities for certain things.
+
+You know, we're pretty open-ended in terms of what we're looking at in terms of use cases.
+
+Right now, our current use cases are in, like...
+
+energy and manufacturing particularly.
+
+There's a fair amount of stuff that still has to be done by humans that could be pretty easily moved into robots if they had a little bit more capability.
+
+And then in terms of how does the homeostatic networks kind of get into the active inference
+
+framework in general.
+
+And I kind of touched on it a little bit in terms of how these ultra stable nodes work in the framework of homeostasis.
+
+If you kind of think of homeostasis as the network trying to seek global equilibrium, what this means from the ultra stable nodes point of view, it means that its local output state is zero.
+
+And that local output state is
+
+the result of an accumulation process of this linear transformation so the idea here is this ultra stable node what it's doing is it's doing a search it's doing a search through linear what are the right linear transformations that make my local uh state go to zero uh and so in that context you can kind of think of every time the um the ultra stable node updates its local linear transformations um this is updating its local model of the world and making a new guess about
+
+how the world works and whether or not that's useful for the purpose of global prediction.
+
+It depends on whether or not it makes that local value go to zero.
+
+So there's a lot of threads here in terms of expectations and
+
+prediction error flowing through the network.
+
+But it's a much more distributed process.
+
+And it's much less clear what part of the model each node is taking place.
+
+Because each node in the network, when it's changing its linear transformation, what it's actually doing is slightly redefining all of the feedback loops of all the subnetworks in the network it's in, all of the loops that flow through that node, it's making a small change to.
+
+So
+
+Each node in a certain way then has effect on all the other networks that are connected through its feedback loops, and all those other nodes also have impact on its signals that are flowing through it.
+
+And this is a reciprocal process that kind of builds this generative model.
+
+I'm not sure if that's particularly helpful.
+
+
+SPEAKER_11:
+Yeah, that's great.
+
+If I could make one more comment and question and then we'll bring Adam Safran on in just a minute or two.
+
+The letter that you showed was quite interesting and I got the sense of this like multi-generational titanic clash between what you described as infinite computation in the discrete setting with the Turing tape
+
+and then infinite adaptation in the continuous setting with the generalized cybernetics.
+
+And so I think that's a very fascinating framing because what do people say about computers and continuous time systems?
+
+We're going to have to discretize.
+
+And so the implementation is stepwise and that's what allows us to like actually implement it on hard drives and CPUs and so on with the von Neumann architecture.
+
+But then also in the background or like even the water that we swim in is this continuous time, the real time unfolding of perception, cognition, action outside of the sandwich model, outside of the discrete time.
+
+
+SPEAKER_00:
+Yeah, I'm really glad to pick up on that.
+
+I wish I was more qualified to speak on such topics.
+
+I'm a computer scientist, so I don't want to speak too far outside my field.
+
+But yeah, I think you hit the nail on the head of my gut instinct on it.
+
+
+SPEAKER_11:
+All right, we'll take just a short break and then come right back with Adam Saffron.
+
+All right, welcome back, everyone.
+
+We are continuing on with Adam Saffron, Generalized Simultaneous Localization and Mapping, GSLAM, as a Unification Framework for Natural and Artificial Intelligences.
+
+So Adam, thanks a lot for joining, and please take it away.
+
+
+SPEAKER_01:
+Thank you, Daniel.
+
+So hello, everyone.
+
+I'm Adam Saffron.
+
+I am a research fellow at the Johns Hopkins University School of Medicine at their
+
+Center for Psychedelic and Consciousness Research.
+
+And today I will be discussing a grand unified theory.
+
+Another one.
+
+But before I do, as was previously mentioned, and as is probably of interest to people watching this, I recently co-organized a special issue of Frontiers in Neurorobotics with Ines Cipollito and Andy Clark.
+
+Most of the submissions are already in for you to read and
+
+that will be closing up soon.
+
+There's also another special issue that I am co-organizing with other active inferencers and Fristonians for Royal Society Interface Focus on the subject of symmetries in mind and life broadly construed ranging from symmetry breaking and dynamical systems to a gauge theoretic formulation of the free energy principle.
+
+This is actively soliciting contributions.
+
+And so please contact me if you have anything along those lines.
+
+So in this work and throughout all of it, my journey, I've been trying to understand the basis of autonomy and biological and artificial systems.
+
+Do we have free will?
+
+How does that work?
+
+Could we build autonomous agents that work like we do and have our capacities?
+
+These are the kinds of questions that have motivated me.
+
+Towards this end, I have been working on some fairly ambitious projects, such as a theory of consciousness that tries to bring together various theories within the free energy principle and active inference framework, and also models of free will in terms of the micromechanics of agency.
+
+Across all of this work, I take what I've called a
+
+Marion neurophenomenological approach, or Anil Seth calls it computational neurophenomenology, which I think is a better name.
+
+And roughly the idea is you take the core aspects of experience seriously as fundamental things to explain, and then you cross-reference this with a multi-level functionalist handling or a Marian handling, where you can simultaneously analyze the system on computational or functional levels with the system
+
+what the different aspects are for, their adaptive significance, the function they're serving, this algorithmic level, the abstract way, the specific programs and operations by which this is achieved, and the implementation level or the physical realization of these.
+
+And so the idea is you take this multi-stack understanding of cognitive systems and you cross-reference this with phenomenology, taking experience seriously.
+
+And this is my general approach.
+
+And active inference, with its associated process theories, basically checks boxes across all those levels.
+
+You have the free energy principle, you have active inference, and you have predictive coding.
+
+And these various claims of different degrees of specificity really help to flesh out this mutually constraining multilevel account of cognition.
+
+But more recently, I have been collaborating with roboticists.
+
+And here are two particularly excellent
+
+Biobots, Tim Verbalen and Ozan Katal.
+
+And along these journeys, we encountered each other and there's increasing interest in machine learning and artificial intelligence and things like artificial consciousness.
+
+You'll have people like Ben Gio talking about system to cognition and more recently, even Lacuna has been starting to take these things on with his JEPA architecture talking about world models.
+
+of different kinds and how they might serve the functions of artificial consciousness.
+
+But for my collaboration with Tim and Ozen, we've mostly been focused on the specific problem of navigation, specifically a problem known as simultaneous localization and mapping.
+
+Roughly the idea here is that where am I in space and what kind of space is this?
+
+This is a fundamental question for any active inference system, any cybernetic system.
+
+But there's a kind of a problem here in that you're trying to map out the space and situate yourself in it in the same time simultaneously.
+
+But to map out the space, it helps to know where you are in the space.
+
+But to know where you are in the space, it helps to have a good map of that space.
+
+And so there's various proposals for different ways of bootstrapping yourself to degrees of certainty of,
+
+what kind of maps or models are adequate for situating you in the world in a particular location.
+
+And this is going to be important whether you're a robot navigating through the world or an animal foraging for value.
+
+You got to know where you are to know what to do.
+
+So more recently in this collaboration, which I've really found to be amazing because
+
+I'm in awe of roboticists and what they can do.
+
+It's kind of like that Feynman quote of, what I cannot build, I do not understand.
+
+Well, they live that.
+
+That's just what they do all day long.
+
+They're introspecting, how do I work?
+
+They're going into theory, and then they're actually building a system in this back and forth iterative process.
+
+And so the collaboration here was looking at what ways can biological systems, and specifically focusing on the hippocampal system, what ways can these inform navigation problems?
+
+In this more recent paper that I'm going to be focusing on more today called Generalized Simultaneous Localization and Mapping, or GSLAM, we're reversing the flow a bit.
+
+The idea is more than cognitive neuroscience informing robotics, it's looking more to robotics to inform cognitive neuroscience, basically leveraging the precision they have with characterizing these problems and the way they're in touch with the ground truth of engineering and physical moving systems in the world.
+
+using this to inform cognitive neuroscience.
+
+And specifically the claim is that this SLAM problem is fundamental and that it may have structured a surprisingly, maybe shockingly broad range of cognitive processes.
+
+And that this might be a fundamental, a source of fundamental principles for understanding how high level cognition was achieved with high level put in some scare quotes, but the idea is the things that, uh,
+
+Humans seem to be, or animals seem to be particularly capable of doing relative artificial systems and humans in some ways, even more so, and the properties we want to recapitulate in artificial intelligence and machine learning.
+
+So some precedent for this came from work with Ratslam, the seminal work by Milford, Wyeth, and Pracer.
+
+So in this, they look to the rat in this hippocampus.
+
+and look at its wayfinding and navigation abilities and try to basically reverse engineer these.
+
+There's a really excellent YouTube video that I'll post.
+
+I've watched it countless times, which just summarizes this process of building up Ratslam from these initial foundations of the ambition and folding in more and more details, finding out this isn't quite working, going back to the biology, going back to engineering, and then actually showing systems that
+
+do the same things as biological systems inspired by those systems.
+
+It's extremely compelling.
+
+It kind of like, you know, every time I watch that video, I feel like I get something new.
+
+I wonder, are these the steps that nature took in evolving these systems?
+
+And I also kind of felt like, what have I been doing with my life all this time?
+
+Like, why didn't I find roboticists sooner and started talking to them?
+
+So I'm very grateful to be part of this symposium.
+
+Leighton, and I'm very grateful for Tim and Ozen.
+
+And so with their work with Leighton Slam,
+
+what they're doing is they're tackling the slam problem using active inference.
+
+I'm not going to go into all the details here, but some of this was discussed.
+
+There's parallels with some of the architectures that were discussed previously, and Tim touched on this.
+
+So you basically have an agent moving through the world.
+
+It has a variety of views of what it's expecting to see and poses.
+
+And this experience map is a trajectory of the agent, room, space, and time.
+
+And then here would be a generative model description in the middle of this, where you have these conjunctions of poses and views, which are unfolding in this series of transitions, adaptively sculpted via your policies, but where there's this upper level, which is basically organizing this as spatial temporal trajectories, situating you in some kind of map or graph of space.
+
+And this
+
+conjunction of pose and view, one of the places I found this to be compelling is that I've arrived at these as basically the primary modalities I focus on just from looking at the system's neuroscience.
+
+But this happens to be the primary things that are focused on for helping a robot to move through the world.
+
+And pose and view, and basically for neuroscience, I focus a lot on systems such as
+
+the precuneus as potentially enabling something like a mind's eye, and the lateral prior cortices as something like a lived body, and that these would couple very closely.
+
+And that would make some sense since your pose would inform your view and vice versa.
+
+But there's another detail you need for this to be an autonomous system, an adaptive agent, which is not just like where's my body and what am I seeing, but where am I in space?
+
+And where do I want to go relative to the world and the various things that I believe are in the
+
+How do I pursue my goals in the world?
+
+And so enter the SLAM problem.
+
+But what's built with Latent SLAM, this is a very impressive architecture.
+
+Some details are described below, which all these things governed by a singular objective function where the agent is able to not just make its way through the world, but also it's this powerful self-supervised learning curriculum
+
+as you're moving between views and pose and landmarks, each one providing a source of predictions for the other, training up the other, helping you to get a grip on the world.
+
+In terms of SLAM, two of the things that, so this like broader notion of G-SLAM or generalized SLAM, but this would be a way of thinking of high level cognition.
+
+I'm particularly interested in
+
+these two operations, one's called loop closure and the other's graph relaxation slash node duplication.
+
+I guess that's three.
+
+But the idea is, as Tim mentioned, when an agent finds itself in a situation where its pose and view are highly similar to something, to what was previously encountered, this affords a potentially unique opportunity.
+
+You now think you know where you are in space.
+
+And so this is a really good opportunity to update your experience map.
+
+And so this, coming back around,
+
+It's not just a good opportunity in terms of you have high confidence, but it creates a closed system.
+
+So you closed a loop.
+
+And so you basically have these different equilibrium points in this graph, which can be thought of as a map also, but because they're all chained together, these are sometimes modeled as like energetic spring systems, and they're all mutually informing and constraining one another.
+
+And so when you find yourself
+
+with a loop closure event where you're in this highly familiar state, you then take this as an opportunity to refine your map.
+
+And so you will do a very fine, if you're within a certain margin of error of a location, if you think you really got it, you'll then take the overall map and relax.
+
+And you'll basically move around the various dependencies of different nodes,
+
+space, the different landmarks, to adjust them and have each one refine the other and form the other.
+
+However, if you're past some threshold for similarity, and it looks like you're close, but not quite there, you're a little bit different.
+
+If you're surprised, then you'll duplicate the node, and then you'll create a new landmark.
+
+And so now you'll have a new graph.
+
+And so this is basically a kind of structural learning.
+
+And there's a lot of work in Bayesian cognitive science on
+
+And with an active inference, a lot of open work, like how do we effectively do structural learning for handling complex domains?
+
+And I'm suggesting, and I think Tim and I hopefully would agree, especially because we're writing together, would be that this provides a principled basis for doing structural learning.
+
+What's interesting here, though, in this diagram that Tim made, is that as you're mapping out this warehouse here,
+
+if you set these thresholds for identifying a node differently, if your graph relaxation slash node duplication thresholds are set differently, you get very different models or maps.
+
+You might get very different structures, or if you will, schemas or scripts.
+
+That's not the frame in terms of the SLAM problem, but the claim here is that basically the hippocampal supposed place fields provide a basis for
+
+structured representations, many of which have resemblances to the kinds of things that were hoped for in good old-fashioned cognitive science and in neuro-symbolic AI.
+
+And part of what's hoped for is some of the aspects of potentially uniquely human cognition, high-level cognition,
+
+It requires some sort of representational scheme, but if you set these parameters, but if this is the mean by which you arrive at representations, and if these parameters set differently could give you wildly different representations, these would have very different impacts on the kinds of minds you might have.
+
+Potentially including even things like cognitive spectrums, if you were to apply this to a biological domain.
+
+And so there's some notion that for instance, you could even potentially think of these parameters for the hippocampal system.
+
+which are maybe evolutionarily were originally laid down as parameters for this for a slam problem for an animal finding itself in the world but where they continue to operate in terms of the mechanisms of hippocampal and entorhinal plasticity that these if they're parameterized differently in different people could give you very different kinds of minds and this potentially has very um
+
+The significance of this might be difficult to overstate in terms of characterizing human difference.
+
+These might be some of the most important variables you could look at for saying how people differ in the way they relate to knowledge in the world.
+
+And not just so this would have clinical consequences, basic science consequences, maybe even helping to explain some of uniquely human cognition, the kinds of things that help to get symbolic reasoning and cumulative culture off the ground.
+
+There's other proposals that are kind of similar to this mad dog navigation perspective or SLAM perspective.
+
+Jeff Hawkins out of Numenta has a proposal he calls 1,000 Brains Theory.
+
+Technically, it should be called something more like 100,000 Brains Theory, where the idea is that there's a common cortical algorithm carried out by every single cortical column of doing this object modeling and navigation of the kind described with hippocampal and entorhinal system.
+
+I find aspects of this to be compelling, but also very mixed feelings, and I can talk about that later with anyone who's interested.
+
+There's another recent proposal in this spirit by Chris Fields and Michael Levin, where they're basically characterizing morphogenesis as cells engaging in a kind of wayfinding and navigation process of where they ought to be in this synchronization manifold of the phenotype.
+
+And so they're all finding their place, you know, singing, as Carl might say, like singing from a common hymn sheet, knowing where they are.
+
+But as they're synchronizing, they're moving around to find where they are, this unfolding geometric melody that eventually becomes the phenotype of the organism.
+
+But the idea is that this intelligence of wayfinding at the cellular level, many of these mechanisms may have been repurposed and recycled and deployed differently for overt navigation, and that this is a frame for intelligence more generally.
+
+I find this to be extremely compelling.
+
+Although what I'm doing with this work is I'm focusing more on the hippocampal and entorhinal system as a source of specific adaptations with specific properties and a major transition in evolution.
+
+Potentially also have some connection to things like Ginsberg and Jablanka's major transition markers and unlimited associated learning.
+
+They have a lot of emphasis on the hippocampal system and its homologues.
+
+There's very interesting work that I'm only beginning to look into in the insect
+
+and insects with the central complex and the mushroom bodies and the way they handle navigation.
+
+I think cross-referencing the mammalian version and the insect version would be really invaluable.
+
+And that's a major to do that I'm hoping Daniel will help me with.
+
+So some other precedents would be in terms of this idea of generalized navigation, that this would be a powerful frame for understanding cognition comes from some older work with Hassabis and McGuire.
+
+They found interestingly that hippocampal patients
+
+Not only are they impaired in episodic memory, but they have trouble with episodic imaginings of counterfactuals of novel situations.
+
+And so they talked about this construction system of this brain, this core system for memory and imagining, allowing for various forms of sophisticated modeling and creative cognition.
+
+And this seems to have been part of what basically gave Demis the confidence to go and found DeepMind.
+
+And this is still a core aspect of what they're doing there.
+
+And the race is on for reverse engineering the system, and the race is heating up.
+
+And some really excellent work would come from Timothy Barron's group.
+
+I believe he's still at UCL.
+
+They're showing, for instance, there's an architecture called the Tolman-Eichenbaum machine, which I strongly recommend checking out that's active inference compliant as a realization of the functioning of the campus system.
+
+They don't focus...
+
+as much on navigation, although it can be used for that, and that's part of it.
+
+I'll come back in a second for the differences here.
+
+But in this work, one thing of note is so they're showing basically people categorizing these stimuli, where you have these birds with different length necks, and there's a kind of morpho space in terms of characterizing the features and the various dimensions.
+
+And basically, they're showing hippocampal slash entorhinal-like representations, grid-like representations,
+
+being involved in helping to map out this feature space.
+
+And so this is one example that's very commonly cited of spatialized cognition of something that might not seem clearly spatial.
+
+But then the idea of G-SLAM would be, once we've spatialized it, then to what degree in our sense-making is it actually kind of navigation through the space?
+
+And so this process of spatializing and navigating through the space simultaneously, I would call that a SLAM problem.
+
+And I think a lot of cognition can be fruitfully framed in this way.
+
+And I'm going to go a little further.
+
+So here's the Tolman-Eichenbaum machine.
+
+And he's showing different, I don't know, is his face covered by the thing?
+
+I can't tell.
+
+Well, there he is.
+
+Yeah.
+
+So his work is unbelievable, his group.
+
+But different things like relations among people within hierarchical tree structures of their relations, doing things like transitive inference of
+
+one property related to another and a set of dependencies, but basically using the, the hippocampal systems properties to navigate, navigate and manipulate these spatialized representations.
+
+Um, there's other work from deep mind.
+
+Um, uh, there's this other talk highly recommended by, um, Stachenfeld at all at the main conference.
+
+It's unbelievable talk, uh, talking about the, the recent work from deep mind to reverse engineer the hippocampal systems, uh,
+
+place cells and the grid cells of the entorhinal system as allowing for a variety of properties.
+
+Some of, you know, very similar to Barron's work and they collaborate together.
+
+But one thing that's interesting about this talk is she makes a point that this isn't just for tasks that are like physical space.
+
+This isn't necessarily spatial.
+
+I might challenge that a bit
+
+and say that we should basically always have a prior of looking for the spatial properties of any task domain and then wondering to what degree can we frame this as a SLAM problem.
+
+And I think there's maybe two reasons for doing this.
+
+One, maybe three.
+
+One is that basically putting things into a common framework
+
+helps you to draw analogies across seemingly heterogeneous domains.
+
+And this can be a source of insight in terms of a common representational framework for sense-making.
+
+Sense-making gives you an ability to have creative combinations from seemingly different domains.
+
+But the other reason is the hippocampal system, this was specifically probably what it was selected for.
+
+This is a mapping system for a
+
+animal forging through value through various spaces.
+
+And this isn't just evolutionary, but this is also developmentally and ongoing.
+
+This is an ongoing problem.
+
+We have not transcended this.
+
+We are still in space.
+
+We still constantly have to move through space and situate ourselves through spaces, physical spaces, and also conceptual spaces.
+
+So that's part of the reason I'm really emphasizing the slam framing because the hippocampal system will never lose this job description.
+
+And the idea is that understanding the ways in which it's parameterized, the specific operationalizations, I don't think that's a word, it's essential to keep in mind this ecological significance.
+
+And so this is all within the spirit of, I guess, a broader view in cognitive science called ecological rationality, which is go back to the origins and try to understand.
+
+It's Tim Bergen's quote, nothing in biology makes sense except under the light of evolution.
+
+Take that very seriously and run with it.
+
+One other thing that's, so along the lines, one thing I think you get is connections.
+
+One thing a GSLAM perspective gets you is connections to forging theory.
+
+And so if you're thinking of an animal going through the world, trying to extract value, resources are often patchy.
+
+And so as you're moving through the world, you might be balancing exploration and exploitation with respect.
+
+If you find a patch, it might be good to exploit that for a bit if it's particularly juicy.
+
+But then as that patch dries up,
+
+Maybe it's time to go explore.
+
+And then you want to adaptively move between phases of exploration and exploitation, staying longer in some places and then moving to other places.
+
+And so these jumps to other places, like when a patch starts to dry up, these are sometimes known as levee flights.
+
+And this is playing actually into some of my work in psychedelics and formed by some really intriguing suggestions from Matt Schein's group.
+
+The idea is that one of the mechanisms impacted by psychedelics might be
+
+potentially facilitating these kinds of levee flights where you can think of more creative cognition as involving more exploration, more broad associations.
+
+And forging theory, it's extremely rich and well-developed.
+
+There's all sorts of different modes of forging that could be thought of as different modes of cognition.
+
+There's specific hypotheses and connections to formalisms like the marginal value theorem.
+
+So you would have a hypothesis like, when do you leave?
+
+Well, in the marginal value theorem, that is, you leave a patch.
+
+Or when do you go and try to find the new?
+
+You leave a patch when your current estimated value drops below what you think the average rate of return should be.
+
+So this then gives you basically, you can now characterize people, where are they relative to these different normative models?
+
+And this idea maybe has an even older vintage or maybe newer relative evolution, but old relative to discourses in terms of the art of memory and the method of loci.
+
+Memory, especially before we wrote everything down or when writing things down was expensive,
+
+And even now, to have something in your mind where it could be at hand, where you can retrieve it, to have a well-curated set of knowledge, it's essential.
+
+And so one of the best tricks that were discovered is you actively, intentionally spatialize your knowledge.
+
+You actually create a physical place that you visualize, and you move through it.
+
+And at each point in this space, you've placed different things you want to remember.
+
+And part of the reason this likely works so well, almost certainly, is this is
+
+um, you know, the core of memory in the hippocampal system is actually involving a process of, um, it is a spatial mapper.
+
+That's something I would argue.
+
+Uh, there's connection to some other, um, work in cognitive science I'm not going to get into right now, but like multidimensional scaling, where you, um, understand potentially complex domains by mapping them onto a more, uh, a simpler and potentially more, uh, cognitively navigable space.
+
+Um,
+
+And then I'm not going to get into this right now, but actually I will.
+
+So real quick aside is with respect to multidimensional scaling, one of the early things that got people excited for it about it was its potential use for analogical reasoning or establishing similarities between domains.
+
+It's a very important thing to know, like how similar is something relative to something else?
+
+Like should these things be placed in the same category or, you know, it's,
+
+And one way of doing this was saying, what is the distance in this, when you do multidimensional scaling and you place something in a feature space, what is the distance between these, between different things?
+
+And the further apart, the less similar they are.
+
+But there are other models of analogical reasoning, and there's another race on to try to figure out how we do analogical reasoning.
+
+And so some of these proposals, they would go beyond something like multidimensional scaling, but they involve specific structure representations.
+
+But then we have a question, well, what's the ontological status of such things?
+
+Do they actually exist in the mind in some way?
+
+Do they actually have representations?
+
+Or maybe these things are more like they're virtualized or inactively realized or implicitly.
+
+I suspect many of the kinds of structures described in good old-fashioned cognitive science might not be biologically plausible, but they might be surprisingly biologically plausible if you actually have a system capable of adaptively constructing graphs based on...
+
+your ability to extract value from these graphs and situate things relative to other things.
+
+And so it's possible that some of the analogical reasoning and even causal reasoning could be unlocked by having a good means of creating structured representations.
+
+And one of the things the hippocampal system seems to be able to do is create these graphs where the different place cells of the hippocampus can be thought of as nodes.
+
+And so if you duplicate a node, you are now basically doing structural learning.
+
+You're complexifying
+
+this representation.
+
+So this comes into my work in other ways, such as models of goal-oriented behavior.
+
+I'm not going to get into too many details right now, but here would be the hippocampal system.
+
+And you see, based on work of people like Reddish, and also like Sam Gershman has a successor representation model.
+
+But basically, you'll see these predictive, the hippocampus is a predictive map, where what's being predicted is
+
+where you'll see these sweeps of activity that will proceed in front of the animal and then will predict what choice it will do, what arm of a maze it might go down.
+
+And so the idea is that the hippocampal system is the top of the cortical hierarchy and that any prediction errors that are not handled elsewhere end up get temporarily stored in this volatile memory system, but which is also encoding these trajectories or these series of equilibrium points.
+
+of state transitions and that basically you have, you know, prediction areas that are not handled elsewhere, make their way there, get temporary stored.
+
+And you can have what's sometimes called semantic pointer architecture, where basically as you're moving, as you're stepping through these various equilibrium points, you can then unpack this as estimates of system and world in terms of operative policies and actions and what you expect at different points along these different trajectories.
+
+And so here I'm focusing on moving through a physical space in this case, making tea, but this is, I would argue, this is also part of what we do when we navigate conceptual spaces that we are deciding what branches do we go down to what degree, where will we find what kinds of value at that?
+
+This is a similar operation using similar procedures from common neural processes.
+
+More recently, I've been trying to extend this to models of,
+
+volition, including free will.
+
+
+SPEAKER_06:
+And let's see.
+
+Daniel, how much time do I have left?
+
+I'm sorry.
+
+10 minutes?
+
+Okay, great.
+
+
+SPEAKER_01:
+So this is less, I guess, explicitly slam-framed.
+
+but still the hippocampus at the center of it.
+
+And so here I'm trying to, this is a recent piece, it's in pre-print form, which I'd love feedback on.
+
+But basically the idea is that the present moment of experience has a thickness to it.
+
+This is sometimes called the specious present or the remembered present.
+
+And that it seems to vary that the minimal thickness of a moment of sense-making seems to be about a third of a second, and the upper bound seems to be about three seconds.
+
+And that this seems to correspond to an epic, so you basically can, so the hippocampal system can, whenever you enter like a room, it'll tile that domain with a certain degree of granularity.
+
+It'll create these hexagonal tilings of that space.
+
+And then within there, that's where you'll have these different attracting attractors, these different trajectories play out, orchestrating the rest of the brain in terms of its dynamics to pursue these various goals.
+
+And so the one way you have to work with in terms of the thickness of the different rollouts for sophisticated inference would depend on partially the shelf life of this set of attractors before you have to refresh them.
+
+in some way, either set down an entirely new set or try to recreate the old one or prevent the remapping.
+
+And this would be related to some of what was just described with aerodynamics in terms of how good of a grip do I have?
+
+So let's say you have like a poor grip on what's happening and your prediction error is going up.
+
+This is not a good situation for you.
+
+That might be a good opportunity to stop, halt and catch fire, retile space, get a new set of operative policies for sophisticated inference.
+
+And so, so here, what I'm trying to do is show that different levels of agonism of the serotonergic receptors involved with psychedelics, 5-HT2A receptors are influencing the stability of these sets of attractors and the vividness with which you are doing these imaginings and of rollouts of actions into the future.
+
+And here it's,
+
+It seems that what you could potentially do is describe some of a dose response curve for something like psychedelics, where as the dose increases, the extent of the rollouts become greater.
+
+You've stabilized them.
+
+And imagination can become more vivid and can influence your policy selection more because you have more confidence in what you're seeing.
+
+And so sophisticated inference, your imaginings are contributing more to your ongoing overt action selection up to a point.
+
+But then at a certain point, the idea is you keep dosing the animal or maybe the robot, and it enters more of a creative dreamlike regime where it starts to lose coherence.
+
+And you see the extent of these rollouts of policy selection decreasing.
+
+Things are becoming more vivid, but less coherent.
+
+And this itself could occasion error and potentially re-gripping in this model.
+
+And so the idea is that this would be a cognitive spectrum potentially, in addition to explaining some of the neuro phenomenology of things like psychedelics, this could potentially explain some cognitive spectrums, whether we're talking about maturation or aging or waking up, you know, when you first wake up to going to sleep, these different parameterizations of your mechanisms for sophisticated inference, helping to basically provide a neuro phenomenological handling of human
+
+of what it's like to be a person and all the variations of it.
+
+And so I think that should be it for right now.
+
+And happy to talk about all this with anyone who's interested.
+
+Thank you.
+
+
+SPEAKER_11:
+Awesome.
+
+Thank you, Adam.
+
+
+SPEAKER_06:
+Hi, Daniel.
+
+
+SPEAKER_11:
+Hey.
+
+
+SPEAKER_06:
+You're muted.
+
+
+SPEAKER_11:
+Thank you very much.
+
+Any other notes you'd like to add?
+
+
+SPEAKER_01:
+I think that's it for the moment.
+
+
+SPEAKER_11:
+Great.
+
+Hope that you consider anything and join us for the roundtable shortly.
+
+So thanks.
+
+And we'll be right back with the final presentation by GF Clutcher.
+
+right we are back this will be the final presentation of this interval this is jf cloutier towards a symbolic implementation of active inference for lego robots so looking forward to hearing this and then seeing you on the roundtable jf i'm jean-francois and i will talk about how i program lego robots as active inference stages
+
+
+SPEAKER_02:
+This work contrasts with most robotic implementations of active inference, which are based on probabilistic inference.
+
+So I hope this will spark some interesting discussions.
+
+Well, first of all, I'm a software developer.
+
+I'm not a neuroscientist.
+
+In my spare time, well, I like to code models of cognition because I'm keenly interested in all matters of cognition and consciousness.
+
+And I run them on robots because the real world is hard.
+
+And I believe that writing code for robots is actually a very good way to test my understanding.
+
+And coding itself helps make abstract concepts tangible to me.
+
+So what do I want to accomplish?
+
+Well, I want my robots to learn autonomously while they conform to the principles of active inference.
+
+This is the current version of my robots.
+
+There are two earlier versions, and there's one in early development.
+
+And here we'll see my robots to the left, Carl, to the right, Andy, driven by the interplay of generative models for hunger, danger avoidance, and wanderlust.
+
+Let's see them in action.
+
+They navigate a space.
+
+The sheet of paper on the floor represents food.
+
+And they are attracted by the scent of food simulated by an infrared beacon on a pedestal.
+
+So Carl is making a beeline to the food while Andy is having a problem getting traction and bumping into the walls.
+
+Carl is cautiously approaching, but we'll get a little bit too close to the pedestal.
+
+And this will engage its danger avoidance, collision avoidance generative models.
+
+He backs out.
+
+Andy is observing all this.
+
+Andy backs out as well.
+
+Carl is re-approaching the food.
+
+And this time will eat successfully.
+
+And he has noticed that Carl was freaking out.
+
+And in sympathy freaks out himself while Carl is eating.
+
+All right, so that was the robots as they are right now after three iterations of this project.
+
+So what does it take to implement an active inference agent?
+
+Well, there are three approaches.
+
+One, we could take the numerical approach, which basically puts the mathematics of active inference into code and runs that on robots.
+
+Another approach is to take a symbolic approach,
+
+where we have code functions that operate mostly on symbols, predicates, et cetera.
+
+Here we can see we have the symbols for hungry, very, danger, curiosity, et cetera.
+
+But that's not the only option.
+
+Take E. coli.
+
+E. coli is an active inference agent and its implementation is biochemical.
+
+Well, I clearly didn't take that route.
+
+I went the symbolic route.
+
+Well, mostly because it's the familiar one to me, and it provides me with a better scaffolding for my intuitions and exploration.
+
+I also find that it handles complexity quite well.
+
+When I started this project in 2017, my first thoughts were to implement a society of mind.
+
+I'd come across this concept decades ago.
+
+It's a theory of mind put forward by Marvin Minsky 50 years ago.
+
+And at its core, it says that intelligent behavior emerges from a lot of simple actors that interact in simple ways.
+
+It so happens that I look at it as an architectural principle as well.
+
+So how does one implement a society of mind?
+
+Well, to me, the answer is clear is we use the actor model.
+
+The ACTOR model is a model of concurrent computation that was introduced by Carlewitt in 1973.
+
+According to this model of computation, we have independent actors, which are processes, concurrent processes, each one managing its own state.
+
+And the only way an actor can interact or influence another actor is by sending it messages.
+
+And once an actor receives a message, it will interpret that message, possibly modify its internal state, and as a consequence, fire messages to other actors.
+
+So building a society of mind using the actor model is quite a natural fit.
+
+I also happen to program in the Elixir language, and Elixir is a message-oriented, multi-process language, which is based on the actor model, so it's a perfect fit.
+
+So, here we are.
+
+It's 2017.
+
+I own two LEGO Mindstorms EV3 kits.
+
+They're wonderful robotics kits with a nice choice of sensors, mini motors, and a computer, the EV3 brick, that controls them all.
+
+And I want to build a Society of Mind in Elixir on my EV3 robots.
+
+I'm in luck.
+
+There's a Linux distribution called EV3Dev that allows me to run Elixir on the EV3 brick.
+
+So I'm all set.
+
+So that allowed me to start this project.
+
+And this project, as I said, has completed three iterations.
+
+And I'm starting a fourth one.
+
+And we look at each one in turn, reviewing the goals and also the issues uncovered.
+
+First iteration, 2017, version one.
+
+A simple society of mind, as I call it.
+
+So I implement an ad hoc model of cognition.
+
+It's not something that I took from research.
+
+It's something I made up myself.
+
+It's home-brewed.
+
+And let's have a quick tour.
+
+So being a society of mind, it's populated with actors and writers.
+
+We have the detector actors and their responsibilities are to interface with the sensors and to pull them periodically to generate percepts, which are events that are like all other events that the actors will produce, are sent to the central nervous system actor, which is a dispatcher, which will then dispatch these events to other actors that are interested in them.
+
+There's a memory actor, and all events are sent to the memory as well to be stored for a certain amount of time and represent the past, if you want, to the agent.
+
+And the other actors are able to query this memory in order to make whatever decisions they need to make.
+
+One of the key actors are the perceptor actors.
+
+And what they do is they ingest events, percept events, originally from the detectors, and analyze them, maybe in the context of the past, and produce higher level percepts.
+
+For example, a perceptor might be digesting a distance percept from a detector, look at it and say, ah, given...
+
+prior distances, I'm getting closer to an obstacle and then a higher level and then produce that percept and the high level perceptor might say, ah, I am getting closer to an obstacle and I am currently close to it.
+
+So produce a percept that says collision imminent and so forth and so on.
+
+Another important kind of actor is the motivator.
+
+And the motivator is responsible for deciding what the robot needs, what the robot wants.
+
+And it expresses this need or this want as a motive event that is, again, sent to the central nervous system, dispatched, in this case, to the behavior actor.
+
+And the behavior actor then takes this motive and acts on it by emitting intent events that are
+
+listened to by the actuator actors who translate these intents into actual commands and move the robot.
+
+One key point is that the motivators actually compete with one another so that the most important need of the robot is the one that's expressed.
+
+So, for example, getting to safety is more important than satisfying hunger.
+
+Let's look a little bit into one of the types of actors, the behavior actors.
+
+And the behavior actor is actually quite complex.
+
+It does a lot of work.
+
+It's not a simple actor.
+
+It's implemented as a state machine.
+
+And with every state transition triggered by new percepts, intents are emitted.
+
+And so we can have a behavior actor, which job is to direct the robot to the food.
+
+So it works.
+
+So let's see ND version one moving about and trying to get the food, which in this case is the blue paper on the ground.
+
+So it tries to avoid collisions.
+
+It does not always succeed.
+
+Here it finds out it's stuck.
+
+Backs out.
+
+Goes around.
+
+Doing a better job at avoiding obstacles.
+
+And now makes a beeline to the food having detected it.
+
+Approaches cautiously and feeds.
+
+All right.
+
+So this worked quite well, but there were issues with this version one.
+
+I don't think it was visible in the video, but the robot was frequently overwhelmed by a constant flow of percepts.
+
+The detectors constantly feed percepts into the society of mind.
+
+And after a while, they kind of back up and the robot starts reacting to old events.
+
+And one solution was to actually put the robot to sleep once in a while, paralyze it, let the events wash through the system, and then wake it up with a clean slate.
+
+So that was kind of a little bit awkward.
+
+And another issue was that, well, there's no learning going on.
+
+The robot doesn't get better with each run.
+
+And given the model, it wasn't clear to me where I could fit learning in there.
+
+Time for version two.
+
+So I need to find a way to make my robots learn, and they also need to better focus and be able of attention so they can avoid being overwhelmed with all these unneeded sensations.
+
+I also need more computing power, so I replace the EV3 brick by a Raspberry Pi 3.
+
+About the same time, I come across Andy Clark's book, Surfing Uncertainty, and I find that the predictive brain makes quite a lot of sense to me.
+
+I think it tells a really good story about learning and attention, so I decide to implement a predictive society of mind.
+
+This is my first crack at it.
+
+I won't go into the details.
+
+I do in a companion paper.
+
+Let's just say that there are actors for managing beliefs, validating them, making predictions, and taking action to make these predictions come true.
+
+There's also an attention actor for turning detectors on and off as needed, and a focus actor for prioritizing belief validation.
+
+I do introduce some learning.
+
+The robot learns what actions correlate well with success, but that's about it.
+
+And the model does not feel quite right to me at this point.
+
+And they are bottleneck actors.
+
+For example, there's only one experience actor.
+
+There's only one attention actor, only one memory, of course, and only one focus.
+
+And in a society of mine, that just doesn't feel right.
+
+Yet it still, it works.
+
+And let's watch Andy on its first run.
+
+It's Andy version two, hasn't learned anything yet.
+
+So same scenario.
+
+So Andy has detected the food, would like to move towards it, but doesn't know which actions
+
+validate beliefs best.
+
+It smells food, but still, you know, it's just heading into the wall.
+
+So poor Andy is being quite unproductive here in its quest for food.
+
+It's a little bit painful to watch, but stop.
+
+Now here's Andy 30 runs later, and it's much more competent about matching beliefs and actions.
+
+Smells food and very competently makes a beeline to that food.
+
+Just.
+
+Here we go.
+
+Slowly approaching.
+
+Obviously a very different ante from the naive one.
+
+And there we go.
+
+Okay, so it worked, but there were issues with version two.
+
+First, the model doesn't quite feel right to me.
+
+It doesn't quite capture something.
+
+I didn't feel right about it.
+
+And there were bottleneck actors as well, which is not a good sign.
+
+And learning was limited to action selection.
+
+So time for version three.
+
+I call this one a society of generative models.
+
+So I go back to Andy Clark's book and also read on the free energy principle.
+
+And it becomes clear to me that generative models are actually quite central.
+
+In fact, it's generative models all the way down.
+
+So I get to work on a new model.
+
+In this new model, I have very few kinds of actors.
+
+Detector actors, as before, to interface with the sensors.
+
+Actuator actors to interface with motor speakers and whatnot.
+
+And the only other kind of actor are the generative model actors, the GM actors.
+
+And there's quite a few of them, in this case here, 16.
+
+And they do the heavy lifting.
+
+They do the belief updating, the predicting, the raising of prediction errors, the selection of actions, and
+
+They are responsible for remembering their past states and actions.
+
+Each GM operates within its assigned scope.
+
+There's one for locating food, one for avoiding obstacles, one for detecting approach to obstacles, and so forth and so on.
+
+The GM actors have parent-child relationships.
+
+The parent GM sends predictions as events about what it expects its children GMs to believe, even what it itself believes, and these predictions flow downward.
+
+And prediction errors flow upward if a child GM receives a prediction about what it's supposed to believe or it's expected to believe and it's not what it believes and it sends back a prediction error up to its parents.
+
+Well, that means that a generative model's perceptions are, in fact, the uncontested predictions it makes plus the prediction errors it receives.
+
+And the GM updates its beliefs based on these perceptions.
+
+And given what it believes, it may decide to take some actions and then raise intent events that reach the actuators.
+
+A little bit like before.
+
+The generative models are kind of grouped into different areas of concern.
+
+There's being, which is responsible for deciding whether we're in danger, we're hungry, or we're free.
+
+There are the danger GMs, which have to do with clearing obstacles, trying to stay in well-lit areas, avoiding collisions with the other robot and whatnot.
+
+Then there are hunger GMs,
+
+that have to do with eating, seeking food, etc.
+
+There's the Freedom GM, which I call the Wanderlust GM, which basically says, well, I'm neither in danger nor hungry, so let me just roam around.
+
+And finally, there are these two ones here, which have to do with guessing the intent of the other robot, and we'll go into more details with these two.
+
+So let's look more closely at the GM actor.
+
+Remember that a GM has parent GMs and child GMs, that predictions flow downward and prediction errors flow upwards.
+
+Let's look inside.
+
+A GM defines one or more conjectures.
+
+A conjecture is a potential belief.
+
+For example, whether I know where food is or whether I'm about to collide, two different conjectural beliefs.
+
+A belief may either be a goal, that's a belief we want to make true, like I'm eating, or an opinion, which is a belief that I want to validate, for example, that I am approaching food.
+
+A conjecture is typically activated when the GM receives a prediction about the conjectured belief
+
+and a conjecture knows how to check its associated belief to see if it's valid it knows how to make predictions given that belief and how to decide what actions to take to either achieve or test the belief a gm learns how well alternate courses of actions policies correlate to achieving validating the belief
+
+It also keeps track of which child GM it trusts more, should they send competing prediction errors.
+
+So it does precision weighing.
+
+And each GM actor works in its own time.
+
+It's a concurrent process.
+
+And it does one, it operates one round at a time.
+
+And we'll see what a round means.
+
+and it remembers its past rounds, its past perceptions, the predictions it's received in the past, its past beliefs and actions.
+
+So now let's look at the life cycle of a GM actor.
+
+Well, as I said, a GM actor operates round after round after round
+
+So what's a round?
+
+First, when a round is started, a GM carries over the perceptions and beliefs from the previous round.
+
+It doesn't start from scratch.
+
+And if it's in the midst of trying to achieve a goal belief, it may, as it starts its new round, activate conjectures for that action belief.
+
+And as a result, send predictions to child GMs.
+
+Once we're done starting, the round is active and then the GM actor just sits there for maybe, I don't know, 300 milliseconds waiting for events.
+
+events like predictions coming from above from parents that will then activate conjectures trying to prove that the predictive belief is actually true.
+
+This will cause predictions to be sent to child GMs.
+
+And as a consequence, maybe prediction errors will come up and the GM will update its perceptions.
+
+When the round is completed, either because we've heard from all the children or because time's up,
+
+Well, the GM completes this current round.
+
+It updates position weighing, keeps its trusted perceptions, updates its beliefs.
+
+As a result, may send prediction errors because the new beliefs conflict with predictions that it had received before.
+
+It updates its policies.
+
+And it decides on the course of action, sends intents, and notifies that the round is completed.
+
+And we continue.
+
+So round after round after round.
+
+I mentioned that there were two very kind of more interesting GMs in the Society of Generative Models.
+
+These are these two GMs and they represent my little foray into theory of mind.
+
+These GMs are dedicated to guessing what the other robot is doing.
+
+So each robot observes the other and detects patterns of movements and infer intentions from these patterns.
+
+There's only two kinds of intents that are inferred.
+
+One is that the other robot has detected food and is making a move towards the food, or that the other robot is in danger and is panicking.
+
+Now, how does a robot see the other robot?
+
+Well, in addition to the...
+
+array of sensors i already had from previous version i've added um a new sensor a 360 beacon seeker and what this beacon seeker sees is the beacon um on the back of uh the other robot so each robot has a beacon on its back that broadcasts a 360 radia radius um uh circumference angle it uh
+
+signifies here I am, here I am, here I am.
+
+And the other robot can detect how far the other robot is and at which relative orientation.
+
+So that, let's say one robot here, Carl, is making a beeline to the food.
+
+Andy has been observing this.
+
+and seeing the pattern of movement, which is a very straight trajectory, infers that Carl has detected food and is homing in on it and may decide to follow Carl and get to the food as well.
+
+Another pattern of movements would be a chaotic pattern of movements.
+
+And let's say Carl had been backing away in panic from hitting the pedestal.
+
+And Andy was observing this and noticed that the same kind of chaotic pattern and inferred that Carl was in a panic and decided to get into panic as well.
+
+If you remember the video at the beginning of the presentation.
+
+So this is doing well, but
+
+We all know debugging is hard.
+
+I find out also that debugging societies of mind on robots is very hard.
+
+In order to help myself, I develop a simulated simulation environment.
+
+I think of it as simulated embodiment, which allows me to observe what goes on inside a given robot.
+
+It helps for debugging.
+
+It helps for experimentation.
+
+In the simulation world, my robots, virtual robots, live in a grid world.
+
+There are obstacles, the blue tiles.
+
+There are darker areas that the robot tries to avoid, which are represented in the black and gray squares.
+
+And then there's the food, which is the green tiles here.
+
+As the robots navigate that space by using their society of generative models, I can see where each robot is in terms of its state.
+
+First, I can see where it's located.
+
+I can see its orientation, what it's last said, what last action it executed, and I can see the state of its virtual sensors and virtual actuators.
+
+I can also peek inside the various generative models of a robot.
+
+Here I'm looking into the avoiding obstacle GM of Andy, and I can look at the state in the current round or in past rounds, and I can see which predictions came in, which conjectures are activated, what are the current perceptions.
+
+what beliefs that the robot holds at the time and what actions it thinks are more likely to work and what actions it is taking.
+
+Very, very helpful.
+
+But this moves really fast.
+
+And so I can actually slow down the simulation and even pause it and then look inside the various generative models and see if what's happening is what I expected would happen.
+
+So great debugging tool and experimentation tool.
+
+So I'm quite happy with version three.
+
+I think it aligns quite well with the active inference ontology.
+
+There are no bottleneck actors, but learning is still limited to selecting action policies.
+
+However, I think that the version three sets the stage very well for the new iteration, and this one has an ambitious learning agenda, and it's just getting started.
+
+So version four, starting now.
+
+um i call it active inferencing so here's what i want to achieve as the robot interacts with its environment and i and learns how to maintain it i wanted to learn how
+
+I want for it to learn how to maintain its homeostasis by growing its own society of generative models.
+
+So instead of being given an a priori set of generative models, I want the robot to learn that set.
+
+Not only that, but I want each GM to
+
+learn its own capabilities.
+
+I want it to infer its logic programs that, when executed, will infer predictions from perceptions, will infer beliefs also from its perceptions, and infer policies that will validate or invalidate its belief.
+
+So how does one do that?
+
+Well, there's a very, very interesting paper
+
+which is called Making Sense of Sensory Input, written by Richard Evans and all from A Deep Mind.
+
+And it answers the question of how do you learn a causal theory
+
+that explains a sequence of sensations.
+
+And once you've built that causal theory, you can then apply it to predict what the next round of sensations or perceptions will be, and thus make predictions about them.
+
+Just to read from the beginning of the paper, making sense involves constructing a symbolic causal theory that both explains the sensory sequence
+
+and also satisfies a set of unity conditions.
+
+Now, unity conditions are actually a set of constraints derived from Kant's philosophy that ensure that all the pieces of the theory form a coherent whole, semantically speaking.
+
+I won't go into the details, but it's quite fascinating.
+
+The paper goes on.
+
+Making sense of sensory input is a type of program synthesis, but it is unsupervised program synthesis.
+
+So the paper presents an app perception engine.
+
+This is the software that will generate, will infer causal theories from sensory data.
+
+It is
+
+At its core, it's a code generator.
+
+What it does is it synthesizes logic programs that implement these causal theories.
+
+And when you run these logic programs, you can predict incoming sensations.
+
+So essentially, a perception engine generates predictors.
+
+And the way it does that is it searches for predictor logic programs in a space of potential possible logic programs.
+
+It's a search problem.
+
+And the search space is extremely large, of course.
+
+So we need a way to constrain it.
+
+We need to apply strong inductive biases to restrict the search.
+
+That's where the unity conditions come in.
+
+So in order to derive its own predictor, a GM will search for good predictors using app perception.
+
+So given a prior round of perceptions, remember that the GM has a memory of each round, and in each round, a set of simultaneous perceptions given that sequence.
+
+a GM will search a space of candidate predictors for a good one.
+
+What makes a predictor?
+
+Well, two things.
+
+First, there's a scope and then there's rules.
+
+The scope is essentially the objects the rules will be about and the belief predicates that will be used in the rules.
+
+The rules, well, there's three kinds of rules.
+
+There's the static rules, which apply on a set of simultaneous perceptions, like at time n.
+
+and the rules validate and possibly also infer implied perceptions, missing perceptions.
+
+An example of a static rule might be if the robot is at distance zero from an obstacle, it is also touching the obstacle.
+
+Then there are causal rules, and the causal rules essentially infer the perceptions at time n plus one, given the perceptions at time n.
+
+uh they predict the next perceptions an example of a causal rule would be if the robot is at distance x from an obstacle and the robot is approaching the obstacle in the next round of perception the distance of the robot to the obstacle should be smaller and finally there are conceptual rules which uh are rules uh that kind of make the whole predictor hang together semantically there are
+
+Rules of mutual exclusion.
+
+For example, there can only be one distance between a robot and an obstacle.
+
+And rules of uniqueness, which, oh, I'm sorry.
+
+Rule of uniqueness would be that they can only be one distance.
+
+Yes.
+
+Rule of uniqueness, there can only be one distance, for example, between two objects.
+
+And mutual exclusion might be a robot cannot both approach an obstacle and be touching it at the same time.
+
+So the app perception engine will kick in for a GM when the current predictor of the GM is no longer good enough for the job.
+
+We've produced a predictor, and now we have more rounds of perceptions, and the predictor is doing a really bad job at predicting the next perceptions.
+
+And then the app perception engine will kick in and try to produce a better predictor for that GM.
+
+So that happens for all the GMs.
+
+And once we have a good predictor, the GM, given the current set of perceptions, can infer the next set of perceptions, thus make predictions.
+
+So we talked about how a GM learns, but how about learning the entire society of GMs?
+
+How does a robot form its society of GMs through interactions with the world?
+
+Well,
+
+This was going to be guided by a metacognition GM.
+
+That's something that's given.
+
+When the robot starts life, it has a basic set of detectors, set of actuators.
+
+That is a given.
+
+And it also has a metacognition GM.
+
+It's also a given.
+
+The metacognition GM, its role is to watch over and guide the evolution of a society of GMs.
+
+That's the action.
+
+For it to function, each GM must act as a cognitive sensor.
+
+It must produce sensations such as
+
+Are prediction errors trending up or down?
+
+Do policies predictably impact my beliefs?
+
+Or, very importantly, within my purview, is the robot's homeostasis at risk?
+
+These are cognitive sensations that a GM will produce, will be listened to by the metacognition GM.
+
+that will allow it to update its own beliefs about how well the Society of GMs is doing.
+
+Does it have sufficient coverage?
+
+Is each GM capable enough?
+
+And based on that, may take corrective actions by creating new GMs.
+
+And possibly if one GM is not doing very well, it's stuck in a rut, removing it and replacing it with another.
+
+So that's the role of the metacognition GM.
+
+So how can the robot tell whether it's doing better or worse than before, given what it has learned?
+
+Well, feelings.
+
+That's how.
+
+So a robot will have internal sensors for feelings, and I'm thinking about feelings of hunger, which increases with physical and mental exertion and is reduced with eating.
+
+There's the feeling of pain, which would go up with the number of collisions, but would be reduced automatically with the passage of time, simulating healing.
+
+And then I'm thinking also of the feeling of ennui,
+
+which goes up if a GM is not learning anything, if its logic programs are unchanged for a long period of time, but only goes away when the GM is learning.
+
+Feelings have a balance, positive, negative.
+
+I'm hungry, very hungry, negative balance.
+
+I'm not hungry at all, positive balance.
+
+And a negative balance signals risks to homeostasis.
+
+And when beliefs are derived from...
+
+feelings with a negative balance or a positive balance, then these beliefs take on this balance.
+
+And this is going to be used to prioritize actions because actions that promote beliefs with a strong balance will be prioritized over actions that do not.
+
+So in other words, AGM with very strong feelings will have its actions prioritized over
+
+GMs that currently want to take action, but from less feelings, less powerful feelings.
+
+And if these actions conflict, then the actions of the GM with stronger feelings will predominate, will take over.
+
+Well, given all this, what do I think makes a robot an active inference robot?
+
+Well, there's many things, but I'd like to think that in its simplest expression, for me as well, at least, an active robot is one that learns what to do in order to feel good more often than not.
+
+So I'm hoping that this work will raise some big questions and give me some insights into them.
+
+For example, what is the apparent knowledge that an agent must possess to learn autonomously?
+
+What makes unsupervised learning converge on competency?
+
+Diverge.
+
+And maybe a little bit more far out.
+
+What can growing a society of GMs learn from developmental biology?
+
+I suspect that there are principles at work here that they both share.
+
+So that's it.
+
+Thank you very much.
+
+Thank you to the Active Inference Institute for their help and encouragement and the version
+
+Three of my work is available on GitHub.
+
+It's open source.
+
+I can be reached on Discord and by email.
+
+And the companion paper to this talk is available on Zenodo.
+
+
+SPEAKER_11:
+All right.
+
+Great talk, JF.
+
+We'll take a quick break and we'll be right back with the roundtable.
+
+All right, we are back.
+
+This is the beginning of the second roundtable.
+
+That's our last session in the second interval of the second Applied Active Inference Symposium.
+
+And some more may be joining, but I am joined here by Adam Safran, Bruna Lara, and Jakob Smeckel.
+
+And maybe just to begin, it would be awesome if anybody who wanted to... Thank you.
+
+And welcome to JF.
+
+Carl will be joining shortly.
+
+So perhaps to begin, if anybody would like to provide a reflection on a talk that was not their own.
+
+What was something that you felt like was brought to the table?
+
+What was a key problem area that was addressed?
+
+And how did you see Active Inference being implemented and adding meaning in that situation?
+
+
+SPEAKER_08:
+I can maybe quickly just comment on Jeff's presentation since it was the most recent.
+
+I think definitely this symbolic approach to active inference is one that has perhaps not been that pushed forward.
+
+And obviously there are different approaches all around the field, but I feel like that this
+
+particular perspective on pursuing this kind of emergent generative models which only have the very basic kind of setup but then the complexity emerges through the usage of Elixir and Prologue I think was really interesting and yeah I mean we
+
+talked about JS project in the organizational meeting units quite a lot, but, uh, every time I think about it, it's really cool to see this implementation.
+
+
+SPEAKER_11:
+Thanks Jacob.
+
+Adam.
+
+
+SPEAKER_01:
+Well, I mean, in terms of the recent one, just the app reception engine, like the content inspiration that I found that to be really exciting.
+
+especially because I've been taking some inspiration from some of the work and wondering whether basically these categories, are they not just preconditions for judgment, but any kind of sense-making whatsoever, like any sort of world with composition that could be navigated and parsed.
+
+And so to see that that kind of work was being done with that level of sophistication was just amazing.
+
+
+SPEAKER_11:
+It is a thread that came up multiple times with juxtaposing discrete time, continuous time, and all of these.
+
+And then it's almost like another dialectic with the numerical and the distributional approach to variational inference, sampling, message passing, a whole taxonomy of approaches that we've seen for active inference models.
+
+And also models of perception, cognition and control outside of active inference.
+
+And so maybe, JF, if you want to just to provide a thought on where you see the symbolic perspective coming from and intertwining with active inference directions and robotics like we were talking about today.
+
+
+SPEAKER_03:
+Right.
+
+Well, I think it comes in from different perspective.
+
+One is explainability of choices and behaviors.
+
+If the robot is driven by symbolic reasoning, then it becomes relatively straightforward for it to provide an explanation of its behavior in terms of the chain of reasoning.
+
+that led to it.
+
+So that's of interest in and of itself.
+
+The other aspect is when it comes to the app perception engine, it has a
+
+an ability to develop a causal theory symbolic causal theory from relatively small data set so unlike a machine learning solutions which require intensive an intensive learning process which leads to an obscure
+
+causal theory, if you want, with the apperception engine, you have a relatively small amount of data as input and a causal theory that's symbolically expressed as output, which can serve as a basis for explanation and justification and rationale.
+
+That being said, if the
+
+as part of the process of apperception, a GM abduces latent objects and abduces predicates.
+
+The meaning of these predicates are only to be inferred in context because they're going to be called like P1 and P2 and object O1, object O2.
+
+You may, by examination, just maybe infer, ah, I think the
+
+We're looking at a predicate that has to do with navigation and avoidance, but that will not be clear.
+
+So I think in that regard, there are gains, but they're not absolutely clear in terms of explainability.
+
+But when it comes to active inference, I think that what matters to me
+
+is that the robots behave according to the principle of active inference and not necessarily by implementing the mathematics of it.
+
+So I don't think it's a contradiction.
+
+As far as I'm concerned, these are fortices that are mine, which is symbolic programming.
+
+And that's why I'm doing it that way.
+
+
+SPEAKER_11:
+Thank you.
+
+It's almost like in the textbook of active inference where we have the high and the low road, and here's like the symbolic airdrop actually arriving at a similar place, although being quite disjoint in its origins from the particular partition flows on continuous numerical variables, a lot of the ways that we've seen things develop in the past several years.
+
+So welcome, Carl.
+
+If you would like to say hello or provide any remarks on anything that you've seen at the symposium or any overview thoughts on active inference and robotics.
+
+
+SPEAKER_10:
+Well, I greatly enjoyed all the presentations.
+
+There's so many different perspectives.
+
+So I would imagine my comments will fall from what people want to talk about.
+
+So I'm going to just pick up on that last theme.
+
+So, you know, Jean-Francois's symbolic dropping on from high.
+
+I thought it was a really intriguing perspective.
+
+And it's a perspective that I've been actually forced into in certain applications of the gull-o-fashioned mathematics of active inference.
+
+So I thought it'd be useful to share that in the sense that when you write down discrete state-space models and use the maths of minimizing variational expected free energy
+
+to invert those models, very often you're confronted with specifying those models with Boolean logic.
+
+If this, then that.
+
+literally in the code which you write to specify a particular tensor that maps from some causes to some consequences, you are literally using if and then statements and and and or statements in order to generate the tensors or the matrices that sort of encode probabilistic mappings, which now become
+
+deterministic mapping simply because you're populating these tensors with zeros and ones.
+
+So I do see an enormous opportunity here to actually bring together the mathematics and the simple probability theory just using categorical distributions or Dirichlet distributions of a particular sort.
+
+you know you're only dealing with some zeros and one probabilities and the kind of logic and a perception that you were talking about I thought that was absolutely fascinating and one one thing that intrigues me is if you can do that um then that that there is um
+
+a way of doing your searches of all the potential programs or logical statements that are internally consistent with the evidence at hand.
+
+For example, I could build a generative model where I can be in two places at the same time, or two things can be in the same place at any one time.
+
+From the point of view of the generative model, I can write that down.
+
+without an exclusion principle.
+
+But when I now come to ask the question, is that model relative to another model that can be written down in terms of Boolean logic that precludes two things being in the same place any one time?
+
+does that simpler model now provide a better explanation for the evidence at hand?
+
+So technically, what that means is that I can apply the rules of Bayesian model selection to this model versus that model, where the model just is
+
+a statement of propositions, logical propositions.
+
+And there are ways of sort of automating that very efficiently called Bayesian model reduction.
+
+And I'm just wondering whether you could take a lot of pressure off the search for the internally consistent logical structures that you're dealing with, if you can cast it in terms of
+
+in terms of Bayesian model reduction, which quite simply is measuring the evidence, the probability of this sequence of outcomes, that can itself be categorical, you know, I'm in this state or that state, the probability of that particular sequence of discrete outcomes given this structure, this generative model that is articulated as a logic.
+
+and if you can do that I think that'd be very very powerful because that speaks to a common theme which I think most of us or you were talking about which is this issue of structure learning um you know and what you're talking about is is sort of a principled way to get the right parsimonious structures that have this you know this coherence I can't remember you um
+
+were even taking it right back to sort of 19th century philosophy or 18th century philosophy in terms of the constraints would be really great to see whether that kind of um
+
+sort of logical structure that philosophers like actually could be discovered or disclosed just using good old-fashioned basic model selection.
+
+There seems to be a close homology there with some of the work of people like Josh Tenenbaum, where he certainly articulates structural learning from the point of view of radical constructivism using sort of program searches and sort of
+
+casting generative models as programs and then trying to score the quality of these programs using a form of Bayesian model selection.
+
+And he claims to be able to do sort of millions very, very effectively within a few seconds.
+
+Have you looked at Josh Chen and Bam's work at all?
+
+
+SPEAKER_03:
+Not yet, but I certainly will.
+
+And I just want to make clear that the app reception engine was developed by Richard Evans in the paper, Making Sense of Sensory Input.
+
+And yes, one of the core issues is inductive bias.
+
+How do you restrict the search space so that you can have a chance of finding within a reasonable amount of time a logic program that is a competent predictor?
+
+And that's where Kant's synthetic unity of apperception plays in as it provides constraints on the class of logic programs which are acceptable, which are considered valid.
+
+And if I make a contribution, because this is work in progress, I would like to add additional constraints of
+
+from the fact that we're not trying to generate one generative model in and of itself, but as in the context of a society of generative models.
+
+So a generative model will borrow its perception domain from the belief domain of other generative models, thus creating additional constraints.
+
+And as it searches, it will try not to
+
+modified scope in such a way that it orphans other generative models.
+
+So as the society of generative models grows, so does the set of constraints that apply on reducing the search for a predictor in any of the generative models themselves.
+
+So I'm hoping that as
+
+the society of general models grows so does the set of constraints that apply on the searches for any one of them but i think the name of the game is very much in this uh the richness and the strength of the inductive biases that are applied on search just to highlight a few pieces of what were addressed and then to bruno or adam or anyone who'd like to add
+
+
+SPEAKER_11:
+It impressed on me, robotics is radical constructivism, not just in the sense of the constructing models, but also in the way that Adam described in terms of the relationship to the embodied artifact.
+
+So that is one interesting piece.
+
+And another, in this quest to find the rainbow that connects first principles and analytic formulations,
+
+through mesoscale, for example, computational code, all the way to the last mile in the cases that we heard from Wenhao Chen in the previous session.
+
+Carl, when you described the way that Boolean logic enters at the level of execution
+
+was very interesting and suggests that there is kind of like a brackish area similar to that between discrete and continuous time models in like hierarchical modeling.
+
+But here, where the numerical and the statistical approaches to active inference
+
+are becoming connected to actual logical implementations and design choices that have to do with which functions are executed first or the conditions that certain things occur in and so there actually is a meeting ground or an interface in a way implicitly already and so it is very interesting to see how jf's work on the generative model generation
+
+process is now approaching that intersection from the other side and suggesting it's like if you see a car coming from the other direction there's a road and now this high and low road network starts to grow more pathways so bruno or adam would be happy to hear any thoughts you have
+
+
+SPEAKER_09:
+Yeah, thanks.
+
+I think that's much our case.
+
+As I was telling you, we come from this other side of the story.
+
+And at the end, we have to make some choices on implementations.
+
+And so far, we've been very focused on these self-organizing maps.
+
+Most of our work is on that.
+
+And that's actually one of the questions I have for all of you.
+
+What's your take on all these approaches that we're trying to... We're coming from a different field, from a different point of view.
+
+And in a way, we are almost intentionally avoiding probabilistic approaches to active inference.
+
+So I don't know, what's your opinion on that?
+
+That was the first one.
+
+And the second one is more like, I don't know, like a doubt, a question for Carl, like what do you see in the near future on all these things that we're working on, on prediction error dynamics and this monitoring of the error over time?
+
+Yeah, I think that's...
+
+
+SPEAKER_10:
+I'd love to speak to that if I can, yeah.
+
+In fact, interestingly, it does actually also speak to your question, Daniel.
+
+I just wanted to point out also that this notion of moving between continuous states-based models and discretized states-based models is something that people in quantum computing and physics are going to keep their close eye on, because if you get it all digital, then the opportunity for quantum computing suddenly rears
+
+head, so I think it was also a very pragmatic reason to sort of look at that transition.
+
+And also just to bring in Adam's point, you know, not only was he suggesting that we quantisise, discretise, spatialise in terms of little tiles and places, receptive fields for being here as opposed to being over there, but he was also suggesting we do that in time.
+
+So I think the quantisisation
+
+of space time in a generative model is a really important thing of course you know you could argue that that's a step closer to good old-fashioned symbolic ai that has a meaning in in the sort of folk psychology sense so
+
+To come to Bruno's question.
+
+So the big divide here is between, from my point of view at least, degenerative models that are of continuous states and time versus generative models that are of discrete states and time.
+
+And clearly you need both in the sense that the world that a roboticist and indeed me and my children live in is a continuous world.
+
+I have to move around it.
+
+control continuous temperatures and all sorts of things.
+
+And yet it seems as if the intelligence is at a symbolic level.
+
+So I think what we're talking about is a hybrid generative model.
+
+And then the question is, how do you get the sort of discrete parts to talk to the continuous parts?
+
+But if we just focus on the continuous parts, and just to answer Bruno's question directly, first of all, what I'm saying is you can't ignore the continuous bits.
+
+So everything you were talking about in terms of self-organizing maps,
+
+has to be there at some level.
+
+It's just a question of whether you can put a more symbolic logical structure on top of it to co-screen it sufficiently to resolve all the complexity.
+
+I loved your work.
+
+I could see all the important
+
+issues in terms of representing uncertainty as the, if you like, the stand-in for the valence of how I am doing.
+
+So I was amused to hear that you're actively avoiding probability theory.
+
+Yet for me, everything you said was all about probability.
+
+It's all about uncertainty.
+
+And that was true at so many levels.
+
+So just to answer Daniel's question to you, the relationship between free and variational free energy and
+
+the prediction error is really trivial and very simple.
+
+It's just under continuous state space models with Gaussian random fluctuations, the free energy gradients just are the prediction errors, the sign of prediction error.
+
+simple quadratic forms for the log probabilities.
+
+So self-organizing maps that organize themselves in terms of responding to prediction errors just are systems that are performing a gradient flow on a variational free energy under the assumption you're dealing with continuous states that have Gaussian bicentral limit theorem, Gaussian
+
+random fluctuations so i you know that that's all exactly what you know uh what would please me if i was if i was a probabilistic committed to the probabilistic parts of it yeah your i think your thing you're bringing to the table though is is is this sort of the dynamics of the uncertainty or the amplitude of the prediction error the unsigned prediction error the sort of the behavior of prediction errors over you know with the separation of time scales and i think that that that's a really important um
+
+really important move.
+
+I see slight homologues of that, not formally identical, but certainly homologues of that.
+
+From the point of view of an engineer, this would be like getting the Kalman gain right.
+
+If you interpret a Kalman gain on a Kalman filter as
+
+assigning the right precision or confidence to the prediction errors as they come in relative to the state estimators and your prior beliefs that you've accumulated, getting that right, having an adaptive Kalman filter where you're actually optimising the Kalman gain.
+
+That would be, if you like, the state of the art hierarchical Kalman-Busey filtering.
+
+So if I was a psychiatrist, I would say this is exactly what goes wrong in people with schizophrenia and autism.
+
+is that they've got their estimators of the overall um uncertainty or prediction error wrong um and that they now need to um you know and that this is an explanation for um false belief updating or false state estimation from the common filtering point of view the the other point um that struck me in in the early part of your talk was um something which um
+
+as a neurobiologist or motor control theorist, something that they would find very entertaining, which was the link between the ability to ignore stuff and sensory attenuation.
+
+I don't know if you've come across that in robotics, but certainly in terms of motor control of the kind I think you're using, which I would
+
+ascribed to the equilibrium point hypothesis like approach you know so you're putting your set point into the actuator and you're letting the reflexes do the rest but you've got to control carefully how those prediction errors are used to drive the actuator make sure they don't come back up and change your state estimation and so from the point of view of sensory attenuation that just is attenuating the precision or the inverse variance or estimation of the overall amplitude
+
+So and finally, you know, looking at the long term trends in the estimated precision, I think is, you know, is a really important way to see whether you've got the right generative model for this context.
+
+I noticed you were citing the work of
+
+and that was I think his really great insight many years ago, interesting from economics, he was working with economists at that time, so I think that's very very important as well, it's all about estimating uncertainty.
+
+
+SPEAKER_09:
+Yeah, thanks a lot.
+
+I mean, as you can see, there's, well, obviously, we come from this side of Woolpert, and you can see all that literature behind our work.
+
+But yeah, we're getting there.
+
+And that's...
+
+That's where we are going.
+
+That's what we're intending.
+
+And you'll see some work that we're going to come out very soon that tries to bring deeper this...
+
+to make better use of this monitoring.
+
+And the other thing I was thinking is something you mentioned, is this weighting of the attenuation.
+
+And that's always been in our mind, again, because of why can you tickle yourself and all these famous, famous works.
+
+We have lots of doubts.
+
+We have lots of discussion with people about this attenuation and the precision weighting.
+
+And that's what we are now trying to implement.
+
+Again, using self-organized maps.
+
+But yeah, we'll try to get results quite soon.
+
+Thanks a lot.
+
+
+SPEAKER_10:
+Just to say, I think that's really important because as soon as you can get dynamic attenuation,
+
+or gating in play, very much in the spirit of what was implicit in Matt's sort of homeostatic architecture.
+
+You can talk, I think genuinely you can talk about your robots attending to this or ignoring that in the right kind of way.
+
+And you're starting, I think, to get quite close to now
+
+sentience because you've got attention in the mix uh you've got some a kind of metacognition in your self-organizing maps which i think licenses something which is much much closer now to sort of a sentient intelligence as opposed to just a reflexive kind of control yeah that's that's that's that's the idea let's let's hope for the best
+
+
+SPEAKER_11:
+So a few points are then, Adam or Jakob or anyone, active inference is inference about action, and it also uses action as one of the ways to reduce uncertainty.
+
+And so it's a very tantalizing parallel with quantum active inference as being about quantum systems and potentially using quantum
+
+in some way to run these models.
+
+Another point was in the recent folk psychology paper with Ryan Smith et al.
+
+There was a distinction of how increasingly cognitive and symbolic functions were being played by decision-making active inference in the discrete setting, while more motor behaviors could be played out by motor active inference in the continuous time setting.
+
+And through this conversation, I'm seeing how, whether that is explicit or implicit, that decision AI to motor AI handoff is mediated by a symbolic layer, either implicitly through the code construction or potentially even explicitly with the kinds of approaches that we're exploring.
+
+And then one last area of some parallels that I'll like to hear from Adam or anyone else
+
+Self-organizing maps brought up by Bruno have a lot of similarities with some of the graph operations that Tim Verbellen and Ozan Katal and Adam's work was describing, and then the harmonic modes
+
+that adam has described in work as well reminded me of the ultra stability that matt brown described in some of these more classical models of like synergetics and multi-scale harmonic organization and so adam or anyone else would be happy to hear any of those thoughts
+
+
+SPEAKER_09:
+Okay, just quickly to answer Adam, I don't know exactly how, I mean, what do you mean with... Oh, by the way, they can't see my question, the audience, maybe we should read.
+
+Sorry, Adam is asking to what extent can self-organizing maps be used as model of experience-dependent plasticity as implementing a kind of implicit neural architecture search?
+
+I mean, I don't know exactly what you mean with neural architecture search, but...
+
+there is this literature on growing self-organizing maps.
+
+So like the usual original architecture is fixed, but there is some implementations where you actually can add nodes.
+
+and they have more plasticity.
+
+And there is also the ones that don't stop learning, so it's continuously moving.
+
+So that helps you to not have a fixed structure and a fixed mapping of the sensory input, but it just moves as there is new data coming, new input.
+
+coming in.
+
+So that's the dynamical sums and growing sums, I think, if you're interested on that.
+
+
+SPEAKER_01:
+Extremely.
+
+I guess the intuition or question was that I'm sure there are plenty of inductive biases that we would be equipped with to help us converge on efficient regimes of inference and learning.
+
+But I'm also wondering the extent to which, I don't want to go too far with this kind of analogy, but something kind of like a field programmable gate array, but that self-organizing map dynamics could allow for the creation of different regimes of active inference.
+
+To what extent, as you're, let's say, building up a hierarchy,
+
+At different levels of it, based on where you are in this overall hierarchy or hierarchy, you might take on very different computational properties via experience and plasticity.
+
+So it's like you learn the inductive biases you need as you go.
+
+But to come back around with self-organizing maps, the locality and the
+
+the topography of them, one thing I'm really curious about is the extent to which they could actually be used for modeling like entorhinal and hippocampal representations, to what degree the different operations that are used for constructing these maps would also converge with the kinds of structural inference and structure learning that have been described for the hippocampal system.
+
+I don't know the answer to that, but it seems like a potentially fruitful intersection that Daniel suggested.
+
+Yeah, definitely.
+
+Yeah.
+
+
+SPEAKER_09:
+I mean, I think in principle, they are inspired from the hippocampal activity, the maps.
+
+And yeah, there's lots of proposals out there of different ways of moving them.
+
+
+SPEAKER_04:
+But yeah, I think they would be very useful for what you want.
+
+While I'm talking about that, a general question
+
+
+SPEAKER_01:
+question for me that I've been wondering about is, so I guess I'm suggesting that like you're getting these representations, structure representations potentially being afforded by these place fields of the campbell system.
+
+But one thing I'm wondering is, and that these would provide like equilibrium points, like Carl often will talk about the importance of structuring action and perception
+
+by these discrete acts that seem to be unfolding at roughly theta frequencies.
+
+And this seems to be like the time scale of coherent action selection for an organism of about our size that can do about the things we can do with a brain about this big, all kind of brought in the same temporal register.
+
+And so this idea that like we might be stepping along these representations in some ways, like moving from like between these bump attractors,
+
+as somehow structuring cognition by some sort of representation.
+
+I'm excited by that.
+
+But I still don't have a sense for how far you go with that or ought to go.
+
+For instance, so let's say we're talking about something like, this is actually something Carl said.
+
+scolded me about in the past, which is before you think of the architectural principle, think of the inactive situatedness of the system.
+
+And so something I wonder is, so I'm focusing on maybe you're getting this inductive bias of the hippocampal entorhinal system is this high-level controller, but to what extent are we implicitly doing things like symbolic reasoning, but via modes of enactment?
+
+Like, to what degree, like, could you do something like, like, let's say we're talking about, like, Perlian causation, and you want to do something like a do operator.
+
+You could have some sort of, like, graph, some sort of, like, flow of inference, like, maybe even, like, within, like, the, like, chain bump attractors, like, the hippocampal system and the
+
+Actually, another thing that Carl actually brought up recently was bump attractors in the colliculus.
+
+So maybe even in terms of patterns of ocular motor motion is potentially providing another means of accessing such representations and being governed by them.
+
+But to what extent is it too neurocentric?
+
+Is it actually being realized more implicitly by the overall contextualized functioning?
+
+
+SPEAKER_11:
+it's you know i'm open questions for me so sure to carl and then jacob or anyone else who wants to talk well to me
+
+
+SPEAKER_10:
+Can I tell Adam off again or not?
+
+I don't think he needs telling off.
+
+Yeah, it's interesting, isn't it?
+
+I wonder whether that is the interface that Daniel was referring to.
+
+How do you get from a necessary continuous Bayesian filter coupling with the world?
+
+I mean, even with Carla and Andy, these things are moving continuous states.
+
+So at some point,
+
+even if it's actually physicalized.
+
+There is a continuous generative model, self-organization in play.
+
+And I'm reading Adam's question as, is this too neurocentric to worry about bumper tractors
+
+and the role of lateral inhibition, for example, in carving up receptive fields that could be actually written down as just sort of basically a quantized representation.
+
+For example,
+
+receptive fields in V5 or motion sensitive areas can either be expressed as a sort of continuous preference for motion as a continuous function of visual velocity.
+
+Or you can say, no, this population is just encoding the probability that this particular edge is moving at eight degrees per second.
+
+So, you know,
+
+if Adam you were asking you know are we being too neurocentric in over interpreting the neuronal dynamics that just basically do the carving up into a series of either tilings and receptive fields or place fields or in the context of sort of stable fixed points you know sort of thinking about
+
+heteroclinic channels as, you know, one way of articulating a discrete set of ordinarily organized fixed points that have, you know, that's the way that we should understand it.
+
+I don't know, but I think, you know, it could certainly, if you can read them in both ways, I think that then gives you license if you wanted to simulate and reproduce in silico these kinds of computations.
+
+It certainly allows you to replace heteroclinic channels, heteroclinic cycles, bumper tractors, receptive fields of this kind with a discrete representation.
+
+And to me, practically, that would be an important way to proceed, simply because that minimizes the complexity of the generative model.
+
+And in minimizing the complexity, you maximize the model evidence.
+
+I don't know whether being neurocentric is a good thing or a bad thing.
+
+You know, interesting, just think about what is a self-organizing map?
+
+So when I was at school, it was this basically a couple map lattice with lateral inhibition to do this sort of carving up and segregate those various populations or localities from other localities.
+
+If that's the case, again, you've got this notion of natural inhibition, will it take all light dynamics?
+
+What is that?
+
+Well, is that a statement of this exclusion principle?
+
+And I mean, beyond simply the sort of exclusion principles, I can't be in one place at any one time, but the fundamental exclusion that you get when dealing with discrete state spaces, you know, I've got to be in this state, and I'm not in any other state.
+
+And that means that being in this state means I have to inhibit being in any other state just to get a sum to one constraint.
+
+So just by going, if you like, discreet, you're naturally inducing by physical architecture requires the kind of lateral inhibition that is one of the defining features of a self-organizing map.
+
+So that might be a virtue or, you know,
+
+of being a bit neurocentric in the sense of understanding evolution as working its way to a coarse-grained, minimally complex, discretized, symbolic representation of the world.
+
+And we just now read receptive fields in a slightly, we over-interpret them.
+
+They're just basically encodings.
+
+The world is likely to be in this state from my point of view.
+
+Can I just make one final point which kept on recurring to me?
+
+There'll be people chasing you on this.
+
+I'm thinking about Bruno and self-organizing maps and Adam and actually Matt as well.
+
+I think there's a slow realization that these kinds of architectures are the way to go.
+
+that's coming out of machine learning when people are getting bored with that propagation.
+
+So they're now all turning to local energy-based rules, and they now realise that they get much better performance from a deep neural network if they just use a local energy-based rule.
+
+And what would that look like?
+
+It would look exactly like the self-organising maps that all three of you have been talking about.
+
+It's just me, my node, trying to protect everybody else around me,
+
+and doing so by minimising my local variation of free energy or minimising the prediction errors, mathematically those being equivalent.
+
+The twist here is that this can be applied to effectively overly expressive amorphous, a completely connected neural network,
+
+and it will still work.
+
+With the right kind of pruning, you will start to get to the sort of nice hierarchical structures that Bruno was showing, or with the right kind of temporal scheduling, you'll get to the nice Tolman-Eckenbaum machines.
+
+But at the end of the day, they're just sort of deep networks, not even deep, they're just networks with a local energy.
+
+And those things I've now noticed, certainly at the University of Oxford, are now called predictive coding.
+
+So there's no necessary, no prediction.
+
+There's no prediction in the temporal sense that Adam was trying to emphasise or in the sense of a Kalman filter.
+
+It's just that they rely upon the local computation of prediction errors to generate the local energy function.
+
+So I see the people, the reactionaries in deep learning, the young Turks who want to do it better, they've all now identified predictive coding as the rhetoric in order to say this is how it's done.
+
+And it's just a statement of
+
+you don't need to do um i think bruno had a nice phrase do you or perhaps it was perhaps it was um diffuse your learning everywhere through back propagation you if it's working properly you should just be able to do it locally with your own little node vertex of your som or gm in a in a in your francois
+
+
+SPEAKER_11:
+if i could uh build on that and then anyone else who'd like to add a challenge that exists and is recognized in robotics and many of the presentations brought up was how to move from continuous and high dimensional data like a high resolution video camera or multi-sensor integration in the world
+
+eventually towards logical and conditional contextual action.
+
+And so when we see the neural network representations, we kind of see sometimes zooming in and zooming out and different ways that people are training those models, including limitations in those models training, like the back propagation that Carl just mentioned, as well as that Steven Grossberg has gone into.
+
+And so trying to contextualize that issue in light of what we're discussing about discrete time and about symbolic logic, it seems that through the partially observable framework, not even saying the partially observable Markovian framework, but here including holographic principle and so on,
+
+There's a way to move from a continuous statistical distribution and make a map to a discrete statistical distribution.
+
+Like the A matrix in the POMDPs that we use can have a continuous variable and then map that onto a discrete statistical distribution.
+
+and then i wondered if there's something like a logical a another tale of two densities a tale of two different cities or a third city and so this matrix recognizes logic from discrete distributions that's the recognition density and then the generative density is the emission of logics that are compatible with discrete distributions because
+
+With the recognition direction, recognizing conditional logics and searching over relatively small sets of possible conditional logics from discrete distributions is possible.
+
+Like a verb is never used, two verbs in a row are not used or something like that from a discrete distribution logic could be extracted or recognized.
+
+And then if there's a discrete distribution or more,
+
+logics can be sampled and that speaks to that inductive bias where you want the inductive bias to have limited false positives and false negatives with respect to the empirical world like you wouldn't want to waste time
+
+spitting out logics that cannot be however that might not be lethal but it certainly wastes a lot of time and then conversely what could be lethal would be to have an inductive bias that fails to recognize empirical aspects of the world and so that is like an expectation maximization but transposing not between a continuous and a discrete statistical space but rather between a statistical and a logical space
+
+So Jakob or, oh yes, Jakob or Bruno, anyone who would like to add to that, please.
+
+
+SPEAKER_09:
+No, Jakob, you haven't said much, please.
+
+But I can say something afterwards.
+
+
+SPEAKER_08:
+Yeah, I just had some general questions that are kind of related to Daniel's remark on the move between the purely continuous and statistical representation of degenerative models into the discrete.
+
+And since this week I've been reading the paper from Chris Fields and Carl and others on the FEP and neuromorphic
+
+development i'm wondering whether the question of structure learning can be solved by some fundamental computations that are available at the very low um low dimensional level of
+
+just quantum systems where given the right environment, that system would naturally evolve into some kind of discrete morphology that it didn't start with, kind of similar to like the primordial soup then evolving into discrete or more discrete life forms.
+
+And whether
+
+and whether that might impose the necessary structural learning principles or message passing where each new layer that evolves in the hierarchy is receiving observations from the other ones given by the new Markov blanket that's drawn around it.
+
+But in terms of actual implementation, I'm wondering whether that requires quantum computers or whether that can be done with some kind of different architecture that is able of this automatic evolution in its morphology.
+
+
+SPEAKER_11:
+Awesome.
+
+Bruno, and then anyone else who'd like to add.
+
+
+SPEAKER_09:
+Yeah, I mean, very nice, your question.
+
+And then, just kind of to round up what you were all concerned about, we were just thinking and remembering this, and going back to songs, and there is this proposal, some songs, but I don't remember the authors now,
+
+Well, it's this other type of architecture that takes into consideration the learning progress.
+
+So previous activations and some sort of history of the previous winning nodes and so on, that might be the next step so that you can actually monitor what's happening over time.
+
+And if you have one of these that it's coding for error, then that would include the monitoring of the prediction error.
+
+Yeah, and it would kind of close this gap between continuous and discrete representations, because then you could have it all over time.
+
+So if you want Adam, I can send you some literature on that.
+
+
+SPEAKER_11:
+Thank you, Bruno.
+
+One point on the morphological computational angle, Jakob, and then again, anyone can raise their hand.
+
+I thought about a bunch of tree seeds.
+
+We're back in frequentism again, so everyone can take a breath, but there's a hundred seeds that are planted.
+
+And depending on the priors inherited from evolution and the updates, which are happening from the generative process, from the niche, there's going to be like a distribution of that tree through time.
+
+So like a palm tree is going to have a very like narrow,
+
+cone some sort of distributional cone across those hundred that are sampling from it and then another shrub might have like a different um shape then you brought up how potentially quantum or discrete like morphological decisions
+
+could realize that continuous probability distribution at the population or even like the multiple worlds level.
+
+And there's something there also with the local computation of large models that Carl mentioned, that it's like something happens
+
+where there is not even just a symbolic or discrete decision that's made, there's an embedded decision that's being made that now is part of the history.
+
+And so the branching pattern of any given palm tree is gonna be unique or any given shrub, yet they also may fill out at the population level a distribution set
+
+that has these aspects that can be modeled as like a Gaussian blur over tree morphologies.
+
+Yet, of course, no one is saying that the tree is a blur.
+
+And so there's so many interesting contrasts with like the realized trajectory of the Lego robot.
+
+And that's the N equals one, the population of trajectories, the imagined set of trajectories.
+
+So having a unified ontology
+
+to be able to talk and have formal, concise connections amongst these different kinds of remembered, now casted, anticipated, or imagined futures helps find the patterns across systems that, like Adam said, are essentially the basis of sensemaking and insight.
+
+
+SPEAKER_01:
+I got to ramble.
+
+So I guess in terms of this motion from a continuous to a discrete regime, or even drawing analogies from a quantum to a more classical regime, in general, I've been, with respect to computational models of consciousness, wondering how
+
+a seemingly classical world of experience can emerge from a probabilistic model.
+
+Like why are things so precise and, or, um, Carl's written some really, uh, interesting papers with Andy Clark on this, um, on the Bayesian blur problem.
+
+And one of the suggestions was that like, um, the discretization for the sake of action, like,
+
+in order to act, you have to act in a particular way.
+
+And it's like just the requirements of doing a particular thing at a particular time induces this.
+
+And so one of the things, and so this is, I don't think it's competing, but in some ways competes for like a suggestion I had, although I think it's compatible, because like I was wondering whether basically like something about the timescales at which you could get like these,
+
+coherent eigen modes or like the population activity could achieve these like attracting states would create like the timescales of the formation of these large scale attractors could create like an in and an out of like who gets to inform or not.
+
+And this could help to like sharpen things up and, and like creating these population level attractors.
+
+But there's another way of describing it in terms of like what lets you act.
+
+Um, so in terms of like, uh, like these different, uh,
+
+I guess one more comment along those lines is, I think it's interesting that like, I've talked to some rodent researchers and when you remove the hippocampus, you'll still actually get like roughly theta scale, like large mesoscale organization of brain dynamics for the rest of the rodent's nervous system.
+
+So it seems like there's almost a...
+
+it might be, I don't know if you'd say it's like degenerate, but it's like natural selection, like any mode, any, any way it could catalyze things to help with the coordination, to help with the alignment, the spatial temporal alignment of that, that allow, that allow for different forms of synchronization was utilized.
+
+So like there's like, you could get, for instance, a good amount of discretization just from like potentially just from like learning and interacting with the world.
+
+that requires you to do this just physically to interface with it.
+
+You can get some of it from like the overall connectomic properties, just like that's the times, like that's what's required for the, you know, the overall brain to form attractors.
+
+They'll form it at a certain timescale and in different nervous systems of different size and complexity with different bottle, like information bottlenecks might tend to form these attracting states roughly on that same scale.
+
+And maybe things are tuned for that, or maybe they get tuned by experience.
+
+as an innate inductive bias or as a empirical metaprior learned.
+
+You could also get it with things like the local logic of how you transition between these different equilibrium points for highly central structures.
+
+And so something that's very unclear to me is the extent.
+
+I imagine the answer is all of the above in most combinations.
+
+But to what degree were these inductive biases, are they taking the form of evolutionary priors
+
+And to what degree are they developmental priors?
+
+This is still very unclear to me, but one thing that, and there seems to be a tension in machine learning in terms of these, like you want these rich inductive priors to do efficient inference and learning, because otherwise it's hopeless, but you pay a price in terms of generalization sometimes.
+
+And so I have no idea how nature balances to what extent and in what cases, or I have some idea, but not nearly enough to feel comfortable.
+
+So that's my ramble.
+
+
+SPEAKER_11:
+I think we can actually hinge on this and bring it to an area that some of the registrants brought up and also something probably many of us have been thinking about which is multi-agent modeling.
+
+And I wanted to connect that to what Adam was just saying about what is granted
+
+via embeddedness what arises or becomes more possible simply as a function of realized corporal embodiment as opposed to in silico simulation and in our multi-agent discussions we've been differentiating spatial multi-agent scenarios from essentially non-spatial like digital or cognitive so in the spatial multi-agent case
+
+the real world, the niche, the generative process does the work of inducing or preventing collisions.
+
+Like it just cannot be the case that two entities are in the same location.
+
+Whereas in the cognitive case, whether it's birdsong or negotiation or verbal communication or revisiting websites, we can both be at the same website.
+
+And so then there's sort of a mass parallel stigmergy occurring or a mass parallel real-time architecture where there is some kind of coordination, but the coordination isn't exclusionary.
+
+Again, because two entities could, their thought trains could essentially
+
+cross in and out and those trains are like ghost trains that don't exclude each other whereas that couldn't happen in the real world so i wanted to ask anyone who had thoughts how does multi-agent modeling come into play for robotics what current issues are facing multi-agent robotics
+
+and how can what we're discussing here with Active Inference play a role specifically in understanding complex multi-agent scenarios?
+
+
+SPEAKER_03:
+I have a question in that regard for Matt.
+
+Matt, your solution has been applied to a single agent.
+
+Do you see the possibility of a homeostat that is composed of multiple agents
+
+that will direct their collaboration towards achieving a common goal.
+
+Does it scale to multi-agent situations?
+
+
+SPEAKER_11:
+Thanks.
+
+I hope Matt can provide a thought, as is working.
+
+Carl, and then anyone else.
+
+Where is Matt?
+
+Listening.
+
+Can he speak?
+
+only at a future point in an expected trajectory?
+
+
+SPEAKER_10:
+I will answer for him then.
+
+I would imagine what he would say is if you just take the generalized synchrony perspective on the emergent properties of a homeostat coupled to its environment, and you couple two homeostats together,
+
+they will find a mutual homeostasis that just will be a joint synchronisation manifold.
+
+So what you'd expect to see is a coming together exactly in the spirit of dynamical generalised synchronisation.
+
+So there will be, as I think Daniel mentioned earlier on, the homeostats will be singing from the same hymn sheet under the constraints of what they can communicate.
+
+So I think from Matt's point of view, he's more interested in establishing a generalized synchrony between a use case, an industrial use
+
+as opposed to just letting two homeostats shape and design their own little eco-niche and indulge in cultural niche construction.
+
+While I'm talking, though, I think there's something very interesting about Daniel's question in relation to your work.
+
+I sort of overheard the little robots telling each other what they were thinking.
+
+And I thought that was really important.
+
+And simply because, speaking to this general question about what does active inference or what,
+
+What are the special considerations that you might want to bring to the table when thinking about a multi-agent setting?
+
+I think there are two ways we could talk for ages about this.
+
+First of all, it's having the law of requisite variety across agents.
+
+And then the story would unfold in terms of natural selections, Bayesian model selection.
+
+I think answering large parts of Adam's questions.
+
+about where the inductive biases come from if you cast that the biases as selection biases we're just talking about basic model selection selection amongst what the requisite varieties afforded by Ashby's law but to make that basic model selection work you have to have natural selection so you know there's a great story about the importance of multiple agents from that point of view from the point of view of structural learning
+
+for free as an emergent property of natural basic model selection or natural structural learning.
+
+But the other thing is, just from the point of view of active inference, if you've got multiple agents, what's to stop you thinking
+
+thinking about these multiple agents as one big agent where you've cut some message passing between them and like one big agent with lots and lots of eyes and sensors and the like so I'm I'm asking now when I looked at Carla and Andy what's to stop me thinking about Carla and Andy as one agent
+
+that has a really flexible and deployable set of sensors.
+
+So they've got eyes that can point in different directions.
+
+So if we translate this into sort of controlling drones, for example, and we have a swarm of drones, we can think about that as one agent, one robot with lots of deployable eyes, which gives you, you know,
+
+an enormous flexibility over the you know possibly complexity of the way that we control our two eyes which are both in front of our heads so how would you then write down a good generative model for a swarm of eyes where there's one CPU there's one there's one sort of
+
+like the Lego brick controlling all the drones, where you just write a generative model with multiple sensory modalities where you needed to deploy action in the right kind of way to get the right epistemic foraging or whatever.
+
+But that would entail now message passing, belief updating, natural interactions and SOM between the brains of agents.
+
+So say, no, you can't do that.
+
+You've actually got to have physically separable robots to have a truly multi-agent setup.
+
+So how can you now...
+
+work around the fact you you don't have direct message passing and belief updating between the two the brains the brain the separated brains well you just have communication so provided you broadcast what you believe and provided those beliefs are perspective independent so they're conserved
+
+so that what I say in terms of my frame of reference is meaningful from your point of frame of reference, which incidentally for Daniel and Jakob becomes relevant from the point of view of quantum frames of reference here.
+
+But if we can assume we've all got an idea
+
+an allocentric frame of reference, then all that is required to put together the many brains into one brain is to have beliefs broadcast.
+
+Just those beliefs that are conserved or shared in the ensemble's generative model.
+
+So I don't know, was Carla able to hear Andy and vice versa?
+
+So did they actually share a narrative of the belief updating?
+
+
+SPEAKER_03:
+No, they did not.
+
+The speaking was, the talking was mostly for my benefit so I could see what was going in their mind at the time.
+
+So when Carl was saying, oh, Andy is freaking out, I knew that the generative model had identified the behavior and
+
+inferred the mindset of the other robot.
+
+But I am playing with the idea that they can communicate by just distributed message passing from one robot to the other.
+
+And what they would communicate is essentially I would consider one agent as
+
+a source of sensation for another agent.
+
+And in the same way that internally generative models, the beliefs of a generative model becomes a sensation of another higher level generative model that can scale across multiple agents.
+
+And that would happen by communicating
+
+these predictions across agents and these prediction errors across agent as they propagate between general models within single agent and just scale the architecture.
+
+So instead of having a society of mind within an agent, we should also have a society of minds across agent and the same mechanisms would be at play.
+
+But you're absolutely right.
+
+We need to have this communication, but it would be the same kind of communication
+
+across society of minds as they would be within society of mind.
+
+I'm hoping that they would be self-similar and the same architecture would apply at any scale.
+
+
+SPEAKER_10:
+Which actually speaks to Jacob's question about Markov blankets and Markov blankets.
+
+That sparse you get from that scale-free separation and refined, minimally complex
+
+about the nature of communities and the scale of the world in which we live and all the organs that comprise me living in that world.
+
+That scale-free aspect that is defined by the sparsity and the absence of coupling and getting the messages that are communicated right.
+
+I think there's something quite fundamental about that.
+
+
+SPEAKER_11:
+I've got a question.
+
+Yes, Adam, please.
+
+
+SPEAKER_01:
+So for the organism internal case, I'm wondering, so to what degree do you get common agency for societies of minds due to common embodiment?
+
+But when we're going for a kind of common or joint agency and maybe even different forms of joint identification or de-individuation or re-individuation,
+
+of individuals into a collective, to what degree do we need something as constraining as a joint embodiment?
+
+For instance, I'm thinking of soldiers marching in step or the ways in which we seem to potentially even expand and hack our body maps by sharing different synchronous modes.
+
+That literature is somewhat contested.
+
+I like the literature.
+
+But to what degree is it?
+
+You don't need to have that kind of synchrony, though.
+
+It's just like a strong enough shared task is enough to radically make someone make the central thing their role of where they're singing in the hymn sheet.
+
+That becomes the primary attractor governing them.
+
+And you don't need to necessarily have this kind of physicality.
+
+I don't know if that makes sense, but think of the different means in which you do need something like
+
+synchronous in time, or is it just a very strong selective pressure for coordination to establish a synchronization manifold to pull off the re-individuation?
+
+
+SPEAKER_04:
+I don't know if that's getting at any of what you had in mind.
+
+
+SPEAKER_11:
+Yeah.
+
+Oh, it's a great question, Adam, so thank you.
+
+I also think this ties to, again, JF's framing of society of mind, and then we can contrast that with a society of bodies.
+
+So the society of mind is that virtualized case, whether it's the counterfactual virtualizations that cognitive entities can be modeled as doing, or whether it might even be a society of minds in a digital setting.
+
+And then there's the societies of bodies, which maps earlier to our multi-agent discussion on like a physical crowd.
+
+So like what are the similarities and differences with a digital swarm and a physical one?
+
+It comes down a lot to their ability to collide.
+
+And again, the digital swarm can weave in and out because they can coexist in the same location in a semantic space in that generalized foraging way.
+
+Whereas the embodied swarm is going to have collision, uh,
+
+prevention by virtue of the physicality and i think by using active inference to study these systems and integrate them we do approach exactly what you brought up adam which is like almost what do we get
+
+through shared task as opposed to what do we get from a common task?
+
+Something that we merely have in common versus something that we're actively coordinating on together and potentially even coordinating together in the same exact space or on the same instance of, which provides the most constraints.
+
+Like if people are rowing the same boat versus rowing parallel boats versus on different lakes.
+
+So as we sort of...
+
+separate spatially and especially virtualize there becomes more and more possibilities um and this for those who are coming for perhaps from a robotics angle and wanting to understand what active inference brings to the picture here hopefully we've
+
+pointed a few things like the scale-free or scale-friendly nature of models to be composed based upon their sparsity and defined interfaces, and also the multimodal aspect.
+
+For example, Carl asked JF if the audio could be heard rather than only emitted.
+
+And that's not going to require some bolted-on communication module
+
+is gonna be able in the symbolic or in the numerical case to be mapped onto an architecture that also Bruno showed, these architectures that can do sensor integration as a function of the interface definitions locally, rather than potentially have ad hoc structural design decisions
+
+that could result in a lot of research and engineering debt so happy to hear any thoughts on that um yes god
+
+
+SPEAKER_09:
+um yeah i mean yeah you're right and um no i just wanted to add that we are working on on on that community well first um i come from from the very i don't know like a very now you could call it old-fashioned school where we were we we
+
+as you can see in our implementations, they are kind of very low level, what we could say low level, and coming from the sensory interaction with the world.
+
+And that is maybe why we are not, or we haven't been so far very concerned with very high level representations.
+
+So we are just dealing with very basic interaction with the world.
+
+And at the same time,
+
+It's my belief.
+
+I mean, it's very interesting, this interaction between agents and so on.
+
+But I think, or I've always thought that first we need an agent that knows itself in the world and has its own model.
+
+So like a first frontier or a first blanket, as you like to call them.
+
+And only then can start to understand other agents and to interact with other agents.
+
+um yeah so that that was what i wanted to tell you know thyself carl
+
+
+SPEAKER_10:
+I'm just wondering, there is an argument from developmental neurorobotics that to have a true sense of self, you've got to have a true sense of other, and you can only ever have a true sense of other if there's something else out there that's physically very much like you.
+
+So just speaking now to Adam's point, does it have to be, or perhaps Daniel's question, the shared body as opposed to the shared narrative,
+
+There is an argument, I'm not making the argument, I'm just saying that there could be an argument that in order to disambiguate the causes of some sensory consequences of an action,
+
+from where the action could be made by you or an identical robot or me or mum or me or my brother that is the only case in which you are now going to be able needed to contextualize and assign and attribute the agency of this outcome to what to self versus other in a world in which I was the only
+
+object or phenotype like me I wouldn't need a sense of self and I wouldn't need a sense of other it's just when you have multiple agents that are quite similar and confusable then you actually need a sense of self to make sure it's not it's you and not me which of course you know speaks to not only theory of mind but the essence of communication as well so I'm just making that point that you know
+
+that putting two robots together, maybe as you point out, once you've sorted out a robot, just learning how to move, then learning that the consequences of it moving could actually be reproduced by somebody else.
+
+And then it might develop a sense of selfhood or a minimal sense of selfhood.
+
+And then I think you're in the game of truth theory of mind.
+
+That's it.
+
+
+SPEAKER_11:
+Yeah, it's a very interesting area with thinking through other minds as have been brought up in some of the presentations and then society of mind.
+
+It is that nesting of blankets of different kinds of generative models, but again, using the same statistical or formal machinery, just like we could have a nested multi-level regression model where one model was in kilometers and then there was another model that was in degrees for temperature.
+
+And also the question about swarms and collectives and groups comes up in biology all the time with different ways that people delimit or qualify individuality, ranging from the evolutionary unit of replication, the Kantian concept of an organism as the unit that is teleologically closed, the physiological individuality,
+
+which might even include cases like symbiosis, the information theory of individuality, and different ways that we can look at information processing and transfer in terms of what individuals are.
+
+And it's so fascinating how that comes into play with robotics, where when we think about the
+
+robots that will be interacting with us as a slightly different set than the ones that might be working underwater on a pipeline.
+
+There, like Matt showed, they might be able to interact with a relatively simple generative process that doesn't exhibit mind-like qualities.
+
+It's interacting with a mere active inference entity.
+
+But when on the other side of the blanket, there's another adaptive active inference entity,
+
+and especially when it's us, then there's a space of norms and also laws, which are like that pseudocode execution order for thinking through other minds in a way.
+
+How will robots navigate a space and how will they be able to make abduction possible?
+
+occur in a real-time way both in the generation of novel hypotheses with inductive bias followed by the selection of trajectories of action again taking into account formal codified law as well as the kind of state of exception even or understanding when preferences allow for something to be so strongly desired that how and when
+
+It's pursued, might not be how you'd pursue it in a different time.
+
+So there's just a lot of cool threats.
+
+Yes, Adam or anyone else.
+
+
+SPEAKER_01:
+This is reminding me also from the first session, there was mention of value alignment.
+
+And this seems to be a multi-scale problem in terms of it will show up just as much of the robot not stepping on your toes or crushing your foot to, as it expands, is it optimizing in the direction?
+
+Are its tensors going in the direction that you want your tensors to go shaping?
+
+And it seems like of the proposals, sometimes there's some, how do I say this?
+
+begged questions that active inference maybe answers so it's sort of like let's say you have a framework like cooperative inverse reinforcement learning and so there's some sort of like you know so it's like you are trying to like roughly like optimize for the utility function of the other agent so how do you get this kind of like shared utility but then like these like active inference models where like you're bootstrapping minds um
+
+like, intersubjectively, you have, like, regimes of joint attention and thinking through other minds, or, I mean, some of this work with, I'm doing with Anna Chianizza, it's, like, she emphasizes how, like, we start out, like, actually physically inside of another organism, completely dependent, like, homeostatically, and so, like, you're automatically sort of grandmothering in this joint intention right from the get-go, and the seeds of, you know, organization and individuation are already, like,
+
+scaffolded in that way, just by the niche contextualization, where you're co-constructing each other as your mutual, you and me are intersubjectively like mutual niche construction.
+
+So it seems like with respect to, I don't know at what point these problems in terms of like deploying robots when they first enter,
+
+Because it's all the way as highfalutin as intelligence explosions.
+
+Will a recursively amplifying system stay aligned with you?
+
+But just like in the world, how can I make sure the robot doesn't crush my foot?
+
+Anyway, so the ways in which co-valuing and the robot identifying itself as an individual relative to other individuals plays into it.
+
+it seems like active inference has like a very rich way of handling and modeling a lot of these different um uh proposals and processes but um something i would wonder like for to ask like actual roboticists like how near term is it like a live problem of getting like what forms of social modeling for robots like and what forms of like a sense of self modeling for the robot like
+
+How much do we need at what stage for what levels of deployment in the world?
+
+With what degrees of robustness?
+
+
+SPEAKER_04:
+Simple question.
+
+
+SPEAKER_11:
+Great question.
+
+And maybe just to double on what active inference does to potentially frame that junction, since in this roundtable we won't address, but this is the stuff and substance of applied active inference symposia for many years to come in an economic framework.
+
+reward absolutist framework, which is kind of a full stack ranging from the ways that models are trained based upon pragmatic value and reward all the way up through a world that values economic returns.
+
+The question becomes in human-robot alignment or in multi-agent alignment more generally, the question becomes, how are we creating and then allocating epistemic, I'm sorry, how are we creating and then allocating pragmatic value?
+
+And epistem can be valued to the extent that through time it provides pragmatic value.
+
+For example, one person doing a little bit more of a research angle and one doing more of an application and profit side of the business.
+
+And when we shift to a uncertainty imperative for a sustainable or even optimistic world model, then we can achieve pragmatic value as a consequence of a process theory that highlights reduction of uncertainty.
+
+And then the question moves from creating and allocating value to how can this ecosystem of diverse entities
+
+find a general synchrony and communicate and be how they are in a way that will be
+
+reducing the expected free energy of the ensemble, which is not the question that was even approached by the create value, allocate value framing that has come up in AI and continues to occur to this day.
+
+What if the image creators, what if they end up reducing our food allocation so they can have more?
+
+They take the intellectual property instead of providing it to humans
+
+That might be framed slightly differently in an uncertainty reduction framework plus optimism, rather than in a reward maximization, which somewhat enforces a atomism and even a pessimism.
+
+We'll have a yes card.
+
+Yes, please.
+
+
+SPEAKER_10:
+I just wanted to agree with you.
+
+That was an excellent point.
+
+Yeah, yeah.
+
+There are so many ways you can tackle that.
+
+I was still puzzling over Adam's challenge.
+
+How do you stop robots standing on your foot?
+
+I was thinking, how do you stop little puppy dogs weeing on the carpet?
+
+I think it's really you've got to train them, haven't you?
+
+I don't think there's any magic answer.
+
+I think the answer is just what Daniel said.
+
+Things are designed and constructed
+
+can presumably only exist under the free energy principle if they minimise their uncertainty or expected surprise so that they make everything as predictable as possible, which simply means that if I'm living in a world full of dogs, robots, cats, flies and
+
+plants, then we're all trying to make ourselves as predictable as possible to each other.
+
+And that is the, you know, that's the sort of folk psychological way of saying that variation free energy is an extensive quantity.
+
+So if a set of Markov blankets or phenotypes of varying forms and structures jointly has its own Markov blanket, so it is an ensemble or a group or a community or a family,
+
+then it must put an upper bound on its surprise and free energy and because the free energy of each constituent of that ensemble is summed to give the joint free energy then it also requires that each individual is trying to minimize her surprise at the same time it's all internally consistent and quite you know
+
+to my mind, unmagical if you just look at it in terms of minimizing fear that you're minimizing surprise under optimism, as Daniel nicely put it.
+
+
+SPEAKER_11:
+Thanks.
+
+
+SPEAKER_10:
+You just have to make your dog surprised when he wheezes.
+
+So you've got to find a way of making the robot surprised when it stands on your foot.
+
+
+SPEAKER_11:
+J.F., you have a dog, right?
+
+So how do you see similarities and differences with these versions of and also potentially even a family?
+
+So how do you see these different entities being communicating and and behaving appropriately or not and learning?
+
+
+SPEAKER_03:
+Well, having a dog raises the question of, do I make myself understood?
+
+And that's a very difficult question to answer.
+
+When I say, no, you're not allowed to eat from that plate on the table, I think my dog understands.
+
+I'm not allowed to do this now.
+
+As soon as I walk out, then permission is granted.
+
+So, you know,
+
+It's difficult to, communication is very difficult across individuals, especially across species.
+
+But I'd like to just rant a little bit on something which came up, which is the scale-free nature of free energy principle, the fact that it can apply at a societal level the same way that it applies like a Russian doll to the cellular level.
+
+Um, as a software developer, I see self-similarity, the recursion, uh, fractal as, as a, uh, as a beautiful thing.
+
+And I think at, um,
+
+The same way physicists have symmetries as a guide to what is right because it's beautiful, I think we share self-similarity as a guide as what is beautiful and possibly true.
+
+And I think self-similarity is beautiful because it's beautiful.
+
+it collapses the amount of information that you need to generate something rich.
+
+So that's why I think that having a society of mind made up of actors and having a society of minds and having the same principles scale up feels very beautiful and feels right.
+
+
+SPEAKER_11:
+Excellent point.
+
+Yes, just if we could go for any length of time, a final set of thoughts and reflections from each of you.
+
+
+SPEAKER_01:
+Quick interjection.
+
+Jeff, if you have anything written on that or want to write it, there's an upcoming special issue on symmetries that I think it might fit with.
+
+
+SPEAKER_11:
+Would you like to give any final reflections or anything that you've heard or felt updated by?
+
+Any thoughts you have on the state of the applied active inference in 2022 in robotics or where we're heading now that this symposium is behind us?
+
+I'll start with Adam, but then everyone else can go.
+
+
+SPEAKER_04:
+Thank you, Daniel.
+
+
+SPEAKER_01:
+Well, this simulated a lot of questions and just seeing the range of work being done was inspiring.
+
+And all I have to say is I was grateful to be a part of this.
+
+Thank you for putting this together.
+
+
+SPEAKER_11:
+Thank you, Adam.
+
+and after the closing words i'll review every presentation and list the co-organizers as well so bruno and then we'll continue on
+
+
+SPEAKER_09:
+Yeah, just like Adam said, thanks a lot for the invitation.
+
+It was very kind of you.
+
+I want to thank Mark for insisting, Mark Miller, that was insisting on us to present with you here.
+
+It was a very nice experience.
+
+Well, we keep working.
+
+We need more hands.
+
+We have more ideas than hands, but I suppose that's everyone's problem, no?
+
+So, yeah, thanks a lot.
+
+
+SPEAKER_11:
+Great.
+
+Then there were three.
+
+Uh-huh.
+
+Jeff?
+
+
+SPEAKER_03:
+Yes.
+
+Well, again, thank you very much.
+
+This was extremely stimulating.
+
+Every talk I came out of listening to it with this, I want to introduce in my robots some aspect of it.
+
+And my mind is buzzing right now with possibilities.
+
+And so thank you so much for this opportunity.
+
+
+SPEAKER_08:
+I guess I can go next.
+
+Also, thanks a lot for being able to join this final roundtable and for all of the great presentations.
+
+I'll definitely have to look over them probably a couple more times to fully understand all the
+
+progress that has been made.
+
+And specifically, there's a lot to consider on the multi-agent modeling and the ideas in this discussion that we were also talking about quite a lot in the Active Blockference project.
+
+Probably was left with more questions at the end of it, but that's also the exciting part of it.
+
+So thanks a lot.
+
+
+SPEAKER_10:
+Now it's my turn.
+
+I cleverly leave myself to last because everything that needs to be said has already been said.
+
+So that just means all I have to do is just to thank Daniel and his colleagues, which he's going to thank anyway.
+
+But personally to Daniel, thanks so much for all your energy, not just today, but over the years.
+
+It is really great to see these people and colleagues come together and sort of generate ideas and questions, which is exactly what we need to do.
+
+Thank you.
+
+
+SPEAKER_11:
+Thanks a lot, Carl.
+
+And I think my one personal reflection, it swooped in at the end when JF said that from each of the presentations, there was like a module or an archetype or a function that transposed.
+
+And I think that is proof of concept of working in a shared ontology as well as in an embodied
+
+shared ontology which is to say like a field in a community of practice with different small world structures and so on but when we have the ability to transpose across systems and scales then we can bring in the modules and the pieces that people are mentioning and start to understand how those functions can be composed and designed and that's extremely exciting um
+
+Everyone, thanks for joining the roundtable.
+
+You can depart the Zoom or I'm just going to review the presenters again and the co-organizers.
+
+So thank you for joining the roundtable.
+
+You can leave if you'd like.
+
+In the first session, there was Tim Schneider with Active Inference for Robotic Manipulation, Tim Verbellen, Robots Modeling the World from Pixels Using Deep Active Inference,
+
+Ben White, Artificial Empathy, Active Inference, and Collective Intelligence, Noor Sajid, Learning Agent Preferences, and Wenhua Chen, Dual Control for Exploitation and Exploration and its Applications in Robotic Autonomous Search.
+
+Then in the first roundtable, it was Wenhua and I talking about...
+
+dual control the second session began with bruno lara with prediction error dynamics a proof of concept implementation matt brown real-time robotic control through embodied homeostatic feedback and adam saffron with generalized simultaneous localization and mapping g-slam as unification framework for natural and artificial intelligences
+
+towards reverse engineering the hippocampal entorhinal system and principles of high-level cognition.
+
+And then J.F.
+
+towards a symbolic implementation of active inference for LEGO robots.
+
+We've just completed the second roundtable with Adam, Bruno, J.F., Karl, Jakob, and I.
+
+The organizers for the symposium were Mark Miller, Matt Brown, Blue Knight, Alex Vyotkin, Ivan Matelkin, and myself.
+
+So thanks again.
+
+Till number three of Applied Active Inference.
+
+Hope to see everyone around the Institute.
+
+Bye.

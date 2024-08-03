@@ -1,0 +1,3532 @@
+SPEAKER_04:
+hello and welcome everyone to the second applied active inference symposium hosted by the active inference institute it is july 31st 2022 and this is the first session of the symposium
+
+
+SPEAKER_03:
+The focus of the symposium will be robotics and the presentations will be centered around that theme.
+
+If you have ideas for future symposium topics and want to participate in organizing, please reach out to us.
+
+For those of you watching live, please post questions in the chat and we will ask the presenters during the roundtable discussion.
+
+This symposium will be recorded, transcribed, and archived for lasting access.
+
+we will make the playlist available for asynchronous participation.
+
+If you would like to participate in the transcription of the video, please reach out to us at active inference at gmail.com.
+
+Uh, we will have five presenters followed by a round table discussion.
+
+The presenters in the first block are going to be Tim Schneider presenting active inference for robotic manipulation and
+
+with co-authors.
+
+Let's see.
+
+Oh, sorry.
+
+Oh, I don't have any listed here.
+
+Okay.
+
+And then next, let's see.
+
+Next is Tim Verbellen.
+
+And he is presenting robotics modeling the world from pixels using deep active inference.
+
+Also no co-authors listed.
+
+And then next will be Ben White with Artificial Empathy, Active Inference, and Collective Intelligence.
+
+And he has co-authors Mark Miller and Daphne Demacos.
+
+Sorry if I got that wrong.
+
+And after that, we will have a talk by Noor Sajid, Learning Agent Preferences.
+
+And let's see.
+
+Her co-authors are
+
+Here she is.
+
+Oh, she doesn't have any listed here either.
+
+And then finally, we have Wenhua Chen with a talk called Dual Control for Exploitation and Exploration and its Applications in Robotic Autonomous Search.
+
+And that's it.
+
+So with pleasure, I introduce Tim Schneider.
+
+Please take it away.
+
+
+SPEAKER_07:
+yeah thanks a lot for the introduction i'm just quickly going to share my screen i hope you can see that all right um yeah so my name is tim schneider and today i want to talk about our work on active inference for robotic manipulation so i think we can all agree that manipulation so there's some noise in the background
+
+Sorry, yeah, never mind.
+
+I think we can all agree that manipulation is one of the central abilities that we need in our everyday life, like be it cooking, writing or using tools.
+
+And you can obviously think of a variety of other tasks that also require dexterous manipulation.
+
+However, despite this significance of manipulation in our everyday lives, robotic manipulation is still a largely unsolved topic.
+
+And I think one of the main reasons for this is that usually in classic robotics, how we did it for years, we always assume that everything is kind of known, that we know where everything is, how everything behaves.
+
+But in unstructured environments, this is usually not the case.
+
+And so what we need is very adaptive policies that are able to react to changes in the environment and are robust to all kinds of perturbations.
+
+So what my lab focuses on, or at least in part focuses on, is applying reinforcement learning to robotic manipulation.
+
+So learn these skills instead of programming them by hand.
+
+However, this is also not super straightforward in manipulation.
+
+And one of the central challenges here is to perform the exploration.
+
+So in reinforcement learning, we always have to explore a task before we can complete it.
+
+Like, for example, here in this task, this robot has to move up this little ball into a target zone on this tilted table.
+
+And what we usually do and what is done here is that we just apply some random actions in the beginning and also throughout the entire optimization procedure.
+
+And we just hope that this will give us some useful insight into how the world actually behaves and how we can create
+
+um a high reward in in these settings but i think in manipulation this is usually not the case because if we just apply random noise we end up dropping the objects we are trying to manipulate we end up maybe destroying even parts of the environment so i think this approach is simply not feasible for interacting with the real world in manipulation and if we look at how humans explore the world we see a very different picture
+
+So this is a toddler that has obviously the task of building the highest possible tower out of these blocks.
+
+And what we can see is that this toddler is not simply applying some random noisy actions.
+
+This kid has actually a fairly directed way of exploring.
+
+It has an idea of what is useful to learn, what might bring it forward.
+
+Or maybe this is not as planned, but more of an intuition.
+
+But certainly this exploration is much smarter than what we are currently doing in reinforcement learning.
+
+And so to summarize this, exploration is a very challenging task in reinforcement learning for manipulation.
+
+Humans, if we take them as an example, explore very actively and in a very directed fashion.
+
+And the question that we want to ask in this work is, can we do this with robots too?
+
+And so this is where we started looking into cognitive science and also came across active inference.
+
+Mainly because it proposes a theory of explaining curiosity in intelligent beings.
+
+And the question was whether we can translate this onto robots.
+
+So for completeness, I want to quickly go over the basics.
+
+So in active inference, we assume that every agent maintains some kind of model of the world, which consists of observations O, hidden states X that the agent cannot observe, and some actions or policy pi.
+
+And the objective is to minimize the price, which is the negative log likelihood of the marginal observation probability.
+
+under the model of the agent.
+
+And the agent has two ways of doing this.
+
+The first one is inference, so understanding the causes of the observations it is making.
+
+This is done by applying variation inference to compute an upper bound of this objective, which is called variation of free energy.
+
+And then we minimize this, which corresponds to finding a variational posterior for hidden states given the observations we are currently making.
+
+And the other avenue, which is what got us interested in the topic, is the selection of actions in order to minimize this free energy objective.
+
+So if we want to do this, we have to make sure that we kind of plan ahead.
+
+So we have to take an expectation of future states we might encounter, given that we choose some form of action.
+
+And we take this expectation of this free energy term.
+
+And what we get out is fairly interesting.
+
+Namely, we get this kind of formulation here, which decomposes into an expected information gain term and an extrinsic term.
+
+And the way this expected information gain term works or what it encourages is to take informative actions because this term becomes maximal when we take an action which causes us to learn as much as possible about the current latent state of the world.
+
+So for example, if you're in a very dark room, a very informative action would be to turn the light on.
+
+It's not immediately goal-directed or anything, but it will at least tell you where you are, what your surroundings look like, and so on.
+
+And then the second term is this extrinsic term, and here the agent maintains a preference distribution over observations.
+
+This is a bit of an unorthodox thing for me as a reinforcement learning person.
+
+We usually simply define a reward, but here this extrinsic preference is defined in terms of
+
+of this target observation distribution.
+
+But this is also exactly the point where we can inject a target behavior into the agent by basically saying, okay, this agent should prefer to observe some specific observation.
+
+Now, taking a step back and going to the reinforcement learning part of this talk again.
+
+So the problem statement that we are looking at is a finite horizon MDP, which means that there are states, actions, and rewards.
+
+We assume that these states fully encode the entire state of the environment.
+
+So there's no hidden state in the environment.
+
+And the objective of the agent is to maximize its expected return for one episode.
+
+And the challenge here is that the dynamics and the reward distribution, so these two distributions here are completely unknown.
+
+So the only way the agent has to figure those out is to probe the environment with different actions, observe the outcomes, and then learn some kind of model out of this.
+
+I mean, obviously there are also other ways of doing this.
+
+This model doesn't have to be learned, but in our case, it will be learned.
+
+Now, we can see reinforcement learning through the lens of active inference.
+
+I just wrote down this MVP again from the previous slide here.
+
+The first thing we need is to define the internal model of the agent.
+
+And we do this in a way that we say, OK, there's two models the agent maintains.
+
+One is a model of the dynamics and one a model of the reward distribution.
+
+And both of them are modeled as Gaussian distributions conditioned on neural networks.
+
+So these are neural networks, theta being the neural network parameters.
+
+And this introduces a latent state now into the environment, namely the neural network parameters.
+
+So what was X before in the inactive inference is now here theta, the only thing that the agent cannot directly observe, which is what are the optimal parameters that describe what is currently going on in the environment, what the agent is currently observing.
+
+And the second thing we have to do is we have to make the agent desire a high reward.
+
+And we do this here by making the reward part of the observation.
+
+So now it's observing the environment state and the reward.
+
+And then we are setting this desire distribution in a way that it prefers high rewards, namely by setting it to the exponential of scaling factor of beta times the reward times that t.
+
+And if we do this, we end up with the following planning objective.
+
+So this is the expected free energy now, but everything put into its place.
+
+And so the planning objective of the agent is now according to the expected free energy to maximize this objective here.
+
+which consists for one of the extrinsic reward, which is just the sum of rewards the agent expects to encounter by taking some policy pi.
+
+And then there's also this intrinsic term again, which in this case here becomes the mutual information between the neural network parameters theta and the observation the agent is making.
+
+So ideally, the agent wants to make observations that are both good in terms of reward, but also have a lot of information about what the ideal model parameters are going to be.
+
+I just said that.
+
+Exactly.
+
+And now we can use this to forge an algorithm out of that.
+
+And it works like this.
+
+So in every episode, we start by resetting the agent to some initial state.
+
+And then in every step, we have to solve this planning objective of selecting a sequence of actions that minimize the objective function I showed here in the previous slide.
+
+We execute this action, obtain a new state and reward.
+
+We store all of that in a replay buffer.
+
+And then after the entire episode is done, we use this data in the replay buffer to perform the inference step of learning our models and adapting them to the data we saw.
+
+Now, the challenging part about this is to perform this optimization here.
+
+And the first challenge here is already to compute this term even for any given action.
+
+So computing the expected reward for a given action is...
+
+has been done before in many works, and usually here Monte Carlo methods are used.
+
+So just estimating this expectation via Monte Carlo.
+
+But this intrinsic term, which is the mutual information, is known to be fairly hard to compute.
+
+And so there have been a variety of methods proposed to compute or to approximate mutual information.
+
+Many of them rely on variational inference or amortization.
+
+But the issue is that we would have to do variational inference over the model parameter theta, which is a fairly high dimensional vector.
+
+And also we have to do this potentially thousands of times in real time while we are optimizing this function here.
+
+And so this is simply too expensive to do anything fancy like that.
+
+So what we are left with is a nested Monte Carlo approximation.
+
+And nested because we have an expectation of a KL divergence.
+
+This means we have an outer expectation and an inner expectation, and we apply Monte Carlo for both of them.
+
+And the good thing about this is, first of all, it's very fast, and it allows us to represent P by a set of particles, because we now only need samples, so we can also just keep these samples and treat the entire model as an ensemble.
+
+But the disadvantage is that we require quite a lot of samples of theta in order to get anything done here.
+
+Because we have this outer and inner loop, for every sample that we draw for this outer estimator here,
+
+for every sample of theta, we need to have n j samples of this inner estimator here of theta again.
+
+And this means you can quickly calculate if we take five samples on this outer estimator and five on the inner estimator,
+
+we already end up with 30 samples of theta.
+
+So we have a quadratic growth in samples that we need in order to compute this mutual information approximation.
+
+And what is also important to note is that each of these samples is a full neural network that needs to be trained and maintained.
+
+So this is simply going to be very, very expensive very quick.
+
+And so what we propose to do instead is something that is a bit illegal in terms of math, or at least it will lose us a lot of formal guarantees.
+
+And that is to use the same samples on the outer estimator as we used in the inner estimator, and vice versa.
+
+So to use in the inner estimator the same samples of the outer estimator.
+
+That means we draw a bunch of samples once.
+
+And then we use all of these samples except the one we just now used in the autoestimator to perform this inner estimation.
+
+And again, as I said, we lose some formal guarantees because what usually is assumed is that these samples are IID.
+
+This is not the case anymore right now.
+
+But we found empirically that this actually improves sample efficiency a lot.
+
+So, I mean, here you see a little comparison we did on a discrete, like a randomly generated discrete probability distribution where we could compute mutual information accurately.
+
+And here you see a plot of the error of the sample reusing estimator, the second one, compared to the vanilla estimator that doesn't reuse samples.
+
+And this is over the number of samples, so the sample efficiency is actually much higher, even though we are losing these formal guarantees here.
+
+Now, this means we now know how to approximate or get at least some approximation of this objective.
+
+But what is still unclear is how do we actually maximize this objective.
+
+like what kind of optimization algorithm we are using.
+
+And the first thing we tried here was to simply use a vanilla cross entropy method.
+
+This is a fairly common choice in robotics to use this method because it's very robust and doesn't require gradients in anything.
+
+And it's also considerably fast.
+
+It works in a way that you initialize some Gaussian parameters.
+
+So you always maintain this Gaussian distribution of your current action distribution.
+
+You initialize it to mean 0 and 1 variance.
+
+Then you sample a bunch of action trajectories from this distribution.
+
+For each of these, you evaluate the reward.
+
+And then you collect the n samples that have the highest reward.
+
+And for those, you fit the parameters of the current Gaussian distribution you have over actions in order to gradually shift this distribution towards areas of F that have a high reward.
+
+And if you iterate this for a while, you usually end up with a fairly good plan.
+
+Now, the issue is that applying this delivers fairly poor results.
+
+And the reason for this, we quickly found, is something that is called detachment, or has been called detachment in prior work, I should say.
+
+I don't think this is an established term yet.
+
+And the problem works a bit like this.
+
+So consider you are in this completely reward-free environment.
+
+The only thing that there is is intrinsic reward that leads you out to explore this environment.
+
+And you start in the middle here of this maze.
+
+And you can either go left or right.
+
+And in green is everything that is intrinsic reward.
+
+So everything that is not explored has a lot of intrinsic reward left.
+
+And so your agent decides maybe to go for the left side first.
+
+It explores it for a while, but at some point decides that now the more immediate intrinsic reward is towards the right side, right?
+
+Because this part has been explored now.
+
+So on the right side, it's easier to get intrinsic reward.
+
+So it might switch over to exploring the right side first.
+
+And remember, this is episodic.
+
+So after a couple of steps, this agent always gets reset to the middle and has to do this over again.
+
+And so at some point, the right is maybe completely explored or whatever.
+
+And now we are in a bit of a tricky situation because we're again starting in the middle.
+
+But the entire right side is explored and the left side is so much explored that in the immediate vicinity of this state, there is actually no intrinsic reward left.
+
+And because many planners that work well on high dimensional problems rely on very local optimization, we found that these planners are unable to find now a trajectory that leads all the way into this zone with high intrinsic reward on the left.
+
+And the reason simply being that in cross entropy method, in order to reach this zone, you would have to randomly sample a complete trajectory that goes all the way around this maze and ends up somewhere here in the middle, or at least somewhere close to the border of the intrinsic reward here.
+
+And this is usually not happening.
+
+The solution for this we found is to realize, first of all, that the only reason there is no intrinsic reward left in this area here is because we already explored it.
+
+So at some point in the past, we must have taken a trajectory that led us all the way around towards the border here and stopped somewhere here.
+
+And so what we can do is we can simply remember all the past trajectories we took and use those as an initialization for the cross entropy method to start off the planning from.
+
+So the way this looks like is that in the end, instead of simply returning the plan, we store the entire plan together with the current state in a memory buffer.
+
+And then when we plan for the next time, when we start the planning, we not only sample from this initial distribution, we also sample from this memory buffer, take into account all the previous plans we had and start optimizing those as well.
+
+And we found that this usually leads to behavior that is very well able to escape this area of low intrinsic reward.
+
+Yeah, and that brings me to the experiments we did.
+
+So this is a task we designed to be specifically hard to explore.
+
+So the task is, as I said before, to move this ball into this target zone.
+
+The tricky thing is that first of all, the table is tilted.
+
+If the robot loses the ball, it ends up somewhere here on the bottom and it cannot be recovered anymore.
+
+So the robot has to wait for the end of the episode to continue exploring.
+
+And also the reward is completely sparse, meaning the reward is zero everywhere except for if the ball is in this target zone.
+
+And this means that the robot has to explore this entire environment purely based on intrinsic reward and without any extrinsic signal in the beginning until it discovers this reward for the first time.
+
+So if you apply, just like I told you before, this classical technique in reinforcement learning of just applying some random noise, we can see that the ball gets dropped immediately every time.
+
+And even after like 5,000 episodes, you would soon see we are not able to reach even one third of this table.
+
+So here on the right is a histogram of positions the ball has visited so far.
+
+And we are completely unable to leave the start of this table.
+
+However, if we use our method, we can see that we actually explore this environment in a very systematic manner and achieve a very good state coverage, or at least ball position coverage.
+
+And our agent is quickly able to find this reward here and find a strategy that consistently pushes it into the right location.
+
+This is also reflected in a learning curve.
+
+Here's a comparison with a bunch of baseline methods we ran.
+
+One is PETS, which is just a model-based reinforcement learning algorithm.
+
+There's also SUC and MBPO.
+
+And neither of these methods managed to find the reward in the given time.
+
+So we ramped it up a little bit, made this task a little bit harder.
+
+So what you see here are
+
+are holes in this table.
+
+So now this becomes a maze.
+
+There's still no extrinsic reward in the lower area and also up until here.
+
+So that means that, again, based purely on intrinsic reward, the agent has to learn to maneuver this ball.
+
+This is a fairly tricky task, to maneuver this ball around the corners of this maze into the target location.
+
+And although it takes a bit longer to train here, obviously, because this task is much, much harder, it's also important to know once the ball is inside of this hole, it's lost and it cannot be recovered.
+
+So although this is much harder and it takes a bit longer, you can see that our method is able to solve this problem and push the ball into the target location at the end.
+
+So this is a bit of a slower version of this policy.
+
+And you can see that it is actually fairly tricky to maneuver it around these corners.
+
+There's a learning curve here.
+
+Unsurprisingly, the baselines did not manage to solve this task.
+
+But I mean, it is expected since it's harder than the previous one.
+
+And finally, we also evaluate our system or our algorithm on the real system.
+
+So we built this actually in reality and trained it from scratch.
+
+So there's no transfer going on, no pre-training and simulation or anything.
+
+And you can see here the behavior is similar.
+
+The agent starts exploring the environment more and more, pushing the ball systematically around and ultimately discovering the reward on the top of the table and then finding, yeah.
+
+a consistent strategy of moving it up.
+
+There's a learning curve for this as well.
+
+But yeah, this brings me to my conclusion.
+
+So we presented an algorithm based on active inference that is able to solve very challenging sparse reward manipulation tasks.
+
+And at the core lies this augmented cost function that is derived from the expected free energy.
+
+And this one, like, encourages the agent to perform very directed exploration while also maximizing reward.
+
+And we demonstrate that this method works not only in simulation, but also on a real system.
+
+And so to give you a bit of an outlook, I think what is very important to note is that if we compare to human haptic exploration, humans rely very heavily on tactile sensing for all of this exploration.
+
+We have developed a variety of different strategies for actively perceiving using tactile sensing, for example, like rubbing an object to figure out the texture.
+
+or what you can see soon in this video, like grabbing it with our full hand in order to figure out the shape, can measure temperature.
+
+There's all kind of stuff we can perceive actively from objects using tactile sensing.
+
+And tactile sensing is also something that is being actively researched in the robotics community.
+
+There have been a variety of new tactile sensors coming out lately.
+
+One of them is the so-called digit sensor.
+
+You can see it here.
+
+And it works in a way that it has a gel that deforms upon contact with something.
+
+There's a camera in the back and some LEDs.
+
+And if there's some contact, you can see the deformation of the gel in the camera, which is giving you some kind of local tactile feedback.
+
+And I think it would be very interesting to see what we can achieve with active inference on using tactile sensors, although there is a variety of challenges that need to be solved.
+
+I mean, this is a high-dimensional image.
+
+The contact dynamics are much more complicated.
+
+And yeah, there's a lot to consider here.
+
+But I think this would be a very, very interesting avenue for future research.
+
+and yeah this also brings me to the end of my talk i want to thank you a lot for your attention um i want to thank my collaborators as well boris georgia honey and young peters
+
+If you want, you can check out our paper here under this QR code.
+
+There is also a project page which will soon contain an extended version of this paper that has been accepted to iROS, but I haven't uploaded it yet.
+
+So I will do this within the next one or two weeks.
+
+So if you're interested in more details, I recommend you to check this out.
+
+But again, it's not up yet.
+
+And yeah, there's my contact details in case you have any more questions.
+
+So, yeah, if I got that correctly before we do the questions afterwards in the roundtable, is that correct?
+
+
+SPEAKER_04:
+Correct.
+
+Thank you very much, Tim.
+
+You may exit and re-enter the stream when we go to the roundtable.
+
+all right okay thank you very much and there will be just a few seconds of a break and then we will be going to the next talk which is tim verbellen robots modeling the world from pixels using deep active inference so we'll be right back hello
+
+All right, here's Tim Verbellen's talk, Robots Modeling the World from Pixels Using Deep Active Inference.
+
+
+SPEAKER_08:
+Thank you for expecting me.
+
+Hello, I'm Tim Verbellen.
+
+Thank you for expecting me on the Roblox Symposium.
+
+So unfortunately, I could not make it live, but I recorded this talk for you, and I hope you'll find it interesting.
+
+I'm going to highlight a bit of our research, like sketching out the picture that we worked on and put it short.
+
+Basically what we want to do is we want to have robots that can model the world they live in from pixels, but basically we can extend it to any sensing modality using defective inference.
+
+So why do we work with robots?
+
+Well, basically
+
+We figured out that if we want to have something intelligent, if we want to build something intelligent that is actually doing something relevant to the real world, then you need to do action.
+
+You need to interact with the world.
+
+You need some kind of embodiment.
+
+And that's why we work with all kinds of robots.
+
+We have robot manipulators that can scan around gross objects, interact with objects.
+
+We also have navigating robots that can drive around, can fly around.
+
+So you might be wondering,
+
+why are you looking at both navigation and manipulation and everything there, whereas all over the world there are labs that are dedicated on manipulation as a single domain and navigation as another domain, and they're like two distinct problems.
+
+Well, the thing is that if we take it from another approach, if we look at it from an active influence perspective,
+
+then it's basically the same thing you're you're doing the same thing and that's why we are trying to combine um all kinds of robotic uh problems uh from this single scope and see to what extent we can kind of address it and solve them and and to compare where are we compared to state of the art and in robotics let's say that's like our overall objective
+
+So in this talk, I'll talk a bit on what is the general approach we're taking and then some current results in both navigation manipulation and some of the work in progress that we're excited about and working on right now.
+
+So let's start off with what is active inference.
+
+I guess most of you will know already, but just to set the scene for at least the next 40 minutes are on the same page regarding the notation and what do we mean with the terminology.
+
+So basically, active inference just means to us
+
+we have our agent or brain that just builds a joint model of its environment which we call the joint probability over outcomes so actions a and then some hidden states as so your agent is distinct from its environment it can interact with the environment by doing actions it gets some observations and it tries to model with a hidden state like how is this environment
+
+generating me generating my observations and can i model this through these seven states i use the the single principle of optimizing this this this uh this thing by minimizing the circle of the energy which is like another balance on surprise or prediction error and importantly
+
+not only you use this to model this instinct, to build a model of the world, but you also use this to select the actions that you will hope that will minimize your expected reality in the future.
+
+And, like, looking at everything from this angle of minimizing your prediction error, not only for the past, but only for the future, this basically gives you a very powerful mechanism to start doing robotics.
+
+So just some math equations that kind of relate to this free energy concept.
+
+So basically, minimizing the free energy entails having this
+
+model that explains your world, where on the other hand, you also want to have an accurate description of how the world works.
+
+So you want to predict your outcomes from your statements.
+
+This basically means that you're having all the information that's out there in the world.
+
+You can actually have this in the state representation, but at the same time,
+
+as simple as possible according to Schreyer.
+
+And then this Q is basically the variational posterior, which is like saying, I want to be able to invert the model.
+
+Like if I have some observations, I want to be able to infer what is the most likely state that could explain whatever happened to now.
+
+That's kind of the idea.
+
+And then if you look at the future, then of course you don't know outcomes that will come in the future.
+
+So now it's basically
+
+now the expectation also considers what might happen in the future so what outcomes and then your your expected physiology uh it becomes again like two terms one is the instrumental value it's just says how do i think the outcomes that i witness will actually realize what i expect to be what i want to be like it's like realizing uh preferences uh and then in a reinforced learning context you might see this as like
+
+a reward signal, but rather having it coming from the environment.
+
+It's now more like something that's intrinsic, that defines what you are as an organism.
+
+And then, importantly, you have the second term, which is like information gain, like how do I think my beliefs will shift?
+
+for what I think now will happen versus what I think my state will be if supposedly I get these outcomes.
+
+And you're basically searching for the observations that will give you more information about what you're doing.
+
+So automatically you get this, on the one hand, goal-directed behavior, but on the other hand, your agent is also driven to find out the relevant observations, find out information in this environment.
+
+But of course, we have this kind of deep active inference flavor where we basically want to learn this model just by feeding it data, basically.
+
+And we use these deep neural nets that we know from the so-called artificial intelligence nowadays.
+
+It's basically a function approximator where you give it some data, and then you can match any function with them.
+
+And we use these then to approximate the densities that were on the previous slide.
+
+So how does it go?
+
+We have our hoxibase.
+
+you basically feed those through a neural net, which then represents this approximate posterior, so this outputs like means instead of deviations of Gaussian distributions, and these are then like your posterior distributions.
+
+So it looks like a bunch of multivariate Gaussians, and this is then your state representation, like what's happening right now, given the observations I had until now.
+
+Then we have an additional neural net that then predicts the dynamics in this latent state space.
+
+Like, if I do these actions, how will my state evolve in the future?
+
+And this outputs, again, parameters of precautions, for example.
+
+And this allows you to plan in this latent state space.
+
+Like, what will happen if I do this or that?
+
+And in order to kind of train the model from each of the
+
+states we can then have a decoder model that then tries to predict the observations that you expect to see from the state and so the the trading mechanism is then minimizing the energy which entails that here you have your accuracy minimization so you minimize your constriction error but at the same time you minimize complexity which basically caused the L divergence to be
+
+This thing is like what I expect to happen without observations.
+
+I want to have it as close as possible to what I expect has happened, given that I saw the observations.
+
+And by minimizing the scale divergence, you basically force the model to have a very concise
+
+encoding that allows you to imagine what might happen and at the same time merge in the information coming from your outcomes, but not more than as necessary.
+
+So you don't want to necessarily model all the details in your pixels, for example, as long as you have enough information to predict sufficiently what will happen.
+
+So that's roughly the approach.
+
+And so now we look at some instances in robotics cases, and we'll start with the navigation.
+
+So in this case, we have robots like these, but then with some additional sensors mounted on top of them so we can get all kinds of inputs.
+
+We just drive them around this lab environment where we have a warehouse setup.
+
+train these kind of models that just have to predict.
+
+For example, from camera images, what will I see if I do certain actions?
+
+And then after training such neural nets, then this is the kind of thing that we get.
+
+So these are basically imagined views from a viewpoint from inside this lab environment.
+
+And now you can say, OK, what do you think will happen if I do certain actions?
+
+And this is then kind of the thing that it starts imagining.
+
+And these are four different samples from this distribution.
+
+So you'll see at the beginning, they're all imagined kind of the same thing.
+
+But as the further you go in the future, the more they disperse in their kind of modeling, all kinds of scenarios what might happen in the future.
+
+And you can also see that even though the model is trained on long sequences,
+
+it doesn't really capture like long-term dependencies or like very accurate uh location information like here if i turn around i will be facing the wall whereas you're taking things if i turn around or just another uh part of the air so here things i'm in the middle of the nail i'm at the edges let's say so it kind of all has this inside the model that these are all kind of scenarios that can happen
+
+But because we condition these models on the action, we can also generate action conditions.
+
+And so we can say, what will happen if I turn left or if I turn right, if I go forward?
+
+So it actually encodes these dynamics inside this model.
+
+And this is just trained from data, from just driving around and learning to predict what can happen.
+
+One of the things that we found out is actually by creating such a model, we can then after effect at runtime compare always your prediction, what you think will happen to your posterior belief, what actually happened given your observation, and then plot the Yalda version between the two, which is then kind of the notion of the Bayesian surprise of the model.
+
+And if we then put like a
+
+a new object, like you have this table here or there, and if the robot flies over it, then this kind of dynamic has never seen before, which would result in like a huge spike in spite, and the robot's like, yeah, what's going on here?
+
+And in order to show that this is not just measuring the difference in pixels, we also have this scenario where
+
+people walking by the robots which also happens when we are recording the data so this is kind of a normal scenario and then actually the robot is like oh yeah this is something that can happen i see some legs i think right it's nothing to be surprised about so here you can see that it's more than just learning pixel dynamics it actually captures like this is a normal state versus this is a weird kind of dynamics
+
+And one of the nice things from using these learned models is that you can actually put in any sensor model.
+
+So we focus a lot on pixels because that's also nice to visualize and you can relate to how it looks like.
+
+But we can also give you like a later likeness.
+
+or is it going further for me?
+
+And also here we can then have like imaginations of the model, like what's
+
+relates like okay this is how lighter scans will be this is how radars will be if i if i'm looking at the ale i see much more reflections in the radar image whereas if it looks at the ale it has like only a few reflections so it actually captures all these dynamics from any of these sensor modalities in this in this latent space so that's one of the strengths of this project
+
+But as I told you, it has a very narrow temporal depth.
+
+It can predict for a few seconds, maybe one second, maybe two seconds, but then it becomes dispersed and blurry.
+
+So you cannot really use it for long-term planning.
+
+So we figured out, yeah, what do we need to do in order to use the system, but then do something more relevant long-term?
+
+And we figured out that what we need is go a level higher and make a hierarchical model that instead of predicting the next sensory observation, it can predict which kind of state we expect a bit further in the future.
+
+And then we found this kind of model where the blue part is actually what you saw right now, but then the red part is like more
+
+where we kind of combine some ideas from engineering, from SLAM, right?
+
+What is the thing that you expect to be like in minutes or a few seconds there?
+
+And it's actually like, okay, I'll do that at a certain location right now.
+
+And in a few seconds, I'll be at a different location.
+
+that i expect to be there so if we implement such a model it basically boils down to having on the one hand this is abstraction of the sensory inputs which is what you saw before and then together with some representation of the post if you turn around to keep track of it so you know kind of
+
+uh where you're heading and you have to understand support integration and then these two combine then build kind of a map which is then becomes your model of the world is then traversing this map and then we get something like this so here we get it set up so here we have the camera now we have a data information from the sensory inputs
+
+but then by integrating both like this rough sense of where you are together with what you think it looks like, and then combining like, if this pose and view is pretty much the same as what I visited before, then it's probably the same location that you merged it to.
+
+And so then you see that it actually covers different nails in the lab, and it actually makes sense out of it.
+
+And then you can basically use this model also
+
+You can give you an imagination, like what is this looking like?
+
+And then you can use this to plan longer and longer term business.
+
+So then we go to the more manipulation kind of use cases where we have like a robot arm and we typically have a camera on the wrist, so it's actually getting information what it's currently looking at.
+
+And you might think, yeah, this is like a very different use case, but again, the way we approach it, it's just an agent that can move around and its main objective is to predict
+
+what will i see if i move around and then use that to kind of figure out how this world works but of course now it has much more than a piece of freedom but other than that the concept stays the same so here basically
+
+similar thing where it basically learns other viewpoints from the information it got.
+
+So first we give it like very, it's straight looking at the, and I'm reporting the tables where it learns nothing.
+
+And then it reconstructs for all kinds of, this is like reconstructions for all kinds of poses in the workspace.
+
+So it just figures it out.
+
+And it was trained on like simple cases with some blocks in front of it in simulation.
+
+Then, if you start adding observations to the system, you can see how all the different poses are kind of imagining, ah, there was a yellow cylinder there, so in these few points, I probably need to imagine a cylinder.
+
+And this way, you can kind of start building the world and reconstructing the world from all kinds of viewpoints.
+
+So it's always predicting the future observations from the information it got until then.
+
+And the model is improving its information.
+
+But then you can, of course, also use the model to kind of assess which would be a good viewpoint that I haven't seen before that gives me some new information.
+
+And then basically what we do is we use this expected tree energy term to then
+
+drive the action.
+
+And what we found is that by just doing this mechanism, in this case, we also give it like a preferred observation, like, okay, you want to see a blue cube.
+
+The current observation is just looking at empty space.
+
+And what we found in the bit is actually, it first goes all the way up, because that's what it figures out to give it the most information.
+
+And then it will start zooming in and scavenge for the preferred observation and then stay there.
+
+It was a really cool effect to see from just this principle that it now goes up to have an overview.
+
+And then once it's explored the workspace, you can then kind of create a novel viewpoint.
+
+So this is again the imagination space of the robot arm wandering around like we had in the navigation scheme, but now with the robot arm action state.
+
+So it's, again, the same principle, but we get similar results out of it.
+
+But then, of course, we were thinking, okay, we need to throw a lot of training data, like different scenes of different objects at it before it could kind of start imagining these kind of scenes.
+
+But if we look at how we learn, how the world works, how the world around us is, then toddlers are actually looking at objects and manipulating them and looking at a single object at a time.
+
+And that's how they learn.
+
+This is the better way to learn in the manipulation scenario how the world is working.
+
+So that's then what we did.
+
+Instead of having trajectories of random scenes, we just made the robot look at particular objects and then predicts other viewpoints, but still from that same object.
+
+It's always looking at kind of the same location and predicting how will this thing look like from this side.
+
+And then you basically get something where you can imagine for this particular object, this is how the dynamics are for this object.
+
+and then we take a similar model but then we trade it on a different object so now instead of having a huge deep learning model that has to learn about any object around we can basically compress this into a very uh well very it's maybe a bit of a much smaller real net um and then we instantiate a new instance for every new object that we created so we can give it marks or
+
+a can or a banana, and it can start imagining how all these objects look like from other views.
+
+But then again, you can give it a preferred view, and then ask for which would be a trajectory that brings you to the preferred view.
+
+And that's what you can see here.
+
+So then the top view is the target.
+
+You just randomly give it a viewpoint, and it figures out how to move in this space just by imagining what these kind of objects look like from different views.
+
+Then you can also use this to classify objects, because if we then have a random object that it either had seen or never saw before, it can use all the models and just query which model is actually matching my prediction for what I'm seeing right now.
+
+And this then gives you an idea, like it showed me that object.
+
+And you can see
+
+Here, for an initial view, it's already pretty good at knowing what it is.
+
+But in some cases, you have a very ambiguous view point.
+
+You cannot really distinguish the two objects.
+
+And then you can just have another view.
+
+And that will then resolve the ambiguity.
+
+And that's exactly what we see here.
+
+So the energy agent will look for the most informative view.
+
+And then for the known objects, it reaches 100% accuracy.
+
+and then for objects never saw before it then says yeah i don't know this object and for this particular case it's not 100 accurate and why is that because there are objects that might be very related so for example it no it knows it knows about spoons and then you give it a fork and it's like
+
+yeah it's kind of looking like a spoon so i'm i'm not sure but and these are the errors it makes but these are like sensible errors because actually the dynamics of the objects are very much matching an object i know before and then if you query it like what would be the next view you would like to see you typically want one with a low expected reality
+
+But if we ask it, what would be a view that you don't want to see, then you get this kind of imagination in the rightmost row.
+
+For a can, if I just look at the top, I just see a circle, it can be any can.
+
+Or this particular view, it's very dark, so I cannot really distinguish it from anything.
+
+And the mystery bottle in the bottom right is like, yeah, this is kind of looking like a banana, so this is not the viewpoint I will choose to go next.
+
+But in practice, we saw because these objects are so distinct, and a random agent is also good at just integrating information because the chances are low that you actually end up in this ambiguous viewpoint.
+
+In this scenario, it's equally well just randomly looking around, but the more your objects become ambiguous, the more benefit you have from actively sampling particular viewpoints.
+
+Yeah, exactly.
+
+So to me it's like the same thing as using radar and camera for navigation.
+
+It's like using tactile and visual information for just inferring what this object is like to me as a robot then.
+
+We haven't done a particular experiment yet on tactile because it's also a bit more difficult to kind of just simulate.
+
+But yeah, it's on our minds to do these kind of things.
+
+But yeah, it's a very interesting route to take, I agree.
+
+And so finally...
+
+What we can also do then is look at a scene with different objects, and then say, okay, I want to open the can, so I need to have the top view of the can.
+
+and normally if you if you read this to a reinforcement learning agent it would just say okay i cannot see this this type of circular gray thing inside the goal average search the only thing it will do is like randomly search around until it sees something like and then go to the target but in our case we know that the system is first like this thing
+
+is probably more related to the can rather than instead of the sugar box so it will draw its attention to the can and then also yeah this is more like a top view and this is more like a side view so it can imagine like the the thing it should the movement it should make to go to the top view
+
+so this is exactly then what our system does we just give it the target view it directs its attention to the correct object and immediately finds out the movement it should make to kind of get to a similar uh so that's kind of the real powerful uh system and you can see this kind of like
+
+adding another hierarchical layer on top.
+
+It's similar to the navigation where you then have like an abstraction of locations.
+
+Now you have like, okay, I have an abstraction of objects being somewhere spatially arranged and I kind of infer where they are and how I should move in this space in order to replace them.
+
+So then to end, it's something that we're actively, and actually Pietro is actively working on this, is basically, okay, we now have this system where we can build a model where we can relate action to what is happening.
+
+But one of the difficult things is still like the further in time you need to plan,
+
+your potential of trajectories explodes.
+
+It's like, yeah, you cannot plan using all these fine-grained actions.
+
+So can you figure out a few sensible actions or skills that we can use to explore?
+
+And so one thing in order to avoid this explosion
+
+to amortize a policy.
+
+So now we train again a function that is then more kind of a habit policy that gives you the action, but instead of using a reward signal as done in reinforcement learning, we basically give it an objective that's more related to the expected free energy.
+
+In particular, here we use what we call latent data surprise, which was like a term that we invented to relate more to the RL community.
+
+But in essence, it's just like the information game on your expected states, basically.
+
+And then we found that it actually found out to play these video games just purely from an intrinsic motivation.
+
+And also, if we compare it to other terms that they add in the RL datings to get this intrinsic information.
+
+intrinsic drive we actually found that our method was either on bar or slightly better than than others and especially in cases where we add some noise in the state so if if the observations are kind of noisy or ambiguous the power method still was it was more easy to outperform the others because they they were like okay the noise is like very interesting so we were drawn to noise observations although like maybe they they don't give you extra information
+
+so that was something interesting to find and now we're actually expanding that like instead of having this is more like having an exploration policy but now we're thinking more like okay if we go to plan maybe we just won't have like a few distinct options that make sense to explore like can we kind of find some elementary skills that are worthwhile to explore so in this case we have
+
+again a robotic arm, and here we again explore using this intrinsic drive for information gain, but then we give it like 32 potential slots to learn policies and it just has to say
+
+find out which ones are good trajectories that, in total, allow me to explore the state space again.
+
+And then we end up with a manageable set of skills that we can then fine-tune for particular tasks.
+
+And that's actually one of the things that we're working on right now.
+
+So with that,
+
+always reach out via email or via Twitter and hope to see you soon at the next location.
+
+
+SPEAKER_04:
+Thanks.
+
+All right.
+
+That was Tim Verbellen's presentation, Robots Modeling the World from Pixels Using Deep Active Inference.
+
+The next presentation is going to be by Ben White, Artificial Empathy, Active Inference and Collective Intelligence.
+
+
+SPEAKER_00:
+Hello, everybody.
+
+My name is Ben White.
+
+I'm a first year PhD philosophy student at the University of Sussex.
+
+And I want to start by saying a really big thank you to the organisers for inviting me here today to share this research with you.
+
+It's a real pleasure to get to do this, even if it's just in a pre-recorded format.
+
+I want to say right now at the outset that this is very much a collaborative and ongoing project.
+
+It's work that I've been doing with Mark Miller and Daphne Damakis, and it's very closely related to the kinds of things that I do here at Sussex.
+
+So I'm interested in looking at the relationship between human well-being and material environments.
+
+I'm interested in things like ambient smart technology, social media, augmented and virtual reality, and affective computing, which is what I'm going to be talking about today.
+
+And because this is an Active Inference symposium, I'm going to afford myself the luxury of not going over the basics of the framework.
+
+And instead, I'm going to jump straight in and I'm going to tell a fairly broad stroke story about how we think Active Inference might be able to shake things up in affective computing.
+
+So affective computing is a research program which, as many of you will know, aims to build computing devices capable of interacting with human users on an emotional level by identifying, categorizing and responding appropriately to emotions in human users.
+
+And just to give some examples, we have the paper in the top right from the MIT Computing Lab.
+
+And this project aimed to put affective interfaces into cars because any of us who drive know that there are certain emotional states we can sometimes find ourselves in that probably hinder our decision making process.
+
+And that can have some pretty negative outcomes.
+
+And so this project was really geared towards increasing road safety by intervening in the emotional states of drivers.
+
+The two devices at the bottom, so the screen and camera in the bottom center,
+
+and the rectangular headed guy who's yellow, these are Jibo and Wobot respectively.
+
+And these are therapeutic interventions that use facial recognition technology, emotion recognition technology to learn about their users and then make suggestions for certain tasks or games or even clinical interventions that are geared towards supporting the emotional well-being of the user.
+
+But as you can imagine, these are not the dominant deployments of affective computing.
+
+We mostly find affective computing now in industries like recruitment and marketing.
+
+So, for example, companies like Unilever and many, many others use emotion recognition devices in their hiring process in order to analyze certain nonverbal responses and facial expressions, which they say are indicative of certain desirable or undesirable character traits relevant to the job.
+
+However, you won't be surprised to know that this has come in for fairly heavy criticism.
+
+So there are certain kinds of worries about this technology.
+
+The first worry is that it is simply not functional, that it's based on bad science and that it doesn't do what it's supposed to do.
+
+And closely related to that is the various kinds of ethical concerns, mainly that these systems are in danger of propagating certain kinds of biases and prejudices.
+
+So Lisa Feldman Barrett, for example, who is a major leading light in affective neuroscience, has come out fairly heavy against this kind of technology.
+
+She's labeled it neophrenology and said that it's there's simply no way that it can do anything.
+
+what the people who make it say it can do.
+
+And this is because she says it's based on a very outdated theory of emotion, which states that humans have six to eight basic emotions, things like anger, fear, disgust, surprise and so on.
+
+And that these emotions are expressed through sets of facial expressions, which are universal across different cultures and different contexts.
+
+And anybody familiar with Lisa Feldman Barrett's work will know exactly what she thinks about that theory of emotion.
+
+She's not a fan of it at all.
+
+And the ethical concerns have been raised by AI ethicists like Abirba Birhani, who's argued that basically the fact that these systems are trained on very, very large data sets mean that they are inherently conservative.
+
+And this is why they propagate certain kinds of biases.
+
+So the two pictures of the hand holding a device you can see on the right hand side.
+
+In this case, it's Google's Vision Cloud.
+
+In the top picture with the dark-skinned individual, that device is identified as a weapon.
+
+And on the bottom, that light-skinned individual, it was identified as some kind of electronic device.
+
+And there are other studies as well that have shown that emotion recognition technology just works completely differently on non-white individuals.
+
+With technology like this making such consequential decisions for people's lives, it's really, really important that we start to get this right and we don't have these kinds of outcomes that we have in the current program.
+
+So we need the strongest, most up-to-date theoretical underpinnings that we can get.
+
+And we think the place to start with that by the place to start in updating the science is to recognize that these devices are very problematically disembodied.
+
+They're very superficial and they are inactive in the sense that they don't perform any actions.
+
+And this, of course, is a million miles away from the way human beings interact socially and emotionally.
+
+And we've known this for a very long time.
+
+So we've known, for example, this example from Luis Pozoa's work, that emotions are not simply partitioned off from the way human beings think or act.
+
+Actually, cognition and affect are very, very closely intertwined.
+
+There's no discrete separate brain areas that only do emotion and only do cognition.
+
+And.
+
+Furthermore, research paradigms in cognitive science, so embodied cognition, for example, tells us that actually we need to go even further than that and recognize that embodied action is an integral constituent part of how we think and feel.
+
+And then the other E's that make up 4E cognitive science.
+
+So inactivism and activism, extended cognition and embedded cognition have come together with niche construction theory in really interesting ways to tell us that actually we also need to consider how elements of our external environments can scaffold the way that we think and feel.
+
+So.
+
+This is where active inference comes in, because we think that if we're serious about designing these kinds of devices, take into account these most up-to-date theoretical developments, then active inference basically brings all of that in with it.
+
+So active inference is a theory that really elegantly kind of intertwines action, perception, thinking, cognition and affect together.
+
+under the unified imperative of minimizing an agent's surprise.
+
+So that's the first thing that it gives us off the bat.
+
+It gives us this unified computational, unified conceptual framework that can be shared by researchers in different fields.
+
+But mainly, as the name suggests, active inference really puts action front and center.
+
+It's not some afterthought or just some kind of bolt-on gimmick.
+
+And I think it's worth reflecting for a second just on how central actions are to the way that we interact socially and emotionally.
+
+So human beings are very far from being a passive classification device.
+
+We're constantly sampling the world and probing the world in order to get more information so that we can update our models of the world.
+
+So imagine the following scenario, which happens to me fairly often.
+
+Imagine you're on public transport and somebody is giving you a weird look or maybe they're scowling at you in some way.
+
+We tend to not sit there and just look at their facial expression to try and work out what's going on.
+
+We have other avenues open to us, so we might look behind us to see if they're actually looking at someone else.
+
+We will probably look at the broader scene for some context to see if there's something going on that can tell us more about that scowl.
+
+Or depending on our mood, we might even scowl back at them or flash them a smile and see how they respond to that.
+
+And I think another scenario that really brings this intuition out very strongly is to think about the peculiar kind of tension that comes in a job interview.
+
+So I think that tension is the result of a confluence of two things.
+
+Firstly, very high uncertainty, uncertainty that's really important to us.
+
+And also the fact that our usual embodied epistemic resources have been straitjacketed by social convention.
+
+Because it's the case that in a job interview, even though we want to know a lot about what the other people are thinking and feeling, social convention dictates that we can't ask them, we can't prod them, and we can't really sample the scene in ways that are going to give us more information.
+
+We're kind of stuck to the chair.
+
+We just have to wait and see.
+
+And that's an unusual situation to being because so much of human social and emotional interaction relies on active states to use active inference terms.
+
+So speaking, listening, prodding, smiling, scowling, raising an eyebrow, all of these things are embodied actions that we take to learn more about social setting.
+
+And I think the thing to emphasize is how important context is as well.
+
+So the ability to kind of actively survey a scene to drink in context, but also the way we learn about the relevance of that context is something that's built up and scaffolded through action and different kind of patterns of practice.
+
+So if you think about the scowler on the bus again, there's a high degree of uncertainty around that facial expression.
+
+But if you imagine that same facial expression transported onto the face of somebody on the other side of a boxing ring, all of a sudden, the uncertainty around that facial expression is minimized because the context of boxing ring tells you everything you need to know about why that person is scowling at you.
+
+And this emphasis on context is something that's badly missing in current iterations.
+
+And the active inference community is already producing really cool work premised on these kinds of insights.
+
+So there's this paper Thinking Through Other Minds by Samuel Vessier and colleagues.
+
+And this paper highlights just how it is that we come to understand our socio cultural niches.
+
+through precisely this kind of active social foraging.
+
+So it's really emphasizing the importance of context and the fact that we come to learn about context through action.
+
+And there's an example of where we see a gap between artificial systems and humans when dealing with context is how artificial systems and humans compare when performing selective attention in regard to some task.
+
+So it's a really pervasive problem in artificial systems that they don't tend to look at the same places that human beings do when human beings are surveying a scene for some kind of task relevant information.
+
+So the question is, how do we get artificial systems to drink in context in the same way that humans do?
+
+And then how will that improve the performance of emotion recognition devices?
+
+so selective attention is all about filling in epistemic gaps it's about filling in gaps in your knowledge with information from a scene that may or may not be task relevant and one of the reasons humans are so good at this is because obviously we have this huge knowledge base of uh what different contexts mean we live in the world we've always inhabited socio-cultural niches and so we have a lot of experience
+
+But as I said before, it's important to emphasize that the way that we learn about context is about sampling different contexts.
+
+It's about the fact that we have our entire lives been actors in the world, not passive observers.
+
+And I think this work by Merza and colleagues that you can see on the slide here,
+
+It's really interesting because it shows that Active Inference is capable of modeling selective attention in ways that give us much more human-like results.
+
+So they used certain kinds of internal precision dynamics, and they demonstrated that these precision dynamics can map
+
+accurately, covertly, task relevant and task irrelevant features of the scene, and then update precision estimates in relation to that information, which then drives overt actions, which then serve to update the system's model.
+
+So it's this very close relationship between covert attention and overt attention, which I think is really interesting on this account.
+
+And I think active inference is a really powerful framework for recognizing and addressing context generally, and for the importance of action in learning about context.
+
+So the models that I just outlined, they provide the tools for this very elegant top-down first principles approach to selective attention, which is based on these internal precision weighting dynamics, but also on embodied action perception cycles.
+
+And of course, one nice side effect of this is that systems based on this would be able to autonomously select the data from a scene, which is going to give them the most epistemic payback.
+
+And this means that they can do away with the very, very large data sets and long training times, which AI ethicists have said are probably the root cause of a lot of the ethical concerns that I talked about earlier.
+
+And so from a practical standpoint, this means that we need to think about building affective computing devices which are not merely inner lumps of plastic.
+
+We need to start thinking about approximating something much more like a fully embodied agent.
+
+One consequence that's really fascinating about the kind of active social learning that's scaffolding, scaffolded through other minds that I was talking about earlier with the thinking through other minds paper is that active inference agents can come to enjoy a degree of synchrony between their internal states.
+
+So this paper by Carl Friston and Chris Fifth, a duet for one, it utilizes simulations of songbirds to show that, quote, generalized synchrony is an emergent property of coupling active inference systems that are attempting to predict one another.
+
+So in rough terms, what they demonstrate is that according to active inference,
+
+meaningful communication between two agents requires that they are sufficiently able to model one another in a kind of infinite regress.
+
+So what it is, is me modeling you, modeling me, modeling you.
+
+And that by doing this, by making and testing these kinds of predictions, we essentially ultimately converge on model synchronization.
+
+And this is a core part of the paper, the original paper by Daphne de Mekas that she did with Friston and Parr, which has already suggested that if we take active inference as a starting point for building affective computing devices,
+
+then what we have is the prospect of an artificial system which can potentially sync internal states with the user.
+
+And that's obviously going to hold an awful lot of promise for certain applications of affective computing.
+
+And I would say to anybody interested in the kinds of things I'm talking about now to go and start with this paper by Daphne, because I think it's a really interesting and wonderful starting point.
+
+But one thing that we want to say is that for this sort of deep affective synchrony between artificial devices and users,
+
+It means that the artifact itself will need to have some kind of interoceptive signals, some kind of internal affective dynamics of its own, and it needs to be able to act in ways that expresses those signals.
+
+So, so far I've been talking about acting in ways to express those signals and acting in ways to sample the environment.
+
+But I want to say something now about the prospect of active inference devices, which actually have their own internal affective dynamics, because I think that the active inference framework has already shown the potential to provide this.
+
+And what I'm talking about here is some fairly recent developments in the framework called aerodynamics.
+
+And using aerodynamics, we can start to understand how embodied affective states are an intrinsic part of the motivational drive for curiosity and epistemic foraging.
+
+So one of the really elegant, famous strengths of active inference is that it has the power to dissolve this opposition between explore and exploit.
+
+And while there have been numerous strategies for building the motivation to explore into artificial systems,
+
+active inference has the potential to put embodied activity and emotion right at the center of solving that problem and so this is obviously going to be relevant if we want to build emotional recognition devices that are intrinsically motivated to probe the internal states of their users so i think it's worth taking a second to refresh how active inference accounts for emotion and affect
+
+so the first attempts to understand um interoception in active inference were they bared a lot of resemblance to the way that we were thinking about perception under active inference so it was about um
+
+predicting um signals hidden States in the world except that the signals that the brain was trying to predict were internal signals they were coming from inside their own body so gastrointestinal respiratory circulatory signals and feelings like hunger thirst temperature pain these were seen as top-down predictions about the hidden causes that underlay those physiological changes
+
+But it was the case that researchers that were working in affective neuroscience, so people like Lisa Feldman Barrett, Neil Seth and Mika Allen, they were quick to add that these interoceptive predictions probably held a kind of special prioritized place in terms of the overall system.
+
+because they were likely to ground other predictions, predictions about the external world in terms of what really matters, which fundamentally is maintaining the homeostatic states of one's own body.
+
+But more recently than this, affective states have been hypothesized to fill another role within the active inference framework, which is
+
+essentially says that felt bodily states, things like mood and other affective states, valence bodily states, they reflect a kind of second order information within the dynamics of the active inference system.
+
+And that information is essentially tracking the rate at which surprise is being minimized relative to the expectations of the system.
+
+So according to aerodynamics, affective states are essentially just the subjective level feedback about how the system is doing at minimizing surprise, keeping itself within expected bounds relative to the expectations that we had going into that scenario.
+
+But the second order information doesn't just, it's not superficial in the sense that it just reflects that kind of information, but it actually plays an intrinsic role in modulating the internal precision dynamics over action policies.
+
+So from a phenomenological perspective, I think this makes really intuitive sense.
+
+So when we're doing better than expected at a certain task, we tend to gain confidence.
+
+We might take more risks.
+
+And when we enter a certain scenario or task with a particular action policy, which doesn't work out the way that we expected it to, we will be very quick to switch things up and try something else.
+
+And in this sense, aerodynamics can be said to keep agents flexibly attuned to the opportunities for success within their environment as they learn and develop new skills and abilities.
+
+And the thing to notice is that agents that are outfitted with a sensitivity to aerodynamics are naturally curious.
+
+Because finding new surprise in the environment, which can be successfully minimized, it literally feels good to us.
+
+And the places where we find surprise that we can minimize in the greatest amount is at the edge of our skills and abilities.
+
+And this is why we like to find scenarios that are kind of...
+
+maximally challenging without being frustratingly challenging without being too hard so we like to occupy areas that are neither too well known nor too complex
+
+And aerodynamics also plays a role in helping us to direct and enhance learning.
+
+So surprise and its reduction rates signal the expectations about the learnability of particular situations.
+
+So that helps to guide our attention and prioritize certain areas or certain tasks where we know we can find the most success.
+
+And we've already seen this kind of optimal surprise minimization show up in robots in terms of curiosity.
+
+So there's this work here by Odoja and Smith where their robots were trained to seek out optimal levels of complexity where the most learning can take place.
+
+And specifically, now there have been active inference approaches that have begun to use aerodynamics in real-world robotics.
+
+So this is really exciting, and this is kind of real-world proof of concept in the work of Skelassi, Lara, and Siria.
+
+And these researchers have actually built robotic systems that make use of this internal aerodynamics machinery.
+
+So their work has shown that robots that are equipped with aerodynamics are actually better able to manage uncertainty by fluidly selecting adaptive actions in an environment compared to more traditional approaches.
+
+So artificial agents equipped with internal aerodynamics are better able to learn and then autonomously select the proper surprise minimization strategies in any given situation.
+
+And they do this by allowing their valent states,
+
+that second order information about performance relative to expectation to weigh the selection of the most suitable behavior.
+
+So in other words, by allowing that second order information to have a direct impact on the internal precision dynamics over action.
+
+And this work showed that this kind of internal aerodynamics also provided a way for artificial agents to navigate the temporal aspects of goal selection.
+
+So basically what that means is these agents were very knowledgeable about how long they should persevere with a certain task and when they should give up, which is obviously something that even human beings struggle with a lot of the time.
+
+So thinking in terms of aerodynamics, it shows us that affect is intrinsically linked to goal selection.
+
+And we want to suggest that by introducing these aerodynamics into affective computing devices, we would start to see devices that are not only motivated to exhibit a kind of curiosity in implementing new policies for action,
+
+But we'd actually start to see a real paradigm shift in the affective computing program to a much more biomimetic approach.
+
+So instead of just having classification devices in lumps of plastic or in smartphones, we'd start to see embodied devices that can actively engage with the world.
+
+and that have their own internal affective dynamics based on what we think is going on in living systems.
+
+So this is really exciting.
+
+And this new wave of affective computing devices would not only be able to perform much better, but we think it might go some way to addressing some of the ethical concerns that I was talking about earlier.
+
+But the thing to be really clear with, a kind of disclaimer at this point is we are certainly not saying that an active inference approach to affective computing is a replacement for thinking about all of the kinds of social justice issues that come with the implementation of this technology.
+
+We are just kind of speculatively saying that it's on first glance, it certainly appears like some of the ethical concerns might be addressed by this new approach.
+
+But we think there are going to be a lot of benefits of this new approach.
+
+So first, if you think about the kind of model synchrony that I was talking about earlier and think about that within the context of therapeutic intervention, we think that when we get this degree of model synchrony, any dysfunction in the user's internal dynamics is going to be mirrored in the internal dynamics of the artifact.
+
+And so this is going to make the device very well placed to make suggestions about potential interventions.
+
+And this is essentially what CBT already attempts to do.
+
+So this will be building on approaches that have already been proven to be effective.
+
+And the next thing is to think about the fact that so far when we've been talking about action, I've been talking essentially about epistemic foraging.
+
+But once you have the possibility of humans and artifacts establishing this kind of model synchrony, and you have these artifacts that are properly embodied and able to act in the world, it might be possible for the artifact to begin to install prior preferences about what states in the agent are actually preferable.
+
+such that the artifacts may actually be able to steer with a degree of autonomy, the emotional synchrony between it and its user to specific ends.
+
+So when we have this, we have these active inference theories beginning to emerge of depression and anxiety and other kinds of disorders.
+
+With that full understanding, coupled with the kind of model synchrony I've been talking about, we start to open up avenues for the device itself, steering the user away from these kinds of dysfunctions.
+
+Now, it might be the case that these active inference devices come with their own set of worries and ethical concerns.
+
+I think it's very plausible that they do.
+
+And it's something that we're going to be thinking about as we go forward in this research.
+
+But I don't have time to explore it here.
+
+But I think the last thing to say is that most speculatively is that this active inference approach also sets the stage for beginning to address the well-known value alignment problem between humans and AI devices.
+
+Basically, what we have here to our mind is an initial and very speculative building blocks of building artificial systems that have a degree of genuine empathy with their users.
+
+So these devices would not merely be simulating empathy or passively categorizing human emotion.
+
+They would genuinely have their own internal dynamics that would synchronize and match with the internal dynamics of a user.
+
+And this is going to be a bedrock for much more interesting and much more rewarding human AI collaboration into the future.
+
+And that's the end.
+
+I wish I could be there to answer questions.
+
+Unfortunately, I'm not.
+
+I'm pretty sure Mark Miller is going to be there with you.
+
+So maybe he'd be happy to answer some questions.
+
+But I would also encourage you to get in contact with myself.
+
+I'd be really happy to hear from anybody that's interested in this kind of stuff.
+
+You can see my email there, b.white at sussex.ac.uk.
+
+And you can get in touch with me on Twitter as well at midnightbiscuit.
+
+Thank you again for listening.
+
+It's been a real pleasure to get to present this work.
+
+Thank you very much.
+
+
+SPEAKER_05:
+All right.
+
+
+SPEAKER_01:
+Should I start?
+
+
+SPEAKER_04:
+We're back.
+
+And yes, please.
+
+This is the presentation of Noor Sajid, Learning Agent Preferences.
+
+Thanks, Noor, for joining and take it away.
+
+
+SPEAKER_01:
+Brilliant.
+
+Thank you, Daniel.
+
+So just before we get started, I just wanted to thank Daniel and the Active Inference Conference, I guess,
+
+for inviting me to give a talk on this project.
+
+I'm really excited about that.
+
+So just to introduce myself, I'm Noor.
+
+I'm a current PhD student at the Wellcome Centre for Human Neuroimaging with Carl Friston.
+
+This is some work that we've been thinking about over the last year or so.
+
+Feel free to, I don't know how it works.
+
+So do we have questions that, sorry, do we have questions throughout the presentation or are they at the end?
+
+um but if there are any questions we'll be uh taking questions in the live chat and then the round table will be bringing them up okay not directly during your presentation okay um yeah no worries okay so the project is focused on learning age and preferences and it's
+
+From my perspective, it's super interesting because that sort of changes the dynamics of how you consider the problem setting.
+
+And that's what I'm going to start off with.
+
+But before I do that, I just wanted to highlight my wonderful co-authors that I'll be sort of presenting the work on behalf of.
+
+So we've got Hannes, Alexei, Zaaf, Lance and Karl.
+
+And the project, so the work that I'm presenting is based on two different projects and I'll highlight the different work as we go through.
+
+Um, so my, okay, so I'm trying to flip.
+
+Okay.
+
+Let's yeah.
+
+So the, the way the presentation is going to be structured is just, I'm going to briefly motivate the problem setting, um, and then describe the problem setting in a bit more technical details, and then really drill down into exactly how we can learn these preferences, um, that we can equip the agent with, and then, um, some experiments and, uh, remarks.
+
+So.
+
+What I wanted to highlight is that when we learn agent preferences, there's usually a bi-directional association between the agent and the environment.
+
+And what I mean by that is something that you can see in this graphic really clearly.
+
+So you've got the main part that the agent would have taken as it was walking down this particular route when hiking.
+
+But as perhaps many other people are joining along, the agent ends up walking along the shorter or maybe the more smaller path.
+
+So what this highlights is that agent preferences are essentially dictated by the environment that it's surrounded by, right?
+
+depending on the constraints.
+
+So for example, other agents, maybe an animal or something else is happening on the road would mean that the agent ends up taking the second part instead of the first one.
+
+And as a consequence of that, it changes the environment.
+
+So as more and more agents do the same thing, the shape or the construct of that part becomes more prominent and it becomes part of that environment.
+
+And what I'm really interested in as part of my work is this sort of bi-directional association between how the agent changes the world and how the world changes the agent's preferences because it constrains the actual state space that it exists in.
+
+But as part of this project and the work that I'll be presenting, we're purely focusing on how the agent's preferences or how the agent's, I guess, objectives are changed as a consequence of the environment constraints.
+
+But before I do that, I really...
+
+I wanted to highlight what preferences actually are, because a lot of the time we're not really aligned on what that means.
+
+So I'll just briefly describe how we are considering preferences.
+
+So preferences here are usually a subjective assessment of what agents would like to experience.
+
+And this can be continuously learned or modified even in the absence of external feedback.
+
+So there might be some internal motivations or some objectives that the agent is learning internally.
+
+that shape exactly how the agent wants to behave in the world.
+
+So in the previous example, when we were looking at the case of going between the two parts, depending on the constraint of the environment, it's essentially the agent's subjective preference because it could have taken another route, so for example, maybe here, and that could have also shaped the environment as well.
+
+Okay, so let's motivate this problem setting slightly more formally.
+
+So we're going to be working as part of the idea that these agents that we're interested in have an internal model.
+
+And this internal model is
+
+composed really briefly of three important components.
+
+So three important random variables and then one deterministic variable.
+
+So let me just qualify that a little bit more.
+
+So we've got our outcomes.
+
+So this is something that the agent is exposed to in the environment.
+
+And for example, the actual, I guess, constraint in the instance of the hiker having to choose between the two parts, for example,
+
+it might see a hindrance or it might have some grass or some other agents are exposed to and it needs to, that's the data coming through and it needs to then identify whether it wants to choose one part or the other part.
+
+So that would be based on its own inferences about what that outcome actually means.
+
+So that's noted by S here.
+
+And then based on that, it needs to then decide what action to take.
+
+And that's denoted by the A here.
+
+And at the same time, the agent is keeping track in this particular formulation of the agent's model or the gender model that we're interested in.
+
+which is denoted by this deterministic variable H2 or H3, depending on which time point we're interested in.
+
+That is essentially this deterministic recurrent model that we have that's encoding all the prior history, the actual states, sorry, the actions and the states that the agent has been exposed to, sorry, has selected in the past.
+
+And that encodes what is the,
+
+the updates that are then used to select the posterior estimates for the next time point.
+
+Then you've got your, in this particular model, you've got your latent state and prior, and we're just calculating them in really a specific way.
+
+So your prior is defined as categorical distribution, and this becomes really important for us because this allows us to use some conjugacy rules to update the way the agent's preferences are learned.
+
+And I'll come back to what I mean by preferences in this technical setting a little bit more on the next slide.
+
+And the state posterior here is, again, a categorical distribution that the agent is estimating based on the history and the current observation it's been exposed to.
+
+And we've got the standard formulation if you're working within a POMMDP formulation where we've got a transition function.
+
+So this is denoted again as a categorical distribution conditioned on the history of the agent, the agent is encoding.
+
+And then we've got an image predictor that
+
+determines exactly what would be the next observation given the history and the state.
+
+So the idea with this gender model is that you have an encoding of how the agent is representing the world.
+
+It tells you exactly how the outcomes are then inferred as particular states that then allows the agent to evaluate particular actions.
+
+But
+
+I haven't really defined how the actions are selected.
+
+So we work in a standard active inference setting where the actions are defined as being sampled from some probability distribution a, so the actions we saw before, which is calculated as the argmax of minus g over a. So what is that exactly?
+
+For our work, we were interested in essentially extending the minus, the expected free energy with a conjugate prior.
+
+So the expected free energy in standard terms would be something where you have an extrinsic
+
+imperative, you have a salience formulation and you have novelty.
+
+Extended imperative is something that's constrained by the environment.
+
+Saliency is when you want to have accurate belief updates and novelty is when you want to be able to estimate your world appropriately, given the parameters of the model that you've been able to learn.
+
+And when we extend it for the preference learning setting, and this is something other folks have done,
+
+maybe introducing it as part of prior over the outcome space.
+
+So we're looking at as part of a prior over the state space.
+
+So, sorry, let's see if I can get the color to change.
+
+Okay, so this is the prior and we're conditioning in on a categorical distribution D, which I highlighted before.
+
+And that allows us to take into, I guess, I'm sorry,
+
+use some of the conjugacy rules of interest.
+
+So now I'm gonna go to the next bit.
+
+So, sorry, just going back here.
+
+So what do we have so far before we move on to how do we actually land this D that we were interested in the previous slide?
+
+So we have an agent who's equipped to the model.
+
+The agent is interacting with the world.
+
+And based on this interaction,
+
+the way the agent is learning its preferences can shift.
+
+And the way it's shifted is a consequence of the type of actions it's making that we had using the expected free energy.
+
+So how do we learn preferences?
+
+So in the literature, there's been, well, at least in the psychology literature and some of the spiking neural networks and other formulations, there's been a few different ways it's been proposed how agents are learning preferences.
+
+So one of them is mere exposure effects.
+
+So the idea that when you're seeing something quite frequently, that that pairing is more preferred than if you weren't seeing that
+
+And this can be categorized as a heavy plasticity learning rule.
+
+Then you've got attention mechanisms where when you're attending to an option, it becomes more preferable.
+
+So maybe you're selectively looking at X or Y. And based on that, you've filtered out all the other data that you've been exposed to.
+
+And that's what becomes more something that you as an agent would prefer.
+
+And if you were to think about a more, I guess, biological construct to that, that might be a consequence of some synaptic gating that can encourage the enhancement or some sort of suppression of data or the noise that you are exposed to.
+
+Another formulation could be the contextual effects where an option is only preferred when it's compared to some other option.
+
+So there's this relative
+
+comparison happening and based on that in particular in certain settings you would want to do x instead of y and here x could be taking the path uh the longer route oh sorry the the wider route route in comparison to the maybe the the tiny route that we saw in the the hiker picture and that could be only you you only prefer the wider route when you don't see an animal some blockage there
+
+And this encodes some behaviorally relevant signal selection for the agent.
+
+So now what I'm going to do is I'm going to go through some rules and some formulations that we've been thinking about in terms of encoding preferences.
+
+And the way we've sort of parameterized the learning of those preferences is aligned with some of the
+
+I guess, things people in psychology have also been thinking about.
+
+So the first one is learning preferences from near exposure.
+
+So we start off with extending the agent's gender model with a conjugate prior over the prior beliefs.
+
+And what that simply means is that we take the category of distribution that we've conditioned our prior state on.
+
+And then we introduce a prior over that.
+
+And that allows us to take into account some of the conjugacy update rules that we're interested in.
+
+Because our prior distribution over the state space is D.
+
+which is a categorical distribution, we can now define a durational distribution as a conjugate prior, which is denoted here.
+
+And we've just got two different formulations here of how you can update that.
+
+So essentially, as you're exposed to more data, you are introducing, you're counting your pseudocounts over the summation of all the pseudocounts in that particular distribution.
+
+factor that you're interested in so taking this into account we can do heavy learning um rule which we do using online interactions through preference prior preferences so the way it works is that given your um hyper prize in the time point before you can update those based on um some alpha rule oh sorry some learning rule alpha and also the belief um
+
+updates you've had in the past.
+
+So this is denoted by the S for that particular pseudocount or the Dorothée parameterizations for this current time point.
+
+And you add all of this together and that gives you the updated preferences.
+
+So the way this particular formulation works is that the more you see something, the more you're going to prefer it because
+
+there's a very simple learning happening here.
+
+And in the simulations and the way we formulated at the moment,
+
+we've got alpha set as a static parameter equal to one.
+
+So you can manipulate that and the way you can manipulate it where if you have it alpha going to greater than one, you will then wait the new data coming in a lot more in comparison to if you had it alpha less than one, then you're not taking into account the weight of the new data coming in as much.
+
+And what this allows us to have is accumulation of particular contingencies or the way we are prioritizing our prior.
+
+And these dictate the learned preferences.
+
+The next formulation of learning preferences that I wanted to speak about was how we can learn by attending to preferred options.
+
+So here we're going to slightly change the model.
+
+by introducing an additional preference learning component.
+
+So we, again, are extending the agent's gender model with conjugate priors over the prior beliefs, so the hyperprior.
+
+So this is exactly the same as before.
+
+But the different thing that we're adding here is the synaptic gates to encode preferences.
+
+And these just are computational homologs that we've introduced in terms of the actual
+
+biology of like the the formulation i think that's taken to interpretation but these allow us to have an attentive mechanism which is what we're interested in and we do this to a two-step procedure so first we encode memories and how that how that works is we take a sample of all the data that the agent is um interested in um sorry the the agent has actually um
+
+um okay sorry um so the way the way the encoding of preferences is working is we have two components um which we're then um combining together the first component is the the online exchange that the agent has had so by online exchange i mean um the agent is selecting its um actions based on the expected free energy and that's allowing you to um
+
+essentially gather data about all the different trajectories it follows depending on what action is taken and it's got the data and its posterior estimates given that.
+
+The next, so this would be the on policy.
+
+The second bit that we have is the imagined interactions.
+
+So this is when the agent is offline in the sense that it's no longer being exposed or given outcome,
+
+outcomes based on its imagined or the way it's interacting with the world.
+
+And the only thing it's getting is the updates in the states, the latent states, depending on what actions it's selecting.
+
+And this is the imagination part.
+
+So what we're doing is we're combining this together and we take 30% of this
+
+And all of this, so these are 10 steps into the future.
+
+And then we're essentially interleaving them together and that gives us an encoding of the memory.
+
+The reason for only using 30% is to allow for the imagined interaction of the new things that the agent is considering to be taken into account.
+
+And the idea with the interleaving is that we're allowing for
+
+but the real experience and the imagined experience.
+
+So the real is here, the on policy experience to be used to shape the way the agent is encoding its perception of what has happened in the past.
+
+And then using the encoded memories, we then encode the preferences using a selective attention process.
+
+So this memory buffer that we have here,
+
+is what I showed in the previous slide.
+
+So this is the memory buffer.
+
+And then using this, we essentially encode the preferences using two gating mechanisms.
+
+So the first one is an attention block, and the second one is a gating block.
+
+The attention block essentially weights some part of our distribution slightly higher, and then the gating block
+
+constrains or restricts that data out by filtering it.
+
+And we are optimizing these two blocks using maximum entropy.
+
+And the idea with optimizing through maximum entropy is to allow for some shifts in what's happening.
+
+And by shifts, I mean to have a more flexible representation because we're trying to maximize the entropy of the distribution.
+
+Okay, and this formulation allows us to encode filter contingencies that can dictate land preferences.
+
+This is a slightly different formulation built on the same Bayesian updates, but we're introducing this selective memory component.
+
+Okay, so I'm going to quickly go through the experiments.
+
+So we evaluated this, the two algorithms in a 16 by 16 by 10 grid world.
+
+So an example grid is here.
+
+So the agent is presented with this image, including his own location at each time step.
+
+And we've got four distinct states.
+
+So we've got red, we've got blue, we've got the light green and the dark green as well.
+
+And in this particular formulation, we have no reward or score outcome modality.
+
+So the agent is learning purely on its motivation to understand the world.
+
+And if there are questions about that, we can talk about it.
+
+And the grid is changed every K steps and the K determines how volatile the environment is.
+
+And at each episode, the agent is initialized in some random location.
+
+So maybe here or here.
+
+and that constrains how it interacts with the world.
+
+So for sake of time, I might skip this bit, but essentially, the tables are highlighting exactly what the training parameters were, and they were fairly consistent.
+
+Actually, they're exactly the same between the two algorithms.
+
+So the PEPPER formulation, where we have heavy plasticity, and the NOR formulation, we're doing non-reinforced updates using selective attention.
+
+And then the preference learning parameters that like how long the planning horizon was.
+
+So it was 15 and we have an episode length of 100 and we do this for 50 episodes and we reset.
+
+So K is reset every 1, 25, 50, 75 and 100 steps.
+
+And this gives us a nice way of evaluating what's happening.
+
+So then the first thing we were interested in was evaluating how the preferences are shifting in a static setting.
+
+So this is one where we have Hebbian.
+
+So this is Hebbian learning.
+
+And this is where we have the attentive gating measure here.
+
+And with the Hebbian, we can see that this is on the
+
+X-axis we have the state's dimensions and the Y-axis we have the epochs or the time consideration.
+
+And this is the same for both the figures that we've seen at the moment.
+
+And we can see with the Hebbian one that as we go further down, it becomes more concentrated and there's no really shift here.
+
+Whereas for this, for the attentive preference learning measure, we've got these
+
+random blocks that appear that weren't there before, but they also disappear.
+
+So it's quite interesting that over time, the preferences are shifting as a different measure compared if you're doing a qualitative assessment of the comparison between the two.
+
+And then our post-hoc analysis of trying to actually understand what is happening quantitatively, we compared the heavy learning formulation with the selective attention preference formulation, and then we compared it with the baseline, which is the expected pre-energy of G here.
+
+And on the Y axis, we have the environment volatility.
+
+Again, this is the K%, but just denoted as percent.
+
+And then on the Y axis, we have preference satisfaction and exploration trade-off that we're using as Osadoff's distance.
+
+And this is just evaluating how far particular trajectories have shifted.
+
+So what we're comparing is whether there's an increased exploration or not, depending on which preference metric we're using, because based on our qualitative assessment that we saw before, there is this shift between the different encoding of preferences given the preference metric, sorry, formulation that you're using.
+
+So we can see that when we get to 50% volatility, there is this shift from exploitation to exploration for the PEPPER algorithm.
+
+So we see that here based on this nice mode of the distribution that we're seeing here.
+
+Whereas for the new formulation, it's slightly expanded out, but it's not as exploitative as the
+
+the PEPA formulation.
+
+And then when we are looking at extreme ends, we can also see that there is this shift from exploration to exploitation for the PEPA formulation, but we don't necessarily see it for the normal formulation.
+
+So at the moment, there is some quantitative differences in the way the two agents are evaluating, encoding preferences and how that shapes the behavior.
+
+And this is just an example of the neural formulation in terms of how much it's exploring the path and the way it's interacting with the environment.
+
+So these are the grid worlds, and this is just a heat map of that exploration trajectory.
+
+So I'm just going to quickly do some takeaways.
+
+So both of the formulations that we have, even though quantitatively and qualitatively they are providing different ways of encoding preferences,
+
+they do have a tendency to influence the agent behavior that's different to the baseline or the expected free energy where you didn't allow for this change in preference assessment.
+
+And if we are to compare with the standard reinforcement learning setting, we are here casting what is preferred to an agent instead of the environment or the designer.
+
+And it's particularly important in a robotic setting where you want to be able to go back and allow the agent or a robot
+
+to be able to shape some of its own goals and objectives purely if it's working in a more creative setting.
+
+Maybe in settings where it has to do a really specific task, this type of formulation might not be the best.
+
+But this does provide a flexible formulation where we're only modifying the preference learning component and using the same general model.
+
+So the initial general model that I defined for
+
+The agent is kept consistent for both the pepper and the normal formulation, but the behavior that we're getting is through this additional component that we add.
+
+But the key thing to note is that these preferences are a consequence of learning a suitable gender model.
+
+So if your gender model isn't that good, then the way you would learn the preferences themselves might not be the best.
+
+So there's a slight trade-off
+
+because whoever's designing this formulation or working with this formulation needs to take into account how well the gender model has been encoded or learned by the agent.
+
+And on that particular note, I'm just going to end the presentation.
+
+So thank you so much, everyone, for listening.
+
+And I want to thank my co-authors for this great work and my funders.
+
+And I've got the QR codes for both the papers if you're interested.
+
+And that's it.
+
+Thank you.
+
+
+SPEAKER_04:
+Thank you.
+
+Awesome talk.
+
+
+SPEAKER_01:
+Okay, I'll just stop sharing.
+
+
+SPEAKER_04:
+You can depart the room and you can rejoin for the roundtable if you'd like.
+
+Otherwise, thanks again for joining.
+
+
+SPEAKER_01:
+Thank you so much.
+
+Have a good day.
+
+Bye-bye.
+
+
+SPEAKER_04:
+See you.
+
+Bye.
+
+Awesome.
+
+All right, the next talk is going to be by Wenhua Chen, Dual Control for Exploitation and Exploration and its Applications in Robotic Autonomous Search.
+
+
+SPEAKER_05:
+Just one second.
+
+
+SPEAKER_04:
+All right, we're back.
+
+We're back with Wenhua Chen.
+
+Thanks again for joining and please take it away.
+
+
+SPEAKER_02:
+Okay, thanks for inviting me to this particular meeting.
+
+It's quite interesting for me.
+
+As we are not, I'm not always operating this particular community.
+
+So thanks for providing me this chance to share my working experience with you.
+
+So my talk is about how to develop autonomous search strategy for robotics and in this context about chemical, biological, and other interesting dispersion.
+
+So the approach I'm developing is called due control for exploration and exploitation.
+
+And as you will see, there is actually a lot of similarity with the active inference theory.
+
+So I came from Loughborough University.
+
+I'm working in the aerospace and automotive engineering department.
+
+So I have quite a strong engineering background, but not on the neuroscience.
+
+So this is the basic outline of my talk.
+
+And I can show you some background about the application and also discuss design method and then talk about the simulation and experiment results.
+
+And also, particularly, I'm interested to share with you about my thinking about what are the relationship between the approach we discussed here and also the active inference, reinforcement learning, and other similar kind of area, and then talk about what is the way to move forward.
+
+So let's talk about the autonomous search as a case study.
+
+So this is basically can be widely found in the natural environment.
+
+And for the polar bear, they try to find the prey or the food, and they need to use smell.
+
+And also similarly, you can find the insects.
+
+If they are searching mating and other food, they can use similar kind of strategy.
+
+The idea here is by making use of the sensors, they need to reasoning about where the food or the soil might be.
+
+Then think about what is the best strategy in order to find it.
+
+and particularly interesting for us is how to convert this kind of intelligence from natural world into the engineering area so we are able to teach robots or uavs try to search any chemical biology and resources and also in the future you can be using for environment force enforcement for example and try to find the pollution aware sources
+
+and many, many other applications.
+
+So basically, you can think about it, the idea here is somehow like you try to develop a smell dog, which can sniff around and then try to find the drugs and other endangered materials.
+
+This is not a new area.
+
+There are lots of research in the area, and particularly bio-inspired lots of research.
+
+People can be using the Campbell Texas or the other reactive strategy, like you fly down the wing.
+
+If you find something, you try to follow the trace in order to search the source.
+
+Another mainstream work in this area is based on what we call the information theory approach, which treats this kind of process as an information game process.
+
+somehow at the beginning you don't know where are the sources and you have a high level of uncertainty then during your search you drive the level of uncertainty lower and lower so this is actually is you can think about it this is a information game and then you can using the reward function like entropy like the
+
+KL divergence or many others to measure the success of your search and then based on that you can derive the strategy to driving to do this but now we're not we're looking to another angle and we should either as a control problem and then think about how to link this with a active inference and a similar kind of work so when we try to search the
+
+a source and you don't know any information.
+
+So basically on the robot you have a chemical or biologic agent gas sensors and then based on that every time you need to reason where you need to move your robot in order to have a best chance to find the source.
+
+So there is a strong interaction between the robot and the environment and the environment robot and also they have a strong interaction coupling between the perception
+
+and planning or decision making.
+
+So basically, if you decide to go to a different location, and then you will take a different kind of chemical sensor measurement, this will affect your belief about where the source might be.
+
+And this will also change your course of action, because based on that, you need to decide where you want to move in the next step.
+
+So there is a strong coupling between the perception and the planning or action.
+
+so and this is also a typical example of the trade-off between the exploitation exploration so you need to maximize your chance so a lot of people in this field must be familiar with this kind of trade-off i will not go into the detail now i will try to explain to you about the strategy what we have developed so and now we try to formulate the problem and there is a method here and
+
+You can ignore that, but you try to understand a high-level understanding.
+
+What is the math here is that each time we have X, which is the state of the agent of the robot, and also you have a variable set of action you want to take, which is basically trying to make the robot move forward, backwards, or left and right to move to different directions with different step size.
+
+And also you have the measurements.
+
+The measurements in this case is you are
+
+First is your gas measurements on the sensor.
+
+You can have chemical sensors on the robot.
+
+And also you have some measurements about your position or your location with respect to the environment.
+
+And the other things that we have is the unknown information about the source and also about the environment, and which will include the location of the source and also include the location
+
+uncertain the environment like the wind direction and the speed which will significantly affect the dispersion of the chemicals or any audio.
+
+So the idea here is you take the connect all the data during the process and which is included anytime the action you take which is u and also the sensor measurement which is z here
+
+So you add all of it together, give you something we call the information state, which is a connection about all the data you have so far.
+
+And then you decide what is the cost function or reward function it should be.
+
+And in the simplest way, what do you think about?
+
+Okay, my aim is to try to move my robot position close to the source location, as close as possible, which is quite sensible, the mayor.
+
+But the problem now is I don't know where the source is, the location of the source is.
+
+So this is why the conditional arm for the data is connected so far.
+
+So conditional on this one tries to minimize this cost function, which is a typical way in our control community.
+
+There is a particular name called the stochastic MPC, mode of predictive control.
+
+but what we want to do is move away from this just doing this we want to do further and because this we move further this is actually built up a link with the active inference so what we do is now okay we're not just the conditional on the all the data we connect so far but also we connected on some virtual data so what it basically is we also added the future
+
+all the actions and what are the future outcome so somehow because you have a model you said oh if i do this what is going to happen what kind of same moment i'm going to get if i do another thing what kind of moment i'm going to get and how this man will affect my belief of the world of the environment
+
+so that means i now conditional on not only on the ik but also conditional on ik plus one and here and we need to have take into account the contraction of our future measurements and how future measurements will affect our belief okay but you know before i introduce the detail mathematics a little more method i try to give you some definition of notation
+
+so suppose anytime you have the probability density function of any unknown parameter theta you want estimate this is a pdf probability density function of that and if you take the the mean the expectation of that this will give you something we call the nominal estimation okay use the mean of that as your nominal estimation and you try driving your robot maybe to the nominal estimation location
+
+But also we have to quantify how the uncertain level of this estimation.
+
+So how reliable is your estimation about the environment?
+
+So basically, we define the error between them and the nominal one.
+
+And from any measurements, then this will actually give us the variance.
+
+It will define the variance of this one.
+
+So once we have this notation, we can simplify the cost function we had before, like here.
+
+But now it's conditional on ik plus 1.
+
+And they can simplify it into two terms.
+
+The first term is about, OK, so maybe the active inference we call it
+
+extrinsic value.
+
+The exact one is the intrinsic value.
+
+The first part is, okay, I want to move my robot location to the believed source location, which is denoted by the normal estimation of your target location.
+
+You want to make this error as close as possible.
+
+So this is the task.
+
+You want to perform something to basically move your robot close to where you believe it might be.
+
+The second is, how reliable is this belief?
+
+And we quantify here by using the variance.
+
+And you should remember, those two relationships are derived from the very basic cost function.
+
+There is no weight between those two.
+
+Naturally, this is the optimal way.
+
+If you minimize this, naturally, it's the optimal way to do it.
+
+So the cost function consists of two terms here, which is
+
+the task, the object that you want to perform and the uncertainty of your belief.
+
+So you have the extrinsic and also intrinsic values and optimally combine them together
+
+Okay, so now we can go to a little bit more detail about the equations, and I will not go into too much, but it basically is somehow like a basic agency equation, like the next time's robot position depends on your actions.
+
+And also you have the dispersion model, which is somehow like a Gaussian model, but it also depends on a number of parameters, which is the wind speed, the wind direction, what kind of chemicals you have, they have some lifetime in the state of the air.
+
+and then some other parameters associated with the location of the source.
+
+But also we try to model the sensors and we should know that in the environment, the chemical and also those bio-agents, their concentrations are really low and many times they may be not able to detect anything.
+
+But also, you should also know they have lots of local turbulence, which upsets your sensor.
+
+So that means lots of times you couldn't follow the gradient method.
+
+Try to say, oh, I followed the gradient.
+
+I found the maximum concentration.
+
+No, it didn't work.
+
+This is maybe what it looks like of the true dispersion fields.
+
+You can see the concentration change quite dramatically.
+
+So that's the challenge.
+
+So we also need to model the sensor behavior
+
+somehow like when the sensor you can have a reading so it's true reading plus some sense of noise whether many times you don't have sense of reading
+
+So you just purely have a background noise of your sensor.
+
+So that is another point.
+
+And once we do that, and we have tried to see what are the unknown parameters about the environment, about source wound estimate.
+
+So basically about include the wind speed and the direction, and are they associated with the chemical components or parameters associated with the target, particularly the source location, the release rate.
+
+And then we can be using, in our framework, we're using Bayesian inference to try to estimate those parameters.
+
+So this is what the diagram looks like.
+
+So basically, you have two parts.
+
+One is about the reasoning.
+
+Another part is about the planning or control action.
+
+In the reasoning, every time you take the new measurements, and you base on the prior information and the model you have, and you try to update your parameter estimation, and then you build up a probability map.
+
+about your local environment.
+
+And then you fit this into your planning.
+
+Here you try to estimate if you take any action, what's the influence about your belief and also how to make your agents close to the source.
+
+So you do the planning here.
+
+And this somehow like this red box is somehow like that you try to using your virtual or a moment to do the reasoning and repeat this again and give you a decision and then just keep doing this.
+
+And so you can do some simulation study about this.
+
+For example, if we start from here, this is source, this is concentration, and then you can put the source in different location and the agent in different location to see how they are performed and then try to understand the performance.
+
+And what we can see is that
+
+If we quantify the performance in two ways, one way is we call the successful rate, which is if we run the simulation 100 times or experiment 100 times, what's a successful rate?
+
+So for the new approach, you can achieve about 100%.
+
+And for some entropy-based original method, you can achieve about 80% chance to find that.
+
+If we're using a classical mode of pre-control, you also have about around 80% of chance to find this.
+
+Another measure is about how quickly your conversion moves to the true source location, which is the diluted by distance from the agent to the source in terms of the root mean square, because you run it many times.
+
+And what you can see, our approach actually can decrease the value conversion to the source very quickly, but others can slowly conversion to that.
+
+And we also can do the experiment.
+
+This is the exciting bit.
+
+You can put on the physical robot, try to let it run.
+
+And then you can do that using the software to implement your high-level algorithm.
+
+But at low level, you also have a control loop.
+
+Try to combine your robot, try to follow, drive it and follow your high-level decision to see where you want to move.
+
+The low-level will follow that.
+
+We're using the sensors and also some low-level control to do it.
+
+So here's an experimental result.
+
+You can see it's very turbulent and the concentration changes quite quickly.
+
+The robot stops from any point.
+
+And there's a purple point giving you an idea about the belief where the source might be represented by particle filters.
+
+You can see where the time goes, they're concentrating closely on them to the left.
+
+the location of the source.
+
+And this is, after that, you can map in the area, give you the idea about the concentration in this particular area.
+
+And also, we can do that in flight, outside, implement all the strategy on the UAVs.
+
+And the real test, you can have the chemical sensors here.
+
+This is all the other GPS, the cameras, and all the sensors.
+
+And you have a low-level ground control station here.
+
+And then you can do all the experiment outside.
+
+This is a trial on the chemical plants.
+
+They have a leakage of a gas.
+
+And then what happened?
+
+You can see the test that we did.
+
+industrial side and the UAV taking off and they got to the chemical sensors on that and they don't know where are the sources.
+
+Based on that, they developed some search strategy.
+
+But at first, we didn't do the intelligent search.
+
+We just let the UAV to fly around, try to pick up the data.
+
+And then we moved to intelligent search and tried to demonstrate that.
+
+So pretend someone died because of the chemical leakage and then you need to send the UAV to
+
+to identify where the problem and then first respond and take a proper action to this.
+
+So then we can map in the area.
+
+This is not an intelligent search wall, but it just fly around and connect the data, build up an understanding.
+
+We can say where they are.
+
+But then we move to a fully intelligent search.
+
+And then it's somehow like hands-off.
+
+We don't have anyone touch that.
+
+It's fully that UAV to decide where to fly to connect the data.
+
+And then the child understand where their source might could it be.
+
+And this is another scenario I can see here.
+
+And you have the car here.
+
+Maybe this is similar to the environment.
+
+You have a vehicle involved in the accident.
+
+Whether you have any petrol leakage there.
+
+Because this might be, it means you have a risk of the explosion.
+
+And then if you send the first responder to this area that we're under the higher risk.
+
+So if you could have an agent to be there, try to search where have any potential accidents.
+
+leakage of gas and where it might be then you found them.
+
+so that's an idea about doing this kind of research and then we also developed this one to more broad applications a particular one we call the cell for optimization control that the idea is for any or most system you want to maintain it operate in best possible way
+
+which can change with the environment, because when the environment changes, the best possible operation way to change it.
+
+However, you want to have a consistent, by taking the same idea as we already talked about, they're able to explore the environment influence on them, they understand how to best operate themselves.
+
+So somehow like here, they just change the environment, reorder function, you just try to
+
+follow that and then try to do the best.
+
+So there's many, many applications.
+
+I just talked about one.
+
+This is a situation where we have, it's about renewable energy.
+
+You have a PV farm.
+
+The energy, the aim is very simple.
+
+you try to harvest as much energy as possible.
+
+But the problem is the optimal operation is changing with the environment, with the sunshine, the temperature.
+
+The solar insulation has changed your optimal operation.
+
+So what we developed is a strategy.
+
+No matter what kind of weather condition, you always can maintain the solar farm operating the best possible way it could be.
+
+So the red one is the ideal one.
+
+Green one is actually what we, the blue one is what we did.
+
+We try to follow the optimal.
+
+This is optimal operation.
+
+We always try to follow.
+
+So that's some examples, not only for the autonomous search, but we can use the strategy to solve much wider range of problems.
+
+Now we talk about the relationship with some others existing work.
+
+One is the dual country concept.
+
+why do you control because the control action is not only changing your physical behavior of u.s system but also changing your belief of the world of the environment so this is why you call it due control but however it's not a complete new concept in the control community we did this before but invented on the dynamic system or how to estimate your own state
+
+how to understand some of your own parameters.
+
+The idea now is try to extend it from UAV for example itself, understand itself is more to the environment because we think about it for autonomous driving for the UAVs, we have all those information about ourselves.
+
+What we really need is the information about the environment, understanding about the environment.
+
+Another link is with
+
+the active inference, the community.
+
+And this is a very interesting and surprising finding from me.
+
+Because when I developed the new strategy, I don't have any idea about this community.
+
+And it's somehow like you can start from a completely different area, different angle.
+
+But however, you found that you're landing on the similar kind of idea or area.
+
+So that's, I think, one of the most exciting things in this research.
+
+So basically you can think about the dual control idea is also about your action will change your belief about the environment.
+
+And then you connect the information.
+
+This will again change your belief about that.
+
+So there is an interaction between the action and the perception and how they're connected with each other.
+
+So I will not explain too much because basically in this country people maybe much understand what I'm talking about and another is about that it's linked with us.
+
+Yeah, it's linked with the
+
+By the way, there are some other research in this area.
+
+Another is about the reinforcement learning.
+
+And this might be about the link with reinforcement learning.
+
+So basically, the reinforcement learning is trying to make an optimal decision for a given dynamic system and subject given a reward function.
+
+And then the problem itself converges to find a solution for a Bellman equation, basically.
+
+And what reinforcement learning does is how to solve this problem by approximating the optimal value function and also try to find the optimal policy.
+
+So the idea is to try to learn the strategy through iteration.
+
+But what we do is from the work I'm doing is developed from something we call the model of project control.
+
+We try to solve the same problem, but however, we truncated the infinite horizon problem into a finite horizon problem.
+
+So every time we try to solve a finite horizon optimization problem, we find the optimal solution.
+
+But the reinforced learning tries to do it using the iteration like
+
+learning try to do that.
+
+So basically, and the whole idea about link between them is actually explained in this paper that I just published.
+
+If anyone in the company is interested in this, please have a look.
+
+This is my view about a link between those two.
+
+And also, it's a link with an active inference.
+
+Because the approaches are different, I just give you the conclusion.
+
+For the reinforcement learning, they have three major problems, I think about it.
+
+One is they need lots of data to help them to learn the optimal strategy, optimal value function.
+
+And the second is if you learn from the simulation environment, when the environment changes, and all there is a mismatch between your simulation environment and real environment, the optimal strategy you learn in the simulation environment will not work very well in real life.
+
+in particular in this case for example if i learn that try to search the sorting based on this environment okay the wind comes to this direction speed i learn how to do it but if you come to real emergency the wind is actually blue to this direction the strategy you learn maybe doesn't work at all because it's not optimal another problem is actually the
+
+Being like a black box, it's very difficult to prove the stability or safety, this kind of thing.
+
+But we don't have it.
+
+In the control, we have a rich body of tools.
+
+We're able to prove the stability, safety, and other things.
+
+I think the first tool is able to solve it by active inference as well, like reduce the number of data required, and also have to deal with the unknown environment.
+
+But however, the control also have another office, which is about safety.
+
+about this.
+
+So this is a quick try to think about the link between the approach talked about here and the reinforcement learning.
+
+And then we can discuss more itself for this particular topic.
+
+Then the kind of work that we are doing, we try to
+
+move this from single step to multiple stack looking ahead and the final horizon but this will have a problem about the computational load because now we have to deal with a much higher company how to reduce the computational load is quite difficult and last time when i talked with uh car for instance and gave me some ideas about the team how to do it we are trying to learn from your community about how to reduce the computational load
+
+Another thing is that what we are doing is we try to prove some regular properties for the approach.
+
+Somehow like we try to prove they can converge into the true sources.
+
+And if you do anything there, your belief can converge into true external environment under them.
+
+And also you are able to prove the safety of that, which is particularly important for our area when we deal with cars and aircrafts.
+
+We have to prove it is safe to do it.
+
+So we are working on those areas.
+
+Conclusion is we developed some new framework in our way and we tried to make system operating on the environment by
+
+somehow like a trade-off between the exploitation exploration and try to understand the future action is influence on our belief so this is can deal with the coupling between the action and the belief and
+
+And then our approach is not somehow like many other approaches.
+
+They think about if you want to trade off your artificial stitches, intrinsic or extrinsic values together, add some weight.
+
+And it's actually, this is naturally happened.
+
+It is optimal in some way.
+
+And the particular thing for us, I think, about it is we have a particular way for the community of active interference.
+
+We can learn a lot from there because we have a community here.
+
+People working in this area develop many good ideas.
+
+And the question is how to send it to that, how to promote more collaboration between those two communities.
+
+I would think it's one of the very interesting things to do.
+
+So yeah, that's all of my talk.
+
+I think I very much come to the end of my time.
+
+Yeah, it's 29 minutes now.
+
+
+SPEAKER_05:
+Yeah, so that's good.
+
+Okay, yeah, thanks.
+
+Yeah, so I will join the roundtable.
+
+Yeah, thank you.
+
+Yes, okay, thank you.
+
+I will leave it first, then we'll rejoin.
+
+Okay, thank you.
+
+
+SPEAKER_04:
+Alright, well, welcome back, everyone.
+
+So, as it turns out, we may or may not have any people join.
+
+We will have just one join right now, and then we'll see who else joins, and... So, welcome back, Wenhua.
+
+I was just saying that anyone who's in the live chat, please feel free to write any questions in the chat and we'll be looking at them.
+
+I'm not sure who else will be joining us, but I think actually this will be a great opportunity just for as short or as long as you'd like to talk a little bit about
+
+a little more about what you presented on and also connect to some threads that were happening earlier in the presentations.
+
+How does that sound?
+
+And we'll see who else joins.
+
+Sound good?
+
+I actually don't hear you anymore.
+
+okay one second we'll figure this out yes all right so we can hear you now um yeah okay sorry yeah welcome so um
+
+We'll talk about some of the previous presentations.
+
+Not sure which ones you've seen and otherwise I'd like to pick up on a few threads in your presentation.
+
+And then we'll take any questions that people are asking live.
+
+How does that sound?
+
+Yeah.
+
+Awesome.
+
+So one point that you highlighted was this notion of dual control and how it brought you to some of the similar
+
+places that active inference has arrived at.
+
+So I'm curious what you think led to that and what led to those vectors intersecting in a dual control and what is at that nexus or why does it exist that way and why is it coming clearer to the forefront at this time?
+
+
+SPEAKER_02:
+Yeah, thanks for that.
+
+That's a very interesting question.
+
+And I also think about it myself from time to time.
+
+I think those two areas I feel originally was quite far away.
+
+We have different strategies, different ways to think about the world.
+
+Typically, control, we normally are interested in.
+
+As I said, the dual control concept is not entirely new.
+
+And the people in the control community already realized that many years ago, somehow, if you take any action,
+
+the action will not change the behavior of a dynamic system but also maybe you could have some influence on the variables you are interested in.
+
+In traditional control this could be
+
+For a physical system, there are some parameters in yourself, like mass or damping or other things you don't know.
+
+By doing that, it will help you understand what you really are.
+
+Just like when you're driving your car, you have some maneuver, you know what mass or inertia my car has by doing some certain action.
+
+So the people realized that before.
+
+But the difference now, because we control the move from typical, maybe you can talk about low-level automation, now move to high-level, we call that intelligence or automation, autonomy.
+
+Okay, now we move to the higher level.
+
+So then that means that you treat the dynamic system more like an agent in our way, in our language, in the computer science or neuroscience, it's an agent.
+
+So now we're more interested not only about ourselves, more interested about the environment surrounding us, the outside.
+
+So the work I think has now progressed.
+
+What I did is move from your concern about your agent, yourself, more about what are the environments surrounding you, how to explore the environment, how to understand your behavior in the environment.
+
+so by doing this i feel we bring the typical engineering heart of solid control into this kind of natural world in this kind of biological kind of sense because now you're more interested in how to deal with coexistence with the environment how do you so this is why i view on this and but on the other side this is also what i reading on the on the active inference but certainly this community have more say i feel traditionally
+
+before the geocontrol people already have some idea about treating the human brain as a basic machine so now we said okay i have prior information about the environment i have a new data coming in helping you understand what is happening around me about the environment
+
+But I think what active inference, for me, I think about, certainly there is one side of how we define the reward function.
+
+In particular, talk about using free energy to quantify that.
+
+This is really wonderful.
+
+But also, I think about key things here is about
+
+You now think about action.
+
+The action is also linked with my understanding of the environment, about perception.
+
+So using the action to explore the environment gives you a better understanding.
+
+So that means you move from just treating the human as a passive way to receive the information from the environment.
+
+Now I can actively do something, helping me to better understand the environment.
+
+So I feel this is my understanding of the key feature of active inference.
+
+So because this is the reason, you can see that naturally we are linked with the control we talk about.
+
+Because the control normally talks about what is the consequence of your action, how to take the best action.
+
+So this is my view.
+
+Those two areas are from quite different areas.
+
+Gradually, because of the need for the research and also something like a trend in the field, they are now moving together.
+
+In this particular area, they are converging to each other.
+
+So that's what I'm thinking about.
+
+
+SPEAKER_04:
+Awesome.
+
+If I could just like pull out a few threads that I thought were really insightful there.
+
+So you cited a paper from the 70s about this dual control notion, the idea that we had to have not just like a single imperative or have an imperative that contained epistemic and pragmatic components and all that that entails, like the unknown consequences of action.
+
+So what we would have is like expected free energy as opposed to the variational free energy.
+
+And then you described how there was a movement from lower level automation control systems, the classical thermostat and other kinds of like single variable, single fixed point implementations.
+
+And then as the implementation complexity approaches the multi-joint and way, way, way beyond how that multi-joint is going to be in a social context
+
+um a changing environment that system that's being designed comes to convergently require the same imperatives of a nervous system which is to say like the real-time integration of sparse sensory data and also that is what
+
+authorizes the ecological stance and the embedded cognitive perspective, which ties in with some other recent threads in cognitive science and neuroscience, like the pragmatic turn.
+
+And so it really is interesting how like from the technical capacity side, the questions that were converged upon in terms of memory and forgetting and all these things are like the challenges that natural systems have been involved in solving for a long time.
+
+
+SPEAKER_02:
+Yeah, and that's also right.
+
+That's a very, very interesting part of the technology development.
+
+but also there is maybe demand from the society.
+
+And because a lot of things like the traditional mechanical or thermal kind of a simple control already widely existing, they help us to boost our productivity for many years.
+
+But now we reach to the stage that we want to further increase our productivity, increase our efficiency.
+
+And you have to have a highly automatic system
+
+which is able to deal with some unexpected events, uncertainty.
+
+And so in order to have this kind of capability, they also require a high level of intelligence, like our human or animal.
+
+So that is actually another reason technology is moving, is because the society and the economic demand for this kind of thing to happen.
+
+
+SPEAKER_04:
+Okay, I have another question about your scenarios that you explored.
+
+How is explore exploit balanced automatically?
+
+How can such a large statement be made?
+
+And how is it balanced when risk is in play, like risk of going into a dangerous area?
+
+So within the search task, how is explore exploit balanced?
+
+mediated?
+
+And then how does that become more complex?
+
+Or how is it integrated in the model when bodily injury is on the table?
+
+
+SPEAKER_02:
+Yeah, thanks for this.
+
+Yeah, that's very interesting question.
+
+And also, we try to think about this along ourself for a while.
+
+And the first I would like to say for the just using the autonomous such this particular examples to illustrate the key ideas.
+
+and the the fundamental objective for this particular task is very simple or clear somehow like based on my understanding i try to move our origin try to move close to uh real life uh to real sources okay so under them we formulate this as a reward function or cost function somehow like you want to move your next time's agent location to the source
+
+location as much as possible but however because you don't know that so then you conditional on all the information you connect so far so this is a the reward function your origin defined but from there we derived this particular function if formulated in this kind of way and in uh and also try to introduce the the note about the action will affect our belief
+
+And then, naturally, you find the cost function or reward function becomes two terms.
+
+One term is about exploitation, another term is about exploration.
+
+So there's a natural happening.
+
+There's no need to introduce some terms.
+
+They just naturally come together in this kind of way.
+
+So this is why we think about maybe
+
+the best way try to do that but also you you you mentioned a very good question about the risk for example if they naturally you're not only something like a target they want to follow but also during the process you need to aware of kind of risk there so normally you have to deal with in our framework in two ways one way is we have to add some constraints in our uh
+
+action generation it means for example one example is in our search if there is a obstacle in some way if you command your vehicles or aircraft move to that direction certainly this risk because the client is going to collide with the obstacles
+
+We added the constraints in the search domain.
+
+It said in this area, you couldn't go.
+
+This is one way to do that.
+
+But also you can add some, we call it the softer constraints.
+
+That means in the cost function, you add some penalty in your cost function.
+
+It said, okay, there is some area that might have some risk.
+
+You try to avoid if possible.
+
+And then when you generate or optimize your action, you try to take this into account.
+
+
+SPEAKER_04:
+All right.
+
+Awesome.
+
+I want to connect that to Active Inference and then ask a great question from Dave.
+
+So you mentioned how various constraints could be provided to prevent situations of risk or hazard to the entity.
+
+And so that is what may work in practice.
+
+And so that's why it's been so interesting in the presentations to see that most of them have featured at the very least a laboratory robot context.
+
+And that kind of makes the full stack interesting.
+
+make makes uh increases our confidence that the full stock kind of touches like there's like a tesla coil like there is a path through some implementation and then the question is how deep in the specifics do you have to go versus how um far up in the generalities and then there might be some situations where the constraint is applied in a very situational way but also
+
+as you laid out dual control and reinforcement learning, you said reinforcement learning is not really amenable to being formalized analytically in practice.
+
+Whereas one active inference strategy that we've seen to balance like a task performance with survival is you say, I want to reduce my surprise about the gas cloud and I want to reduce surprise and have a high battery percentage.
+
+So then it will just like balancing explore exploit within a drive, like to detect the gas or to stay high battery.
+
+It also can have a nested model that's balancing those drives.
+
+And so there's also an analytically simple and first principles way to detect
+
+bring homeostasis and risk avoidance into very generalized framings of the active inference framework.
+
+And then again, in the specifics, it might be useful to do different model variations closer to the edge.
+
+But then it's very interesting to think about what it looks like when also there's something in the center that has a simplicity to it.
+
+
+SPEAKER_02:
+Yeah, yeah, thanks for that.
+
+That's a very useful discussion.
+
+certainly there are different ways we can deal with the balance between the you want to do what you want to do and also try to avoid any risk or pitfalls and then try to deal with particularly I think the problem here on my opinion is called uncertainty because uncertainty will affect all those things because if you think about risk how possible this risk might be so there is a lot of things like this and
+
+This comes back to my fellowship.
+
+My fellowship was funded by EPSRC for five years.
+
+I concentrated on this particular area.
+
+The goal of my fellowship, as we already somehow indicated, is to try to increase the level of autonomy by introducing more intelligent algorithms into the control and other fields.
+
+But one of the ideas for me is we want to develop something we call a goal-oriented control system.
+
+It means we want to promote, because high level of intelligence like us, people or animals, they more have a goal-oriented behavior.
+
+Rather than just people, you say, oh, I give you the goal, you try to figure out how to do it.
+
+If you have a less intelligent one, he said, oh, I need to give you instruction every step about how to do things properly.
+
+So first is to promote the goal and the behavior.
+
+I said, okay, for this particular one, what is the task?
+
+What do we want to achieve?
+
+What's your requirement?
+
+So the second thing in the key integrated in my framework is about constraints.
+
+Why are the constraints so important?
+
+Because you try to avoid any pitfalls, any risky things.
+
+For example, if you want to develop an autonomous driving car, you have to follow the rule of the traffic, the road, and you have to follow that.
+
+And you have to follow the traffic lights and other things.
+
+And you don't want to collide with any other vehicles or hit any pedestrians.
+
+So those are the constraints you have, safety constraints in this case.
+
+But you also have a lot of physical constraints.
+
+Because if they have a maximum power, maximum temperature or pressure, your system could have.
+
+Otherwise, you are going to destroy yourself.
+
+So constraints play a very key role here.
+
+But the question, as you said, for different scenarios, how to abstract, formulate these constraints is the question.
+
+But the whole idea is you have to, for any decision or action you made, you have to respect those constraints before you try to think about, oh, I won't achieve any meaningful objective.
+
+Another key part of this one is uncertainty.
+
+The uncertainty came from many, many ways.
+
+Could it be the environment change or uncertainty we already talked about?
+
+But also could it be uncertainty about your information?
+
+Because you have a sensor, the sensor could have error or the sensor range is not enough to pick up all the information you need.
+
+And also uncertainty about your belief of the world.
+
+For example, we talked about the risk, but how reliable this risk could be.
+
+So I think about it and this is my belief in the whole framework for dual control.
+
+The key thing is about how to quantify the uncertainty about your belief of the surrounding environment.
+
+This is driving your reward somehow like exploration.
+
+So those are the key things in my view.
+
+And basically, what I really think about, you talk about in the active inference, we are able to formulate that in an analytical way.
+
+And then if I formulate it in a logical way, we are able to use some tools or theory people have developed in the last 30, 50 years, in particular in the control community and other communities, we are able to formally prove if we do it in this way, we can make sure you are able to satisfy certain safety requirements.
+
+It will not hit some obstacles.
+
+It will not put yourself in danger, for example, like you eat in the natural world, eat by other animals, for example.
+
+So this is the dream.
+
+We have some progress in this area.
+
+We're already able to do some very simple systems.
+
+We're already able to prove stability or safety of the dew control.
+
+But however, what we want to do is try to extend to much wider world.
+
+So therefore, the free energy principle,
+
+it's much more difficult because the energy the functioning level is quite complicated how to understand that is another level of difficulty but however in principle we are able to work together to push this
+
+
+SPEAKER_04:
+Thank you.
+
+There was really a lot in there.
+
+I'd like to make one remark on active inference and then bridge to Dave's question in the chat.
+
+So you highlighted uncertainty and that's, of course, a core aspect of active inference with bounding surprise using free energy.
+
+And then you mentioned goals and constraints.
+
+and that really seemed to me like a common point with cybernetics and goal orientation constraints general systems theory cybernetics branch but also engineering and entrepreneurship and innovation as your colleague stephen fox has worked on and those perspectives on goals and constraints of
+
+potentially nested systems of organization like projects within an organization or a firm within a market or a cyber physical system nested within a firm within a market to have interfaces that can even just be described in an information partition way
+
+and then you brought it back to safety and to be able to have certain like probabilistic or formal guarantees on those kinds of arbitrarily composed systems is very exciting direction um any remarks on that or i'll ask the question from dave
+
+
+SPEAKER_02:
+Just to have a quick remark, I think for me, I'm more on the technology side, but however, it's absolutely right.
+
+This kind of goal-oriented behavior, you can be using for the social organization, using for the biological, or many, many other things.
+
+Because basically, when you survive, you have a goal.
+
+This goal is to try to survive, find food.
+
+And in the society, any organization, the goal is to try to find more profit, constrained by the marketing environment and many other things.
+
+Yeah, I absolutely agree with you.
+
+
+SPEAKER_04:
+I'm just gonna make one more comment to refer back to an earlier talk, not sure if you saw this one, but this was Tim Verbellen's talk, and he was talking about video games, and about how just with only an epistemic drive, some of these video games were able to be played very well, like with Pong and with Mario,
+
+And then it made me think about how in a lot of video games, staying alive is an imperative.
+
+Whether you're just tapping something or a maze or something that's growing or shrinking, it's like staying alive
+
+bridges the gap between search and exploit and all these different behavioral modes it's like if you're not staying alive if there's no like idle process for your cpu then it's over so then yeah there's no point in future epochs so that's um really interesting so let me go to dave's question so dave uh wrote
+
+Professor Chen, I didn't notice discussion in your presentation of affect or emotion or drive.
+
+What do you think about adding such mechanisms to the dual control model?
+
+Could this amount to explicating internally generated motivations?
+
+Or would such a trick be a mere disguise for inserting arbitrary experimental specified rewards?
+
+
+SPEAKER_02:
+Yeah.
+
+that's a very interesting question and when I read the literature in active inference then I'm fully aware of that the focus of our research is quite a little and we focus on do something specific or useful and in this case for example in the case the autonomous search is just try to find a
+
+the location of the sources.
+
+And in the PV farm for generating renewable energy, the object is quite simple.
+
+It says, OK, we want to harvest as much energy as possible given the condition.
+
+So that's what I mean.
+
+The focus of our work is
+
+very specific but however when we come to the biological and also human and others they have lots of things like the emotion and many other things we didn't consider in our current work and I can see this is the gap between the due control and the active inference is actually you can deal with talk about a more general skills like in power or confidence or some other more things emotional things
+
+And this is actually the direction of maybe the future of our work should move, try to learn from this community about that.
+
+But in principle, and as I said, if we are able to formulate those kinds of emotions or many other things as kind of a reward function, for example, you encourage people to be happy, but you need to have some way to quantify that.
+
+If you couldn't capture that, maybe you would not promote the behavior, try to...
+
+make you happier.
+
+So the key thing for us is how to formulate an interesting
+
+reward function.
+
+And this is also what you can learn from active inference.
+
+In principle, we didn't have a restriction on what type of reward function should it be, what type of constraints should it be.
+
+The framework is in some ways quite general.
+
+But however, for more complicated systems, it still did a lot of work.
+
+Yeah, that's very interesting.
+
+
+SPEAKER_04:
+If I could build on that, so I was imagining the setting of firefighters and there's some different chemicals that are being sensed and about the way that the extended cognition paradigm and seeing the cyber-physical team as being just qualitatively, whatever tools they're using, even if it's just the walkie-talkie,
+
+and their bodies it still is like an extended cyber physical team and then as we move forward into futures that may in different areas like include all kinds of tools that we do and don't know about so then that's what's interesting about a framework that can start and pick up in the um like qualitative zone
+
+and then also take it all the way to the application.
+
+And then as to value alignment, I thought that what you just added had some seeds of new ways to think about the human robot or just more generally the multi-entity alignment question.
+
+And that is their preference vectors or some of their preference vectors
+
+could be about the same thing and in the same direction.
+
+Like the semantics of what the firefighter on the survey says, I want to like balance X and Y and Z in this ratio.
+
+And then there can be an entity
+
+whether that's another person or some kind of explicitly structured cyber physical entity that also has that same like preference distribution.
+
+And then that is like a formal way to find that probabilistic alignment because the question has to be addressed one way or the other.
+
+And how will those distributions align accidentally or using some other simple heuristic?
+
+
+SPEAKER_02:
+Yeah, that's absolutely right.
+
+It's actually when we talk with our end user and also firefighter and also the Ministry of Defense, they're interested in the terrorist attack or some other kind of things in London, the trooper station, there's some scenario like this.
+
+And here they talk about it is very rarely just send a robot out.
+
+and let it do all the things.
+
+These actually always have an interaction between the first responder and the robot.
+
+Robot pass the information about, oh, where I thought it might be.
+
+And then the operator, first responder, provides some extra information.
+
+And they always work together as a team.
+
+And also there are some preferences
+
+For example, in some areas, based on the first responders' experience, they knew where they are more likely to be, when they see a picture or see the season.
+
+So there is always the interaction between the ups and the downs.
+
+This is actually our future step, somehow to promote this kind of interaction between humans.
+
+in some in preference and many other emotional other urgent things because some area if you close to maybe exit or somewhere you maybe have a priority to search or find whether there's some problem there so
+
+
+SPEAKER_04:
+Okay, a few remarks on that.
+
+So it made me think about how the response network of an emergency could be seen as embodying a prior.
+
+Like where I am in California, maybe firefights are a certain likelihood different seasons.
+
+So then a phone call to emergency services
+
+might have a different likelihood of something being the case in one region versus another, or it can be kind of used in like a Bayesian filtering way.
+
+Where are we getting 15 reports of the same thing?
+
+And then where are we like we're already working on that situation and there's something else that needs attention to be brought to it.
+
+So we don't want to like have a sampling bias.
+
+And then that question of how training data in a static learning context
+
+results in basically like biased implementations in the real world was a theme of several of the talks.
+
+A question I wanted to ask was about the turbulence of the flow.
+
+It brings a chaotic or kind of multi-peak landscape because what I saw in the cloud was it's like island chain.
+
+
+UNKNOWN:
+Yes.
+
+
+SPEAKER_04:
+It's not just one ridge of sense.
+
+And so how does a smooth Gaussian variational approximation make sense of something that otherwise we might think we would use complex simulations to resolve?
+
+
+SPEAKER_02:
+I think you are a real expert.
+
+That's a really good question.
+
+And we struggled with this for quite a while.
+
+And you can think about that.
+
+have a lot of local turbulence is there and also come coupled with the any case if you have a chemical biology dispersion the concentration of the air is actually really low
+
+And also, for our UAV, the small drones or the robot, the sensors they carry are not very advanced.
+
+You can't carry some lab-grade, very comprehensive equipment.
+
+Actually, we use a very simple gas sensor.
+
+So that means you have a high level of risk detection.
+
+And also, what makes it even worse is because you talk about the turbulence it can make.
+
+And when we operate on the UAV,
+
+the propeller didn't help us.
+
+It itself generated lots of local flu.
+
+It upset our sense.
+
+So it's hard.
+
+Now it's somewhat appreciated.
+
+Lots of hard work to get into this area.
+
+But try to answer your question is, when we are reasoning, we could use a more complicated model
+
+But however, the complicated model sometimes didn't give us, in this case, didn't give us too much benefit for two reasons.
+
+One reason is the complicated model is always because the environment has a high level of uncertainty.
+
+And even if you have a complicated model, if it's accurate to represent the real environment, then that's a complicated model that gives you benefit.
+
+If the model
+
+environment is so much uncertain there, maybe the simple, good enough model is able to do the job.
+
+That's the first question.
+
+But also by using a simple model, it can significantly drive your computational load down.
+
+The simple Gaussian model, it is very simple.
+
+But however, you are able to drive your computational load down because compared with a CFD model, computational fluid dynamics model, or more complicated model.
+
+Secondly, because there's a particular scenario, the sensor is not high grade, so a lot of uncertainty caused by model maybe just disappeared within the sensor noise, because the noise is quite high.
+
+Even you try to push your model more and more accurate, but it's just maybe 1%.
+
+Sensor noise give you 5%, so it didn't give you too much benefit.
+
+This is what we found in this situation.
+
+
+SPEAKER_04:
+So I'd like to...
+
+maybe connect that gas dissipating setting to one of the earlier talks.
+
+And again, not sure if you saw it, but just to kind of recapitulate the point.
+
+So this was from Tim Schneider's talk and Tim spoke about goal-driven active exploration.
+
+So I'm sure that there would be a lot of resonance there with the dual model.
+
+And one of the questions that he really highlighted was he asked, can the familiar have intrinsic value?
+
+Because he described this problem called the detachment problem where like a region of high value,
+
+posterior likelihood a good region to be in is getting walled off by like a well-explored region and so that dissuades further epistemically driven actions into that kind of ring it's almost like we've already been there but then it's like the the you know the new finding was just one more paper down that down that bridge um yeah and then
+
+We talk a lot in Active Inference about morphological computation and embodied computation.
+
+And I think in the setting of the gas dissipating, there's several ways like we can be really specific when we're talking about applied embodied computation.
+
+So one was what you just mentioned with the UAVs and the fans and how that was causing a distortion.
+
+It wasn't just like a free floating sensor.
+
+And that's like our own body models.
+
+And so people talk about how the body is a model and it has a model of itself in space.
+
+And that's how we can do all these actions.
+
+And then the second example of like embodied and extended cognition was the way that the gas was dissipating.
+
+So it's almost like the forgetting in the model was happening automatically because you couldn't just build up
+
+a heat map of where of you know the integral of gas flowing through a region of time you have to have something that is dynamic but you're local searching a space and so your estimate in other areas that are distal will become increasingly uncertain so yeah what does that make you think about in terms of the work that you're doing
+
+
+SPEAKER_02:
+Yeah, all those things are very interesting.
+
+There are many directions for that and we think about the work we are doing here is just try to illustrate the very basic principle about how to take the advantage of the action you take to give you the new information and then from there to help you.
+
+So this is basically we talk about being the same spirit as an active inference.
+
+So this is the fundamental thing.
+
+And in terms of scenario, in terms of the complexity, there are many, many layers we can add things on.
+
+And also one thing you mentioned about the
+
+For example, the influence of the agent or the robot is dynamics.
+
+But also it could be, for example, we consider a source now is in the stationary, is fixed.
+
+They are just released, the gas.
+
+But in the real life, maybe there is a mobile and things that people, some terrorists, for example, put something on the truck or on something they're driving around or some other.
+
+things could happen.
+
+And then there are also people talk about intermittent release, sometimes release and stop and then release again.
+
+So there are many much more complicated scenarios here and could be very interesting, coupled with some other things people talk about.
+
+For example, it could have more than one sources in this release.
+
+It's just not one single source, it could have more than one.
+
+and also people talk about if you have a large area and you have a number of agencies try to work together now we talk about a collaboration between the different agencies how to work together more efficiently to search the area so there are many many things here and one particular thing that i feel is directly can get from the help
+
+from your communities.
+
+Now we only look at one step ahead, but in real life we already have some similarities.
+
+If we look five steps ahead, it actually gives us a much better result because you look further at the influence of those changes.
+
+However, the downside we already talked about is about computational load.
+
+So now you have a tree search because each step has a number of directions you want to move your agents.
+
+and if many multiple steps and the combination could be quite nasty and we now have a researcher try to think about using a multi-color tree search or similar kind of and the cow is also provide for instance provide some idea about a new worker in the area how can be embedded into our work and try to take the advantage of this so there are lots of interesting things here
+
+
+SPEAKER_04:
+Awesome.
+
+I'd like to, I think, just to create a few of these points of contact.
+
+Pick up where you said that you're planning one step ahead, which is analogous to the variational free energy.
+
+It's like the instantaneous best action.
+
+And then the expected free energy takes it into the future.
+
+And I wanted to mention a few different ways that temporal planning is accomplished.
+
+And some were mentioned in the earlier presentations.
+
+Also, it's interesting to note that however many years ago, I don't know the exact number, but somewhere in the 10 years ago range, active inference was kind of like an instantaneous perception, cognition, action theory, and several elaborations have specifically enabled it to account for increasingly distal planning.
+
+So one example is like in the continuous time setting,
+
+having a Taylor series approximation of the generalized coordinates of higher and higher approximation depth is one approach.
+
+Another approach that can happen in discrete time is having just a broader time horizon for policies, as well as with different tree pruning approaches.
+
+Another approach that can work with discrete time or with hybrid models with discrete and continuous time is hierarchical modeling.
+
+And so it's very interesting to wonder whether for planning a hundred steps out to go to think really deep into how the UAV will do something far away.
+
+How does it chunk that?
+
+And how does that chunking into, is it a hundred steps of one, 10 steps of 10, two steps of 50 and five of 10 inside the way that it starts to chunk and understand how
+
+
+SPEAKER_02:
+are the ways in which the computational burden is reduced and also those ways that start to resemble the ways in which biological cognitive entities also make sense of their environments yeah i think that's absolutely right that's a very good way to move forward we're also doing some thinking this way but not necessarily coming from the same direction because we think about it for example when we make a decision on on the uh on the for example using the uh
+
+the autonomous search problem, you somehow like you try to design your waypoint where you want to move to that.
+
+And then suddenly you have a question about how far the step size.
+
+This is actually can change.
+
+And if in the large area, maybe you want to move a little bit longer distance.
+
+So somehow this is, you can regard this as a hierarchical strategy.
+
+And then you actually give the command to low level UAV control or autopilot.
+
+They try to follow those kinds of things.
+
+So there is a lot of things that we need to think about that somehow like a trade-off between the performance computation load and the horizon you want to look at.
+
+In theory, if you're longer, it gives you better performance.
+
+But however, how far you are able to looking at.
+
+So there is a trade-off between those terms.
+
+Maybe for different applications, you could have different factors.
+
+But the whole idea, I think that's quite interesting, is actually worth to explore.
+
+
+SPEAKER_04:
+Cool.
+
+We have also kind of to pick up on some similarities and differences with the presentations.
+
+Some of them utilized neural networks as modules in their training.
+
+Other used variational Bayesian methods.
+
+which can be fit as an optimization problem.
+
+And also we saw sampling based approaches.
+
+So I guess just pretty broadly, how do you see these different ways of doing robotics and edge computing?
+
+How do you see them working in different situations or together with sort of
+
+pre-trained or updatable models that are large or variational or sampling based approaches yeah that's that's a very interesting topic and it was quite abroad and there are um
+
+
+SPEAKER_02:
+lots of research nowadays about using a pre-training model and particularly in the context of reinforcement learning for example if you learn things and then try to deploy them in the real life particularly for the for the robotics as well they have lots of research in the area and for me and as i didn't have time to explain uh articulate those ideas fully but i think about it as lots of problems and
+
+whether it's the engineering system, robotics, or the biological, or the human.
+
+However, the situation could be described like how to make an optimal decision at any time.
+
+The optimal decision could be in terms of trying to find food, or trying to survive, or trying to do something useful.
+
+So all those problems, in my view, can be summarized as optimal decision-making problems.
+
+And for this one, even when you have all the environmental information unknown and also all the behavior of your agents unknown, it's not easy.
+
+But when you try to deal with something like what we talk about is uncertain in the environment, an unknown environment, it will become much more challenging.
+
+Maybe there is no single solution for this.
+
+This is why you talk about many different approaches they try to deal with the problem.
+
+For me, there are two major
+
+approach i'm thinking about it one is i call the iteration process the iteration process is particularly like in the reinforcement learning what it means you have some initial strategy you try to
+
+take the action from the environment reward function changer or study changer you learn from that gradually somehow like you make your policy or value function close to truly the optimal one optimal policy so you're always doing that in the
+
+in the iteration, learning, learning, learning.
+
+So this is an approach.
+
+And because of this approach, you need lots of data.
+
+This is why now people tend to train in the data, train in the strategy beforehand, and then deploy that.
+
+Maybe online you can adapt a little bit to that, but you can use it offline, use lots of data to take the advantage.
+
+Another approach, maybe more like in the
+
+in active inference or more like in the dual control, I call it purely like an online optimization approach.
+
+The online optimization process is just like saying, okay, given all the scenarios, given all the information I have about the environment, given what is my objective, I try to work out what is the best strategy I should have.
+
+Given all the information I have about the environment,
+
+about my reward function.
+
+I just try to work out what are the best strategies.
+
+So then this problem can formulate as an online optimization problem.
+
+You try to say, OK, given all the information connected so far, given all the understanding, you try to do that.
+
+For this approach, you need to have a larger computational load, normally, as you talk about aging computing.
+
+And this is why we talk about one step ahead, because one step ahead means the optimization problem is easier to solve.
+
+If you look at it multiple steps ahead, the optimization problem could get much more complicated.
+
+And aging computing, maybe you're not good enough to try to do it.
+
+But in principle, I regard itself as a too broad approach to suggest that.
+
+In the active inference, this is precisely you try to use free energy or expected free energy as a reward function.
+
+You try to optimize your action to give you the best possible one.
+
+So that's why I feel it's this kind of similar kind of approach that we talk about.
+
+
+SPEAKER_04:
+so i i was also while you spoke to the dual control systems thinking about how it might have formal differences from free energy principle and active inference as we know it today or again like we discussed earlier how it might have reached some of the same points from two different angles and it made me think about the particular partition
+
+and the Markov blanket or the Friston blanket.
+
+So do you have any thoughts on this?
+
+Or I can provide any more context.
+
+But first, I just wanted to ask you if the concept of blankets was relevant or there was some analog in the control literature from your perspective.
+
+
+SPEAKER_02:
+Yes, maybe we can say we always do that in our control community.
+
+So we always do that in the sense, traditional environment control look at is our own dynamics, self, and the sensor try to pick up the information.
+
+Then the action we take.
+
+So this is a control where it's a sensor and your own thing and then take the action.
+
+But however, previously control, we very much like ignore the interaction with too much of body environment.
+
+We talk about environment in the control, typically we call that disturbance.
+
+So the aim of our control system when we are existing is try to act against any disturbance because we try to do something ourselves or keep, for example, if you think we want to keep your room temperature at a certain degree, if some open door, if the external temperature changes, all those, our control is somehow like, I don't care about anything outside.
+
+I care about the sensors take the information, I do something, and then I take the action.
+
+So this is always regarded as information from the sensor.
+
+And we take the action, which will have some influence outside.
+
+Then we take the information from the sensor.
+
+So when I see the micro-blanket, I find that there's a natural and maybe some
+
+somebody with some thinking we have, I feel this is quite interesting, the way to look at the world.
+
+And because in this way, you don't care about if someone opens the door or don't open the door.
+
+You don't know, because you just say, from the sensor, what's the temperature changing?
+
+And we take this, ignore anything outside that.
+
+
+SPEAKER_04:
+I'm glad you added that because I also had wondered whether the control loop was like a pre...
+
+active partition, I mean, input output systems, systems with interfaces, holographic systems, more and more equivalences have been found, but it's kind of like the sparsest representation of interaction between two agents or with an agent in a niche is like, well, you know, you need the road going one way and you need
+
+the road going the other way otherwise it's not like you haven't closed the loop so you have those four pieces like the two entities in the edges um and then it is interesting with the way that what comes from the environment is described is it a perturbation or a disturbance something that should be controlled or as the case with allostasis and like biological processes that are anticipatory
+
+And then going all the way into like novelty, which is like the ultimate anticipation.
+
+It's just the anticipation of the different.
+
+And then it's like, again, paralleling the development of industrial control systems going from stabilizing vibration into needing to be proactive.
+
+There's also, again, natural coming together as the attention in these fields turned to finding formal cognitive models.
+
+
+SPEAKER_02:
+Yeah, you're absolutely right.
+
+I think the principles of the micro-brain are quite interesting and relevant.
+
+But the big difference from traditional engineering control thinking to what I think in your area or our current thinking is about how to represent the environment in your brain.
+
+so how you try to say this is a make the whole things different because as i said previously maybe you don't care too much everything like today the disturbance or i just interested in that that you are heating system another and now is actually no i want to have some way to
+
+If you want to anticipate something happening, you may have a better representation about the environment.
+
+And also you want to align your belief of the inside state more closely to the external state.
+
+So that is where I think all the things come.
+
+And also where you are able to make some high-level decisions, where the intelligence comes from.
+
+Because you have a better representation about that, you can figure out a better way how to do it, and then how to get the benefit from the environment.
+
+
+SPEAKER_04:
+So one example that made me think of, and also connecting back to the embodied intelligence and the morphological computing, I remember seeing a robot or a little vehicle, and it was able to move over a surface that looked kind of like a stair on its side, like it was just very jagged.
+
+But the wheel that this machine had was shaped like a square that was the right radius.
+
+So basically, it was able to roll perfectly smoothly across that one frequency of stair.
+
+But a different frequency of stair, it would have just been a total bumpy ride.
+
+So if the wheel would have been small...
+
+Then there would have been a debate around, well, should we represent chunks of stairs and up and downhill and all that fine scale?
+
+But then when the morphology is fit to the niche...
+
+in a way that's natural or in a way that is off sourcing some of the computation to the physicality, then that entity only needs to consider like a linear movement as if it was like in a simpler space.
+
+And so then it's almost interesting to ask, like in some of the presentations, they used very standardized robotics platforms.
+
+like the quadcopter and the turtle bot and other standard, to the extent I understand, standardized robotic hardware, which is awesome because it increases accessibility and it demonstrates it in a clear way.
+
+Like tomorrow we'll hear from Legos implementations and so on.
+
+But then that element of embodied computation
+
+starts to show how we could almost work in a different way and ask what kinds of systems could implement certain functions maybe there are shapes of
+
+robots or other objects that we just haven't seen the shape yet.
+
+They don't have to have two legs.
+
+They don't need to be five feet tall.
+
+They don't need to look like a trash can.
+
+That's some of the morphologies.
+
+But then with the air and the water and the ground, there's so many bodies
+
+just of insects.
+
+So it's going to be really amazing to see how this is used proactively to design morphologies and behaviors that just do things we haven't seen.
+
+
+SPEAKER_02:
+Yeah, yeah, you're absolutely right.
+
+I think you're absolutely right.
+
+And in this kind of, I think maybe people call it
+
+the fitness thrive somehow like this and it's actually somehow like we always maybe you can using free energy or some other notion to describe because you you live in an environment you want to get the best out of that and we talk about it now is a strategy how to do it or how to but however in the natural world because you physically
+
+your things are gradually involved with you.
+
+And if we are in our design, we can choose those physical body as options, as something we are able to change.
+
+And maybe gradually can combine those two things together.
+
+It's not only your brain to make the best strategy, but also you are maybe called the actuators or your physical bodies, other things, you are gradually will change with that.
+
+So this is about how you, I feel, how to set up the phone.
+
+But what I feel much more interesting is in the active inference, when you're using free energy, and then you can try to capture much broader kind of behavior.
+
+And as I said, in the control area, we now is maybe more focused on the specific task
+
+specific mission this is what we do physically we want to do it but however a lot of things like soft skills and like more broadly about it like our competence or our capability we don't talk about it but human when we do the things we learn learn build up the confidence or embody our skills and then we do more things now this is and i think this is things happening and active inferencing able to
+
+explain that in able to have a true framework to do this we are maybe at a more on the physical alignment so i can see things that gradually can move together and you make a mega robots for example more capable to do something if they have the ability of the changing the borders or changing the actuation changing other things or even maybe they have come
+
+improve their sensing because there's something gradually they learn and they found more important than other sensing particular environment they will try to more develop that kind of particular sensing capability so i can see that naturally and but the question is about how to set up the problem we allowed it to make this happen well um
+
+
+SPEAKER_04:
+One thing that kind of that reminded me of from my own area of insect behavioral modeling is there are many models of task performance like digging or foraging.
+
+However, there are fewer models that are describing task transitions, even though those are really important for the colony.
+
+And then the models of task transitions tend to be more generalized, dynamical simulations and less getting into the kind of agent based modeling perspective.
+
+And so it's like, as we're seeing robotics with the physicality and the technology pushing the frontier, that kind of task switching becomes important, higher and higher orders.
+
+And then again, that brings us into the bio-inspired design conversation because task switching is so essential.
+
+And the idea that like,
+
+the human is this unfolding of memory and anticipation and all of these different features and it's hard functionally or neuro anatomically to separate out how the human brain works and how animal nervous systems work
+
+And so I think that'll be another interesting area with this tension between explainability and potentially even austerity of the models.
+
+in that they'll have parameters but the parameters in the way they interact even for a few parameter model might be difficult to understand because it's not like gonna be all the information is in those generative model parameters it's going to be those model parameters and the dynamics of how gas is in the world that are sort of relied upon like
+
+outside of the focus like the the background context for the model so the model itself won't be fully understandable or explainable because it's going to rely on this context just like no sentence can stand alone so there's just so many interesting areas and and um to see that the directions that different fields can meet at and then start to structure a productive relationship yeah
+
+
+SPEAKER_02:
+That's absolutely right and I think I also absolutely agree with you.
+
+is about the importance of models.
+
+In many ways they are very very important for us.
+
+I knew that in the machine learning area they have a model-based approach and a model-free approach.
+
+I'm more biased to model-based approach because you can use a model-free approach.
+
+They are quite powerful in some ways but however maybe they suffer some issues you already highlight
+
+how to explain this to the why make this kind of decision why take this kind of action and more explainable and and for the model-based one because a lot of things we are doing and particularly in our area they are engineering systems they have a first principle or other models already there for many years but however is now is the question is about how to
+
+and make use of that.
+
+And so I prefer model-based approach in many ways.
+
+One is for the explanation and try to you can either understand the action but also for the I call that somehow like maybe people yeah use the word sampling efficiency somehow like you can use less data because you have a model-based approach and in the in our engineering world data means money
+
+And I knew a lot of people who said, oh, okay, Google and Facebook can harvest millions of data online freely.
+
+But however, in engineering, if you want to do something, you need to experiment to test.
+
+You need to physically run something to get useful data come out from that.
+
+So that is the money.
+
+So when we're using the model-based approach, it's much more efficient in terms of learning, understanding what's happening around the environment.
+
+And so this is why, economically,
+
+I feel is quite important for this, not just for the safety or how to make it more explainable, but there are some other reasons.
+
+
+SPEAKER_04:
+Well, very interesting.
+
+Is there any other remarks you'd like to add or questions you'd like to raise?
+
+
+SPEAKER_02:
+Not really.
+
+I think that's really a very good conversation.
+
+I'm very pleased upon this community, as I said, and it's a surprise for me and the people share the same idea.
+
+So what I'm interested in is getting more involved in the primary community.
+
+And also I would like to open the door if anyone working in this community, they want to talk with us, want to work together and develop some new ideas, as we already discussed, and they're more than welcome.
+
+And you could have my contact
+
+and then try to talk with me.
+
+And so basically, I think we share a lot of fundamental ideas, and also there are some different tools, different slides, different concepts and approach.
+
+If we are able to work together, I will think about it.
+
+We make them not only as a tool to try to interpret how
+
+natural world and the human or animal behavior like how to but also make it as a useful tools to drive us like this theme to design more capable robotics and do something for the society amazing great okay close to the first session so you can depart okay thank you wow
+
+
+SPEAKER_04:
+What a great discussion.
+
+Big appreciation to Professor Chen for joining for that.
+
+Well, that concludes the first interval of the Second Applied Active Inference Symposium on July 31st.
+
+or at least it is now where I am.
+
+And in about eight hours, we're going to have the second interval.
+
+It will feature presentations by Bruno Lara, Matt Brown, Adam Safran, and JF Cloutier.
+
+It should be a great set of presentations followed by a roundtable discussion featuring several of those presenters as well as Carl Friston.
+
+So hope everybody has a good break in the eight hours before the second interval and prepare some thoughts and questions and writes them in the live chat or emails us.
+
+Really appreciate you spending the time and attention listening to this Active Inference Institute symposium, and hope that you'll stay involved, participate, and keep on acting and inferring.
+
+So goodbye, everyone, and see you in the second interval.
