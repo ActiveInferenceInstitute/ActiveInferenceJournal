@@ -1,0 +1,842 @@
+SPEAKER_01:
+hello and welcome it's september 13th 2024 and we're in active inference model stream 14.1 with ranway talking about value of information and reward specification in active inference there will be a presentation then we'll have a discussion and looking forward to people's comments and questions thank you again for joining and looking forward to the presentation
+
+
+SPEAKER_00:
+Yeah, sure.
+
+So I'll just dive into it.
+
+Yeah.
+
+So thanks again for the invitation.
+
+And so this paper is about the value of information and then some aspects about reward specification in active inference, but it also touches on POMDPs.
+
+And so the motivation is very simple.
+
+So I,
+
+was simply trying to understand the expected free energy objective for action planning in active infants.
+
+And the nice thing about the EFE objective, which makes it an appealing objective for a variety of people in a variety of domains, is that it has a very intuitive decomposition as the sum of the expected value term and the epistemic value term.
+
+And then so the expected value term
+
+is this term that encourages the agent to obtain reward or achieve their preferred state of the world because it's simply the cross entropy between the predicted future observations given some actions and the preferred observations p tilde
+
+The second term, epistemic value, is what makes active inference or what makes EFE very interesting.
+
+So the epistemic value term is defined as the expected KL divergence between future posterior, so belief about future states given future observations, and the predicted
+
+distribution of future states so what this term does is it quantifies how far is the future posterior from the future prior which essentially quantifies the amount of belief update so if you optimize this term then it essentially encourages the agent to take actions that would lead to a higher amount of belief update so a higher amount of information obtained about the environment
+
+So experimentally, people have found that optimizing this objective led to some very interesting behavior.
+
+So on the left hand side here, we have an example from one of Alex's papers where he compared what we call the state coverage of reward maximizing agents versus active inference agents in this simple environment called the mountain car, where the state of the agent is
+
+represented by its position and velocity.
+
+So we see that active inference agents has much larger coverage of the state space.
+
+So it spreads more territory of the state space versus the reward maximizing agents.
+
+And so this potentially allows the agent to do is to learn a better and more comprehensive model of the environment, which it also turns out that having such a model enables better action selection
+
+and actually achieving higher reward.
+
+So on the right hand side, we have an example from one of my papers.
+
+So I did a lot of study on modeling human driving behavior.
+
+And this is one of the examples where we have a car called the Eagle vehicle driving down the road.
+
+And then on the side of the road, we have a large truck, which potentially obscure the view of a pedestrian, but we don't actually know whether the pedestrian exists or not exists.
+
+But if the pedestrian does exist, we assume, or rather the ego vehicle believes that it's going to cross the road.
+
+So we don't want to cause any conflict with the pedestrian who's trying to cross the road.
+
+So what this ego vehicle does as a consequence of optimizing EFE is that it will nudge slightly to the left of the road to gain view of the pedestrian.
+
+And if it sees that the pedestrian doesn't exist, then it will return to the center of the road and carry on with the optimal speed without ever having to stop for the pedestrian.
+
+So these behaviors are very interesting and it highlights the value of encouraging the agent to explore and gain information about the environment.
+
+And this is usually understood as the main differentiator between active inference and some of the other frameworks for decision-making such as reinforcement learning.
+
+But one somewhat contradictory fact is that
+
+Actually, Bayesian and meta-reinforced learning are already known to ultimately trade off exploration and exploitation.
+
+So here we have an example from one of the more recent meta-RL surveys.
+
+So this is actually a very common benchmark in meta-RL, where we would start an agent in the center of the circle, and then the goal position, which is unknown to the agent, will be somewhere along the circle.
+
+But again, it's never known to the agent.
+
+So what the agent has to do is to explore along the circle to find the goal.
+
+So basically what it does is it'll pick a position along the circle and it'll just trace along the circle until it arrives at the goal position.
+
+So this is the optimal strategy for this setting.
+
+And we see that it's already being demonstrated by meta-RL.
+
+So this begs the question even more of what is the relationship between active inference
+
+and Bayesian RL.
+
+And the main idea of the paper or rather the main insight that we're trying to offer is that EFE can be understood as an approximation to the Bayesian optimal RL policy and specifically by the information reward shaping of the EFE objective.
+
+So to unpack this, I will do a very brief
+
+review of some preliminary annotations on MDPs and active inference.
+
+And then we will introduce a few analysis tools from MDP theory, which will allow us to better understand and appreciate the notion of value of information, which then will allow us to derive the main results of the paper.
+
+And then we'll just close up with some discussion and more and some other interactive activities.
+
+Yeah, so the preliminaries will be very brief because most people in the Institute, I believe, are the experts in these topics.
+
+So this is the regular formalism for MDPs.
+
+And then the objective of an agent in MDP is usually to maximize discounted cumulative rewards.
+
+So I have chosen to use the infinite horizon setting with discounting because it makes the analysis a bit easier.
+
+So the only thing I wanted to highlight on this page is that the classic MDP theory says that for a given MDP with known transition probabilities and known reward function, there always exists at least one deterministic stationary Markovian policy.
+
+And then the value function of the policy, which is the value accrued by the policy in MDP, can be computed from the Bellman equations.
+
+And then so another ingredient that we need is partially observable MDP, which is just an extension of MDPs where the state variable now is no longer directly observable to the agent, but the agent can observe another signal O that's usually correlated with the states.
+
+But because the agent can no longer observe the state, then if you condition your policy only on the most recent observation, you don't really have sufficient information for taking optimal actions.
+
+So in general, for POMDPs, the optimal policy has to be conditioned on the entire history, which as accumulates, can tend to an infinite length.
+
+So here we need to
+
+recall another very important result from POMDP theory, which is that the belief state, which can be computed from the Bayesian belief update, is a sufficient statistic of the entire history, which means that if you condition your policy on a belief state, then you don't have to condition your policy on the entire history.
+
+And then once you do that,
+
+you can define the value function also in terms of the belief.
+
+So we have what's called a belief action value function, the belief value function.
+
+So this belief state view of POMDPs is very interesting because it says that for any given POMDP, you have an equivalent MDP that's defined on the space of beliefs, equivalent in the sense that it would yield the same optimal policy for the belief MDP and the POMDP.
+
+And then this belief MDP would have its corresponding belief action reward.
+
+and belief transition dynamics.
+
+So the belief action reward is defined simply as the weighted average of the state action reward by the beliefs.
+
+And what's interesting about this belief MVP is how the belief transition dynamics is defined.
+
+So you can understand this by
+
+looking at these two terms on the right-hand side.
+
+So this basically says that in order to transition the belief from one time step to the next time step to get B prime, the first thing you're going to do is to draw a future observation, or sometimes I call it counterfactual future observation, O prime, from the posterior predictive
+
+of the observation distribution under the current belief.
+
+And then you're going to perform Bayesian update on this counterfactual observation to get the next belief.
+
+And so because the marginal distribution over the observation is, in general, stochastic, this makes the belief transition dynamics also stochastic.
+
+So this is the equivalent belief MDP for the POMDP.
+
+And then I will refer to this as the base optimal belief MDP, because the policy computed from such a belief MDP would be the base optimal policy for the POMDP.
+
+So then we have active inference, which, similar to the canonical POMDP framework, has an inference step and a planning step.
+
+And so the difference between active inference
+
+And the regular POMDP is instead of performing exact Bayesian update, we'll perform variational updates.
+
+But because from the variational inference literature, we know that if the variational distribution QFS is chosen appropriately,
+
+then it would have to be equal to the exact Bayesian update.
+
+So this doesn't really introduce too much difference from the classic POMDP framework.
+
+The main difference between active inference and the classic POMDP is that the agent would, instead of optimizing reward, the agent minimizes expected free energy.
+
+And I wrote this
+
+form of EFE here, which I believe is more general.
+
+It's sometimes referred to as the energy entropy decomposition.
+
+So something I want to remark on this page is that whenever we talk about EFE, we need to be very precise about the definition of different cues because there are too many cues in active inference and in EFE.
+
+And here I define the Q over future states as the product of future marginal state distributions.
+
+This is not because I invented it.
+
+I'm just writing the usual definition of EFE in a more formal way and explicitly called out that this is the product of future marginal states.
+
+And then, so one more step to get the pragmatic and epistemic value decomposition of EFE is that we would have to define the energy function or the preference distribution to have preference only on the observations.
+
+And then we can split up the energy entropy decomposition into the pragmatic and epistemic value decomposition.
+
+So what this characterization allows us to do is that we can now see EFE as a specific type of belief MDP, where it would be different from the base optimal belief MDP, but it would still have its own belief action reward and belief transition dynamics.
+
+So if we look at the belief action reward, it's simply the sum of the one-step pragmatic value, which I denote with R tilde, and the one-step epistemic value.
+
+And if we unpack the one-step pragmatic value, we can actually write it as a linear combination of a state action reward.
+
+And this is because of the linearity of the expectation, which is used to define the pragmatic value.
+
+But the linearity doesn't hold for the epistemic value.
+
+And in fact, the epistemic values concave in the beliefs.
+
+Another interesting aspect about the belief transition dynamics for EFE is that it doesn't, so different from the base optimal belief transition dynamics, it doesn't contain the counterfactual observation O'.
+
+So what it means is that instead of drawing a counterfactual observation from the current posterior predictive marginal and doing a counterfactual update, you would just directly propagate your current belief to the next state marginal.
+
+And so this is sometimes called the open loop.
+
+belief updating in the literature in a way that's analogous to open-loop control, so that you would update your belief without taking into account of the next observation, but only during planning, not during execution, which we'll come back to later.
+
+But the belief MDP view of EFE would tell us that there exists an optimal deterministic Markovian policy simply due to the characterization as an MDP.
+
+So with all of these precise characterizations, we can also make our main question more precise.
+
+And so we saw that EFE uses the open-loop belief dynamics with an added information reward.
+
+Whereas the base optimal belief MDP uses the regular linear combination of state action rewards and a closed loop belief dynamics.
+
+So can we understand these modifications in EFE as an approximation to the base optimal belief MDP and in turn the base optimal policy?
+
+So that's the question we're trying to pursue in this paper.
+
+So in order to answer that, we need to introduce some tools from MDP theory.
+
+So the first set of concepts we'll introduce are the policy advantage and the model advantage.
+
+And for the sake of discussion for now, we'll just understand them as some abstract notion of error measures.
+
+of the policy and the model.
+
+And the reason why I say that is that if you look at the definition of the policy advantage, for example, so it's defined as the difference between two value functions.
+
+So for the first value function, the action is taken
+
+from the argument of the advantage function whereas in the second value function the action is taken from this policy pi which is used to define the value function so the reason why i say this can be understood as an error measure is that if
+
+the action A is more or less the same as the action drawn from the policy Pi, then the advantage function will be zero, so there will be no difference between them.
+
+So this essentially characterizes how much is action A different from an action that would have been chosen by the policy that's used to define the value function.
+
+And then basically more or less the same idea holds for model advantage, but instead of measuring the difference in the actions, we're measuring the difference in the two dynamics by saying that if I draw a next state S' from dynamics P',
+
+And another next state, S double prime from dynamics P, how is the value of S prime different from S double prime?
+
+So if P prime is actually equal to P, then there is no model advantage.
+
+So this thing measures the difference between the two models.
+
+two other concepts we need to know one is effective horizon so this is basically introduced as an analog of planning horizon for infinite horizon discounted problem so it's defined as one over one minus the discount uh discount factor gamma so it's basically saying how many time steps do i need to accumulate until the geometric discounting that's usually used in
+
+in the RL setting is zero.
+
+And then the normalized occupancy measure is essentially the stationary or marginal state action distribution along the Markov chain of rolling out a policy in a dynamics.
+
+So this kind of essentially characterizes the equilibrium behavior of the system.
+
+And so with these concepts, we have our first analysis tool, which I call performance difference in mismatched MVPs.
+
+So what we're trying to do in this lemma is the following.
+
+So we say that we're going to look at two policies, pi and pi prime.
+
+And then both policies are optimal with respect to their own MVPs, which we denote as m and m prime.
+
+And we're going to say that these two MDPs would share the same state and action space, same initial state distribution, and the same discount factor, but they could potentially have different rewards and different dynamics.
+
+So this is very similar to the comparison of the EFE policy and the Bayes optimal policy where they share the same spaces, but they have different rewards and different dynamics.
+
+So this is basically our tool to quantify their difference.
+
+And so what does Lemma move on to say is that we're going to look at the performance difference between these two policies, but both of them will be evaluated in environment M. And because policy pi is, by definition, the optimal policy for MDP or environment M, then there's no way that pi prime is going to do better than pi.
+
+So that's why this quantity is also called the regret.
+
+So we're going to interchange with calling it regret or performance difference.
+
+But basically, this relationship here shows that the regret can be decomposed into three terms.
+
+So the first term is the advantage of the actions drawn from...
+
+policy pi, which I call it the expert distribution because it's the better policy in this setting.
+
+And then the second and third term are defined in terms of the model advantage.
+
+And I've used notation or abused labeling to call it also the reward advantage.
+
+And then, so you can understand this relationship by saying that if R and R prime are equal and then P and P prime are equal, then there's no reward model advantage or disadvantage between the two policies.
+
+And because of that, then there's also no policy advantage, then the regret would be zero.
+
+And so the nice thing about this relationship is that if we put an absolute value sign over it and then we do some algebra, then we can actually obtain an upper bound on the regret that's defined in terms of the policy advantage, reward advantage, and the difference between the two dynamics.
+
+So from now on, I will actually call reward and policy advantage
+
+um reward and policy error because that's to some extent what they represent so what we see here on the right hand side is that the coefficients for these different terms are different so the coefficients for the reward and policy error are linear in the planning horizon one over one minus gamma whereas the coefficient for the
+
+uh dynamics difference is quadratic or squared in a planning horizon so it says that if we're making errors or mistakes along all of these dimensions then the rate at which the dynamics model error accumulate is going to be much faster than the rate at which policy and reward error accumulates
+
+Another thing to remark about this relationship is that it can be a little bit conservative because sometimes even if you make mistakes with your choice of dynamics, you can actually make it up by
+
+choosing the reward function to be different from the optimal reward.
+
+So basically, if you incur some disadvantage in the dynamics, then you can choose to gain some advantage in the reward so that it can still out.
+
+And so basically, I'm going to show that this is what happens with the EFE policy compared to the base optimal policy.
+
+Um, yeah, so let's, with this, let's refine our main question a little bit more.
+
+So we're trying to understand EFE as an approximation to the base optimal, uh, belief MDP, and then specifically the way in which, um, it approximates that is via this reward shaping term to cancel out the disadvantage, uh, due to using open loop belief dynamics.
+
+uh so before we do that we um we should review the notion of value of information which will give us to and also make better connections between these two topics so the value of information
+
+The most popular definition was given by Ronald Howard, 1966, where he defines it as the reward that a decision maker is willing to give away if they could have their uncertainty resolved by some magician, for example.
+
+And if you commit to this definition, then you can quantify the value of information simply as the difference between the expected value given perfect information and the expected value without perfect information.
+
+And then one very appealing fact about this is that because an optimal decision maker cannot do worse by having more information, then the expected value of perfect information is always non-negative, at least in the single agent setting.
+
+But the thing about PelmDP is that in general, you cannot just provide the agent with perfect information.
+
+Usually what happens is
+
+the environment provides the agent with an observation that provides indirect information about the environment.
+
+So we need to essentially make an extension of the expected value of perfect information for the PUMDP setting.
+
+And it's basically very straightforward.
+
+And I would just label it as the expected value of perfect observation because we can make an observation rather than be given perfect information.
+
+And this is sometimes called the value of imperfect information from the decision theory literature.
+
+And the definition, again, is just the difference between the expected value given the perfect observation versus without the perfect observation.
+
+And the non-negativity results apply, again, in the setting.
+
+And then so to apply the expected value of perfect observation to the POMDP setting, we then have to take into account the sequential nature of decision making.
+
+And once we add that, it actually turns out that the definition of EV in the setting is the expected value using the canonical linear combination of rewards plus the open loop belief updating.
+
+whereas the expected value given perfect observation is the same as the base optimal value function so so this is very interesting and um it also so because uh the definition of the expected value uses open loop dynamics they sort of serve as a bridge between the base optimal policy um
+
+the active inference well actually maybe i put it here the active inference policy whereas the open loop policy is in the middle because this open loop value function takes one term from the base optimal policy and takes another term the belief transition dynamics term from the active inference policy
+
+um so again the non-negativity of uh the value of perfect observation applied in a setting because as you increase the planning horizon you're basically accruing the non-negativity of value of information along your planning horizon
+
+So this is great.
+
+But the problem with this proposition is that it doesn't really tell us how much is the closed loop or base optimal policy better than open loop policy.
+
+And it also doesn't take into account of the fact that usually
+
+in applications, even though we would plan a policy in an open loop, when we deploy the policy, we usually still deploy the policy in a closed loop by allowing the agent to observe the environment and update their belief.
+
+And if we considered all of this, then we would actually need to compare
+
+the closed-loop policy and open-loop policy using the performance difference and mismatch MDP where both policies are tested on the ground truth PUMDP which we allow the agent to update their beliefs.
+
+So if we do that, if we can make comparison that way, then one thing we know is that the main contributor to the performance difference between the two policies is due to model advantage.
+
+And specifically in this case, it's due to the disadvantage of using open loop dynamics and open loop policy planning.
+
+So what exactly is the advantage or disadvantage of being open loop?
+
+So here we have a proposition that quantifies that.
+
+And it turns out that the advantage of being closed loop is exactly related to the information gain.
+
+So how did we get this?
+
+So basically, we start with a one-step decision making.
+
+And in that setting, the advantage of being a closed loop is basically the expected value of perfect observation, which is the difference between the expected value given perfect observation and without.
+
+And then we can rewrite this as a linear combination of the difference between the updated belief
+
+and the prior belief and if we apply some balance here then we can uh rewrite we can we can upper bound this as the expected information gain and that's how we got this and if we accrue this along the planning horizon then we basically multiply this by the effective planning horizon one over one minus gamma so that's how this is obtained um so this is actually very interesting
+
+Because it gives us a clue that if we want to improve the open loop policy while still committing to open loop dynamics, then one very reasonable thing we can do is to change its reward.
+
+And a very obvious choice for changing its reward is to simply make up for the information gain that it loses by using the open loop dynamics and add that back to the reward function.
+
+And once you do that, then basically you got the EFE objective function in here.
+
+So to be able to formally show that the EFE policy, which is simply the open loop policy plus an information reward, and show that how much it improves on top of the open loop policy, we need to make a few assumptions.
+
+So the first assumption we make here is on the preference specification.
+
+So basically, what this assumption says is that we need to make sure that if we still want the EFE agent to be goal-directed, then we need to set the preference in such a way so that the gain in pragmatic value after a belief update
+
+is always greater than the loss in information gain after a belief update.
+
+This way, we make sure that the agent focuses on a task and doesn't get distracted by collecting information that's potentially not useful for the task.
+
+And then the second set of assumptions are introduced to make us able to compare the open-loop policy and the EFE policy on more of equal ground.
+
+So the first assumption is that we're going to assume that the EFE policy commits no more, or rather it does no worse in terms of policy advantage compared to the open-loop policy.
+
+And the second assumption says that the information gain value along the horizon is always going to be greater than some values.
+
+So again, these things are introduced just for us to better compare the two policies.
+
+And with all of these assumptions and the previous insights, we have our main result here, which gives the regret bounds for the open loop and the EFE policies.
+
+And so we see here that for both the open loop and EFE policies, we have a term that's linear in the policy error and quadratic in the information gain.
+
+But the difference between the EFE policy and the open-loop policy is that the EFE policy has an additional term, which is a minus something that is linear in the information gain.
+
+So basically, the upper bound is being reduced by this term that's linear in the information gain.
+
+So that's how much.
+
+yet the EFE policy improves upon the open-loop policy, which makes it a better approximation to the base optimal policy than open-loop policy.
+
+Yeah, so that's the main results and the main idea in the paper.
+
+So we'll just close up with some discussions that might be interesting to people from different communities.
+
+So the first interesting observation is that this view of EFB as an approximation to the base optimal policy actually connects back to a lot of work people have done in POMDP planning.
+
+So the thing about POMDP planning that's very tricky is that even though MDP policies are very easy to compute,
+
+as soon as we introduce partial observation it just becomes extremely difficult to compute the optimal optimal policy that would ultimately trade off exploration exploitation so people have explored a bunch of heuristics and one of them is called the dual mode controller where you would design an ad hoc rule to switch between exploration mode and exploitation mode so for the export and and uh
+
+and and that switch is being determined by the entropy of your belief with some um chosen threshold and therefore so for the exploration mode uh um you
+
+essentially take the argmax of the current belief.
+
+So that's the state that you believe is most likely to be the current state.
+
+And you would simply choose an action from the MVP policy, which we know is easier to compute.
+
+But if the belief entropy is higher than your threshold, then you would take an action to minimize entropy of the next belief.
+
+So you can read this as something that's very similar to maximizing the gain of information in the next period.
+
+Another interesting framework, again, from the PalmDP literature is that some people have realized that there's certain types of behavior that just cannot be modeled as reward-driven.
+
+And usually what happens here is that you want these agents to actually minimize the
+
+entropy of their beliefs or maximize the information gain so this is usually called roll pump dp or active sensing so the objective function in this in this framework usually is just to minimize entropy of belief but not the one-step belief entropy rather the cumulative belief entropy along the entire planning horizon so something very interesting about this is that this term if if we introduce
+
+um a uniform prior belief that doesn't change over time steps then minimizing belief entropy is actually proportional to maximizing the expected kl divergence between the updated belief and a uniform prior belief so this looks really similar to the information gain objective
+
+in EFE, and usually what people do is that instead of just minimizing belief entropy, depending on whether we have any requirements for getting rewards, we would do a weighted sum of the reward term and the belief entropy term.
+
+And when you do that, that objective is essentially the belief action reward in the EFE case.
+
+So the one final thing is that actually goes back to active inference.
+
+So the formulation of active inference that I have introduced, I call it vanilla active inference, and it's also the active inference, the version of active inference that's currently in the main branch of IMDP.
+
+But in 2021, people have proposed a variation of active inference called the sophisticated inference.
+
+And basically what it does is that it maintains the...
+
+reward plus information gain as the belief action reward but it actually uses the closed loop belief dynamics i think there's a sentence somewhere in the paper that says that the difference between sophisticated inference and the vanilla active inference is that agent would plan not for future states of your future beliefs so if that's the case then um
+
+It's essentially using the same belief transition dynamics as the base optimal belief MDP.
+
+So for practitioners, then there's a potential problem with sophisticated inference, which is that
+
+now you're basically being based optimal with your belief dynamics but you're adding an additional um term in your reward which means that if the base if the behavior that's supposed to be produced by the base optimal policy you are now ruining it with the additional information gain term
+
+um so basically the concern is that agent uh sophisticated inference agent would try to get too much information at the detriment of uh getting less reward because you would spend more basically you would spend more time uh collecting information than focusing on a task um but
+
+um essentially what comes to the rescue is our old friend uh the temperature parameter so depending on how you set the precision of your preference distribution for example using a temperature parameter of a softmax distribution then you essentially construct a weighted essentially a weighting of the reward term versus the information gain term so if your preference is very precise with a very low temperature then
+
+in this case a very high value of lambda then you're essentially saying that i only care about the reward i don't care about the information gain and in this and and if you do this then sophisticated inference just becomes exactly equivalent to the base optimal policy um so um so essentially the lambda temperature term lambda interpolates base optimal
+
+policy for reward-seeking behavior versus information-seeking behavior if you have low lambda.
+
+And this essentially makes sophisticated EFE a strict generalization of the Bayes optimal policy.
+
+Uh, so that's everything I wanted to discuss.
+
+I think, uh, so the final slide is for people who are interested in, uh, more, uh, the basics of active infants and also the connection between active infants and RL.
+
+I have, uh, two blog posts to offer that some people perhaps find helpful.
+
+Yeah.
+
+Thanks again.
+
+
+SPEAKER_01:
+Awesome.
+
+Thank you.
+
+right i'll read a first question from the live chat and then i'll read some questions i wrote and some other questions from the live chat so
+
+Andrew wrote, you mentioned that we should set preferences such that the pragmatic value outweighs the information value lost after the agent has already achieved that information value so that the agent does not become too focused on seeking information rather than achieving a goal.
+
+Can this strategy risk the agent getting stuck in a local optimum by setting preferences which mitigate information seeking?
+
+
+SPEAKER_00:
+okay i think something slipped my mind because because it appears to me that the question is somewhat reversed so if i'm getting the idea right so you're saying that if the agent somehow gets stuck in a local minima along a trajectory ticket reward then one thing you can do is to change for example the weighting between the reward term
+
+and the uh the information gains home so that it um essentially switches the mode to focus on getting information and hopefully balances itself out of the local optima is that right it could be
+
+And then is the question whether that's a reasonable thing to do, whether there's a way to automatically do it, or is that what you're looking for?
+
+I don't know.
+
+
+SPEAKER_01:
+Yeah, where and how does preference learning and scaling come into play?
+
+So to keep these kinds of epistemic and pragmatic dualities, if there is going to be a unified imperative for policy selection that's projecting onto a set of EFE values, then how do you weight the epistemic and pragmatic value in training and in deployment?
+
+
+SPEAKER_00:
+yeah i think this is an open question i don't think anyone has done very convincing work on this topic specifically so i know about
+
+one thread of work from uh carl's people uh essentially they have a way to define uh an update rule for the pre the temperature parameter or the precision parameter so basically what happens there is that if um you end up in a situation where
+
+your variational free energy which quantifies the accuracy and essentially the accuracy of your predictive model.
+
+If variational free energy decreases, which means that you're starting to observe signals that constantly violates your model of the environment,
+
+then you would choose actions in a way that's more stochastic so there are ways to derive such rules from the view where of this notion of free energy unifies perception and action so people from carl's lab has derived rules like this um and then uh there's also work from noir and uh i think it's called um
+
+I can't remember what it's called, but basically what that work does is it's trying to use Bayesian updating to learn the preference as the agent interacts with the environment.
+
+So basically the agent would start by having some preferences about what states or observations to achieve in the environment.
+
+And as the agent interacts with the environment, it would actually refine its own model, its own preference model, rather than its model of the dynamics of the environment.
+
+But something very tricky that happens there is that
+
+So she did the experiment in this environment called frozen lake.
+
+So basically you're walking on a frozen lake and there are holes on a lake.
+
+And if you somehow step into that hole, you would fall or die.
+
+And then an agent that learns the preference in that environment basically learns that it prefers to fall into holes.
+
+So that doesn't really make a lot of sense.
+
+If your goal is to maximize reward or stay in the life,
+
+But it makes sense in a sense that agent just builds a preference model that is essentially in compliance with what actually happens in the environment.
+
+So it's kind of self-evidencing in the wrong way.
+
+So do either of these two approaches provide a practical way to automatically tune the temperature parameter to balance yourself out of a local optimal like you said?
+
+I don't think either of them do that.
+
+So I don't think I have a comment that, like,
+
+firmly addresses this at the moment.
+
+I do know that people who actually work more on the Bayesian RL side, they have done some work to derive approximations to exact Bayesian RL.
+
+And in doing so, they were able to derive some automatic temperature tuning rules
+
+um to achieve that so if you're interested i believe the person's is ian osband um but i can't i can't be wrong but just look for phasing rl literature um it's it's a paper that um essentially derives a basing rl version of soft active critic
+
+
+SPEAKER_01:
+Awesome.
+
+Thank you.
+
+And another way to address that is to avert slash avoid structurally so that like a blood sugar distribution could be loaded with high pragmatic value, an isochate distribution could be driven by high epistemic value in hierarchical models.
+
+So
+
+it isn't that every single model is just loosely describing all of this cluster of undefined processes this is really getting to the distributional level and then if a distribution really does have such a challenging situation that it has to be tight and refined and then make a large jump to an area it's never been i mean those are the challenging situations
+
+and that's where these other techniques and methods can be brought into play however those are the challenging ones and and that is not even necessarily needed for simpler settings um well thanks again for the really instructive and informative presentation to kind of just restate i saw the big move
+
+as grounding in the full observability conditions and the analytic situation for the markov decision process for the mdp so certain kinds of guarantees exist that are um as they should be slightly weakened with the partial observability introduction of observables and latent states
+
+So how is it possible to use some of the techniques, patterns, guarantees, et cetera, for full observability on a partially observable situation?
+
+And the move is kind of to consider the parameterization of the generative model as a fully observable setting, which is what it is in like the programming environment.
+
+Whereas if even part of it were obscured, then even that would be a partially observable setting.
+
+So by treating like the ABCDE partially observable MDP that we see in the textbook and all this work, by treating that as fully observable, essentially to the proof finder, exactly, thank you, by treating the full state updating of the POMDP, now that...
+
+bottom-up semantics of those variables might be the probability that this happens or the probability that this maps to that.
+
+So still it is about partial observability, but then considering that object in its fully observable condition to itself, then you can see that no-regret situation where
+
+there's no policy advantage and one's own sense making didn't have a disadvantage and an expert evaluating one's sense making didn't have a disadvantage so in those situations the learner's heuristic is zero regret on the policy and on the sense making side
+
+and then there's a kind of imperative which is the distance from the expert sense making and policy selection because it's basically like what would have been the expert policy and sense making if it would have been fully observable and then the POMDP reduces to an MDP
+
+
+SPEAKER_00:
+Yeah, that's precisely the strategy.
+
+So planning in POMDPs can be turned into planning in MDP.
+
+It's just a much more difficult MDP.
+
+You don't get away with any of the difficulty of planning in a belief MDP because now the state space essentially has
+
+countably infinite cardinality which means that there's no way for you to compactly represent your beliefs over multiple steps or your value functions so it doesn't make any of that or any practical applications simpler but it does offer a very nice theoretic technique
+
+to better understand the different kinds of tweaks you can do to the base optimal policy.
+
+
+SPEAKER_01:
+cool and and then another connection is with the dual mode switching so in like chapter five of the textbook in their neuroanatomy they show one schema of how dopamine level regulates sort of a system one system two thinking fast thinking slow shift in the thinking fast mode
+
+observations expected or otherwise don't even need to be considered you can just sample directly from the policy prior from habit and then even to engage expected free energy use g to update the policy prior into a policy posterior so evening even to consider possible future actions and observations that's a deliberative mode
+
+It's dealing with intangibles and doing computations that where habit will suffice can just be done.
+
+So then by proxy, you can use the observation entropy and just say, if the observations are within this acceptable threshold, there's no reason to step outside of habit.
+
+And then where observations start to become surprising in this way, then a deliberative execution per policy can happen.
+
+
+SPEAKER_00:
+Yeah, so I think this is very interesting, like so mode switching or like self
+
+um essentially self selection of how much compute resources you put into at at test time or at runtime um is a very interesting topic i know alec has done some work on um like once you amortize a pulse you can still choose to refine your policies on on online
+
+uh and so on and so forth and and it also makes a nice connection between what's happening with like large language models nowadays you have like so-called like post training you can do a lot of stuff so for example in what's called best of n sampling where you sample a ton of uh outputs from the policy and then you use a reward function of score which one um is better and then
+
+choose the output that instead of all the other completions that you have sampled and then basically the more completions you sample the more likely you'll get a completion that's
+
+going to be scored higher by the test time reward function and then you can basically decide okay what what's the trade-off i'm going to make between my test time compute that's been used to do a ton of sampling which is very expensive versus um versus the the potential improve improvement in reward that i'm going to get so this this is very interesting um but i i don't think um like
+
+in the active inference community, people have done enough principled work or come up with a principled framework to allow an agent to dynamically adjust their computational resource and time on the fly.
+
+So I would actually encourage, and also I don't really understand it myself, so I would encourage people to do more work along this direction.
+
+to figure out what is the generative model that allow people to do test time adaptation of compute resources and so on.
+
+
+SPEAKER_01:
+Cool.
+
+Yeah, that's very interesting and gets into system design.
+
+Is it the agent that's estimating how much resources would be useful for it, or is there an estimator that's making a secondary judgment?
+
+I'll read a question from the chat.
+
+Sriharsha wrote, thanks for the talk, Ran.
+
+In your expertise from an engineering perspective, what are your comments on building a deep active inference agent versus a deep RL agent like Dreamer?
+
+
+SPEAKER_00:
+Yeah, so I think the word deep sometimes means different things in different communities.
+
+So early in the day, deep active inference used to mean using deep networks to approximate certain distributions or amortize certain distributions in active inference agents.
+
+I think over the years, the meaning of deep has shifted.
+
+So now I think within the active inference community, deep means having multiple levels of hierarchy.
+
+Sometimes it also means planning along
+
+a longer temporal depth.
+
+So I think being hierarchical is actually pretty difficult.
+
+Again, I don't know of a very nicely principled and still
+
+working way to make agents hierarchically deep and also its first principle in the sense that it can be automatically discovered from data.
+
+I've tried to do some work, but I haven't found a way in which
+
+hierarchy doesn't collapse usually what i found is hierarchies tend to collapse and things actually like anything that you can portray as hierarchical can also be represented in a flat way so i would again encourage people to do more work in that direction
+
+but in terms of just comparing the various tools and also way to hybrid active inference with neural nets that people have done versus agents.
+
+So I think
+
+basically a lot of people's view of dreamer versus you know deep active inference that many people have implemented is that dreamer is so similar to active inference especially i i can't remember if which version of dreamer uh and if it does
+
+um use an information gain term in a planning objective and if it does then you basically cannot tell whether there's any difference between dreamer and deep active inference um so so in a sense even carl has mentioned sometimes that dreamer is basically like some
+
+variations of an active inference agent i would i would point but i would still point out that there's one aspect of dreamer which uh makes it a little bit um uh
+
+theoretically suboptimal, but it might work well in practice because of that suboptimality, is that Dreamer doesn't perform belief-based planning as most deep RL systems don't perform belief-based planning.
+
+uh they perform state space planning because if you look at the policy architecture of dreamer the policy is not conditioned on a representation of belief is conditioned on a single or multiple particles sample from the posterior so that
+
+In theory, it would lead to a slightly different exploration behavior, but I'm not sure how that actually behaves and the difference it makes in practice.
+
+So if you're interested in that and if you want to make a deep RL agent, actually do belief-based planning, which I personally have some interest in, I would encourage you to look at some of the work from Shimon Whiteson's lab from Oxford.
+
+They have done a lot of
+
+belief-based planning of deep RL agents.
+
+So for people who, I think some people in the Institute might know this, there's an algorithm called Very Bad that the active influence folk has cited multiple times.
+
+So that essentially came out of Shimon Whiteson's lab.
+
+And in that architecture, the agent's policy is conditioned on a belief representation as opposed to state representation.
+
+
+SPEAKER_01:
+awesome thank you yeah um a kind of short comment and thought on this theory and practice like you mentioned
+
+multiple namespaces that collide with deep active inference sometimes people are using neural network approximators sometimes that's called amortized inference and then there's sort of in terms of model depth people could be talking about hierarchical like hierarchical bayesian models they could also be talking about temporal depth so whether it's more layers of the cake
+
+on this time slice or whether it's however many layers the cake with more time slices and then you kind of brought in a twist with like however hierarchies can be flattened we see that all the time in matrix operations where sub matrices are used to flatten all kinds of things and then similarly in planning there can be a thicker presence
+
+or habit and heuristics can be learned such that planning like behavior can be emulated with less depth so that's just so interesting like the fact that these formalisms can go and deep in space and time is really just like an initial
+
+surveying of spaces and just saying within the infinite policy horizon situation this and this and this will be the case and then it's a purely empirical engineering question whether a time horizon of one two three four five has what computational trade-offs and needs so it's just like so amazing how the math has already sketched out some of the dimensions
+
+And then within the space of what is sketched out, it's an engineering question almost alone.
+
+And there's still theoretical differences to clarify this entangle, but even those alone don't map obviously to performance
+
+adequacy or advantage in the real world or for any given data set so it's kind of like fun to research and discuss this underlying layer which gives rise to those engineering results at the same time though imagining that a certain graph or equation has a certain output on a certain data set is is
+
+hopeful um and then also i think it connects to the low and the high road like with carl's mention about different architectures that recapitulate and get to their own syntheses and combinations of
+
+what we call pragmatic and epistemic value or maybe what in the energy-based learning energy-based models that they might use more like you presented with the energy and entropy decomposition it's like those are constructions along the low road they are model architectures that get to this common Nexus of being able to have an imperative which unifies both epistemic and pragmatic value
+
+The free energy principle coming from the high road, on the other hand, has no architectural suggestion.
+
+It's a partition in the mathematical physics state space.
+
+And so it's unsurprising that there are models that are similar on through further to simplified low road constructions like POMDPs, because we're all talking about the same setting
+
+agent or interface input and output with pragmatic and epistemic component.
+
+And so just interesting how all of those architectures, even though they might not be able to like make API calls to each other or like hot swap different components, they have comparability against the high road understanding of their belief updating for the next,
+
+
+SPEAKER_00:
+observation coming in and action going out in a fitness context yeah i don't have much comments on like high road stuff i personally um would label myself as a low road person that's that's awesome but both roads must be built
+
+
+SPEAKER_01:
+yeah um i'll ask another question in the live chat and then we'll see if there's any final questions upcycle club wrote are there any potential benefits of implementing sparse coding techniques in this framework
+
+
+SPEAKER_00:
+So I'm not super familiar with that.
+
+I mean, let me Google that real quick because I do want to see if I can address that question.
+
+And I know about sparse coding and I know the connection between that and VAE stuff.
+
+So let me look that up real quick.
+
+Okay, so I'm looking at a tutorial on sparse coding.
+
+It says that sparse coding is a class of unsupervised models for learning over complete representations.
+
+Yeah, so I'm not sure if there's a way to interact with the viewer, but does that mean that you're trying to
+
+um so basically learn more representations than what's sufficient uh in a way that's kind of similar to how people are training uh sparse auto encoders for interpreting language models nowadays i'm not sure that's uh maybe i should read on a little bit more to see what benefits it offered
+
+
+SPEAKER_01:
+Yeah, I'll let you know if any other information comes in.
+
+It's an interesting connection between the matrix flattening and the sparse coding because sometimes when the matrices get flattened and fused together using the submatrix representations, then they have sparsity.
+
+And then that actually just from an engineering perspective enables sparse matrix methods and compression to be used.
+
+So again, whether the hierarchical representation with a lower density or a sparser flattened representation for a given language, et cetera, has this or that performance, that's just an empirical question, but it's interesting that flattening gives you a constructed sparsity even for non-sparse information.
+
+And then there's the angle you mentioned about the interpretability sparsity
+
+and methods to pull out fewer interpretable characteristics like for example um yeah yeah did the viewer respond there no but how about just um
+
+Upcycle wrote, better handling of missing data would be one benefit I can think of.
+
+So maybe we'll research and learn 14.2.
+
+What are your current research or development directions?
+
+
+SPEAKER_00:
+So I'm interested in pursuing this view of principled planning and active inference a little more.
+
+So basically, the reason why I did the study and wrote this is that I was trying to understand if there's a way to develop better planning algorithms for agents and specifically believe space planning for agents in a more principled way.
+
+and uh and and initially i was doing some experiments um and then it occurred to me that and then doing experiments for uh beliefs-based planning of active inference agents and i realized that if i want to design better algorithms for active inference agents
+
+I actually need to have a very precise understanding of what the active inference agent is supposed to do in a way that's not susceptible to all the holes in the active inference theory currently.
+
+So this paper essentially contributes to filling up some of the holes in the
+
+in the theory of active inference agent planning, but just more like planning and approximate belief space planning in general.
+
+So what I want to do as the next step for the stuff presented in this paper is to see if there are better ways to improve planning capabilities of active inference agents and belief space planning for agents in general, that my
+
+depends on better you know leveraging tools from from variational inference for planning my leverage tools from temporal abstraction my leverage tool tools from essentially sparsity or sparsification or inducing more structures in a generative model um yeah but what i really want to do is just
+
+make better planning algorithms for agents, planning algorithms that actually work, that doesn't require a lot of tuning, that you can just grab and run it, or any ideas you have in mind.
+
+You don't have to look for very specific tools on the internet and try it and realize it doesn't really work that well.
+
+
+SPEAKER_01:
+Awesome.
+
+I'll ask one last question.
+
+In theory or in practice, how is planning for overt action embodied movement similar and different than planning for covert mental action?
+
+
+SPEAKER_00:
+um yeah i don't quite understand this so i i know a recent paper um i think nor is part of the uh is one of the authors um i think it's in europe's where they propose the hierarchical um
+
+model-based rl agent from uh like that somewhat inspired by active inference and then basically what they do there is to cast um action selection at the higher level of the hierarchy or rather well so basically casting that as covert action selection
+
+So this doesn't really, at least if you approach it from the view of action as interface between the agent and the environment, then in that sense, action always have to exist at the lowest level of the hierarchy, right at interface between the agent and the environment.
+
+So it will never be an overt action that exists at inside of the agent at the higher level.
+
+So that's part of the reason why I say that people should do more work on hierarchical models and hierarchical planning, because even though a lot of the existing techniques work, so for example, in hierarchical planning, we have the options framework from hierarchical RL.
+
+so what that does is basically decompose planning at the planning of primitive actions at the lowest level to planning at the higher level over more extended periods of time so basically the higher level will say execute this
+
+task which then gets translated to a sequence of lower level actions such as going to the kitchen grab coffee right that's a single movement at the higher level even though it's a bunch of lower level primitive movements so i think these um techniques people have been using in um hierarchical planning are very appealing and they actually work pretty well
+
+And now with like using language models to do the option selection, they work very well in practice.
+
+But in theory, I feel like there's still a gap of how hierarchical perception model arise automatically from the environment and how planning can just automatically be a part of that.
+
+And then how
+
+Um, you know, overt mental actions, um, you know, play a role after you have obtained, uh, or learned, uh, hierarchical representation of the environment.
+
+So all of these, in my opinion, are open questions.
+
+I don't think, I think people need to continue to address them.
+
+I don't think people have addressed them to a satisfactory extent at the moment.
+
+
+SPEAKER_01:
+Cool.
+
+right thank you this was a great stream so until next time yeah awesome thanks for yeah
