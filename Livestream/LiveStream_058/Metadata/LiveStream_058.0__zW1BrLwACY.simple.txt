@@ -1,0 +1,1632 @@
+SPEAKER_00:
+hello and welcome this is active inference live stream 58.0 october 29th 2024 we're discussing the paper from pixels to planning scale 3 active inference
+
+So welcome to the Active Inference Institute.
+
+We're a participatory online institute that is communicating, learning, and practicing applied active inference.
+
+You can find us at the links on the slide.
+
+This is a recorded and archived live stream.
+
+Please provide feedback so we can improve our work.
+
+All backgrounds and perspectives are welcome and will follow video etiquette for live streams.
+
+Head over to ActiveInference.Institute to learn more about the Institute, get involved with projects like live streams and a lot of other things.
+
+Okay, before we jump into the paper, let's say hello.
+
+I'm Daniel.
+
+I'm a researcher in California and really looking forward to this discussion.
+
+Arun, want to say hi, give any context, and thanks again for contributing to the .Zero.
+
+
+SPEAKER_01:
+Hi, everyone.
+
+My name is Aaron.
+
+I'm a software engineer in the UK.
+
+I did my PhD a good few years ago, in which I touched on dynamicals with modeling and active inference.
+
+I've been thinking about it for a long time since then.
+
+I came across this paper and thought it was really hard.
+
+And so I requested, guys, can we do a live stream on this?
+
+I'd really love to understand this paper properly.
+
+And now I've somehow ended up contributing to the live stream.
+
+So yeah.
+
+
+SPEAKER_00:
+okay so we're discussing this paper from july 2024 from pixels to planning scale free active inference by carl friston and colleagues the rest of this video is going to be some background and context and an introduction and an overview
+
+of the ideas it's not a review it's not comprehensive it will be part of an exciting series where in the coming weeks in the dot one and dot two we discuss with the authors and the dot two is going to fall during the applied active symposium so that'll also be really fun
+
+Okay, let's go to the big questions.
+
+What are your big questions around whether it's about the paper specifically or what are the big motivators that made you excited and want to pursue these affordances?
+
+
+SPEAKER_01:
+So I think the big one is the title, right?
+
+And I think the question of scale is one that's plagued a lot of Active Inference implementations and previous papers in the past few years.
+
+Everyone's like, oh, yeah, I'd love an Active Inference agent that can do stuff.
+
+But if I have more than a few states, I get a combinatorial explosion.
+
+and things either fall over or they take a very long time compared to alternative methods that are out there.
+
+So the question of scale is a really important one and I think this paper nominally looks like
+
+There's a way around that.
+
+Also, the renormalization group as a way to do that is, I think, a very interesting one.
+
+It draws from a lot of physics that I actually studied a very, very long time ago.
+
+So that really spoke to me and I thought it was really, really nice to see some things that apply to also like Ising model of ferromagnetism.
+
+some other key parts of thermodynamics that now come into AI, which active inference has been doing for a while with the free energy minimization part.
+
+But I think the renormalization group is a really interesting part of maths that seems to get you a lot further.
+
+I also had some much more technical questions, which maybe don't fall under the big questions, which you'll definitely come on to later when I was reading this paper and looking at it and I go, I don't understand actually what's happening here.
+
+So I'd really love to dive into those and particularly catch up with the authors in the later episodes to get some of the more technical answers on how these matrices and tensors play together, which seems to defer a little bit to the textbook by Parr and some of the other formulations by the RxInfer group as well.
+
+So actually getting into the nitty gritty of how we implement this will be really fun for me.
+
+
+SPEAKER_00:
+Cool.
+
+Blue also contributed to the .zero, and so she wrote, what is a path?
+
+More specifically, how are paths related to the renormalization group?
+
+How is the renormalizing generative model, RGM, different from the active inference generative model that we usually study?
+
+And how do paths tie into transitions between categories?
+
+And I had similar questions.
+
+What is the renormalization group?
+
+How is it being used here?
+
+How does that make the generative models structurally or functionally different?
+
+How does that have implications for different media?
+
+Few key claims.
+
+They're considering one solution to the implicit scaling problem with scale-free generative models that are linked through the renormalization group.
+
+They're going to explore generalized MDPs, Markov Decision Processes, as discrete models that do functional cognitive tasks like compression, content generation, and planning.
+
+They're going to pay attention to universality and scale and variance for specifying structural form of generative models.
+
+And then there will be a sequence of worked examples that we're going to spend most of the dot zero walking through.
+
+And they highlight that these kinds of RGMs with quantized paths may or may not be useful in certain application domains.
+
+So that's kind of the meta ML question is where, or how would we know where this would or wouldn't be more effective than another given kind of model, no free lunch at all.
+
+Could you read the abstract?
+
+
+SPEAKER_01:
+Yeah, sure.
+
+So this paper describes a discrete state space model and accompanying methods for generative modeling.
+
+This model generalizes partly observed Markov decision processes to include paths as latent variables, rendering suitable for active inference and learning in a dynamic setting.
+
+Specifically, we consider deep or hierarchical forms using the renormalization group.
+
+ensuing renormalising generative models can be regarded as discrete homologues of deep convolutional neural networks or continuous space models in generalised coordinates of motion.
+
+By construction, these scale invariant models can be used to learn compositionality over space and time, furnishing models of paths or orbits, in other words, events of increasing temporal depth and itinerancy.
+
+This technical note illustrates the automatic discovery, learning, and deployment of RGMs using a series of applications.
+
+We start with image classification and then consider the compression and generation of movies and music.
+
+Finally, we apply the same variational principles to the learning of Atari-like video games.
+
+
+SPEAKER_00:
+Awesome.
+
+Okay, moving on to... Daniel, you're on mute.
+
+Thanks.
+
+To the roadmap.
+
+The first section is the introduction.
+
+Section 2 is the background formalism.
+
+This is going to make connections with the generative models from the textbook.
+
+Then section three, four, five, six, we'll go through a sequence of worked examples.
+
+We're going to front load the focus in the dot zero on sections two and three, and then four, five, and six unfold kind of naturally.
+
+Three is a static image MNIST handwriting dataset task.
+
+Section four is a cyclic video that then slides into a chaotic attractor dynamical system.
+
+and a natural video.
+
+Section five goes into sound, and six is the general planning case from pixels to planning, and seven's a short conclusion.
+
+So it's pretty much introduction and conclusion like bookends.
+
+Section two is where the general formalism is, and then three through six take us on from handwriting, several kinds of videos, dynamic images, sound, and then gameplay and planning.
+
+Here are the keywords of the paper.
+
+Active inference, active learning, Bayesian model selection, renormalization group, compression, structure learning, RG flow, renormalizing generative model.
+
+So those are good terms if you're uncertain about to jump into.
+
+okay we have a few slides on some of these background concepts just to get it up front so we can proceed with the paper when we get there let's start with what is renormalization so of course much could be said but what what would you say what is renormalization
+
+
+SPEAKER_01:
+Yeah, so I think this is in itself quite a loaded term.
+
+There's a lot from physics.
+
+And if you look at the Wikipedia page, the third link that's there, there's a lot in that Wikipedia page.
+
+It's very confusing.
+
+A lot of quantum electrodynamics coming in.
+
+And I think Feynman has an attitude on it.
+
+He says he's not a fan of it.
+
+um but uh i think for our purposes the top quote that's there that's coming from the paper is actually good enough for a large part so we basically take some sort of system and we say this is way too hard this is way too complex there's way too many moving parts what is a like a take-home message what is the summary of what this is doing
+
+at a macroscopic level compared to the micro level.
+
+And there are some examples in the upcoming slides on particularly talking about thermodynamics and materials where this will become more obvious as to how this might work in practice.
+
+But I think the coarse-grained version that retains the properties of interest is really what to focus on going forward.
+
+And yeah, lossy compression for the signal processing engineers in the audience.
+
+This is very much a case of you're not keeping everything when you renormalize.
+
+You're keeping what's important.
+
+
+SPEAKER_00:
+Awesome.
+
+Yeah.
+
+As you coarse grain, so spatially, like thinking about a radius or like a convolutional diameter getting larger and larger, you're choosing a bigger chunk to grain over, coarse graining, and renormalizing what those edges and relations amongst blocks are.
+
+So you have one model, it's a...
+
+10 by 10 square so you have blocks of size one and all those edges and then you decide okay we're gonna look at blocks of two by two you have fewer blocks fewer edges so you have to renormalize all of your parameter estimates and then you end up with hopefully capturing some of the signal with fewer parameters aka compression whether it's lossy or lossless
+
+Okay.
+
+
+SPEAKER_01:
+I'm going to pick up on one thing quickly where you said spatially, and you can renormalize through space, but you can also renormalize through time.
+
+You can renormalize through any dimension you want.
+
+It's just easier to imagine the space and time ones.
+
+So the time analogy that I think they use in the paper, which is quite a good one, is thinking about if you're, let's say you're watching TV and you're watching something.
+
+And in that moment, there are two characters talking that might form part of a scene.
+
+which is one renormalization, and then you have a series of scenes, which would be an episode, and then you'd have multiple episodes in a series.
+
+So the time one, actually, I find a bit more intuitive to understand what renormalization is.
+
+And you can say, oh, yeah, something happened in a particular episode.
+
+You can say something happens in a particular series, something happens in a particular scene, but that thing you might be describing might actually be more fine-grained or more coarse-grained.
+
+
+SPEAKER_00:
+awesome yeah the examples will start with the static handwriting and move on to include time and you're totally right about the time scales it's like saying what's the transition matrix from minute to minute or hour to hour or day to day but each moment is measurable with seconds minutes hours or so on okay how about the spin block transformation
+
+
+SPEAKER_01:
+Yeah, so now this is sort of back to material science and magnetism.
+
+So there's a fairly well understood model of magnetism called the Ising model and physicists generally quite like it, mathematicians quite like it.
+
+You imagine a big magnet, there's lots of little magnets that will line up in a grid, and each magnet just talks to the little magnets around it.
+
+And you can recover quite a lot of actual behavior of magnets in the real world with a fairly simple model for this.
+
+But the spin block transformation is largely going, well, if I have lots of little magnets together and they're all pointing the same way, I can just think of it as one big magnet that's the sum behavior of all of these little ones.
+
+And this is a trick that we play a lot in physics of going from the micro to the macro.
+
+The micro is too hard to model.
+
+It's too painful.
+
+You've got all these particles.
+
+They could all be doing, you know, spinning every which way.
+
+all their speeds and velocities and if you had all of them then you could add them all up and you could figure out what's going on or you can just you know get a thermometer measure the temperature right and the temperature that one number tells you a lot about how this thing is going to behave so you can get a lot of value just from the macro but if that macro is composed of all of the micro so depending on where you are in your core screening of your scaling behavior uh you can get either a lot done or a little bit done and it's just what's useful to you
+
+So I quite like this sort of quote at the bottom about the magnitude of an observable of a physical system undergoing an RG transformation and whether that observable is relevant or not.
+
+I think that's quite important to bear in mind for the future examples of, well, if something is always increasing, it's always getting bigger, then you're going to see it on the coarse grained transformations that you see later.
+
+but if it's always decreasing at a particular level you're not going to see it on the higher levels you're only going to see it on the lower levels so it'll have so this gives you some uh understanding of causality of when you're going up or when you're going down uh on the core screening um so yeah like particle speeds and temperature is a nice uh a nice uh example of this and similarly magnetism with the spin block transformation
+
+But by and large, what are these transforms doing?
+
+If you take a grid of lots of little things, you just go, well, I'm just going to summarize this with a single thing that represents that behavior and then move on with my day.
+
+
+SPEAKER_00:
+Awesome.
+
+okay quick on the singular value decomposition there's a nice interactive explanation this is related to principal component analysis and it's a way to proportion variance and to take the biggest cut of variance
+
+for a given decomposition for a dataset.
+
+And you can take, we'll look at it in application a bit later, but it's used to assess the vectors of variance, and then you can truncate them and use that to capture increasing amount of variance for a given dataset.
+
+We'll look at it in a specific case.
+
+And last kind of background topic on locality principle.
+
+
+SPEAKER_01:
+Yeah, I don't actually know a huge amount about the locality principle, but I think it's a general intuition that things next to each other affect each other and things far away, in theory, don't affect you.
+
+There are definitely some things where if this is violated, this feels very weird.
+
+I think quantum entanglement is probably an example of that.
+
+
+SPEAKER_00:
+uh but i'm gonna stop speaking there because we've hit the limit of my knowledge yes i think wittgenstein wrote something about that okay and this is just a few of the other links but there was a ton of other links that people brought up over the months preparing for this okay onto the paper so
+
+here's the link to the coda i'll put this in the youtube live chat right now just if anyone wants to follow back to the workspace where we did the preparation work if you're watching live write any questions in the live chat and we'll check it at the end
+
+What we're about to do is go through much of the paper, pulling out some of the key quotes in the main thread, and we show most or all the figures and some of the formalisms.
+
+Of course, they're all there in the paper.
+
+This is just the highlights so that we can get this done in a reasonable linear amount of time.
+
+in preparation for conversations with the authors further open source development and all that so okay here we go onto the paper so first three sentences of the paper this paper considers the use of discrete states discrete state space models as generative models for classification compression generation prediction and planning so for context we're in the discrete time setting
+
+Figure 4.3 from the 2022 textbook.
+
+We're in the top setting.
+
+The inversion of such models can be read as inferring the latent causes of observable outcomes or content.
+
+So this is the tale of two densities, meaning that generative models can be used to generate synthetic observations from latent state estimates, that's the generative direction or decompression, as well as infer latent states from data, that's the recognition direction from observations to latent states.
+
+And then last of these three sentences, when endowed with the consequences of action, they can be used for planning as inference.
+
+So in contrast with sort of a sterile sense-making or perceptual inference task,
+
+Active inference considers action as part of a joint inference distribution or problem, which constitutes the agent.
+
+So think about how the agent is defined as ABCDE matrices as sensemaking, latent state transition operations, and the consequences of action.
+
+so improvements to generative modeling technologies have wide-ranging implications for a variety of both sense making perception tasks on the inbound as well as decision making and action tasks on the outbound which is kind of the theme of active inference that action can be treated as an inference problem any thoughts on these first slides um no i think we should keep going cool okay specifically
+
+This paper explores the use of generalized Markov decision processes.
+
+This generalization in question rests on equipping a standard, partially observed Markov decision process with random variables called paths.
+
+this affords an expressive model of dynamics in which transitions among states are conditioned upon paths which themselves can have lawful transitions so we're going to return to this figure again but the big picture is that from the sort of textbook basic pomdp we're going to add some sophistication which is that variables called paths
+
+will condition the state transitions and those could fall under the agency or the efficacy of an agent or not there can be lawful probabilistic transitions among paths which are like transitions amongst actions in a policy sequence except that actions in a policy sequence would be understood to be under the control of an agent and and those paths states influence transitions of latent states
+
+Figure one shows that several concepts of depth in generative model.
+
+We have temporal depth, which means a deeper unrolling through time.
+
+So this is just predicting more time steps deeper into the future linearly.
+
+So if this was each one was one day, this is just going rolling out for a bigger number of days.
+
+hierarchical depth would be if we had a model that had days months and years and the way that it could deal with longer time scales would be have 30 days within a month and then 12 months within a year so nested hierarchically recursive layers
+
+deal with deeper time scales instead of needing to unroll 365 days.
+
+And factorial depth can be thought of kind of like a multi-sensory model.
+
+So here's an observation of sound and here's an observation of light.
+
+And then those different modalities can be factorized separately from each other, like the what and the where in the brain to simplify.
+
+And that's another way in which generative models can have depth.
+
+Any more thoughts on this?
+
+
+SPEAKER_01:
+I think one thing to highlight is first of all, the notation is quite difficult to understand in this figure.
+
+I found it really hard.
+
+There is also a...
+
+I think there is a difference, at least in my mind, when I read this figure in the caption compared to, say, the textbook, which is the C matrix.
+
+So I think previous formulations of actor inference, the C matrix tends to represent the prior preferences of an agent, sort of its goals, its values.
+
+It's like, I expect to see these observations.
+
+so if i don't then i'm going to experience a higher free energy so i'm either going to change my mind or change take some action to change the world so that my observations match my priors better and i get a lower free energy here the c matrix seems to be encoding probabilities of paths it's not entirely clear to me how we get value into that as opposed to just
+
+what it expects to see.
+
+So maybe there is a distinction here that I haven't understood, or maybe it is genuinely a shift.
+
+I'd be really curious to ask the authors specifically
+
+
+SPEAKER_00:
+in the future episodes yeah pending authors accounts but two things I would note to echo that first is every variable through time can be understood as a trace or a path whereas path is also being used to refer to just this specific upstairs string
+
+And then a second case of overloading is C, while in previous situations, like in figure 7.3 or 4.3 from the textbook, we have C as playing a role in expected free energy calculation, pragmatic value, the preference over observations.
+
+Here, it's not the same C. C as preferences is over observations.
+
+Here, transition probabilities are encoded in C. So it's kind of like a B, but this just goes to show letters are just letters and future software will be able to flip out and have different shapes and notation and all of that.
+
+So don't get too attached to the letter.
+
+look at how they're locally defining things even though that can be really challenging learning too okay the generalization becomes particularly important when composing markovian processes in deeper hierarchical architectures this follows from the use of states at one level to generate the initial conditions and paths at a lower level this recursive aspect speaks to a definitive feature of the generative models considered in this paper renormalizability
+
+This is the big idea.
+
+Multiscale hierarchical models can be built using this paths-on-states-on-paths-on-states-on-paths-and-dot-dot-dot-dot method, which describes this renormalization happening across scales.
+
+you could have the inch by inch path and then that's nested within a foot by foot and mile by mile or you could have the minute by minute path and that's nested within hour by hour and day by day so by having this layering of states and paths and states and paths there's a clean way to get the separation of spatial or temporal or arbitrary scales so
+
+that's the big background formalism one other way to get an intuition here's from our paper on the renormalization group in free energy principle applied to multi-scale biological systems
+
+On the bottom, we have the kind of figure that we've seen in many active inference papers, where we're thinking about the cognitive behavioral entity like a worm, where the sensory states can be associated with perception, the active states with action, internal states with cognitive states, and all of that.
+
+At the end of the day, there's also this nested, extended evolutionary process that is happening at the population scale.
+
+So that's kind of like nesting the phenotype of individual worms within a population of worms or within an ecological distribution.
+
+And then last note here, in this setting, a policy is not a sequence of actions, but a combination of paths where each hidden factor has an associated state and path.
+
+This means there's potentially as many policies as there are combinations of paths.
+
+So because these paths are kind of like context combinations, it means that there's a double explosiveness to them.
+
+So understanding how do you handle that and understand the computational complexity class, and again, where it wouldn't be useful, those are key questions.
+
+Any thoughts?
+
+
+SPEAKER_01:
+Yeah, I think that last bit, especially in a paper that's talking about scale-free active inference, and then now we're not just combining states for that combinatorial explosion.
+
+Now it's combinations of paths of states and actions.
+
+In theory, this should be much worse.
+
+So I think
+
+At the moment, I'm reading this and I'm thinking we're going to pay even more of a cost in terms of computing what the hell is going on.
+
+But I think the renormalization group and making these models hierarchical pays for it.
+
+That's my intuition of reading this paper.
+
+So yeah, there's a good quote to have there and it's a good thing to have bolded.
+
+I don't think you're ever going to get a free lunch, but you have to pay for lunch.
+
+
+SPEAKER_00:
+yeah the number of ingredients for lunch um okay in what follows we illustrate applications of the renormalizing generative model rgm in several settings um
+
+The renormalization group requires the functional form of the dynamics, in terms of belief updating, is conserved over levels or scales.
+
+This is assured in variational inference in the sense the inference process itself can be cast as pursuing a path of least action, where action is a path integral of variational free energy.
+
+Another classic term overloading action here isn't like the robot moving its arm.
+
+This is the physics action, sometimes with a capital A.
+
+because all inference under free energy principle is considered in terms of the path of least action we can be assured that arbitrarily thick wide thin tall small world however you want to create the topology of a generative model we can be ensured that we're in an analytical setting where the models are quote doing the same thing
+
+at different scales and then this takes us all the way from the first principles framing of the problems all the way on through the software tools like rx and fur which might be implementing these kinds of generative models also in this kind of ecumenical way the only thing that changes between levels are the parameters of the requisite action eg sufficient statistics of various probability distributions
+
+That's to say, the functional properties of the RGM are simply determined and described by how it's parameterized.
+
+So was it statistics all along?
+
+And that's what we have in figure three with showing what that blocking looks like.
+
+These are statistical parameters that are learnt.
+
+So the description of the topology of this graph is the structure, which is either fixed or designed or set or learnt as a structure learning problem.
+
+And then there's the values for a given situation that these variables take on.
+
+and here's that state path essential coupling that's the state paths state path so compare this with hierarchical or multi-level Bayesian regression compare this with hierarchical predictive processing architectures state path state path and each of those constitute a separation of scales all of this is a statistical model any thoughts on this
+
+
+SPEAKER_01:
+Yeah, I think the hierarchy part is absolutely key here.
+
+There is a little aside in the paper about which things in a hierarchy can affect which things in the lower part to make the inference actually possible.
+
+So this is the idea of the Markov blankets and whether a child can have multiple parents, that sort of thing.
+
+I think we possibly will come onto that later.
+
+But overall, the main critical thing is
+
+stuff happening at a higher level in your hierarchy is determining a lot of what's happening at the lower level, but information can flow back up with the observations that you get at the lower level to infer those parameters at the higher level.
+
+So that's the classic active inference sort of top-down, bottom-up approach.
+
+
+SPEAKER_00:
+yeah awesome okay next section active inference learning and selection this section overviews the model which is used in the numerical studies of the following section and figure one provides an overview of the generative model that's considered in the paper we already took a quick look outcomes at any time depend upon hidden states that's the a matrix that's the partially observable part
+
+while transitions among hidden states depend on paths and that's this sort of way that we see the transitions amongst latent states so that's the B matrix which is intervening between hidden states S B is being imposed upon by this path happening so it's almost like this is a this is like a rail or a guide up top
+
+that's influencing how the actual latent state ends up unfolding through time.
+
+And at each time point, there's the emission of an observation, that's the generative direction, or it could be taking in an empirical data point and then updating beliefs through time.
+
+They describe the variables just like in the caption
+
+The tensors are generally parameterized as Dirichlet distributions whose sufficient statistics are concentration parameters or Dirichlet counts, which count the number of times a particular combination of states and outcomes has been inferred.
+
+We focus on learning the likelihood model encoded by Dirichlet counts, A. And that's known as learning by counting.
+
+So that's the kind of classic case of pulling balls out of an urn.
+
+and then tallying every time you see a certain kind of ball coming out of an urn or here it would be like pulling balls out of an urn and it's either cloudy or sunny and then you're doing learning by counting on the context and the outcome and then you're using that to parameterize everything else
+
+carrying on a little bit with this and again connecting back to the 2022 textbook compare with figure 7.3 pomdp
+
+The details are basically the same, except notice that paths U are described, as we mentioned earlier, C in the textbook, just the letter C, it's not actually that variable computationally, but the letter C is being used for preference distributions over observations.
+
+Here, C is playing a role in the transition.
+
+It's kind of like a B, but for this meta path.
+
+In the textbook, we have a single-layer model.
+
+Now, it has compositionality, but it's just a single-layer model, whereas in the paper we're discussing today, hierarchical levels are described in terms of this state-path-state-path alternation approach, and there's factorial depth.
+
+Here, the procedural order of operations for the generative model is provided as policy selection
+
+generate hidden state sequences and generate expected outcomes.
+
+This is the forward or generative direction.
+
+We could also go the recognition direction from real observations to policy inference.
+
+So they're unrolling a policy centric approach that yields expected outcomes.
+
+That's like running the generative model from policy inference out
+
+as opposed to running a generative model from data processing to belief updating about policy going in.
+
+Just to highlight some kind of points of contact, similarities with the textbook for those who dapple.
+
+Any comments?
+
+
+SPEAKER_01:
+No, I think that was really good.
+
+
+SPEAKER_00:
+Awesome.
+
+Equations 1, 2, and 3 in this paper are akin to equation 2.5 and 2.6 in the textbook on variational free energy and expected free energy.
+
+So to learn about the different decompositions of variational free energy in terms of the ones that look more statistical, like divergence minus evidence, complexity minus accuracy, or the ones that look more statistical physical, like energy and entropy,
+
+that's variational free energy and then analogously with equations two and three in the paper or equation 2.6 in the textbook we have expected free energy with the classical decomposition into epistemic value pragmatic value okay now we get to active inference um there's a lot we could say here
+
+they describe that first sentence of active inference section in variational inference and learning sufficient statistics encoding posterior expectations which could be about sense making as well as action posterior expectations about what i am going to do pi
+
+are updated to minimize variational free energy.
+
+So that's the idea of seeing everything it is that the agent is and does on the inbound perceptual and outbound action selection as part of a joint distribution that's undergoing variational free energy minimization.
+
+That's the active inference concept.
+
+note the circle with a dot notation so the notation implies a sum product operator the dot or inner product that sums over one dimension of a numeric array or tensor so note the difference between circle with a dot as the inner product or tensor contraction while circle with x is the outer product so to look at the figure with message passing
+
+and which brings in this circle with a dot notation.
+
+Here we see the same graph that we saw in figure one.
+
+In figure one, we have a Bayes graph.
+
+So the nodes are variables that we would encode in our program, and then the edges are causal relationships.
+
+So that's the kind of classic systems modeling kind of flow interaction mind map.
+
+Here in this figure, we see a factor graph representation.
+
+Now, in Livestream 55 and in the Realizing Synthetic Active Inference Agents discussion and other discussions, we've talked more about the relationship between Bayes graph and the Forney factor graph representation.
+
+Suffice to say that what it is that nodes and edges are basically get flipped, but there's a full reproducibility.
+
+so that here we have ways to look at the logistics of message passing amongst these nodes.
+
+And it turns out that under the hood, this is what RxInfer is doing when it's being implemented.
+
+So maybe if we get more into implementation, we could talk about that.
+
+This figure is just showing that for that POMDP,
+
+which is going to be doing the real work of active inference on the perceptual and the action selection side.
+
+It's not just that we can link up the variables on the base graph that account for what we want to do.
+
+It's that there's a specific logistics and we know exactly which messages to pack and send in order to get this whole variational inference done at the graph level.
+
+And that can be done with either a determined logistical schedule
+
+or it can be done in a reactive message passing setting.
+
+Okay, active learning.
+
+Bayesian model reductions a generalization of ubiquitous procedures and statistics.
+
+In the present setting, it reduces to something remarkably simple.
+
+By applying Bayes' rules to parent and reduce models, so a model of k parameters and of k-1 parameters, it is straightforward to show that the change in variational free energy can be expressed in terms of posterior Dirichlet counts A, prior counts A, and the prior counts that define a reduced model.
+
+So A' corresponds to the posterior one would have obtained under the reduced priors.
+
+The alternative to Bayesian model reduction is bottom-up growth of models to accommodate new data or content.
+
+If one considers the selection of one parent model over another augmented model as an action,
+
+These two equations in the active learning section are like the add and remove variable operations and ultimately what allow us to compare any Bayesian model.
+
+So model comparison amongst nested, strictly nested models can be done in the fully parametric setting using the hierarchical likelihood ratio test.
+
+Bayesian models allow model comparison amongst models that differ in only one parameter, like adding or removing one parameter as part of structure inference, or there could be radically different model topologies underneath.
+
+And that can be evaluated in terms of like a Bayes factor support for one model over another.
+
+It also connects to a lot of work, theoretical and applied in sleep-wake type models, where parameters are added, fit increases during wake cycles, and then synapses are pruned, models are reduced, core screening occurs during sleep.
+
+And the big picture is you can use Bayesian model comparison
+
+framed as a free energy landscape optimization just as always comparing different base graphs comparing different generative models and then this results in the expression of a log base factor or an odds ratio comparing the likelihood of two different models so this allows comparison of different models and the selection of different models as its own inference task
+
+Any thoughts on this?
+
+
+SPEAKER_01:
+Yeah, just one thing I want to pick up on is I actually can't remember, like, I guess with this paper, I think they were just doing sort of like, it's almost like just purely the bottom-up approach, right?
+
+They're not starting with like a massive model and then
+
+You couldn't start with a very big one at the top and then coarse-grain down.
+
+You have to coarse-grain sort of going up the hierarchy, as it were.
+
+So I think we end up going with this bottom-up growth of models because you don't want more levels than you need necessarily.
+
+Or if you have an image and you're trying to classify it and it's, I don't know, 32 by 32 pixels and you just subdivide it by two,
+
+you need to start with your pixel, you need to start with your full image width first and then coarse-grain, coarse-grain, coarse-grain up, rather than going, ah, A4RI, I'm going to have N levels and then cut them down after.
+
+So I think that's probably going to be more on the bottom-up growth of models for this particular paper.
+
+
+SPEAKER_00:
+Yeah, good point.
+
+How do you know how big to make each scale and how many scales?
+
+We won't read all the text on this page, but big claim.
+
+Renormalizability is feasible under the models in Figure 1.
+
+So that's kind of the rhetorical chain is, here's the models that we're working with in Figure 1.
+
+These models have renormalization properties.
+
+That is what makes this state path, state path layering amenable to scale-free or scale-friendly or multi-scale generative models.
+
+claim is that given the renormalization properties of base graphs like or including the ones that they're describing with this state path state path nesting there can be computationally tractable possibly multi-level renormalization and the rest of the paper they're going to be explaining and unpacking that and adapting it to specific settings
+
+These renormalizing transformations have the effect such that the dynamics slow down in time and space as one ascends levels or scales.
+
+So compare that with other work on information theory of individuality, bottom-up and top-down information flows and causality, gapping and laddering.
+
+And also they're saying that the structure and the tuning of the variables in the graph, which would yield the full reproducible description of the renormalizable generative model, itself can be reached through this Bayesian model comparison.
+
+We had some questions about how the discrete and continuous time are different.
+
+A more intuitive view is that successively higher levels encode sequences of sequences and implicitly composition of events or episodes.
+
+In other words, at a deep level, one state can generate sequences of sequences of sequences, thereby destroying the Markovian properties of content generated at the lowest level.
+
+So this is like encoding or sedimenting nested sequences or paths in event-based or order structured narratives.
+
+Deep structure is what allows
+
+or possibly advanced or naturalistic, interpretable, fill in your preferable adjective there, models of complex phenomena that do have deep structure like speech and writing and story.
+
+and they're going to be walking through renormalization through space in terms of pixels time and in general spaces so it's cool to think about like chris fields and mike levin's work on competency in navigating arbitrary spaces as an invariant for analyzing cognition in diverse embodiments
+
+So the idea that space and time are just some state spaces, but other state spaces like semantic embeddings from an LLM or other kinds of state spaces might also have these abilities to yield to the renormalization operation.
+
+Any comments?
+
+
+SPEAKER_01:
+No, that was all good.
+
+
+SPEAKER_00:
+Cool.
+
+Figure 3 is a graphical model, which we looked at a little earlier, where groups of states at a lower level are generated by a single state at a higher level.
+
+So here we have a state at a higher level, S sub 1 superscript n plus 2, and then flowing out of it, we have the state and the path at a lower level.
+
+Higher states only change after a fixed number of lower state change.
+
+So that could be two.
+
+It could just be twice as fast, like a frequency doubling every time there's a time scale separation, or it could be fixed like 60 minutes per hour, and or it could be fully reactive in terms of using Rx and Fur for a just-in-time type responsive updating.
+
+And this is somewhere where I think that generalized notation notation will be really helpful because talking about what these variables are in detail gets pretty messy.
+
+um because each state and path has only one parent the ensuring markov blanket the blue circles of each state red circle ensures conditional independence among latent factors there is a strict uniparental inheritance factorization pattern in the hierarchical model so can latent factors remain conditionally independent so note that the s and the u here are not connected
+
+Conditioned upon the higher S, they are conditionally independent.
+
+That simplifies the runtime inference.
+
+In sum, a renormalizing generative model, RGM, is a hypergraph parameterized by two sorts of tensors, the A and the B, in which the children of states at any level bipartition into initial states and paths.
+
+In this example, the blocking transformation groups pairs of states and paths.
+
+so here it's kind of like a and b again not exactly the a and the b letters from the textbook but note that a describes the likelihoods or empirical priors and b is the dynamics so a is broadly referring to like this instantaneous sense making like relationship between
+
+latent states and observations whereas b is describing the dynamics and the transitions through time so i'm not sure if it's exactly that simple but a is kind of describing synchronous attributes of the model whereas b describes diachronous through time aspects of the model okay anything else
+
+
+SPEAKER_01:
+Yes, I think one thing to really hook onto is the uniparental inheritance thing.
+
+So I think you're correct when you say, yes, that makes everything faster and less computationally difficult.
+
+That is a good thing.
+
+uh but i think there's a more philosophical thing to raise as well which is when we're talking about causality going up and down the levels uh and learning should in theory be a lot easier uh when you only have a single cause for something so that means that when you make an observation it's much easier to infer oh
+
+the parent must have been this in order to cause what I see.
+
+And you don't have to consider multiple factors coming in and going, ah, well, it could have been any one of 10 different factors that mean I saw what I saw.
+
+So that learning process as well, when we talk about the direct line counts earlier, should be a lot easier to do when you have only a single parent for a particular variable.
+
+um so yeah that conditional independence among latent factors i think also features into the locality aspect as well of uh when we're talking about the very beginning of the session but i'm not 100 sure on that but that's my intuitive understanding of what's going on there cool okay one can also regard rgm as an expressive way of modeling non-linearities
+
+
+SPEAKER_00:
+In the limit of precise likelihood mappings, this can be viewed as the composition of logical operators.
+
+One can see why an RGM can compose operators to represent or generate content that has compositional structure.
+
+The inversion of an RGM could be construed as a simple form of abductive logic.
+
+Okay, now we're going to get to the examples.
+
+Here we go.
+
+First example, image compression and compositionality.
+
+So first it's helpful for background to look at variational autoencoders.
+
+These take in some input observations, they project down to a latent space that's smaller and then decode out to reconstruct.
+
+So it's really similar to a variational autoencoder.
+
+And look at the first word, variational free energy, variational autoencoder.
+
+They just call it the ELBO, not the VFE.
+
+There's so many similarities between this method and active inference that it's really helpful to study up.
+
+It just sometimes uses a little bit of a frame shifted ontology.
+
+Here's what they do.
+
+They're studying the classic MNIST handwriting data set.
+
+They map continuous pixel values to a discrete state space, and then they're going to learn the structure through recursive applications of a blocking transformation.
+
+They group together local pixels by tiling or tessellating the image.
+
+So that's the first step, is they tessellate over the image at multiple scales.
+
+So the smallest dots is a 4x4 cluster of pixels.
+
+Then the medium-sized dot is four of those.
+
+So then one, two, three, four, these get clustered into this one.
+
+And then one, two, three, four get clustered into that one, and so on.
+
+So that's the spatial static renormalization via spin block locality principle process.
+
+Each group is then subject to singular value decomposition.
+
+given the training set of images to identify orthogonal spatial basis of singular vectors.
+
+So this is the grouping and the reduction.
+
+Grouping is the tessellation.
+
+It's like a convolution.
+
+We'll talk more about how it differs from convolution, like a convolutional neural network.
+
+And then they truncate.
+
+So here's an example from the form index project, but there's many other places you can look at this.
+
+This is what, for a principal component analysis or for an SVD analysis,
+
+every single time it selects the vector that explains the most orthogonal variance and then it takes that profile out of the original data and then it takes the next most variance explaining vector and so you end up with something that looks like a variance explanation curve so the first 10
+
+components explain 70%.
+
+To get to 90% on this data set, it took 50.
+
+So if you say, well, my computer only has space for 10, just take 10.
+
+Or if you say, well, I'm interested in this kind of Bayes optimal, Pareto optimal crossover point,
+
+you can solve it that way or maybe you have other constraints so that's pretty much how it's working is they're structurally using the nesting with these four by four spin glass blockings and then they do a SVD truncation compression method on each level of that blocking
+
+this is how the path state path state path state works it's a multi-scale blocking convolution tessellation operation to group then svd with truncation to reduce to a defined state space they only retain 32 of the variables from the svd at each level um
+
+There's more on this slide, but one thing that'll certainly be interesting to discuss with the author is, at first glance, this procedure may appear to generate likelihood mappings of increasing size because the combinatorics of increasingly large groups could explode at higher levels.
+
+However, by training on a small number of images, one upper bounds the number of states at each level.
+
+In other words, one can effectively encode a finite number of images without any loss of information such that RGM inversion corresponds to lossless compression.
+
+So, what's the deal with training data?
+
+How do we know about what is going to be an optimal or effective data size, variability, information content, or curriculum for the dataset?
+
+How do we address that data selection problem, sometimes called active data sampling?
+
+And then to the point about the lossless compression, one can effectively encode a finite number of images without loss of information.
+
+So how can or does this do compression better than, for example, Gzip or LLM?
+
+That was a great moment in computational history when people realized that in certain ways, these models are doing information compression and that even Gzip or just file compression utilities have attributes that trained machine learning models have because of information theory.
+
+And how do we know and infer or describe these trade offs related to the training data set and the structure of the model all these different things.
+
+As we expand the scope of our modeling degrees of freedom and how has this problem been solved similarly or approach differently in other work on information geometry in variational auto encoders.
+
+And then just last piece on working through this example.
+
+So again, they pre-processed the MNIST images.
+
+The images were downloaded from the link here.
+
+They were converted to the format that they needed.
+
+Then they say an exemplar image is shown in figure three in the paper.
+
+I think that should be figure four.
+
+And then they're showing the centroids of each of these groups.
+
+So this is just to get an intuition for what this multi-scale spin glass blocking is doing with the success of clumping and grouping into these multiple spatial scales.
+
+Okay, any comments?
+
+
+SPEAKER_01:
+Yeah, I think I'm still very confused as to how this ends up being from the previous slide, how you get lossless compression if you're also doing the singular value decomposition and truncating some of those vectors.
+
+I definitely want to follow up with the office about when are we lossy and when are we lossless?
+
+And as you said, the question of training data and how much, what goes in your curriculum, that's going to be huge, I think.
+
+
+SPEAKER_00:
+yeah good point there's a truncation of variance so it's if it's close to lossless that's also known as lossy compression um here is figure five that's describing these concatenated likelihood matrices this is a common method in a lot of
+
+models where four separate matrices can be included as sub matrices in a bigger matrix that can make it simpler to deal with in programming it might make it amenable to sparse matrix methods or compression methods it might make it just easier to visualize but this is kind of a classic trick going back to the spm days um okay
+
+if we had imposed an additional constraint or structural prior that likelihood mappings are conserved identically over groups so for example if there was the prior that um let's just talk about these four major quadrants that's the third level of the model if we had said all four of those are the same
+
+versus a situation like it was which is it was left open upper left quadrant of five could be different than the bottom right quadrant of five if we had imposed that additional constraint that the likelihood mappings are conserved identically over groups one would have the discrete homolog of a convolutional neural network with implicit weight sharing
+
+So this is a super key point because people might have a lot more familiarity with convolutional methods from computer vision.
+
+In the case where the mappings are constrained to be the same, so it's a situation where we're learning a single filter that optimally sweeps across a whole image, this is the convolutional neural network case, convolutional case.
+
+Here in the multiscale RGM, the learning space is more complex.
+
+it's more general so the advantage is we could possibly describe more conditional relationships like oh the upper left quadrant of five looks like this but the bottom right looks like that what's the disadvantage you know where is this lunch getting paid for it massively expands the search and training space as always you can have a more expressive model has more options bigger search space less expressive model smaller search space
+
+And then figure six shows more about what these scales look like and connects it also to receptive fields in the visual processing.
+
+But just like the four by four spin block window or the 32 truncation dimensions for SVD or the 10 levels of this factor, that's a big question is like, what about three by three with 25 dimensions of SVD and an eight factor or eight levels for the factor?
+
+How much meta optimization do you do to determine what these variables should be?
+
+
+SPEAKER_01:
+One thing to pick up on that, which maybe they don't do in this paper, but I'm sure they've done in others is, well, if I need to optimize something about my model, why don't I just
+
+create a bunch of them and then check my free energy and just pick the one with the lowest free energy.
+
+So parameter optimization through free energy minimization happens everywhere else in Active Inference.
+
+I'm not sure why we couldn't also do it here for some of these.
+
+So you'd set up your RGM, but you could have different parameters on how many principles components to keep, how many levels to do, et cetera.
+
+And so long as you can generate observations and see which ones are the most internally consistent with the probabilities based on the training data, you could probably learn how to do your RGM.
+
+
+SPEAKER_00:
+Yeah, I think that's the dream, is you say, here's the meta structure of the 1x1, 2x2, 3x3, 4x4, mxn.
+
+grouping and then we'll learn how many n should be grouped by on how many levels per factor with how many variance retention elements from the SVD and then you say okay well should we retain the same number of SVD variables for every level
+
+Or should we open up the possibility that, well, maybe the first level we retain 10, but the second we only retain three.
+
+Again, that might be more expressive if there really was 10 variance contribution in the first level and three in the second, but it's a bigger search base.
+
+So that's the sort of meta question, but that's cognitive computing.
+
+So it's exciting times.
+
+Figure seven, getting to the performance on the MNIST.
+
+So figure five, it says in the text, illustrates the results of active learning, but I think here they mean figure seven, during exposure to the first 10,000 training images of the MNIST dataset.
+
+So in this example, images were assimilated if and only if they increased the expected free energy of the RGM.
+
+In the absence of prior preferences or constraints,
+
+This ensures minimum information loss by underwriting informative likelihood mappings at each level.
+
+So my question was, does this address the data sampling issue?
+
+It seems like they're selecting from a larger data pool the informative examples which improve the performance of EFE.
+
+So how much to threshold or how to prioritize that?
+
+How do you deal with a path dependence in training?
+
+the order of the curriculum of the points that are seen, or does it not matter?
+
+But for real time and online inference methods, it often really matters.
+
+It's a complex landscape, so if you head out left or head out right, it's gonna make a big difference.
+
+And isn't this substituting another possibly quite challenging inference and data selection problem just so that a special smaller RGM can be made?
+
+So there's gonna be situations where it is worth that entry cost to set up a smart active data sampling method to train a powerful RGM.
+
+There might be another case where that data sampling component is challenging and it's not worth it and there's another simpler way to do it another way.
+
+So of course, in any specific situation, it's an empirical question
+
+how these different methods perform.
+
+And then just again, with these images, figure eight, the thing to note here is classification accuracy increases with a marginal likelihood that each image belongs to the class of numbers.
+
+So here they're showing that their accuracy is very high where they're most confident and their accuracy drops as their confidence drops.
+
+And from a quick perplexity search, I'll also be curious to see what others have to add, classic shallow machine learning algorithms can easily achieve 97% accuracy on MNIST.
+
+In 2015, convolutional neural networks approach achieved an error rate of just 0.29%, so 99 plus percent.
+
+So especially at the way that they're presenting it here without code and things like that, keep in mind that it's more of a proof of concept in analytic foundation, not necessarily being described as a computational advance, which would have a lot more details on what was run rather than just saying it was learned automatically within a few seconds on a personal computer.
+
+That's kind of a casual way to describe it.
+
+I think it's very...
+
+colorful and inspirational, though more assessment would need to be looked at.
+
+How does the fit relate to other methods?
+
+And so this is a super exciting open source direction to support empirical reproducibility efforts to establish how and when and where different code bases do differently on different datasets.
+
+
+SPEAKER_01:
+Okay.
+
+Yeah, 100% just want to echo on the
+
+It can't just be in a MATLAB script on Carfridson's computer.
+
+It's got to be out there so that we can use it and build on it and understand what's going on.
+
+One thing I think that's also worth highlighting is this classification and confidence question.
+
+I'm not sure if the convolutional neural networks will also give you that.
+
+So if they classify something, maybe they just say, oh, I think it's the digit zero
+
+And I'm like, 95% confident?
+
+I don't even know if you get that necessarily.
+
+I think maybe you get something that's a pseudo confidence number on a scale between zero and one, but it's not really confidence in the same way that this is.
+
+This is like, you've got a probability distribution and you can do a credible interval on it if you want.
+
+So I think that's something to really highlight, the explainability
+
+is often in many cases worth swapping a few percentage accuracy points so that you know why your algorithm has suggested something.
+
+
+SPEAKER_00:
+Yeah, earlier work by a lot of those authors have highlighted that true element of interpretability and uncertainty.
+
+For example, in a LLM today, even if it does say something like, I'm not sure about X, that string, I'm not sure about X, was actually achieved as a high confidence outcome.
+
+And so it doesn't actually reflect an introspection of the uncertainty intervals on x.
+
+fun topics to go into.
+
+Okay, that was the first example.
+
+Now we're gonna go faster through the next examples because they're structured much the same way.
+
+It's just each of these following examples is gonna bring in a new dimension.
+
+So the next dimension is gonna be video compression.
+
+Generalize the renormalizing procedures of the previous section to include dynamics for recognizing and generating ordered sequences of images.
+
+So video is sequence of images.
+
+Also algorithm one has the fast structure learning, even just copying and pasting this into perplexity and working in cursor from there does amazing things.
+
+So I'm super excited for what people come up with in terms of using the algorithms that are laid out and implementing them in different languages and so on.
+
+So this section is gonna generalize the static univariate grayscale example of MNIST.
+
+into an rgb three color three channel plus time time color pixel voxel tuple structure here's where we get to time time wasn't present in the mnist example but by partitioning each sequence into non-overlapping pairs during the time scale transformation at successive levels one effectively halves the length of the sequence when ascending from one level to the next
+
+So we talked about different ways to do nesting in time, 60 minutes in an hour, 24 hours in a day.
+
+Here is going to be a strict frequency doubling.
+
+This means that higher levels encode sequences of sequences of sequences, paging exhibit, that can be regarded as episodes of successive events.
+
+So key idea.
+
+State path, state path, state path, encodes transitions through time.
+
+And there's this enforced frequency doubling.
+
+So processes are encoded relationally.
+
+Look into something like successor representation learning or cue learning to see some other approaches.
+
+During inference, the separation of temporal scales manifests as a particular kind of reactive message passing.
+
+So it's possible to define and use message passing among levels.
+
+It could also be possible to provide alternative operations orders, or like in RxInfer, use graphs that have no preset order of updating or other rules for how updating occurs.
+
+Okay, here's where in figure 10, 11, and 12, we get to the example.
+
+We used a short video sequence of a dove flapping her wings.
+
+The original video was downsampled to 32 frames and they describe a little bit more.
+
+They use the same four by four blocking.
+
+So this is key information on the video processing.
+
+And it's really exciting to think about what they do to these file formats
+
+as analytic affordances i found this actually more from the discourse analysis area and rhetoric studies but if we think about the choices and the degrees of freedom that are made in the data processing and meta modeling those are analytical affordances and it relates to how we were talking about you could do inference on those variables
+
+And so here we see analogous to the images that were output for the MNIST summaries and performance.
+
+Here we similarly have prediction through time of this dove flapping the wings.
+
+It's a cyclic generated video.
+
+And for example, the stimulus here is just if like a spotlight is only on part of the dove and then it can reconstruct through space at the same moment
+
+and through time, how it will continue to unfold given the patchy observations that it gets.
+
+So that's the kind of dove video example.
+
+
+SPEAKER_01:
+I think there's some background on why does that matter, that you can just do the spotlight thing and recover the original in a way.
+
+So this is a fairly common way of understanding unsupervised learning.
+
+Has your algorithm actually understood the data?
+
+And so masking parts of the image and asking it to infill it is a very common way of testing that what you've got actually understands what's going on and it's not just going to hallucinate anything random.
+
+So, yeah, when I first came across it, I thought, oh, this is a bit odd.
+
+But then, yeah, it's worth looking into just as background of like, well, if you have an unsupervised learning technique, how do you know it's actually doing a good job?
+
+
+SPEAKER_00:
+yeah cool okay the next example in the video section in the preceding example the sequence of the image constitutes a closed path namely a simple orbit so it's like a gif of the dove flapping the wings it returns to the same spot and then it continues again this can be regarded as a quantized representation of a periodic attractor in the section paths orbits and attractors
+
+They use the same procedures to compress and generate stochastic chaos using images generated by a Lorenz system.
+
+The aim of the example is to show how active learning after structured learning furnishes a generative model of chaotic orbits.
+
+So Lorenz system and active inference is discussed in the four-part series on Livestream 32, Stochastic Chaos and Markov Blankets.
+
+And here we see an analogous process to the MNIST, analogous to the DOVE.
+
+We have an image or sequences of images through time.
+
+It's traces from this Lorenz chaotic attractor.
+
+Similarly, there's this grouping and reduction operation happening through space and time.
+
+And then parameterization of those models, that's the structured learning followed by parameterization, results in the ability to have, even when there's a gap in the observations, like in figure 15 on the right,
+
+here we have a gap in the observations but the predictive posterior is able to continue it's an empirical question how well it lines up but this is just really fascinating because it shows well even though the generative process we can say has this chaotic instability
+
+that might make it analytically intractable.
+
+From the generative modeling perspective, the RGM enables a really nicely typed way that can accommodate systems that have these chaotic properties.
+
+What was exciting to you about this part?
+
+
+SPEAKER_01:
+Yeah, exactly that.
+
+It's, you know, chaos is fascinating, and modeling it, famously very difficult.
+
+So yeah, I think this is actually, I feel like they should be shouting about this more in the paper, in a way, like, maybe they could have opened with this, I don't know.
+
+But
+
+I would really like to see some more like actually simpler examples of chaotic systems being modeled in this way.
+
+And maybe that could be a separate paper entirely.
+
+But even just, you know, one dimensional signals that change in time that are famously quite chaotic that we don't do a very good job of modeling would be really interesting to see how
+
+getting that into an orbit modeling procedure using this would be and see how that goes.
+
+We were very excited to try that.
+
+
+SPEAKER_00:
+Awesome.
+
+Yeah, totally agree.
+
+The next example continuing in the image and video sequence is a bird, so a natural extension.
+
+Figure 16 illustrates the spatial blocking of a more natural video, a short sequence from this website.
+
+So that URL was no longer active.
+
+but either way it was just a search url so it'd be cool to see the exact video maybe it could be uploaded but either way this is a short video of a bird in a natural setting and again figure 17 staying with this theme there's a latent state prediction ongoing even though the stimulus the observation is withheld sometimes so in a way that's like what happens when we blink or have an isocate
+
+We have this ongoing posterior prediction of the visual scene, which is what's being experienced or attended to, with color everywhere and equal precision everywhere and all this stuff, including continuity when we blink or have an eye saccade, because it's basically what's happening here.
+
+There's just transiently no stimulus, but still the likeliest thing that's happening is the latent state prediction.
+
+So that last little sequence took us from
+
+handwriting static images grayscale into three video settings which was a cyclic oscillatory synthetic video a synthetic chaotic video and then a natural video so you could imagine if this was more structured natural video it would be easier to learn with probably any method
+
+If this was a more complex scene with multiple different things switching positions, it would be a harder video to learn.
+
+Any more thoughts on the natural extension?
+
+
+SPEAKER_01:
+Yeah, actually, so if it's trained on this particular video, one thing I wasn't sure is what frames does it predict at the end?
+
+So we talked about if you miss some frames in the middle, and then it can catch up and keep up.
+
+But if you just run this indefinitely,
+
+I'm not actually sure what the bird would be predicted to do.
+
+And would it just eventually loop back?
+
+Because it's sort of like if you had that chaotic path in the previous one, it's still in orbit.
+
+It still returns to the same attractor states.
+
+Whereas here, I'm not sure what the bird would do when it's predicted to be doing stuff.
+
+Maybe it just flies off the screen and we don't see it anymore.
+
+I don't know.
+
+
+SPEAKER_00:
+It's kind of like a sci-fi simulation to run.
+
+It's like a sci-fi, like what if it's like the movie's an hour and a half long and then you keep watching.
+
+It's like, wait, it's still going.
+
+What's happening?
+
+Okay, the next case that they study is sound.
+
+So the video examples in the prior three were just transitions.
+
+It was an ordered sequence of images.
+
+Whereas the video more broadly understood like the live stream that you're listening to now is video as image plus audio.
+
+So here they just kind of leave the video behind and say, let's just look at the audio.
+
+In this setting, pixels, and there's an analogy for the multimodal LLMs,
+
+where the tokenization methods that work for natural language in the discrete setting also work for tokenization of image and audio like GPT-4.0.
+
+So in this setting, pixels, i.e.
+
+picture elements, are replaced by voxels, volume elements over frequency and time.
+
+These constitute time frequency representation of time series or a continuous wavelet transform, CWT.
+
+Renormalizing generative models for sound are simpler than for video content because there's only one metric dimension, frequency, that accompanies time.
+
+Using a spin block transformation to coarse-grain over frequency reflects the factor assumption that neighboring frequencies fluctuate in a correlated fashion.
+
+So kind of similar data availability setting, URL provided, but unclear what the songs were.
+
+And then we see the similar visual representations culminating in, for example, 20, where predictions, latent state predictions are able to continue even though part of the stimulus has been redacted.
+
+So it's kind of like a video chat or a phone call and then someone drops out for a few seconds, but you're able to still have your unrolling expectations about what did happen, even though you might be missing some observations.
+
+So any comments on this first sound part?
+
+
+SPEAKER_01:
+No, let's carry on.
+
+
+SPEAKER_00:
+All right.
+
+From sounds to music.
+
+One might ask if RGMs could be applied to language, perhaps in the spirit of hierarchical Dirichlet process models.
+
+We will not address this here.
+
+but provide an application to music to illustrate the generalized synchrony that accompanies communicative exchange, Fristin and Frith 2015, the classic songbird dyad.
+
+So keep in mind that the birds that are in this dyadic songbird setting, which is also reflected in the 2022 textbook, are literally singing from the same sheet music.
+
+They have the same single fixed song.
+
+so it's not modeling the flow of language as conversation at the level of new lexemic information provided like go to the store and get me milk or meta lexemic like prosodic or stylistic elements of language
+
+It's a very restricted sense of language, but it's part of the tech tree of building towards models that capture more sophisticated elements of language.
+
+But here is more structured than this sound example.
+
+It'd be interesting to hear some of these songs in their
+
+original versions and in their generated versions.
+
+And like, how well does this do from a performance and file size perspective?
+
+How well does that do to MP3?
+
+Which is another example of data compression.
+
+And that's exactly like the Gzip and LLM comparison earlier.
+
+If at the heart of a variational autoencoder or an RGM or something else is using a structurally determined model as parameterized to have a smaller representation of a larger space, how do these
+
+physics inspired first principles of intelligence models or classical machine learning and compression related models do are we getting what fraction of compression how good is the performance all these you know can you tune the bit rate all those kinds of questions okay on to the last section from pixels to planning so
+
+In the final section, we turn to the deployment of RGMs for planning as inference and implicitly their use as synthetic agents and decision makers under uncertainty.
+
+So we're getting to the generalized active agents, which is to say the capacity for control and navigation in arbitrary spaces.
+
+And so here we also see a comparison or juxtaposition of active inference and reward learning.
+
+And Ran Wei gave a great guest stream recently on similarities and differences there.
+
+And they make some more comments about how the RGM
+
+has relationships with generalized multi-level learning.
+
+So now we're kind of briefly dropping any specific case, like a data set of images or video, and just thinking more generally about how this RGM could be used for multi-scale active agents.
+
+Any comments?
+
+
+SPEAKER_01:
+No, Scario.
+
+
+SPEAKER_00:
+um procedurally this looks very much like conventional reinforcement learning however it is simpler and more efficient because it learns a compressed representation of and only of paths that link rewarded states so that might have some connections with the inductive behavior paper that they also wrote another way of looking at this is smart data selection that relates to my earlier question of well if you knew which data to select and in what order
+
+for free, then maybe the model can be trained effectively.
+
+But if it's a hard problem to determine which data to sample or what order to do it in, then it's just substituting one type of problem for another, which might be effective in a situation, but that's not a general approach.
+
+Effectively, this leads to the automatic selection of model structures that can only recognize and predict rewarding episodes, thereby eluding subsequent parameter learning.
+
+This rests upon the fact that one does not need to learn how to maximize reward if one has a generative model that can only predict paths that lead to reward.
+
+I was a bit uncertain about this because different paths may probabilistically lead to different reward.
+
+And then I thought, well, wait a minute, that's just pragmatic value.
+
+What about the automatic selection of model structures that can only recognize and predict epistemic information?
+
+Isn't the expected free energy gonna be able to select data, active data sampling, live stream 57, smart data selection, according to epistemic plus pragmatic value?
+
+And thereby specify the next action.
+
+Again, reinforcement learning selects the next action based upon highest expected value or reward, but expected free energy has epistemic plus pragmatic value.
+
+In what follows, we will illustrate this approach in sequential policy optimization and unpack some of its corollaries.
+
+Games and attractors.
+
+So here, they use simple Atari-like games to show how a model of expert play self-assembles given a sequence of outcomes under random actions.
+
+The first simple game in question is the game of Pong.
+
+They describe how they coarse-grain the blocks.
+
+And then they selected frames that started from a successful outcome.
+
+So they trained on successful examples.
+
+In short, we use rewards for and only for data selections.
+
+That's kind of an interesting possibility that there's a pragmatic filter on training data followed by then an epistemic openness to whatever it is that that data has.
+
+um and renormalization happened through space and time like the video examples and through the action policy that's the section that we're in here where we're saying in the general case we're also able to do rgm on nested policy but here there was just one time scale of policy um
+
+figure 25, 26 and 27 go over some of those representations.
+
+So any thoughts on this?
+
+
+SPEAKER_01:
+Yeah, I think it's the training part is really interesting.
+
+And what I think maybe possibly as well, we're getting a bit closer as to why they use that C letter for paths, if it's only ever
+
+encoding paths that are rewarding, then we sort of go full circle back to the definition in the par textbook of C is like rewards.
+
+It's just rewarded paths rather than rewards of observations.
+
+But I think they come onto this later on in the paper.
+
+This feels like a very brittle way of training a model.
+
+If it only ever encounters positive states or like things that it likes or things that we want it to like,
+
+What happens if you drop it in a situation that it hasn't seen before, where there's a negative state and it has no way to recover back to a positive one?
+
+So if you think of like for training on a game, if you start in a losing state, how do you bring it back?
+
+How do you recover?
+
+So I think that's something that we will come onto later, but it's a really interesting thing to bear in mind of, well, what are you training on?
+
+Are you only training on success?
+
+How do you deal with failure?
+
+
+SPEAKER_00:
+yeah great point that also makes me wonder about the transfer applicability so we trained on that bird video but then what if it's the same bird but it's just a little bit darker light or it's a different angle what are the transfer limits or what is it really training on
+
+And then especially if there's a sort of data filtering or selection to pass data, that is one of the critiques of large data set related training.
+
+So maybe this uses a subset of it, like a filtered subset,
+
+since there's already a database of successful and unsuccessful plays just selecting the successful ones and then at the same time there's this interesting biological tie-in which is like the organism's training data through life in a way is all successful with respect to survival
+
+so by having the training data only reflect a certain kind of success perhaps with a lot of variability still it it's an interesting question what it learns and how transferable that could be
+
+And then this is the last of the worked examples.
+
+Figure 28 shows the same simulation using a slightly more complicated game based upon Breakout.
+
+So what's happening in these gameplay settings is gameplay is like a video plus controllable state transitions.
+
+So it'd be like if there was a dove flapping its wings,
+
+And then also there was another parameter which was lights on or lights off.
+
+And then there's one latent state which is where is the dove's wings really?
+
+And then how does the dove's wing state get emitted to observations when the light is on or off?
+
+then that would be like a simple example where the dove does not respond to the light and then a more complex example would be oh it flaps differently in the light and the dark and so that's where you start getting into these factorized models and paths on states on paths and states
+
+So here they study this game Breakout, where there's, in a way, niche modification happening.
+
+It doesn't show any of the cells on the top getting broken, but that would be interesting.
+
+How does it represent, down into the really fine scale, what numbers represent the presence or absence of a block?
+
+And how does that really get encoded
+
+So any last comments before we go to the conclusion?
+
+
+SPEAKER_01:
+I actually found this example the most difficult to follow in the paper.
+
+I think it's still not entirely clear to me how this RG operator handles the action inside this as well, and how you...
+
+coarse grain the effects of action that might happen at a particular time step that then gets sort of diluted out as it were so uh that's just something i think from for this uh for the game section that i'd quite like to ask the authors about is uh to go to a bit more detail on the rg operators when action is happening but that action can only happen on a particular time like uh what's the word uh sort of period as it were uh
+
+
+SPEAKER_00:
+yeah also i wasn't sure if these were meant to be empty or if something but then i wondered well is there a natural interpretation of levels one two and three and do these scale separations capture some natural components of the game or
+
+is there a possibility that by using like a four by four or any n by n or using a strict doubling of time that there's kind of an aliasing where real natural scales of analysis get sort of chopped up strangely with different time scale separations and so then it depends a lot on what spatial temporal scales are divided on
+
+And then there'd be some training data for some partitionings that would work really well.
+
+Like if you had a ton of good information on the structure of a problem, then maybe one measurement would be all you needed.
+
+Like if you knew the whole class schedule of the university and how all the class beginnings and endings were related, and then someone said, there's a lecture in that hall on Tuesday,
+
+And then you could have a ton of information about how that was correlated with everything else.
+
+But then if you were studying it on a meter by meter subdivision on a timescale that wasn't related to the timescale of the classes were happening, you might need a ton of data and still be shocked with the next time step.
+
+So that's just the structure learning challenge, and I think that is the hope and the question, how can automated, semi-automated, and ultimately unified methods for structure learning be applied?
+
+Okay, conclusion.
+
+The paper has showcased several applications of a generative model for discrete state-space approaches based on the renormalization group.
+
+The appeal to the apparatus of the renormalization group is relatively straightforward in the setting.
+
+This is because active inference is an application of the free energy principle, which is itself a variational principle of least action, whose functional form is conserved over scales or hierarchical levels.
+
+Having said this, the restriction to spin block transformations and pixel spaces could also be regarded as a limitation.
+
+Classic answer.
+
+In principle, any outcome space could be a candidate for coarse graining.
+
+How do we know, understand and balance where and when these spin blocks would work or not?
+
+We've discussed and in other conversations, the applicability of the viability of doing sweeps and structure learning and act-inf, on-act-inf, on-act-inf, on-RL, on-act-inf, on-RL and how many layers back before your data science team is just like, I think this is fine.
+
+RGM with quantized paths may or may not be useful in certain application domains.
+
+The applications above illustrate the simplicity and efficiency with which the structure of the models can be learned.
+
+So that's the key claim.
+
+That's the key point.
+
+Further limitations of the approach described above rest on the efficiency of the accompanying methods.
+
+The efficiency is both a gift and a burden.
+
+Again, great.
+
+Clearly, in terms of sample efficiency and compression, the schemes described above are designed to outperform conventional learning schemes.
+
+Okay, but designed to outperform is something that anyone can say.
+
+So did they outperform when other learning schemes weren't presented in the paper?
+
+This follows because model construction procedure is constructive as opposed to the reductive approach of Bayesian model reduction and related procedures.
+
+enabling the self-assembly of a minimally expressive model to recognize, generate and predict the content at hand.
+
+So that's this bottom-up construction through tessellation that we've discussed.
+
+This should be contrasted with the reductive, but not to be confused necessarily with reductionism or reductionist account, but reductive in terms of starting with a large, overly expressive model that's reduced or pruned, minimizing complexity to recover predictive validity and generalization.
+
+So one way to think about that is like in the VAE, the latent space is a bow tie.
+
+it's smaller in the middle whereas for an image processing neural network you might take in 64 pixels output 64 pixels but then the thickness in the middle is huge so these are the approaches saying well you can kind of have this constructivist approach to building a smaller latent space that's projected down to and then unpacked from that's the vae rgm type style
+
+another approach is to start with a massive surfeit of parameters you know 70 billion 405 billion and then use that as a function approximator to fit an approximation to some other function but more generally how could efficiency be a burden um
+
+They make some more points about learning and skills.
+
+And this gets to our question about the successful trials for training.
+
+So these such models are necessarily brittle in the sense they will not recognize or respond to events they have not previously encountered.
+
+That almost seems like too far to say.
+
+I mean, the MNIST model will be able to respond to a digit it has never encountered.
+
+It won't be able to respond to a temperature reading because it just doesn't even have that capacity, but it's like out of sample learning or out of structure learning.
+
+A useful heuristic here is learning to ride a bike.
+
+In this kind of procedural learning, we learn from a starting position and accumulate successive cycles of pedaling until we avoid falling completely.
+
+But we do fall and we learn from when we fall.
+
+In other words, we retain only experiences characteristic of successful bike riding until we can ride fluently.
+
+However, we would not be able to ride a bike starting from any arbitrary state e.g.
+
+falling over.
+
+We would have to return to a known starting position to recover our flow.
+
+Flow is meant in manifold, which itself is a pun, senses here, the fluency associated with being in the flow, control flow, dynamical flow, and of course, RG flow.
+
+So what is really being claimed about what are the situations where successful examples are enough, where negative examples are and aren't learned from or recovered to, and then how well did these methods work within and out of sample
+
+After all, that is what the whole question is in training a model is how well do you do on the training and the test for different kinds of out of sample being from really similar, but not in the exact training data itself all the way on through totally different kinds of work.
+
+So we don't know the next steps or implications.
+
+We have a lot of questions and hopefully do too.
+
+What are you looking forward to?
+
+Or just what are your thoughts having now gone through all this?
+
+
+SPEAKER_01:
+Yeah, I'd love to see some code.
+
+I'd love to see some implementations that we can hack around with ourselves.
+
+And yeah, I think it's a really because a lot of
+
+what's come in the past for Active Inference has been, it's felt very like, I need to write my generative model down on paper.
+
+I need to really sit down and think, undistracted, and think, how do I model this problem?
+
+What are the causes?
+
+What are the observations?
+
+How might they relate?
+
+and then I create a function which will generate these observations.
+
+And then you can plug it into active inference and go all the way.
+
+But often the hardest part is writing down those A, B, C, D matrices.
+
+It's actually really difficult for lots of people.
+
+You can be a trained physicist and it's still really hard to think, how do I model this problem in the real world
+
+in terms of mathematical matrices.
+
+That's really hard.
+
+So in theory, if your RG operators are good enough, and you just you can just chuck some data, maybe it has to all be positive data, all the happy path stuff.
+
+But that's already quite powerful, I think, and moves, I think, active inference closer to more traditional machine learning in terms of accessibility and ease of use, so that data science teams could just use this in
+
+does represent quite a significant step forward for that.
+
+And I think with all the work that you've done on this channel of just making active inference more accessible and easier to play around with, easier to try in new scenarios, that's such a good thing.
+
+So very excited for the future livestream sessions on this paper.
+
+
+SPEAKER_00:
+Awesome.
+
+Yeah, great point that how much of the modeling specification
+
+today and tomorrow will be manual semi-automated automated like would you just put in the eeg data and just say go for it or how would you embody side information about the eeg problem and then how would it do on training tests and how would it transfer all these different questions so it's great do you have any last comments
+
+
+SPEAKER_01:
+Uh, yeah, I just think the explainability thing is going to be the key here.
+
+So as soon as you go to unsupervised sort of structure learning, what did those levels mean?
+
+And what did those factors mean that it's learned from the data itself?
+
+If I, if we go the old fashioned route, if I come up with a generative model and I say, this is how I'm modeling the system, I can explicitly say this level, this latent variable is for whether it's raining or not.
+
+And this observation corresponds to water observed on the grass outside.
+
+But because I'm coming up with that model, I can use words to communicate that to you, and you have that full explainability of this model.
+
+With this approach, we are going to lose some of that, and it'll be really interesting to see whether we can recover the explainability of, well, what does this factor mean when I did a principal components transformation and ditched half the components?
+
+What does that actually mean?
+
+You can sort of look at it on the MNIST example and go, oh, yeah, it's a digit, right?
+
+But we still have to look at that.
+
+So getting that in a semi-automated way would be very exciting as well.
+
+
+SPEAKER_00:
+Yeah, that makes me think about what
+
+natural joints of the world handles for the world will
+
+a possibly automated method fail to find?
+
+And then conversely, what new natural scales might it come up with?
+
+For example, just doing PCA analysis on natural language.
+
+It's like, okay, principal component one is whether it's happy or sad or whether it's written in this language or that language.
+
+But then you get to principal component seven and it's like, huh?
+
+does that eigen term mean something with it a little bit more of this and a little bit less of that does that what does that really mean and then the further you go out usually the less reliable those variance components are across different data sets so then that comes back to how do we interpret
+
+and set up systems that have few or many, you know, when shorter lists are more interpretable.
+
+But then when you clump under fewer things, they have more
+
+grouping of dissimilar things so it's like lumpers and splitters the neets and the scruffies those those are all coming to play right on that field so thank you very much arun and also to blue and to courtney for the contributions to the dot zero so looking forward to the next two weeks peace thanks very much

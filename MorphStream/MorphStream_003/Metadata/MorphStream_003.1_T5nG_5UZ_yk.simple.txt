@@ -1,0 +1,1156 @@
+SPEAKER_00:
+Thank you.
+
+so hello everybody oh can you just go on mute if you're not speaking sorry i'm just going to do a bit of an introduction um so welcome to the third um morphstream series the others are on youtube if you've not had a chance to catch those so just a reminder of the purpose of these meetings are to educate and inspire at the intersection of active inference and neuromorphic computing um if you've not met me before i'm sarah hamburg so i'm predominantly a neuroscientist i did my phd in neuroscience at ucl which is where i first came across
+
+active inference.
+
+And I've just finished a postdoc in neuromorphic computing.
+
+And I'm part of the SAB for the Active Inference Institute.
+
+And I think I've been involved with them since about 2020 when I was trying to work out earlier.
+
+But I'm really pleased today that we're joined by Professor Anand Subramani.
+
+So he's an assistant professor in the Department of Computer Science at Royal Holloway, London.
+
+He's broadly interested in learning and intelligence.
+
+So that's both algorithmic and biological.
+
+His current research is focusing on understanding the principles of scalability in deep learning, which is what he'll be talking about today.
+
+So I'm just admitting some people.
+
+So he aims to use principles of scalability to build models that are more efficient and can scale up seamlessly.
+
+His research draws inspiration from neuroscience and biology
+
+in his quest to build a better and more general artificial intelligence.
+
+And you can visit his website, Arnan Subramani, for more information.
+
+I'll pop that in the chat as well.
+
+So his talk today is on principles of scalability and biological inspirations.
+
+He's going to talk about how current models scale and what we can learn from the efficiency of biological brains.
+
+One of the central themes will be sparsity, its significant role in scalable systems and its synergies with neuromorphic hardware.
+
+He'll present existing ideas based on spiking neural networks and recent work from his group, which is focused on using various forms of sparsity and distributed learning to improve the scalability and efficiency of our learning models.
+
+so the format will be that the first part um anand will speak and then we'll sort of have a more general open conversation between all of us um anand i don't know if you want people to interrupt you with questions or not if you just want to take them at the end that's entirely up to you yeah i'm actually completely fine with taking questions during the talk cool okay right well without further ado uh yeah we'd love to hear your presentation
+
+
+SPEAKER_02:
+Satish Penmetsa, Ph.D.
+
+: yeah Thank you Sarah and thank you very much for the invitation so yeah like Sarah mentioned i'm going to be talking about principles of scalability and biological inspirations.
+
+Satish Penmetsa, Ph.D.
+
+: So i've been working with computation neuroscience and machine learning for quite a long time and have been thinking about.
+
+well, I mean, how intelligence works to some extent, but also really a big part of it is about understanding how various, how biological models scale and by extension, how artificial intelligence models scale.
+
+And that's what I'm going to be talking about today.
+
+So just to start off with things that we already know
+
+I mean, so AI is really starting to become better than humans at lots of things, right?
+
+So this is kind of like a plot of performance of various AI models in relation to humans.
+
+And you see that handwritten recognition and speech recognition, image recognition.
+
+So all of these have been improving very, very fast.
+
+But recently, things like language understanding and reading comprehension have also improved and become better than humans.
+
+So there is really some kind of like a major movement going on in AI where things are really becoming better very fast.
+
+And so the question is, what is happening or why does it work so well?
+
+So there have been a lot of advances in the past two decades because we have started using deep neural networks with lots of layers and lots of parameters.
+
+And the machine learning community has figured out how to train these models well and get them to work well.
+
+So there has been algorithmic advances in stochastic gradient descent using relu layers, skip connections, normalization layers.
+
+And all of these have been like,
+
+very important in giving us the ability to train these very deep networks.
+
+The other aspect, the other thing that has changed in the past two decades is that we have lots more data.
+
+So we have access to a lot more data, which helps a lot with supervised learning, but then we've also, as a community, figured out how self-supervised learning can be used to train these models and get them to do interesting things.
+
+And the third thing is we have a lot more compute.
+
+And I will talk about this.
+
+So this is actually going to be one of the focus of my talk.
+
+And we also have scalable architectures.
+
+So even if you have lots of compute, it doesn't really help if the machine learning architectures that we have don't scale and make use of the compute that we have.
+
+So that's obviously a very closely related and important part.
+
+So just to look at compute itself,
+
+So this is kind of like a plot of various models all the way from 1985 to modern day.
+
+And so what's interesting here is, I mean, first of all, before GPU computing, which is this left side of the plot over here,
+
+what you see is that the compute has been doubling every 24 months so this has been just standard moore's law we have been getting faster and faster processes but there is this sort of discontinuity where people figured out that they could use gpus that were originally designed for graphics they could use that to do machine learning and so what you see here is that the slope of the
+
+increase in amount of compute available changes quite significantly it becomes a lot more steep and so here the compute starts doubling every 3.4 months starting about 2012 or so and then the third major aspect is
+
+These set of models that we're familiar with now, the transformer models, and you see that the compute has been doubling every two months with these models.
+
+So it looks like compute obviously plays a very, very major role in the AI capabilities that we have, but also the models that are able to take advantage of this compute.
+
+So what happened?
+
+Since 2018, which is when this compute started doubling every two months.
+
+So one of the major advances in 2018 was a new scalable deep learning architectures that were published that actually was able to make use of the compute very well.
+
+And then a lot of engineering effort and money spent actually getting these models, scaling up these models built on these architectures.
+
+It's actually making use of the computer.
+
+And this is kind of always a separate concern because even if you have a great model that scales really well, there needs to be like a lot of engineering done to actually scale it up.
+
+And the scalable model that was published in 2018 was the Transformers.
+
+So most of you might have seen this already.
+
+So this is the paper, Attention is All You Need, which was first published in 2017 and has already gotten tens of thousands of citations, if not more, close to 100,000 citations.
+
+And this is an architecture that replaced LSTMs, which were the dominant recurrent network architecture for sequence processing at the time.
+
+So there are various reasons why transformers are scalable.
+
+And what was kind of interesting is that, so they're scalable not just in the ability to be able to run them across a lot of GPUs or to use up a lot of compute, but the important aspect of scaling up over here is that as you spend more compute, the model performance improved.
+
+And that's a really important aspect.
+
+And this is kind of the scaling plot from the now famous GPT-3 paper.
+
+And what you see on the x-axis is the amount of compute that was used to train the model.
+
+So this kind of includes a combination of the model size and the length of the training, which is also very closely related to the amount of data that was available.
+
+And the y-axis here is the validation error.
+
+And what you see here is that as you spend more and more compute, as you have larger models, and as you train them for longer with certain amounts of data, the validation error goes down.
+
+And so you can really invest, compute, and get returns out of using a Pollard compute.
+
+And here, there's a power-law relationship between these two.
+
+And depending upon the model, more recently people have observed there's like a much more complicated relationship, but these models do tend to improve in performance as you invest more compute in them, up to a certain limit, obviously.
+
+Okay, so why do these architectures scale well is, I mean, obviously one of the main questions.
+
+And then by extension, can we scale these models even better?
+
+And how do we do this?
+
+so to answer the question of why do transformers scale so well i mean there are lots of reasons just like focusing on a few of them but like i said transformers were proposed as a replacement to recurrent networks in the form of alistiums and they use something called self-attention to process the sequences so what they did was they replaced recurrent networks which which are known to be hard to train with feed forward networks that are easier to train and uh
+
+The other kind of very important advantage of transformers was that they allow parallelization across the length of the sequence.
+
+So when you have really long sequences, or any number of sequences, any length of sequence in the recurrent network, you always have to process it one sequence element at a time.
+
+And with transformers, you could process the entire length of a sequence in one go because of the particular way the architecture is designed.
+
+And that's a pretty huge advantage because now you have a whole new dimension of parallelization.
+
+And so the second reason why transformers scale so well is because we already figured out that GPUs work well for machine learning and transformers were really, really a great fit for GPUs.
+
+And so you could put a transformer on a GPU and really make full use of the compute provided by the GPU.
+
+I mean, we don't know if transformers are intrinsically better as a model, or if it is just because of the good fit between transformers and the available compute, the available types of compute that we have today, so GPUs primarily.
+
+So, which is kind of this question of, was it a hardware lottery?
+
+So a hardware lottery is used to describe when a research idea wins because it is suited to the available software and hardware better and not because the idea is superior to the alternative research directions.
+
+And so for transformers, it's not fully clear if it was just a hardware lottery or if there is like something very intrinsically advantageous about it.
+
+Okay.
+
+So the scaling of transformers, I mean, I'm not going to go into any further detail because there's a lot of literature published on this.
+
+But now the question is, can we scale even better than transformers?
+
+And this is kind of a plot taken from this paper by Bohan, who's a professor in neuromorphic, professor in Stanford.
+
+And so this is a plot of the, on the x-axis, you see the number of neurons and y-axis, the energy consumption, right?
+
+And so this gray line over here is where we are at currently.
+
+So that's kind of the standard silicon chips in 2D.
+
+And the biological systems that we know of, so biological brains, is this darker line over here.
+
+which kind of you see has a much steeper slope of scaling compared to the silicon chips that we have.
+
+So I'll talk about what this line in between is in a moment.
+
+But because of just like very practical reasons, just physical constraints and the sizes of things and the amount of energy that it can consume and just the proportion of things like proportion of wiring versus the amount of compute that you have available.
+
+So for various different reasons, you really want the steeper slope in both the algorithms and the hardware that you have.
+
+because otherwise it makes it like close to impossible to achieve the same level of scale so over here biological brains have reached like 86 billion neurons and uh well i mean this is a little bit uh older but this because of the steep slope if you wanted to reach the same number of units you're going to consume
+
+quite a bit more energy, right?
+
+So transformers are probably like somewhere up there and biological brains over here.
+
+And at some point this becomes a deal breaker.
+
+So you can, this starts like providing like an upper limit on how big you can scale the models.
+
+So energy efficiency in that sense is like a very fundamentally important aspect.
+
+I mean, assuming that scaling models always gives you this dividend of better performance, then it at some point without efficient models, it becomes impossible to read sizes that can do interesting things.
+
+Anand Oswal, Ph.D.
+
+: Okay, so what does biology do how does biology scale, because we see that it has the steep slope of scaling and one of the things that it does is.
+
+Anand Oswal, Ph.D.
+
+: It uses a lot of sparsity and I mean a lot of it is also again like.
+
+Anand Oswal, Ph.D.
+
+: Just because of physical limits and the amount of.
+
+Anand Oswal, Ph.D.
+
+: cells, the density of the cells that you can have that amount of energy available to the brain and so on, but.
+
+But since this has evolved under these constraints, what we have ended up with is a substrate for computation that is extremely sparse, both in time and space.
+
+So this is kind of like a plot of what the neuron activity looks like for one of these typical neurons.
+
+And what you usually see is that there are these kind of spikes.
+
+So there are times when the neuron
+
+decides to communicate with the rest of the neurons.
+
+And then most of the rest of the time, it's really not doing much.
+
+And then so you have these spikes of outputs.
+
+And this is sparsity in time, so in terms of activity.
+
+And then you also have sparsity in terms of space, which is just the connectivity of the neuron is very, very sparse.
+
+So not all neurons in the brain are connected to all the other neurons.
+
+So second thing is neurons use event-based communication.
+
+which means that communication really happens only through discrete events that send messages between units.
+
+And so it's not the case that each neuron is talking with the next neuron all the time.
+
+On the other hand, most of our artificial neural networks really do work like that.
+
+So there's like an output that goes to the next unit or the connected units pretty much all the time.
+
+The third thing, and again, this is because of just very practical constraints in biology, is that learning is local in time and space.
+
+So you cannot have all-to-all communication between neurons in the brain to do learning because it's just impractical.
+
+And so what this means is that each synapse has to use information that's available
+
+mostly locally to the synapse and then with like very very low dimensional global signals incorporated into this so uh and and so this this is passing uh is local in time as well and the fourth aspect is temporal coding so because time is available in some sense for free quote unquote
+
+Neurons can use time to compute.
+
+They can use time to actually send messages, and it can be used in various different ways.
+
+So neurons are able to trade off computation for time in that sense.
+
+There are lots of other interesting properties, asynchrony, for example, and then also some sort of distributed learning that happens in various parts of the brain.
+
+So I won't be going into detail into any of those at the moment.
+
+Okay, so let's come back to this plot, which showed the scaling of various things.
+
+And so now I've added back the labels from the original plot.
+
+And so this gray line over here is the dense 2D silicon scaling that we have.
+
+And so this middle line over here is what would happen if you actually took the silicon and put it in three dimensions, but without sparsity.
+
+And so you obviously do get better scaling.
+
+But there are some practical challenges that need to be overcome to actually have three-dimensional silicon, mostly related to heating issues.
+
+And the biological brains are all in this regime of sparse three-dimensional
+
+uh substrates right so this sparsity is really what makes the difference uh i mean given you have a three-dimensional substrate sparsity is really what makes a difference in allowing this much better scaling property of this computational devices as it were so this really means that we need apart from the right algorithms we also need the right hardware
+
+And there has been quite a lot of work on biologically-inspired hardware that can make use of the sparse asynchronous communicating neural network units.
+
+And this is kind of like this illustration that Intel has.
+
+So they've been also working on one of the neuromorphic processors called LOIHI.
+
+And this is a really great illustration of the differences between conventional computing and neuromorphic computing.
+
+But essentially, in conventional computing, you have synchronous clocking, you have sequential threads of control, whereas in neuromorphic computing, you have completely asynchronous event-based spikes and parallel and sparse compute.
+
+And it's also, I mean, so GPUs are kind of in between, so which allows parallel computing, but it's still synchronous clocking and it's kind of more optimized for dense computation.
+
+And so these neuromorphic chips are essentially chips that use these biological ideas and are able to work with sparsity in both time and space and also able to work with asynchronous computation.
+
+And so the state of the neuromorphic chips right now, just to kind of summarize what's been happening.
+
+So I mean, I personally don't work on the hardware aspect of it, but mostly in the algorithms.
+
+But there has been a reasonable amount of progress with neuromorphic chips.
+
+So for example, in 2021, at least.
+
+So this is like a plot which shows
+
+the relative performance of various devices in comparison with this Intel low heat chip, which is a neuromorphic device.
+
+And so if a device is, if a point is above this dotted line, it means that the neuromorphic device does better.
+
+And if it's below, it means the conventional device does better.
+
+And all of the points here are conventional devices.
+
+So you have CPUs, GPUs, some kind of like accelerator, deep learning accelerator, and IBM's TrueNorth, which is also a neuromorphic device, but a little bit older.
+
+And the batch size also makes a huge difference.
+
+If you have batch size of one, the neuromorphic devices tend to do better in general, and a larger batch sizes, GPUs tend to do better.
+
+And so what you see over here is, well, first of all, there are certain like biologically inspired models, which are these blue ones over here that do much better on a neuromorphic device compared to conventional hardware.
+
+the other hand what you see is that even for some of these biologically inspired models if you start using large batch sizes so if you look at this purple square over here it uses something called an lsn which was
+
+one of the papers that I was involved in a few years ago.
+
+And if you combine that with deep neural networks, for a batch size of one, the neuromorphic device does better.
+
+But then if you increase the batch sizes, then GPUs suddenly start doing better.
+
+So neuromorphic devices are still not there yet.
+
+it's still work in progress.
+
+And though he, for example, is a digital neuromorphic device, and there is a lot of variety of possible neuromorphic devices out there, a lot of people working on very cool, interesting ideas, but there is this promise of the neuromorphic devices having really intrinsically better scaling curves if the engineering is done right.
+
+Okay, so now,
+
+I'm going to talk about algorithms a little bit.
+
+So let's just go back to this slide where we looked at what biology does that I think is important for scaling up these models.
+
+And one of the initial kind of attempts at using some of these principles was what are called spiking neural networks.
+
+uh and uh spiking neural networks are essentially a direct biological uh i mean it's a model of a neuron that is really directly derived from biology so as i said in biology you have neurons and then if you kind of
+
+stick an electron in the neuron and measure what it's doing, what you see is that it has this action potential.
+
+So suddenly there is this surge, this sudden change in the potential.
+
+And I'll tell you what this potential is in a minute.
+
+But this action potential, as it's called, is a spike.
+
+And that's what is used for communicating.
+
+And most of the rest of the time, the neuron doesn't do much.
+
+And so this action potential is essentially because the neuron is constructed in such a way that there is a voltage potential difference between the inside and outside of the neuron.
+
+And this potential is constructed through
+
+the movement of ions.
+
+The neurons control the movement of ions across the membrane, across the cell membrane, and which kind of creates a membrane potential.
+
+And this is used to kind of trigger the action potential of a neuron, which leads to ionic currents inside the neuron, which teaches the synapses.
+
+And then there's a chemical messaging across the synapse, which goes to the next neuron and so on.
+
+So that's kind of like the biological process.
+
+And this can be simplified into like a
+
+circuit, if you will, an RC circuit.
+
+And then it can further be simplified into a computational model where there are inputs coming in as spikes, which are just zero or one values.
+
+And the neuron does a weighted sum of all the inputs coming in.
+
+So this is kind of very similar to what artificial neural networks do, except that in the case of spiking neural networks, the inputs are binary and very, very sparse in time.
+
+And so the neuron kind of integrates this.
+
+And then if the internal state of the neuron goes above a certain threshold, then it also emits a sparse discrete spike.
+
+And so if you kind of look at the activity of the neuron, this is what it looks like.
+
+So the membrane potential, if there is input that looks like this, so some sort of...
+
+constant input, then the membrane potential goes up every time a spike arrives at the cell body.
+
+So in this case, just the neuron, the computational neuron.
+
+And whenever this membrane potential goes above a certain threshold, then the neuron emits a spike.
+
+Okay, so this is a very, very simplified model, and this model is called the Leaky Integrate and Fire model.
+
+So you can kind of write this down in terms of equations, and essentially,
+
+So I don't think I will go through this, but maybe the important thing to kind of note is that there is some sort of the output of the neuron, which is Z over here, is one if the internal membrane potential is above threshold and zero if it is not.
+
+And this Z is the only thing that other neurons see.
+
+So the membrane potential is completely internal to this neuron and no other part of the model has access to it.
+
+But this one zero value, this binary value, the spike that's emitted is what the other neurons see.
+
+And this kind of depends on the threshold.
+
+Okay, so now spiking neurons are great because you have this temporal sparsity now, right?
+
+So you're not like sending messages all the time, but you're only sending messages every now and then.
+
+But you need to train these models.
+
+And in a standard RNN, you can just use backpropagation through time by defining a loss function and then calculating the gradients of the loss function backpropagated through time into the model and then update the weights based on this gradient.
+
+But the problem with spiking neural networks is that the spike emission function is non-differentiable, which means that it's not so straightforward to just apply backpropagation through time directly.
+
+because that depends on all the parts of the model being differentiable.
+
+But that is kind of like this
+
+very crude trick, as it were, that works surprisingly well that we discovered back in 2018 along with colleagues, which is that you can, I mean, so this blue curve over here is the spike emission function, which is this kind of step function, where the derivative is not defined at the threshold.
+
+And we kind of realized, and I mean, a lot of people realized at around the same time that you could just define a pseudo-derivative.
+
+So we could define a derivative at that point quite arbitrarily.
+
+And within some constraints, if you, so for example, we defined it in this piecewise linear function and it tends to work really, really well.
+
+So you just replace the derivatives of this non-differentiable function at that particular point with the value that's derived from the pseudo derivative.
+
+And then you can just train all these models with back propagation through time and they work really great.
+
+but it turns out that that's not enough i mean so if you have spiking neurons and use back propagation through time that's really not enough to get the same level of performance as artificial neural networks because the second aspect of recurrent networks that we needed was long short-term memory and recurrent networks need to have some sort of memory by default uh
+
+So just standard artificial recurrent networks and leaky integrated fire neurons, neither of them have this long short-term memory.
+
+So in the deep learning community, people tended to use this model called LSTM.
+
+which was really, really powerful because it had this specific mechanism for storing and updating something called a memory cell.
+
+So it could gate the input coming into the memory cell.
+
+It could decide to forget things.
+
+It could also gate the things going out of the memory cell.
+
+And this really helped this model to have long memory, essentially, long, short-term memory.
+
+And so we wanted to do something very similar for spiking neural networks because Leaky Integrated Fire Neurons by default do not have this memory.
+
+And so one of the interesting observations that we had was that in neuroscience,
+
+the activity of the neurons don't really correspond to like a very typical leaky integrate and fire neuron model because there seems to be some sort of adaptation happening.
+
+So if the neuron has constant input, so I mean, this is kind of an example where if you give the neuron constant input, for a leaky integrate and fire neuron, you mostly expect the spikes to be evenly spaced.
+
+because every time it hits the threshold, the neuron spikes, and then it's reset to a lower value, and then the input kind of drives the membrane potential up again, it spikes again, and so on.
+
+But what you actually see in biology is some sort of adaptation.
+
+So if a neuron spikes, then after every spike, the next spike is pushed back.
+
+It spikes less
+
+for a while and then after that it spikes again and then again it spikes less for a while and so on.
+
+So there's kind of like adaptation of the dynamics.
+
+And you see this everywhere.
+
+So in the pyramidal cells in the mouse and in the human neocortex.
+
+So this is data from the Allen Institute that they kind of characterize cells from various different animals.
+
+And so this kind of measure of this adaptation is called an adaptation index.
+
+And essentially what you see is there's a big chunk of neurons in humans and mice, which have an adaptation index that is large, which means that there is this adaptation happening.
+
+And so what we did was to try to model this and include this phenomena in Leaky Integrated Fire Neurons.
+
+And we came up with a model called an adaptive Leaky Integrated Fire Neuron, where the idea was quite simple.
+
+It was to adapt the threshold every time a spike happened.
+
+So every time a spike happened, the threshold would go up a little bit and then decay back to the base value.
+
+And so as it turned out, this simple mechanism, so this kind of threshold adaptation was enough to put the performance of spiking neurons very, very close to LSTMs when trained with backpropagation through time.
+
+So this is a plot where you see this.
+
+So this was tested on MNIST.
+
+a sequential MNIST, where you give the input one pixel at a time to the recurrent network, and then it has to classify what the digit was at the end.
+
+And so just standard leaky integrate and fire neurons does really, really poorly.
+
+So it has like 50% test accuracy, whereas just adding this adaptive threshold, which is the model that we called LSNN, gets the performance up to 93.7, right?
+
+And LSTMs are up here at 98%.
+
+And so with some other additions and using parameter sparsity, it goes up to 96.4.
+
+And this is with spiking neurons.
+
+So it turns out that this was one example of really using biological data and basing the model on that and seeing a huge improvement in what the models could do.
+
+So how am I doing on time?
+
+
+SPEAKER_00:
+So we're about halfway through this session now.
+
+So how long do you, much more do you think you'd like?
+
+
+SPEAKER_02:
+Probably about 15 more minutes.
+
+Is that okay?
+
+
+SPEAKER_00:
+Well, halfway through the hour.
+
+You can take an extra 15 more minutes.
+
+It means we'll have sort of 15 minutes for chat at the end.
+
+So it's up to you kind of how you want to divide it.
+
+I would like to remind everybody if they have questions, they can kind of jump in as we go as well.
+
+It's really dense, this one.
+
+I'm loving it.
+
+But I guess, yeah, the timing, we might have a little bit less time for chat at the end.
+
+But if people want to stay on the call, I can stay on as well for a bit longer, if you can as well, Anand.
+
+
+SPEAKER_02:
+Yeah, absolutely.
+
+Sure.
+
+I mean, yeah.
+
+So I will try to speed it up a little bit.
+
+At least skip some parts, and then you can go and look up the paper.
+
+
+SPEAKER_00:
+Right.
+
+Okay.
+
+
+SPEAKER_02:
+And then go into all the details.
+
+Okay.
+
+But so...
+
+We also had models that were able to take advantage of this temporal coding that I mentioned, actually using time to do computation.
+
+To quickly summarize this, the idea was that in the brain,
+
+Anand Oswal, Ph.D.
+
+: kind of have a specific mechanism that controls the speed of transmission of signals, so this is called.
+
+Anand Oswal, Ph.D.
+
+: The so there's this thing called a Milan sheet and there's there's been like a lot of recent evidence that.
+
+Anand Oswal, Ph.D.
+
+: So the Milan sheet is has been known to control the speed of the signal transmission there's been a lot of recent evidence that the Milan sheet actually adapts.
+
+uh in adults which means that that seems to be like an additional dimension of learning that happens in the biological brain in adult brains and so we wanted to kind of see what can be done with just controlling the speed of transmission so which in a computational model translates to a delay so a delay in communication between one neuron and another neuron
+
+And so what we tried to do was to test out if we could train a model with only synaptic delays without training the weights at all and see how far we could go on deep learning benchmarks, right?
+
+And so we did this and so we had like a temporal encoding and we constrained the weights to only three values.
+
+So it was something like minus 10, zero and plus 10.
+
+And the weights were randomly initialized and then fixed.
+
+And then we trained only the delays of the network, synaptic delays.
+
+And it was quite interesting to see that just by training delays, you can get performance that's comparable to like your standard, both standard artificial neural networks without convolutions and standard spiking neural networks where the weights are trained.
+
+
+SPEAKER_00:
+Can I just ask, is that with the adaptive neurons as well that you were just talking about, or is this just with the delay?
+
+
+SPEAKER_02:
+So this does have some form of adaptation in the neuron.
+
+So it's actually a slightly different form.
+
+But in this particular case, we were working with feedforward networks and not recurrent networks.
+
+Okay.
+
+So the memory didn't matter so much.
+
+Okay, thanks.
+
+So this is an example of using time for computation.
+
+And there's ongoing work to extend this even further and to see really how far we can push using time to compute.
+
+So what is interesting is when you use delays, for example, in a computational model, if it's implemented properly on appropriate hardware, a delay is just a neuron not doing anything until a certain point.
+
+which means that when it's not really doing anything, when it's not sending message to the following neurons, you're not consuming any energy.
+
+And so this is a very nice way to make the models more efficient by having delays and by using, by kind of like reducing the activity of the overall network.
+
+Okay.
+
+So,
+
+So far, we've been looking at spiking neural networks, which were these models that were very closely based on biological dynamics and still using all of these principles of sparsity and event-based communication and temporal coding.
+
+But spiking neural networks of this particular form still don't work as well as the best deep network models.
+
+So essentially in 2018, LSTMs were, when we were doing this adaptive neurons, LSTMs were the dominant model.
+
+But then as I mentioned at the beginning of the talk, there have been newer models that have been performing even better.
+
+And so now we really have these transformers and related models that do really, really well and scale really, really well.
+
+And spiking neural networks pretty soon kind of hit a ceiling in terms of how well they could do.
+
+And we had to think about ways to push the effectiveness of these models beyond that, while keeping all the advantages in terms of sparsity and efficiency.
+
+So we started thinking about really using these principles, biological principles and designing models from first principles.
+
+to take advantage of sparsity and event-driven computing and so on, but then without really modeling the neuron directly based on biology.
+
+For the sparsity in time, the basic idea really was that you had this threshold gating function that would decide when communication went to other neurons and when it did not.
+
+And we realized that we could just use this for other architectures that tended to work really, really well for things like language modeling.
+
+And with both these models and with spiking neural networks, what happens is that because you have this activity sparsity, which is essentially that not all the units are active all the time, when you train these models, the backward pass is also sparse because you only really need to propagate the gradients through the units that were active.
+
+and a few other units because of the particular shape of the pseudo derivative that we chose but you do not have to propagate gradients through all the units and if you can actually take have some hardware that can take advantage of this you end up getting like way more efficient training as well so not just the forward bus so this is kind of uh an illustration of this so the forward pass over here with these blue arrows is uh only goes through units that are active
+
+And the backward pass, when you're calculating the gradients, again, only goes to the units that are active and a couple of other units that were close to being active.
+
+But most of the other units are skipped entirely in this computation.
+
+And we decided to take this model called a gated recurrent unit, which is another recurrent network model that works quite well.
+
+I mean, it's still not on par with transformers, but it works.
+
+So it was one of these models that had like a really
+
+quantitative advantage over leaky integrate and fire-based spiking networks.
+
+And we wanted to make it activity sparse as well.
+
+And so we took the GRU and added event generating mechanism to it using a gate and a few other features like having a reset and having a refractory period and so on.
+
+And with this model, we were actually quite easily able to match the performance of
+
+LSTMs are like the best language models, recurrent language models in terms of perplexity.
+
+So that's kind of like what you see over here.
+
+So there are like two different data sets.
+
+One is the Pantry Bank and one is the Wikitext 2.
+
+And the bold values are like the best recurrent network model performance on these two data sets.
+
+And with our event-based GRU model, as we called it,
+
+We were able to get public cities that were very, very close to these recurrent models, but we had extremely high activity sparsity.
+
+And so if you look at just maybe this one example with the EGRU or the Pendry Bank, we had about 85% activity sparsity.
+
+And so if we had had hardware that could actually take advantage of it, it would
+
+it would use like 85% less computation if the hardware could actually take full advantage of it.
+
+And the backward sparsity was close to 50%.
+
+So you really end up doing like 50% less computation for training the same model.
+
+And we were also able to use way fewer parameters to do this.
+
+So overall, these models, I mean, so the thing is, these results that we showed, all the training was done on GPUs because we actually don't have the hardware that can take advantage of all of this sparsity.
+
+But this is, in some sense, like a calculation of exactly how much energy we would be able to save if we had this hardware.
+
+And so we were also kind of able to tune kind of trade-off sparsity with performance within a certain limit.
+
+So you see here that we don't, even though we are very close to the recurrent model performance, we don't actually reach it.
+
+And then there is a way to kind of make it less sparse and reach this close and you still kind of end up with some energy savings.
+
+So for example, so we actually implemented this on a neuromorphic chip recently.
+
+It's a neuromorphic chip called Spinnaker 2, which is developed by some folks at TU Dresden in Germany.
+
+And what was kind of interesting is if the energy consumption for a single batch for Spinnaker 2, which is this green bar over here, as you can see, is significantly lower than running it on a GPU.
+
+So this blue bar is the A100 GPU, just like one of the more recent ones.
+
+And the orange one is like a slightly older GPU.
+
+So it's like a little bit slower.
+
+And Spinnaker 2, and this was like actually a very
+
+the implementation was essentially a prototype.
+
+So we were not actually making full use of the chip, but it was able to make use of some of the sparsity on the device.
+
+And you kind of get like a huge energy advantage even with that.
+
+Although for larger batches, you don't, right?
+
+So this is kind of still one of the difficult areas of neuromorphic computing where it's not able to take advantage of larger batches.
+
+So yeah, so this is kind of on archive.
+
+You can go look it up.
+
+So we're kind of like getting there slowly, getting all of the sparsities on hardware.
+
+OK, so we can also use sparsity to make training very efficient.
+
+So I won't go into this in detail.
+
+But essentially, you can use algorithms that so far were considered completely
+
+computationally prohibitive in terms of the computational expense, you can actually, so these algorithms become more practical if there is activity sparsity and parameter sparsity.
+
+Okay.
+
+So, and we have explored like a really, really, really tiny part of the properties that can make models scalable, which is just activity sparsity and parameter sparsity.
+
+And we've mostly explored it only in terms of algorithms.
+
+And so there's obviously like a long way to go before we start reaching the scaling point.
+
+of biological substrates and biological algorithms.
+
+But we're kind of like trying to move towards this direction.
+
+So that's kind of like the conclusion, which is that sparsity and locality are essential for scaling up models due to energy constraints.
+
+And there are also other clever ways to use physical substrates to improve energy efficiency.
+
+So using time to compute communication and others.
+
+The next step is to really try to scale it up and start to catch up with transformer-based models on tasks that are a lot more closer to what people use in the real world.
+
+A lot of this work was done with lots of other people.
+
+This is the group and collaborators that we have.
+
+We have a large group in Ruhr University, Bochum.
+
+Some of you might have actually seen a talk by David Kappel,
+
+who gave a talk at Morfstream a while ago.
+
+And we have a few people from TU Dresden, and this is the group that actually develops the Spinnaker 2 hardware and makes all of this possible.
+
+So thank you very much.
+
+Hopefully we have some time for discussions.
+
+
+SPEAKER_00:
+Thank you so much.
+
+That was absolutely fascinating.
+
+There's a lot to unpack there.
+
+So Harris, you've got your hand up if you want to ask a question.
+
+
+SPEAKER_01:
+Yeah, I just wanted to say kudos.
+
+It was very interesting.
+
+And I have a couple of questions related to this presentation.
+
+First of all, you posed one very interesting question that has to do with the following.
+
+Can we scale even better, let's say, effectively moving beyond transformers?
+
+And as far as I understand it, because these large language models, the LLMs, are all the hype these days.
+
+So as far as I understand it, not all LLMs are transformers.
+
+But the other way around is true.
+
+Stavros Stavrides- And the reason for for that is because there are some elements that are not based in in transformers as you mentioned, you mentioned very current neural networks, of course.
+
+And that's one type, let's say.
+
+And another subtype that is based on RNNs is the long short-term memory networks that your group is actually investigating.
+
+And what I wanted to say is that trying to put everything together, is there a possibility
+
+for moving beyond the transformers and scaling even better by opting for what is called polycomputing
+
+And I mean polycomputing that is capable to combine different types of computing in a multicomputing paradigm like classical computing, quantum computing, neuromorphic, and even optical.
+
+So what do you think about that?
+
+
+SPEAKER_02:
+Yeah, that's a very interesting question.
+
+I mean, so there's definitely like a lot of
+
+potential in these unconventional computing devices that various people are developing, right?
+
+And each of them have different strengths and different weaknesses.
+
+So it would make sense to combine them together in a way that we use the strengths of like some of them without being affected by their weakness so much.
+
+But well, I mean, at least in terms of efficiency itself,
+
+If using like multiple devices or multiple different computing nodes,
+
+always kind of leads to this problem where you do a lot of communication.
+
+And communication is expensive, right?
+
+So even on a CPU or a GPU, or like most computing devices that we have today, the communication is really the bottleneck.
+
+So that's probably, I mean, that's actually like one of the main reasons why we are looking at activity sparsity, because that has to do with communication.
+
+So communication tends to take a lot of energy.
+
+It consumes a lot of time.
+
+And so, even with multiple different types of computing, the main problem that would need to be solved is, how do you make communication efficient?
+
+Both on a physical substrate, both in terms of the device itself, and also in terms of algorithms.
+
+
+SPEAKER_01:
+Thank you.
+
+Thank you very much.
+
+
+SPEAKER_00:
+Jennifer Jones- And yeah I had a couple of questions as well, I think it's it's fascinating.
+
+Jennifer Jones- And that you're saying essentially that you can get the same performance of the ls TMS but like with about 80%.
+
+Jennifer Jones- Less power like I think that's really amazing do you think that this these types of architectures will be used, so in the near future to make say GPS more efficient or or implemented in some specific use cases, maybe where.
+
+sort of temporal sparsity is particularly important, the temporal coding is particularly important.
+
+So I'm quite interested to hear your take on the applications where you see this being used in the near future.
+
+
+SPEAKER_02:
+So the temporal coding, I mean, I've not really seen
+
+uh much attempts to make use of it i think it's it's probably like one of those things which is like the hardest to make use of both from algorithms and hardware point of view but people are trying to make use of uh this activity sparsity so nvidia for example recently
+
+added support for a certain type of sparsity.
+
+It's still very, very limited, but they started adding support for a certain type of sparsity, which in principle could be used for activity sparsity quite well.
+
+There have also been a couple of deep learning accelerator companies that do activities.
+
+Actually, the
+
+I mean, there's probably like a bit of context that's required.
+
+So the reason that activity sparsity is really hard to make use of in hardware is because it's dynamic.
+
+So if you have parameter sparsity and if the parameter sparsity is fixed, you kind of know which particular weights you need to load at what times and which ones you don't.
+
+But if this is changing all the time, then it's really, really hard to optimize its use.
+
+And so this dynamic sparsity is what is extremely challenging for GPUs and most conventional devices.
+
+So NVIDIA's attempt at adding this support for sparsity is to some extent address being able to use dynamic sparsity.
+
+Although in NVIDIA's case, you cannot use, I mean, so basically using even static sparsity is very, very hard unless it's designed in a very specific way.
+
+And so this deep learning accelerator company that I was mentioning, so they really have done, they've designed a chip completely from scratch.
+
+It's a company called Cerebras, which can make use of dynamic sparsity.
+
+And it's also like super scalable because essentially what they've done is created like this huge chip on a single wafer, which means that the communication overhead is much, much lower.
+
+And it works really, really great for training extremely large models if you have the right kind of sparsity on them.
+
+So it's still not completely general purpose.
+
+It's still very closely tied to transformer architectures.
+
+But it can use activity sparsity really well if implemented correctly.
+
+But they don't really go beyond that.
+
+So they don't do time-based computing or make use of any of the other aspects.
+
+especially asynchronous computing, for example, as far as I know, only neuromorphic people working on neuromorphic devices seem to even use it.
+
+Although, well, I mean, I guess like somewhat ironically, we haven't fully figured out how to use it effectively.
+
+
+SPEAKER_00:
+I was actually just going to ask you a bit about dynamics last week, because I'm interested in sort of taking inspiration from neurodevelopment.
+
+And I think it's really interesting that in the developing brain, like say from about age two to 10,
+
+you have huge amounts of synaptic pruning.
+
+Like you actually lose about 50% of your synapses and that's essentially a key component of how we learn.
+
+So before I saw this talk, I was thinking about how if anyone's actually taking inspiration from neurodevelopment, for example, thinking about sparsity and how the brain sort of develops by pruning away all the sort of unwanted connections.
+
+Is that what people are thinking about?
+
+Does that fit into what you were just saying a little bit about dynamic sparsity or is that slightly different?
+
+
+SPEAKER_02:
+No, I mean, it's actually very, very closely related.
+
+And I mean, we've been like thinking about it a little bit also.
+
+But so essentially, what we've come to realize is that so there are two different aspects to having a model that performs well.
+
+So one is just the inference.
+
+So if you have sparsity, you can make predictions with this model or like kind of run the model forward.
+
+and any sort of sparsity helps.
+
+It makes it very, very efficient.
+
+But this does not necessarily make the model easy to train.
+
+So you need to have, there is this really orthogonal concern where you need to be able to train the model well, and it's a little bit in conflict with having sparsity.
+
+So like one of the, well, at least like from a very, very non-expert perspective, what it seems like is this neurodevelopment, this kind of like pruning that happens.
+
+It seems like there might be like a learning phase where a certain type of learning happens
+
+that is a lot harder to do if the overall network was really sparse and then you have this like huge pruning space and then you have like a different network that learns that can still learn but like a lot more slowly perhaps or but but it's like a lot more energy efficient it's interesting because yeah like the brain although it's pruning it's also growing and the part of the reason why it's growing so much is because of the myelination which is interesting because you talk about that in terms of the synaptic delays so maybe sort of there's some
+
+
+SPEAKER_00:
+balance between the sparsity pruning and then sort of the delay myelination that's introduced somewhere in a dynamic way um that's important to do i don't know
+
+
+SPEAKER_02:
+Yeah, I mean, I think, I mean, yeah, so I mean, obviously, like in biology, you know, like specific things don't just do one thing, right?
+
+They do like a number of different things.
+
+So that's the case with myelination as well, for sure.
+
+But so kind of what is interesting is that with delays, I mean, if you can control the delays, and if you can work with longer delays, then you actually need less activity in the network.
+
+Because, I mean, so if you take like a network with like absolutely no long-term memory, so like Leaky Integrated Fire Neuron or a Vanilla Recurrent Network, and you kind of try to train this network to store something for a longer time, one of the ways that it can discover to store things is literally persistent activity.
+
+So you have like one neuron that keeps firing all the time because it's storing one particular bit of information.
+
+And then at the end, if this neuron is firing, you know that bit is stored, and if not, it's not, right?
+
+It doesn't always emerge and it's pretty hard.
+
+There's a reason why these recurrent networks don't work well for long-term memory.
+
+But if you make the problem simple enough, you do see this.
+
+And when you train a spiking network or an LSTM, you do see persistent activity on and off for various things.
+
+And if you had delays, you could just completely avoid this.
+
+You could just say this neuron will send the message when it's ready after a few time steps or so, and only then the other neuron needs to process this information.
+
+
+SPEAKER_00:
+OK, interesting.
+
+That might touch on my which will make my final question because we have to drop and everyone's dropping off and share your screen.
+
+Sorry, I should have probably asked you to do that earlier.
+
+I'm quite interested in this idea of so artificial neural networks.
+
+They have the sort of this like always on activation function, whereas people contrast that with spiking neural networks, which are like neurons and like that on and off.
+
+And what's interesting, I guess, from a neuroscience perspective is because a lot of the brain is actually glial cells, which actually do have more this continuous activation.
+
+So the brain is actually quite a hybrid between more like ANNs and SNNs, essentially.
+
+So I'm super interested in sort of if you think like maybe the future will be hybrid in some way.
+
+Oh, Carl Fristner has entered the waiting room.
+
+I think I'll admit him.
+
+I don't know if he's in the right meeting.
+
+we're meant to have an essay meeting ah okay maybe yeah so that was my last and final question sort of do you think the hybrid system um would uh be something which people are interested in or looking at in the future or is that not something that i see um that's an interesting question so
+
+
+SPEAKER_02:
+Vaidhyanathan Ramamurthy, Well, I mean the question, I mean, so I think the related question that needs to be answered is do hybrid systems really provide any sort of advantage in terms of computational power or any any other thing.
+
+And at least as far as I know, there is no reason.
+
+So if you can get this event-based system to work, and at least theoretically, they're supposed to be equivalent to artificial non-event-based systems, then there wouldn't be any reason to use a hybrid system.
+
+But it could very well be the case that there are certain constraints where just an even-bid system would be way too slow.
+
+So that might be a concern.
+
+So it just takes too long to reach decisions or something like that.
+
+And then you might need hybrid systems as well.
+
+Yeah, I mean, so I'm happy to discuss.
+
+I mean, if you're interested in this area, I'm happy to discuss with you offline as well.
+
+
+SPEAKER_00:
+I'm super interested because as well, I like the sort of you get with the glial cells, there actually is some electrical communication.
+
+They have gap junctions and they have these sort of slow oscillations, which almost like the faster event based oscillations almost take advantage of a ride.
+
+So there's sort of an embedding nesting there of the the spiking and non spiking.
+
+So, yeah, it's something I'm super interested in.
+
+I just yeah, I don't know if the silicon world is as interested in it as me as a neuroscientist.
+
+
+SPEAKER_02:
+Yeah, but I'm happy to chat about it offline.
+
+
+SPEAKER_00:
+Oh, OK.
+
+Well, thank you so much.
+
+That was absolutely fascinating.
+
+I'm sure people might want to reach out to you with some questions of offline because this will be put on YouTube.
+
+So if they do, what would be the best way for them to contact you if that's OK?
+
+
+SPEAKER_02:
+Yeah, absolutely.
+
+It's okay.
+
+I mean, I have my contact information on my website.
+
+
+SPEAKER_00:
+Okay, great.
+
+
+SPEAKER_02:
+So email is probably like the best way to contact me.
+
+
+SPEAKER_00:
+Cool.
+
+Okay.
+
+Right.
+
+Thank you so much.
+
+And that's everything that I have to cover.
+
+Yeah.
+
+Thank you.
+
+
+SPEAKER_02:
+Thank you very much for inviting me to the talk.
+
+It was very interesting.
+
+
+SPEAKER_00:
+Yeah.
+
+Amazing.
+
+Yeah.
+
+I'd love to stay in touch and chat some more about this as well.
+
+So thank you so much.
+
+
+SPEAKER_02:
+Absolutely.
+
+All right.
+
+See you.
+
+Bye-bye.
