@@ -1,0 +1,978 @@
+SPEAKER_00:
+okay welcome back cohort six we're in our first discussion of chapter four so andrew however you'd like to begin and for everyone else any questions in the chat or raise your hand or however and let's jump into four perfect um yeah welcome everyone we're
+
+
+SPEAKER_03:
+going over chapter four for the first time with cohort six.
+
+For warning, for anyone new to active inference, this chapter is a bit more mathematically involved than the preceding chapters.
+
+But this is where we actually start to relate a lot of the concepts and kind of overview ideas that we've already been introduced to.
+
+We begin to kind of map these more mathematically to understand the computations involved.
+
+in active inference models.
+
+So more specifically, this chapter goes through the typical forms of active inference generative models we'll see, both in discrete and continuous time.
+
+um the relationship between those models and uh the dynamics of minimizing their free energy um at the very end we're also briefly introduced to other things that we'll see in later chapters including inferential message passing so um i would like to i i think this chapter does well at highlighting the importance of approximate inference
+
+We've seen before that a lot of the underlying assumptions in active inference involves the minimization of free energy.
+
+Now really,
+
+The idea is that agents would want to, quote unquote, want to minimize surprise.
+
+But because we need to actually render the computation tractable, we instead are minimizing a quantity known as free energy.
+
+Quick note that the mathematics involved here
+
+draw from different mathematical fields, primarily linear algebra, differentiation and multivariate calculus, and the use of Taylor series expansions and some others.
+
+There are some nice appendices in the back of the textbook for anyone who's either new to those areas of maths or need some kind of refresher and would like to get a closer look on their relationships specifically with the computations involved here.
+
+And so sort of the core here is that we're introduced with the equation 4.1.
+
+We already know from previous chapters, a generative model in a certain way can be reduced to a prior and a likelihood.
+
+Those fit right into Bayes' theorem.
+
+That's equation 4.1.
+
+And so it relates the prior and the likelihood on the left-hand side, which you could just replace with, you know,
+
+oftentimes there's a notation, the letter M to denote a model.
+
+And then on the right side, those end up equaling a posterior distribution, which is your hidden states conditioned on your observations times Y or your observations, so your evidence.
+
+And so you can imagine whenever the agent basically
+
+takes in new observations, all these quantities can be updated.
+
+And that's the kind of nice, easier kind of introductory view of how this works.
+
+As far as rendering everything tractable,
+
+Um, we also exploit something called Jensen's inequality, um, put in simple terms, Jensen's inequality says the log of an average is always greater than or equal to the average of a log.
+
+Um, so.
+
+We can exploit that and rewrite Bayes' theorem using logs.
+
+And we use a different notation rather than a capital P that might be used to denote an exact distribution.
+
+We can use a Q, which is used to denote an approximate distribution.
+
+and replace that in there.
+
+And so the whole idea is by minimizing free energy as a kind of proxy that is always greater than or equal to surprise, the agent, again, quote unquote, wants to minimize free energy in order to minimize its surprise.
+
+If you can get those two quantities to be virtually zero and virtually equal to one another, that would be kind of the general overall goal
+
+um and to kind of zoom through a bit more of the rest of what happens in this chapter we get a further breakdown of what comprises free energy um it involves um
+
+using Colbeck-Liebler divergence between that approximate distribution, the Q I mentioned earlier, and an exact inference P, and then subtracting log model evidence from that.
+
+Michael Prast- figure 4.3 or excuse me 4.2 were introduced to the kind of factor graph notation that's often used in act building active inference models.
+
+Um, these are not yet active inference models.
+
+There's simpler static perception models, but they give a nice kind of quick view of here are the kinds of things we'll be getting into.
+
+We have variables, uh, every single one of these involves something we're already familiar with, which is, uh, for a generative model, we have a prior, we have a likelihood.
+
+So all of those models involve the core components of a, of a generative model or agent.
+
+Right.
+
+So.
+
+Um, from there, we, it, it shifts into figure 4.3, um, which will have very similar components, but we're now introduced to active inference in that, uh, we now have actions that the agent takes, which then impact, uh, state transitions, right?
+
+So we've moved from figure 4.2 of just none of the models in 4.2 have action involved.
+
+None of them have like necessarily show some kind of temporal sequence of things playing out over time.
+
+You know, it's simply just these more static perceptual models that there's a nice example there where the one in the top left can be modeled as like, um, um,
+
+a disease and uh taking a diagnostic test that then computes like the the result of you know if if you uh administer a test on a person who has a hit we're trying to derive a hidden state here marked as x do they have disease like what is it or do they have it or not
+
+why is the result of the test, right?
+
+So that's kind of a way of looking at how these things are linked together.
+
+We have a prior, which is the prevalence of the disease.
+
+We have a likelihood, which is, you know, what is the result of the test given the disease?
+
+We can use Bayes' theorem and what could be called model inversion to switch around, see, okay, what is the,
+
+is there a disease given the particular result of the test?
+
+Strongly recommend just kind of reading through those couple of paragraphs to get a better sense of what's going on there, because it's much more descriptively clear than probably how I'm describing it here.
+
+But in any case, yeah, it's a good resource for getting started on these things.
+
+And then figure 4.3, the difference where we now have active inference models is that we actually have a temporal dimension, which is we're now including state transitions over time.
+
+So you can read those graphs in figure 4.3 from left to right, t minus 1 to t, the current time step, to t plus 1, which is the next time step.
+
+So the agent is basically taking in those observations at the bottom of that particular graph that Daniel has zoomed in on.
+
+We have these linkages with the hidden states as we saw before, but now we have policies impacting the state transition.
+
+as the agent engages in actions or sequences of actions, which is another way of saying what a policy is, in order to try and the agent tries to impact the changes in the states.
+
+So that is kind of the active part of active inference.
+
+And then from there, section 4.4, it's a little bit more involved.
+
+We can take all of these ideas that we've been introduced to, likelihoods, transitions, and so on.
+
+We can map those out to different components of our models.
+
+So now a likelihood model.
+
+is now called an A matrix or A tensor.
+
+The transitions model is now the B matrix or B tensor.
+
+The priors over states are now a vector called D. We also now have preferences that the model has, which are in a C vector, super important for the agent actually realizing its preferences or expected observations, which is an idea we were already introduced to in previous chapters.
+
+So the idea here is that we're able to just kind of map a lot of the more verbally described ideas that we've already seen in preceding chapters to these different components of a model, and then seeing how computationally we can minimize free energy over time.
+
+A couple other ideas that are brought up, but I won't go into too strongly right now because I want to allow time for questions and discussion are expected free energy or otherwise known as G that's related to planning.
+
+This is where the agent doesn't just look at past observations or current observations to minimize its free energy.
+
+but it also wants to realize its preferences.
+
+And so it has to kind of plan what it will do in order to realize those preferences or goals that it already has, right?
+
+So G plays in that the agent actually wants to kind of plan ahead of time.
+
+What should it do?
+
+So the C vector of preferences plays into that.
+
+You can look at the way that the agent chooses different actions or policies to take as it's actually computing expected free energy for each policy.
+
+And then it scores the policy.
+
+Should I do X?
+
+Should I do Y?
+
+Or let me revise that because the notation, I don't want it to get mixed up.
+
+Should I do policy number one, policy number two, policy number three?
+
+Well, let's score the expected free energy for each of those policies.
+
+And whichever one has the lowest expected free energy at the end, you go with that policy and you go with the actions that that policy entails in order to impact the environment, in order to impact the state transitions based on your transitions model, which basically is how do you think your actions are going to impact the environment around you?
+
+Even more quickly, some other top line topics that were introduced to Markov blankets.
+
+We've already seen some references to those in previous chapters.
+
+There's a nice box that describes more on Markov blankets and not just how Markov blankets are kind of conceptual.
+
+concept that separates an agent from its environment, but furthermore, kind of the maths underlying what a Markov blanket is about statistical independencies and dependencies between variables and so on.
+
+We get more on continuous time models, which are frankly much more mathematically involved, I would say.
+
+Involves more in the way of differentiation and looking at temporal derivatives and applying Taylor series expansions.
+
+A concept called generalized coordinates of motion that's involved, as well as Laplace approximation.
+
+And finally, at the very end of the chapter, we're briefly introduced to what's called Bayesian message passing, just kind of how, if we think about these models as graphs, as we've already seen, messages are being passed around between nodes via edges.
+
+And that has a significant amount of neurobiological
+
+plausibility behind it theoretically and through continued empirical study.
+
+And so that's the kind of neuroscientific or neurobiological backing to being able to say how a lot of this works.
+
+And for anyone's especially interested in message passing, we'll see a lot more of that in chapter five.
+
+I would also recommend to anyone
+
+more interested in planning in these discrete time models with the A and B and C and D components and so on.
+
+If you want to skip ahead to chapter seven, that chapter is entirely centered on discrete time models.
+
+It'll have more breakdowns of these different terms that are involved in computing G like we see terms like expected ambiguity and risk in this chapter.
+
+There are other ways that you can break down how we compute G.
+
+And it's nice to have these kind of words like risk or expected ambiguity that maybe gives a better intuitive sense of the maths involved and how it's useful, how it plays into the explore, exploit, trade off model behavior.
+
+Anyway, I feel like I've already covered the gist of what's going on in this chapter and maybe even overspoken.
+
+So if anyone has any questions, thoughts on any of this or any other particular topic they want to get into, please feel free to raise your hand or just unmute yourself and go for it.
+
+
+SPEAKER_02:
+Yeah, I have a couple of questions related to the statistical side.
+
+How would this relate to calculating something like the R0, like we look at in epidemiology, where you're looking at a predictive state with an n value of 0?
+
+
+SPEAKER_00:
+I'll give a short answer.
+
+There's probably multiple ways you could do it.
+
+But I mean, one way to handle it would be treat the true R0 as a hidden state.
+
+And then you make observations.
+
+So you have an epidemiological inference trying to estimate an underlying parameter.
+
+That could be the temperature in the room with a thermometer.
+
+It could be the R0 with a sampling from the noisy tests.
+
+That's kind of the general approach.
+
+It's what SPM does.
+
+You have the underlying neural activity unobserved, and then you have neuroimaging data, which is being caused by very nonlinear relationship with neural activity, like with the blood flow.
+
+That's the general process of perceptual inference is pretty much separate out what you're really, the underlying variable hidden state that you're trying to estimate.
+
+and then separate that out from the observations you're getting.
+
+And then you load up onto the A, how the hidden state is related to the observation synchronously.
+
+Then you load up onto the B, how that hidden state changes through time.
+
+And then you can layer in the policy.
+
+
+SPEAKER_02:
+Okay.
+
+Can you do that recursively with elliptic curve then?
+
+So would you step back over?
+
+So you would have to do linear step function back over through, right?
+
+Again, not sure how the curve, you mean like.
+
+So I'm just thinking of it in terms of the math with like the heavy side step function.
+
+So if you're going down from a three state to a two state, see how you have, like, you're almost jumping that zero state, but really what you're doing is sinusoidally passing through it with an elliptic curve in a way, but you're passing through a negative with a positive direction.
+
+
+SPEAKER_00:
+sketch out an agent that's doing that or having it done to them and then try to make it look like figure 4.3 and then you'll probably be close to an answer.
+
+
+SPEAKER_02:
+Okay.
+
+
+SPEAKER_00:
+Thanks for the summary, Andrew.
+
+This is a dense chapter.
+
+
+SPEAKER_03:
+Yeah.
+
+Yeah.
+
+
+SPEAKER_00:
+Yeah.
+
+Chapter one, introduction.
+
+Two and three, low road and high road, getting to active inference.
+
+Chapter four, it's active inference.
+
+Chapter five, neurobiology case studies of active inference.
+
+That's the first half of the book.
+
+And then chapter six, recipe for making it yourself.
+
+Chapter seven and eight, revisit.
+
+Sections 4.4 and 4.5.
+
+Nine, bringing in data.
+
+Chapter 10, summary.
+
+
+SPEAKER_03:
+So we get a significant amount of kind of back and forth between kind of more verbal descriptions of the ideas and concepts.
+
+But we have to come back to the maths, right?
+
+That's essential.
+
+And I think that's what chapter four does, is just quickly give you a broad stroke of here are the maths underlying a lot of these ideas and how the dynamics play out.
+
+
+SPEAKER_00:
+JR made a really nice comment in the Discord a few days ago.
+
+This is a new paper, Active Data Selection Information Seeking.
+
+And here there's a slightly new and different notation.
+
+Lambda operator introduced to indicate either summation or integration, depending on whether we're dealing with continuous or discrete variables.
+
+So here we're approaching that in the time setting, but it's kind of like,
+
+This comes up a lot, like whether the variable is continuous or discrete, and then whether time is being treated continuously or discreetly.
+
+Those are options under the umbrella of active inference models.
+
+So the actual kind of pseudocode is not predicated on the variables being continuous or discrete.
+
+
+SPEAKER_03:
+That, to me, intuitively just seems...
+
+really nice and allows for a more direct relationship between the continuous and discrete variables.
+
+Because you have this chapter four here, as well as comparing chapter seven and chapter eight,
+
+It's like the textbook kind of presents discrete and continuous.
+
+I mean, of course, free energy minimization and a lot of other concepts are shared between the two.
+
+But I mean, we get a kind of sharp distinction between using discrete and continuous variables all the way down to
+
+the very notation being different, your S's and O's for discrete versus X's and Y's for continuous and so on.
+
+So it's nice to see an equation that can kind of relate or compound the two
+
+to where you just need to kind of know if it's discrete or continuous, and then similar process for each while knowing, of course, that discrete variables you're working with point masses and summations as opposed to integrations and so on with continuous.
+
+That's another point to be taken for the ontology.
+
+Sure.
+
+
+SPEAKER_00:
+Um, Peter or, or anyone?
+
+
+SPEAKER_01:
+Thank you, Daniel.
+
+So I loved this chapter.
+
+I thought it was really cool.
+
+I'm pretty excited by the lambda notation that was just described.
+
+I was unaware of that, and there's a lot to think about there.
+
+In some ways, this was the chapter that I was personally least comfortable with in terms of my ability to sort of grok everything that I needed to get.
+
+My personal background is mostly on the neurobio side, and I have much less in the way of mathematics.
+
+I was wondering, so I haven't checked out the references at the back yet, so maybe that's actually gonna answer my question, but I was wondering, does the active infants group have any kind of like a learning path for the supporting mathematics that you would need to really be able to be really kind of fluent with this chapter and like, for example, be able to plug in values and do things with the model?
+
+Like, do we have any kind of a guide of like, hey, if you wanna learn, you know,
+
+Taylor series expansion here's where to get it, if you want to learn linear algebra like here's a particularly good text because i'd be interested to sort of take that stuff on over time.
+
+
+SPEAKER_00:
+Thanks yeah i'm in the math learning kind of subsection, this is, you know quiescence till or when people.
+
+don't want to do it, but then as people want to do it, like anyone's welcome to just say, this time UTC, I'm going to do this.
+
+Like in Discord or however, or just make the edits directly here.
+
+This math learning and resources has at least many.
+
+I think the language models are really good at this right now.
+
+This kind of like
+
+like undergraduate level math, which is hard.
+
+That is a good specialty of them.
+
+And then another possibility with the learning is from the equations.
+
+Here, all the equations have been put into LaTeX.
+
+Then this can just be, so even if you're working with a language model that doesn't have the ability to put in a screenshot,
+
+can just put in this or look at what we have here and then look at the explanation why would a high schooler be interested what's the pseudocode where is it important what are the variables these are just tentative but they do um even where they contain like some like i guess factual you know omissions or or errors
+
+they give it the style of what information is in the equation.
+
+And just like one plus one equals two, one plus one equals question mark, like you could spend the rest of your life truly pondering it.
+
+So there's never going to be a moment, okay, I'm done with Bayes' equation.
+
+I finally, you know, don't need to wonder about it anymore.
+
+But then knowing that it will never be fully resolved
+
+getting to kind of just like a stopping point with feeling like you don't know at all what it does.
+
+And then just seeing a bunch of related natural language descriptions.
+
+And then also our handwritten natural language descriptions.
+
+which anyone can also add to.
+
+Sometimes just seeing it written out linguistically instead of only symbolically can help, especially because then you can replace X with hidden state and Y with observation.
+
+And then from there, that can translate to other languages, but also you could replace, okay, hidden state with temperature, observation with thermometer.
+
+And then this starts to look more like the probability of the temperature times the temperature
+
+thermometer given the temperature and so then it's like easier to jump between a tangible example and all these other like kind of aspects of the holistic math understanding and like Jonathan Schock and Ali Blue others have like also thought about how to what kind of math is important to lead up to the textbook group
+
+And in the appendices, they do mention what they see as the important background areas.
+
+I think it's A, linear algebra.
+
+So doing operations on matrices.
+
+adding and multiplying products on matrices.
+
+Taylor series approximations, this is important for the continuous time.
+
+This is where you take a point and then you try to extrapolate a continuation around that point.
+
+Variational calculus and stochastic dynamics.
+
+This appendix may still not be the perfect resource to learn those four topics, but the fact that they listed them out as the four topics, then going to any like highly rated online course or like popular videos on these topics is probably pretty helpful.
+
+
+SPEAKER_02:
+linear algebra very much is and stochastic dynamics or just statistics i think also is critically important it's fantastic thank you it's uh beyond helpful really appreciate it peter i'm in the process of learning all of this myself so i'd be willing to work with you if you wanted to do something as well within discord or something through coda
+
+
+SPEAKER_01:
+Sure, that'd be great.
+
+
+SPEAKER_02:
+Thanks.
+
+Are you on the Discord?
+
+
+SPEAKER_01:
+Yeah, I just joined a couple days ago.
+
+
+SPEAKER_02:
+Okay, great.
+
+
+SPEAKER_00:
+There is a textbook group channel.
+
+You can try to join in or just post somewhere if you can't find it or anything, but then we can just kind of
+
+keep that discussion alive and, um, like, yeah, knowing, knowing what this symbolizes helps.
+
+There probably is a point of diminishing return with learning any of the background maths, but also they're their own reward.
+
+So they're fun to learn.
+
+
+SPEAKER_03:
+I might throw this into the, um,
+
+CODA as well, but just sharing if anyone is familiar with Coursera courses.
+
+For me, I've had to do a lot of learning asynchronously from the
+
+institute and i really like this one um just because um you know it has a couple courses there it's very intuitive and especially for anyone who wants to move in the direction of like implementing and learning with um python it mainly focuses on that but yeah the first course is linear algebra but in the context of like we're learning matrices we're learning
+
+how to multiply them and so on um and then by time we get to the second course it's multivariate calculus and so all of a sudden you're learning about like gradient descent uh with multiple variables involved so just the first two courses of of that link i shared um i find immensely helpful for at least as a starting point it just walks you through everything so yeah
+
+
+SPEAKER_00:
+depending on where someone's at with their programming or engineering or anything it can help just to think of these as variables like s can be kind of treated with one handle as like a mathematical variable and if you want to go into the um like the abstraction and the analysis and the category theory then it is going to be helpful to just pick up s of t with one handle and
+
+But then at the same time, when you actually write the PyMDP code, S is going to be like a matrix of a defined shape.
+
+So then going to the PyMDP documentation and examples and just seeing like, okay, what shape is A, B, C, D?
+
+Okay.
+
+That's the whole agent.
+
+That's the active inference agent.
+
+That can help ground it.
+
+That's not the general case, but seeing how minimal...
+
+a small case can be is helpful to know like what a complete generative model is and kind of calibrate how challenging different kinds of phenomena might be to model.
+
+Yeah.
+
+PyMDP, open source package, discrete time, but this is a good...
+
+package that's really focused to like getting as fast as possible to the discrete time agents.
+
+Whereas RxInfer as we're exploring week after week is general and continuous and all these other things.
+
+POMDP gets you really fast to the POMDP like chapter seven model.
+
+There are great
+
+demos including that you can just open it up in a notebook you can copy the notebook or use this version and just like run it right here and see the full active inference model you can also clone it locally into like cursor.sh
+
+with a code enabled development environment.
+
+And then you can chat with the code base and ask questions about like PyMDP or any other package.
+
+So this can be extremely helpful.
+
+
+SPEAKER_03:
+yeah i think that's great um i would say for for people who are just getting into this and thinking about how to set up a model as well some things uh if you want to start with py mdp or otherwise um and again if you want to jump to modeling i would strongly recommend having uh and you have the time for it have a look at chapters seven and eight that'll definitely go over more like
+
+more specifically how to construct models.
+
+For anyone who's thinking like, okay, I have a particular project, how do I map the variables to these different components of a POMDP?
+
+For example, you can have a look at chapter seven.
+
+It'll get into things like, okay, we have states, we have observations, like two crucial parts of a model.
+
+Well, maybe I have different forms of data that I'm bringing in.
+
+Like for example, someone,
+
+doing something more physiological and clinically based in a lab or something.
+
+Maybe you're collecting neuroimaging data in addition to heart monitor data.
+
+So suddenly you have two different data streams coming in.
+
+you can map those as different like observation modalities is what they'd be called.
+
+And basically you'll just be constructing your matrices, the A and the B and so on that account for like these different data streams that account for different hidden states that you're trying to inferring.
+
+Trying to infer so on.
+
+PyMDP is great for that too.
+
+If you are wanting to use Python or at least using it as a learning tool, because all of these examples, there's the teammates one that Daniel scrolling through.
+
+There's another one that sets up a two armed tool.
+
+bandit model just like uh an agent who um you know picks from one of two like kind of slot conceptually what are like slot machines and um
+
+So you have, it shows you how to like, oh, you have multiple forms of data or observations that are coming in.
+
+You have multiple hidden states that the agent is trying to infer.
+
+You will set those up as like matrices or tensors.
+
+And that's kind of where the linear algebra plays in and being familiar with matrix operations becomes really important.
+
+But it's really nice.
+
+Yeah, David, you have your hand up.
+
+
+SPEAKER_02:
+Yeah, in regards to the choice function there, would that apply to what we covered earlier in terms of the lambda function or the lambda operator rather?
+
+Let's see.
+
+
+SPEAKER_00:
+Okay, we can look back at the lambda, but about like the behavioral selection itself.
+
+Let's find kind of exactly where it comes into play.
+
+Okay.
+
+Okay.
+
+So in this, this is the tutorial one.
+
+There's going to be, they first have a simpler version with no planning.
+
+So here's an active inference loop with no planning.
+
+Then planning comes into play.
+
+So a big, big question arising when doing the modeling is like, are we working with something that plants?
+
+And even behavior that kind of like,
+
+seems plan-like might be underpinned by simply heuristics.
+
+Like a flock of birds, you might not need to appeal to it doing a long-term planning for its coordinated movement.
+
+You might just be able to explain that with single time step behavior of the birds.
+
+So just because something is acting adaptively through multiple timescales doesn't mean that it needs to be planned.
+
+But you may still model something from the outside as if it's doing planning
+
+um whether or not it is map and territory and all that okay now given that here's here's where when you're in um the planning setting here's where the the choice comes into play
+
+Calculate expected free energy of actions.
+
+So here we actually are using expected free energy G, and it is calculating the expected free energy based upon essentially all the variables that come into play.
+
+And then they, so it takes in the policy prior, which is like E or habit, which is just your before thinking about planning, what is your habit?
+
+So if you're doing like a fair teammates rat, it might just be 50-50.
+
+Or if it's a teammates rat, but it has like an 80-20 bias for one direction.
+
+Then each of the policies get reweighted
+
+The policy variable sums up to one, and then here they're reweighted to update to a policy posterior, and then here chosen action is sampled from the posterior.
+
+Earlier, Andrew also said you could just pick the lowest one, or you can sample from this distribution, and there's other things you can do.
+
+So expected free energy isn't a choice function itself.
+
+It's a reweighting of the likelihood of policies that then enables you to take different kinds of choice functions secondarily.
+
+
+SPEAKER_02:
+So would policy Q be, in essence, the quiescent point of pi?
+
+Which one?
+
+So where you have Q underscore pi is the softmax at negative G. So would that be like a horizon point, essentially, where you're measuring at?
+
+Or measure it to a distance at softmax?
+
+
+SPEAKER_00:
+The time horizon is big T. So here, this is a five-time step simulation.
+
+And here, policy length is considering all combinations of policies of two affordances.
+
+So if you can go up, down, left, right, four affordances, then there's 16 policies of length two.
+
+And you have a range of four values.
+
+with the actions as the okay yeah the actions at each moment are the affordances policies are sequences of affordances for a given time um and then playing around with these variables is sweeping across them and making like summary diagnostic statistics about
+
+
+SPEAKER_02:
+portfolios of simulations is when you start to see interesting things okay great yeah i've been kind of modeling similar to this and i've been seeing similar things so i'll start working with this a bit more to solidify things perfect thank you cool and yeah it's uh
+
+
+SPEAKER_03:
+As Daniel mentioned earlier, for anyone who's more directly interested in modeling,
+
+Again, I'm personally trying to learn both PyMDP as well as RxInfer at the same time.
+
+Two different programming languages because RxInfer is based in Julia.
+
+But we do have an ongoing institute project Thursday mornings.
+
+It's the RxInfer project.
+
+And what's great is that one of the folks from BIAS Labs who's developing the RxInfer package
+
+um, is actually directly involved with that group.
+
+So we, we have some, some nice, uh, communication with one of the developers basically.
+
+Um, and there we are, um, going through different examples right now that RxInfer, like those folks have directly made available, just like we were going through an example for PyMDP.
+
+So they've done the same for RxInfer.
+
+Um,
+
+There's a nice kind of reciprocal relationship going on because we have the opportunity to tell the representative from BIAS Labs like, hey, we think you should, you know, maybe update your documentation to make it clearer on this particular point or something like that.
+
+And then they help us with the learning.
+
+But yeah, anyone who wants to kind of get more involved with that.
+
+not to mention the the rx infer package seems to offer some capabilities beyond uh maybe what other methods allow for so um we were able to look more at like continuous time models which are certainly uh in certain ways more mathematically involved with all the integrations and so on so yeah this is a nice um example here like
+
+This is trying to model a car that needs to take the right actions to exploit its velocity and acceleration in order to move up a hill landscape to reach a goal that it otherwise couldn't if it just put the pedal to the floor, so to speak.
+
+And so the agent like learns what what it should do in order to reach that goal.
+
+But yeah, so they're just like toy examples.
+
+But yeah, super cool.
+
+Yeah.
+
+And I think useful for you if you have your own project that you under want to undertake using this is kind of like a foundation for that.
+
+Daniel, you're going to say.
+
+
+SPEAKER_00:
+Yeah.
+
+Yeah, this is a different syntax, different language, Julia, than Python, but with many similarities.
+
+And again, like even with limited code familiarity, it helps calibrate like where someone is at.
+
+Like this is just a coin toss.
+
+This isn't even like, it's not a coin tossing quantum agent.
+
+This is just like literally a coin being tossed.
+
+But this can help calibrate learning in terms of like,
+
+what does it take to make a coin toss?
+
+And then, okay, here's a slightly more involved example with a hidden Markov model.
+
+And then we're also gonna bring this back into the textbook group by looking to replicate PyMDP and textbook examples in Rx and Fur.
+
+Because although it can feel, and it is true on one hand, that it's more flavors or more material or more variants, it's actually a very important decision that they took in the textbook to have figure 4.3
+
+like they're not in they don't introduce just the discrete time and then later go to continuous time they introduce them jointly to emphasize that there isn't only one way to treat time in active inference so then that's how i've been approaching it too so that's awesome
+
+cool yeah i mean it's like there's base i don't know if there's any um any one-way streets like if there's one there's another one and so having there be multiple languages it's like not about one person being able to generate all the scripts for all the languages for all the cases you know in a moment
+
+but basically code models can already do that first off.
+
+And then, so we're just able to look at that and then try to connect the dots and think what's this deeper space that's able to have multiple Julia and multiple Python scripts corresponding to a T maze.
+
+And then how do we make sure that that kind of like broader latent or dark space that we're thinking about is active inference.
+
+And what makes something actually an active inference model as opposed to just like any other kind of broader input output cybernetics or control or reinforcement model, which might be totally valid and adequate for a setting.
+
+So there's nothing wrong with like not making an active inference model.
+
+It's just that there is a difference between it being an active inference model versus being like a reward learning model.
+
+
+SPEAKER_02:
+Gareth J. And right, so.
+
+Gareth J. Sorry, no good, so I kind of see that also is like being a parameter of the time frame or the frame that that constraint is saying, so if you're using the language in that sense as a filter, it would be applicable to that model, for example, in that discrete time range.
+
+where it may not fit to another model with the same kind of parameters due to other separate constraints, for example.
+
+
+SPEAKER_00:
+You mean like kind of using the validity of the active inference ontology to kind of check whether the script is an active inference model?
+
+
+SPEAKER_02:
+Yeah, but in a way by being able to apply it as a filtering model without energy, it kind of reduces the friction on the surface, doesn't it?
+
+So if the language that you're using within that frame works with the frame,
+
+without it adding too much context because of the parameterization versus dragging and dropping that filter into another model where the language doesn't fit.
+
+You would have to use a different model, but that doesn't make the first model not valid.
+
+Would that be a correct statement in that context?
+
+
+SPEAKER_00:
+I think so.
+
+I mean, I don't know if this is too broad, but making model two cannot make model one invalid, right?
+
+model two can yes.
+
+And it might be, yeah, it might be fewer parameters or more or more or less accurate, but, but it can't invalidate.
+
+It's just merely another addition, like into the blockchain of everything.
+
+And then in terms of the ontology and the variables, I mean, you can just look at the variables.
+
+Oh,
+
+added more comments here.
+
+But if you've defined, if you've looked at figure 4.3, and this is the rough setup of your set, then you can ask, is there something that is here that I don't have?
+
+And then is there something else that I have?
+
+And either of those, if you make it simpler than this,
+
+You might be dealing with a special reduced case.
+
+If you add more things, I mean, that is pretty much all of the research advances in active inference.
+
+It's like, well, what if we added a variance parameter here?
+
+Or what if we added a nesting here?
+
+So it's like more can be added here.
+
+And hence the textbook just like tried to throw the fastball down the middle and show it in its like plain way.
+
+And then to be able to map anything to the plain version, if you can bring it back and if it's a valid return to the kernel, you know, then it's like, oh, it's a heavily modified Linux kernel.
+
+But not everything is a heavily modified Linux kernel.
+
+Something else might just be a totally different construction.
+
+So it might be better, might work well with in a computer system, but it wouldn't make sense to say that it was a modified Linux kernel unless you had started with either pruning down or adding to the Linux kernel.
+
+
+SPEAKER_02:
+Okay, perfect.
+
+Yeah, you don't want to end up in Temple OS when you're looking at Linux.
+
+
+UNKNOWN:
+Okay.
+
+
+SPEAKER_03:
+I would just also briefly add to that point if, like,
+
+just for inspiration or otherwise.
+
+But if you wanted to kind of just literally just flip through, not even necessarily read, but for the time being, flip through chapters seven and eight and just look at the other figures going on in there.
+
+They give many more ideas of like how you could construct this from the standpoint of like looking directly at these, this kind of like graphical notation.
+
+We've been talking in the RX and for how it seems great to be able to use graphical notation in the first place.
+
+One, just for,
+
+being able to track all the different variables and how you're setting up the model but then also too just like scheming on like what what do you need how does the model need to be changed or or otherwise um like in seven chapters seven and eight we get more into discrete and continuous time models we also are introduced to hierarchical models where you can add a second level
+
+Probably one of the most involved graphs is, yeah, these, like Daniel has pulled up, I would say especially figure 8.6.
+
+is pretty great.
+
+What it does is that you have a hierarchical model at the top level.
+
+You have the POMDP, like discrete time model setup.
+
+And then the bottom half of that graph is actually using continuous variables.
+
+So it's not just hierarchical, it's also like a hybrid model.
+
+So you're including both types of variables in there.
+
+You could almost think of this as like at the lower level, that bottom half, you could have something like
+
+um, uh, continuous time neuroimaging data.
+
+And then at the higher level, there's some kind of discreet, uh, hidden state that you're using that, that real time observational data to then, uh, infer like, you know, so it's, uh, yeah, it's just steaming, modeling, doing the mapping from, uh, you know, reality to variables on a graph.
+
+
+UNKNOWN:
+Um,
+
+
+SPEAKER_00:
+awesome yeah this all uh all fits together so yeah i might have to uh join you guys on thursday so it'll be interesting thank you yeah or or um or the the rx infer code is in the chat also on the math background so the spm statistical parametric mapping this is what carl friston at all we're working on in the neuroimaging group
+
+at UCL in the pre-ACT-INF and FEP days and continuing.
+
+It's a MATLAB toolkit.
+
+It continues to be developed and the documentation is all online.
+
+That being said, this 2007 textbook
+
+is very informative.
+
+It has like 40 or 50 chapters, but they're standalone short chapters that don't really reference each other because they're focused on like the neuroimaging setting of taking in multi-sensor data, doing the sensor fusion, doing the dynamic causal modeling.
+
+I find it really informative because it quickly reviews and uses parametric statistics, non-parametric statistics, and Bayesian statistics.
+
+So it's very, very strong for learning about this setting, which is where you have a prior on a hidden variable, and then you're getting observations, and then the hidden variable is changing through time, like neural activity.
+
+Control theory then injects into, selects out a slice of B to control how the system evolves.
+
+And so that's why that was brought into play because if you're only observing the neural system, then you only need this.
+
+But then if you're gonna be selecting behavioral stimuli,
+
+or you're going to be doing transcranial stimulation or something like that, you need to have a bidirectional interface.
+
+But in terms of the basic statistics and weaving together parametric, non-parametric Bayesian, this is one of the best textbooks.
+
+
+SPEAKER_02:
+Okay, awesome.
+
+I think I've read some selections from it, but I definitely need to pick up a copy of it.
+
+
+SPEAKER_00:
+I don't know how much the physical version costs, but I'm sure that there's a PDF of this one.
+
+We probably have it.
+
+And also the online documentation is more updated.
+
+And there's also tutorials for SPM.
+
+So, even if you don't do neuroimaging, I've never been on an MRI slash analyze the data, but still just reading through this, because these machines are creating a lot of data, and it's a very transferable setting.
+
+
+SPEAKER_02:
+Okay, great.
+
+Yeah, I'm interested in the noise parameters on that, too.
+
+
+SPEAKER_00:
+Yeah, and comparisons, the kinds of statistics that you need to account for, like within and among participants in a clinical study, and statistical power calculations, like...
+
+That's really where it comes down to it.
+
+Like trying to understand the statistical formalisms in their N equals one setting is almost like, I don't know if ironic is the right word, but the whole point is we're using distributions so that we can take in multiple data points.
+
+So it's not meant to just be like kind of looked at on the shelf.
+
+It's meant to be like played around with different priors and testing how different observation sequences lead to different updates.
+
+
+SPEAKER_02:
+So that's kind of how I've been approaching it as well as testing as n equals zero is equivalent to one, which is why I asked the question in regards to the lambda.
+
+It's a choice function of zero or one.
+
+Um, but that would, so I've kind of been approaching in terms of like at T zero and zero at T one and one, and you have expansion from that set back to, and it will always still be the N one plus or N minus two in that sense, back to just what we had started talking about earlier, but.
+
+
+SPEAKER_00:
+yeah there's a lot there that's kind of like when when the when the when the mouse is planning it's it's now it's t equals zero but also it's the next time step but also it's an arbitrary time step but to get lost in the fact that it could be an arbitrary time step it also has to be through other frames right well um
+
+Next time later in the day, let's just begin with whatever questions people have or other added questions to the table and upvote the questions that you like.
+
+And we'll start from the top next week.
+
+Okay.
+
+Thank you all.
+
+Awesome.
+
+Thanks everybody.
+
+Thank you.
+
+Thanks folks.
+
+
+UNKNOWN:
+Take care.

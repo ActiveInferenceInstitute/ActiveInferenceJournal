@@ -1,0 +1,826 @@
+SPEAKER_02:
+all right welcome back cohort five we're in our second discussion on chapter seven so is there anything anybody wants to begin with we can look at the text we can look at any question we can add a new question we could look at pi mdp anything um
+
+Anyone can write in the chat or raise their hand or just go for it.
+
+
+SPEAKER_00:
+Yeah, so I have a sort of more more open ended question.
+
+I've been sort of
+
+thinking about doing a little modeling project.
+
+And what I'm thinking about is that I'm just wondering how I can use this active inference machinery to model some kind of recognition task.
+
+How would you approach doing something like an MNIST classification with active inference?
+
+But what I am interested in is bringing this one key difference from the active inference-like approach to the problem that's basically completely solved using artificial neural networks.
+
+But in a way that, you know, if you feed MNIST to like a transformer-based classifier, you patchify it.
+
+So it turned into small little chunks of image and you feed that into a transformer and the transformer kind of like sees the whole sequence and then finally learns how to classify an image.
+
+I'm just sort of wondering, thinking about how to find some sort of connection between doing something like that, except getting the neural network or some other kind of system to choose where to look, to sort of model the behavior to be almost like a saccade.
+
+I'm seeing a part of an image, and then I have to make a decision where to look next to
+
+resolve as much uncertainty as I can about what am I seeing.
+
+And it doesn't have to be something like an MNIST.
+
+It could be like some really, really simple images to start with, you know, like 8x8 pixels, some generated, I don't know, knots and crosses or whatever.
+
+But I don't really even know where to start with that.
+
+It's a very open-ended, big, big thing.
+
+But if you have any suggestions where to look, I would love some pointers.
+
+
+SPEAKER_02:
+yeah great great questions well certainly what I'll show now is not the end of the story but I think it'll provide some motifs that you can pick up on here's a 2021 paper with Axel constant so in this setting it was an eye Cicade visual
+
+And one of their novelties was that they made a bounding box that was kind of like the zone that was visible in the Cicade.
+
+So the cross focus is the center of vision.
+
+And then the affordance of the I Cicade is to move to another cross.
+
+And then that would move the bounding box.
+
+And it's a cultural pattern recognition task.
+
+like based upon identifying these higher order patterns of pottery.
+
+So that's one visual way.
+
+I think this is a super fascinating thing because in almost all visual recognition tasks, either the whole image is passed through if it's sufficiently small, like MNIST, or it's tokenized or chunked or however.
+
+But here we bring the action into vision with actual guided cognitive vision moving to uncertainty.
+
+So that might be...
+
+way more efficient in certain settings um for example recognizing a person like first there's like the movement just empirically like there's like movement to the body and then there's a movement to the face and then identifiable parts of the face that's the saccade model and then on the MNIST the recent uh structure learning paper actually specifically they do MNIST um and they um
+
+So the labeled data in MNIST are the true identity of the digit.
+
+And then they use their structure learning technique to develop the styles, handwriting styles of the digit.
+
+So they're not doing structure learning on how many digits there are as far as my reading.
+
+but they do look at different styles.
+
+Like these are different styles of the digits.
+
+So then it is learning, it's doing, it's saying how many styles of one are there?
+
+And then it's finding through structure learning, which is the proposal of a additional latent factor, and then Bayesian model reduction, pruning the model back down for redundancy.
+
+they find strong performance on the MNIST.
+
+The code is in MATLAB, and I've looked into it.
+
+With some language models, you might be able to bring it into something out of MATLAB or just isolate it into pseudocode.
+
+But the MATLAB code itself, it's a little bit of a... It integrates a lot with the broader SPM package.
+
+So it's not just like you can just pop out the MATLAB script and run it.
+
+Because if you follow the rabbit's trail, it goes into a few other SPM scripts that I don't think have been brought over into PyMDP yet.
+
+But from a pseudocode perspective, it's very informative.
+
+
+SPEAKER_00:
+Awesome.
+
+That looks super relevant.
+
+
+SPEAKER_02:
+Thank you.
+
+Yeah, but this one does not have CICADE.
+
+This one, the MNIST digit is coming in
+
+One interesting thing also on the cultural one, this generative model was actually, this is before PyMDP.
+
+this generative model is the one that we utilized for active inference.
+
+We just said, well, what if instead of it was an eye saccade in a bounding box without leaving a trace, what if it was an estimate moving in a zone leaving a trace?
+
+So that kind of opened up the like observing from afar, moving your eyes, but not leaving a trace versus skin in the game where the movement from here to here is interpreted as a physical movement.
+
+
+SPEAKER_00:
+Cool.
+
+Great stuff.
+
+Thank you.
+
+
+SPEAKER_02:
+This, this paper all, I mean, has other benchmarks like the, the recognition, um, Sprites dataset, maybe even a third one.
+
+Towers of Hanoi, classic TI 83 game.
+
+with some very interesting shapes.
+
+Cool.
+
+Any other thought or part on seven?
+
+why mdp right now is only in discrete time so pretty much everything that you encounter in time dp today will be in the chapter seven spirit um sanjeev's python work as well as
+
+Rx and for Julia have continuous time models.
+
+Okay, can we go through the matrices other than a to D so you're talking about in here because or in which figure to do.
+
+
+SPEAKER_04:
+Maybe yeah this this seems good sure.
+
+Okay.
+
+Okay.
+
+
+SPEAKER_02:
+Okay, so here's the progression of how they introduced the matrices in 7.
+
+O is the observation vector at each time point.
+
+So if you just had one binary sensor, O would be a 0 or 1.
+
+If you had eight float sensors, it would be eight float numbers.
+
+S is a vector carried through time, each time point, of the latent states.
+
+So let's say we're talking about temperature in the room, thermometer, observations, latent temperature, hidden state S, agent's estimate of hidden state S.
+
+a is a matrix that has um rows and columns corresponding to o and s a is a mapping between o and s and so it can be used to start with s and then emit a distribution of expected observations or it could be taking in an observation conditioning upon an observation like base theorem does and then updating um a hidden state belief
+
+D has the same dimensionality as S being carried through time.
+
+So D is just like a vector.
+
+It's kind of like T zero.
+
+It just starts the chain going and it gives you S at the first time point.
+
+And then B is a transition matrix that has edges and rows and columns, edges, of the dimensionality of S. Because it maps S at t minus 1 to S at t. So this is a standard hidden Markov model.
+
+Ambiguity matrix A between hidden states and observations.
+
+Transition matrix B between states at times.
+
+There's no action in this model yet.
+
+Um, the next thing that they do is they take that exact downstairs model E coming down.
+
+And then this is where the action answers the picture, which is PI, which is, uh, the policy space expressed as a probability distribution over actions.
+
+So PI sums up to one.
+
+It could be sampled from, or it could be just pick the highest number.
+
+Or it could be pick the second highest or all these different things that you can do regarding how to pick a policy from pi.
+
+But pi intervenes with a policy in B. And so while previously B was just a single matrix going from S of T minus 1 to S of T, now B is going to be having a matrix slice for every single affordance that we have.
+
+So each slice of B is like an index card that describes the world transition model conditioned upon action selection.
+
+G is expected free energy, and G is a distribution that essentially updates the policy prior habit with respect to epistemic and pragmatic value equation 2.6.
+
+So that gets us to this kind of figure 4.3 or figure 7.3 discrete time classic model.
+
+We have a downstairs hidden Markov model with no action, and then actions select which B matrix is gonna be applied as S unrolls through time.
+
+And then in figure 7.10,
+
+we see a lowercase letter above each of these other letters that we have talked about.
+
+That represents a hyperprior or however you want to think about it, but it's a distribution which that uppercase variable is drawn from.
+
+So instead of just saying, well, there's four states in the world, so our D vector could be 0.25, 0.25, 0.25, 0.25.
+
+That'd be like a uniform prior across initial location.
+
+Or it could be 1, 0, 0, 0, just unambiguously starting in the first distribution.
+
+Or you could parameterize little d, which would be a distribution which big D is sampled from, for example, across individuals or across nest mates or across trials.
+
+So then learning could happen on little d.
+
+across trials.
+
+So you could begin with like a uniform prior of where I begin.
+
+And then with learning by counting, you can just say, okay, I'm going to, with the conjugate prior, the Dirichlet distribution, I'm going to add one count to little d every time I observe myself starting at a certain location.
+
+And then trial after trial, you'll end up drawing big D from a prior distribution that does resemble the experienced history.
+
+That's the learning by counting part.
+
+And then the end of the chapter, they just kind of present one more motif, which is now that exact 7.3 or figure 4.3 exact motif.
+
+just demonstrating a little bit of the composability of the base graph by showing that like the observation being emitted from a top level model here level two that observation could be understood as for example a prior on a lower level model but figure 4.3 or figure 7.3 is kind of where in the discrete time
+
+we get the downstairs sense-making from observations, transition world model, and then finally to the action-dependent world transition model.
+
+
+SPEAKER_04:
+Thank you.
+
+I think it's a very good overview, and I'll refer it back again.
+
+I just have one question.
+
+When you use the word motif all the time, what does it exactly mean?
+
+I just don't understand that word, actually.
+
+Sorry.
+
+Motif?
+
+What do you mean by motif?
+
+Sorry.
+
+
+SPEAKER_02:
+I use it like a pattern, like a pattern language, or like an identifiable theme.
+
+So let's just say we were looking at cars as generative models.
+
+One of them is red.
+
+Another one has a convertible top.
+
+Another one has six wheels.
+
+another one has a trailer like those are just kind of like motifs some motifs might be mutually incompatible but other motifs it might just be like well like um here we're looking at the motif of having a hyper prior here we're looking at the motif of nesting now the lower the lowercase letters are not shown but of course you could have lowercase letters
+
+so there's nothing contradictory about those two motifs it just and this is definitely not like the only or formal way to think about it it just like here in figure 7.3 we kind of have like the kernel nucleus um there isn't much you could remove here if you wanted to remove something you could remove like this part so it was just focused on the transition of two time steps
+
+but that's very minor um this kind of shows the basic initialization and then the step from the previous moment and then the step to the next moment of action as reweighted by expected free energy so here we have kind of an essential kernel and then there's all these motifs or there's other ways probably to say it but there's all these other strategies that we could start to see or use
+
+
+SPEAKER_04:
+All right, thank you.
+
+
+SPEAKER_02:
+And yeah, I mean, I don't know how far the Linux kernel metaphor will go, but like this model doesn't have just as written various of the more sophisticated cognitive phenomena.
+
+So it's not that advanced cognitive phenomena or higher order human type thinking is already in this image.
+
+It's like, this is the canvas that is a starting point for like learning and novelty.
+
+So it's not that all these different diverse cognitive phenomena are like intrinsically, essentially within the active inference formalism percept.
+
+it's that we have something that's general and modular enough to accept and even entertain multiple different renditions of a given phenomena like there's not just learning a narrow definition of learning would be like each parameter being updated and then if somebody wanted to engage with a higher order like kind of conversationally what we might talk of as learning
+
+like chapter six is there for us we could go through it and we would find like a room of 10 people could come up with a thousand ways to implement learning at a higher level in active inference hence a lot of emphasis on like what's the core and then what are some of those like decorators and modifications augmentations and so on
+
+because chapter six plus the core essence plus the confidence to play with motifs gets very far um would people be up for maybe a little if we take a look at figure 7.10
+
+
+SPEAKER_01:
+Adrian Holovaty, What people may be up for trying to walk through it perhaps like and I don't know if this is applicable it's a long way from the teammates but.
+
+Adrian Holovaty, Like walking through it like with like a real life kind of decision idea like what i'm thinking is and try to map that process on to the model.
+
+Adrian Holovaty, So, like what I was thinking is like i'm sitting in my room and i'm looking outside of my window and i'm trying to decide.
+
+whether I'm gonna go outside or not.
+
+And looking at, okay, what are the parameters of that decision?
+
+What are the different observable states or hidden states that are gonna influence that policy?
+
+You think that's an appropriate exercise, Daniel, or something along those lines?
+
+Would people be into that?
+
+
+SPEAKER_02:
+I mean, it definitely is.
+
+I'm just finding a table that I'll copy in.
+
+Okay.
+
+I'll make this under chapter seven.
+
+Okay.
+
+This is just one little template.
+
+so here we have the a b c d e and pi and o and s so we um have we don't have the the lowercase letters yet but we could add them and um each of those discrete time variables is linked up to an ontology term most of which are all of which have been used um
+
+and then here is an example like for an ant colony nestmate how those got mapped um but i mean let's hide these and then let's just go for it okay what's the setting what is the agents
+
+
+SPEAKER_01:
+Living room in New Mexico.
+
+Okay.
+
+If that makes sense, yeah.
+
+Aren't we all?
+
+Okay, observing.
+
+The window.
+
+Outside through the window.
+
+So I guess outdoors through the window.
+
+Okay, pixels coming from outside.
+
+
+SPEAKER_02:
+Sure.
+
+And then what's truly out there?
+
+could be is it raining or not yeah the weather I guess you know is it is it that's the decision I'm trying to make yeah okay well and and this just goes to show like first off how open it is like what actions are but um I mean we'll get there but can we control the rain
+
+So then there's already such differences between a model where there's a hidden state that you can't control, but you still could make a policy decision to take an umbrella or not.
+
+But then there would be another level of interactivity of a model when the policy can also control the hidden state, like an air conditioner with a temperature.
+
+Bruce Sutherland, Ph.D.
+
+: versus just sort of like a put on a jacket if it's raining okay so now, given that we already said s&o.
+
+Bruce Sutherland, Ph.D.
+
+: What is the dimensionality of a and what is the semantics of a.
+
+Let's just say, just to be clear, that the visual stimuli that we're getting is 10 pixels, and then they have a continuous level of brightness.
+
+Like we could go into the RGB and all this other stuff, but there's 10 pixels.
+
+And then raining or not is a binary state.
+
+So what is the dimensionality of A, or what does A map?
+
+
+SPEAKER_01:
+I mean, the site of raindrops or not, right?
+
+So it's like... Yes, it maps, but... So that's a two-dimensional, yeah?
+
+
+SPEAKER_02:
+Maps between the observations in the hidden state.
+
+So its shape is 2 by 10 matrix.
+
+Okay, I see, yeah.
+
+there there's other we're just going with just the first sketch pass okay so this is mapping these pixels from the pixels down to beliefs about the rain or vice versa so if we said condition upon i know it's raining we could emit a profile of pixels that's the likeliest thing
+
+Or we could take in an empirical pixel distribution and then ask what is our conditional probability of it being raining.
+
+So that was, this is then last piece of the downstairs sensemaking part.
+
+What is the B matrix shape?
+
+Given it's a transition matrix.
+
+should be two by two i guess yes these are just the transition probabilities of staying raining staying not raining or switching the the on the identity matrix the diagonal on b is like stay
+
+Because you're mapping for, let's just say that the first row is raining.
+
+The second one is not raining.
+
+The upper left corner on B is rain to rain.
+
+And then the lower right corner on B is not rain to not rain.
+
+And then the off diagonals are switching.
+
+Okay.
+
+This is the downstairs map.
+
+This is a partially observable Markov decision.
+
+Sorry, this is just a partially observable Markov model.
+
+No decision has come yet.
+
+Right.
+
+Now we're going to come into the decision.
+
+Okay, so what is the action space?
+
+Go outside or not.
+
+Okay.
+
+Now if we go outside, then we're going to get different observations, but we'll just say yes, go outside or not.
+
+Okay.
+
+Okay.
+
+what is what are the affordances basically not raining it's an affordance for us to go outside yeah um almost here the affordances are the same as the policy space because there's no planning okay so affordances are what you can do in a moment like up down left right and then the policy space is the affordance space exponentiated to the time Horizon of planning
+
+So if it's a non-planning model, then affordances equals the policy space.
+
+But if it was a two-step model, then you could plan, I'm going to not go outside and then I'm going to go outside.
+
+Or I'm like, I'm going to go outside and then I'm going to come back.
+
+So then that is considering over multiple time steps.
+
+But here, single time step, no blame.
+
+Okay, we need D as part of our downstairs.
+
+D is prior on it raining.
+
+And so this is just, this has the same shape as S. So this basically is just gonna, this could be like one, zero, which is like, we start, sure, it is raining.
+
+or it could be 0.5 0.5 we start unsure if it's raining okay and then um actions are selected different ways obviously that's what we're interested in so what are some different ways you could select actions well you could just draw from your habit distribution that's one approach in um
+
+Okay.
+
+Now we're going into the, the, the New Mexico dopamine brain on the left side.
+
+This is where we have actions being drawn from the habit distribution.
+
+So that's a totally, totally, um, viable decision-making strategy.
+
+That's kind of like thinking fast, like type one is drawing from habit.
+
+Um,
+
+another approach is to use expected free energy to reweight the policy prior into a policy posterior according to equation 2.6 which is to say reweighting policies according to their epistemic plus pragmatic value so in this setting the epistemic value um right now like everything's pretty much fixed
+
+So there really isn't much epistemic value to gain yet.
+
+Pragmatic value though, is gonna be about preference satisfaction.
+
+So what would the preference be?
+
+Preferences over observations.
+
+I'll just note like,
+
+This recent one on intentional behavior.
+
+They do explore like essentially preferences over whether it's raining or not.
+
+But suffice to say in the textbook and in this kind of primary version, the preferences are over observations.
+
+So let's just say that let's just say that it's darker when raining.
+
+lighter when not so if our kind of if our conversational preference is like i prefer it to rain our c preference variable because it's over observations would say i i prefer i expect and prefer it to be darker because the preferences are grounded in sensory observations that haven't come in yet
+
+I mean, uploading the textbook to a language model or not, copying in this table and then saying, write active inference Python code, given that this is my POMDP, you will get a script with just this much information.
+
+Because you've given all of the information needed.
+
+There's no other, there's no, there's way more complex models to make.
+
+But in terms of describing all of this, I mean, G is not really a variable.
+
+It's a functional that gets applied to pi conditioned upon C and E. So by defining A, B, C, D, E, S, O, and then the generative process,
+
+the true rain but that doesn't have to be active inference that could be um a random number that could be an API to a weather station that that it could just be anything else that plugs in and outputs observations and then intakes actions but here it's kind of a null action intake because your choice to go outside does not affect
+
+Yeah, that makes sense.
+
+All right.
+
+Thank you for that.
+
+Cool.
+
+Yeah, I mean,
+
+David Price- plug it in and see where it goes or look at a pie mdp.
+
+David Price- documentation and see which one it looks most like.
+
+David Price- I think we looked at it a previous time, but this one is a moving grid world agent in one.
+
+David Price- And then to.
+
+David Price- um.
+
+Prakash, this is under chapter seven.
+
+Yeah.
+
+And then chapter two here is, again, similar.
+
+And then the, I mean,
+
+make some kind of fusion variants like there's a T maze it's like your living room is the starting position in the maze and then like you know you could check the weather that's the epistemic Q or you could choose to bring an umbrella or not and then it would already have almost isomorphic relationship with it with a tutorial
+
+And especially when starting, this is like why the iterating on having a model is so informative.
+
+Like ironically or appropriately, depending on how you see it, it's like it's epistemic chaining.
+
+The modeler is in an epistemic chain with their own modeling.
+
+It's super easy to wait on the sideline until what?
+
+I really don't know.
+
+But by putting something down, then there's all these other things that open up.
+
+So that's the epistemic chaining as a process.
+
+Okay, Francis, let me just see what you wrote.
+
+Is it straightforward to download either the PMD, the PMD notebook is the chapter seven document also.
+
+Okay.
+
+Um, about PMD.
+
+Yes.
+
+At the top of each page, like I'll just put it in the chat.
+
+You can open it in Colab super easy and then just make a copy.
+
+So those are very nice notebooks to pull.
+
+Um, is the chapter seven document also a Jupiter notebook?
+
+no um that would probably require going to appendix c and uh going to the matlab code or um this the team is foraging
+
+and bringing this MATLAB code into something like a notebook.
+
+I'm not actually sure if MATLAB even has notebook.
+
+Or realistically, since it's the T-Maze, like this PyMDP T-Maze demo, it's the same exact thing.
+
+So this notebook is probably a good one to go with.
+
+
+SPEAKER_05:
+I don't have MATLAB.
+
+uh as a non-academic is uh expensive uh or used to be expensive sorry you said you don't have coda or matlab colab it's free you just click on the link and then just duplicate it okay yeah okay
+
+
+SPEAKER_02:
+Matt lab does have a costly license, except there's the octave like variant that's open source.
+
+But like, rather than get into this whole like octave mat lab situation, like the, the Python and Julia are the way to go and rust when the time is right.
+
+This is interesting.
+
+recommend breaking the demo to change the generative model.
+
+Only by doing this will an intuitive sense of mechanics of active inference develop.
+
+Pretty interesting.
+
+That's exactly what I was planning to do.
+
+thank you okay yeah i mean it's it's super fun and then also like again seeing the kernel execute like just seeing a decision be made that helps open up like oh there's some there's like all these levels of diagnostics or analytics about the trace of the model that you might be interested in now is that active inference well it's about an active inference model
+
+But then a next step might be like to do a parameter sweep across parameter combinations and then summarize the outcomes of those swept parameters with another heat map.
+
+And then what do you do from there?
+
+Then you could fold that back into the base model, or maybe you make another active inference agent that looks at the heat map and then does something from there.
+
+Hence it being more like lines or journeys of inquiry rather than like developing an artifact that just kind of slams the door.
+
+Especially with these kind of more intuition pump examples.
+
+
+SPEAKER_05:
+Without wishing to derail things, I have an interest in doing test automation for code.
+
+And I was looking in chapter seven at the way that the agent explores the little maze quite efficiently because it's seeking novelty.
+
+And I was wondering whether I could do something like that to do exploratory testing of, say, an API.
+
+
+SPEAKER_02:
+That, that sounds very interesting.
+
+I've never specifically seen it, but something like adaptive fuzzing or testing.
+
+And then that's where the epistemic value comes into play is like, let's just say pragmatic value is I prefer the program to work.
+
+So, and then epistemic value is I'm going to find out about where and how it does or doesn't work.
+
+So if you only, um, made the breaking changes that you knew were going to break it.
+
+it would be very confirmatory, but it wouldn't be epistemic because you would only have been confirming, which might be a valid exercise, but you'd only be confirming the consequences of the actions that you already suspected.
+
+But maybe that's important.
+
+And then another setting would be like with a kind of uniform prior or with an informed prior,
+
+what kinds of changes would actually reveal more learning about the structure of the program or the API.
+
+And then it's like, but once we figured out that that's a breaking change, like we've kind of mapped that part of the maze, there's probably a lot of cool ways to go there.
+
+Christoph?
+
+
+SPEAKER_00:
+So I think it's an interesting problem what to do with something like, you know, exploring the API.
+
+There's this paper, first of all, there's planning and, no, certainly not planning and navigation.
+
+active interest in intentional behavior and they have this notion of sort of like inductive planning where there is a certain goal that the agent wants to reach and it works backwards to figure out what are the steps
+
+to get there.
+
+For something like exploring an API, and I think for a lot of applications though, I think what's going to be eventually necessary somehow is to have a hybrid model that you will have to be able to attach almost like an LLM to it to basically at some point say like, well, I would like to actually, I decided on my course of action, I want to write some code that actually invokes the API.
+
+And here with this decision, the structure of decision-making, we're
+
+looking at assembly level of intelligence.
+
+At some point, just like we are attached to an LLM that continuously pumps out words, and I'm just choosing over the distribution of those words, they're being pumped out, but I'm not actually generating them.
+
+I'm not aware of how that's happening.
+
+In the same way, you would have to attach an LLM to almost like an active inference agent that does some goal-oriented exploration of the API.
+
+So that would be very interesting if you could achieve something like that.
+
+It's probably, you know, quite a lot of money to be made on this sort of intelligent exploration of APIs given how much trouble bugs are causing.
+
+
+SPEAKER_05:
+Cool.
+
+Thanks.
+
+
+SPEAKER_02:
+Yeah.
+
+Like, and then it kind of like in, in that, um, like we were talking about right before we began with like the feedback and the training examples, like you can have a data set of correct API calls and incorrect API calls or something like that.
+
+Um, and then it's like plan to make it work.
+
+And those are kind of the semantics of perception and action that.
+
+like ecosystems of shared intelligence, synthetic intelligence, if we can construct a formalism that has the semantics that are how we think about it and or co-evolve that with updating how we think about it, then we would have kind of a high bandwidth or a low loss or some other good property of the edge between
+
+artifacts.
+
+
+SPEAKER_00:
+Yeah, I think this is where LLM's really kind of suck at, that you can sort of ask it to do something like this, but it will not really have any kind of notion of thinking about the problem deeply, about how would you go about breaking something for an API, because that requires a sophisticated model of what the API might be doing under the hood, for instance, like some kind of buffer overflow and something like that.
+
+But if you could come up with a minimal example that would model something like
+
+you know, assume there is a possibility of a buffer overflow in an API, how would you go about making some kind of inference about our planning to exploit that?
+
+That'd be super interesting, as a minimum as a kind of a minimum example, even for just a simple, you know, very simple API that takes like a car star and a size or something, something like this?
+
+How would you go about, you know, inferring whether it's possible to do the buffer overflow in this?
+
+
+SPEAKER_02:
+One funny piece there would be, check out the PyMDP API, and then what would be appropriate, the appropriate, the latitude within that API is active inference.
+
+That's kind of one, that would be a plot twist.
+
+And then also on the interpretability, here's a paper with Mao and others from last year.
+
+Like largely there aren't technical advances in this paper.
+
+The images are drawn from Sanfed Smith's Livestream 28 paper.
+
+So it's not like this is breaking the theoretical ground, but the whole point is when you ask a neural network or LLM, et cetera, how sure are you about that?
+
+it can come up with a sequence of tokens, but that sequence of tokens is only going to be coincidentally related to anything like an uncertainty evaluation.
+
+Whereas if uncertainty parameters are explicitly encoded, then self-access introspection
+
+is just like a parameter look up it's not like some second it's like part of the real-time function of the system is um uncertainty estimates of different kinds at different levels so then to ask about how certain it is about a certain thing at a certain level you just ask that question and then return that variable
+
+You know, maybe even that's on some kind of special chip or something like with verified access or something.
+
+So it opens up to all these different architectures rather than like, well, let's train like another adversarial neural network to like, you know, try to infer this about this one.
+
+And then that gets into this whole like deception game versus having these introspectable architectures.
+
+Joris?
+
+
+SPEAKER_03:
+To what extent does this differ from Bayesian reinforcement learning?
+
+Great question.
+
+
+SPEAKER_02:
+What what what what about that, or what what do you mean overall house activity inference different than reinforcement learning.
+
+
+SPEAKER_03:
+yeah maybe indeed even overall but yeah if you want this kind of uncertainty measure with whatever you infer, then I guess both frameworks will allow this or is there yeah.
+
+
+SPEAKER_02:
+uh it's probably a very unclear question but yeah okay there's there's there's a few a few works and a few approaches there so um models that aren't active inference still do deal in uncertainty so there still is an uncertainty parameterization in even a linear regression however a neural network or reinforcement learner that's trained to generate language
+
+its outputs of languages don't necessarily represent a veridical introspection.
+
+Maybe there's a way to train it so that the output is a veridical representation, but that would be a secondary kind of welding together.
+
+Whereas this architecture that we just looked at, like it's it's a part of that's kind of on the uncertainty as part of the architecture part.
+
+The key the key difference between active inference and the reinforcement learning is in reinforcement learning.
+
+a reward distribution is proposed a secondary or auxiliary or corollary corollary distribution is proposed that's like layered over the observations so in the homeostatic environment we'd say we're getting observations about temperature and we are rewarded by 37c and we seek out high reward
+
+In active inference, we do away with this secondary auxiliary function, and we directly work on the observation distribution by calling our preferences not a preference for higher score on this proposed distribution, but rather we have an expectation and a preference that connects directly to the observations themselves.
+
+
+SPEAKER_03:
+Yes, I understand that, but I
+
+have been vaguely looking at things that Benjamin van Rooij and his lab are doing.
+
+But I don't really understand it yet.
+
+But there is some kind of thing like Bayesian reinforcement learning.
+
+I wonder if they have I I would expect it to have uh um a measure of uncertainty that comes with with any prediction there but I might have uh yeah it might just be too fake concept in my mind no you're right there it is there I mean this work on um demystified and compared and there's several other
+
+
+SPEAKER_02:
+works that do directly tackle it.
+
+It's not out of the picture that, I mean, architectures can include arbitrary components.
+
+So it is possible to be like, well, let's have an epistemic module.
+
+Well, yes, but then epistemic and pragmatic value at the end of the day in the RL learner or the deep Q learner or whatever epistemic and pragmatic value are going to get blended back together.
+
+
+SPEAKER_03:
+into the reward function right you have this like artificial curiosity and and other uh intrinsic motivations that you could add add on to a classic canonical reinforcement learner and i see quite a lot of of research on that but then it seems that from an active inference framework it kind of emerges from the from from the the system but
+
+
+SPEAKER_02:
+Absolutely.
+
+That is the hope, that there's a variety of cognitive phenomena from planning to epistemic value, curiosity, intentionality, variety of phenomena that could be implemented in a range of architectures, but will pursuing a first principles approach lead to simpler, more interpretable
+
+more efficacious models?
+
+Possibly, possibly.
+
+If somebody needed, there might be a better model for a situation today because there are such incredible gyms and toolkits for reinforcement learning.
+
+So, but yes, hence the moment of the epistemic,
+
+excitement that we have and share here plus the accelerating pragmatic conversion and understanding like yeah where is this useful because it's it's all good for something to be insightful but then um i mean there could be a situation where active inference just gives us an intuition pump and then we use a neural network or there are hybrid architectures that that
+
+do this or that and um but if utility is is what is desired or or some other property that another system already has then yeah definitely active inference has to work to to to be superior there one really interesting um moment from um this was a couple days ago
+
+with uh Ryan Smith and two of his PhD students so the empirical status of predictive coding um what was super interesting about this paper was like in this textbook group if someone said like what's the status like of of FEP or status of acting people would often take it like in a metaphysical direction
+
+However, they took it the other way and asked what's the empirical status of predictive coding and active inference in explaining neuroimaging and neurobiology.
+
+So it's very interesting and these are the ongoing questions.
+
+and curating the models and being able to compare them based upon how they do treat these phenomena that would be super informative and then if we can have a similar um syntax for the variable similar API use agent I mean this um the demystified and compared it uses the open AI gym so like
+
+they presented some promising, interesting results, and that was several years ago.
+
+And a lot of the work has probably not been published on the OpenAI ActiveInference side, but it is right there, like with Frozen Lake or with the other reinforcement learning settings.
+
+And then look at where they're different, find out where does the super high-performance, large-scale RL model do well that this simple ActiveInf one doesn't.
+
+And then what would we need to do to make it different?
+
+Well, fun.
+
+Yeah, Chapter 7 is pretty fun.
+
+Next weeks, we'll head into Chapter 8 on the continuous time.
+
+Maybe we'll look at some Rx and Fur examples because there aren't going to be PyMDP examples for Chapter 8.
+
+um the continuous time models there's a lot to say there on the math and on the philosophy and so on chapter nine integrating with data and then chapter 10 just a long wrap up with no figures or equations so thank you all see you next time thank you daniel bye thank you thanks everybody
