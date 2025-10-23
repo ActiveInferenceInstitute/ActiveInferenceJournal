@@ -1,0 +1,938 @@
+SPEAKER_02:
+All right.
+
+Greetings, everyone.
+
+Thank you for joining.
+
+So we're in this first of the third weeks for the cohort.
+
+It'll be a bit of a grab bag.
+
+So we'll see where it goes.
+
+But a few people have written some first questions.
+
+And then we'll look at some prior questions, see what else comes up.
+
+All right.
+
+So first, I'd be interested in examples on how to train an active inference model.
+
+What would anyone say on this?
+
+How is training an active inference model similar or different than potentially other kinds of models?
+
+
+SPEAKER_01:
+Hi.
+
+I was thinking there should be a world model which would be trained on minimizing the variation of free energy as a loss objective.
+
+So I'm assuming that can be from an RL perspective or something, like from some collected trajectories that can be trained.
+
+But for the expected free energy, I'm not so confident how that can be deployed.
+
+
+SPEAKER_02:
+Yeah, thank you.
+
+Fraser?
+
+
+SPEAKER_04:
+I would just, I mean, I've only successfully made maybe like two or three Active Inference models that are like non-toy examples.
+
+But one thing that I found particularly helpful or salient was that you had to really think about the different timescales of things that were going to be training.
+
+So I guess in a machine learning context, training refers to the updating of parameters of a model.
+
+So our, you know, and as was just said by, is it Sri?
+
+I think it's Sri.
+
+We need our model to embody the environment in some way.
+
+So that's going to be parameterized.
+
+It's gonna be a bunch of parameters and we need to tweak those parameters in a machine learning setting.
+
+that happens at a much slower or at least a slower time scale than the actions that we need to decide to emit at each time point if it's a discrete time model, let's say.
+
+So there's kind of two questions.
+
+There's the question of what actions do we emit based upon expected free energy, based upon maybe just VFE.
+
+And then there's the question of, okay, what
+
+How do we also minimize VFE with respect to our parameters?
+
+So those two questions loom large, at least in my mind, when I'm thinking about training an active inference agent.
+
+
+SPEAKER_02:
+Cool.
+
+Yeah.
+
+Well, there's a lot of pieces to bring out here.
+
+One note is that
+
+Variational Bayesian methods, like the variational autoencoder, are also trained or updated using variational free energy minimization.
+
+So the concept of using the evidence lower bound to bound and approximate surprise, which is equivalent to maximizing model evidence, that's not a new modeling trick from active inference.
+
+Part of the interesting thing, though, is bringing the perceptual and the action selection process into the unified objective and then using the evidence lower bound on that.
+
+So so there's like some I mean, it will be cool to kind of pull out from the conversations and papers and get to the Venn diagram.
+
+So that's that's one thing is.
+
+Training a model based upon free energy minimization is something you'll find in a variety of machine learning methods.
+
+An interesting difference in terms of, at least like in terms of how chapter six differs from some other machine learning pathways, like nowhere in chapter six, the recipe for modeling, does it say anything like,
+
+go find a data set of positive examples and then tune your model so that it recapitulates the maximum performance on the positive data set.
+
+So that's kind of interesting is like prior data can have a different role in the situation of training an active inference model.
+
+So sometimes in machine learning, you have a basically a priori
+
+prior setting of a general or a large topology of the model.
+
+Like here's the architecture of the neural network and the layers, or I'm training a 7 billion parameter transformer architecture.
+
+So you kind of have a large generic function approximator
+
+where the nodes are essentially not intended to have any semantic meaning and then during the training phase you pump cats and dogs with labeled examples and then you have the data set of cats and dogs and then you have some held out data set of cats and dogs and you try to improve performance on that so
+
+In the machine learning situation, you have a kind of generic model architecture, usually with many, many parameters, like thousands to billions.
+
+And then positive examples are pushed through that network so that the weights come to embody patterns in the data.
+
+In contrast, at least in terms of how Chapter 6 lays out the process, the Bayesian graphs that are constructed in active inference are smaller and usually more interpretable, where the nodes have distributions that are kind of like based upon...
+
+how the problem was carved out to be like you have a node that's explicitly based upon the cat or the dog um so that's kind of a difference is rather than walking into the situation with a sort of general highly parameter uh uh architecture and a data set
+
+Here, as chapter six lays out, is you have a bit more of like a systems modeling approach.
+
+So that's one important difference.
+
+But how do you update the parameters?
+
+That's pretty general because there's a lot of different parameters to train.
+
+Let's look at.
+
+So coming to like chapter seven.
+
+This is just focusing on the downstairs sense-making piece of what later action will get plugged into.
+
+So here, prior D, hidden state S through time, state transitions B, each state is emitting observations.
+
+You can think of that as being like the hidden state multiplied by the A ambiguity matrix leads to an observation distribution.
+
+That's the generative direction.
+
+or the synthetic data generating direction, or you could take an observation, multiply it by the ambiguity matrix and kind of run it back to reconstruct an uncertainty distribution over hidden states.
+
+So that's part of the flexibility.
+
+Depending on the situation, you might say, well, we know the observations without error.
+
+Like they might be noisy, but we measured them without error.
+
+And then we want to learn some other parameter.
+
+Or we know the hidden states through time, but we want to infer the prior.
+
+So this kind of gets into which variables are fixed and which variables are learnable.
+
+the way that a distribution is fixed in a Bayesian setting, it's like it has a hyperprior.
+
+So a prior on that distribution, that's just a spike.
+
+Like the observation was seven.
+
+So just a spike at seven.
+
+Whereas if it was, the observation was seven plus or minus one, then that would take in a whole distribution.
+
+So just to conclude and give a first pass general answer, when you're setting up the model, if a variable is entered as fixed and with a kind of infinite precision on it, it's not learnable.
+
+Whereas distributions that have like actual breadth,
+
+Those parameter updates can be updated within that range of the distribution.
+
+There's a lot of other pieces, though.
+
+That was totally not a complete answer.
+
+
+SPEAKER_00:
+What are any thoughts or questions from there?
+
+
+SPEAKER_04:
+I guess most broadly, you have to choose a model.
+
+You have to choose a particular model, something like a POMDP or Gaussian mixture or something.
+
+Whatever it is, that discussion applies to your choice of model.
+
+But you do have to choose a model.
+
+
+SPEAKER_02:
+Yeah.
+
+Just thinking of broader modeling considerations.
+
+So it was brought up.
+
+How do we train on what hasn't happened, like with expected free energy?
+
+So let's look at just a first pass on what the expected free energy calculation entails.
+
+It's going to take in a policy prior.
+
+Pi, it's a vector of policies.
+
+The policy space, just like in other control theoretic formalizations, the policy space is a vector of all the possible policies.
+
+Policies are all the combinations of affordances for a given time horizon.
+
+So if we had four affordances up, down, left, right, time horizon of two, there'd be 16 affordances.
+
+policies, up, up, upright, et cetera.
+
+We're going to take this policy vector, which is the probability distribution over action.
+
+It sums to one.
+
+Something must happen.
+
+And we're going to update the policy prior into the policy posterior.
+
+Policies are going to be sharpened according to their score on this unified objective.
+
+A good score can be gained from having either a high pragmatic value
+
+which is to say that the sequence of expected future observations is aligned with preferences, that's utility, and or the policy has a high expected information gain or epistemic value, which is to say that the KL divergence about beliefs about hidden states through time is diverging because of the observations that are expected to come in.
+
+So different policies might be evaluated to have different pragmatic values and different epistemic values.
+
+There is this question of how do you balance these two components of the expected free energy?
+
+Because just having both of them in a unified objective doesn't mean that there's going to be an adaptive finessing of this explore-exploit type trade-off.
+
+So first, at the parametric level, here's what that updating or training looks like.
+
+It looks like changing the amplitude of a variable.
+
+So let's see what chapter it is.
+
+Okay, so here we are in chapter seven.
+
+It's a rat in a TMAs.
+
+It has a preference for the attractive stimulus.
+
+So check the script to see whether this is written in terms of log probabilities, et cetera.
+
+But a six in the preference vector here means that the attractive stimulus is considered E to the sixth times more probable
+
+If this were one and negative one, the relative preferences would have all remained the same.
+
+If this were 600, you can imagine it would be exponentially more.
+
+So the way that pragmatic value gets scaled is with scaling the amplitude of the C vector.
+
+So you play around with, you could take the C vector and then just like in the code, you could make a series of C vector alternatives, like multiply by 0.1, multiply by 0.5, 0.9, 1.1, 1.5 to 10.
+
+So generate this like suite of Cs.
+
+bringing you closer to on one hand a flat c like if you said multiply this by one millionth so it's it's basically zeroed out that is equivalent to having a flat preference distribution having a flat preference distribution
+
+is equivalent.
+
+So here's, now pragmatic is on the first term here.
+
+Having a flat preference distribution is equivalent to InfoMax.
+
+On the other hand, you could make your C vector supermassive.
+
+That would make the epistemic component of the expected free energy negligible, which would essentially look like utility maximizing control.
+
+So one lever that you have is modifying the pragmatic value.
+
+That's pretty straightforward because you're just doing a vector lengthening or shortening.
+
+And then the other way that you can rebalance the scales is with epistemic value.
+
+If your parameters are not learnable, like if there isn't an uncertainty distribution,
+
+so you can imagine increasing the precision on your variables until they're essentially fixed, then epistemic value goes down.
+
+Conversely, if you were to expand your uncertainty
+
+on the variables, epistemic value would go up.
+
+So whether by combination of widening and narrowing your uncertainty distributions to manipulate epistemic value or stretching or shrinking the C vector to modify the pragmatic value.
+
+So those are kind of the two knobs that you have
+
+to to to manipulate the relative intensities of these two terms but then how do you really select a given parameterized trade-off so that's a situation where um like going back to the um teammates so that's not not the only way to do this but there's just one one way to do it would be we set up the teammates with a given setting now
+
+As with any training, the optimal parameterization is going to depend on the niche.
+
+So if we had an example where the food was always on the left, then the optimal parameterization is going to be different than if it was switching like a metronome or if it was switching with some autocorrelation function.
+
+So that's why it does depend on how you set up the niche.
+
+Then you could take, let's just say we built five C-vectors
+
+ranging from a kind of like the 0.1, the 0.5, the 1, the 2, and the 10, and then five different uncertainty distributions that we could choose from.
+
+So now we have 25 combinations.
+
+Then we could basically simulate with all 25 of those combinations and then say, well, which of those mice had the highest performance?
+
+and says, okay, well, it turns out that given this niche setup, having the C vector look like this and having the uncertainty distribution look like that gave the highest outcome.
+
+That's, again, interesting to consider because it wasn't the case that we had like any positive dataset examples.
+
+So it's a really interesting opportunity to define these models
+
+and then train and tune them in ways that don't necessarily rely on specific past data sets.
+
+But you can use this sort of synthetic simulation and method to still develop more useful tunings.
+
+So that's about the EFE.
+
+One option there just being to do parameter sweeps over possibilities.
+
+Fraser?
+
+
+SPEAKER_04:
+Yeah, I was just going to recapitulate that.
+
+So for you to be able to have an active inference agent per se, it seems like you have to be able to entertain kind of factual possibilities about what would be the case if you did an action.
+
+So you have to be able to perform actions, and you have to be able to evaluate the suitability of those actions.
+
+And the way we do that is with the EFA, let's say.
+
+you're going to have to have some kind of means of rank ordering your choices that you make at points in time.
+
+That's kind of the ontology of what you do when you do training, let's say, of this kind.
+
+You can do variational free energy minimization, but you're not necessarily doing active inference if you're doing that.
+
+You kind of have to have this kind of factual entertaining of trajectories into the future, it seems like, so.
+
+
+SPEAKER_03:
+Yeah.
+
+
+SPEAKER_02:
+Okay, let's look over in RxInfer.
+
+Okay, it is figure 1.2, or is it, or is it 2.1?
+
+Oh, it should be 2.1.
+
+
+SPEAKER_04:
+It's 2.1, yeah, sorry.
+
+
+SPEAKER_02:
+Oh, no, it was a... Blurring the line.
+
+What table is in what document?
+
+Um...
+
+like let's just look at training in the situation of this um this is not an action model this is just an observation model so this is like the listening to music the first part of chapter seven prior beliefs on the frog in the apple then likelihood model that's going to update based upon an observation here in this case jumping updates to a posterior belief distribution now
+
+In spirit slash in mathematics, this is exactly what happens with updating the action prior into the action posterior.
+
+Here, it's just we're talking about a belief prior into a belief posterior conditioned upon an observation.
+
+but this is conceptually what happens.
+
+Like, let's just say this was, I have a 10% chance of turning left and then a chance of turning right, 90%.
+
+And then I do G and then update that policy distribution to look more like this.
+
+I then sample the most likely one or I sample from this distribution.
+
+So that's the kind of general concept of updating a distribution, but this one's not about action.
+
+
+SPEAKER_04:
+So this isn't even an active inference model.
+
+This is just Bayesian inference.
+
+Yeah.
+
+
+SPEAKER_02:
+Yeah.
+
+This is just Bayesian inference, but we can, we can say, well, what, what would be the here?
+
+There'd be two things that, that might be learned.
+
+If we were to kind of build this example out, you could learn your prior that could come from just simply the prior posterior, like from wherever you left off in the previous cycle, you just pick up there with your prior and,
+
+Another method for learning the prior is learning by counting.
+
+So learning by counting is very related to the earn model.
+
+So in this situation, you have an earn, like a jar.
+
+and there's a certain number of balls of color one and color two.
+
+So initially, you don't know.
+
+You may not even know how many colors there are, or maybe you've been told that there's only the two colors.
+
+You pull out color one, but you don't necessarily want to only believe that there's color one in there.
+
+So you'd start with one in each, and then as you make observations, you count...
+
+And then it's like a coin flip.
+
+Like if you just kept on flipping that coin, eventually you'd get to 100 and 100.
+
+And then if you got to 1,000 and 1,000, that would be a sharper prior around 50-50.
+
+Whereas one and one would be like a looser prior.
+
+So that's one way to learn prior beliefs.
+
+Learning a likelihood model is kind of another topic.
+
+So it's like that's part of the challenge sometimes is the variables with different semantics.
+
+like the hidden state distributions, the A matrix, the B matrix, the consequences of actions, the priors on preferences C, those all have kind of different ways that you might approach learning them because there's different considerations like
+
+what will yield the most performance parameter value?
+
+Then there are considerations like, what is a cognitively realistic learning mechanism?
+
+Another consideration would be, to what extent do we want to learn this variable and then fix it for runtime?
+
+Or to what extent do we want this variable to be learnable or updatable even in runtime?
+
+So in this RxInfer,
+
+model of the figure 2.1 accurately reflecting the textbook, the values are all fixed and given.
+
+But I think it will be very useful for us to, starting with this example and continuing on, what does it look like when these distributions are also allowed to
+
+to be learned in different ways.
+
+
+SPEAKER_04:
+And crucially, for an active confrontation, that has to be by means of action.
+
+
+SPEAKER_02:
+Yes, thank you.
+
+Dave.
+
+
+SPEAKER_03:
+Are any of the implementations of RxInfer able to take account of a situation where not just the values of the variables, but what variables there are need to be changed in order to succeed?
+
+You didn't know that you have to take temperature into account to distinguish between apples and frogs.
+
+You didn't know that you have to hum to intervene in...
+
+to your uh your exploration where is is do you just assume that you know is that something that we're even trying to do at all where there's genuine discovery where there's no precedent for what how the model has to change or change the dimensionality of not just the number of dimensions but what dimensions there are in sensation imagine
+
+
+SPEAKER_02:
+Tobus, if you have any thoughts, feel free to add.
+
+
+SPEAKER_00:
+I don't really have thoughts behind how this would be attempted.
+
+I just know, in the Oryx in first sense, that's been a desire to have such a setup for a while.
+
+As far as I understand, for example, in the case of the team mates, I know they had, I think it was Magnus Kodal, he had to write specifically code and hard code the structure, I think, based on his needs.
+
+And I do understand he expressed the need at the time to have been able to...
+
+you know, to rely on structured learning to have that, but instead it had to provide a custom implementation at that point.
+
+But I do believe there's an action in the RxInferred team, development team, to take care of this structured approach to learning in the future.
+
+
+SPEAKER_03:
+Yeah, that'll be great.
+
+Maybe in the worst case, you just have to do something like...
+
+completely jump out and do genetic algorithms or something.
+
+And it's entirely outside of the paradigm.
+
+If you're lucky, you can simply, when you discover relevant dimensions of actual action or sensation, just say, oh, well, that was in my, in the totality of my prior.
+
+I just didn't know it.
+
+None of the values are set.
+
+I'm just off, uh,
+
+go back and change the dimensionality of the priors and then recalculate.
+
+But who knows?
+
+That's where you get into some really interesting psychology and really interesting logical techniques.
+
+Thank you.
+
+
+SPEAKER_04:
+I do know that at the end of Dimitri Begayev's PhD thesis, which is kind of the founding document of RxInfer, at the end of that, he kind of gestures to other problems now that we want to be able to attack.
+
+And one of them was this issue of model structure learning, learning the actual structure of the model.
+
+In that case, it's a graph.
+
+It's a very hard problem as far as I understand, and no one really knows how to do it yet.
+
+
+SPEAKER_02:
+Yeah.
+
+Like...
+
+A few things.
+
+So you could have an explicit distribution over like, I don't know how many lights are going to be in the room.
+
+I think it could be from one to 10.
+
+And then you could have methods that, oh, it's seven.
+
+Now I'm going to spin up seven A matrices for the seven lights.
+
+But then that kind of like question of unknown unknowns and being able to, in a potentially open-ended way, incorporate like new rows in the variables you already have.
+
+Like, oh, you could go before you could go up, down, left, right.
+
+Now you can also go a diagonal direction.
+
+So that kind of like expanding variables you have, and then also like, oh, now you have a new type of affordance or you have a new sensory modality.
+
+That's at least in terms of the examples we have in open question.
+
+Another quote that I think is kind of just to plant a footnote, this is from Toby St.
+
+Clair Smythe's
+
+thesis, he differentiates between the structured learning and the learning structure.
+
+So learning structure is about the former extending the process of learning to a structured setting, whereas the latter learning the underlying structures themselves.
+
+That's a kind of playful but interesting question.
+
+Like, are we learning the structure of the patterns in the world with a fixed structure internally?
+
+That's one side of the coin.
+
+And the other side would be, given the structure of the patterns in the world, how can the
+
+Act-Inv model potentially modify its own structure to accommodate those patterns more easily.
+
+RxInfer hopefully provides the sandbox to experiment with those things because of the possible open-endedness of being able to combine different nodes.
+
+I don't think any of our examples from Kobus's work or from the Reactive Bay's team, but Fraser or Kobus, correct me if this is not the case, but they have a fixed topology in runtime.
+
+It's not that the graph has a certain connectedness and then something occurs, like a policy decision or some kind of signal, and then the graph changes.
+
+But, and then like Dave mentioned, genetic algorithms, like there's so many other pieces, like the parameter sweep mentioned earlier, but like parameter sweeping isn't necessarily part of active inference.
+
+It's not part of the particular partition.
+
+It's not the physics of action and perception.
+
+It's just a computational science method.
+
+So in practice, a variety of methods come into play
+
+ranging from parameter sweeps, parallelization, A-B testing.
+
+So those all come into play to kind of tune or give a bigger view on the active inference generative model.
+
+So sometimes you are just interested in building one generative model,
+
+Other times it's like, even for just for fun and speculative realism, even then you still may want to generate a sequence of generative models.
+
+Just like if you were doing linear regression, you would make from simple on through, like you'd have a family from the most possible interactions and including all the variables to like the simplest model, right?
+
+And then there'd be the combinations in between.
+
+So there's something kind of analogous to cross-calibrating the performance of different models that have different structural elements.
+
+
+SPEAKER_03:
+Now, there was a presentation, might have been a guest stream, and I suspect it was in 2020, where somebody was addressing this using a formal setting where graphs combine and split in response to particular kinds of failures.
+
+Do you remember that ecological treatment of graphs?
+
+
+SPEAKER_04:
+I do remember Bert de Vries of the Bias Lab saying that this idea of 40-style factor graphs, they allow for a relatively robust model in the sense that you can take out nodes, and the reactive message processing will just kind of self-organize around that.
+
+I don't know if that's actually been demonstrated yet with in particular.
+
+I think maybe that's more of a theoretical benefit so far.
+
+But yeah, I'm not aware of actual examples of that just yet.
+
+
+SPEAKER_02:
+There's several other.
+
+I think it was the supervised.
+
+There's several other approaches to structure learning.
+
+So first off, again, a Toby paper.
+
+This is more on the category theory here.
+
+This is in terms of structured learning.
+
+because it describes agents with structured interfaces for learning like computer APIs.
+
+So that's super exciting.
+
+But now on the learning structure side, there's earlier work, 2020, Smith et al.
+
+And then there's more recent work, which is quite interesting here.
+
+Okay, the notation and the letters get a little funny and interesting because like here, the transition probabilities are encoded in C. But in the textbook, we were just discussing like C is the preference on observations, but here it's not.
+
+So it just, you know, see that?
+
+What happens in this paper is...
+
+It's in the context of MNIST handwriting data.
+
+And there are basically these, there's an unknown and not preset number of styles.
+
+And then there's this question, which is how many styles should we, given our task is to categorize these digits into zero through nine.
+
+How many styles should we spin up?
+
+So in the extreme case, there's only one style of zero, one style of one, one style of two.
+
+That's just like a big circle around the points in space.
+
+On the other extreme, like every single example is its own style.
+
+So both the one style and the every single one has its own style, those are on two extremes of a structure learning parameterization.
+
+How many styles are there?
+
+And so then the question is, how do you find that sort of Pareto optimal, Bayes optimal number of styles that actually provide you positive classification ability?
+
+And so that's sometimes approach from this idea of, on one hand, adding a latent factor and seeing if there's variability that that latent factor can explain.
+
+And then testing using Bayesian model selection.
+
+Okay, here's my model with n styles.
+
+Here's n plus 1 style.
+
+Is that extra style punching above its weight?
+
+Or if it's diminishing returns, then the smaller model is better.
+
+So that's the kind of like add a latent factor, see if it helps.
+
+and then move forward with whichever one's better.
+
+And then the other side of that is like the pruning, which is kind of like the sleep or the synaptic pruning.
+
+In that situation, you say, okay, given the N parameters I have, which one would be like the first to go?
+
+And then you remove the least informative of the parameters that you have.
+
+So that has led to some interesting work, probably more not open source than open source on systems that are able to, in different kinds of ways, add latent factors to explain and explore deeper patterns in like observation data or like in the consequences of action.
+
+And then cyclically, for example, like in a sleep-wake type situation,
+
+add parameters during wakefulness to explain more variance, remove parameters that are the least informative during sleep to promote model sparsity and interpretability and simplicity.
+
+Another thing just to note since the question was like about training is chapter nine is where the topic of connecting to empirical data is brought in.
+
+Before chapter nine, it's like all kind of like we propose this model, like we've just a priori specified this model, and then we ran the model forward in a generative direction to generate synthetic data.
+
+The reverse direction is, let's just say we already had a data set.
+
+So we already have a data set of people typing and their eye movements or of the mouse in the maze or the particle moving or whatever it is.
+
+So we already know what data we want to connect from.
+
+So then we still use the same generative model such that we know that we want these observations to connect up to the kinds of observations here.
+
+Like we want to have the location observation at every time step.
+
+So you could pre-register that model or you could build it after the data were collected
+
+And then what's called model inversion is, so here is distribution of the parameters given the observations and actions.
+
+And then that is being flipped, it's proportional, that's the kind of infinity sign, to here's the probability of the parameters given the model, and then the probability of the actions given the observations in the model.
+
+And so then this is reconstructing latent parameters theta in this kind of general linear regression framework against the observations, conditioned upon the observations.
+
+So when we're generating synthetic data, you can think about that as a distribution of observations conditioned upon parameters.
+
+Like I'm just saying that the room is 30 degrees and now I'm going to generate noisy thermometer data.
+
+So that's like generate me thermometer observations conditioned upon the hidden state S. The other way to do an inference, the inverted model would be, tell me what you can say about S, the true temperature in the room conditioned upon these observations that I'm empirically getting.
+
+So those are kind of the two directions of using a Bayesian model.
+
+And I think there's a lot of good work to be done with making examples that do that.
+
+That kind of features just coming online in PyMDP, and it's there in RxInfer, but we don't have any larger scale or even medium examples
+
+but those would be some cool things to look into.
+
+It kind of returns to chapter six, like why are we building this model?
+
+Like if we wanted to study, how are the relationships between observations and hidden states learnt?
+
+Well, then we would have a distribution on A or we'd select from multiple A matrices.
+
+But once we kind of open up all the possible directions of learning,
+
+like including preference learning, like how does the mouse know that it wants the food versus the aversive stimulus?
+
+Or how does it come to know the consequences of its actions from a movement perspective?
+
+That makes the space of the model larger and larger and larger combinatorically.
+
+Whereas the case where all the parameters are fixed, so there's like not really learning per se, there could still be real-time inference, but just it's not doing any deeper learning.
+
+That's like the plug and chug special case point.
+
+And then for every time you open up learning on a given variable,
+
+like first you have a quantitative learning, like just updating the values in the cells.
+
+Then you can think more of like a structural learning, like the A matrix was two by two, and now it's going to be two by three, or it's going to be three by three.
+
+And then you can get even into more kind of severe structure learning.
+
+Like what about a second A matrix?
+
+Or what about another modification on a base graph?
+
+Each of those steps from fixed quantitative tuning, structural tuning within a fixed topology, opening up the topology, that's open-ended.
+
+Each of those could be like...
+
+large increases in the amount of sweeping that you have to do.
+
+So if you want to make a playful example with open-endedness, you can go in that direction.
+
+If you had more of a
+
+If you had a question that defined your pragmatic value such that you wanted to get some utility out of your model, at some point you would probably choose which distributions you want to fix.
+
+I'm just going to say it prefers sugar and it avoids poison because I'm not asking the question, how does it come to prefer sugar?
+
+then if you were asking how does it come to prefer sugar you would want to make that distribution learnable because that's what would address that question but if the question was given that mice like sugar how do they learn um associative um you know between the color of the room and the shock of the foot or something like that like so the the question
+
+from the outset sometimes shapes what you situate as learnable or not.
+
+Yeah, for sure.
+
+
+SPEAKER_04:
+I just wanted to say, with respect to the significance that that discussion has to modeling, a lot of us, I'm quite interested in building models of this.
+
+The relevance would be you want to hard code as much as possible, not worry about the topology maybe initially, not worry about the
+
+multiplicity of the matrices and just kind of do the most truncated strict Bayesian inference you can on the most, you know, cut down version of the problem.
+
+And then, and then maybe iteratively up expose parts of the model say, okay, now, now we've got our frog jumping, let's say, or I think the classified as frogs versus apples, but you know, what if we need to say, determine also what we want to classify, you know, frogs versus apples versus oranges versus mice.
+
+How do you determine that you want to even classify frogs and apples?
+
+That's another action then you're gonna have to build in.
+
+So that introduces a huge amount of complexity.
+
+So to avoid that, if you're just interested in creating a first step in a model, the best thing to do is just kind of ignore those problems and hard code it essentially.
+
+I was just thinking for the relevance that would have to modeling efforts.
+
+
+SPEAKER_02:
+Yeah, that's a great point.
+
+Like, it makes me think about here.
+
+Like, we could just draw a circle around each of these bar charts.
+
+And this is kind of like our Bayesian graph.
+
+Kind of.
+
+You know, these are the variables that we're considering.
+
+It's almost like that's an island coming out of the ocean.
+
+Or, you know, choose a different way to think about it.
+
+But it's like, if we wanted to explicitly learn the prior...
+
+we would have another node, which is our prior on frogs and apples.
+
+Is it 0.1, 0.9, plus or minus 0.05?
+
+Or is it 0.1, 0.9, plus or minus 0.01?
+
+And then that would be the learnability of this prior.
+
+And then you could say, well, how did it come to believe that it was plus or minus 0.05 on frogs and apples?
+
+And then it's like, so the buck has to stop somewhere in practice for a particular model, but depending on what is useful or epistemic for you, you might pull back multiple layers.
+
+Dave?
+
+
+SPEAKER_03:
+Yeah, there's actually quite a lot of data that's,
+
+real-world data, the analysis of which can be relevant to what we're talking about.
+
+We're talking about behavior shaping from animal trainers and then the formalization of that in Skinner-style training.
+
+And bubbling up against what kinds of learning, what kind of teaching you actually can efficiently explain is a nice problem in itself.
+
+There's certain things you just cannot readily explain in this scenario.
+
+But there's a lot that you really can.
+
+
+SPEAKER_02:
+Yes.
+
+So figure 9-1, where...
+
+The experimenter's choice of which stimuli to provide, which test questions to send, et cetera, those are observations for the mouse.
+
+And then what the mouse does in terms of selected actions, that's the observations for the experimenter.
+
+This is kind of the cool thing with the Bayesian methods is you could pre-register or do a statistical power sweep
+
+what trains of experimental stimuli, under the generative model as I understand it, what trains of experimental stimuli would be differentiable
+
+from each other or contrastable or not.
+
+So like an example of this that's very empirical is in fMRI.
+
+So the fMRI signal, the bold, the brain oxygen related signal that Friston and others have studied with SPM for many years.
+
+So that signal happens on a timescale of several seconds.
+
+So they have a graphical model that includes the timescale of several seconds.
+
+And then they can simulate out, well, if we had two stimuli and they were alternating at the timescale of half a second, we wouldn't be able to determine the relative efficacy of these two stimuli because they'd be too convoluted by this like three second response time.
+
+On the other hand, if you had the observations alternating every minute,
+
+it would be too slow, you'd only get one change point detection per minute.
+
+So then it's like, well, what timescale should the observations be alternating on to derive the highest statistical power?
+
+Then even with that calculation, there's further considerations like, oh, but then if the person cognitively understands, oh, they're alternating every 16 seconds.
+
+So there's always many considerations in practice, but that's kind of the fun of the iterated modeling is this back and forth with the synthetic propositions and the empirical data, if it's a situation where there is empirical data.
+
+
+SPEAKER_04:
+I mean, the nice thing is that it's Bayesian inference all the way down on all of these things.
+
+So we kind of know what we're doing in terms of, I mean, in some sense, we're still doing Bayesian inference on model structure.
+
+We're still doing Bayesian inference on, you know, the A matrices and then versus the parameters and so on.
+
+
+SPEAKER_02:
+Yes, unified approach to handling and updating the variables, whether they're beliefs about state, beliefs about action, beliefs about observations, et cetera.
+
+And to kind of bring it back to the very beginning,
+
+we could be actually building from the inside these active inference models, or like in figure 9.1, this could be a transformer or a neural network.
+
+So also these models could be used to describe and map cognitive architectures or systems or things that aren't active inference things per se, but still have interactions across the interface.
+
+So sometimes you're actually building it.
+
+Other times just observing it and then building something to describe the observations.
+
+Which would kind of be like training a machine learning or reinforcement learning model on language or on something like that.
+
+And that could be used to generate language.
+
+So again, that has a lot in common with other methods.
+
+It's just that this is a very flexible phrasing of that problem.
+
+Okay.
+
+Well, so at least this was sort of a...
+
+general slash modeling discussion but if there are topics that people like want to explore i would highly recommend slash ask put put the questions on the page or in the table before you can leave a comment to like make sure that that they're seen um and just kind of
+
+front load what you want to ask and that will help like bring other people in and, and make, make, uh, a fun learning time.
+
+Okay.
+
+Any, um, last questions.
+
+
+SPEAKER_04:
+I guess the chapter two where, uh,
+
+we're opening up for just any, any sailing discussions at all about any parts of chapter two.
+
+You know, it's not like it's going to have to be a modeling discussion or anything like that next session.
+
+
+SPEAKER_02:
+Yeah, we can do any.
+
+Correct.
+
+It'll, it'll just be, we'll do two weeks of chapter two and then we'll see if we want to have another, what we want to do in, in three weeks from now.
+
+Cool.
+
+Cool.
+
+Okay.
+
+I'll stop the recording.
+
+Thank you.
