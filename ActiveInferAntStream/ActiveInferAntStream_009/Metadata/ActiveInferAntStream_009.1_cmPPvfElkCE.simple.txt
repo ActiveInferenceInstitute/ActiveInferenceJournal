@@ -1,0 +1,1148 @@
+SPEAKER_00:
+all right it's december 26 2024 this is daniel friedman it's active inference stream 009.1 how to accelerate active inference mountain car in rxinfer.jl
+
+and hope everyone is having a good end of year season.
+
+Looking forward to different updates, different live chats, see what happens along the way.
+
+I'll start the stream off with making a GitHub push.
+
+All right, while that's happening,
+
+I'm going to head over into Cursor.
+
+This is what we're going to be exploring, covering today, which is modifying an RxInfer package example made by the developers and moving it from a notebook format into a script format, adding some more visualizations and analyses, and then doing a setup script, hopefully to make it easier to get it going on your computer, and meta analysis.
+
+And right now there's a big
+
+meta analysis happening but we'll look at some past runs that finished just a few seconds ago okay so check the github this is uh based on the current version 3.8 of reactive base rx inferred.jl and just
+
+to keep it separate and clear made a fork or a branch from the exact version today.
+
+And then put all of the work that I'm about to go into into this examples folder slash mountain car.
+
+So it's a
+
+branch on Rx and for jail and in the video description are all the links okay so github push worked now to start another standalone and meta analysis so here's where i've gotten to after many speed bumps and and fun along the way this is in cursor right click open an integrated terminal first if you haven't
+
+Run the script, Julia, setup.jl.
+
+Probably also other settings will need to be bumped up against on different settings.
+
+Also, I brought it up, synced it to the current version just after building part of it.
+
+So there's probably a lot of inefficiencies.
+
+It's of course very cursor slash Claude-esque.
+
+So there could be a lot of redundancy, a lot of ways to go.
+
+But I'm going to run the setup script, then we'll look at the standalone and the meta analysis.
+
+Okay.
+
+So this is, as mentioned, branches off of the RxInfer example Active Inference Mountain Club.
+
+Okay.
+
+Let's just briefly look at setup, see what's happening while it's finishing this.
+
+There could probably be a lot of sorting of this.
+
+Different packages are installed.
+
+The rxinfer keystone package is installed from the local GitHub repo.
+
+So probably it would take some other different way to export functions in a different way.
+
+Calls probably some set of automatic dependency installations
+
+uh pre-existing explicit calls that I typed in like most recently this stats plots so definitely figure out what else could be changed to get this working on your own computer but at the end I hope it accurately says yes RX infers functional
+
+some of the core packages that we need are loaded.
+
+Here's the Julia version, project path, RxInferPath, and then how to run the scripts.
+
+And that can be probably developed.
+
+Okay, so that's the setup.
+
+Then there's the standalone Julia Mountain Car standalone.
+
+This one has today's date and the file name
+
+just to give it a static version as a single file snapshot but the meta analysis is much more scattered across methods scripts so the single mountain car standalone has the date okay so
+
+let's look before we go into the code at how they set up and characterize the mountain car problem okay so it's written in this sort of notebook blog post multimedia style
+
+Active Inference Mountain Car.
+
+This is from the RxInferJL documentation.
+
+A group of friends is going to a camping site that is located on the biggest mountain in the Netherlands.
+
+They use an electric car for the trip.
+
+When they are almost there, the car's battery is almost empty and is therefore limiting the engine force.
+
+Unfortunately, they are in the middle of a valley and don't have enough power to reach the camping site.
+
+Night is falling.
+
+and they still need to reach the top of the mountain.
+
+As rescuers, let us develop an active inference AI agent that can get them up the hill with limited engine power.
+
+Okay.
+
+before we go into their technical details here's just a single perplexity prompt give an overview of the mountain car problem from control theory at four level slash types of depth plain archetypal ultra-technical and esoteric and also generated some images so we can generate some more images now or people can suggest other prompts
+
+So plain understanding.
+
+The problem involves an underpowered car stuck in a valley between two hills.
+
+The car's engine is too weak to climb directly up to the right hill to reach a goal flag.
+
+Instead, it must swing back and forth, building up momentum by driving up the opposite hill first until it gains enough energy to reach the target.
+
+archetypal perspective.
+
+This scenario exemplifies the fundamental principle that direct paths aren't always optimal.
+
+The car must first move away from its goal, driving left to ultimately reach it on the right, a counterintuitive strategy that demonstrates how complex systems often require indirect approaches.
+
+The problem has become a classic test case for reinforcement learning algorithms because it requires learning this non-obvious solution.
+
+the active inference approach that rx infer is going to implement doesn't have a trained reward or proposed reward function on some data set of successful or not successful traces it's going to be directly from the distributions okay technical analysis we'll see in more specifics
+
+getting into the scripts, and then I'll be the last one.
+
+Esoteric implications.
+
+The mountain car problem transcends its mechanical nature to represent a metaphor for optimization in complex landscapes.
+
+The system demonstrates the necessity of building potential energy through oscillatory behavior, the interplay between kinetic and potential energy transformations, the emergence of sophisticated behavior from simple physical rules,
+
+The relationship between local optima valley and global optima goal.
+
+The problems enduring relevance stems from its ability to challenge both traditional control methods and modern machine learning approaches while maintaining mathematical elegance and its simplicity.
+
+Okay.
+
+So the goal for this stream, and then we'll look more at the specifics of the mountain car and the code itself, to learn about RxInfer, hopefully correctly, or at least helpfully implement one useful experiment to learn about Julia and all these different tools.
+
+And shout out to Andrew for the early Julia adoption and insights.
+
+um here is using cursor 44.8 rx infer 3.8 or two julia 1.1 1.2 and then for the llm in cursor cloud 3.5 sonnet 2024 10 22. all right
+
+Here's the finished single standalone that we ran, started during the stream.
+
+It is gonna implement two different simulations with the same physics and two different approaches to strategy.
+
+First is going to be the naive approach, which always pushes to the right.
+
+And then the second is going to be this active inference approach with a given look ahead period.
+
+And this script goes into the outputs
+
+So here's the new one in green.
+
+Here are the outputs of the single simulation, and this will give an intuition for what the single standalone does.
+
+First comparison doc if.
+
+So here the single parameter combination that is used was chosen.
+
+It's, I think, similar or proportional or the same to what was used in the original example.
+
+notebook and there's two different dots representing the car's position simulation on this landscape and we'll look at how physics is given on this landscape so the rules of physics are specified and the elevation
+
+and the potential and the kinetic energies are calculated in a sort of basic physics simulation style not simply modifying some attribute of the direct landscape function itself
+
+and they both start at negative 0.5 and they're both trying to get to positive 0.5 the colors will change i think throughout but naive control is red and it drives right and it
+
+oscillates a little bit but reaches a fixed point where the friction and the gravity are equivalent to the engine's limiting force and that reaches this stable point the blue active inference agent has this anticipatory simulated trace and I think it's definitely worthy of another long investigation
+
+how does it distributionally fit this policy anticipation and what is the computational complexity as we scale the time horizon and inference but we can see that with this preference for being higher up the active inference agent can see that it can get higher up
+
+to the left than it is on the right by moving that way.
+
+And that from already being up on the right slope and oscillate its way to the goal position.
+
+And you can imagine that that there's going to be combinations of physics and engine force and goal position that are easily or impossible to do.
+
+right going through the rest of the images in this single case output but first going to start the oh let's just go through all these first okay so this is the action distribution the naive control has is always picking that one
+
+value to go right with one whereas the active inference now it's in tan it or red has at least i don't know if i'm perfectly implementing what the notebook does but at least it does have some policy variance and it one that for this parameter combination does get it up to the goal
+
+action comparison so there's another way to look at that this is the naive control with now in blue with the y equals one policy function output active inference agent having this
+
+more back and forth control policy swinging between two and negative two i'm not sure what this if this is scaled to a different number but none of this is meant to say that this is the best fit it's really just a first step towards
+
+figuring out what kinds of tools and interfaces for generative models and for RxInfer can we use to start doing some useful parameter sweeps across different regions of parameter space and structure models.
+
+Okay, these are state action maps.
+
+So here's position on the x axis, velocity on the y axis.
+
+there's another one that makes sense yeah so here's here's the trace of the naive noun blue and active inference showing these different trajectories they start out with zero velocity at negative 0.5 here's a version where the vectors are added the naive control
+
+follows this blue spiral to its fixed point attractor the active inference agent has this oscillatory behavior reflected with a loop not just a spiral that ends up reaching a higher net position via increased velocity which is what it needs to get up the hill here's the
+
+predictive element of the active inference agent here's velocity distribution
+
+there's a wider range of velocities ranging from the negative to the positive further in the active inference agent.
+
+Energy comparison.
+
+This is not like variational free energy.
+
+This is the kinetic minus the potential or kinetic and the potential energy.
+
+So we can look at this calculation though.
+
+And energy efficiency, I think, is the integral or something of this, but I'm not exactly sure.
+
+okay so this state action map is showing that trajectory and then mapping overlay with which action was taken so starting here 2.0 was used that's moving to the right and then abruptly the policy switches to negative 2.0 then policy switches here and then
+
+the position is approached and i i think that's an interesting question like to what extent does it have inertia to meet the goal or does it engage in a sort of xenos paradox slowing down as it converges if it has the engine control
+
+it has to be kind of like a run past the finish line situation at least in terms of the explicit preference distribution otherwise you you get sort of slowing behavior leading up to the goal i don't know that could just be a total artifact of this hill okay that's the that's the uh single
+
+standalone output okay now config.toml is going to specify a meta analysis suite
+
+So here's what it's going to look like here.
+
+It was 200 simulations of 200 times.
+
+Definitely interesting to profile.
+
+How much is the startup time for one app model?
+
+And then is there any other further caching?
+
+Because starting the first one seems to take longer as the sort of RX and firm machinery comes online, I guess.
+
+But we'll look at the code this too.
+
+It should be interesting.
+
+And again, it's all just initial takes for hopefully people and others to improve on it.
+
+So here's the config.tala meta analysis.
+
+So there's two knobs in this parameter grid sweep.
+
+The force limit of the engine and the friction coefficient of the landscape.
+
+The gravity constant is kept constant.
+
+For each of the engine force and the friction coefficient, you give a minimum and a maximum.
+
+So I think the one that just ran, maybe it was this one, I don't know.
+
+Let's see, 717.
+
+We'll just run a clean one.
+
+So minimum and maximum force and friction.
+
+Let's do a higher resolution.
+
+1 to 27.01 to 27.
+
+So this is going to do 15 times 15 multiplied by the number of episodes per parameter combination.
+
+So that can be used for technical replicates.
+
+So then that parameter combination, we can understand the variance profile of it too.
+
+I'll set that to two.
+
+Maximum steps per episode.
+
+Let's leave it at 100.
+
+Planning horizon.
+
+Leave it at 40.
+
+Initial position.
+
+This is also position and velocity.
+
+Third would be acceleration, etc, etc, etc.
+
+Snap, crackle, pop, all that.
+
+Div, grad, curl.
+
+Target state is the position and velocity preferences.
+
+So think again, interesting to see are those convergent or does inertia carry
+
+some plotting here kind of as an experiment kind of as a bit of a local coding optima uh some of the plots are are in ascii plain text and then some output so 1515 so that was just a sort of recap run setup.jl confirm that rx infer works then run
+
+just the standalone mountain car standalone 12.624 and that will do the simulation we did that close that window this is another standalone now clearing now we're going to run the meta analysis
+
+So hopefully this will work.
+
+Meanwhile, let us explore the CodeVis briefly.
+
+Visualization.
+
+So not sure if this is accurate.
+
+This is a TBD with RxInfer experts, but here the prompt for this
+
+graphical visualization was... I'll modify the prompt just so we have three free flows left for this out of five.
+
+Here's the meta analysis.
+
+Let's close that one.
+
+Meta analysis plugging away on the terminal.
+
+We'll see if it has to be D or rebugged.
+
+And then we'll do a graph is free version on this flow visualization.
+
+emphasize the component of active inference and the free energy principle okay looks like we passed the first phase so this loaded the configuration toml set up the parameter batch
+
+objects plus methods so now we'll see how the simulations go um the first part i think takes longer and then the second it hits a second rate i'm not sure which i think might maybe does the all the active inference ones then all the naive and the so we'll see how long it takes to click to n percent and then see how long it takes to finish okay meanwhile
+
+Here was the graphics.
+
+So the prompt was, again, I hope slash don't know, this is accurate, would be really interested to explore how we could develop these methods and get some, you know,
+
+stable versioning if these are accurate, and use them for learning RxInfer.
+
+So, trace how a probabilistic model specification transforms from at-model macro definition through node creation to final compiled graph structure, including node contraction optimizations.
+
+Emphasize the component of active inference in the free energy principle.
+
+Not sure it's going to matter.
+
+So, here is
+
+ostensibly looking through parts of this package.
+
+Not sure how much of a rocket and all these other pieces are in there.
+
+But you know, here's some references in the code.
+
+Again, I'm working in the Rx infer branch.
+
+So here it does find a place in the documents.
+
+So the app model macro is passed to Graph PPL package.
+
+Here's a section.
+
+This is kind of like using cursor slash codeviz as a RAG for code and docs facilitated because the RxInfer documentation is on their GitHub as well.
+
+So then let's see.
+
+At model macro definition uses graph PPL and that gets customized by reactive message passing graph PPL backend.
+
+Okay, maybe.
+
+Transformation pipeline.
+
+compose simple operators, folds mathematical expressions, and adds brackets to ensure correct argument handling.
+
+So the app model parameters and syntax get kind of unpacked.
+
+Inject tilde right-hand side aliases.
+
+that creates nodes and variables based on model specification from the nodes so this is the statistical phase graph i guess interesting
+
+Although some nodes in RxInfer.jl already come with their own meta structure, users have the flexibility to define different meta structures for those nodes and also for custom ones.
+
+A meta structure is created by using the struct statement in Julia.
+
+Okay.
+
+That is converted to a factor graph.
+
+That's sort of the
+
+post 2017-ish work with Bert de Vries, Friston, Parr here's the free energy optimization component okay so the factor graph construction I guess whether in the scheduled Forney classic non-reactive style or
+
+ostensibly, but not necessarily in the RxInfer reactive message passing setting.
+
+Probably the message passing can be scheduled or reactive differently.
+
+Here's variational free energy.
+
+Variational free energy then defines a functional objective that includes the model and a variational distribution over the latent variables.
+
+not sure if this is going to always be the case for any graph or how how that um comes to be for a given factor graph but these are just questions to to learn from explore and then here's a specific
+
+Bet free energy.
+
+I know Dave told me it was one way or the other, but probably I said the wrong one, but the Bethe approximation.
+
+Okay.
+
+Meanwhile, 21% done with this 225 times something meta-analysis sweep.
+
+The BFE can be iteratively optimized for each individual variational distribution in turn.
+
+Optimization of the BFE is thus more manageable than direct optimization of the VFE.
+
+So they use also these methods that in the Oryx Infer Group this year, we kind of
+
+talked about as the what are they called?
+
+The six functions.
+
+so they are a convention which provides interpretability and structuring for aurix infer action perception loops by using a canonical set of methods so that and thanks to many of the participants throughout this year in getting the documentation doing all these experiments too
+
+So I don't know how accurately I've implemented it, but here's what we had and there's different ways to do it.
+
+So in the structured, scheduled, single time step, every node, one time step, factor graph, logistics.
+
+It's not reactive.
+
+It's like moving the whole simulation ahead one click.
+
+What I understand of with the reactive message passing situation is that it brings some computational reactive methods to
+
+the local variant of a free energy the Beth free energy that enable variational inference to be done in a in a flexible and effective way okay node contraction oh the six functions so once into the reactive setting
+
+Whereas in the scheduled version, it was just iterate through this list of operations.
+
+Let's do a devrise.
+
+This is Graphical Brain, Belief Propagation and Active Inference, Frist and Par, devrise 2017.
+
+Figure 1.
+
+showing how one time step updating of the POMDP graph up here translates to these analytical updates occurring in this scheduled order on this Forney graph which is a transformation of kind of nodes into edges and vice versa
+
+between the Bayes and the Forney graph and there's also recent other papers and live streams and such but this 2017 is just laying out the relationship between the single time step of Bayesian updating and the update rules that can be scheduled on that Forney graph
+
+then reactive moved that into a much more general situation where different processes can be playing out with different logics and speeds so there could be like one sensor at 100 hertz and one at one hertz and you're neither sampling too much or too little however then there's this question of okay well we're going to specify the app model
+
+using the rx infer at model syntax looking like this here's transition function modeling transition due to gravity and friction so updating position and velocity given the physics the structure of affordance or policy
+
+in action space.
+
+Inverse engine force, not sure why it needs to be defined here.
+
+This is I hope just putting out some
+
+stabs and pheromone trails in into the dark for people to clarify perform techno invective make it clearer make other documentation all these kinds of things i'm and i'm not sure if i've completely perfectly
+
+mapped it into the script form but from this example this is the proper reference version the app model function for the agent type like mountain car is defined like in this generative model specification
+
+language where for time steps during the time steps of the simulation there's a direct distributional updating occurring so that just defines all of the updates to occur one could imagine that that doing the order differently
+
+would matter so maybe it could be as simple as just these happening but the order could matter and you might not want the order to matter in exactly the same um order as the code are lined but rather to take this um all at once representation
+
+And then further, just from a package perspective, it's desired to have more of a flexibility with how you call the statistical distribution so that, again, those different logics can be hooked up to what is called.
+
+Otherwise, if it's only this expressive and none of those further steps were taken, then this could just do something as simple as iterate through in this order.
+
+but then to put in logics well like actually do this one twice as fast or something like that it would be needing the kind of rewrite that would result in some of these steps um so technically the agent here goes to three phases act execute observe that's one step infer and slide kind of like act and first serve
+
+Act, execute, observe.
+
+In this step, the agent performs an action onto the environment at time t and gets an observation in exchange.
+
+These observations are basically the prediction of the agent on how the environment evolves over the next t time step.
+
+So, act and get an updated observation.
+
+position momentum infer after receiving observations the agent starts updating its internal probabilistic model by doing inference it finds the posterior distributions over the state and the control distributions three slide after updating its internal belief the agent moves to the next time step and uses the inferred action from the previous time step to interact with the environment and that is where you pick back up with one so this is the kind of ooda toe
+
+inactive etc and these steps are kind of like mid-level functions um explored on this page here with six where there's a future
+
+or here it says the act and some of this might be from the earlier slightly different version it's just all sort of directionally in the ballpark that that because the graph doesn't have this intrinsic scheduling to it then and and you can have so much flexibility with a custom scheduling um custom nodes message rules all that kind of stuff that um you need to bring
+
+how the graph is called and updated and operated more explicitly so that's a good thing it's just that it's still slightly evolving with many of the package semantics and examples and norms
+
+and there's probably many patterns to explore and not necessarily some sequence or repertoire of these mid-level possibly semantic or sub-agentic like steps that give a lot of nuance with describing is it O O D A or is it A D O O or is it O O D O O D O O D
+
+Okay, coming back to CL simulation.
+
+Okay, 52% done on the meta analysis.
+
+So that was, um, that was the code viz.
+
+Let's do another code viz.
+
+Help us totally understand how the standalone
+
+Mountain car.
+
+Let's just see if this works.
+
+Help us totally understand how the standalone mountain car script calls every minute, particular, and etc.
+
+Please, thank you.
+
+55% done.
+
+Reindex.
+
+Then we'll look, we'll see this code biz, and then we'll look at the output of the meta analysis.
+
+Okay.
+
+But briefly, just to look over what they get to,
+
+so they just they describe the analytical process formalization for the mountain so again it's not a proposed reward or utility function or anything trained on data it's just a distribution that's physics grounded using just simply a gravitational force on the hill landscape depending on the position
+
+And that's implemented also using possibly some special characters and some special Julia syntax that will take some learning and some package specific syntax.
+
+So to be learned and better understood, but here's where they lie out the functions that create physics and create world and the sort of world generative process element.
+
+They have a static image just to confirm that they've initialized everything.
+
+Here's the naive approach.
+
+This is the naive.
+
+I think I have implemented it slightly differently with just having it all output a one each time step.
+
+Maybe they're pre-filling it as well.
+
+and then here's the visualization of just the naive policy having that initial ramp up then fixed point here's the active inference generative model okay and we'll wait
+
+Now let's help them solve the problem with an active inference approach.
+
+Particularly, we create an agent that predicts the future card position as well as the best possible actions in a probabilistic manner.
+
+So not from data.
+
+Not from datasets.
+
+We start by specifying a probabilistic model for the agent that describes the agent's internal beliefs over the external dynamics over the environment.
+
+The generative model is defined as follows.
+
+So here are the equations and in the GitHub for basically the variables in the Bayes graph.
+
+And I would look forward to using some of these new visualization methods
+
+to visualize the factors and the app model from the notebook, visualize the standalone and the meta-analysis to confirm that the model's being analyzed correctly.
+
+Okay, now let's look at standalone.
+
+Well, let's just finish with what they have in the documentary.
+
+Here's the variables as defined.
+
+Here's the key RxInfer at model macro.
+
+At model macro and meta blocks are used to define the probabilistic model and the approximation methods for the nonlinear state transition functions, respectively.
+
+In addition, the beliefs over the future states up to t steps ahead of the agent is included.
+
+So this is like the agent class equivalent, which we looked at briefly before, defined as those distributions over those variables.
+
+after specifying the generative model let's create an active inference agent for the car technically the agent goes through three phases so here again are those mid-level semantic bundles of sort of distributional updating cognitive sub-agentic process etc that are being projected into this three cycle act execute observe
+
+infer slide but that's again as far as I understood from Cobus and others and and learning this year that's just a convention and other orders or other kinds of um you know that could be a good place to play with this simulation um and again to confirm through the flow of the simulation with the code viz
+
+how the notebook, the standalone, and the meta analysis might be correctly or incorrectly applied.
+
+So in the cell below, we create the agent through the create agent function, which includes compute, act, slide, and future.
+
+So here's future, but it wasn't mentioned above.
+
+here is where the reactive message passing component is called not exactly sure what they mean about the message so again just a learning artifact dude try to understand
+
+the extremely interesting potential and directions we can go with the kind of flexibility that we have with RxInfer and how cool their direction and vision for the open source element is too.
+
+So here's the create agents method.
+
+Now it's time to see, remember?
+
+Now it's time to see if we can help our friends arrive at the camping site by midnight, question mark.
+
+Here is the Julia syntax.
+
+There's a combination of initialization methods, parameterization, agent creation, further parameter specification, step through experimental protocol.
+
+then this discrete time loop for the number of time steps as the active inference simulation is going to go and then here's a very concise animation method and so here it's a little bit different but it's the same kind of general picture that is shown here different scaling colors um but that's
+
+what is happening in outputs comparisons.
+
+
+UNKNOWN:
+Okay.
+
+
+SPEAKER_00:
+And they have more information on the way message passing plays out with this example.
+
+
+UNKNOWN:
+Okay.
+
+
+SPEAKER_00:
+right let's look at the code viz for the whatever we prompted okay 83 done with the with the big meta analysis okay so here we go here's mountain car standalone 12 26 2024. first loads config dot tunnel
+
+Like, I don't even know if it does.
+
+It does.
+
+That's one.
+
+It also configures a shared logging function and a visualization, probably data collection, arraying function.
+
+so then these config informed visualization and logging methods are holding the traces of these two agents as they're simulated within a shared parameter configuration like physics and friction that's each cell of this meta-analysis it's ongoing
+
+and each of these agent folders we could say has like a naive control agent for that physics combination and active inference agent for that physics configuration the parameterized
+
+sort of setup for the simulation and everything loaded in place, which can often be a lot of the hardest part.
+
+Sometimes cursor plus LLMs knocks it out of the park.
+
+Other times it's just two steps backwards, one step forward.
+
+Mountain Car is called
+
+interesting mountaincar.jl even here looks like it goes to code of conduct here's the readme let's look at that on github
+
+Let's look at some of these methods.
+
+Wow, though, interesting.
+
+Okay, 95% done with the meta analysis.
+
+Here's the mountain car model.
+
+method so here's standalone standalone's parameters are i i don't know if um terminally i'm sure it could be restructured are written at 300 lines in just wanted to start there it's a highlight tab so here's how i understand what's happening in the standalone it's defining this as the mountain car module and and i think a better package reference and function reference could go a long way
+
+Here at the package and at the specific method level, RxInfer and ReactiveMessagePassingSub kind of second level consultants are called and some of the other packages that are needed.
+
+Visualization.jl is brought in for some methods.
+
+Also, this file exports public functions.
+
+So other scripts can call include on this script and get these functions.
+
+Here are some... All right, here we go.
+
+Completed 900 simulations with 80 successes.
+
+Okay, good.
+
+So that means that some of the simulations should have worked.
+
+Some of them didn't work.
+
+So at least we picked some interesting area.
+
+Not sure if it's going to visualize everything properly.
+
+okay here's the app model function with like the same i hope um distributions and such here's the create physics here's the create world here's the create agent
+
+Here's calculating the kinetic potential and total energy.
+
+So here's the potential energy with 9.81 gravitational constant.
+
+Okay, no errors from the meta-analysis, but we'll see what it ends up outputting.
+
+What was output?
+
+so here's the physics based energy calculation not to be confused only to be distinguished from the fact that the message passing updates are doing a free energy minimization but this is referring to the physics i don't know what it it's if there's a just the physics phase space for the newtonian mechanics
+
+Here's the method to call for the animations.
+
+That's the module.
+
+Then here is when that standalone is called by itself.
+
+It calls in all these other packages.
+
+Here we're at line 300.
+
+Here are the parameterizations.
+
+These may override or vice versa.
+
+And set the shared
+
+parameters for the naive and the active inference approach here's the act the naive approach here's the execution of the naive approach this is sort of a procedural way they defined um
+
+Just again, like these are, this is like an example of something that might be totally irrelevant in a given moment, or it might make a huge difference in a simulation.
+
+So here they put a hundred ones or n naive time steps of ones, and then just accepted that vector.
+
+here possibly more error prone possibly introducing disastrous logics there's a procedural generation of setting the action at that time step to one and that enables some of the single standalone logging
+
+Here's the Active Inference approach.
+
+So it's prefigured with the AI namespace subscript.
+
+Here is the compute act slide future agents.
+
+Not sure if this .04 gets overridden.
+
+We'll see maybe in the meta-analysis.
+
+Here's the active inference simulation in a let block, which helps with the, I don't mean impenetrability security, but in the error tolerance and logging for allowances in programs.
+
+So different sort of footholds, entry points for logging.
+
+and an understanding and for a given situation maybe more or less there's a lot I I don't even know so many different ways to write different codes so here's the observation of the position and the velocity from the current state's modalities factors here that's the initial position
+
+here is the time step discrete time sequence so this is kind of like there's the topos of the the topology of the action perception partition and then this is like the kairos possibly also chronos for specifying how those
+
+different topological aspects of the action perception partition get enacted sequentially in this case but with expressivity to have other logics underneath these uh just current transient
+
+norm specifications so set the action to the act function push it onto the action trace and execute the action then observe push the observations store the predictions and and the future call check against the target update beliefs
+
+so maybe that's the sort of running through the finish line component like it checks whether it's actually at the goal then it updates its beliefs or but i'm not sure and logs every 20 time steps here's the calculation of the energies the visualization on the analysis of the naive and the ai
+
+comparison plots, outputs, some summaries.
+
+Okay.
+
+So that again goes to the outputs folder.
+
+Now let's look at, so 17.
+
+Okay.
+
+So here's an ANOVA, but here's some earlier ones that have many more.
+
+Let's try to get these back.
+
+First, just going to explicitly bring in the meta analysis and the mountain car methods.
+
+Okay.
+
+Please ensure that all ASCII art and non-ASCII parentheses quote normal plots are fully output by the meta-analysis.
+
+Then we'll update the TOML just to do a tiny one, just to verify that.
+
+So we'll do two by two
+
+So this is kind of a common sort of micro dev loop situation with, of course, just breaking, unworking things, but visualizations sort of trickling off, needing to be fixed.
+
+And then the sort of trade-off between pursuing a local branch and then pursuing a deeper branch.
+
+So for example, here was using the ASCII text art.
+
+this was on 450 for each sweeping so let's see these were the plain text we'll see if we can recover these but you know hilarious if we can hilarious if we can't okay here's just a sort of summary on the overall success versus failure of naive versus active inference so
+
+TBD if it's exactly perfectly doing what the standalone does and again if that's exactly the right or only way to do it in the example but at least in this parameter zone active inference is doing better so there's at least some cases where there's a better policy than just going to the right success rates so here's sort of an ASCII art uh
+
+visualization, not sure if the dimensionality is the right way, but it's sort of some example.
+
+Here's the difference.
+
+Here's some different plots.
+
+This is why it was a local off mode because like it looks kind of sick.
+
+So I thought, okay, it could definitely be also improved, but it's also like, it's cool.
+
+It can stay.
+
+parameter analysis so here's success rate versus force in the naive success rate not sure why this wouldn't be a monotonic distribution different plots like plotting this by that plotting this by that
+
+Okay.
+
+Meanwhile, I'm going to accept blindly the edits that it made to the meta analysis.
+
+Double check the TOML.
+
+We're doing a much smaller situation.
+
+Clear.
+
+Run it again.
+
+Back to the earlier outputs.
+
+Heat maps is empty.
+
+So that was one of the non ASCII art energy analysis.
+
+so this again suggestive that the simulation really is happening which is kind of the question of these different cases but it's limited ability with ASCII so here's um
+
+another visualization that's it's like the control effort distribution by agent type almost always is at 100 but then there's a few other ones so not sure if those are spurious or how those come to be in the naive control effort case but here is this um different distribution okay an analysis is empty
+
+So here's an example of the sort of extended startup time of RxInfer.
+
+Okay.
+
+So this will probably have to be resolved, but here is setting up the smaller simulation.
+
+So it sets up the whole batch, whether it has to do two or 200,000, and it's going to go a lot faster.
+
+It's already at 12%.
+
+Okay.
+
+Okay, so I'll just sort of read some of these second closing parts while we finish up this meta analysis.
+
+If you're watching live though, write any comments or questions in the chat.
+
+Okay, so here's some open source to do.
+
+At the package scale, just verify and improve
+
+You know, anyone who wants to try can clone the repo, get the setup.jl working on another setup.
+
+On the statistical front, we can do better statistical description work, visualization, and analysis within and across simulations.
+
+So sort of distinguishing and building some statistical power apparatus for technical replicates and biological replicates or experimental conditions.
+
+19% on the simulation.
+
+On the formal and the analytical structural side, well, one approach is from the initial RxInfer teams notebook and from the standalone and from the more meta analysis style.
+
+apply generalized notation, notation, GNN style, which we can actually try this in this stream briefly.
+
+So we'll leave that one up.
+
+Category theory.
+
+Here, added a couple of links before, so still analyzing the meta-analysis.
+
+At least that's a good sign.
+
+So I wanted to highlight two recent blog posts from August and November of this year by colleagues at the Topos Institute.
+
+So the earlier one is a blog post by Sophie Libkind and David Spivak, a polynomial account of Bayesian Update.
+
+so here they describe this poly tree notation this is a very math arty and useful overview for the poly category theoretic notation and some operations and probably a ton more for Bayesian update
+
+and and later they did work including more of the action side and then here's a post from uh November of this year by David spivak describing a paper uh dynamic task delegation for hierarchical agents okay meta-analysis finished with an error no look just fix it thoughtfully
+
+So, Neural Wiring Diagrams for Message Passing in Multiscale Organizations.
+
+Sounds to connect on a lot of act-inf topics.
+
+So, they wrote, In our recent paper, Dynamic Task Delegation for Hierarchical Agents, Sophie Lipkin and I described a task delegation from an agent to a team of subordinates as morphisms in a certain operad called org.m.
+
+However, such morphisms include a great deal of data, and the examples we gave there barely scratch the surface of what's possible.
+
+In this post, I'll show how recumbent neural wiring diagrams with arbitrary feedback and quote axon splitting give rise to a message passing language for describing certain such task delegations.
+
+That is, I'll define a cyclic operand rnwd and a function rnwd arrow org m.
+
+right now what are you doing rnwid and there could be a lot of connections here with the message passing i want to just highlight those see if anyone is interested to explore that direction um just in terms of making okay now
+
+Here, accept the changes, resync it, clear, start up the meta-analysis again.
+
+On the sort of action perception, behavioral science component, fitting data, playing with different noise patterns and levels, and then also figuring out some other strategies that can get plugged in
+
+other than the the naive one so just for reference this is the i believe formerly known as open ai gym now called gymnasium.pharama.org so mountain car here's how they describe this the environment is part of the classic control environments which contains general information about the environment
+
+So description, this is how they describe it on that gymnasium situation.
+
+The mountain car MDP is a deterministic MDP, Markov Decision Process, that consists of a car placed stochastically at the bottom of a sinusoidal valley with the only possible actions being the accelerations that can be applied to the car in either direction.
+
+The goal of the MDP is to strategically accelerate the car to reach the goal state on top of the right hill.
+
+There are two versions of a mountain car domain in gymnasium, one with discrete actions and one with continuous.
+
+This version is the one with discrete actions.
+
+First appeared in Andrew Moore's PhD thesis 1990.
+
+so here's just how they do it so that could be cool to bring the rx infer active inference agent to the gymnasium and vice versa another angle here
+
+look into the links go to the multi-agent page in active blockference project document and and and probably other and and better um sources for this too but this is just from from years ago in the cyber physical case and the ant case
+
+some of the different ways that hopefully rx environments and or similar will help enable with the expressivity to talk about a sort of pure blockchain stigma g niche modification neighborhood where you have a kind of centralized at that scale of analysis hub and spoke to and from like for example in the blockchain case
+
+people might talk about sending from wallet A to wallet B, but from a message passing perspective, it was wallet A to the blockchain, and then the blockchain update changes the efficacy at a future state for B. Whereas in this case, maybe explicit's not the best term here, but spatial collisions and direct interactions are possible, as well as environment interactions.
+
+So, okay, we're back to the
+
+Meta analysis.
+
+Okay.
+
+Already it looks like more folders have come out.
+
+16 simulations with four successes.
+
+So again, some of these should, okay.
+
+So here we are within this most recent, we'll wait for this to finish and then we'll look into this most recent meta analysis.
+
+Okay.
+
+The heat map.
+
+OK.
+
+OK.
+
+Chaos.
+
+Surprise, chaos.
+
+Mouse over or just copy and paste it into the composer.
+
+please thoughtfully address all so that the visualizations of all kinds are safely plotted and fully logged output.
+
+Okay, meanwhile, what is happening in these folders?
+
+Okay, heat maps went empty.
+
+but here's what came out before that okay so here was the smaller parameterization with these other ASCII art so for the for the cyberpunk solarpunk rx and fur enthusiast this one oh is much bigger
+
+the size of the ASCII art can be specified in the TOML plot width and plot height okay meanwhile the agent is chugging away over here okay then parameter analysis with these bigger ones
+
+so not exactly sure how accurate everything but okay heat maps empty that's kind of part of the issue okay interesting with a naive energy distribution ascii plots nothing nothing okay
+
+accepting these visualization updates clear let's just delete the ones from after 18. call the meta analysis it's gonna run it
+
+So how can we use Rx environments and or others to model this kind of direct communication amongst agents, low road or high road, to model transient communication like propagative radio, EMF, light, schooling, flash flocking, or
+
+sort of proximate antenna-antennal interactions, as well as to model communication through space-time cones, thinking more about topics like niche modification, stigmergy, across-trial learning, and pheromone psychophysics in the active inference case.
+
+Cobus, live in the dock.
+
+Okay, so here appears to be a key part of the issue.
+
+So we'll see how much this interferes with it on this new run here happening here.
+
+But there's some overlap between the ASCII art.
+
+Let's just preempt.
+
+ensure that we are not quote, getting it twisted with the plots and ASCII art, plots, math art, plots.
+
+Please check over everything and fix and trench to be 100% functionality.
+
+Okay, checking out the readme.
+
+Structure of the repo.
+
+Standalone implementation, physics engine, octave inference agent, naive agent, visualization.
+
+meta-analysis framework, at least the hope of one.
+
+Different measures.
+
+Set up with setup script.
+
+Run standalone or the meta-analysis.
+
+update the config.toml hopefully project.toml the one with all the package stuff should be taken care of by setup but submit a request or or let's figure out how to make it simpler and here are some of those key packages including rx infer okay
+
+finished the 16 simulations now it's plotting so we anything with 18 see that we're already kind of we're already on another okay rerunning it
+
+starting now to to fix but basically this is the whole coefficient slash question how fast how good how augmented how clear how well documented how aligned how useful how interesting how novel how valuable so let's let that simulation go
+
+Okay, while the meta analysis is happening, let's have just a more folder.
+
+Let's just see how it does with a who's on first.
+
+In who's on first,
+
+Write A. Please write A. Comprehensive.
+
+Absolutely informed.
+
+And far.
+
+Insighted.
+
+Flash out.
+
+Sighted.
+
+Parenthesis.
+
+Indoor.
+
+Outdoor.
+
+Specialist status.
+
+who's on first style dialogue or more about 1920s Americana baseball USA OS specific lore and all the contents of the feed me and mountain car active inference
+
+reactive message passing scheme as we've tried to implement and dot dot dot.
+
+I'll help write a humorous Abbott and Costello who's on first style dialogue that cleverly weaves together classic baseball references with the mountain car active inference implementation.
+
+Let me write this in the who's on first.md file.
+
+69% done with the meta analysis.
+
+Okay.
+
+Okay.
+
+Let's see if, okay.
+
+We'll just do the one shot.
+
+Okay, push it to GitHub.
+
+Accept the changes.
+
+Clear.
+
+Run a meta-analysis.
+
+Reload the repo.
+
+more all right just one shot just so that we can close out
+
+Who's on first?
+
+Mountain Car Edition.
+
+Say, Costello, I've been meaning to tell you about this fascinating new project we're working on at the ballpark.
+
+Oh yeah?
+
+What's that?
+
+It's called Mountain Car Active Inference.
+
+A mountain car?
+
+At a baseball park?
+
+What are you, nuts?
+
+No, no.
+
+It's a simulation.
+
+We've got two agents trying to get up the hill.
+
+Two agents?
+
+Like baseball agents?
+
+No.
+
+One's active inference and one's naive.
+
+Well, that's naive of them both.
+
+Who's controlling them?
+
+Exactly.
+
+Who's controlling the active agent?
+
+What's controlling the naive agent and I don't know is measuring the performance metrics.
+
+Wait a minute.
+
+Who's controlling the active agent?
+
+Yes, precisely.
+
+I mean the fella's name.
+
+Who?
+
+The agent controlling the car.
+
+Who's controlling the active inference agent?
+
+That's what I'm asking you.
+
+And I'm telling you who's controlling the active inference agent.
+
+Look, let me start over.
+
+When you run the simulation, who plots the result?
+
+Oh no, who doesn't plot anything?
+
+What plots the results?
+
+I'm not asking what plots the results.
+
+does plot the results creates beautiful heat maps too i don't care about heat maps i want to know who's plotting no no who's controlling not plotting then who is plotting no like i said what plots everything all right wise guy let me try another way the car needs to get up the hill right right so who calculates the force needed no
+
+who only handles active inference i don't know calculates the forces you don't know who calculates the forces no i don't know calculates the forces that's what i'm asking you and that's what i'm telling you i don't know calculates the forces then who does no who does active inference i don't know does forces what does plotting and tomorrow handles the parameter sweep parameter sweep
+
+You bringing in a groundskeeper now?
+
+No, no.
+
+Tomorrow is our batch simulation handler.
+
+Today's not involved at all.
+
+How can you run simulations if today's not involved?
+
+Why would you want today involved?
+
+I'm not asking why.
+
+Oh, why is Busy analyzing the energy consumption?
+
+I don't even know what we're talking about anymore.
+
+That's the spirit.
+
+Now you're getting it.
+
+I don't know, it's a crucial part of our implementation.
+
+Ah, hey wait, I haven't told you about Because's statistical significance testing yet.
+
+Later that day.
+
+Okay, let me just ask one simple thing.
+
+Sure.
+
+In the config file, who sets the initial position?
+
+Oh no, Naturally sets the initial position.
+
+Naturally?
+
+Yes, naturally.
+
+I should have stayed in the minor leagues don't forget practice tomorrow we're running a full parameter sweep distance screaming only to return to more errors let's see how far we got
+
+still no heat maps okay um i'll give one more minutes or so if anybody wants to write a question in the live chat otherwise look forward to seeing what people think um
+
+see where it's incorrectly or inefficiently applying active inference with rx infer because this is a really promising direction there's a lot of interfaces for specifying simulations making uh versions of the textbook
+
+examples, all kinds of fun research and education and application that rx infer is enabling.
+
+So I will accept this last edit, make the last push.
+
+Yeah, Composer, being able to edit across multiple files.
+
+See, this is good.
+
+It looks good, but it's really hard to see just from a quick scan.
+
+So I'll just leave it at that.
+
+Close cursor.
+
+Make last git push.
+
+Okay, verify that closing edits were sent.
+
+All right.
+
+Thank you, everyone.
+
+Enjoy.
+
+I wish you a good closure of the year, beginning of the next.
+
+Good accelerations in this continuous, discrete, complex scenario we're in.
+
+Okay, thank you.
+
+Bye.

@@ -1,0 +1,1362 @@
+SPEAKER_00:
+all right hello welcome everyone i'm going to start this stream with a github push all right it is june 8th 2025 and this is active inference stream 14.2 first where we're going today in terms of
+
+AI art to quickly give a little visual beginning.
+
+No.
+
+I'll just show.
+
+Sorry about that, I was just working up to this last moment to get this going.
+
+Where we're headed is using RxInfer multi-agent trajectory planning example and using GNN to give an exact reconfiguration.
+
+So we're going to be using generalized notation notation to yield
+
+this simulation in rx infer so there's a couple steps to go over uh this is just sort of a live working uh presentations and to be refined and polished i just wanted to get it all into this one stream given all these recent updates so to the stream agenda and also people watching live i will look forward to your comments and ideas
+
+Let's start with looking at the areas we'll go into.
+
+First, just some overview on the tools.
+
+I'm using Cursor 1.0, which came out recently.
+
+GNN, Generalized Notation Notation.
+
+Check out Stream 14.1 if you want to see more.
+
+Using LLMs via Cursor, mainly Clod 4, and it's going to be about reverse and forward engineering in the RxInfer setting.
+
+Okay, where we're headed is a robust information supply chain from plain text configuration to executable simulation.
+
+So here's what that is going to look like again with AIR.
+
+We have GNN, the plain text GNN,
+
+moving through all of these stages the triple play graphical on through executed simulation so whether we think about that as meeting in the middle between the forward specification of GNN and all of these different kinds of things that we might want to do with GNN like the type checking all the modules of the package and the golden spike moment is meeting in the middle
+
+with the reverse engineering of Rx and Fur examples and the forward engineering of the GNN package so that we can end up with this meeting in the middle between the plaintext, which gives us all these benefits of plaintext, reproducibility, et cetera, and all these functionalities of GNN.
+
+In the main first section, I'll go over what that specifically was, talk about the reverse engineering in the RxInfer example, from script to more of a package, and then meeting that package with a forward engineering pass from the GNN schema and pipeline on through the needed configuration.
+
+and that's the golden spike again just a metaphor uh there have been many changes to the gnn package and still a few more that could occur with logging and so on but i'll go through a few sections of change and documentation a little bit more on the golden spike and the analogy
+
+then we'll see what people comment where that goes and I have a little bit of manual writing as well in terms of thinking about what that means from a organizational perspective and for active inference and for the Institute and all that okay going to the package
+
+All right, in the doc RxInfer folder, the first thing is this short script clone RxInfer examples.
+
+And this clones a repo, which is a fork of the main RxInfer examples that I have on my personal GitHub account.
+
+And this, I sync it up with the main examples repo, which is awesome that they're putting out more and more and different.
+
+And then in the support folder on my fork, first there's a setup Julia script to get your environment ready.
+
+And then there's a notebooks to scripts Julia, which takes the notebooks from the examples and it
+
+turns them all into scripts just by extracting out the code blocks.
+
+So they don't all necessarily work on the first pass, but it gets all the content.
+
+Again, to this forward reverse engineering idea.
+
+Here's the process.
+
+So first... And the links to all this are in the video description.
+
+First use that notebooks to scripts script to convert the notebook into a script.
+
+Sometimes it might run away.
+
+Other times you might need to change certain things about the control flow.
+
+And first step is to just lock in the single script.
+
+So what that looks like in the case here,
+
+So then it clones in.
+
+This is work I did on the fork to get, this is the reverse engineering part with RxInfer.
+
+Scripts, advanced examples, multi-agent trajectory, archive.
+
+So this is the working single script version of the multi-agent trajectory model.
+
+Just for context, where this takes us is these four agents that do a negotiation of avoidance collision and obstacle avoidance.
+
+So different collision avoidance.
+
+And that's happening with, at the heart of it all, this at model block, as always, in RxInfer.
+
+that is used by the path planner inference step.
+
+This is the
+
+kind of the kernel and then rx infer is making that kernel of the generative model the explicit probabilistic joint distribution makes it look a lot more like the math or the analytical description of the generative model and everything else is pushed into the inference methods so that's that kind of idea of writing shorter at model blocks that distinguish different generative models and then everything else is like
+
+rendering that out into the graphical model with the stereotyped inference routines from that single script take it to more of a configular modular approach so that was probably several hours several dozen prompts but not something that couldn't be done eventually in an automated fashion to split up that single script
+
+that which was only lightly modified from the notebook format which is 339 lines to modify it from single script into in this case almost 10 different scripts some of them are really short
+
+but they clarify and there's other ways that it probably could have been disassembled or disarticulated.
+
+This separates out different functions and also adds a lot of visualization and logging methods.
+
+Third step, from that multi-script package,
+
+all the hard-coded variables take it out to a config toml file so this is like a little domain specific language just for this one example in this one case where this gives all the configuration needed so instead of just having the values coded in the scripts look to this central config standalone file
+
+There's multiple ways or stages of generalizing the variables like the dimensional state spaces, initial parameterizations, constraint variables, number of agents, simulation variables like time steps into this config block.
+
+That is going from, and all along the way, confirming that the simulation is still running.
+
+So that was the reverse engineering of RxInfer.
+
+So it's kind of like the original notebook was like a handmade chair, and this was like reverse engineering it so that we could have this cartridge, which gets run like a disassembled Ikea factory,
+
+separating out the methods whereas the original example is great and really informative in terms of a blog post readable introduces things sequentially and shows what rxinfer is doing and gets to those exact simulations this shows like one path through the flow
+
+and it's a custom made artifact.
+
+And again, that reverse engineering process was taking it into these different disassembled components, but exactly reproducing it and then pulling out all the configuration into a config.
+
+So that's the reverse engineering of the RX in Fursight.
+
+Now in the forward rendering,
+
+This is going from a GNN file to that config.
+
+Because if we know from that reverse engineering phase that getting to that config is going to allow the execution of the simulation, then the other side of that meeting in the middle is getting the GNN file into that config format.
+
+So here is in this examples folder, a GNN style markdown file with all of the parameters that need to be specified in the config.
+
+So that when you're in SRC and you run main, main is going to run all of the steps which are turned on
+
+of the 14 steps, which are each their own numbered script with the same name module.
+
+Whichever ones you have enabled, which is in the new file in pipeline module config,
+
+you can turn whichever of these modules on or off.
+
+That's different from last time.
+
+And that RxInferGNN example gets passed through step one, checks the files.
+
+Step two, does set up to the virtual environment.
+
+Step three, does any tests.
+
+Step four, type checker, output.
+
+we can look in the type checking and see, for example, that RxInfer, even though these resource estimates are not currently specifically accurate, especially compared across different packages, but the resources are calculated for that RxInfer example just by virtue of it being a GNN.
+
+Then there's
+
+Let's continue looking through the... Step five, exports into a bunch of different outputs.
+
+Six makes visualizations.
+
+And then of interest here is nine, which renders what we want into the Toml.
+
+And 11, it's going to call the LLM.
+
+Here's the exports.
+
+This is the re-export of the GNN file and the export of the GNN file in other formats like XML and other graph formats.
+
+That's step five.
+
+Step six, visualization.
+
+We get
+
+the matrix visualization of all of the state spaces and ontology assertions of this model so like this is an interesting example in this engineering rx infer notation namespace a is often used for state transitions whereas in the active inference textbook
+
+B is used for state transitions.
+
+But it's an example of why we don't want to have a welding between letters and ontology terms.
+
+We want to have the flexibility to use the same letters for different ontologies and language in different settings.
+
+So it's a perfect example of that, of just the ontology assertion space and all the variables can be described just because it was GNN file.
+
+Now we get to step nine.
+
+Oh, it didn't run completely.
+
+To run it again, Python 3 main.
+
+This will run in the render
+
+In the render folder in SRC, in the RxInfer section, there's a TOML generator.
+
+So this will read in the GNN and then output the TOML, which is the one that we knew that we wanted from the RxInfer site.
+
+Then this script in the RxInfer folders and doc demonstrates the GNN RxInfer pipeline for multi-agent trajectory planning.
+
+It performs two-step validation.
+
+So first it runs a baseline execution from the clone of the RxInfer examples.jl, which doesn't use GNN.
+
+Then those
+
+files for the example are all copied over into this uh folder right here multi trajectory planning and then it's logged in the running of the script that the config was replaced with one regenerated from the gnm so it's a clean um
+
+functional replacement experiment to show that the GNN structured file here can be used as part of this bigger pipeline which includes the type checking the category theory all these different kinds of ontology connections
+
+and yield the target toml that we know will make the simulation work for the reverse engineered disarticulated rx infer example so hope that that has been conveyed
+
+It took a long time, I think, overall to get here, but it had long been the triple play vision that we would have a unified plain text format for the math diagrams and visualizations and executable code.
+
+so it's like okay how do we get triple play integrity so we could have things like okay well you change the visual representation with a drag and drop and then it changes the executable code it's like how is that going to work formally well a lot of the examples scripts and scientific papers used like a all-in-one script which can make reproducing the example
+
+simpler and more monolithic but then give fewer degrees of freedom because you might be just like 700 lines in the middle of the script and it's not clear how you change certain aspects more structural about the um
+
+model so how do we get to the ability for there to be a triple play where changes in one can be traced to changes in the other and that was where jacob and i were thinking maybe we have some sort of intra or infra lingua with the generative a generalized notation notation
+
+Let's find that quote.
+
+So Oryx and Fur or any other software we could try doing a reverse engineering of a PyMDP script gives the ability to set everything needed
+
+accept the state space of the generative model so there's still a lot to be explored in terms of how do we customize control flows and more simulation environment scale factors um and also a lot more to say um but suffice to say that for
+
+simple reproducing of standalone examples this reverse engineering sort of forensic phase is a very important proof of concept
+
+So in active inference, research models are often conveyed through assemblages of natural language, pseudocode, programming language, analytical formulas, and pictorial representations.
+
+In this paper, we present GNN as a flexible and expressive language tailored for expressing active inference models and encompassing various relevant aspects of languages, including ontology, morphology, grammar, and pragmatics.
+
+By leveraging GNN as an active inferlingua or interlingua, infralingua, supralingua, intralingua, we aim to bridge and respect gaps among different modeling approaches in order to facilitate interdisciplinary research.
+
+So how can this be used?
+
+Well, for our education, we can have these
+
+well-tempered generative model infrastructural pipelines and specific well-documented interpretable configurations that help us understand and communicate figure out what different generative models and process flow elements are doing there's also a lot of engineering uses so
+
+There could and will be many use cases where GNN is not a front feature of the product.
+
+It's just a useful, increasingly useful open source and stack for connecting the dots
+
+between existing examples and ways to modify and design with those motifs, and then increasingly forward use of this kind of metaprogramming, program synthesis type approach to generative modeling, which is going to have all these benefits for making them easier to design, like just being able to prompt an LLM and say, make me a GNN file that represents this, like we'll do probably later in this stream.
+
+All the way on through having the resource estimation, all these features that we want for any generative model can be abstracted and brought into this infrastructure grade pipeline so that
+
+once there are more and more paths and understanding about how do you get more and more generically or in all these different situations to executable simulations, using this pipeline and putting in the cartridge helps separate and give a lot of reproducibility and expressivity to the compute that happens in between.
+
+So there's the reverse engineering approach, which is just taking scripts exactly as they are and within that language or in more of a port or transfer,
+
+doing an exact reproduction effort.
+
+And then from there, maybe certain pieces can be flipped out, but it's always good to know that we can exactly reproduce using the same variable names, the same ontology assertions.
+
+So that becomes kind of like a substrate of, well, paper one modeled attention this way, and in natural language, they described attention this way.
+
+Paper two in a different programming language in a different natural language said this about attention,
+
+And here's how we can use ontology across the natural language and the computational elements to talk about where those are similar or different.
+
+Buzzing can be used for different functions.
+
+So for example, once we have the config,
+
+and the ability to separate out these different variables, we could see what are the perturbations that are allowable because we didn't change any of the logic or the control flow.
+
+So for example, if the number of agents were simply changed to 50, then as it is currently written, there might need to be some other refactorizations of state spaces, which just changing NR agents wouldn't exactly do.
+
+it might just be part of a loop and then the loop would break because it's like, wait, there were only four because we only had four initial locations.
+
+So then you go, okay, okay, okay.
+
+How could we develop configuration spaces where a number of agents at a programmatic level had a relationship to instantiations of matrices and other features like knowing that you needed to have as many of these blocks
+
+as you do agents so in this exact situation again it was first just an exact reverse engineering but from that reverse engineering through insight and through program synthesis and fuzzing approaches we can explore like what happens when the dt is 0.01 or do a program sweep across generate simulations where dt ranges from this to this while the number of iterations ranges from that to that
+
+so then that gives this ability to explore what are the functional the performance aspects optimization and then we can go even further especially as the visualization and the disco pi features improve so here not every single variable was captured by the disco pi category theory description but
+
+It wasn't the focus here, but that would be something that could be worked on.
+
+And again, in general, the goal is a wide range of defined and checked GNN formats, ranging from discrete time, continuous time, all these different kinds of scenarios.
+
+We continue to build out that space and neighborhoods of different models, which can be interpreted a certain way.
+
+So there's a lot of things that could happen with the processing pipeline.
+
+Like, how do we know that this PyMDP one, we only want to render into PyMDP and the RX.
+
+So, okay, should we include that information in the file and or in the file name?
+
+How should that be handled by the different modules?
+
+Those are the kinds of software improvements that would then allow us to, when we run it,
+
+Right now, let's just say we had it perfectly working for rendering PyMDP to PyMDP and RxInfer to RxInfer.
+
+We still might get 50% errors, and then it would try to chase around fixing, but it didn't need to be fixed.
+
+But then if we had some examples, which are actually quite few, if any, where we have the same exact analytical situation being cross-rendered into PyMDP and RxInfer.
+
+So those would be some interesting ways to check that all of the cross rendering is working well.
+
+okay returning to the agenda and if anyone has any suggestions or questions write them otherwise I'm just going to try to get through the rest of the agenda go to some of the manual writing see if there's some interesting thing that we could look maybe look at the documentation and just kind of have this informal bringing together of all these recent developments over the last couple of days
+
+so that at least it's been worked through and put out there for for those who want to explore it and then it will return in in more forms over the coming months so the golden spike was meeting the middle between reverse engineering of the n equals one rx infer example into the components into the config form
+
+Pipeline execution summary is a JSON file.
+
+So what's cool about this is different steps can be tucked in with the arrow
+
+So you can look at just the logging for each step and it probably makes it more machine readable as well.
+
+But like here's the full logging for the step five and then step six visualization and so on.
+
+In terms of how the pipeline overall has changed,
+
+Big picture is still the exact same, which is all the documentation is in docs.
+
+The RxInfer script is in there for now, just to be close to RxInfer cloned repo.
+
+And all the source code is in SRC.
+
+So you just delete the output folder and then run main.py.
+
+Here.
+
+It runs whichever...
+
+of the modules are configured to run in config.py it will run those sequentially each of them have a function and this is all very documented up in the repo
+
+okay GNN computational science deployment science multi-agent systems being able to design and describe these systems and it starts quietly being able to write and read and modify GNN files and Markdown that starts to flow out through more and different places better and better
+
+And that's just one trace through an information supply chain, which hops across different operating systems and mines and servers and all of that.
+
+However, with this GNN entry point or meeting point, there's the ability to do some verified computing and tracing a little bit better from which generative model and which data inputs and so on are run how, when,
+
+to yield what outputs and that flow from abstract concept to concrete execution is unified slash unifiable um some of the most
+
+important ways that people could explore from here, getting the GNN repo examples working on their own machine, making GitHub issues or comments with ways to improve it, seeing what kinds of scenarios and value propositions they'd like to do themselves, in which case just go for it and report back, measure back.
+
+or to partner or support the Institute so that we can have these kinds of tools being developed very functionally here
+
+okay here's a little bit of a interlude manual manually written interlude to contrast with the large amount of computer generated material then we will return to the documentation which has more computer generation but this next piece is going to be a few thoughts that are selected from a larger writing just to give
+
+a little bit of variety here get some feedback and um again also more to be shared so here we are in 2022 part all textbook figure 1.2 summarizing the high road and the low road so
+
+We want to have notation systems and deployment methods for generative models with expressive methods for and nested addressable spaces of.
+
+So this next series is going to be the spaces of our capacity to do that task within.
+
+Describe, design, render, simulate, analyze, fit, assess performance of described models.
+
+meaning there's a larger set of models we can describe than we can render.
+
+We can describe recipes we cannot cook, and that's a good thing.
+
+So zooming out, there are these concentric spaces of generative models, which we have different capacities in a given moment around.
+
+For example, let's do in the GNN examples,
+
+Make another GNN file fast and comprehensive for a full self-driving car.
+
+Ensure all state spaces and ontological considerations are accounted for with good GNN style.
+
+So this is going to be an example of a GNN file that we certainly cannot render into a programming language in an executable fashion.
+
+yet but with some more constrained generation methods and better type checking in ways of looking at which families of models and control flows we can run then it makes it just an empirical fact that we can we can describe systems that we can't even visualize uh we could say
+
+it's a graph with 100 trillion nodes and then there's no computer that you have available that can visualize that many but that didn't stop you from just writing the math on the paper or just doing a visualization and then questions like the performance of a given model for a given data set in a setting is like seven horses ahead of the cart from what is possible to describe
+
+so that's sort of like the math to application distance to travel which is like consider this equation and this is the attention factor and this one's the regret factor and this one's the the shame modulator and it's like you can just write those math equations however you want no consideration to too much other than just ideally what each of them mean but
+
+when it comes to saying well which model would be a better fit of what that's several steps ahead of actually doing the testing and as long as that's known then there's some interesting cybernetic loops where you're like describing multiple kinds of analytical formulas
+
+with an insight which could be right or wrong into which one of them might be performant in a different way and sometimes your intuition might be right and it's kind of like a compressibility and there might be some other irreducible jumps that just like have to be computed on through
+
+So, when we're talking about performance of a generative model, like this one is good at video games like this and that way, or this one's driving, or this one's drone, or recommending, or resource allocating, whatever domain or function you're making a generative model for.
+
+Performance on one benchmark, so the high jump approach, or on a suite of different measures, kind of like a decathlon,
+
+It's a relational measurement, assessment, or characterization that's secondary to the primary phenotype or embodiment.
+
+So map is not the territory.
+
+Generative models are maps.
+
+So we're talking about cartography, compositional cognitive cartography, on territories, which might be themselves abstract or might be embodied.
+
+Projects in and around the Active Inference ecosystem, they have performance and fitness wants and needs and so on.
+
+So someone might think, okay, well, if I can design this kind of algorithm with this kind of runtime requirements, with this performance by this date, with this amount of funding, then this is a viable method for us to have a business.
+
+So all these different kinds of performance or this should be more efficient or more resilient against this kind of intervention than this kind of model.
+
+All those kinds of assessments.
+
+That's all happening within this
+
+larger space of generative models which could be specified so of course like even the ones that we describe are only a subset of what is possible so those generative models the larger spaces the known unknowns and the unknown unknowns they include the Baroque absurd tiny useful cute funny and interesting
+
+So here is the GNN for the self-driving car.
+
+So it's 566 lines.
+
+It could be made to be compliant with different kinds of natural language standards.
+
+And these state spaces can be type checked for their coherence and their completeness.
+
+And then especially with a Sumo type
+
+program like implementation of pure active ontology like definitions and other kinds of sentence fragments then there's all these different kinds of static checking that could come into play and resource estimation all the early stages of the pipeline basically up until but everything before 10 even for this model that an llm just blasted out
+
+and that's not even with it having an MCP server.
+
+So with the ability for all of these methods within each module to be MCP methods, then compliant generation of arbitrary generative models
+
+can be dropped into the railroad track which already is going to reliably reach the triple play so we have the free energy principle from the high road and bayes-derham statistics updating learning on the bottom meeting at active inference
+
+so that's why the low road is implementation specific and the high road is not because with a high road we want to be able to use fep and related methods on biological organisms and arbitrary levels of analysis or abstract systems so we want to be able to describe systems we can't build whereas the low road needs to be able to build what it's describing
+
+that would be that sort of bottom up like a building must have continuous connection even if it's through like tension or something in order to be x feet high it just it's not it's kind of a classic cranes and sky hooks high road low road so now going a little bit further here consider
+
+that we have pairwise information and distance measures today in terms of software 1.0 in terms of syntactic edit distance so we can look at two different programs or inputs inputs as programs programs as inputs and look at their syntactic differences
+
+more recently we have gained accessibility of information and distance measures in terms of software 2.0 so ai neural networks machine learning as software as per kind of the andre carpathy post 2017 era which is to say that we have these compressive distances semantic distances distances in so-called semantic information geometry model spaces
+
+that's how rags how cursor works how llms work here's what's not out there software 3.0 or it doesn't even matter or need a number but cognitive computing distances now that
+
+requires a kind of perspectival modeling which is least needed in software 1.0 where there's discrete numbers of changes to strings least to not needed to have multi-perspectivalism software 2.0 the perspectivalism is very enmeshed with the model's geometry intrinsically so we could look at the embeddings of a given input into multiple LLMs
+
+and consider each of the LLMs embedding in terms of compressive or semantic distances.
+
+So it's not that it's impossible to get multi-perspectivalism, it's just not, it's being implicitly welded together in the trained state space of the LLM.
+
+What about having a sort of first principles active inference ontologically specified pre-always-already separation that gives true perspective cognitive semantic information differences
+
+differences that make differences for sophisticated cognitive agents what's the accounting system domain specific notation and then general notation notation that lets us cover diverse and unknown cognitive phenomena addressing disparate systems from a first principles perspective which is the high road things we can describe and imagine that we can't necessarily build
+
+and then by specification that's larger than what we can build but where the crane and the skyhook meet is when you have the active inference model that is at the triple play point where the math can be traced into the math
+
+the variables data supply chain can be traced out to the next level and then the ontologies and the assertions that make up the rhetoric of the scientific model can be also separately broken out and that's like pre-reverse engineered to be massively composable in this super useful way so what does it look like for those cognitive phenomena
+
+here in doc cognitive phenomena so here the readme in cognitive phenomena is going to link to each of these folders some of which have files in them some don't but just to show let's do drag them all in comprehensively go through this folder of phenomena
+
+Ensure every subfolder has a technical, accurate README and a compliant GNN file showcasing the phenomena.
+
+here we have all these different subfolders of cognitive phenomena this is the whole iguana this is the unifying approach to different cognitive phenomena is notationally it doesn't mean that there's functional unification per se it's not that there is a relevant edge first off
+
+without a system of interest or scope in mind it doesn't even really make sense to say well is attention related to language processing like yeah in principle you could design a system where there's any kind of relationship within any kind of anything because we're just imagining different recipes then if you specify
+
+for a given system like for a Red Harvester ant nestmate does this relate to that well then it starts to become an inquiry that can actually be pursued and whether or not they play some sort of synergistic or trading off role in a given situation as you've defined it as you've set up the situation Etc Etc Etc
+
+at least there can be a unified notation system so that within certain spaces those notation systems could be like fused concatenated tested for difference and so on so cod 4.0 sonnet doing incredible work just iterating comprehensively through and
+
+writing out uh the files as requested and then again to the point of like these are writing out recipes that are fantastical but then there's a way just like there's a way to build different software into linux there's a way to build approaches that bring you closer and closer to the grand central station rendering assembly
+
+so let's let it go through those examples read a little more so for this part was to say four real um first principles design of cognitive computing with all of the relationality and the multi-perspectivalism that entails
+
+We want to be able to do semantic information distancing in arbitrary multi-agent assemblies.
+
+And I'm contending that some kind of plain text format like GNN and associated packaging and so on can help support that coming to be the case even today with the kinds of things we can do.
+
+So in that light, the Active Inference Institute supports reliable and effective applications of cognitive computing and active inference across domains.
+
+Different projects have different domains and systems of interest, but those are at the domain level and they're connected through the ontology, through the different tools.
+
+There's all these different places where somebody can focus on just a sub, sub, sub domain or anything.
+
+But how?
+
+How to gain access to a common set of tools and pipelines and methods?
+
+We can say, now make a GNN for this domain because the notation and the rendering is being strongly typed.
+
+So we support that.
+
+reliable effective application by providing key services such as software so that includes inference libraries ones that we develop ones that we just rebroadcast the development of others all kinds of examples of ways that people are carrying out that terminal inference
+
+and then we host things like the ontology generalized notation notation like what this stream is about cerebrum the case specific rendering of different generative models there's sections in the docs about cerebrum and also pushing it further back education because the metal rails of the physical supply chain have their own supply chain leading to the education and the mind of the engineer
+
+So education and outreach and awareness is also part of it in terms of how do we make something that is lasting across generations and translating into ways of working together.
+
+maintaining resources like tech trees professional training symposia internships in-person educational programs and so on these are all different offerings and with hopefully partner organizations we can offer these better and different and other and more
+
+now just like dirt and asphalt roads low roads so real generative models that you actually build even if it's just in drafting like a real recipe you imagined let alone a real recipe that you made let alone one that you made like a business idea around but real low roads
+
+are built basically only where and as and how needed lest there be a bridge to nowhere you could it's like look being at the um home depot supply store and looking at all this material and thinking you could do this it's like yes
+
+you could and if it were a quirky hobby or just a inexpressible curiosity it wouldn't even necessarily be a bad thing it just it takes resources not the least of which time so considered in that way there's already many applications and implementations of variational approaches to cybernetics
+
+all but active inference all but the citation network even narrowly considered so whether we look at our curated implementations and the dozens of explicit active inference implementations that we've curated in active blockference
+
+Or whether we're just thinking, well, if it's a variational autoencoder and it's using free energy minimization to look at joint distributions of perception, cognition, action, so on, is that not basically doing free energy minimization on the particular partition?
+
+And then we could even take that further.
+
+We could think about this recent paper and recent guest stream of Takuya Isamura on this triple equivalence and about the relationship between neural networks
+
+their loss function base graphs the kind that we're working with more closely with the factor graphs and base graphs and rx infer and continuous turing machines how those have a triple equivalence so that that parenthetical was to say however however deep you're gonna say active inference has already been applied
+
+whether you think take a very narrow scalpel and say it's only been applied in these open source papers that use exactly these criteria and these software packages and these calculations or if you zoom out and go actually every calculation cannot but be applying active inference wherever you are in that sort of frame there are some low roads
+
+and it is all dots within top-down notationally expressive analytically described spaces of generative models including second layer notational systems which we don't have or use here for operational grammar for kind of control flow but just separating out this generative model
+
+probability distribution description question from the more operational side of of how it is used for example the neural network considered as a programming object and math object and then how it's used with what is sent to it when and all those different kinds of things so
+
+there are some low roads maybe we think that the low road should be there should be more in this place or fewer in that place or the ones that are dirt should stay dirt and the ones that are this should be that we may have some preferences or some opinions on low road distributions and it's a separate related and separate topic
+
+to the expressivity of the high road and the generalizations which are not applying to specific cases
+
+so consider this cognitive research tech infrastructural situation analogous to the metallurgy and alchemy of high precision calipers which can be used to describe and measure machine parts during a material industrial revolution hence our focus on accessibility rigor applicability education sovereignty supply chains and security
+
+to recap that manual section common dialectic rhetoric in active inference related to the low road and the high road we want to be able to understand where are we talking about recipes that we can and can't do different things with
+
+the sort of in that cooking lens the best GNN package would be for very large to all known generative model types what is express what is expressed slash expressible through natural compositional language
+
+could be taken on through at least some steps like the type checking the category theory the ontology even if it wasn't known how to compute certain things still the description could be analyzed on its own terms
+
+So in terms of applying active inference and that being used in high reliability settings, even if it's just high reliability and important and meaningful for you, we're talking about performance
+
+trade-offs fitness phenotype adaptability in specific situations which is very far down the road from imagining the recipe so it's one thing to be like I wonder how a nested generative model for this and that would work for this and if it could be used for this and that important function and then
+
+here's my business plan that I believe is going to work for how we're going to do this and that so there's a big space between and that's where the information supply chain for generative models comes to beat and whether that's going to be something that has to be blazed through by individuals and the sorts of failures and trade-offs that would incur
+
+and or which parts of that coast to coast are there well characterized methods for so in order for people who care about performance to be able to even get to the point of assessing it and not going down this lifelong
+
+learning to write generative models specialty as it has largely been at this point in order for it to break out of that having infrastructure that takes on this scope is going to be critical
+
+It will also provide some deeper directions into the organization of education and research and professionalism through connection with information sciences, cognitive computing.
+
+So meanwhile,
+
+Let's update GitHub.
+
+Meanwhile, the LLM was going through the cognitive phenomena folder and writing GNN files.
+
+So here's the learning and adaptation.
+
+and this sets up a a multi-channel discussion on one hand there's the low road discussion do we really think that there should be this many state spaces no i think this should be 25 dimensions or let's have this as a variable and then do a sweep across how many dimensions or what what are we really talking about with bi-stable perception are we talking about
+
+the ballerina spinning or are we talking about the duck rabbit or that so it supports the technical discussion of state spaces or for for a bioregional setting what variables are we taking into account in this model how
+
+and then there's there's this sort of duel which is just separate from the state spaces like what are we doing here should we be modeling this what are the feedbacks of us modeling this in general and in specific ways so just very interesting useful moments that can have some
+
+describable steps that take them from basically uh through the steps of cognitive systems design there's a few other new folders in the documentation um
+
+some are related to other packages there's also the tutorials let's look at this in GitHub I'll look at these then maybe do one or something random so if anyone has a comment or a question or wants to see like a GNN model or some function then just write it in the chat
+
+some tutorials so first making a simple gnn model basic perception a simple model with one hidden state and one observation so this is like the first model in step by step hidden state with two categories observation with two categories connections parameterization
+
+here's how you run main to go on specific steps to check at how it works and then more future tutorials um
+
+Pipeline has some more information on the pipeline itself Pipeline Architecture has more on the control flow the purposes of the different modules
+
+probably the main control flow could be redesigned or refactored but it works as it is to call these functions which call into folders so hopefully that gives some touch points
+
+That's the forward engineering.
+
+Let's separate out one RxInfer example.
+
+Scripts folder.
+
+Let's do hidden Markov model.
+
+then if it is too challenging maybe try the coin toss okay that was just the cognitive phenomena just showing you can make subfolders with lists and so on and it will just rifle through them okay
+
+Refactor this example unless anyone makes a specific comment or question.
+
+Start by just running the script plainly.
+
+Sometimes it works in the notebook format or other times it'll hit a Julia error.
+
+Okay, there's the error.
+
+I'm just gonna tell cursor.
+
+This was from that notebook.
+
+So that it runs as a script.
+
+Here is the error we get when we run it now.
+
+This could be done to more cleanly do it.
+
+It probably could be focused on having this only be one script and get a single script version like I did with a multi-agent.
+
+Or in this case, let's just go separate it
+
+into as many files in the folder as you want okay so it's going to start to get this hidden markov model rx infer program running and meanwhile
+
+this this could be done after fully disassembled but let's just try it as per and then i'll just drag in the existing gnm files
+
+Write and make to this folder a GNN file for the RxInfer hidden Markov model.
+
+Example, all the parameterization it would need as a GNN.
+
+and then where it's going to go is in the app model block instead of saying b is this hard-coded matrix or a is an identity matrix with a three three those variables will be extracted into this toml or maybe even we can go right to gnn that's the reverse engineering
+
+then the forward engineering is in render rx infer folder say i'm trying to first off if this could already be a gn file we don't even need to do the toml meet in the middle but if the parser can just directly use this information then it's good to go
+
+Okay.
+
+Now, this config, this GNN for the RxInferPOMDP will not work in the multi-agent trajectory avoidance example and vice versa.
+
+So that is just to say there's a lot more that we can diagnose and refine between
+
+which GNN can be taken to what step in what language.
+
+But this HMM, like for example, we could, let's just say, I'll change it to just ask mode.
+
+So it's going to respond to not make code edits.
+
+How are these files similar and different?
+
+greetings Matthias Conrath so imagine large libraries of GNN files some forensically reverse engineered from examples and papers others generated from program synthesis and we could do different kinds of probabilistic and deterministic analyses on oh this this one differs all but for this or
+
+80% of this had that, but this one didn't or something like that.
+
+Key differences, similarities.
+
+As mentioned earlier, like in the PyMDP, A is the observation matrix, but in the RxInfer HMM, A is the state transition matrix.
+
+okay let's see how the refactoring is going so here is that splitting from the uh single craft artifact the local organic handmade farmer's market style into the ikea industrialized
+
+high reliability information supply chain format.
+
+Maybe it's hanging, but it is at least getting broken up into separate parts.
+
+Just letting it know that it's hanging.
+
+Okay.
+
+Triple play.
+
+Okay, while it's fixing the HMM.
+
+Various strategies and tactics may be helpful when employing GNN expressions in different settings and using a spectrum of model precisions, e.g.
+
+from informal conversation to a beautiful presentation to a fully documented
+
+Reproducible research product.
+
+Model precision should be balanced against the need for comprehensibility and ease of communication.
+
+Broadly strategic considerations for expressing GNN include the overall approach to communication, such as the choice of modality and level of technical rigor applied for a given audience.
+
+Tactical considerations for expressing GNN include specific techniques for enhancing clarity and understanding, such as using visual aids, examples, and analogies.
+
+AI art.
+
+Using models for inference data on inference models as data.
+
+Markdown texts as data as GNN files meeting the visualization.
+
+Plain text markdown files Meeting RxInfer With additional visualization and methods Kind of the magic of seeing GNN work Here we go So here on the right side
+
+At least something is happening Then Here
+
+It might be one moment too early to do it, but to now add to the pipeline, add to the rx infer render pipeline.
+
+If we can reverse engineer the HMM to use the pure markdown, we don't even need to render it to this intermediate TOML.
+
+but part of the reason why I wanted to go to the TOML was I did that standalone in another repo just to get to a controlled input to show that there was a middle to be met at now that we know that there is a middle to meet at we can basically just go
+
+straight to GNN and have example specific or category specific parsers but that still needs to be rendered in the GNN folder because the other the side information like the utility functions that this HMM model needs
+
+this wouldn't be in a GNN file so we need these kind of kind of like a car body and then the GNN parameterized parts are like the engine but there's a lot of functions in code and so the way that was being done in the multi-agent setting
+
+was just by copying the folder minus the config so if here it made the hmm gnn in the gnn folder so from the point of view of the
+
+HMM script folder it still does not have a GNN file but if this if it will succeed on this run then we will have succeeded in getting to this face so this one we skipped going to a single functional script went straight from the notebook
+
+extract to the modular software so one outcome of the step is a specific config file
+
+Another emerging approach is directly to target read write into GNN format directly.
+
+Still needs the rendering of extra parametric information.
+
+meaning program environment and flow information that's not part of the generative model all right here we go so we got the now it's working for the HMM inference
+
+So I'm going to delete the original one or I'll move it to archive.
+
+Or maybe it wants that one.
+
+Okay.
+
+Queue up the next question.
+
+Learn again to confirm function comprehensively output more in standalone from standalone file visualizations of free energy values.
+
+So several prompts depending on the example to disassemble it.
+
+Meanwhile, let's try another approach, which is not to disassemble it.
+
+So this will be more, first you have to get it running as a script, or we could develop a plugin
+
+that goes directly to the notebooks but it's so much nicer to have it as these which can be concatenated into a notebook too but at least you know it's going to work so while that hmm is is happening let's do another approach which would be
+
+For this example, write a GNN file like for comprehensively setting all the needed information for the bike rental demand example.
+
+and write a Julia parser that confirms that the DNN you wrote will perfectly align with the initial example.
+
+Okay.
+
+Let's see how this goes.
+
+Move any unneeded files to
+
+To archive, confirm that when running the main script, all data and visualizations are saved to a timestamp folder.
+
+Okay, so this would be an example of if we can skip even further steps by directly inserting in the GNN repo the state space that needs to be created for an RxInfer example to run.
+
+Okay.
+
+Let's see what Julia.
+
+Okay.
+
+So running comprehensive HMM.
+
+If anyone has any last ideas or questions, otherwise I'm going to take it just a little bit further with this HMM.
+
+And bike rental.
+
+Then maybe one triple play who's on first.
+
+And then...
+
+Seems to be hanging there.
+
+Assess and improve and rerun to confirm.
+
+Here's the validation parser test.
+
+This one also seems to be hanging because it's a small.
+
+Okay.
+
+All right, let's just start generating some of the baseball stuff.
+
+Next steps, seeing who watches and comments and emails and makes issues and contributions on GitHub.
+
+I'm going to keep working on the package and the flow and the methods and putting hopefully some useful and interesting work out, but very much open to people's support or feedback on that.
+
+That pretty much
+
+is what i wanted to cover today okay one baseball related analysis and then that will be
+
+Golden who's on first.
+
+Oh, that was interesting.
+
+Only one of us can be the first to do something.
+
+Wow.
+
+Only in the tone.
+
+Wow, there's
+
+Only in the tone of the golden spike, I'm going to be the first to say that I'm not sure what the golden spike is.
+
+Explore greatly within that topic in allegorical sequence involving go-not-tell approaches to category theory and
+
+recursive self development styled exoterically as pun laden quote who's on first dial 1920s illusion environment
+
+make the dialogue totally convey in plain quote fastball down the middle style generalized notation notation GNN
+
+Interesting little error there, huh?
+
+Can't be deleted.
+
+Very strange.
+
+Gone.
+
+All the technical elements, all the main SRC elements, all the documented...
+
+Write this all out vastly and creatively.
+
+All right, if anyone has any last question, do write it.
+
+otherwise look forward to some collaboration on the tooling and some fun interesting discussions going a little more broadly how does this relate to to how we learn and apply active inference all these topics
+
+
+UNKNOWN:
+you
+
+
+SPEAKER_00:
+yeah it will be uh interesting to see what prompt sequences what measures of information are useful for these kind of nested documentation and code folders how do you know when to stop
+
+All right, here it is.
+
+Let's look at it in GitHub.
+
+okay i'll just read it i'll read it and then if anyone writes any comment i might read that and then that will be the end
+
+Alright.
+
+The Golden Spike Dialogue.
+
+Who's on first base in Generalized Notation Notation?
+
+1920s Railroad Depot.
+
+Two gentlemen in bowler hats stand before a massive scheduling board covered in cryptic notations.
+
+One holds a golden spike, the other clutches a stack of papers marked GNN Pipeline Specification.
+
+Well now, Costello, we've got ourselves quite the categorical conundrum here at this Generalized Notation Notation Depot.
+
+Say, Abbott, what's all this gobbledygook about spikes and rails and S underscore F zero three one type int?
+
+Looks like someone's been playing alphabet soup with mathematics.
+
+Ah, my dear fellow, you've stumbled upon the very essence of our enterprise.
+
+That there is a state space variable, the foundation of our active inference railroad system.
+
+Active what now?
+
+I thought we were building a railroad, not running a gymnasium.
+
+No, no, no.
+
+Active inference, my good man.
+
+It's about how minds make models of the world.
+
+Think of it like this.
+
+Every train car needs to know where it's going, where it's been, and what's around the bend.
+
+So the train cars are... thinking?
+
+Precisely.
+
+Now let me show you our 14-stop construction process.
+
+First, we start with Step 1, the GNN parser.
+
+The what parser?
+
+The GNN parser.
+
+It reads our standardized notation files.
+
+Oh, I see.
+
+So GNN stands for Good Night Nancy?
+
+Generalized Notation Notation.
+
+That's what I said.
+
+Good Night Nancy Notations.
+
+No, no, GNN.
+
+It's our text-based language for specifying these thinking train systems.
+
+Well, why didn't you say so?
+
+So this Nancy notation tells the trains how to think.
+
+Let's move on.
+
+Step two is setup.
+
+Absolutely critical, mind you.
+
+If setup fails, the whole pipeline stops dead in its tracks.
+
+Like a locomotive with a busted boiler?
+
+Exactly.
+
+Then step three runs our tests.
+
+Tests?
+
+What kinds of tests?
+
+Do the train cars take written exams?
+
+In a manner of speaking, yes.
+
+We validate their state spaces, check their connections, ensure their probability matrices are properly stochastic.
+
+Their what-astic matrices?
+
+Stochastic.
+
+It means the probabilities sum to one, like making sure all the passengers on a train car add up to the total capacity.
+
+Ah, so if I got three passengers in car A and two in car B, I better have five total passengers.
+
+Now you're getting it.
+
+Step four is our type checker.
+
+It estimates computational resources.
+
+Type checker.
+
+Is that like making sure the passenger manifest has everyone's name spelled right?
+
+More like making sure we have enough coal for the engine and enough track for the journey.
+
+It looks at your model and says this will need X amount of memory, Y amount of processing power.
+
+Smart.
+
+What's step five?
+
+Export.
+
+We translate our GNN models into different formats.
+
+JSON, XML, GraphML.
+
+Sounds like a whole lot of MLs to me.
+
+What's GraphML stand for?
+
+Grumpy, manatees language?
+
+Graph markup language.
+
+Oh, that makes more sense.
+
+And step six, visualization.
+
+We create beautiful diagrams showing how all the state factors connect to observation modalities.
+
+Hold up there, fancy pants.
+
+State factors?
+
+Observation what-alities?
+
+Think of it this way.
+
+State factors are like different aspects of what's happening inside the train car.
+
+Maybe factor zero is how hungry the passengers are, and factor one is how tired they are.
+
+Got it.
+
+And observation, what's it?
+
+Modalities.
+
+Those are the different ways you can sense what's going on.
+
+Maybe modality 0 is what you hear, modality 1 is what you see.
+
+So the hungry, tired passengers in the train car can be heard and seen?
+
+Bingo.
+
+Now, step seven gets really interesting.
+
+That's our model context protocol integration.
+
+Model context what-a-call?
+
+Protocol.
+
+It's like having a telegraph system that lets different railroad companies talk to each other using the same language.
+
+Ah, so like Western Union but for thinking trains.
+
+Exactly.
+
+Step 8 handles our ontology processing.
+
+Our what-ology?
+
+Ontology.
+
+It's like having a master dictionary that defines what every term means in the active inference world.
+
+So if I say belief and you say belief, we both mean the same thing?
+
+Precisely.
+
+Now here's where it gets really exciting.
+
+Step 9 renders our models into executable code for different simulation environments.
+
+Executable code?
+
+Are we hanging somebody?
+
+No.
+
+Executable means runnable.
+
+We translate our GNN specifications into Python code for PyMDP or Julia code for RxInfer.
+
+Hold the phone there, Abbott.
+
+PyMDP?
+
+RxInfer?
+
+These sound like patent medicines.
+
+PyMDP is Python for Markov Decision Processes, Discrete Active Inference Simulations.
+
+RxInfer is reactive message passing in Julia.
+
+So PyMDP is like Python-flavored train scheduling?
+
+In a sense, yes.
+
+And RxInfer is like having a telegraph network where messages bounce around updating beliefs in real time?
+
+Telegraph network.
+
+I like that.
+
+What's step 10?
+
+Execution.
+
+We actually run the code we just generated.
+
+Like firing up the locomotive?
+
+Exactly.
+
+Step 11 is where we bring in the big guns, LLM integration.
+
+LLM, let me guess, large language models?
+
+He knows that one.
+
+Very good.
+
+We use AI to analyze and enhance our GNN models, provide natural language explanation.
+
+So the thinking trains get help from other thinking trains?
+
+It's turtles all the way down, my friend.
+
+Step 12 is where things get mathematically sublime.
+
+Disco pie translation.
+
+Disco pie?
+
+Are we having a dance party with dessert?
+
+Disco pie.
+
+Distributional compositional Python.
+
+It's category theory for string diagrams.
+
+Category theory?
+
+What's that got to do with railroad categories?
+
+Fright?
+
+Passenger?
+
+Mail car?
+
+Now we're getting to the philosophical heart of it all.
+
+Category theory is mathematics that studies how things compose together.
+
+Like how you can connect train cars to make longer trains.
+
+So if I got a dining car and I connect it to a sleeping car, I get a dining sleeping car?
+
+More like you get a composed system where the properties of both cars work together.
+
+The beauty is in the connections.
+
+The morphisms between objects.
+
+Morph what-isms?
+
+the arrows the relationships how one thing transforms into another in our railroad it's how beliefs flow between different parts of the system like how the conductor's belief about the schedule flows to the engineer's belief about when to blow the whistle brilliant you've grasped that you've grasped the essence of categorical composition step 13 uses jacks for high performance evaluation
+
+Jax?
+
+Is that short for Jackson?
+
+Just another executable.
+
+It's Google's library for automatic differentiation and just-in-time compilation.
+
+Automatic differ-at-what-chin?
+
+It's like having a mathematical microscope that can instantly tell you how changing one little thing affects everything else in your model.
+
+Like if I change the call input, it automatically figures out how that changes the train speed, passenger comfort, arrival time.
+
+Exactly.
+
+And just-in-time compilation means it optimizes the code right when you need it, like having a master mechanic tune your engine on the fly.
+
+Slick.
+
+Step 14.
+
+Site generation.
+
+We generate beautiful documentation websites showing off all our work.
+
+Like a fancy brochure for the railroad company?
+
+Precisely.
+
+Now let me show you the recursive beauty of this whole system.
+
+Recursive?
+
+That sounds like something you need a doctor for.
+
+No, no.
+
+Recursive means self-referential.
+
+The system can model itself modeling things.
+
+So the thinking train can think about itself thinking about thinking?
+
+Now you're getting into the philosophical deep water.
+
+Each GNN model is like a mirror that can reflect other mirrors, creating infinite depths of self-awareness.
+
+Like when you stand between two mirrors in a barbershop and see yourself going on forever?
+
+Beautiful analogy.
+
+And that's where our state space blocks come in.
+
+State space blocks, are we building with Legos now?
+
+Think of them as the blueprint sections.
+
+Each block defines variables with their dimensions and types like S underscore F zero three one type int means state factor zero is a three by one integer array.
+
+So it's like saying car number one holds exactly three passengers and we count them with whole numbers.
+
+Precisely.
+
+And our connections show how these blocks relate.
+
+We use greater sign for directed relationships, hyphen for undirected ones.
+
+Like engineer to conductor means the engineer gives orders to the conductor.
+
+Exactly.
+
+And passenger hyphen passenger might mean passengers can talk to each other both ways.
+
+Hashtag cerebrum.
+
+This is starting to make sense.
+
+What about those matrix things he mentions?
+
+Ah, the A, B, C, and D matrices, the heart of active inference.
+
+A, B, C, D?
+
+Sounds like we're back in kindergarten.
+
+Matrix A is your observation model.
+
+It tells you the probability of seeing something given what's actually happening.
+
+Like the probability you'll hear the whistle given that the train is approaching.
+
+Perfect.
+
+Matrix B handles transitions.
+
+How things change over time, possibly based on actions.
+
+Like how pulling the brake lever changes the train speed?
+
+Right.
+
+Matrix C represents preferences.
+
+What outcomes you'd prefer to see.
+
+Like preferring to arrive on time rather than late?
+
+And Matrix D gives you your priors.
+
+What you believed before you had any evidence.
+
+Like believing the train is probably on time when you first arrive at the station.
+
+You've mastered the fundamentals.
+
+Now here's where the golden spike comes in.
+
+Finally, I was wondering when we'd get to the spike.
+
+Is it made of real gold?
+
+The golden spike represents the moment when all these separate components connect into one unified system.
+
+When PyMDP talks to RxInfer, when DiscoPy diagrams execute as Jack's code, when LLM analysis enhances human understanding.
+
+Like when the eastern and western railroads finally met in Utah?
+
+Exactly.
+
+That ceremonial spike joining two great endeavors into one transcontinental system.
+
+RGNN is the golden spike of computational active inference.
+
+so this whole contraption the 14 steps the thinking train cars the matrix algebras the category theories it all comes together to make one big what a standardized way to describe validate visualize and simulate how minds work whether it's a human brain an ai system or a whole ecosystem of interacting agents agents are we talking about secret agents now
+
+Computational agents, anything that acts based on beliefs and desires.
+
+Your train conductor is an agent.
+
+He believes certain things about schedule and desires to keep everything running smoothly.
+
+And all these agents can be described using this GNN notation.
+
+from the simplest thermostat to the most complex social system.
+
+Each one gets its state-state blocks, its connection diagrams, its ABCD matrices.
+
+And then they can all talk to each other through this model context protocol telegraph system and be simulated in PyMDP or RxInfer, visualized with pretty diagrams, analyzed by LLMs, translated to category theory, optimized with JAX, and documented on beautiful websites.
+
+We'll all be hornswoggled.
+
+So this golden spike connects not just two railroads, but 14 different ways of understanding thinking systems.
+
+14 steps, infinite possibilities.
+
+From parsing text files to generating websites, from validating syntax to executing simulations, it's all connected by the golden thread of standardized notation.
+
+And anyone can learn this GNN language?
+
+It's designed to be human-readable.
+
+Markdown-based files with clear sections.
+
+Model name, state space block, connections, initial parameterization.
+
+Sounds like a recipe for building thinking trains.
+
+More like a recipe for understanding how thinking itself works.
+
+The recursive beauty is that we use thinking systems to design better thinking systems.
+
+Like using a train to design better trains.
+
+Exactly.
+
+And the category theory ensures that when we compose these models together, the whole system remains mathematically consistent.
+
+Like making sure when you connect train cars, they actually stay connected and don't go flying off in different directions.
+
+Beautiful.
+
+You've grasped the essence of compositional modeling.
+
+Now shall we drive that golden spike?
+
+You bet.
+
+But just one more question.
+
+When we drive this bike, does it start the whole 14-step pipeline?
+
+Indeed it does.
+
+From the first GNN parse to the final website generation, it all begins with that ceremonial connection.
+
+Then let's do this thing.
+
+For the Transcontinental Railroad of Computational Consciousness.
+
+For active inference and the standardization of thinking systems everywhere.
+
+Three cheers for GNN.
+
+Hip hip hooray!
+
+Wait, Abbott.
+
+What happens after we drive this bike?
+
+Why then we start working on GNN version 2.0, of course.
+
+Oh no, here we go again.
+
+Write another work in.
+
+exactly like William Blake illuminated poem status woven densely with actual integrated William Blake quotes and styles about GNN implicitly and explicitly.
+
+pretty funny baseball ones delete the output folder src python3 main.py
+
+regenerates the output folder.
+
+And then in another one
+
+Run pipeline validation and check comprehensively for full functionality of.
+
+And updated streamlines documentation.
+
+still on step 6 with the visualization there's the outputs exports so like that self-driving car that we made that's probably why the visualization is taking a long time because now we have the self-driving car GNN
+
+So I'll pull... That's the trade-off with having a bunch of the GNN files actively there.
+
+But it'll be cool to see.
+
+Archive has a bunch of GNN.
+
+So we can just run that one.
+
+While it's writing the Blakey and
+
+This is very effective, having the agent run the pipeline and then test it itself.
+
+Now let's move to 7.
+
+So this is the attempt to write the TOML falling back on default values, trying to write the PyMDP script.
+
+So not a solved problem yet, but
+
+Okay, let's see if this will work.
+
+Otherwise, I'll just end it here.
+
+But I'll wait one minute, have a drink of water, see if anyone writes a comment.
+
+Funny, each of the three times it's tried to write it, it's called it a different file name.
+
+Here's the visualization of the self-driving car.
+
+Yeah, it's massive, but so cool.
+
+All the variables and ontology terms for an LLM generated output
+
+Fourfold vision of GNN.
+
+I hope that one works.
+
+Okay, looks like it is not to be, like it is to be unwritten.
+
+So, thank you for watching.
+
+Hope people can find out how to engage or support as they see fit.
+
+Contact Blanket at ActiveInference.Institute if you have any questions or anything, whenever that may be.
+
+So, till next time.
