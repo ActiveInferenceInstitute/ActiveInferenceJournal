@@ -1,0 +1,1590 @@
+SPEAKER_00:
+Welcome William Gebhardt to the fourth Active Inference Symposium.
+
+We're looking forward to your session titled An Introduction to NGC Learn, a Computational Neuroscience Library.
+
+Over to you.
+
+
+SPEAKER_02:
+Yeah, so today I'm here to talk about the NAC, the Neuro-Adaptive Computing Labs, Python NIMP tool called NGC Learn that is really focused on getting your ability to prototype your ideas and work with your ideas in the field of computational neuroscience quickly and efficiently in Python.
+
+So before we're going to start off with all this first, we kind of want to briefly cover what we mean when we talk about computational neuroscience.
+
+So this is just the study and investigation of brain function using mathematical computation and tools and theories.
+
+We have a focus on biologically plausible and biologically grounded systems and neurons and neuronal systems.
+
+And we pay very high attention to the constraints and dynamics that are found in the real world when we talk about these.
+
+For instance, we model things like we have the resistance from membrane potentials, we have currents, we have a bunch of other various internal components to everything that make sure that we are modeling faithfully all of the neurons and components that we can find inside NGC Learn.
+
+And we don't just take from humans.
+
+In fact, there's a couple of various things that we have that are based on findings for things like rat hippocampal neurons and whatnot, for stuff like synaptic plasticity and transfers.
+
+And so yeah, so we kind of look at this biological interpretation of the world.
+
+And so one of the main things that we also like to look at is like, what is realistic when we talk about an interpretation of our world and how biology looks at it.
+
+And so like, for instance, our human eyes, it's been studied that they process thing information at about 60 frames a second, we can certainly detect things that move through our visual field
+
+faster than that.
+
+But as far as visual updates and whatnot, once you pass 60 frames a second or 60 updates per second, we have a hard time distinguishing.
+
+And then also processing for a lot of things in our brain is not just we see an image, we process the image once, and then we just sit around idle until a new image comes into our brain.
+
+A lot of the time, what we'll end up with is we'll end up with a continuous stream of data coming into our brain, and then we have to do continuous updates and processing on that.
+
+And it's that continuous update and processing that we really are trying to hone in on and identify here.
+
+So we do all of this inside of a biological framing.
+
+So we use neurons.
+
+Now, these are not necessarily neurons like deep neural networks like to talk about neurons, where it's just an abstract point in space.
+
+We actually model them as physical objects that have things like internal states and that also embody what they look like in brains and just other neural structures in the body.
+
+We have the center of the cell where we store a lot of our values.
+
+We have synapses that connect these to other neurons later down.
+
+And one of the key things that our library very much highlights is the use of spikes in spiking neural networks in order to actually achieve all of this happening.
+
+What this means is that instead of working in continuous values where you have a real valued image coming into your network and then it
+
+passes through your entire network as a bunch of other real valued numbers.
+
+Images as they enter into our networks tend to be converted into what are known as spike trends, which are just a bunch of discrete either ones or zeros on whether or not there is signal.
+
+And then from neurons to neurons in our systems, we tend to transmit these things only as spikes.
+
+So everything is dealt with with discrete signals rather than continuous signals.
+
+And then the other thing that we really heavily rely on in NGC Learn is stateful modeling.
+
+So as we're dealing with these models that are constantly taking in signals over time, it's to be expected that we require many signals and many iterations over the signals before we will actually produce any given output.
+
+What that means is that all of our neurons have internal states and are stateful.
+
+And so we can, for instance, stop getting any input and we can actually still watch what happens to the neurons in our models as they basically return to their rest positions.
+
+And so we have our biological components that have our internal states, and then these states do change over time.
+
+And so we tend to think about all of the models that we build with NGC Learn and just computational neuroscience in general, somewhat akin to state machines, with the idea that we progress through time by changing the state of our own model.
+
+And then there's certain actions that happen that can affect our model and transform it from one state to another.
+
+And so that's kind of the basic framing behind what we're going for with this, right?
+
+We're not trying to be the next TensorFlow.
+
+We're not trying to be the next deep neural network library.
+
+What we're trying to be is we're trying to be a library that is specifically catered to computational neuroscience and the biologically inspired and biomimetic systems.
+
+So why do we need this?
+
+So building these complex systems has a lot of overhead.
+
+If we need to make a system that tracks all of the different internal states of all models and can communicate between different components easily,
+
+uh that can run efficiently um so at the bottom here you can see here so in one of these models that we built early on uh we had a pretty standard d uh spiking neural network uh that was not big by neural network standards uh that took about eight hours to do an epoch of mnist
+
+And that is due to the fact that when we are looking at an individual image in MNIST, we have to go over it.
+
+I think this model was doing 200 forward passes effectively over it.
+
+Basically, we take the image and we convert it into a spike train that's 200 time steps long and feed it through our model.
+
+In addition to this, because in our brain, we don't have really the concept of mini batching, you don't perceive 18 different world views at a time, and then update off of them, or, you know, 8000 or 500 or however many big
+
+batch sizes have gotten to these days, we do everything in a continuous online updated.
+
+And so because of that, we can only look at one image at a time.
+
+So if we're doing roughly 200 forward passes per image, one image at a time, this can get really, really, really slow and up to eight hours for us to do any POC over MNIST.
+
+And so when we looked at some of the other existing libraries out there, like Brian2, Bindsnet, SNNTorch and whatnot, they all worked and they all have their strengths to be able to implement these systems.
+
+But some of them very much operate like black boxes.
+
+with the idea that you can modify parameters on the outside, but then you're entrusting that your various existing library is doing everything you expect it to mathematically inside.
+
+And what this also does is this makes it hard sometimes to actually either dig in and see what those dynamics specifically are, or even just want to modify some of those dynamics.
+
+And so what we wanted to focus on was building something that was incredibly modular, but still fast, right?
+
+So you can usually you have this trade off between you can have a system that's incredibly fast, but incredibly limited in what you can do with it.
+
+Or you can have a system that is incredibly modular and can do a bunch of things, but generates to trade off speed.
+
+And so we were kind of aiming for the middle of that with error more while trying to expand it to make sure we didn't sacrifice too much speed to be able to do all of the modular stuff that we wanted to be able to do.
+
+And so with that, we have some highlights of NGC Learn here.
+
+So first off, this is an open source project.
+
+It's available on PIP.
+
+It's available on GitHub.
+
+We are an active development base, which means that if you write us messages, like if you put errors or message notifications in GitHub, we'll see them.
+
+If you email us, we will see them.
+
+We will respond to them.
+
+We can work with you on them.
+
+So NGC Learn specifically is built using JAX, which is
+
+basically built on the underlying library called the Accelerated Linear Algebra Library, or XLA, which is a bunch of C Python bindings wrapped around basically C functions for doing linear algebra.
+
+And what that allows, and so those are really fast because we get to use C. And then so JAX is built on one step on top of that, which basically creates a bunch of NumPy bindings for said C Python functions.
+
+And so JAX has this really, really cool component to it called just-in-time compilation.
+
+And what this allows you to do is you can put a pure method into JAX's just-in-time compilation, and it will give you a pure method out
+
+But when you run that method, it runs entirely in C. It does not actually do anything in Python.
+
+And so the advantage of that is if we can take our giant model's state transition functions and make them be pure functions where you give it an initial state and it gives back to you the final state, we can pass that into JAXA's just-in-time compilation and basically take
+
+the entire model and its entire state transformation, and we can do it really efficiently in C. And actually, as a matter of fact, we can take that and we can do state transitions hundreds of times before we ever return to Python.
+
+And so this is kind of how we get that speed up.
+
+And in our testing, that same model that took eight hours to do an epoch over MNIST, we got down to roughly 15 minutes, 12 to 15 running on the same hardware.
+
+to do an epoch over MNIST, which is 40 times speed up there.
+
+There have been other examples that we've had that have gotten up to a 50 times speed up.
+
+This is not me promising that you will achieve a 40 or 50 times speed up in your work.
+
+This is just me saying that sometimes you don't realize how fast it can be running.
+
+Um, we also wrote this so that way, if you want to be writing your own new components, because we all know that, you know, ask models are great.
+
+We can work with those.
+
+Those are great.
+
+But the fun part about science is actually getting to build new things and try out new ideas and new modules.
+
+So we made it really easy to write new stuff, write new components, write new learning rules, write new neurons.
+
+All of this stuff is really easy to write, and they wire directly into the compilers without any problems.
+
+And then one of the other things, too, that we have is that it interfaces with Intel's Luigi 2's simulator.
+
+Now, the Luigi 2 is a neuromorphic chip developed by Intel for doing neuromorphic computing.
+
+This is basically taking spiking neural networks and putting them at purely a hardware level.
+
+which is where all of the energy efficiency that you've heard people talk about with spiking neural networks comes from, is the fact that when you put it onto a neuromorphic chip, it's really efficient.
+
+And having worked with physical Luigi's and whatnot, it can be somewhat of a struggle to actually get those chips running and get them working well.
+
+And so what that kind of comes down to is when you want and you actually get access to
+
+one of the physical pieces of hardware, you want to make sure that your model probably at least works in their simulator that they provide.
+
+I will tell you that the simulator does not one-to-one match with reality, but that is something that Intel knows and is aware of and I presume working on.
+
+But what we allow you to do is that we have a sub-project of NGC Learn called NGC Labo.
+
+And what that gives you is a couple changed object classes and a couple more restrictions that you have to follow while building things.
+
+And then after that, you can run NGC models directly in
+
+the Luigi two simulator.
+
+This means that you can take your model and you can run it on a GPU, you can run it on a CPU, and you can run it on the Luigi simulator, all without actually having to change any of your code base, you're basically just like changing a flag somewhere on where it's running.
+
+And that's all you have to do for that.
+
+So how do we actually build models in NGC Learn?
+
+Because now that I've pitched it to you as this great tool, let's see if it holds up with how easy it is.
+
+So overall, it's a modular system, right?
+
+So the goal of NGC Learn was to be incredibly plug and play.
+
+And also, it has to be effectively one giant state machine.
+
+So we can see on the right here, we have this context block.
+
+Now, for us, a context is generally our model, but sometimes you'll have multiple models that you define or some models that are defined inside of one giant overarching context.
+
+It's just the container that holds everything.
+
+Now, the parts that we're the most interested in, the things that actually do all of the updates and hold all of the fun bits of research are the components.
+
+And so components tend to consist up of a couple of things.
+
+So we have parameters, and we have compartments, and then there are the cables that connect them.
+
+And we'll talk more in detail about what each one of those are in a little bit.
+
+But the components are the new things, right?
+
+If you build a new neuron, if you build a new weight matrix with a new learning rule or whatever, those are what you're building.
+
+You're just building those little tiny parts.
+
+And because of the way that they interface with one another, you don't have to worry about, oh, does this have the right number of outputs to line up with the right number of inputs and whatnot?
+
+If you build the components in such a way that you follow just the standard practice that we've set out, all of the data will flow from component to component without any problems.
+
+So if we want to actually talk about the components, these are the backbone of what you're doing.
+
+So on the left here, I have the leaky integrate and fire neuron.
+
+Now, this is one of the most common neurons to see when you're starting out in spiking neural networks.
+
+It is the idea that you have an internal voltage that slowly builds up, passes over a threshold, and then depolarizes in the midst of spike.
+
+And it does that by taking in current and V equals IR, and you do current times resistance, and you get a voltage, and it slowly builds up your voltage.
+
+So inside of your LIF neuron, or our leaky integrate and fire neuron, we have a couple of fixed parameters.
+
+Now, for us, fixed parameters are values that don't change during runtime.
+
+These are the static parts of your model.
+
+But they're not fixed across all of your components.
+
+And what I mean by that is that I can have a leaky integrate and fire neuron with a voltage threshold of 1, and I can have another leaky integrate and fire neuron with a voltage threshold of 2.
+
+And you can build both of those.
+
+It works perfectly fine.
+
+But the 1 and the 2 can't change while it's running because just of the way that it all works out internally with the compiling.
+
+But for instance, here we have some fixed parameters.
+
+We have neuronal units.
+
+So when we talk about having a neuron or a component that is a neuron, it is more in reality a layer of neurons.
+
+So for us, neuronal units is just the number of leaky integrate and fire neurons that exist inside this little component or cluster of neurons.
+
+They all have a voltage threshold, and then we have tau m, rm, a vreset, and a vrest.
+
+These are just all of the various parameters that you need to get a Leaky Integrated Fire Neuron running.
+
+And then below all of these, we have the compartment values.
+
+Now this is where you actually store the stateful part of your component.
+
+These are the values that change over time.
+
+These are the values that we are transmitting from component to component.
+
+And so, for instance, here in our leaky integrate and fire neuron on the left, we can see that we have current coming in on the left.
+
+We have this voltage value that kind of floats around in the middle because we're not expecting to have it as an output.
+
+We have our output spike, which is just whether or not our voltage did spike.
+
+And then we have time of last spike, which is just, well, the last time step that it spiked because there's multiple learning rules that require that.
+
+And so what we can see here is that if you can kind of think about the various parts of your model that you like to build, the neurons, the weight matrices, any other auxiliary system that you have in your model, if you can kind of fit it to a component, it's incredibly straightforward to get these to be built.
+
+And then once you have them in component form, you can then plug them into any part of any model.
+
+So then what we're going to talk about here is we're going to talk about cables.
+
+Now cables can be a little bit confusing at first.
+
+So cables are what actually connect our components together.
+
+So if we look at the top, we have component A and we have component B. And basically what this is, is that, and then they're connected with the cable.
+
+And so we have our output compartment, which is the brown box that's on the right side of component A. And then we have our input compartment that's on the left side of the compartments box for component B. And then they're connected with this cable.
+
+And so the idea is that data will flow from the output compartment of component A and get copied into the input compartment of component B.
+
+And so this is basically how we get data to move from one to the other without necessarily having it know where it comes from.
+
+So this was one of the main things that we wanted to make sure you was a founding principle of kind of what we were going for when we looked at the component and cables is that a component downstream.
+
+So in this case, component B, it doesn't necessarily need to know and it shouldn't know where the incoming values are coming from.
+
+So these cables are all one-way cables.
+
+You cannot go backwards up the cable.
+
+Basically, the components are just told, hey, this is the value that has been transmitted along this line.
+
+And thus, this is the value that you have.
+
+And you don't get to know where it comes from.
+
+Now, what this does mean, though, is that sometimes what we'll have is InSight will have a component that knows that it's getting values from two places.
+
+For instance, in the bottom explanation, we have component X and component Y. Each one of them have an output, but we're trying to put both of their outputs into the same compartment in component Z.
+
+Now, if we were to do this without the summation that you can see, what would happen is the value from component X would come down, and it would get put into the compartment of component Z. And then the output of component Y would come down, and it would also get put into the compartment of component Z, effectively overriding component X.
+
+And so, but what we do have is we have this concept of operators, which are just simple transformations that can be done to the data that are being transmitted along cables.
+
+So in this case, summation.
+
+This is, you just have two pieces of data that all flow into this little summation operation that just flows into your output compartment.
+
+um it's important to note that the value like the intermediate values inside of things like summation are never stored anywhere they are purely just an inline operation that happens yeah so that's all you actually need to build a model right is you have components and you wire them together that pretty much talks about everything you need to know for the physical parts of your model and how they talk to one another
+
+But that doesn't get us anywhere.
+
+If I just hand you a model that has a bunch of wires around it and a bunch of values in it, but I don't tell you how to actually change any of the values, that's fairly useless.
+
+um in addition to that it's not a particularly great you know just research project we all care about how do these models adapt over time we all care about that whole temporal and evolving nature of everything so with that in mind we want to talk now about how do we actually transition a model and uh what goes into that so
+
+Four, transitioning of models across, so we have state transitions across just a component.
+
+So if we just zoom in on what a component is, we have component A here, where we have our fixed parameters across the top here, you can see we have four fixed parameters.
+
+And then we have two different state transitions that we're going to allow.
+
+We have the reset transition,
+
+and then we have the advanced transition.
+
+And so in this example here, we can see that the reset transition takes two fixed parameters in and sets values via the dashed lines that we see, sets values into all four compartments.
+
+Or we have the advanced transition that takes in, again, two fixed parameters, but different fixed parameters than reset.
+
+And then it also uses three of the compartment values.
+
+We can see the input compartment value on the far left and the two floating compartment values with their solid lines that go into advanced.
+
+And basically, this is we have written an advance function.
+
+So basically, this is just we're doing a state transition called advance that requires two fixed parameters and three dynamically changing compartment values.
+
+Advance internally does some transformation of this data, and it outputs two values.
+
+One of those values gets looped back into the floating compartment that we see on the right, and the other one gets sent to the output compartment that's also on the far right.
+
+And that's really all these state transitions across components are.
+
+When we write them internally, and we'll look at some of what this looks like in a little bit, what we'll notice is that each one of these
+
+transitions is relatively simple, right?
+
+It's just you just take values in, do try to do something to them and send values out.
+
+And that is really, again, you'll see this throughout all of NGC learn, that is basically how it all works under the hood is that we just we take values in, we transform them, we send values out, and we don't necessarily need to know where those values are going, or where the input values came from, that we just know how to move them around.
+
+And it's important to note here again that the parameter parts are fixed.
+
+It's only the compartment values that we can change.
+
+So you couldn't see advanced draw a dotted arrow up to one of the fixed parameters because they are once again fixed.
+
+Now that we know how to do a transition across one component, what if we wanted to do a transition across two components?
+
+And I'm aware that the parameter little circles are missing their arrows.
+
+The images got significantly too cluttered when I tried to draw those arrows in as the diagrams get smaller.
+
+But what we'll notice here is that we now can take a group of components and we can talk about taking the advanced action across a group of components.
+
+And so what this basically does is we will do the advanced operation or transition on a long component day.
+
+We will then transmit all of the data along all of the cables going between component A and component B. So whatever that outputted value of advanced state was would get sent into its output compartment and then sent to component B.
+
+And then component B would once again also do its advanced transition in which it would take on all of its values and compute its own output value.
+
+And you could chain these together at infinite.
+
+There's no limit to how many of these you can chain together.
+
+I will say that eventually it's probably, you know, might want to look at making your model a little bit smaller, but there's no actual limit to it.
+
+There's also the limit to how complex you make these.
+
+There's nothing that says that you can't have recurrent connections in your cables.
+
+There's also nothing that says that outputs or inputs need to actually have values.
+
+You can clamp values to them, which is basically the process of we just set the value and then just let it go.
+
+But there is one thing to note, especially when talking about recurrent things and recurrent connections between neurons and groups of neurons.
+
+And what that is, is that the order of operations in a state transition is deterministic.
+
+And thus, it's also something that each one only goes once.
+
+So if you have component A wire into component B and then component B wire into component A, it will still only execute a transition across A and then across B, or across B and then across A. It will never actually loop itself.
+
+It will always do one and then the other.
+
+And so now all of this really, really works itself down to compiling.
+
+So the compiler of NGC Learn is not actually found in the main repo of NGC Learn.
+
+So NGC Learn is built on top of what is known as NGC Stimulation Library, or NGC Simlib for short.
+
+And that is where all of the, I don't want to say messy or ugly, but that is where all of this code behind the scenes that are making everything work exists.
+
+And that is all of that library can be found in that little tiny compiling arrow that we see down here.
+
+Now, for the way compiling works, though, is we have our state transition.
+
+We have the state transition that we talked about in the previous slide, and we want to turn it into a pure operation.
+
+And what we mean by that is that the same inputs will always produce the same outputs, and no value outside of the outputs of the method are ever modified.
+
+And so how we can do that is with the way that the transitions all work is we can just pass in the entire state of our model.
+
+And then based on the transitions inside each component, they know what compartments they have to be looking at.
+
+And so they will look at those compartments and they will then update and modify the values in the model.
+
+And then it'll move from that one into the next one and from the next one into the next one and so on and so forth until it's actually done.
+
+And so these produce pure methods.
+
+And if we think back to what I talked about with JAX all along at the beginning, that means that we can pass these compiled methods into JAX's just-in-time compilation.
+
+And so what this gives us is this allows us to basically call, advance, or reset, or any transition function that's defined across all of our components effectively at once in one operation.
+
+Here we have it as advanced the model.
+
+And so this is truly where the speedup of NGC Learn comes from.
+
+Even if you do not use JAX or if you don't use JAX's just-in-time compilation because you're debugging, it is still a fairly large speedup just to go from Python being written the way it is into compiling into just running the compiled operation.
+
+um so if you really want to look into and care about how are we getting the speed that we're getting look into the compilers and once again the compilers are actually located in ngc learn ngc simlib which still can be found through all of the knack labs github pages it is also public
+
+Now, what does this actually look like in code?
+
+And so I wanted to take a brief look because pretty pictures are really a tool that helps us understand the thought process behind the models, and they understand how the models actually work.
+
+But sometimes people will show us really pretty pictures.
+
+And then when you go to actually implement it in code, it looks a whole lot different or things just don't quite or not quite as pretty of a picture.
+
+So we do have a short section here where we're going to talk about all of the different code that we do have.
+
+Here's an example of a component in NGC Learn.
+
+Specifically, we are going to be looking at the dense synapse.
+
+Now, all a dense synapse is, is it is a weight matrix that has both a resistance scale value on it, so just a constant multiplication scale factor being applied to everything, as well as a bias term that is added to everything.
+
+Now, so here we have some compartment values on the left.
+
+So as you can see, defining compartments is incredibly easy.
+
+So now everything right here where you see self.
+
+is all inside of the constructor of our object.
+
+So here we have self.inputs is just compartment and then some values.
+
+For us, that's the prevals.
+
+So that's whatever we want.
+
+It's a matrix of all zeros of the correct shape.
+
+And then we have self.outputs, which is just, again, another compartment defined with postvals.
+
+And then we have our weights.
+
+Now, weights are just our weight matrix, which is defined previously in the function.
+
+But it is just, again, simply compartment value.
+
+and what this does a bunch of stuff under the hood but this basically actually associates so when you build one of these objects when you build a dense synapse and it construct it this will actually build a bunch of compart this will build three compartments under the hood and basically register them inside the dense synapse and link everything together correctly so that way we know that they exist and we can wire into them and it does a little bit more than just
+
+Python knowing that the object has these fields in it, they exist, and they have their own set of properties.
+
+And then we have our fixed parameters, which if you look, look exactly like just values that exist on a class, right, we have self dot shape, which and self dot our scale, which is just a resistance scaling.
+
+And I'm sure everybody here who's worked with Python is very familiar with what that looks like.
+
+And so finally we have defining our state transitions.
+
+Now there's a couple things to note about this.
+
+We'll notice that our state transition definitions are static methods.
+
+And what they are really is they're just method.
+
+These have to be pure methods to define our state transitions.
+
+So here we have advanced state.
+
+And we want to still be able to use our scale inputs, weights and biases inside of advanced state and have them all correlate to the values that exist inside of our component.
+
+But due to the way that the compiler works is we still need this to all be a pure method.
+
+So how do we combat that?
+
+Well, we come by that by just doing effectively pattern matching, where as long as your names or
+
+the various inputs, so our scale inputs, weights, biases, whatever, as long as those values are found inside of the component that this transition is acting on, it will automatically grab those values out of those components when it's doing the transition.
+
+And so here we can see this is a pretty straightforward matrix multiplication with a scaling and a bias term to compute outputs.
+
+And we'll notice that once again, outputs is something that is keyworded on the component.
+
+And because when it's done resolving its transition, it needs to know where to put the output value, or in this case, outputs of the state transition, like what values are changed.
+
+And so it knows how to put outputs back into self.outputs.
+
+And so this is kind of the key to how all of NGC learns compilation and just plug and play models work with these state transitions is that you can define these methods that can pull in values from the components that they are being applied to without actually having to have an instance of the component itself.
+
+Now there's one other aspect of these that's not actually shown in this example, and that is parameters at runtime.
+
+So for instance, let's just say that we wanted to add the current time to our output.
+
+I don't know why we would want to be doing that, but let's say we wanted to.
+
+So if inside advanced state, inside the parameter list, we had another value, say time or t,
+
+and t doesn't exist on the component that this transition is being applied to what we'll see with this then is that late it will and we'll see this a little bit later in an example what it will want to do is it will say hey
+
+I can found all of these values, but this specific value T is not found in this component.
+
+You need to give me T for whatever I need to do for this state transition.
+
+And so this is how you can get runtime parameters to be passed into your state transitions and modify them that way.
+
+So now that we have a component and we kind of figured out how to define a component, and I should note that we can define as many of these state transition as we want because they're not actually bound to any specific component.
+
+We need to do something.
+
+So how do we actually define these components in a model?
+
+Because generally, we want multiple of them in a model.
+
+A component as one piece of a model is not very useful.
+
+So in order to do that, we use with blocks in Python.
+
+For us, we call them contexts.
+
+So we do a with a context, and then we give our context a name.
+
+In this case, we've named it model.
+
+And so what we have here is this is a width block.
+
+And so what this does is this is just saying everywhere, every time we define a new NGC learn component or initialize a new NGC learn component inside of this width block, it will automatically be added to the model.
+
+So there's no model.register various built things, no model.components list that you need to make sure is up to date, nothing like that.
+
+If we call Hebbian synapse here inside of this width block, the Hebbian synapse exists on your model.
+
+Now, what this does mean, though, is that the names of all of our synapses are required to be unique.
+
+But I feel like that shouldn't be super challenging because in our models, just for clarity and human readability, we try not to name things the same.
+
+For instance, it wouldn't really make sense if I have three different parts of my model that I've named Z1.
+
+So with that, we can see that we can define components like this.
+
+But what if we have complex models in which we have one overarching model
+
+with sub models that run maybe at different times or at a different frequency.
+
+And we want to be able to have those still be a part of this bigger model, the bigger scope of the model, but run on their own.
+
+Well, luckily for you, we can do that.
+
+So components are, sorry, contexts are fully nestable.
+
+You can nest them as deep as you want.
+
+And when you actually look at the structure internally, you'll notice that it follows very similar to a file structure where everything just ends up with
+
+paths based on context name.
+
+And so you can nest these as deep as you want.
+
+Generally, in my own personal use, I've never found really a need to go more than an extra layer deep, but there's nothing that stops you from going three, four, or five layers deep.
+
+And so as we can see here, though, it's incredibly straightforward to actually build the model.
+
+This here is built a model with two Hevian synapses in it.
+
+Now, I'll give you a brief note.
+
+There's a bunch of other components that are defined below this to get the model to do something.
+
+But those all look pretty much exactly the same as this, just with different objects and different components being built at every line.
+
+So now we have our components.
+
+We have our components defined inside of our context.
+
+but they don't do anything.
+
+They don't interact with one another.
+
+If we think back to the way that we get components to interact with one another, we have to wire them between each other, right?
+
+We have to get data to flow from a Hebbian synapse into an LIF cell.
+
+We have to get it to flow from an input Poisson neuron into a weight matrix into an LIF cell.
+
+We have to get all of this data to flow.
+
+So we do that with cables.
+
+And luckily, defining cables is incredibly straightforward.
+
+So we have overridden the left-hand bit shift operator, basically, to say, hey, if we're going to read the top here, so unfortunately, we end up reading right to left with this, is we're going to take the z0's outputs, whatever's in the outputs of z0, and we want to wire it directly into w1, which is one of our weight matrices inputs, or INP.
+
+And we just write that line, and that cable has been connected.
+
+Everything under the hood is done.
+
+And then I should mention, all of this is still inside the width block found that builds the context of our model.
+
+Any time we're dealing with building parts of our model, it is all done inside of the width block.
+
+And then on the next line, we can take Z1I's spikes and we can output, we can send that into W1IE's inputs.
+
+And we'll notice that this pattern of just taking an output and wiring it into an input is pretty easy to follow.
+
+And so if you build your component with the inputs that you're expecting and the outputs you're expecting, and you make it really clear to yourself what you need to do with that, when it comes to wiring up your model, it should be incredibly straightforward.
+
+But if we think also back to the wiring example, there was a point where I put two outputs and wired them into one input.
+
+So we can see that actually happening inside the second part of this, where we connect two compartments into a single destination.
+
+So we can do this with, for us, the operation summation.
+
+And so what this will do is this will add together any number of compartments that we put here.
+
+So in here, we just have it as two.
+
+But if we had four compartments that we wanted to wire into there, it would be easy.
+
+Now, one of the advantages of doing this instead of just having two input compartments inside of Z1E is this allows for a variable number of connections.
+
+So if inside of one model that you define, you need Z1E to have three inputs or three values being added together, or inside of a different model that you're defining, you have Z1E needing to have seven inputs going into it.
+
+You don't have to build new components.
+
+There's no additional logic that you have to do.
+
+You just add them to this list of parameters that are being passed in and you're done.
+
+And another thing to note is that these parameter chains are entirely nestable as well.
+
+So for instance, if we wanted to invert or negate for W one IEs output value, so it would effectively be W one out minus W one IE outputs.
+
+You just put in the gate around it and you can just nest them down.
+
+So if you want it to sum a bunch of things together and then negate it, you can, if you want to negate two of them and add them, it all works.
+
+And I should also again mention, it does not actually store these values anywhere.
+
+So they are never actually inspectable outside of just looking at the value of the compartment.
+
+So compiling.
+
+So compiling an NGC learn, we didn't want it to be a painful process.
+
+We didn't want it to be something that you had to make sure that everything was like touched the specific right way where you're holding it in with all your fingers and then it happens to work.
+
+So for compiling, it's just a list of components and a key.
+
+So if we think back to the example at the beginning where we had advanced state as the name of the transition method that we have,
+
+That's all we need.
+
+It's that name, advanced state.
+
+And so what this one I'll do in this line of code here is we'll do model.compileByKey.
+
+And so this is on your context model, the whole model.
+
+We give it a bunch of components, w1, w1ie, and so on and so forth.
+
+And then we tell it, compile advanced state.
+
+And so what this will do is it will go through and this just, if we think back to the thing where like composition of functions of everything together, it will go W one goes through its advanced state and then W one IE goes through its advanced state and then W one EI goes through its advanced state and it goes down the list.
+
+Now, obviously, if we reverse this whole list, that will change the output.
+
+It won't change what it's really doing, but the order that the advances happen in does matter, and it is dependent on the order that we find here.
+
+And the other advantage is that we can compile many of these.
+
+So in this case, we can see that we go through all two layers of our model here and all of our neurons in our model.
+
+Everything that's a Z is a neuron.
+
+But let's just say we only wanted to go through the first chunk.
+
+We only wanted to do z0, and then we just wanted w1, and then we just wanted z1e.
+
+That's all we wanted to compute.
+
+Well, all we would have to do is we would just have to put those three values in a compile argument, and it would just go.
+
+We don't have to compile every component in our model.
+
+And what this means is that we don't actually have to have every transition defined for every component.
+
+For example, when we're updating weight matrices, we tend to call it evolving them, right?
+
+They're changing in time, they're evolving.
+
+We don't evolve neurons.
+
+It's not something that we do.
+
+It's not something that doesn't make sense in the context of most models.
+
+So from that standpoint, we would only call evolve on the weights.
+
+Or we might only call reset on the neurons if our weights never have anything static in them.
+
+I mean, a variable in them.
+
+There's a bunch of different things where we can pick and choose which components and the order of the components that these operations happen in.
+
+And so in this, again, just to fully explain, we do have two different output values coming out of this compiled key, this model.compileByKey, as well as one hidden aspect that comes out of this model.compileByKey.
+
+But first, the outputs.
+
+We have this advance.
+
+Now, advance here is the pure function returned by the compiler.
+
+So this is the function that takes in the model state and all of the arguments it's expecting and will return to you the final model state.
+
+ADV args, these are all the arguments it's expecting.
+
+So as it goes through and it compiles down W1, W1 IE, W1 EI, and so on and so forth, it's slowly collecting a list of all of the keyword arguments that it needs to actually compute this transition.
+
+So if W1 requires T and Z0 requires T and DT and Z2E requires a J,
+
+what that means is that it would end up you would have a list that is we need T, D, T and J. If two things require the same parameter, it does assume that they're the same parameter aside, let's say yeah, like the same keyword argument.
+
+So if you have T used across all of your components, you only have to pass in T once.
+
+So that's everything that's visibly returned by this function.
+
+In addition, what this function also does is we can now call model.advancedState whatever this compile key here or an optional name flag that's not currently being used.
+
+We can take that advanced state and we can do model.advancedState and it's the same as calling model.advanced.
+
+And this just has its benefits of you don't have to necessarily keep track of the actual advanced function.
+
+If you have a bunch of them, you can just name them.
+
+So that's everything on actually how we get the compilation to run.
+
+What if we want to perform many of these state transitions in a row?
+
+And what I mean by that is if we think about a spiking neural network, we have a forward pass where we take one look at an image.
+
+But also in spiking neural networks, usually we have to do many forward passes up our image before we say we have an output.
+
+And so when we look at that,
+
+we're doing like 200 forward passes before we ever actually care what the output value is.
+
+So because of that, we don't want to just do a state transition from T0 to T1, get T1, plug it back in over here to get T2.
+
+What I want to do is I want to plug in T0 here and then do T1, T2 until I get to T200.
+
+And so for that, we have scanners.
+
+Now, the ngc learn scanner is built on top of Jax's scan function, which is effectively a method of doing a for loop inside of their compiled, inside of their just-in-time operations.
+
+And the way this works is we have our scanner.
+
+We have an observe function for us, but this is just whatever you want to name it.
+
+There's no actual hard, fast rules on what this needs to be called.
+
+We have compartment values or the model state.
+
+And then we have args.
+
+And so what the arguments are is these are the keyword arguments for that specific loop in time, so t0.
+
+So at t0, we would have arg0, t is equal to 0, and dt is equal to, say, 1.
+
+At t1, or the second loop through this, arg0 would be 1, and so on and so forth.
+
+And we define that down here in loop args, and we'll talk about that in a moment.
+
+But then we'll notice that inside of this, we're doing two actual transitions for every loop.
+
+We go through and we advance all of our state forward, and then we do an evolve step over our model.
+
+And this was done on an STDP, or spike timing dependent plasticity trained model, which means that we do an evolve step at every single forward pass.
+
+We do one for every forward pass over an image, we do an evolve step over the image.
+
+And we'll notice that this gets a compartment values because this is a pure function that takes in the component, the model state, and returns the new model state.
+
+Evolve is another compiled method that takes in the current state and returns the final state.
+
+And then we just return the final state at the end of that loop.
+
+and it just loops, and this will loop over for however long you give it arguments for.
+
+So if we give it 200 loops worth of arguments, it will loop 200 times.
+
+And this part right here at the end is just how you can actually get an output out.
+
+So this will return the compartment value located, the raw spike output of Z1E at every time step will be what underscore S is equal to.
+
+And finally, to call it, we just call observe.
+
+It's whatever the name of this function is.
+
+So if you named this foo, it would just be model.foo.
+
+We tried to use slightly more of that useful name.
+
+So here we have observe and here we have observe.
+
+And then the loop arguments is a 2D matrix.
+
+where every row is just the list of arguments that are found here.
+
+So this is a 200 by 2 matrix, basically.
+
+And that gets us our state transitions.
+
+And so this is how we can look at a model many, many... This is how we can transition over many, many, many steps without ever having to come back to Python.
+
+And since this is fully... So scanners automatically put things inside of just-in-time compilation, just for the way that they work internally for JAX.
+
+But what this means is that we can go from an incredibly slow forward pass over one image to a compiled forward pass over one image to a just-in-time compiled pass over just one pass over an image to a just-in-time compiled 200 passes over an image and just do that in a single function that we have defined.
+
+This is where all the speed comes from.
+
+Finally, I just wanna mention monitors.
+
+So what a monitor is, is sometimes we have a desire to actually look at, well, the internal state of our model as it's running.
+
+And when we're doing things with just-in-time compilation, we never get access to those internal states.
+
+because they all exist in C and they never exist in Python, and we can't look at them very easily.
+
+Again, due to the way that just-in-time compilation works, you can't put print statements in compiled code.
+
+It does not work.
+
+So what this means is that we have monitors.
+
+And so the way this monitor works is it's just a component like any other component in NGC Learn.
+
+Admittedly, it does work differently under the hood, but that's fine.
+
+What we have is we have a monitor by name, and then we have this default window length.
+
+What this is doing is this will keep a rolling window of the last n values that you define.
+
+So in this case, 100.
+
+So it will keep the last 100 values of whatever you tell it to.
+
+Now, at some point, you might say, well, why don't we just make this really long and do it for every value?
+
+Well, that gets really big, really fast.
+
+If you're storing floating point numbers and you're storing millions of them, you can run out of memory in your computer.
+
+So you do have to be slightly careful with that.
+
+But generally, if you just keep the things that you're looking at to relatively small amounts, you'd be fine.
+
+And the use case for this, we'll notice too, is slightly different with the way we wire things into it.
+
+So we'll notice that there isn't a compartment value right here.
+
+There's no m.compartment name.
+
+We just wire directly into the monitor.
+
+And this is why I was saying they work slightly differently.
+
+But as far as the outside user is concerned, you just wire into them like any other compartment.
+
+You can think of it as one giant compartment that stores everything.
+
+So here we take the spike output of Z1E and the spike output of Z1I, and we wire them both into the monitor.
+
+Now, somewhere in between this, we have run the observe function that has gone through and done a forward pass over an image.
+
+Now we want to actually look at the states as we're running.
+
+And so what we'll notice here is in view, the contents of it, we can just do m.view, and then we just give it the compartment that we want to look at.
+
+And this will give us the concatenated matrix of all the spikes.
+
+So if Z1e has 10 neurons in it, it will produce one by 10.
+
+Like sets of neurons will basically just 10 by comma spikes, either zeros or ones.
+
+And so as it goes through, the output of the monitor will be 100 by 10, because that'll be all of the all of the spikes for all hundred time steps.
+
+And so that gets us the ability to look at models after they have run, but
+
+the internal states of the models as they're running.
+
+I will say there are a couple of future things coming with monitors about the ability to actually get them to print out and integrate with matplotlib and getting it so you don't even actually ever have to view.
+
+You can just make lots of compartments and they will just plot nicely for you.
+
+It is currently working mostly in our development branch.
+
+Finally, how has this been used, right?
+
+I've been marketing this to you as like, hey, this is the thing that we have made and it's really cool and it's really fast and it works really well, but let's see it actually work in action.
+
+So the paper that started this all was this paper called Neurocoding Frameworks for Learning Generative Models by Dr. Aurobio and Kiefer.
+
+And so this was kind of the founding idea for NGC Learn.
+
+This was built in the original version of NGC Learn about two years ago.
+
+And it built this incredibly complicated looking model here that has both excitatory and inhibitory connections, as well as a bunch of lateral connections.
+
+Every line that we see here is part of the weight matrices.
+
+And sometimes, depending on the way that the connections go, it's multiple sets of weight matrices.
+
+This is a model that you can build in NGC Learn, and it will look no more complicated than a bunch of little brackets telling compartments where to wire to.
+
+In addition to that, we have reproduced Dillon Cook's paper from 2015 called Unsupervised Learning of Digit Reconstruction Using Spike Timing-Dependent Plasticity.
+
+This is another model that we had.
+
+This is more of a historic model that we have built inside NGC Learn and gotten up and running without any problems at all.
+
+We have one of my papers, actually, with my advisor, Dr. Arrobia, called Time-Integrated Spike-Timing-Dependent Plasticity, in which we built a patching model that basically is this whole structure, where we have a sensory input layer, an image, and it breaks up into a bunch of different subcomponents, or submodels, basically, that all learn small patches of our image.
+
+And then we have one final part that aggregates them all together.
+
+This sort of model is also very easy to build in NGC Learn.
+
+There's no actual time difference between running some of these.
+
+And so again, this is just something that we can build, and this is all able to be built with components that already exist in NGC Learn.
+
+If you wanted to build some of these models, this one, the TISDDP synapse isn't quite in there yet, but this model is fully in there.
+
+You can build this with every component that we have inside of NGC Learn, and it doesn't, without you having to write anything yourself,
+
+But even if you wanted to rebuild this whole model inside NGC Learn, writing everything yourself, it still would not be that challenging.
+
+In addition to that, we also have this contrastive signal dependent plasticity, which is a self-supervised learning in spike neural circuits, again, by my advisor.
+
+uh dr arabia and this is again another model that like this whole thing gets expanded to this which does this and this model is actually inside ngc learn as well all of the components that are needed for it are inside ngc learn and you can build it and you can look at it and it's all linked to in his paper and what that kind of wraps me up to here is the ngc learn museum or just ngc museum
+
+And so NGC Museum is a public repository for NGC Learn that houses the biomimetic, the brain-inspired computing, and the computational neuroscience models.
+
+Basically everything that we've built for all of our models can be found here.
+
+It makes a very convenient place for if you have code that you want to publish somewhere, you can publish it here.
+
+As just a, Hey, here's your paper.
+
+You can, it's all, it is organized and it's working on being more organized, um, into, uh, different groupings of stuff.
+
+There's an whole exhibitors section for it.
+
+So if you have multiple pieces of work that are all done using NGC learn, you can, you, you will have your own, you'll have your ability to have your own folder that you can all that you can organize however you want.
+
+that will have all of your papers that you've built together which would mean that if somebody is looking for similar papers that you have done they can come here and they can see ah here is a spike timing dependent plasticity paper that you've done and here's four other spike timing dependent plasticity papers that you have also worked on as well as here's just other spike timing dependent plasticity works by other authors
+
+that would allow you to cross-reference things and just have a good community-built platform for models.
+
+Because as I'm sure we're all aware, it's really frustrating when you read a paper, it has a really interesting method, you go look to reproduce it yourself, and the code is not available, or it's in a Git repo that's been deleted.
+
+I think we've all been there.
+
+And so from that standpoint, our goal is to make it so that that doesn't happen again and that everything built with NGC Learn can be found all in one place so we can all see how much it can do.
+
+And finally, some upcoming features, reinforcement learning.
+
+So once again, this is actually currently in our development branch.
+
+So we have grid based environments.
+
+Technically, you don't need to make them grid based, it's just the easiest one to visualize.
+
+So it's using components.
+
+So with the way that components work, if you can basically chunk your environment into its own
+
+individually run state machine um you can display it and run it in ngc learn uh currently we have rat water maze rat teammates another model that i'm currently using for a paper that's not published yet uh that are all navigation based tasks that have to perceive the world around them and uh
+
+get updates.
+
+I will say right now it is only limited to 2D.
+
+I would not stop you from using it in 3D.
+
+You just might have to see how to visualize it differently.
+
+And since it is built up out of components, it is fully compilable.
+
+And what that means is that we can compile the RAT T maze into a C function and integrate it directly with the compiled version of our agent, meaning that at the end of the day, you can do your entire training over your RL environment in C, never having to touch Python.
+
+And I will say egocentric and worldviews are both available.
+
+So obviously, these are rendering the worldview.
+
+And then the little highlighted section is your egocentric view.
+
+Both of them are very easily attainable.
+
+Yeah.
+
+And so with that, there's some links to all everything.
+
+And if anybody has any questions, please don't hesitate to ask.
+
+I'm slightly early on time, but that was kind of the goal.
+
+
+SPEAKER_01:
+Thank you, William.
+
+Okay, just while I'm getting back into the game here, maybe just share a little bit of your journey to working on this.
+
+Like, where are you at in grad school?
+
+How did you come to be working on it?
+
+
+SPEAKER_02:
+Yeah, so I am a fourth-year graduate student working under Dr. Alexander Arrobia at the Rochester Institute of Technology.
+
+um here in new york and so this kind of all started so my journey on spiking neural net started about two and a half years ago or so and very rapidly i found just like the speed problem to be incredibly annoying on like how do i actually get this to run in a way that's efficient
+
+And as I started moving to bigger and bigger models, specifically RL and some other models, it started getting really, really slow.
+
+And so around that time, so around like two years ago or three years ago or so, Dr. Raburbia had started working on the first iteration of NGC Learn, which is what his original paper was.
+
+This one was written using and then I got a hold of it and it works.
+
+It works beautifully.
+
+But there, since that paper came out, there were some pretty large advancements in the just computational things.
+
+Jackson really taken off a little bit since that had come out.
+
+It was all originally built in TensorFlow, which works, but it really felt like we were hammering a square peg through a circular hole to get it to do what we wanted.
+
+And so starting about a year and a half ago now, we kind of set out to make NGC learn what it is today.
+
+And then probably eight months ago, it really kind of took off on where it is with its compiling and the speed.
+
+And we've been using it and developing it ever since.
+
+
+SPEAKER_01:
+Cool.
+
+Epic.
+
+Okay.
+
+I'll start asking some questions from the live chat.
+
+And if anybody wants to add more questions, they can go for it.
+
+Okay.
+
+Okay, I'm going to read a possibly unrelated comment, but if you have a thought, otherwise it's not necessarily a direct question.
+
+Okay, Scott wrote, Lawyers say that contracts are a meeting of the minds.
+
+Singers and choruses experience aesthetic amplification of group identity.
+
+Here, the meeting of voices in storytelling equals a smart mirror for group identity.
+
+
+SPEAKER_02:
+That's... Okay.
+
+
+UNKNOWN:
+Okay.
+
+
+SPEAKER_02:
+It's interesting.
+
+I do kind of, thinking about it, it's like, just my initial gut reaction to that is that I think especially when we're doing science, sometimes we can get a little bit too bogged down in being scientists and not enough time in being like, rethinking and actually just coming up with like new ideas, right?
+
+We get too ingrained in like ruts of how things have been done in the past.
+
+And so I think that's something that we all do need to work towards more.
+
+It's just being a little bit more embracing of just new ideas that might not work.
+
+
+SPEAKER_01:
+Awesome.
+
+Okay.
+
+First question.
+
+Mobina wrote, does it only work with discrete value spiking?
+
+
+SPEAKER_02:
+No.
+
+So I'm going to flip through a couple of slides here.
+
+So when you go to these wires here, there's nothing that says that the wires actually move discrete values, but the advantage that we run into is that the fact that they can move discrete values.
+
+So when we look at here, so the weight outputs, so like w, like the weight outputs are actual matrix multiplications of weight outputs.
+
+We can see that here.
+
+This is, this is not a discrete value, but for us, when we're dealing with spiking neural networks,
+
+The input coming.
+
+So the short answer to the question is no, it works fine with floating point values as well.
+
+Um, it just also works with discrete values, which many other systems do not.
+
+
+SPEAKER_01:
+Okay.
+
+To give you a breather, I'm going to read an interesting quote that your last comment reminded me of.
+
+It's from Henry David Thoreau in Walden.
+
+He wrote, "...I had not lived there a week before my feet wore a path from my door to the pondside, and though it is five or six years since I trod it, it is still quite distinct."
+
+It is true, I fear that others may have fallen into it and so help to keep it open.
+
+The surface of the earth is soft and impressible by the feet of men, and so with the paths which the mind travels.
+
+How worn and dusty then must be the highways of the world, how deep the ruts of tradition and conformity."
+
+
+SPEAKER_02:
+It's a good quote, it's a good quote.
+
+I've seen his cabin, I've been to that lake.
+
+
+SPEAKER_01:
+Cool, like I had a sense that you would.
+
+
+SPEAKER_02:
+Yeah, yeah, it's a really cool place.
+
+
+SPEAKER_01:
+Okay, reading down Viet, your colleague and previous presenter wrote two questions.
+
+So first question, I saw that JAX also has a method dot lower to lower the pure function down to machine code, but not compiling.
+
+Do you see any fruitful exploitation of this function in the context of NGC simulation library?
+
+
+SPEAKER_02:
+Um,
+
+Possibly.
+
+So that could get us definitely some of the beneficial parts.
+
+So right now when you compile a function and then it throws an error, debugging that error is a nightmare because it's all compiled under the hood.
+
+I would have to look more into it, but if we can just get to machine code, that would be really cool.
+
+Like if it didn't end up
+
+like if it ended up skipping over, like it's going into C, but I'm not sure if it does.
+
+On top of that, something else that would be kind of interesting is, and I've actually spoken to my father who also does computer programming about this, is if we can get it all written into C or machine code, theoretically, you should be able to pre-compile this, which means that you could get your entire model and all of the state transitions
+
+as a program basically that sits on your computer without actually ever having to touch Python, which I also think would be a really cool place and direction to go.
+
+
+SPEAKER_01:
+Yeah, I think the presentation and the package architecture reflects many octaves of computer science.
+
+You're really getting down into the compilation details, but understanding those is critical because the point you mentioned sort of by the by that there's the possibility with only some constraints to run a model on CPU, GPU, and neuromorphic
+
+That's an incredible cross deployment of potentially identical models.
+
+So you could have certain models deployed across hardware to better understand the hardware, forget the model.
+
+Yeah, for sure.
+
+
+SPEAKER_02:
+Inside...
+
+Yeah, inside of the tutorial section of the documentation for NGC Learn, there's a part with NGC Lava, and it actually will walk you through how to run the same model both on the Loihi simulator and your computer in the same time.
+
+And you can look, and it will get the same output.
+
+It's got some randomness to it, so your filter might be in a different spot, but it will produce the same model.
+
+
+SPEAKER_01:
+Yeah, I mean, what is it even like to, or how is it similar and different
+
+to be programming on a neuromorphic simulator.
+
+
+SPEAKER_02:
+So the simulator is relatively straightforward.
+
+Actually going on to the physical Luigi itself, and this is why we have to stress simulator everywhere, is a challenge.
+
+So first off, Intel's NeuroCore, which is like their proprietary code for running on their Luigi chips.
+
+Well, it's proprietary code, which means that
+
+I don't have easy access to it.
+
+I have a couple working groups that I can have access to it through, but it's not something that I can just put on my own machine and test.
+
+In addition to that, microcode is needed, which is basically what is usually used to patch CPUs and GPUs and whatnot.
+
+But the microcode, it's the level between machine code, and it looks somewhat like assembly.
+
+You need to write a lot of your models in that, which gets complicated.
+
+So until we get a good translation layer between Python and either C and then C to that layer, or between just Python to that layer, the physically putting it onto hardware still is a hurdle.
+
+
+SPEAKER_01:
+Yeah, again, super interesting how this is really spanning the gamut with different layers of computer science and bringing in all these unconventional compute.
+
+Okay, another question from Viet.
+
+Have you also considered automatic operator, such as when we add two compartments A and B together, instead of summation of A comma B, it is A plus B and the library would wire them to the summation operation?
+
+
+SPEAKER_02:
+Yes.
+
+So yeah, we definitely have considered that.
+
+You run into
+
+So it works.
+
+So the long story short is that can work.
+
+The problem that you can run into is it can become a little bit syntactically weird to look at when you have compartment plus compartment meaning one thing and compartment.value plus compartment.value being another thing.
+
+Basically, the problem is that if we start overloading those operators, you now have to be careful
+
+Like right now, if you try and add two compartments together, and you forget to do like compartment dot value, it'll just error because compartments don't have an addition with one another.
+
+But if we produce an addition with one another, it starts to make it you have a lot more silent errors.
+
+So until we find a good way to overcome that problem, it's currently on pause.
+
+
+SPEAKER_01:
+But this brings in a lot of interesting category theory type questions about concatenating nested systems and putting them in parallel in series.
+
+And what are these operators?
+
+What does it really mean when just to have a certain symbol and then what do you really want to do?
+
+What are the operations supposed to do?
+
+
+SPEAKER_02:
+Yeah, and that's kind of been why like we overrode the shifting operator just because I wanted something there that was not just like dot connect.
+
+But beyond that, I've been a little bit hesitant to override them.
+
+
+SPEAKER_01:
+The nod from Will to the old, many years ago, NGC Learn was nice.
+
+Wink.
+
+The original NGC Learn was written in TensorFlow and started by offering generic customizable support for predictive coding.
+
+First note.
+
+And then second note, I posted a link to where we've curated many implementations of active inference.
+
+And Alex wrote, we would love to have community contributions translating these active inference models to NGC Learn.
+
+We would love to feature and maintain these in the NGC Museum.
+
+I mean, that was an incredible...
+
+insight to have a package centric repository
+
+
+SPEAKER_02:
+Yeah.
+
+Yeah.
+
+The whole goal of this.
+
+So all four of these models that are shown here are all in the museum already or on their way to being in the museum.
+
+And yet the goal is just so that way, like if you guys have this repository of here's all the papers, well, what's better than here's all the papers that kills all the papers and the code to reproduce them all in one place.
+
+
+SPEAKER_01:
+Yeah.
+
+Okay, you mentioned a few pieces of this, but Mobina wrote, what improvements are currently being explored to enhance NGC learning?
+
+
+SPEAKER_02:
+Yeah, so again, one of the main ones is just getting reinforcement learning up there and available for people to use easily.
+
+In addition to that, there's an overhaul of our visualization tools that I'd want to have.
+
+So we already support
+
+Things like the raster plots, all of the spike patterns.
+
+We support, obviously, Matplotlib does all of its stuff, and since all of our NGC Learn stuff is built inside of NumPy, it all plugs and plays into that really easily.
+
+But we do have a couple other additions to all of this that we're trying to get up and running.
+
+Basically, there's an overhaul to the visualization library.
+
+In addition to that, I'm sure there's other projects that I've been thinking about, but I don't have my notebook with my list of plans in front of me.
+
+But those two are probably the first two on my list is the reinforcement learning and then visualizations.
+
+
+SPEAKER_01:
+Cool.
+
+And this is a question.
+
+
+SPEAKER_02:
+And the help section and the library built help section.
+
+
+SPEAKER_01:
+Yes, the lobby of the museum.
+
+Yeah.
+
+And then the art outside.
+
+Here's a question that we've discussed with each of the previous package developers today, ActiveInference.jl and the RxInfer.
+
+What was the most challenging part of developing this out?
+
+
+SPEAKER_02:
+Definitely the compiler.
+
+And more and it's not the funny thing is, it's not the compiler specifically, that was the most challenging part of developing this out.
+
+It was how did I want the user to actually interface with it?
+
+Because one of the most complicated things and I can go back to here, right, was getting this to all work in a way that didn't feel clunky.
+
+And it still isn't perfect.
+
+It's just the best we've figured out so far.
+
+But the way to define your compartments and your fixed parameters and then write transition functions that can pull them into itself and do the operation, getting that workflow down in a way that made it so that way if you want to build a new component, it doesn't take very long was a challenge.
+
+um that was probably the most challenging part um the next one's definitely just actually getting the simulator to plug and play everything together um i could give another like three hour talk on how the simulator act like the ngc sim lib actually works under the hood um because it's
+
+It does a lot of metaprogramming and pattern matching and function generation.
+
+Like your actual compiled method that you're running is like four step.
+
+three steps of of, like dynamically created functions deep, basically.
+
+And so getting that to all work without bugs was hard.
+
+And it's been doing pretty well.
+
+It's all we've only had two very, very minor bugs in the past, like five months.
+
+So I'll call that a success.
+
+
+SPEAKER_01:
+In entomology, we love minor bugs.
+
+Oh, yeah, of course.
+
+Okay, I'll read another question.
+
+Rorick wrote, is there an active outreach program to the museum as such treasure ought not to be buried?
+
+
+SPEAKER_02:
+So we're not actively going out and trying to see things, but it is open source and anybody can make pull requests into it.
+
+Um, so, and we are, and whatever we, for, like, our lab or, like, for our own personal research, reproduce a model, um, or either a baseline or just as, like, as we're learning something new, that also ends up in there.
+
+But, um, I think as the going out to people specifically and being like, hey, we're going to...
+
+It's a lot of it is, is we're, we're trying to get the people that use our tool to just, when they've published the paper using the tool, put it also up there.
+
+
+SPEAKER_01:
+That's a very humble answer.
+
+Also, you're doing the active part now, so that can't be discounted.
+
+Okay, I'm going to read another, this is not a question from Scott, but just if you have any thoughts.
+
+Okay, he just wrote, things get interesting as our new computational and information processing systems, computers, internet, AI, etc., etc., etc.,
+
+more faithfully reflect human cognition active inference and biophysical models than our existing institutions and organizations the latter are historical artifacts not yet improved and socialized to loot new learnings about physics supported flows
+
+
+SPEAKER_02:
+I mean, I think, I think this is just, uh, my first thought of that is, uh, many, yeah, many, many modern AI systems and giant structures that are made, uh, do not reflect well on how odd, like are not faithful to biology.
+
+Um, and we definitely have a, we should definitely have a goal on making them more faithful to biology and, uh, getting a.
+
+Basically, there's a bunch of things that biological models can achieve for us, with one of the biggest ones just being the energy efficiency of neuromorphic computing, and the fact that we have things like chat GPT and whatnot that have
+
+uh you know use power drives of small cities to train uh kind of goes against all of that and so i do think that like this is definitely a way of the future i don't think it will ever beat out everything but i do think it's definitely something that we do need to continue pursuit of okay
+
+
+SPEAKER_01:
+I have a question.
+
+What is the putative or possible title or topic of your dissertation overall?
+
+Like, is this one puzzle piece, or is this the major one?
+
+
+SPEAKER_02:
+Yeah, so I've done my dissertation proposal.
+
+Off the top of my head, I do not remember what my proposal's name was.
+
+So I do spiking representation learning.
+
+So up until now, most of my focus has been specifically on the learning rules and credit assignment plasticity rules of spiking neural nets, specifically spike timing dependent plasticity.
+
+This is my paper, Time Integrated Spike Time Independent Plasticity.
+
+And then I wanted to do all of this with the direct goal of putting it into reinforcement learning, which is why one of the reinforcement learning parts of NGC Learn is on the way, is because I need it for my research.
+
+And since other people have also expressed an interest in it for their research, I'm like, let's all put it in the library together.
+
+And so, yeah, so I've got that and then the actual reinforced and then all of this basically played together to go with the representation learning of how do humans actually represent stuff?
+
+Because I'm not a fan of directly going from like pixels to thought process.
+
+I want to go pixels to representation to thought process.
+
+And so that's kind of where I've been at right now in my career path.
+
+
+SPEAKER_01:
+Cool, okay, another comment from Alex, he wrote,
+
+We should also mention that NGC Learn is going to offer support for dynamical systems and even more detailed support for differential equations beyond the basics we have now.
+
+Smiley face.
+
+
+SPEAKER_02:
+Yes.
+
+Yes, that is the thing too that we are on track for.
+
+We've got currently a bunch of different integration methods that are in there, but they allow for some complex dynamical systems, but not every complex dynamical system that we want.
+
+And so the goal is to be able to put all of those in there too.
+
+Pretty much anything you think of that can be represented as a state machine is something that we would love to be able to support.
+
+Just because at the core of it, it is just a giant state machine moving pieces around.
+
+And so while it works really well for spiking neural nets, it works really well for so many other things that are a dynamical system, something that changes with time.
+
+
+SPEAKER_01:
+yeah from the active inference side when i see that well first the reinforcement learning and the ability to have the egocentric and the allocentric i think is very fascinating and it makes me wonder how do epistemic value inferences come into the picture
+
+when we zoom out beyond utility or reward maximization and include these networks with structural fixity or with a dynamic structure doing learning, that's kind of just an interesting... Yeah, for sure, for sure.
+
+
+SPEAKER_02:
+I don't have any great insight on that right now other than it sounds really cool and I would love to be there working on it.
+
+
+SPEAKER_01:
+Cool.
+
+Well, I don't know if I should say that I do or don't hope your PhD ends before then.
+
+Do you have any?
+
+
+SPEAKER_02:
+I hope to get to work on this.
+
+I'm pretty sure even after my PhD ends, I'm still going to be working on this.
+
+So it's all good.
+
+
+SPEAKER_01:
+Cool.
+
+Do you have any last comments or thoughts to add?
+
+
+SPEAKER_02:
+Not really, just that if you are ever trying to set up NGC Learn and you're struggling with anything, do not hesitate to reach out to either myself or my advisor, Dr. Arurbia.
+
+Both of us are on the main dev team of NGC Learn, and we would be more than happy to help.
+
+
+SPEAKER_01:
+Okay, I'll just read a closing comment from Dr. Robia.
+
+We really hope the active inference community and audience considers community contributions to NGC Learn, especially if they want to go beyond using backprop slash standard deep learning.
+
+Also consider using it in the classroom to teach computational neuroscience.
+
+Cool.
+
+All right.
+
+Excellent.
+
+Thank you, William.
+
+Farewell.

@@ -1,0 +1,1164 @@
+SPEAKER_02:
+Hello, we're back with Samuel Nehrer, Jonathan Larsen, and Peter Wade discussing ActiveInference.jl, staying with the ActiveInference plus Julia theme.
+
+Thank you all for coming on and sharing this work.
+
+So looking forward to it.
+
+
+SPEAKER_01:
+Hi, everyone.
+
+It is a pleasure to be here.
+
+So like Daniel said, we'll present on
+
+a new package for doing active inference simulations, but also for applying it to data in Julia.
+
+And we will leave time for questions at some moments during the presentation, and then some time in the end.
+
+Additionally, we're three people, because we've been working on this together, so we'll alternate a little bit with the setting.
+
+All right, let's record.
+
+So first, it's nice just to mention who we are.
+
+So we're all at Aarhus University.
+
+I'm a PhD candidate and Sami and Jonathan are students who have been working on developing this package with me.
+
+And we all come from computational cognitive science, specifically called cognitive modeling, where you model behavior in computational models.
+
+And of course, within that specifically, predictive processing models, including active inference models.
+
+And that's why we made this package.
+
+And we use this in the context of computational psychiatry for clinical questions and also more broadly for just modeling behavior.
+
+And this package is part of a somewhat larger project of developing software for these kinds of research questions in Julia.
+
+And I'll start with just giving a brush up on what cognitive
+
+modeling is in general, so some members of the audience might be familiar with this, but others might not.
+
+Just to set the stage for an introduction to ActiveInference, you all have seen this before, so we'll go through it briefly, but it's nice to have this on our fingertips.
+
+Then we get to the meat of the matter, which is, of course, how to do this specifically in code with ActiveInference.jl, both simulating behavior and also fitting it to data.
+
+And finally, if there's time, we have some applications and some future work that we'll be happy to spend some time.
+
+We might skip that as well.
+
+All right.
+
+Cognitive modeling or computational cognitive modeling comes out of psychology, comes to science where the main question in those fields is to find out what are the mental mechanisms that
+
+makes us do the things we do.
+
+And so the classic perception-action loop, we have to pick it here.
+
+People who maybe do that too.
+
+It's going to be our active instance book, where you have some agent, which could be a person, but it could actually also be an animal or even an organoid or even a simulated thing, system that receives inputs from its environment and takes actions that changes its environment.
+
+And we are here interested in essentially, and I don't know if you can see my cursor, but essentially the relation between those observations and the actions that are created.
+
+So basically the path after the observation error ends and before the action error starts.
+
+And traditionally in psychology and cognitive science, this has been done experimentally.
+
+You take people out of natural situations and control laboratory situations where you measure, well, you control both of these.
+
+So you decide what they observe and you measure what they do.
+
+And so the kind of classical example of this is a computer screen.
+
+You show people some images, something, maybe you ask them to classify them or predict what's going to happen and you measure what they do.
+
+And then you have a measurement of inputs and measurements of outputs.
+
+And you then create some theory.
+
+that will make some prediction as to how they relate.
+
+And of course, there's a big field.
+
+You might have theories of personality types where you predict that actions will change faster depending on inputs.
+
+There's theories of reinforcement learning, et cetera.
+
+And so importantly here, we're using already natural science approaches, experimental approaches with quantitative analyses, but still with purely conceptual theories.
+
+So theories are not formal as they often are in, let's say,
+
+have mathematical theory and the trick is often to go from some conceptual theory to a quantitative prediction that you can then test and specifically give me a moment here sorry about that and specifically
+
+As many people know, there's been what's called a replication crisis in psychology and cognitive science, where the whole issue is that the experiments don't replicate.
+
+And that's partly due to statistical methods issues, but also partly due to problems stemming from the fact that our theories are not clearly formulated.
+
+So one sentence that's saying that there is social learning might mean many different things.
+
+And so in a recent attempt to address this,
+
+is to move into the formal field, just like in physics.
+
+So computational models of this relation between oscillations and action.
+
+And this is inspired by physics.
+
+So in physics, people are no strangers to having things they can observe.
+
+In our case, it's the behavior, but in physics, it can be, let's say, radiation from the sun and then trying to make inference about something you can't observe.
+
+In our case, the mind.
+
+In this case, it's perhaps the molecules of the sun.
+
+And so the methodology is exactly the same.
+
+Create mathematical equations that will describe how actions evolve over time given observations in the environment and test them on how well they describe empirically collected actions in observations.
+
+And here I just put on one of the very classic cognitive models, which is the Scholar-Warner, where you have some very, very simple equations that describe how actions depend on the observations in the previous time step with some classic learning data.
+
+And that's just to say that many of the first cognitive models were very simple.
+
+In a few equations, you would kind of describe these.
+
+I think primarily in three fields is this approach used where you have some
+
+person or some system, and you want to find formal models of its behavior.
+
+That's in computational psychiatry, where you want to use it to understand psychiatric conditions.
+
+Mathematical psychology, which traditionally has been broader.
+
+It's essentially the same questions, but a different community and different types of models used.
+
+But also broader, just behavior in general, not specifically psychiatry.
+
+And computational neuroscience, where you want to relate these models to
+
+example neurobiological processes that could implement and they also overly like overlap with artificial intelligence and engineering and so on all right so i think a primary use case especially in our field of active influence is theoretical simulations where you just take something on let's say learning or let's say learned helplessness you create a simulation that can do that
+
+create that kind of behavior, and you suggest this as a proposed mechanism of how that behavior comes about.
+
+You can use this for one agent, doing one type of behavior, or you can use it for many, and then you're doing agent-based models, specifically cognitive agent-based models, where you rely on actual cognitive theories to make them.
+
+But you can also apply it to behavioral data.
+
+And here you're often trying to either find out what mechanisms provide actually empirically observed data,
+
+You might want to distinguish, let's say, clinical populations from each other and what's called computational fingerprinting.
+
+You might also use results here to inform future theoretical simulations.
+
+You can have ABMs where every agent has parameter values that you found in an experiment.
+
+And you can also use this to design future experiments.
+
+We use simulation to make sure that your experimental design will give you as good results as possible.
+
+And finally, you can also apply
+
+these approaches in machine learning and engineering.
+
+And here, of course, you can make robots that use current models that people might also use in a way that in general technology and knowledge of biological systems have always worked with each other.
+
+So in the same way you might be inspired in how to build a plane by looking at a bird, you might also be inspired in how to build an image recognizer by looking at a human being.
+
+Our packages specifically target
+
+the application to behavioral data.
+
+And so they can do their simulations and also in principle be used for engineering purposes.
+
+But if we optimize them for this situation where you have participants, you put them in an experiment, you get behavioral data and you use those models to understand the data.
+
+And that's what distinguishes it from some of the other software tools that are present.
+
+And PIME-DP now has this capability also.
+
+But otherwise, many of the, and there is in the MATLAB SPM software, also some ways to apply it to data.
+
+But otherwise, the focus has often been on theoretical simulations or on machine learning.
+
+And if you look at packages like RxInfer, which is incredibly powerful and well-made, then also, at least to my understanding, focuses more on the machine learning engineering part, where the ultimate goal is to use these models to build tools that can do things
+
+or maybe for simulations, but not to specifically apply to behavior.
+
+
+SPEAKER_00:
+All right.
+
+
+SPEAKER_01:
+And I'll just give a sense of what the workflow here looks like, because if you come from theoretical simulations or engineering, this might seem really weird.
+
+You start off designing hypothesized models for how people work.
+
+You then check these models before applying them to anything to whether they are worth applying.
+
+simulate behavior with some parameters.
+
+You then estimate those parameters and you see if you can actually estimate the real parameters.
+
+If you can't recover parameters that you know are true, you can't trust this when applied to real data.
+
+And also prior and posterior predictive checks, where you just check that your model can actually generate the kind of data that you might see in an experiment.
+
+And if it can't, it's also not worth applying to real data.
+
+Then you fit it to data, which means finding out what parameters of my model, what they must have been to generate the data that I did observe.
+
+So in classical models, there will be learning rates.
+
+You ask, oh, this person adapted this fast, so his learning rate must be this and this.
+
+In the context of active inference, it's usually parameters of the generative model, the A matrices and B matrices, for example, that we want to estimate.
+
+And finally, we can also estimate how well the model fits our given data.
+
+Because some models might describe some data better than others, we might want to use this to select them.
+
+We use this to relate parameter estimates to some measure that's across participants.
+
+Often this is clinical populations.
+
+We might say, are learning rates or are AMA trees parameters different between clinical populations?
+
+But it might also be in relation to, let's say, age or psychopharmacological interventions, etc.
+
+We're not related to within participant things, let's say physiological correlates and the QBI, pupil dilation, etc.
+
+But the primary use case, of course, is neuroimaging, where you say, according to my model, this participant now has a high prediction error.
+
+Do I see a difference in brain activity at this moment compared to when he has low prediction error?
+
+It's often to find out what the neurobiological implementation of the computation that we think people do
+
+And finally, you might compare models and ask questions like which of these hypothesized models are the ones that best describe the data and therefore perhaps the actual mechanism within people.
+
+So you could compare an active inference and reinforcement learning model, or let's say two active inference models with different generative models inside.
+
+Finally, it's worth mentioning that fitting this to data, there are many different approaches.
+
+Broadly speaking, there are Bayesian and frequent system methods.
+
+They have different advantages and disadvantages.
+
+We usually use Bayesian approaches, and that's a long discussion of why that's nice.
+
+They propagate uncertainty.
+
+They don't have so much data.
+
+But let me go to that just to say that there are also other ways to fit models to data.
+
+And within Bayesian methods, because you can't do exact Bayes to fit them, there are also approximations.
+
+One classical approximation is variational methods.
+
+where you choose some arbitrary distribution, we call it Q, and you make it be as similar as possible to the true posterior belief about the optimal parameters.
+
+You do this by minimizing the variation of the energy.
+
+And as it happens, that's also what active inference agents use.
+
+Another, in cognitive modeling, widely used method is sampling approaches, like Markov chain Monte Carlo.
+
+There are also others.
+
+where essentially you try out many different parameter values, and for each of them you calculate the likelihood of that value.
+
+You do this in a smart way, but it still takes a long time, and you get a full estimate of the probabilities of different parameters.
+
+They have different claims to being useful for different use cases, so sampling is good for parameter estimates, but they take a long time, and they might not probably work.
+
+Variation-based has some claims to being a better estimate of
+
+quality fit or model evidence, there's a whole few where people are still writing.
+
+If anyone's interested, we can take questions on that.
+
+But importantly, the tools we make here can do either of these two things.
+
+Finally, it's just worth mentioning that we as researchers use Bayesian methods to understand people's behavior, but within active inference, we also theorize that people use Bayesian methods to understand the world.
+
+It's nice to keep those separate.
+
+We might use a sampling approximation to patient influence to fit our models to data, but still believe that people use a variational base to understand their environment.
+
+And so in the following, when we talk about generative models, we're not talking about our model of people.
+
+We're talking about people's models of the world.
+
+And again, do ask questions in that.
+
+That's one of the tricky points sometimes when we're doing this, what's called metabation modeling.
+
+There are many paradigms within cognitive modeling.
+
+Mathematical psychology have many, many ways of modeling, often specific behavioral tasks.
+
+There are these old cognitive architecture models, ACT-R and SOAR are the biggest ones where people are also trying to do unified models of behavior in general, which rely on very different assumptions than active inference.
+
+And often we're not aware of them.
+
+Perhaps we should be, so I'll just bring them up here.
+
+And they're kind of raw, old school computationalist models, different modules interacting.
+
+There's of course reinforcement learning models where you assume that people do actions, get rewards from the environment, and then try to find actions that maximize those rewards.
+
+There are many others like deep learning models, et cetera.
+
+But of course, today most evidently there are Bayesian mind models, where you think that people's minds use Bayesian inference of some sort to understand the environment.
+
+There are many schools of Bayesian mind models.
+
+You might look at Josh Tenenbaum for a different school than ours, but active inference specifically belongs to a variational Bayesian mind model.
+
+We use variational approximate Bayesian inference as a model of how people work.
+
+And this has close ties to predictive coding and predictive processing.
+
+So broadly speaking, we might call this variational Bayesian predictive processing models.
+
+They can be just a perception, like hierarchical regression filters or
+
+plenty of models out there, or they can include action as well.
+
+And when they include action, it's called active inference.
+
+So variation of Bayesian predictive processing models of perception and action is active inference.
+
+And now we'll give an introduction to that, but we'll give time for one question before we move on.
+
+Are there any questions?
+
+
+SPEAKER_02:
+Sure.
+
+I'll ask one, maybe you'll revisit it later too.
+
+Arun asked,
+
+What's the biggest challenge you faced building this package?
+
+
+SPEAKER_01:
+That's a long and technical discussion.
+
+I think the main thing is that in Julia, there are many ways of doing what's called the auto differentiation, which is a technical thing that you need to do the parameter estimation.
+
+And there's just a whole ecosystem of packages doing that, and we've had to
+
+become very familiar with those to find the ones that work the best.
+
+And that's not an easy task.
+
+Part of the package is to hide that from the user so they don't have to engage with it.
+
+I don't know if you agree with that.
+
+
+UNKNOWN:
+Okay.
+
+
+SPEAKER_02:
+One more question just while we're paused.
+
+Fraser asked, is there anything in ActiveInference.jl that is particularly suited to compositional agents or collectives?
+
+Kind of leading you into your paper, I know.
+
+
+SPEAKER_01:
+So I'll return to that in the end if we have time, but basically you can use the same method that we use to make inferences about
+
+given a human participant in an experiment, instead of a human participant, you can use it on a simulated collective and treat that collective as if that is also doing some kind of cognition or active inference at least, which is, of course, fundamental to active inference in general.
+
+We expect a cell to do active inference, but also a person and also a collective.
+
+And so if we treat a simulated collective as, let's say, a foreign system that's doing something we don't know what is,
+
+We can fit a model to that in exactly the same way we do to a person and make inferences about, let's say, the parameters of that simulated collective's guaranteed model of the environment.
+
+And in the end, if we have time, I'll just show the results from that paper where we do exactly this, just demonstrating a lot to our example.
+
+That's an exciting question, obviously.
+
+
+SPEAKER_04:
+Yes.
+
+All right.
+
+All right.
+
+I will just briefly touch on the software ecosystem that we built the package in.
+
+So firstly, why Julia?
+
+It's fast and it's very intuitive, meaning that if you come from Python or MATLAB, you can carry a lot of the same intuitions over into Julia.
+
+And then it has a community that is growing quite fast of people doing data science, machine learning, and cognitive modeling.
+
+Then Julia is natively auto-differentiable, which means that you don't need to have a backend in another language to do auto-differentiation, which makes it very fast in Julia.
+
+For this, there's a very nice package called Turing.jl, which is just a package for probabilistic programming in general.
+
+And it can do both sampling methods such as MCMC or no-U-turn sampler and variational inference as well.
+
+Then in Julia, there's also a sister package to Active Inference, which takes different kinds of cognitive models and make it very easy to fit data into those kinds of models by wrapping Turing.
+
+And that's where our ActiveInference.jl package comes into play, as this is a cognitive model that through action models can be used to Turing to fit data quite easily.
+
+And we'll show this later in the presentation as well.
+
+Then we'll just briefly touch on some of the core elements of active inference with regards to perception, action and learning.
+
+So for the perception part, this is the minimization of the quantity variational free energy where we through this minimization, we can infer states optimally based on observations.
+
+And there's different kinds of variational inference, sorry, different kinds of algorithms
+
+that we can use to do this.
+
+I'll later go into the specific algorithm that we're using in this package.
+
+Then we have action and active inference, which is guided by the minimization of a quantity called expected free energy.
+
+And this can have a lot of different kind of expressions.
+
+If you look at the ones that we show here in the slide, we have one that's information gain versus pragmatic value, which is basically where you get the explore exploit behavior for free in active inference, which is really nice.
+
+And then we also use the expected free energy to calculate posterior probability over policies, where policies are actions.
+
+So this is kind of like the points that we use to kind of like guide the action selection.
+
+We're also going to go into that a bit later.
+
+Then we have learning inactive inference.
+
+This is specifically for categorical distribution beliefs.
+
+So there's other ways of learning for continuous cases.
+
+However, here we take it for categorical distributions.
+
+And for this, we use Dirichlet priors over the generative model parameters.
+
+This is basically Dirichlet's.
+
+They have concentration parameters that we can then add counts to.
+
+And this is the update equation that we show here, where we have an omega, which is the forgetting value times current concentration parameter.
+
+And then you add the new here is the learning rate.
+
+And then you then add the chi, which is the data observed.
+
+And in this sense, you just add counts to the concentration parameters.
+
+And then through normalizing it, it becomes your new updated generative model parameter.
+
+And we will come back to how that's implemented in the package as well.
+
+And then a quick refresher on partially observable market decision processes.
+
+So we just want to make sure to say that this is one type of generative models in active inference.
+
+There's other types of generative models as well.
+
+And PMDPs, they're not active inference specific in the sense that you can also use it in other frameworks.
+
+And then what we have done in this package is a discrete state space implementation of PMDPs.
+
+You can have continued state space implementation of PMPDs.
+
+The Markovian element of it, though, is that the time steps, they are discrete and not continuous.
+
+So we'll just briefly go over conceptually the different parameters in the PMDP.
+
+And for this, we have created sort of like this little toy environment
+
+to explain this and if you can see this thing here where you kind of like if you imagine that it's a dial where we can spin it in different ways and then the goal is to get state three on top in the little rectangle and so then you have three actions you can spin counterclockwise clockwise or you can just make it stay in place which you would do if you have state three on top for example
+
+But we'll start with the observation state likelihood model.
+
+Basically what this encodes is the agent's beliefs on how states generate observations.
+
+So it's a categorical distribution where each column has to sum up to one.
+
+So in this case, as we have a identity matrix, this indicates that the agent can deterministically infer the state based on the observation.
+
+So if the agent observes observation one,
+
+then it will infer that it is in state one.
+
+And this can be more or less entropic in the sense we could also have a completely uniform column where we just have 0.3, 0.3 for all of these.
+
+And then the agent wouldn't be able to infer the states based on the observation.
+
+All right.
+
+So this was the observation state likelihood model.
+
+Then we're going to go to the state transition likelihood model.
+
+And this is basically how the agents believes that the states change over time.
+
+And so in this case, I've taken the example of doing it for the action of going counterclockwise because this is usually dependent on actions.
+
+So here we see that, for example, if the agent is in state one and it does the action spin counterclockwise, then it believes that the next state it's going to be in is going to be state two.
+
+And the same if it's in state two, then it believes that it's going to be in state three.
+
+And so that's the state likelihood transition model.
+
+Then we have the prior preference.
+
+And so this is basically where we kind of like get to encode kind of like the preferences or the goals of the agent.
+
+This can be done both over states and observations, but in our case, we have done it for observations and this is the case in our package as well.
+
+So here, for example, for observation one, we have encoded a dislike for this observation, which is coupled to the state one.
+
+And then for observation two, we have neither dislike nor preference.
+
+And then for observation three, which is coupled
+
+to state three, which is kind of like the goal that we want, we have set a preference.
+
+And this is important as this kind of encodes the pragmatic value, which is then part of the calculation of the expected free energy, as you can see here below.
+
+Yes, and that's the C parameters.
+
+Then we'll continue to the D parameters, which are basically just the agent's initial belief at time one.
+
+which state is it going to be in.
+
+And here we just encode it to be certain that it's going to be in state one.
+
+Then we have the prior over policies.
+
+It'll just quickly introduce the notion of policies where policies are collections of actions that can have a specific link determined by the policy link, which is basically how long in the future, how many time steps in the future should the agent plan.
+
+So for this case, we only have one time step in the future.
+
+which is why we only have the three actions here.
+
+And this is also sometimes described as the agent's kind of habits, meaning that it has a preference for certain actions.
+
+In this case, we have given it a uniform distribution, meaning that the agent doesn't really have any preference over any policies.
+
+All right.
+
+So now that we have the generative model down, I'm going to show you how to implement this in our package.
+
+And we're going to do this by providing a work example of a teammates environment
+
+where the agent is going to learn the reward probabilities in the arms.
+
+And for this, I'll just quickly have to introduce the notion of factors and modalities.
+
+So factors are basically different kinds of states.
+
+So in this case, it would be we have location states and we have reward condition states, where reward condition states are whether the left arm or the right arm is going to provide a reward.
+
+Then we have modalities.
+
+Modalities are basically different kinds of observations
+
+And so here we have a location observation, we have a reward observation, and we have a queue observation.
+
+And I'll go into these when we get to define them in the generative model.
+
+To start using our package, you can just add it from the Julia registry using the Julia package manager as shown here.
+
+Basically for this code, you can run through it by yourself and it should be able to run.
+
+And then we initialize the package and we also import the environments module, which is important for the teammates environment that we're using as an example here.
+
+And then we initialize the TMAs environment.
+
+And here we just set a 95% probability of providing reward in the reward condition arm.
+
+So now we can create the actual generative model, the PMDP generative model.
+
+And you can do this manually by yourself.
+
+But then you have to make sure that the generative model parameters are typed in the correct manner, which is shown here where it has to be vectors of raise for AB and vectors to vectors for the C and D and vector of floats for E.
+
+It's very similar to object arrays in NumPy.
+
+However, we have created a helper function that makes this a lot easier.
+
+And so I'll just quickly go through the arguments that the helper function takes.
+
+So the first argument is the number of states in each factor.
+
+And so remember, we had two factors.
+
+We had the location state factor and the reward condition factor where we had in the location factor we had.
+
+four states, we have the sense, the cue location, and the two right arms, so that's four.
+
+And then we have two reward condition states, reward condition right and reward condition left.
+
+So we take this as a vector and give it to this function as the first argument.
+
+And then the second argument is the number of observations in each modality.
+
+So we have four, we have three different modalities in this case, where we have four observations in the first modality, the location modality, we have the location, sense, cue, and the arms.
+
+Then we have the second modality, which is the reward modality.
+
+It has three observations.
+
+It has the observation of no reward, reward and loss.
+
+Then we have the last observation modality, which is the Queue observation modality.
+
+These we also take as a vector and give to the function as a second argument.
+
+The third argument is the number of controls for each of these factors.
+
+We have two factors, the location factor and the reward condition factor.
+
+We only want the agent to be able to control the location factor, so it can move freely between the locations, but in the reward condition state factor,
+
+it shouldn't be able to control what arm should be the reward arm and so therefore we just give it a one in this case then we have the policy link which i have described before it's how many steps in the future does the agent plan and then we have the fifth and last argument which is the initial fill which basically says like when we have cons when we have made the structure of these journal to model parameters uh what should be the initial filling of these and here it takes both
+
+It takes zeros, which we've chosen in this instance, and it also takes the argument random, which is nice for testing, and uniform, which is the default in this case.
+
+Good.
+
+So now we just, having created this helper or these generative model parameters, we just need to fill them with the appropriate values.
+
+So we'll start out with the observation state likelihood model.
+
+And remember, this is the one that encodes the agent's beliefs of how states generates observations and then infers states based on the observations it receives.
+
+So in this case, we have the location observation, which is not as interesting to us.
+
+Basically, it's an identity matrix, meaning that the agent just infers the correct states because we have encoded to do so.
+
+And then we have two matrices here because we have for each of the location states, which is one matrix, and then we have two matrices, one for each reward condition state factor.
+
+And if you go to the second modality, which is the reward modality, this is the one that is interesting to us.
+
+Because if you look at the first column and the last column, this is the queue and center location, we see that it expects that these are going to provide the observation of no reward.
+
+However,
+
+For the second and third column, which are the right and left arms, we see that in the second row that it has a 50% chance that it believes that this state is going to produce a reward observation.
+
+And then if we go to the third row, we see that it has a 50% chance of generating this, or the agent believes that there's a 50% chance of generating this observation.
+
+So in this sense, the agent doesn't know which of the arms is going to provide the reward observation.
+
+And this is the
+
+modality that we want the agent to learn.
+
+We want it to approximate the actual reward probabilities in the teammates environment.
+
+Then we have the queue observation modality, which basically just tells the agent that only when it's in the queue location does it correctly get an observation that informs it on the reward condition state of the environment.
+
+And then we're going to add a prior over a, and this is where the learning part comes in.
+
+The prior over A is the Dirichlet distribution, and the way that we create this is basically just that we copy the structure of A, and then we add a scaling concentration parameter, which basically says that these counts in the Dirichlet distribution, if they are very high, like if we give a high scaling concentration parameter, each new data observation is not going to matter as much.
+
+If we set the scaling concentration parameter low,
+
+then each data observation we have is going to matter a bit more.
+
+And then it's important to say that, and this is a bit clunky, but this is now going to define the A matrix.
+
+So the prior over A is going to define the A matrix, meaning that the A matrix that we just made is not going to be exactly used.
+
+However, we used it as a template to create the prior over the A.
+
+Great.
+
+So now we have the observation state likelihood model.
+
+Now we need to encode the state transition likelihood model.
+
+And this is the matrices for the first factor, the location factor.
+
+And basically, we just note here that we have rows that are filled with ones, meaning that from wherever the agent is for that action, it goes to that place that it wants to go to.
+
+And then we have the second factor, which is the uncontrollable one.
+
+which is the reward condition factor.
+
+And basically this identity matrix just tells the agent or the agent believes that the reward condition state doesn't change over time, that it stays the same.
+
+Good.
+
+So now we come to an interesting parameter, which is the prior preference over observations.
+
+So we have a vector here for each of the modalities.
+
+However, the one that we are interested in is the reward observation.
+
+So in this case, the first index is the index of the observation no reward, and we set no preference or dislike for this.
+
+The second index is the observation of reward, which we set to have a preference for that it wants the reward.
+
+And then we have the third index, which is the loss observation, which we set a dislike for.
+
+Yes.
+
+And then we continue to the D parameters where we had a vector for each of the factors.
+
+We have the location factor.
+
+where we basically tell it that it's going to start.
+
+The first index is the sender location that we're just telling it that it's going to start in the sender location.
+
+And then for the second factor, which is the reward condition factor, we just have a uniform distribution, meaning that the agent does not know what the reward condition is going to be.
+
+Good.
+
+Then we have the last of these parameters, which is the prior over policies.
+
+And we're just going to here provide it with the uniform
+
+So this means that as the E parameters are the habits, it's not going to have any habits in this case.
+
+We see here that we have 16 different policies because we have a policy length of two and we have four actions.
+
+So the total number of combinations of these two actions is going to be 16.
+
+And then as I said, we just give it a uniform distribution over these policies.
+
+Good.
+
+So now we're almost ready to initialize the active inference agent.
+
+Before we do that, we have to specify some settings.
+
+And I'll just briefly go into these, what they do.
+
+The policy length we have talked about.
+
+The use utility basically means, should we include the C parameter preferences that we just set?
+
+And we've set this to true.
+
+Then we have the use states info gain, which basically says that in the calculation of the expected free energies, which is going to guide action,
+
+And should we include the expected information gain?
+
+And then we have the use parameter infogain setting, which basically says that when we calculate the expected free energy, should we include the expected learning or updating of the generative model?
+
+Then we have action selection, which can take two values, either stochastic or deterministic.
+
+I'll go into what they do when we come to the function that actually uses this setting.
+
+Then we have modalities to learn, which basically specifies what modality do we want the agent to learn.
+
+In our case, we wanted to learn the reward observation modality, so we specify this by giving it two.
+
+We also have factors to learn.
+
+This is only relevant when we're doing B and D matrix learning, so it's not going to be relevant in our case.
+
+Then we have the fixed point iteration number of iterations and the fixed point iteration tolerance, which is basically saying that.
+
+When should the inference algorithm stop so you can set it to either as we do here after 10 iterations or when the difference between iterations are equal to a lower between this threshold.
+
+Yes, the last thing that we need to define to initialize the agent.
+
+is the parameters here i'll just briefly go over what they do the gamma is an inverse temperature function on the expected free energies then we have the alpha which is in this temperature on the action selection and then we have the learning and forgetting rates for the priors over a b and d
+
+parameters, which are the ones that we currently have learning for.
+
+The ones that we are interested in at the moment, though, is the prior over A, which is the learning rate and forgetting rate for this, which we're going to set to its default value of one.
+
+And the values here are all the default values.
+
+Good.
+
+So now we can initialize our active inference agent by providing it with the generative model and the settings and these parameters.
+
+And we are almost ready for the perception and action loop
+
+in itself.
+
+And before we do that, we just have to specify how many iterations does this loop need to contain.
+
+And then we reset the teammates, which just gives the agent like an initial observation.
+
+And this is the perception action learning loop, and it has five functions.
+
+And I'm going to go through them and just briefly explain how they relate to active inference.
+
+So the info states function is the one that actually does the minimization of the variational free action.
+
+the variation-free energy.
+
+And this is the perception part of active inference.
+
+Here in our package, we use an algorithm called fixed point iteration, also known as coordinate ascent variational inference.
+
+And here we also just provided a picture of an observation where you can see that we have these three observations, the location observation, reward observation, and the queue observation.
+
+we have the infrared policies this is the one that actually calculates the expected free energies and is affected by the settings that we talked about before and the gamma and the e parameters it returns the expected free energies and it also returns the posterior over policies which is and it's this posterior probability that we are going to be sampling from when we are sampling actions
+
+And so basically this function sample action just samples from this posterior probability over policies.
+
+And it is affected by the action selection, where it could be either stochastic or deterministic if it's stochastic it just samples from the probability distribution, but if it's deterministic it always takes the policy with the highest probability.
+
+Then we have the update eight, which is where the learning occurs.
+
+And this is where we basically add the Dirichlet counts to the prior over A, and then it updates the A by normalizing the concentration parameters.
+
+Then we have the step teammates, which is basically just the agent interacting with the environment, and then it provides the observation for the next iteration in the perception action learning loop.
+
+So this is the loop, and this is the one that is also going to be used in the model fitting part.
+
+And I think we're taking some questions now.
+
+One question.
+
+One question.
+
+Yes.
+
+
+SPEAKER_02:
+Okay.
+
+I'll ask one question from Tin Tin in the chat.
+
+They wrote, hello, thanks all for this great work.
+
+Have you implemented Bayesian model reduction or incremental model construction slash structure learning with ActiveInference.jl rather than manual construction?
+
+
+SPEAKER_01:
+happened no that's the shortcut yeah so the package is just now ready for deployment and there's many ways to extend it which we'll work on but also i mean if people interested in collaboration to develop the package so this is exciting for two reasons like in two ways by the way um basically model structure learning it can either be model structure learning from the perspective of the agent
+
+learning the structure of the environment.
+
+They can also be unstructured learning from the perspective of us researchers wanting to find out what kind of structure a given agent has in the environment.
+
+And both of these purposes are the same thing we would like to do.
+
+
+SPEAKER_02:
+I think a useful kind of connective tissue question.
+
+Where would you put ActiveInference.jl in relationship to what PyMDP does in Python and what RxInfer does in Julia?
+
+
+SPEAKER_01:
+So PyMGP was originally a port of the SPM functions into Python, brilliant work by Connor and colleagues, where they make it modular and easy to use, but made for theoretical simulations only.
+
+And I think this summer, they just finished Jack's reimplementation of PyMGP, which means now you can also use it to fit to behavior.
+
+But it's not designed
+
+It wasn't primarily designed for that.
+
+And it was also not made for engineering purposes.
+
+Python is too slow, although I'm sure you could in principle.
+
+And since then has come the C++ package, right?
+
+Which is much faster.
+
+And I think, but harder to use because it's in C, although there are records in different languages, that would be useful for machine learning.
+
+RxInfer,
+
+implements active inference and many other things on only style factor graph, which is a very efficient and powerful way of thinking patient inference and variation of patient inference.
+
+And that is optimized much more for engineering purposes.
+
+If you want to build something that does something using active inference, go C++ or RxInfer.
+
+And if you want to apply it to behavioral data,
+
+then go pymdp or active-entrance.gl.
+
+And there are some tools for this also in MATLAB.
+
+But I think our package and pymdp are made to make this easier.
+
+And as you might notice, we use much of the syntax from pymdp.
+
+So we're heavily inspired by that.
+
+And in the next part, you'll see how to use it to apply the package to behavioral code.
+
+Does that answer those questions?
+
+
+SPEAKER_02:
+Cool.
+
+Yeah, perfect.
+
+Definitely.
+
+The functions look great and your team's understanding and clarity around the problem setup, taking that all the way through the helper functions for the matrices, that's where so much of the friction is.
+
+So this makes it really clear.
+
+It's a great open source point.
+
+
+SPEAKER_01:
+It's also where a kind of future development, yeah, it was really happening there.
+
+So the API can be improved for sure, and we will work on it.
+
+Because I think one of the main challenges active inference has faced as a tool for cognitive modeling is that it's hard to use and hard to understand.
+
+And that's why much of the mathematical psychology world, for example, just leaves it.
+
+They say, we have a two or three equation model.
+
+Why would we use your beam of a machine instead?
+
+But just as it has been the case with many other methods,
+
+making tools that make it easy to use and conceptualizations that make it easy to understand is the kind of thing that will make these models feasible and therefore used more broadly.
+
+
+SPEAKER_02:
+Yeah, that's making me think like RX Infer is the car factory, this is the bike, and Active Inference is the wheel.
+
+
+SPEAKER_01:
+You can think of it, yeah.
+
+You need a logo.
+
+All right, let's do the last important section and we'll see how much time we have.
+
+
+SPEAKER_03:
+Okay, because we're short on time, I will need to skip through a few of the sections, but I hope it's going to be all right.
+
+So I think Peter already mentioned that we have this sort of environment of packages in Julia, and one of them is action models, which is sort of a system package for us, which mediates the data fitting process for us, right?
+
+So here we are essentially going in the opposite direction where our inputs and the actions of our experimental subjects are known.
+
+But now we are interested in the hidden or latent parameters of the subjective generative model.
+
+So there's a sort of core component of action models is the action model function, which
+
+depending on our model can be an arbitrary function which takes a single input which in our case is a single observation it updates the states of the agent and then it sort of quantifies the probabilities of actions so we end up with a probability distribution from which we can assemble our actions right and so in our case we have this nice function called action pure mdp
+
+which is our active inference action model.
+
+And it takes these two arguments, which is our initialized AI object with the parameters of the generative model, settings, et cetera.
+
+And it takes the single observation and then it outputs the action distribution.
+
+So in this particular case, we have two action distributions, one for each state factor.
+
+And then another core component of action models
+
+is an agent, so it sort of wraps our action model function and our active inference object in a more abstract structure, which we will be using for pitching and for simulation as well.
+
+And it also stores parameters, states, history, etc.
+
+All right, now I'll just allow myself to skip through some of the convenience functions so I can just go straight to the data fitting, if that's all right.
+
+Okay, so this is, I would assume, the most interesting part of this.
+
+So how to actually fit active inference models to data.
+
+So all of our fitting functions kind of operate on Turing, and we wrap all of the necessary Turing operations in our convenience functions for fitting.
+
+So let's say, for example, we want to fit a single subject and we want to recover a single parameter, a sort of minimal, simple example.
+
+So we start by specifying a prior.
+
+So here, let's say we want to recover our action precision parameter alpha.
+
+So we set a prior for it, let's say the Gaussian with a mean of six and sigma two and set it in a dictionary.
+
+And then in case we want to put more parameters at once, we just add them to the same dictionary and their corresponding prior distributions.
+
+And so now we can use the create model function, which will instantiate our probabilistic model on our data.
+
+And it takes these inputs, which is our initialized agent, it takes our priors and our collected observations and actions, which we collect, let's say, from a behavioral experiment.
+
+And in this case, we're just using some data from simulated teammates.
+
+So here we, our actions,
+
+is a matrix which has rows corresponding to timesteps, or let's say trials, and columns corresponding to state factors.
+
+And similarly in observations, we have columns corresponding to observation modalities.
+
+And then we'll have our model object instantiated, which we can easily fit in a single line using our fit model function, which will run the sampler with appropriate defaults.
+
+And then we can, like, obviously people would want to pass some more specific settings into the sampler.
+
+So here I'm passing, for example, the number of iterations per chain, and I'm running four chains, and then I'm using the distributed module to run the chains in parallel.
+
+Right, and then we, after the sampling is finished, then we will end up with the results object, which contains our chains, and then we can
+
+work further with this, right?
+
+So I'm just going to quickly go through some of our other convenience functions, for example, to rename chains, which will rename the names of the parameters in our chains to something more, more intuitive.
+
+And we can extract quantities from our chains that we can just simply display the results of, of our chain.
+
+So again, the summary statistics, some information about, about the conversions of our chains, quantiles, et cetera, right?
+
+Or then we can just
+
+Here's a sort of native Julia uploading function so we can pass our chains to it to take a look at chain traces or posterior distributions.
+
+Or what we can do is we can sample from our prior.
+
+So here I'm taking a thousand samples from the prior and I'm using our plot parameters function to plot the posterior distribution against the prior distribution for our
+
+synthetic participant, let's say.
+
+Okay, and this is the part that's going to be mostly interesting, I think, for people in computational psychiatry and cognitive modeling.
+
+And it's the case where we want to fit a full data set.
+
+So in this case, let's say that we have some data with 10 participants, and let's assume that we have two clinical groups in our data.
+
+can be i don't know control and whatever psychotic or it can be young old right and we can simply pass the whole data set with our collected data let's say from from our behavioral experiment to the same create model function so it instantiates the the probabilistic model on the whole data set
+
+And then additional things that we need to tell the function is which column to use to differentiate between individual subjects and which columns contain our observations and which columns contain our actions.
+
+And again, we have our model instantiated on the whole dataset and we can just pass it on to our fit model function.
+
+And again, this following is sort of the same procedure as before.
+
+can play around with our recovered chains here we have the recovered values of alpha for each participant using native Julia functions to deploy the chain traces and again we can let's say sample from the prior and plot the posterior against priority solutions for each participant right and then
+
+So keeping also with this default procedure in cognitive modeling, now let's say that we have our estimates and we want to see where there is actually a difference in our two groups.
+
+So here I'm just extracting the quantities from the chain and I'm getting the estimates, which in this case are medians.
+
+And we can see here that there are indeed two groups present in our data.
+
+After, let's say that we run some statistics on our estimates, then we might be also interested to see whether there's any correlation with other states of our agent.
+
+And let's say some physiological data, but here I'm putting the state action prediction error, which then my people want to correlate, let's say with brain data or pupilometry, for example.
+
+And for people who might want to use variational inference for various reasons over sampling, the good news is that Turing can do variational inference too.
+
+So here I just sort of remade the tutorial that you can find on the official Turing web page where I'm
+
+In the beginning, just initializing the variational inference algorithm with a sort of default number of samples and a default number of iterations.
+
+And importantly, I'm setting the automatic differentiation backend to reverse mode automatic differentiation.
+
+And then in the VI function, which runs the variational inference algorithm, I'm just reusing our probabilistic model, which we have already created previously.
+
+So this is very nice.
+
+And what we end up with is our variational posterior, which is a type of distribution.
+
+So we can sample from it or work further with it.
+
+And just to rather quickly wrap up.
+
+So we're currently working on the documentation.
+
+We know it's important.
+
+So it should be done in the next few weeks, let's say.
+
+Until then, you can either reach out
+
+or you can refer to Action Models documentation, which is really nicely written.
+
+Okay.
+
+And yeah, just briefly, just to summarize what we need to do in our next potential future.
+
+So we need to optimize.
+
+The package is fast, but there are still a lot of things that need to be improved.
+
+Then the idea was to, for example, be able to fit
+
+all parameters because for now we were only able to to recover the the sort of hyper parameters and what's been called the non-matrix parameters but in principle one can also one should be also able to fit an entire let's say a matrix or c matrix which would be really nice and then okay we can um extend the parameter learning to all other uh parameters of the of the generative model and that idea was to introduce a sort of custom parameterizations where
+
+the user could introduce a temperature parameter on an A matrix, and this could be also in principle then recovered using data fitting from empirical data.
+
+And last, I'm just going to say that for our fitting, we are using reverse automatic differentiation, which is fast, but we are also planning to start experimenting with other engines which are currently under development in Julia also, which includes Enzyme and
+
+Mooncake, which might be potentially faster.
+
+And then on the side of action models, Peter has been working for some time also on the possibility of adding linear regressions.
+
+So the idea would be that we could fit the data, we could recover our estimates, and we could
+
+run linear regressions with our estimates or with other variables that we might have.
+
+In one model.
+
+Yes.
+
+Which is statistically up to you.
+
+Yes.
+
+Okay.
+
+And the last thing you're going to hear from me is that when you decide that you want to start experimenting with our package and you encounter an issue or do you have any specific feature in mind that you would like us to implement, please feel free to open an issue.
+
+Any kind of feedback will be greatly appreciated.
+
+
+SPEAKER_01:
+Thank you.
+
+And we're out of time.
+
+So I'll just briefly mention this point that you can treat a whole group of agents as one agent and do cognitive modeling on a separate paper.
+
+So I'm sure there'll be time to talk about that at another time.
+
+Yes.
+
+I think that's it.
+
+
+SPEAKER_02:
+Thanks, Sol.
+
+This is a huge advance.
+
+It's really awesome.
+
+Brings a lot of features a lot closer to people's hands and minds.
+
+And it's exciting that we'll continue developing and learning about it.
+
+
+SPEAKER_01:
+Thank you.
+
+
+SPEAKER_02:
+Okay.
+
+Thank you.
+
+
+SPEAKER_00:
+Till next time.

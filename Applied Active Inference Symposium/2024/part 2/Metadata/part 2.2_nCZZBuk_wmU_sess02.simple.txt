@@ -1,0 +1,1020 @@
+SPEAKER_00:
+Hello, we're back and with Dmitry Begayev and the RxInfer developers and community.
+
+So thank you for letting us peek and join into your meeting.
+
+Really appreciative for all the collaboration and learning that we've had with RxInfer this year and looking forward to your updates.
+
+
+SPEAKER_04:
+Thanks for having us.
+
+Yes, so yeah, usually we have update meetings about the development for Ericsson FIR, but since we have now active entrance symposium and we also have new PhD students in our lab, I decided to make it a bit special and today we... So I will briefly introduce Ericsson FIR again for people who are not familiar maybe a bit and then we will discuss actual recent developments.
+
+And it's just basically an open discussion, right?
+
+You can stop me at any moment with some questions.
+
+I unfortunately don't see YouTube.
+
+So if there are some questions on YouTube, just stop me and we'll discuss.
+
+So, okay.
+
+So RxInfer is a library for scalable probabilistic programming, right?
+
+But what is probabilistic programming by itself?
+
+And let's mention we want to build an agent like a drone, right?
+
+And we want to build a program for it and write some code.
+
+And usually what we do is we take some data and we feed it into our algorithm and we get the result.
+
+For example, we find the path, right?
+
+But in reality, it's much more complicated because we don't really have precise data, precise measurements of our sensors.
+
+Or maybe we have some wind outside, so our formula is not really correct in these conditions.
+
+And basically, we don't have exact values, but we have some uncertainty around our parameters.
+
+And how do we actually compute the result given the uncertainty around the parameters?
+
+That's the first question.
+
+But more interesting question is actually the backwards question.
+
+So given the observations,
+
+of our path for our agent, what were the conditions under which it has been operating.
+
+And usually it's also circling around certainties.
+
+And in the context of active inference, we can go even further.
+
+So we can say, okay, given the desired observations, like given what we want to see, what actions we actually should take.
+
+given that we don't also know the conditions under which we operate.
+
+So this is what essentially probabilistic programming is about.
+
+And it's very challenging, but good news is that we have the solution for it.
+
+We already have it.
+
+We know how to solve it.
+
+And this is the formula that solves everything essentially.
+
+And this is the Bayes rule.
+
+And it looks pretty simple, right?
+
+It's just like one multiplication, not a big deal.
+
+But it turns out that this formula is really, really challenging.
+
+It's extremely challenging to apply in a real situation.
+
+And why is that?
+
+Well, okay, I can demonstrate why.
+
+If we have a simple program with not a lot of parameters, this formula indeed is quite simple.
+
+So you can actually solve it on a piece of paper and you will get the exact result and it's all fine.
+
+But in real situations, we actually have much more parameters and this formula, it explodes pretty quickly.
+
+And as soon as you add more parameters to your model,
+
+you realize that it's no longer feasible to solve it on a piece of paper.
+
+Actually, you need to write like an entire article about how to solve it for like some specific case.
+
+But we want even more, right?
+
+So we want to not just have parameters, but we want to have some constraints in our system.
+
+Like, for example, physical constraints, like maybe we have an engine power constraint and like,
+
+We have some trees around in the environment.
+
+So when we deal with such a complex system, the math behind is just, you cannot even comprehend it at this point.
+
+And actually, in my opinion, this is a very big problem in the Active Influence community in general, is that math is pretty difficult to read and to double check and to implement.
+
+Usually in articles, we have a lot of formulas and they work in theory, but as soon as we start implementing it, we make mistakes.
+
+Our programs, they have bugs and then it just takes a lot of time to iterate through that.
+
+But ideally, we don't even want to think about it, right?
+
+We want to design an agent and all of this map
+
+under the hood is known, so the space.
+
+And what we want to do is we want to have as many components as we want.
+
+We want to press a button and we want to compile this map, we want to test the port and just deploy it.
+
+And it should result in a robust system that makes reasonable actions under uncertainty in unpredictable environments.
+
+And if you think that's too much to ask,
+
+I would actually draw an analogy with just the regular programming.
+
+So we now talking about probabilistic programming, but regular programming also started or has the same path.
+
+So in the beginning, like a bunch of high level professionals, PhDs, they were designing the very, very first algorithms.
+
+And it was error prone.
+
+They spent months designing a very simple program, spent months designing a computer.
+
+But nowadays, every student or even in schools, you can just download Python and write simple programs.
+
+You don't need to think about how computers work.
+
+You just express your ideas in some sort of a high-level programming language.
+
+and compiler does the heavy lifting for you.
+
+So essentially what we want to achieve here is to have a language for solving probabilistic programming, right?
+
+And you don't have to think about math.
+
+You only want to think about your application.
+
+You want to design your drone or maybe it's a vacuum cleaner or maybe something even more complex.
+
+
+SPEAKER_03:
+Any questions so far?
+
+Maybe from YouTube?
+
+
+SPEAKER_00:
+Not yet.
+
+Thank you, though.
+
+
+UNKNOWN:
+Okay.
+
+
+SPEAKER_04:
+So this is kind of the... But how do we approach it?
+
+How can we approach it?
+
+And in a sense, there are a lot of similar projects in various programming languages as well, and they try to solve the same problem in slightly different ways.
+
+and given that even in this slide there are eight solutions but in reality there are more why do we need a new one why did we decide to write a recent firm where there are so many solutions already developing well the idea here is that for autonomous agents we have a pretty unique set of requirements so if we want to operate in real world
+
+We want to have a very big program because a program of a real world is quite complicated, has a lot of parameters, so it should scale.
+
+It also should be low power because our autonomous agents, they usually operate on battery and you don't really want to have an empty battery soon.
+
+So it should preserve energy in the most efficient way.
+
+It should be able to adapt to changes in the environment, because the real environment is chaotic.
+
+It may change, maybe you didn't account for something in your model, so you should be able to change the model on the fly.
+
+It should work in real time, should be as efficient as possible in terms of performance, and it also must be robust.
+
+So we basically are not allowed to stop our computation,
+
+it should run and should react to the circumstances.
+
+And this is what ARIS Infer is essentially about and what it tries to achieve.
+
+And in order to achieve this, it combines these three main ideas, also in the literature, factor graphs, variational inference, and reactive message passing.
+
+So these are the three key elements
+
+to then we basically try to understand here if we combine them, can we have these properties that I mentioned?
+
+And so to talk a little bit about each of them.
+
+So a factor graph is essentially a graph representation of a probabilistic model.
+
+And a good thing about factor graphs is that they are explainable and they're not a black box.
+
+So we can clearly see the structure of the model and dependencies in different parameters or hidden states and also observations.
+
+And it's also modular, local, we can reuse certain pieces and we can write specialized computations for certain pieces.
+
+So in RxInfer, we have a special language to write such programs.
+
+So I've got this atModel macro that takes the textual description of a probabilistic model and basically creates a factor graph under it.
+
+So a user should not create those graphs by hand and it doesn't automate.
+
+And we can also create submodules, submodules
+
+and we can reuse them in a bigger context.
+
+And as I mentioned, we can, for example, do some local optimizations in our model because we clearly know the structure of it.
+
+So variation inference, I assume that most of you may be familiar, but for most of you who are not, that's basically an optimization procedure that approximates basically
+
+So Bayes' rule in many situations is very challenging to solve directly.
+
+So variational inference is a very clever technique to trade off accuracy and maybe solve the task a bit easier at the cost of accuracy.
+
+And also it's faster because you don't have to solve the original problem exactly.
+
+So the formula actually looks a bit more complex than
+
+base rule itself.
+
+But yeah, the math is sometimes strange.
+
+And in practice, it's actually easier to solve this problem than the original math.
+
+So instead of solving the base rule directly, we approximate the result with a simpler set of distributions from exponential family results, for example, which makes it simple.
+
+And we have also language for constraints for the variation
+
+So sometimes we want to make a mean field over our hidden states, and maybe for some specific states want to be a Gaussian.
+
+So a user also can specify different constraints for different procedure.
+
+And the last thing in our recipe is reactive message passing, which is a central part of the project.
+
+Each message carries a small piece of information required to solve this very complex math behind the inference procedure.
+
+And essentially, in traditional message passing algorithms, they require a fixed global schedule, which has a lot of downsides.
+
+And in a recent ,, we allow messages to flow asynchronously.
+
+And each node in the graph simply reacts on changes
+
+anything in the neighborhood can recompense the result locally.
+
+And it's more robust because if part of the system doesn't work, we simply stop reacting.
+
+But also it, in principle, supports variable update rates for different variables.
+
+For example, audio signals, they may update at a higher rate than videos.
+
+Do we have any questions so far?
+
+
+SPEAKER_00:
+Yeah, I can ask one now and you could go for it or address it later.
+
+Arun asked, what has been the biggest challenge building Rx and Fur so far?
+
+
+SPEAKER_04:
+Oh, that's a very good question.
+
+So the biggest challenge, I may say that, as I mentioned, the math behind all of it is quite complex.
+
+But the implementation side is also complex.
+
+So in order to build such a system, you need an expertise in both.
+
+You need to understand both math and high-level programming to make it efficient.
+
+So the combination of both of these elements is, I would say, unique.
+
+And without understanding one or another, it's basically impossible to build such a system.
+
+
+SPEAKER_03:
+Any other questions?
+
+Okay.
+
+Okay.
+
+
+SPEAKER_04:
+So basically to write the probabilistic program, we need to specify our model or a program, if you would like.
+
+We need to specify our variational distribution and we also need to specify how do we compute posteriors.
+
+So we can define models in our package.
+
+we can define variational distributions.
+
+And for the minimization, we use free energy minimization.
+
+Variational free energy minimization is just a single call to information that combines both model and constraints and runs the algorithm.
+
+And it supports both static data sets, but as I mentioned, the whole idea about recent various reactivity, and it also accepts reactive streams of data sets from external sources.
+
+And this is basically, we believe that these three key elements, they do have properties, which I mentioned earlier, and they do allow us to implement all of those.
+
+And RxInfer is free.
+
+It's available on GitHub.
+
+We have a website, we have a documentation.
+
+We also presented various conferences and also on YouTube.
+
+So yeah, you are
+
+we invite you to check it out essentially and see yeah what it can do for you uh yeah so if you have any other questions right now we can uh no because we just had their questions but again yeah free free to um stop me at any moment so uh okay but the question is uh does it actually work
+
+So I had this example of the drone.
+
+And basically, if we want to implement the drone in ARIS Infer, we define the dynamics of the drone, how, for example, different parameters should influence its position and velocity and speed.
+
+And then we define a model in ARIS Infer.
+
+And then basically we create an environment for it and see how the drone would infer the action
+
+given its current state and the goal, right?
+
+So in this experiment, our drone is instructed to fly to the red dot and it actively tries to infer its current position and the trajectory that it needs to take to reach the goal.
+
+And also on the bottom side of the screen, you see that we change the parameters of the world and also the parameters of the drone reactively.
+
+And yeah, the system still operates.
+
+And actually, to be honest, it was much more difficult to create the environment for this drone than the drone itself.
+
+So Arikson first simplified this task, but the environment was still a challenge.
+
+But for that, we also work on a solution, which is called Arikson Environments, which essentially would also hide all of this complexity of building environments for different engines.
+
+And we also, we have a set of other examples, both for static data sets or proactive data sets.
+
+Yeah, just feel free to check out our documentation.
+
+And yeah, we have reproduced many interesting Bayesian inference tasks with a good performance and scalability.
+
+So we are obviously not solving all problems in this world, but the set of possibilities is really,
+
+Other questions?
+
+
+SPEAKER_00:
+Yeah, I'll ask a few from the chat.
+
+So Discovery Block wrote for the drone, would RxInfer be able to manage actual image input to infer the position or velocity of the drone instead of assuming the observation corresponds to real values with random error?
+
+
+SPEAKER_04:
+Okay, it's a good question.
+
+Not out of the box.
+
+It depends on your model.
+
+So in principle, it's possible to design a model that would process images, but we didn't try that.
+
+So Bataris Infer by itself is indifferent on the input.
+
+So the problem with images as input is that they're pretty high dimensional.
+
+And since RxInfer works on distributions, this image must be processed as a distribution.
+
+So this might be quite challenging in practice.
+
+
+SPEAKER_00:
+But that's a direction to go with the composition of these systems.
+
+So the drone kernel could be designed with an app model taking in beliefs about position or about other features.
+
+And then hypothetically, like in RxInfer or alternative approach to image processing could be brought in and concatenated and used.
+
+And then the kernel belief would remain the same.
+
+
+SPEAKER_04:
+Exactly, yes, you are correct.
+
+
+SPEAKER_00:
+Okay, and one more question from Frasier.
+
+What is the largest remaining theoretical difficulty with this approach, real-time inference, universal inference?
+
+
+SPEAKER_04:
+Okay, it's a good question.
+
+So the limitations, we will talk actually a little bit about it in the current developments, but I can already in that indeed universal inference is quite difficult.
+
+Because in order to execute the inference procedure, we need to compute messages.
+
+And we can compute them in many situations, but in many situations, it is still way too challenging.
+
+And we are actively working on that.
+
+But yeah, message computation is one of the main challenging components still.
+
+
+SPEAKER_00:
+Awesome.
+
+And one last question.
+
+Bert and Arun both asked, have you considered hierarchical or nested models or any of the renormalization type models we've been exploring?
+
+
+SPEAKER_04:
+Great question.
+
+Yes, we did.
+
+And actually, last year, we implemented completely the language that we use for models to support hierarchical models.
+
+And this is one of the directions that we are approaching currently in VICE Lab as well to support more complex hierarchical models and also recent developments in Artif and Print literature.
+
+
+SPEAKER_03:
+Yes.
+
+Questions?
+
+No, no, no.
+
+
+SPEAKER_04:
+Yeah, these are really good questions, but we can continue.
+
+So what about our current development?
+
+I will talk about two and then I will give a stage to Walter.
+
+So we have an external collaboration with Active Inference Institute about graph visualization that takes the textual description of the model and actually displays the graph.
+
+So we have
+
+data structure for the graph, but we don't have a function that would create a nice PNG out of it, like a feature.
+
+And we have an ongoing project to the universal inference, essentially, to support more models.
+
+So for graph visualization, as I mentioned, it's an external collaboration and it goes really well.
+
+So we have an open pull request.
+
+And for example, for this simple model, for a simple point model, I can generate this nice graph that will show the dependencies between variables in this model.
+
+And I can also generate more complex models or graphs for more complex structures.
+
+And we have also Fraser and Chris joined.
+
+
+SPEAKER_01:
+meeting so if you fraser or chris you want to talk uh something uh here you can yeah you can do that yeah i'll just can anyone can everyone hear me is that uh is this coming yes yes uh yeah just really quickly so i'm i'm fraser i'm the guy in the top right bubble there
+
+So along with Chris and Kobus Esterhuisen, we have a project effectively at the Active Inference Institute, as Dimitri said, in collaboration with the BIOS Lab to visualize these models, to be able to get some handle on what they look like, and ultimately to be able to even debug where certain messages are and where issues are with respect to actual message computations.
+
+There's a page essentially at the, I could show where this is, but there's a very publicly available page where you can kind of see our progress, track what's happening, and even reach out to join us and collaborate where you will.
+
+So it's very much open for collaborators and participation.
+
+Absolutely.
+
+Chris, is there anything you'd like to say?
+
+
+SPEAKER_03:
+Nope, I think you covered it all.
+
+Thank you.
+
+Excellent.
+
+Back to you, Dimitri.
+
+
+SPEAKER_04:
+Thank you, Chris.
+
+If you don't want to add anything, we can just continue.
+
+Please continue.
+
+OK, that's great.
+
+Thanks.
+
+And thanks for your effort, by the way.
+
+This is a really cool stuff.
+
+So I was playing with to prepare for the presentation.
+
+And it essentially just works.
+
+So there are some, yeah, I suggested some improvement.
+
+But yeah, I think it's all good, even in the current stage.
+
+And also, for example, other probabilistic programming libraries in Python, for example, they do similar approach in their modeling and also how they display models.
+
+
+SPEAKER_03:
+Okay.
+
+
+SPEAKER_04:
+So the next thing that I want to talk about is universal inference essentially and we already had a question about it.
+
+So suppose we have this model that essentially tells us that we have observations y that are coming from a Gaussian and the mean of this Gaussian is modeled as a beta distribution and y beta is because the variable that is modeled as
+
+So basically, I say here that my observations are constrained from zero to one.
+
+And I also say that the precision of my observations is an exponent of r and r is also from zero to one.
+
+So essentially, it's a pretty simple model at a glance.
+
+But the reality is that this is an extremely challenging model for message passing.
+
+because the messages that we need to compute are not easy to compute.
+
+And the problem is that the result of those computations is essentially a bad distribution.
+
+So it has a very strange form.
+
+that is not parametric or cannot be easily described as a parametric distribution.
+
+So we can also always describe those distributions as a set of samples, but drawing a set of samples is costly and is essentially very difficult to make it real time.
+
+So the idea here is that, okay, we want a nice distribution and you play a parametric and it's usually from exponential family.
+
+And the question is here, OK, how to find this best approximation?
+
+And essentially, Ericsson-Ferrer supports algorithms or approximations that will allow you to specify how you would like to find those approximations.
+
+And one of the recent algorithms is projections.
+
+is a very very new feature so what we can do is we can specify or instruct that it's inferred to use the projection algorithm to beta or to other distributions from exponential memory and it also works around deterministic nodes or just for individual variables and if we combine these specifications so it's a little bit more complex than the original example but even this specification we can solve
+
+inference in this model.
+
+And the result is pretty good.
+
+So here I just display, yeah, generated some data set and I tried to infer the parameters back.
+
+So as I mentioned in the very, very beginning, we have a set of observations and I want to know the parameters with which those observations were generated.
+
+And you can see that
+
+The inferred or projected distributions, they're extremely close to the ones that I used to actually generate the dataset.
+
+And it scales pretty well comparing to other probabilistic programming libraries.
+
+So here on the left side, bottom left side, that's which uses a sampling and takes up to three times more.
+
+Yeah.
+
+real execution time to do this task.
+
+And on the bottom part, we have automatic differentiation variational inference algorithm, which is busted.
+
+But we basically, because it's a new feature, we still try to improve the performance and the performance is not ideal at the moment.
+
+And we already know how to improve it.
+
+Essentially, we have a PhD student that works on this program and it goes really well and
+
+like around a week ago, we had yet a better performance, which is not reflected on this slide, but since it's like just last week, we didn't have to really time to investigate properly.
+
+
+SPEAKER_03:
+Any questions so far?
+
+Well, it's, I mean, a nurse stands for nurse photo system.
+
+
+SPEAKER_04:
+not say it's something like no U-turn sampler.
+
+And U-turn is a term that they use to describe their algorithm.
+
+But yeah, it stands for no U-turn sampler.
+
+It's practically, as far as I understand, one of the best samplers right now to draw from a non-normalized distribution.
+
+And those timings, by the way, so we implement the recent pair in Julia, and those timings are from a different library, also written in Julia.
+
+So these timings are from tubing.
+
+Okay, so we have also, we had already a question about generalizing influx in bit models.
+
+And here I will give a stage to Walter, now.
+
+Hello, everyone.
+
+
+SPEAKER_02:
+My name is Arthur.
+
+I'm also a PhD student in BIAS lab, and I'm going to have a short discussion about generalized inference in discrete models.
+
+So in active inference, we really like to work with POMDPs, partially observable Markov decision processes.
+
+And the simple POMDP or the vanilla POMDP, you can see on the slide.
+
+So we have a joint distribution over states observation and transition matrices.
+
+And we see that we have transition distributions both for the observation model and the state transition distribution.
+
+So both this observation distribution and this transition distribution, they're both categorical transition distributions, but they're slightly different, right?
+
+Because the observation model just depends on one categorical distribution or categorical variable, only the state.
+
+whereas the transition model depends on both the state and the control.
+
+So if we draw the factor graph representation of both these nodes, you can see that they're extremely similar, but they're slightly different.
+
+Now, if we want to go towards this generalized inference, there are two things we can do.
+
+The first is
+
+We just implement this new node, this two categoricals in, one categorical out, and we can just be done with it.
+
+And we could do control in discrete environments, but it wouldn't be very general.
+
+And since these transition distributions are very similar, their functional forms are very similar, the inference rules are also very similar.
+
+So what I'm investigating right now is how we can generalize this inference
+
+in these discrete models such that we can have an arbitrary number of categoricals coming in and transition to a categorical variable coming out.
+
+So this would give us a general contingency tables or general discrete categorical transition distributions in RxInfer.
+
+There are some problems with this because this B matrix,
+
+has a rank which is proportional to the amount of categorical interfaces.
+
+So for the observation model, we just have a transition matrix.
+
+But if we want to do discrete control, then we already have a transition tensor, which maps states and controls to new states.
+
+Currently in ARX and FER, we only support these rank one or rank two Dirichlet distributions.
+
+So this is something that we're working on right now to generalize this inference.
+
+So what we are currently doing is together with Rafael, we are working to replace the rank one, rank two, matrix Dirichlet implementation in RxInferred with a general arbitrary rank tensor implementation.
+
+The working name for now is a multi-Dirichlet.
+
+We're very much open to suggestions.
+
+I am currently deriving rules for this general transition node,
+
+So Thais already in his dissertation has the rules for the rank one and rank two, ten factors and matrices, and I generalize them to arbitrary rank tensors.
+
+And then I will make this new transition node, which takes an arbitrary number of interfaces.
+
+So what can we do with this?
+
+With this, we can do control in discrete models.
+
+So you can see on this slide that we have an agent which is navigating a base.
+
+And this is the type of stuff that will be possible with the generalized inference in discrete models, because we will have categorical states coming in with categorical controls coming in and a categorical state coming out of this.
+
+So we would be able to go towards building agents in discrete environments with discrete controls.
+
+So we can go ahead and solve public peace as soon as we're done with this.
+
+Thanks, Valter.
+
+
+SPEAKER_04:
+And here it is.
+
+Here's the entire presentation that gives an idea of what our extender project is about and what we are currently trying to develop.
+
+And yeah, maybe we were a bit too fast, but we have plenty of time for discussions.
+
+
+SPEAKER_03:
+Do I have more questions online, or?
+
+
+SPEAKER_00:
+Razor, if you want to ask your question directly.
+
+
+SPEAKER_01:
+He has one, but he's also in the comments.
+
+Yeah, just, I was interested, I'm relative, I'm very, very interested, I did mathematics and computer science for my actual degree, very interested in the mathematics of the generalized inference and node constraints and all of that.
+
+To what extent does message passing per se, the process of message passing, to what extent does that influence issues around non-conjugate inference?
+
+Is it effectively kind of only dependent on the content of the messages?
+
+Or does the actual process of message passing have some kind of non-trivial effect on the resulting inference?
+
+I'm just curious about that.
+
+
+SPEAKER_04:
+So the problem with non-conjugate inference in message passing lies in the fact that in order to compute a message, we need to compute an integral.
+
+And in general, computing an integral is not possible on a computer.
+
+I'm talking about indefinite integrals that have no boundaries.
+
+So for an integral that has a boundary from A to B,
+
+say you multiply integral from A to B, you can decompose it into regions and then solve this integral numerically.
+
+But for unbounded integrals that take from minus infinity to infinity, basically it is impossible, right?
+
+Because we have a finite memory of computers and you can always create a counter example where it doesn't work.
+
+And it's even worse in
+
+in multidimensional spaces, so-called cursive dimensionality.
+
+And this is why people are coming with many clever methods to take those integrals via sampling.
+
+So sampling is essentially an algorithm to take an integral.
+
+So with non-conjugate inference... So let me phrase it the other way around.
+
+So with conjugate inference,
+
+Those integrals, they can actually be simplified to an exact formula.
+
+So you don't really need to solve the original integral.
+
+You solve a much simpler problem because you can rearrange some terms and something just cancels out and you get the exact answer.
+
+If it's not conjugate inference, you cannot do that in general.
+
+So you need to actually solve this integral.
+
+And here is why you need those approximation methods like sampling or projection, which essentially try to solve this problem, but at the cost of accuracy, because we cannot afford infinite memory in our computer.
+
+
+SPEAKER_01:
+Awesome.
+
+I see.
+
+So if I just try and... So it effectively boils down to clever ways to compute integrals in ways that it's not going to take too long.
+
+
+UNKNOWN:
+Okay.
+
+
+SPEAKER_04:
+exactly exactly and you you also have to remember about dimensionality of your problems so for example as i mentioned one of the recent developments that we just uh included in our extent firm would allow you to project a high dimensional gaussian distributions uh
+
+Because before, so a Gaussian distribution can be described with its mean and its covariance matrix.
+
+So, which means that for high dimensional Gaussian distribution, the covariance matrix is quite large, so it grows.
+
+And we recently added a simplified version of a Gaussian that doesn't store the entire covariance matrix, but only the diagonal of it and only
+
+the same elements on the entire diagonal.
+
+So the number of parameters is essentially linear to the dimensionality and it scales much, much better and it allows you to yet again solve bigger problems.
+
+Yeah.
+
+In general, this is a quite difficult problem.
+
+
+SPEAKER_00:
+I'll ask a couple questions from live chat, if that's okay.
+
+Okay.
+
+Okay.
+
+Arun asked, is RxInfer being used in production right now?
+
+
+SPEAKER_04:
+Well, we actually have been contacted in the past.
+
+Yes.
+
+I'm not, I'm not aware of any company actively using it.
+
+We actually, we have a spin out from a technical university of mind that we, yeah, we founded the startup.
+
+from BIOSLAB group, which is called Lazy Dynamics, which the entire idea is to commercialize Ericsson-Ferrer to make it a professional toolbox with really good support.
+
+I mean, it's always going to be free for research, but Lazy Dynamics will create nice tools around Ericsson-Ferrer to make the process of creating models easier,
+
+making process of deploying those models easier, debugging models easier, but essentially RxInfer is free and perhaps someone is already using it in production, but we may not know it.
+
+
+SPEAKER_00:
+Cool, great.
+
+Okay, next question from Dean tickles.
+
+He wrote, Do your rules self organize?
+
+Or do they remain constant?
+
+Does the rule recognize its own limits of applicability and adjust accordingly?
+
+I'm just wondering if these rules can morph into heuristics.
+
+
+SPEAKER_04:
+Sorry, you were glitching a bit.
+
+Can you repeat the question?
+
+
+SPEAKER_00:
+Yeah.
+
+Do your rules self-organize or do they remain constant?
+
+Does the rule recognize its own limits of applicability and adjust accordingly?
+
+I'm just wondering if these rules can morph into heuristics.
+
+
+SPEAKER_04:
+No, like message passing, if the question is about message passing update rules, they work independently.
+
+And this is also one of the main ideas of this approach is to not have any sort of global variables.
+
+And yeah, the graph is essentially each message is unaware of any other message or computations such that we can run them asynchronously and do not have any sort of shuttling mechanism
+
+they should cooperate awesome okay next question from bert he wrote is it possible to add a deep learning encoder and train it using messages yeah we actually have i think we have an example in documentation where we use a neural network and we also use the normalizing flows inside ericsson fair so yeah that's definitely
+
+We also have an example where we use differential equations to infer parameters of differential equations.
+
+
+SPEAKER_03:
+Maybe questions from UP students about the approach?
+
+No?
+
+Okay, that's good.
+
+
+SPEAKER_00:
+What do you all usually do in the meetings?
+
+How does it go and how are you going to be taking things in the coming months?
+
+
+SPEAKER_04:
+Well, we already discussed the recent developments and already showed that.
+
+We do exactly that.
+
+We go through the current developments and we try to see what we can do next.
+
+So maybe here, if someone in the chat
+
+I would just post what, for example, they want to do, right?
+
+Like what kind of applications they try to solve with Active Inference that would help us also to change our agenda.
+
+Because we have some certain things in our agenda, so we want to continue with graph visualizations.
+
+For example, in the current version,
+
+We don't have constraints visualization, but constraints are pretty important for the inference.
+
+So this is the next step in our agenda to also implement constraints visualization.
+
+We also have non-conjugate posterior computation in our agenda, generalized inference in our agenda.
+
+But for example, people can also comment on their uses.
+
+Or they can also, for example, open a recent GitHub repository and open discussions, right?
+
+So maybe not right now.
+
+Maybe if someone watches this recording, or maybe someone who is online but still don't have a concrete example, you can always go to GitHub.
+
+open discussions and just drop your ideas there and we can discuss and maybe we adjust our goals of the project together.
+
+And we are also looking for collaborators.
+
+Again, Fraser and Chris were super helpful.
+
+Thanks.
+
+But if more people want to collaborate, it's an open project.
+
+You can always just join the organization on GitHub and drop your ideas and collaborate.
+
+
+SPEAKER_00:
+Awesome.
+
+Also, I wanted to highlight Kobus's examples at Learnable Loop and also the documentation that you all maintain.
+
+And just looking back at our meeting notes from the beginning of the year and looking at the version history of RxInfer.
+
+It's something really new.
+
+It's really been one of the highlights of the year and seeing how it's all developing and a coin tossed.
+
+I mean, never has such a simple, seemingly simple statistical situation been such an amazing learning experience.
+
+opening and it's just exciting to see how the examples start to flow in and then those are useful for learning and they're also useful for training code models and the
+
+the the paradigm difference with rx infer which i think you very quickly move through with the app model declaration and reactive message passing is is really distinct from the script-like flow of essentially all other active implementations
+
+So it's just really exciting to see.
+
+And also that this isn't just about action perception modeling.
+
+We also see in the examples more conventional statistical models.
+
+So that helps bring continuity between the joint distributional modeling of active inference and all of these more standard statistical problems.
+
+
+SPEAKER_04:
+I also noticed that
+
+because I stopped presenting, I had the chat on YouTube and I see a question, what's the best way to get started with the hiring sector?
+
+And I think the best way to get started is to go to the documentation that is in the page that is called Getting Started.
+
+But yeah, so basically to start with the documentation that goes through the process of installing the library, writing your first models,
+
+And then we have also a big collection of examples.
+
+As I already mentioned, maybe some of the applications you can already find here.
+
+We have also examples about active inference, but not only.
+
+So this global parameters utilization uses neural network under the hood.
+
+So with LSTM-driven dynamics,
+
+Something is broken.
+
+We need to open the issue back.
+
+But basically, this example uses Bayesian neural network to train parameters and then later on use it.
+
+And we have also external examples from Cobus.
+
+We have also a series of tutorials on RxInfer on YouTube from toko.jl.
+
+uh from theory point of view i really like the book that is called uh model-based machine learning which only by john win so this is a also a very good starting point it also explains the concept of uh yeah factor graphs stochastic nodes deterministic nodes the run inference but also it it explains the concept of running
+
+inference, essentially.
+
+
+SPEAKER_03:
+I have a question, actually.
+
+So the project of no conjugate posterior computation, I mean, it sounds similar to the variational inference.
+
+
+SPEAKER_04:
+How is that graded?
+
+So variational inference is a very, very good question.
+
+So variational inference indeed reframes the original problem.
+
+as an optimization problem and you can solve it as a black box indeed.
+
+So you parameterize your distribution, you take gradients and you do a simple optimization problem.
+
+And actually it does already solve many problems.
+
+But in our recent case, we actually do not treat models as black boxes.
+
+We decompose those computations in a series of smaller computations
+
+which in a sense helps us because we don't need to run this big global optimization procedure.
+
+But in the result of this decomposition, this individual computations messages, they still may be difficult.
+
+And this projection algorithm is indeed sort of a variational inference, but at a smaller scale.
+
+Okay.
+
+Yeah.
+
+But what you maybe referred to, I can also refer to this ATDI algorithm that they also showed in my slides, automatic differentiation variational inference, which takes the entire model as a black box that just differentiates through it.
+
+And yeah, it doesn't care about contribution.
+
+
+SPEAKER_00:
+Thank you for this.
+
+Any last short comments from any of the RxInferred team?
+
+okay thank you again for for letting us kind of wander into your lab meeting and really looking forward to the collaborations that will continue okay yeah thank you thank you again for inviting us uh and yeah we are looking forward all right until next time bye

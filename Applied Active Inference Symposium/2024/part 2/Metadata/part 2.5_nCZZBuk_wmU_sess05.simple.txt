@@ -1,0 +1,1046 @@
+SPEAKER_02:
+Hello, welcome back.
+
+We're here with Matthew Brown discussing real-time active inference for adaptive robotic control.
+
+So put away the memories that you haven't had yet and let's talk about robotics.
+
+Thank you, Matt.
+
+
+SPEAKER_01:
+Thank you, Daniel.
+
+This is going to be a bit of a change of direction, although that was a really great talk.
+
+I'm looking forward to reviewing a lot of the talks from the last day.
+
+That was pretty amazing from China.
+
+I'm Matt.
+
+Great to be here.
+
+Super excited to share updates about what we're doing.
+
+Just to give a little bit of background on myself,
+
+I've been working in artificial intelligence for a little over 20 years, including time in the defense industry, writing AI for video games, things like Halo, Bioshock, Splinter Cell, those franchises.
+
+And over the last 10 years, I've been working in more serious AI, particularly in deep reinforcement learning and now in active inference.
+
+notably built the first commercially available deep reinforcement learning platform, which was bought by Microsoft in 2018, is now the autonomous systems platform there.
+
+Currently, I'm at a startup at ThoughtForge that I began about five years ago.
+
+ThoughtForge's technology started as a personal research project back in 2007 that never really ended, exploring biologically plausible alternate approaches to machine learning.
+
+And over the last couple of years, I've been applying it to adaptive real-time control for robotics.
+
+That's what I'm going to be going through today.
+
+Just a quick brief agenda on what I'll be talking about and go through quick.
+
+Well, not so quick.
+
+I'll go through an introduction a lot about the high level concepts, then dig into briefly the history of the project and the implementation.
+
+And then go into some of the more interesting topics in depth here, network self models, embodiment, synchronization, a lot of the tools that we're using to get these robots to do interesting things.
+
+And then spend some time talking about what we've been doing with robotics.
+
+So show some videos, perhaps, and just explain a little bit about the direction that we're going over the next couple years.
+
+So I'm not gonna spend very long on this slide as it's probably redundant as the topic du jour.
+
+I will just briefly emphasize the last point on the slide here, which is about how the free energy principle provides a unifying framework that explains how adaptive behavior, perception and action can emerge from the drive to maintain a stable internal state in a constantly changing environment.
+
+This is gonna be a theme throughout the talk.
+
+So I figure point that out.
+
+And this one as well, I'm probably not going to go into too much, but it's worth noting the last two points here about organisms don't passively respond to sensory input, but also actively shape their environment through actions that fulfill their predictions about their sensory experience.
+
+And then also about how active inference explains how organisms achieve complex self-directed behavior by combining sensory processing with active exploration.
+
+This is also going to be a common theme throughout the talk.
+
+Now we're going to go a little bit deeper into what we're specifically using for our robotic models and the roots in cybernetics.
+
+In particular, the relationship between the free energy principle, active inference, and cybernetics, which might be obvious to many people at this symposium.
+
+Cybernetics here being
+
+pioneered in the 1940s, also describes self-regulating systems that adapt to their environments and also kind of views agents as goal-directed systems seeking to maintain equilibrium through feedback loops.
+
+The goal here being to minimize free energy or surprisal
+
+the FEP and active inference.
+
+And active inference kind of operationalizes this through continuous adjustment of beliefs and actions.
+
+And these cybernetic ideas are foundational, I believe, to how the free energy principle and active inference view organisms as systems that maintain their states within a predictable range and also resist entropy and disorder by adjusting internal and external variables over time.
+
+Now, digging one step deeper into the approaches that we're taking here, I'm gonna talk a little bit about the cybernetics of Ross Aspey in particular.
+
+Cybernetics Ross Aspey, he formalized many key ideas, homeostasis in particular as the process by which an organism regulates internal conditions within a narrow optimal range in the face of environmental changes and disturbances.
+
+He's known for,
+
+these are probably the two biggest things he's known for the good regulatory theorem and the law of requisite variety uh the good regulator theorem commonly is quoted as every good regulator of a system must be a model of that system um or more accurately every good regular must contain a model of that system um and with the law of requisite variety the the
+
+common quote is, the only variety can destroy variety.
+
+And another way of thinking about this is a system must be as complex or more complex than its environment in order to manage it effectively.
+
+Or if one system wants to effectively manage or control another system, it must be at least as expressive and at least as complex as the system it's controlling.
+
+In the active inference framework, an agent maintains homeostasis by minimizing prediction error, effectively predicting and compensating for environmental fluctuations.
+
+So this is how Ashby's ideas really kind of come into play here.
+
+Ashby's emphasis on adaptive regulation through internal models aligns very closely with active inference's process of continuously updating beliefs and taking actions to minimize prediction error and maintain desired states.
+
+Ashby's view of homeostasis as a self-regulating feedback system is effectively a form of active inference.
+
+Both involve an agent using internal models to anticipate and counteract environmental changes, preserving stability and adaptability through continuous self-correction.
+
+And Ashby's law of requisite variety here highlights the
+
+you know a lot of the successes of active uh when activism is successful uh and uh of maintaining homeostasis here um relying on the system's capacity to generate a diverse and precise range of predictions and actions uh without sufficient variety of responses the system would fail to adapt leading to a breakdown in homeostasis and an increase of prediction error predictive error um
+
+To exemplify these ideas, Ross Ashby constructed a device known as the homeostat.
+
+This was back in the 1940s.
+
+This was a demonstration of learning as adaptation as stability.
+
+And he believed that behavior is adaptive.
+
+It contributes to the maintenance of these essential variables.
+
+And there's some various ways of looking at what he was doing here.
+
+Some called it an isomorphism generating machine using feedback to generate distributed homostasis.
+
+via ultra stability.
+
+And I'll get more into that in a little bit.
+
+But that's kind of the approach that we've taken here at ThoughtForce.
+
+And then there's kind of a long description here from one of his books about what the homeostat was and how to construct it.
+
+And I'll also talk a bit more about how you would construct a homeostat in a moment here.
+
+Here's a quick high-level abstract view of Ashby's original homeostat.
+
+This is abstracted away in a way that reflects modern views of mathematical networks here, where you can define a network as a set of nodes with connections and weights.
+
+Then he defined ultra-stability as
+
+the mechanism that powers the race of state space exploration, which is used as part of this law of requisite variety.
+
+And I'll talk in the next slide a bit about that.
+
+The network as a whole creates a dynamic attractor set as a kind of a self-consistent, self-reinforcing model.
+
+And the network can be seen as kind of a network of reciprocal constraints.
+
+The original homeostat only had four nodes here, constructed from recycled World War II bomb parts.
+
+So this is pre-digital computer era.
+
+And there's a diagram here kind of conceptually explaining how it worked.
+
+The original homeostat itself, I think, is at the university right now, but the description of how it actually works is somewhat abstract.
+
+At Thoughtforge, we used a lot of his technical journals, which were released by his family, I believe, online in the last 15 years or so, to kind of get more detailed information about the properties and how they're constructed to get a more accurate description.
+
+reconstruction of the homeostatic.
+
+Briefly, I'm just going to talk a little bit about ultra stability.
+
+Ultra stability is the property of the individual node in this network that enables the group property of homeostasis.
+
+The ultra stability here is talked about in Ashby's books and papers.
+
+So I don't think it's necessary to go through a deep, deep analysis of it.
+
+But the ultra stability mechanism is kind of the local
+
+the local mechanism within a node that drives the active process of self-organization and criticality across the network.
+
+And it's core to the function of how the homeostat works.
+
+And it is constructed by a double feedback loop with a low level feedback loop that performs like a linear transformation and then a high level feedback loop that updates or changes that linear transformation over time.
+
+I like including this letter.
+
+This was a letter from Alan Turing to Ross Ashby way back when they were kind of debating on whether or not to go with analog computing or digital computing.
+
+here Ashby being supportive of the analog computing paradigm.
+
+And this letter from Turing is basically saying that his computer, the ACE, was more general and more universal than Ashby's computer because you could implement Ashby's computer on Turing's machine.
+
+um and it's just kind of a fun little piece of history here i i like including it um just to provide some context about the time when aspie was kind of considering these ideas uh and why they were kind of lost to time in a lot of senses at least within the com you know computer science world um and i also like to bring this up because uh i think it's the first at least
+
+at least in my mind, it's the first time that we really started conflating computation with cognition here.
+
+And where Turing had a universal computation machine, while Ashby was kind of envisioning a universal adaptation machine, something closer to cognition.
+
+And this feels very similar to a lot of the debate we're seeing today with whether or not deep learning machines are intelligent or if they can get to AGI.
+
+I think that a lot of the conflation
+
+computation and cognition goes all the way back to the origins of the analog versus digital debate within computer science.
+
+So the next question is, how do you actually build a homeostat?
+
+And I took Turing's advice and simulated it.
+
+We built a simulation of the homeostat.
+
+And the reason why a simulation is useful as opposed to an analytical solution is because of the chaotic nature of how these systems reach equilibrium.
+
+I used to have a quote here from but essentially you can't account for a lot of the chaotic interactions in the systems with loops algebraically.
+
+The circularities and the chaos that's necessary for these to stabilize require that you do this iteratively.
+
+And that means building a simulation that you can kind of step forward and
+
+on the fly generate the chaotic interactions, essentially, as opposed to analytically.
+
+There's lots of references here with the three body problem, a mapping of a line onto itself, this kind of concept of deterministic systems.
+
+Once you have three deterministic systems interacting with each other, you inevitably get chaotic behavior.
+
+That is kind of leveraged as the creative
+
+creative energy that drives the
+
+the learning process in this kind of a system.
+
+The techniques that we use to actually simulate this, and this is, oops, I'm getting ahead of myself here, come from a field known as software radio.
+
+We started out by going through Ashby's technical journals and his writings about how the homeostat was constructed.
+
+And we started out by building out accurate analog level digital simulations.
+
+And then from there, we kind of abstracted out all of the
+
+mechanism specific machinery in the analog systems that are not necessary for the actual function of ultra stability and homeostasis.
+
+So kind of going from this kind of very, very precise analog system to kind of abstracted implementation of these four nodes.
+
+Once functional, and this was simple enough to kind of
+
+further abstract into more kind of modern day network theory implementations where we can kind of build out very, very large networks, similar to how it's done with deep learning that could be connected into arbitrary network topologies as opposed to the original four node network here.
+
+And again, just to kind of reiterate here, the network as a whole can be seen as a self model.
+
+Each node in this network is effectively trying to predict its neighbors as it seeks equilibrium.
+
+And the local ultra stability process tunes a node's local connections and the resulting positive and negative feedback loops that define it.
+
+And these overlapping loops become self-reinforcing or self-repairing over time.
+
+Once you've reached kind of a...
+
+convergence with these feedback loops.
+
+The final self-producing set of loops is a kind of self-model where each node is trying to predict all the others.
+
+And so once all the nodes kind of reach a global consensus, this model can be considered self-consistent and reaches homeostatic equilibrium.
+
+um this genera this can also be seen as kind of a generative model uh composed of emergent self-stabilizing homeostatic feedback loops uh and these loops uh are maintaining this homeostatic equilibrium in a critical state and this is kind of an important note for
+
+why it is incredibly sample efficient, which is going to be very important for robotic applications here.
+
+The idea here is that maintaining this homeostatic equilibrium at a critical state makes it very, very sensitive to prediction error.
+
+The smallest predictive error can trigger a global structural change.
+
+So you don't need to back propagate
+
+with a large dataset in order to change the behavior of the model, a single misprediction can effectively trigger a cascading set of redefinitions where the whole network destabilizes and then reconverges on a new attracting set.
+
+This can also be seen as a form of synchronization, and we'll get into that a little bit later.
+
+And the prediction error reaching zero kind of marks the establishment of a new adaptive synchronization manifold.
+
+And the synchronization first starts with immediate neighbors at each node and then spreads through the entire network as a set of compound hierarchies of feedback loops.
+
+Looking at the time here, sometimes I could switch screens and show demonstrations of this, but maybe I'll wait a bit later to do demonstrations of the original homeostat or a larger homeostat, just so that we're not switching screens too much, in case that's useful.
+
+All right, now we're getting into some of the more interesting stuff, less talking about history of cybernetics.
+
+So the homeostatic network itself seems like a lot of work in terms of, you know, there's a lot going on there and it's not connected to any environment.
+
+It's just...
+
+learning itself in coming reaching to convergence without kind of any um sensory or motor actions so um we have this model that can adapt to its internal structure to reach homeostatic equilibrium through a kind of self-synchronization process next step is how do we actually get this to drive uh behavior uh and this took you know a couple years to kind of work out the engineering uh conceptually it's pretty simple um but it will get very complicated very quickly um the short version is that the sensors and the motors uh um
+
+basically we define sensors of motors and they define how an agent is embedded into an environment.
+
+And the network topology separately kind of defines the adaptive capacity of the homeostatic agents model.
+
+The sensor definitions themselves here are
+
+kind of defined externally from the model itself.
+
+They provide a mechanism to influence the behavior of the system by providing priors in the form of preferred sensory states or preferred environmental states.
+
+And these act as teleodynamic priors, kind of externally defined dynamic set points for the homeostatic adaptation.
+
+And these sensors can be seen as input attracting sets, which can even be modified in real time or animated in real time to generate different kinds of behavior
+
+from the same model at runtime without having to change the model structure or anything like that.
+
+The motor definitions then provide critical affordances for how the agent can modify the environment to help provide a basis for future sensory predictions.
+
+And the spurred states of the sensors become the preferred outcomes of the motors through this reaching equilibrium state.
+
+And the model's behavior ends up being biased as desired.
+
+So this is how we get it to do useful behavior in a robot, for example, from something that is
+
+seemingly just reaching equilibrium and i guess one important or salient note here is that in a real world environment the you know there's it's reaching pure homeostatic equilibrium is is actually quite difficult unless you're uh unless you're very special circumstances um
+
+So to expand a bit more on that, the network diagram here is kind of an overly simplified version of our homeostatic network, but meant to kind of visually explain how to think about these, and particularly here embodiment of these models in kind of
+
+environment here.
+
+Coupling a model like this to an environment through sensors and motors is kind of a form of embodiment here, meaning there's a kind of a specific time and place that this model is operating.
+
+And there is kind of a temporal component here where the
+
+the model's sequence of sensory behavior actually is relevant.
+
+The inputs to the system are not independent, which is kind of different than traditional, what you would imagine, backpropagation-based perceptrons, how they function.
+
+And one thing that's interesting about this, and it's worth pointing out here, is that there's no forward or backward, no feedforward or feedbackward directions in this kind of network.
+
+There's no front or back or top to bottom.
+
+The only thing you can really kind of
+
+direction you can kind of take from a model like this is distance from sensors or motors or how close to the environment a particular node is.
+
+Otherwise, relative location is pretty much everything.
+
+As an individual node, where am I relative to the rest of the network?
+
+And it's common for people to think of machine learning models these days, especially if you're
+
+used to think about deep learning or traditional perceptron-based backpropagation models, to think of it as a sequential flow of processing.
+
+Like, I take in an input, I perceive or I do planning on the input, and then I generate an action.
+
+That's not how these networks function.
+
+Instead, everything kind of happens all the time and everything's overlapping.
+
+What I mean by that is, this is not a sandwich model, I guess, is the term.
+
+Time simply advances and information moves from one node to another
+
+all in parallel.
+
+So in traditional deep learning, it's kind of an atemporal process where information goes from the inputs to the outputs instantaneously.
+
+And there's no internal time, unless you're working with recurrent neural networks, and there are ways of adding a temporal aspect of it.
+
+But the temporal aspect is really a fundamental feature of these types of nodes.
+
+What that means is
+
+The network itself, the homeostatic feedback loops come to be dependent on expected sensory signals, meaning the deeper parts of the network are generating predictive signals forward to the sensors.
+
+In order for this to function, the deeper parts of the model have to be actually actively predicting the sensory inputs that are coming in.
+
+This, I believe, also means that it ends up becoming grounded in the embodied experience itself, meaning the homeostatic self-maintenance of this network is composed of environmental signals from the real world or whatever embodiment you've put this model in.
+
+and as part of its kind of predictions and expectations, meaning the actual sensory experience is
+
+what is being predicted.
+
+And so what the model is actually generating is derived originally from this essentially embodied experience.
+
+The expectations and predictions for the consequences of motor actions are kind of embedded in the behaviors that are being generated, embedded in the signals sent to the sensors from deeper in the network.
+
+At the same time as these kind of predictive signals are being sent to the sensory regions, actions are being sent to the motors.
+
+and these actions at any moment are not based on the latest input but based on predictions about what the model believes is going on in the world world and how best to to kind of satisfy the sensory inputs or get the the model into a preferred state or a lower energy state or lower surprisal state um these kind of these motor actions are accompanied in parallel by sensory predictions that are all moving kind of to the to the to the
+
+this the uh the i don't want to say the front of the network but the the abstraction that defines the embodiment you know go to the sensors and motors um it kind of in parallel um this is this may be familiar to people who are who are um have read about perceptual control theory and predictive processing and very much uh
+
+along those same exact lines in terms of what's going on here, in terms of actively generating predictions to counteract sensory input.
+
+The motors here end up being kind of a critical part of making the future sensory experiences easier to predict as part of this whole process.
+
+Another way to look at this homeostatic process is through synchronization.
+
+The homeostatic process can be seen as generating an adaptive synchronization manifold between the agent and the environment based around minimization of prediction error, basically
+
+minimizing the difference between what I'm predicting the environment is doing and what the environment is actually doing.
+
+This is kind of a synchronization as prediction process where when the two systems are synchronized, they can be thought of as predicting each other, anticipating the other.
+
+Individual nodes are using ultra-civility to predict their neighbors.
+
+And then when at equilibrium, all the nodes are synchronized through these feedback loops, the synchronization
+
+between the nodes spreads to hold network synchronization at this point.
+
+Ultimately, this synchronization spreads across the sensory and motor abstraction between the environment and an agent.
+
+So you kind of get an agent environment synchronization process through this.
+
+Looking at it another way, these overlapping feedback loops interact and synchronize with each other as part of the homeostatic self-maintenance.
+
+As these feedback loops extend from motors through an environment back into the sensors, the model gains the ability to anticipate the consequences of its own actions.
+
+And the capacity to synchronize internal states with something in the external world without direct communication is kind of critical to this.
+
+The synchronization means that the internal states become
+
+they come to resemble internal states of the other system.
+
+And when at this kind of synchronized homeostatic state, it's also in this kind of critical state, sensitive to local prediction errors.
+
+And like I mentioned before, this is kind of critical because that allows internally the model to completely restructure itself or redefine how it predicts sensory experience at the very slightest misprediction.
+
+And this is very, very critical for sample efficiency.
+
+To contrast this with deep learning models or deep reinforcement learning models, you need a very large amount of data to kind of change the domain or the way in which the models are behaving in the world, while in these kind of models, they can kind of change with the slightest, one piece of data can kind of trigger global restructuring.
+
+So one interesting aspect here is that in order to maintain the synchronization manifold, the network must be able to converge to equilibrium faster than the environment can destabilize it.
+
+And so this kind of goes back to Ashby's theory of the good regulator theorem or the law of requisite variety, where the model has to be more complex than the environment is trying to control and has to be at least as expressive as the environment is in terms of coming up with solutions.
+
+And, you know,
+
+I was going to go a bit more into synchronization and how once the network is synchronized with the environment, once two elements internal to the systems are synchronized, they can coordinate without direct communication.
+
+This is important to the whole process so that the sensor and motor abstractions don't have to be the direct link between an aspect of the model and an aspect of the environment.
+
+Once synchronized, those two pieces can
+
+coordinate in terms of their behaviors will be coordinated without direct communication between the two.
+
+So now onto some more fun stuff.
+
+The killer application of all this is robotics.
+
+Other early avenues we looked into is, for example, applying this for anomaly detection where you can kind of use the network as a thermometer for surprisal.
+
+The other way you can kind of use this applied to like modern deep learning is for like a model drift detection where you can kind of use the model to detect when a deep learning system is being used.
+
+on a uh if if the input stream to a deep learning system is being is diverging from the model uh domain so like if the sorry the the training domain so if the data set you used to train it on is starting to differ from how it's actually being used uh this could kind of uh be useful for that um but really i feel like
+
+Robotics is really the killer application for this, especially when you consider the embodied nature of it.
+
+The embodiment is kind of a requirement for how this model works in terms of having to be embedded in an environment.
+
+This could be a virtual environment as well, but it has to have some sort of sensory motor coupling to something external to itself.
+
+Also, the ability to kind of
+
+understand context over time and understand that even for a sensory input that is the same as some other, a sensory input at another time, the things that have happened previous to it are relevant.
+
+And so building up this context awareness through interaction with environment is kind of critical to how our models work, but also very important for robotics.
+
+And then real-time adaptation of the model, being able to update the model in real time as actions are being performed,
+
+is kind of a really useful technique in robotics in order to enable dexterity and adaptation in the moment that is missing from a lot of robotic applications here.
+
+And specific to deep reinforcement learning and deep learning
+
+ways of doing robotic control, there's this field known as Sim2Real.
+
+And so Sim2Real problems come from, deep reinforcement learning is where they're commonly referred to, but it's where the models are sensitive to simulation fidelity.
+
+The idea being that you've trained a model in simulation and how the model behaves is very sensitive to
+
+the specifics of the physics in that simulation or the actual fidelity of that simulation.
+
+So moving to the real world often shifts the input domain and deep reinforcement learning and deep learning models are not usually robust to these kinds of changes unless you
+
+drastically increase the amount of data through domain randomization, which causes other problems such as the curse of dimensionality.
+
+There's all sorts of solutions to the sim2real problem.
+
+For us, we sidestep all this by leveraging real-time learning and adaptation.
+
+So when the model is presented with something new or unusual,
+
+in the moment we we don't we don't separate the the training phase from the deploy you know the the inference phase it it as it's inferring it's doing the updating and the learning um and this this kind of solves a lot of the center real problems um as the model is able to adapt to whatever differences uh happen in the real world that were not represented in the simulation um
+
+So this is a long-winded explanation of why we went after robotics for applying these kinds of models.
+
+Digging into the more robotic side of things in terms of technical detail, in terms of how we're actually implementing this, for a lot of our interoperability between a lot of different robots, the model itself doesn't really care what kind of robot you apply this to.
+
+So you get a lot of hardware agnosticism where you can take a model built for one robot arm and apply it to another robot arm, for example,
+
+and the model will adapt to any kind of kinematic differences between the two, that kind of thing.
+
+This is a diagram of how we fit into ROS.
+
+ROS is the Robot Operating System and it's the open source academic
+
+software framework that is used across that supports a lot of robots.
+
+It's not used in a lot of industrial settings, but it's incredibly flexible in its ability to experiment and try new things.
+
+And so we've kind of used this as our kind of beachhead robotic stack implementation.
+
+These
+
+homeostatic models are particularly small.
+
+They only operate typically about 30k of memory.
+
+They can operate on edge devices, no GPU needed, no cloud needed.
+
+In fact, you want to run it as close to the robot as possible to minimize latency in the control phase.
+
+It just runs in a single CPU.
+
+Because of our implementation of ultra stability and this homeostatic networks are
+
+quite efficient model uptake times our sub millisecond.
+
+So this enables us to update the model and update that synchronization manifold as a task is being performed.
+
+We've clocked the networks being able to run up to 80 kilohertz, but for most robotic control algorithms, 500 hertz or 1 kilohertz
+
+typically fantastic and most robots don't support anything above that um and there's you know there's also some also some other interesting aspects to the the the technical side of things where the models are small enough and we're talking 30k here where um analytical explainability is possible where we can take a look at a robotics action and actually analyze the homeostatic network to figure out um which sensory inputs or which you know which motor output
+
+which sensory inputs led to a particular decision.
+
+And because the models are small enough, we can kind of use different kinds of network analysis approaches to figure that out.
+
+On the more technical detail side, in case it's useful, our models are built in C++ and we have a Python wrapper.
+
+So that gives us a lot of integration to capabilities to lots of different robots, which is useful and fun.
+
+I'm just going to go through some of the applications that we've done in the past, and I could bring up a demonstration and do it live.
+
+This was a use case we did for a company for adaptive inspection.
+
+They had a use case where they have autonomous vehicles going through a field, and they needed a robotic arm to compensate for movement or unexpected orientations and
+
+configurations of the autonomous vehicle base without knowing ahead of time what it was going to encounter.
+
+And so, yeah, this was kind of a fun, interesting, pretty simplistic model that we built for them.
+
+And you can see kind of a fun video here of it in our lab kind of tracking this QR code.
+
+And going one step further in terms of difficulty, this was another use case from a different customer.
+
+They had a challenge of, they were seeing an injury with turning high pressure gas valves.
+
+And they wanted to automate this with robots.
+
+The problem was that they never have a good accounting for what kind of valve or what kind of, you know,
+
+thing that needs to be turned what it was going to look like well the shape of it was going to be if it was going to be rusty and difficult to turn or if it was going to be covered in oil and slippery or if the edges were going to be worn off so they needed something that can adapt to this high level of variability in real time without access to the internet because this was on you know remote locations and so we built this model for them and you this is kind of a fun little video of it
+
+We've turned this into an interactive demo that we've brought to conferences, which is kind of fun here.
+
+This is just recorded on a cell phone.
+
+You can tell it's real based on the production qualities.
+
+But this was that valve turning model that we created before, except we've just kind of adapted it here so that we can show off
+
+people torturing it in real-time, live, as it tries to turn these bolts of various shapes and sizes.
+
+Some interesting things to note here, the original model that we built for this only took about 15 seconds to train, three examples, essentially, and it was only trained on a single bolt shape here, this square, in fact.
+
+And then what we do is we kind of show how it can kind of generalize to all these other different cases here in real time without having seen any of these examples before.
+
+And at the beginning of the video there, you can kind of see on the screen, it's our internal debugger, but it's a fun visualization because you can see the homeostatic network
+
+um learning in real time as you kind of move this um this uh panel of bolts around um i'm just stalling a little bit there we go as you can see those little those little squiggly lines there on on the screen um that's the that's kind of a viewpoint into the 30 of the nodes of the network kind of um updating in real time as we're as we're kind of having it turn these knobs here
+
+Getting into the less interesting stuff, but just to kind of show where we are as a technology, this is a platform we're building.
+
+Currently, this is used internally to develop new models.
+
+And we have some interesting tools here that allow you to effectively search ranges of topologies to experiment with different kinds of
+
+network topologies for a particular task and then see what the performance looks like in simulation and kind of iterate on this.
+
+Eventually, you'll also be able to connect your robot to the platform and download the model directly so that you can go straight from designing a goal specification, we call it a goal specification, but really what you're doing is you're defining those teleodynamic priors in the sensor definitions as part of that
+
+embodiment definition, and then you go and you evaluate what topology is optimal for that definition, and then you can deploy this directly onto your robot in the real world and try it out.
+
+next steps or the direction that we're heading um is is kind of interesting um right now a lot of the models that we're building are very kind of small and uh task specific um but we're building them in a way that is recomposable so the the idea here is instead of building one model that does a task like turning the valves this that that task is actually composed of three smaller models and the idea here is we're building up a library of recomposable sub models
+
+so that we can kind of recompose them in simple ways to go after new tasks.
+
+So the idea here is we can take, right now we only have a handful of submodels, but over the next year or two, we're building out this larger library of submodels that can be recomposed to go after a much wider variety of tasks.
+
+So this diagram here is meant to show how we're kind of looking at building up this framework of recomposable models.
+
+Eventually, that platform you saw, this one here, eventually we'll probably open this up for the public to go and compose their own models from these recomposable submodels.
+
+And then we can even string together
+
+you know, many models together and have a framework for deciding when to use which model.
+
+Because they're only about 30K of memory, you can really kind of load up a robot with, you know, let's say a thousand models, for example, and you can kind of get a lot of generality just from a collection of sub-problems being solved individually in a robust manner.
+
+So I went through this talk pretty quickly.
+
+I figured I'll just end with some current work that we're looking at.
+
+Right now we're working on a, this is just kind of an early look in simulation of an insertion task we're working on.
+
+What's interesting about this is that we can't use vision for a lot of this because once the insertion process happens, the arm kind of includes the view of it.
+
+So we're incorporating
+
+force sensors so that we can kind of wiggle, you know, tight fitting pieces into a housing, for example.
+
+And you really kind of need to build in this kind of nuanced feeling of, you know, wiggling something into place.
+
+This comes very naturally to humans in terms of filling your way through a problem.
+
+And so we're working on building up the submodels needed here for high frequency, for storage sensors, for wiggling things into place to broaden the amount of applications that we can start attacking with this approach.
+
+So that's some current work that we're working on.
+
+I kind of blazed through that really quickly.
+
+I could show some live simulation demos, but maybe questions.
+
+Maybe it makes sense to just move on to questions.
+
+
+SPEAKER_02:
+Thanks, Matt.
+
+That was awesome.
+
+I'll ask some of the questions in the chat.
+
+Maybe we'll still have time to see the demo, but that was really exciting.
+
+Okay, I'll start with Black Cat, who wrote, very cool.
+
+How would you say interoperability challenges change from software to hardware?
+
+
+SPEAKER_01:
+That's a good question.
+
+There's different ways to think about it.
+
+Moving to software, things I think get a lot easier.
+
+Hardware is always hard and always time consuming.
+
+For us, we're using ROS to get a lot of interoperability between different kinds of robots, but ROS is not optimal for a lot of situations.
+
+And so there is gonna be some sort of low level drivers
+
+that we'll have to write that are going to be hardware specific.
+
+But for the most part, most robot manufacturers or OEMs, they have an interface that provides some sort of joint control.
+
+So the models right now are generating effort-based controls that we then convert into positional-based controls because that's the most common.
+
+Most robots do not support effort-based controls.
+
+But pretty much all robotic arms in particular have some sort of joint space control interface.
+
+So we can basically...
+
+all we need is kind of a driver to translate the output of the model into joint space controls for that particular robot.
+
+The other thing that's kind of interesting and you don't get this with deep reinforcement learning is that we don't actually specifically tell the model
+
+um what each motor output does we we just have we just specify how many motor outputs there are from the model um uh although i guess we could overestimate we can give it more more actions a larger action space than it actually has and we'll just kind of learn to ignore or it will just
+
+there will become no correlations between the unused actions and the sensory space so it ends up being unnecessary um but because we don't actually specify what each motor action is doing um it learns that uh meaning like it it will in the first couple of milliseconds of interacting uh with the it considers the robot part of the environment let me put it that way so in the first couple milliseconds of
+
+controlling this robot, it will build up those correlations of, oh, if I apply a positive effort on this joint, it moves me away from my target.
+
+Or if I apply a negative, it gets me closer to it.
+
+It kind of figures out those correlations as a process of learning how to get to equilibrium, if that makes sense.
+
+And as a result of that,
+
+We get a lot of hardware agnosticism.
+
+So with that valve turning model, for example, it was originally built for a different robot.
+
+It was originally built for a heavy six degree of freedom arm.
+
+The customer ended up deploying it on actually a different heavy robot with an additional actuator.
+
+and the model can kind of, you know, we basically added an output to it, but the model can kind of adapt to that situation there.
+
+For those videos you just saw, and at that conference, we then took that same model and deployed it on a different manufacturer with a six-degree freedom arm, and it kind of just figured out, you know, what it needs to do differently.
+
+That robot is really nice because it fits in a suitcase, so it's really great to travel with.
+
+So from the moving to software, and especially moving to this particular way of looking at the interface, it buys you a lot of interoperability
+
+bonuses that you don't get with other approaches.
+
+But you're still dependent on the hardware OEM's driver-level interfaces.
+
+But generally, those are all the same.
+
+The interfaces are all the same, even if spinning up the robot might have different mechanisms.
+
+
+SPEAKER_02:
+Awesome.
+
+Six degrees of act-inf.
+
+I'm going to cluster two questions together.
+
+So Arun asked, how much of this is or will be open source?
+
+And Alexandra Rorbia asked, wonderful talk, Matt.
+
+I'm a huge fan of the homeostat, as you know.
+
+Have you given thought to perhaps translating the homeostat to its core set of equations dynamics and contributing them to open source projects like NGC Learn so others can appreciate its value?
+
+
+SPEAKER_01:
+Oh, great question.
+
+And great.
+
+I'm glad to hear Alex is on the call.
+
+These are both great questions.
+
+I'm always torn in terms of like what to open source and what not to open source.
+
+I think eventually, we are going to open source a lot of this.
+
+Right now, the intellectual property of this approach is
+
+one of the things that is most valuable about our current business.
+
+So from a business perspective, in the short term, we're probably not going to open source a lot of this.
+
+We are expecting to open up our platform to a wider audience over time.
+
+And actually, I should follow up with Alex.
+
+We have actually kind of distilled down our implementation of the homeostat, at least.
+
+You know, there's a lot of interpretations.
+
+I want to say there have been five or six implementations of the homeostat over the last 80 years or so.
+
+And they're all different, which is kind of interesting.
+
+There's a lot of room for interpretation.
+
+But at least our implementation of it, we have kind of distilled down to a relatively simple set of equations.
+
+And they...
+
+are very very similar to kind of the the um equations using the perceptron with a couple of very subtle changes and the the subtle changes here having drastic effects uh one one is that we've added state to the to the to the node um which really changes how how you think about these things as perceptrons are generally stateless and so the adding of the state there kind of adds that temporal notion so even though it's a subtle change it has drastic implications for how the actual model works um but uh and actually i might
+
+I was trying to see if I have it as an extra slide here in the talk.
+
+I might follow up with Alex and share those, the equations.
+
+I'm less concerned about sharing kind of, you know, the approach and the equations for our definition of the homeostasis because these are very, very difficult to implement.
+
+And I would kind of welcome more ideas and activity in the space.
+
+And I need to take a closer look at NGC Learn.
+
+I keep seeing things being added to NGC Learn and it's,
+
+relatively new package, but there's a ton in there.
+
+And I really kind of need to take a look at what's in there.
+
+And if we do open source, it does make sense to maybe integrate that as potentially an option in ngc learn.
+
+A lot of it depends on whether or not the interface is compatible with what we're doing.
+
+And I say that not because as a limitation of ngc learn, but
+
+more of as a limitation of how people think about machine learning models.
+
+Most frameworks that are built around deep learning, their interfaces kind of assume atemporal behavior, where each input-output relationship is independent of the others.
+
+But I think it's a matter of me just taking a look at NGC Learn and how it's structured and how to actually interface with it.
+
+But I think if we do eventually open source the code, that might be the best avenue to doing it, just because that way it would be alongside a lot of these other great ideas for non-backpropagation-based machine learning.
+
+
+SPEAKER_02:
+Thank you, Matt, and also really appreciate sharing that insight.
+
+It isn't open and shut, and just because we can open source something doesn't mean we could or could in that way or should tomorrow or whatever it happens to be.
+
+So hearing your...
+
+your well-worn experience about all of this is really insightful.
+
+Okay, another question from Alex.
+
+He wrote, how do you go about designing the structure of your homeostat net?
+
+Is it a random graph that you instantiate or some other graph type?
+
+Does it depend on the robotic control problem?
+
+
+SPEAKER_01:
+That is a great question.
+
+And just right off the start, I'll mention that it's unsolved.
+
+It's something that we're still working on.
+
+In terms of how we do it now, so longer term, I would love to start with a random graph and then have some sort of...
+
+metric for evaluating what graph is better than another graph for a particular use case, and we're probably pretty close to there.
+
+And then we could have some sort of mutation function, and that way you could kind of evolve what the right topology is for a particular graph.
+
+I think that actually has a lot of promise, and I'd really love to get into that kind of stuff.
+
+Right now, what we're doing is
+
+a half step in that direction.
+
+We have found that the topology has a big impact on how good the model is at performing particular tasks, meaning you can take a random model and then try to have it turn valves, for example, but often it'll do a pretty poor job or it'll be slow or it'll be a little wobbly.
+
+And so really kind of fine tuning what the topology is for a particular task is critical if you actually want
+
+a really effective robotic control model uh and so the way that we've been solving this is um for specifically robotic control we've come up with a a way of parameterizing the topology um and this kind of constrains the search process for what is finding the right topology and then what we do is in that platform you saw in this platform the primary thing that this platform is doing is providing an interface to do that topology search so
+
+In the back end here, when you actually are trying to find what is the optimal topology for a particular use case, what's actually going on is that it's using that kind of parameterized search space and doing a big search.
+
+And so we're actually leveraging some cloud compute here for this.
+
+Not a ton.
+
+It's not particularly expensive.
+
+The training process only takes about 15 seconds per model.
+
+So we're using AnyScale, which is built on an open source technology called Ray, which is...
+
+really good at spinning up, let's say, thousands of CPUs at once.
+
+And so the idea here is we can go and spin up 20,000 different topologies and then evaluate of those 20,000, which one is optimal for a particular use case.
+
+And this process takes about five minutes.
+
+And so we're trying to get that as short as possible so that this is kind of a compilation time interaction, as opposed to training the model for a day and then coming back and seeing how it performs.
+
+You can go and explore 20,000 different
+
+topologies and figure out which one is optimal for your particular use case so that's our current approach which is kind of like a brute pro force approach um but longer term i would love to get to that evolutionary uh approach where we kind of start with a random model maybe we can estimate what a good starting size is or maybe we have some sort of um uh some you know uh
+
+heuristic for deciding whether or not to shrink the model or grow the model.
+
+But to contrast it with deep learning, this is one of the downsides of the approach is that the topology itself is
+
+is very critical for good performance.
+
+As opposed with deep learning, you can often just go with a larger model and just give it more data, and you can kind of get the same performance as a smaller model.
+
+I think this makes sense from a biological standpoint in the sense that our brains are not just randomly connected.
+
+They are evolved over time.
+
+And you can imagine how some brains might perform better at certain tasks than other brains.
+
+And so I think this topology-dependent behavior is
+
+not necessarily problematic or wrong.
+
+It's just something we have to deal with.
+
+
+SPEAKER_02:
+Awesome.
+
+I'll read a comment from Scott David.
+
+This is, as most emissions from Scott's language model, it's not necessarily a question.
+
+So if you have a response, go for it.
+
+And then I do a question that also connects with Ian and a little interoception.
+
+So Scott wrote,
+
+It is interesting to consider the hardware software question of application of active inference in light of the historical encounter of Claude Shannon with von Neumann when Shannon was encouraged to apply the second law of thermodynamics to his quantitative theory of information.
+
+There's a lot better.
+
+
+SPEAKER_01:
+I might need to take a look at that in text form and come up with a coherent response textually.
+
+But there's a lot there.
+
+There are a lot of Shannon-level information constraints at the hardware level, especially when you're talking about update rates.
+
+For example,
+
+the model, the model as part of its embodiment has a temporal aspect to it too, in terms of the frequency of updates of the model has to be consistent, like you can't update it, you know, 100 times per second, you know, for one second, and then a million times per second for the next second.
+
+So there is, there are kind of interesting information theory dome, you know, problems here with, you know, Nyquist theorem, like, as the sensory inputs are coming in, are you getting sensory inputs at a high enough frequency to actually
+
+make interesting inferences about them.
+
+On the robotic side, there are absolutely control constraints.
+
+If you're only able to take an action once per second, you're very limited in terms of what you can do with a robot, as opposed to if you can take an action every two milliseconds, there's a lot more nuance in the feedback process in the control.
+
+So there's absolutely some information theoretic stuff on that interface, in that embodiment definition.
+
+For the most part, I haven't
+
+I don't want to say we've done anything particularly innovative on that side.
+
+It's just these are all things that you kind of have to understand as part of the constraints of the implementation.
+
+But definitely send me the text for that question, and I'll try to come up with a more coherent and thorough response.
+
+There's a lot in there.
+
+
+SPEAKER_02:
+cool and the historical part was was epic um okay here's a a question so ian not sure which parts you listened to from prior maybe matt give a first pass but i was really interested when you mentioned the difference between the position sensors and the effort sensors so how does that play out in robotics and then like into the interoception and introspection angle
+
+In what ways does our postural adjustment relate to positional inference and effort inference?
+
+
+SPEAKER_01:
+That's a fun question.
+
+Unfortunately, I have a feeling my answer is going to be not too interesting in terms of we're not doing anything particularly innovative here either.
+
+The outputs of the model are almost unitless in the sense that they'll kind of adapt to their embodiment in terms of like, so we've kind of been interpreting them as efforts or like you can think of this as like torque controls.
+
+For robotics, this is problematic though, because first of all,
+
+I want to say 90% of robots or 95% of robots don't support torque-based controls.
+
+There are just a few robots out there that require that.
+
+And for the most part, they're confined to research applications.
+
+But the reason why they exist and the reason why there's a lot of interest in it, especially with deep reinforcement learning, is if you can go to effort-based controls or torque-based controls directly to the robot, there's a lot of nuanced behavior you can get.
+
+You can get really kind of
+
+compliant behavior where the robot's applying just enough force to perform a task.
+
+That way, if you bump into it, it's not going to hurt anything and it'll be compliant.
+
+And you can kind of get a lot of nuanced behavior with torque-based controls.
+
+But the reality is that 95% of robots don't support that.
+
+They just support either velocity controls or positional controls of some kind.
+
+And so to solve that, we basically convert the effort output of the model into a relative positional change.
+
+And then we basically integrate that relative positional change over time to get an absolute positional
+
+control.
+
+Not particularly interesting on that side, but it is kind of a technical note that's a bit challenging on the robotic side of things.
+
+I hadn't really thought about it enough from an active inference perspective in terms of what does that mean for the attracting set that you're bringing in.
+
+A lot of it is because it's somewhat disconnected from the sensory inputs.
+
+The positional controls end up impacting the environment in some way, and then
+
+connecting the dots kind of indirectly, that affects your sensory inputs.
+
+But it's not like the positional versus effort outputs of the robot are directly changing how our sensory experience happens.
+
+It's more that it might change the effectiveness or the capabilities of your robot to alter the environment, if that makes sense.
+
+But maybe I need to think a bit more about that, because that is kind of an interesting aspect that I hadn't really considered enough.
+
+
+SPEAKER_02:
+How does that play out in the body, Ian?
+
+
+SPEAKER_00:
+Oh yeah, that's really interesting.
+
+I've joined this conversation late, but thanks for including me, Daniel.
+
+So yeah, I was kind of listening to that with interest and thinking of
+
+you know, how we, as a human, something simple like the concept of being hangry, hungry and angry at the same time and how that affects our behaviour when you've got competing kind of interests or physiological variables that you're trying to deal with.
+
+And then thinking about, okay, a robot, something simple to start off with, like maybe one of these robotic lawnmowers that needs to go back to its docking station to charge up for fuel.
+
+so it needs to end the task it's doing and move back to its docking station and charge up but as robots get more sophisticated and they're trying to please humans more but there will be some kind of, I don't know, some limit to its
+
+um capabilities it's internal processing or power that's and maybe at some point it will face you know absolutely you have to weigh up all of these and come to some computation about what it needs to do next to satisfy its own internal honestly i think ties into some of the stuff that alex has been talking to about with like mortal computation as well um if i'm going to be honest the robot control models we're making are
+
+
+SPEAKER_01:
+Far less complex than an actual biological entity like a human.
+
+But you're absolutely right, because you're going to have all sorts of here.
+
+Right now, we're kind of having these kind of first layer sensory inputs kind of defining the telegenic priors.
+
+But you can imagine like a hierarchy where you have like other models that are feeding outputs that feed into your motor controls, because these motor controls are kind of the end point.
+
+for modifying the environment.
+
+But you can imagine why you would be reaching for a cup of water is driven by some other network that's saying, oh, you're thirsty.
+
+And so we just, you know, I'm just not nearly there in terms of complexity yet.
+
+But I think you're right.
+
+Eventually we will be, especially if you want to have robots that are fully self-sufficient, fully autonomous, know when they need to repair themselves and then going out and performing those repairs, whatever that might be.
+
+Maybe it's charging.
+
+I think you're absolutely right.
+
+I think that's the future, longer term.
+
+I love it.
+
+
+SPEAKER_02:
+Thank you, Matt.
+
+Great times.
+
+Till next time.
+
+
+SPEAKER_01:
+Yeah, likewise.
+
+
+UNKNOWN:
+Bye.

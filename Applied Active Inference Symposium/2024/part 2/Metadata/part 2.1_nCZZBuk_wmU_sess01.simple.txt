@@ -1,0 +1,990 @@
+SPEAKER_01:
+Hello, welcome back.
+
+It's the 4th Applied Active Inference Symposium, Day 2, Part 2, on November 14th, 2024.
+
+We're kicking off this session in the darkness of the pre-dawn on the West Coast, appropriately, with...
+
+Mehran Hossein Zadeh Bazzagherani, ML Don, Brain in the Dark, Design Principles for the Neuromimetic Inference under the Free Energy Principle.
+
+So thank you Mehran for joining.
+
+Looking forward to your presentation.
+
+
+SPEAKER_00:
+Mehran Hossein Zadeh Bazzagherani Thank you very much.
+
+It's a pleasure to be here.
+
+So today I'm going to be talking about the design principles for neuromimetic inference under the free energy principle, namely the methods that are inspired by the brain in order to model human perception.
+
+I just want to preface this by saying that this is a collaboration with my colleague Simon Orbaz from Maynooth University and Professor Friston,
+
+from UCL, and this work has recently been accepted at the NeuroAI workshop at NeurIPS 2024.
+
+So let's just get started.
+
+The content is going to be as follows.
+
+We're going to be talking about first the motivation behind this work, why we got started with this idea anyway to introduce the design principles, particularly for these models.
+
+And then I'm going to do a quick refresher on the math side, just so we all get comfortable with the upcoming derivations that I'm going to be expanding on, which covers the math behind the free energy principle, particularly variational free energy.
+
+Then I'll do a brief discussion on what free energy principle is.
+
+I presume everybody knows by now because we've had so many talks since the beginning of the symposium, but I'm going to do a quick run at that.
+
+Then we'll be talking about the Bayesian brain hypothesis that furnishes the foundation for the idea of modeling human perception as a kind of inference, namely Bayesian inference.
+
+next we dive into the juxtaposition between the generative model and a generative process what do we mean by each one of them knowing the distinction is crucial for understanding the free energy principle because fep lies on this um notion that
+
+there is a boundary that separates an entity from the environment and separating basically my internal state from the external state beyond my Markov blanket.
+
+Next, we'll talk about variational free energy and how it's driven, how it's derived basically.
+
+Then we jump into the design principles in terms of the experiments, the things that you need to consider, the things that you need to define, and how you should go about doing that in order to model human perception as a kind of online inference problem.
+
+We'll go through some final thoughts, some lessons learned, and then I'll introduce some of the resources for those of you who are interested in pursuing free energy principle more seriously and delving into the theory and the practical side of it.
+
+And then we're going to wrap it up with a demonstration using the GitHub repository that is publicly available, by the way.
+
+The motivation is this.
+
+Deep learning has revolutionized artificial intelligence because it has automated the process of feature extraction from raw data.
+
+However, it actually faces a lot of problems.
+
+For example, lack of out-of-distribution generalizability, catastrophic forgetting, and poor interpretability.
+
+It is known as a black box problem.
+
+basically and the catastrophic forgetting is basically when the new knowledge overwrites the previous knowledge the weights are getting overwritten so while the network learns the concept of a cat it might momentarily forget the concept of a dog because the paths are shared between different concepts that are to be learned
+
+You see, in contrast to deep learning, biological neural networks in your brain and in my brain, they do not suffer from these issues.
+
+And this inspires the AI researchers to actually explore this interesting and intriguing area called the neuromimetic deep learning that is all about replicating the brain mechanisms, namely the neuronal message passing and belief updating within the AI models, purely inspired by our best knowledge about how the brain works.
+
+A foundational theory for this approach is the free energy principle, FEP, which unfortunately, despite its potential, is often considered too complex to understand and to implement in AI, simply because one would need a myriad of
+
+disciplines um under their belt knowledge about disciplines under their belt to be able to understand the 300 principle namely you need to know things for example about dynamical systems random processes you need to know about asian mechanics some neuroscience some maybe computational neuroscience and so on and so forth so as as a result it's not it's an intimidating topic let's say for anybody who wants to just get started with it
+
+So we seek to demystify FEP and basically provide a comprehensive framework for designing neuromimetic models where we are actually trying to mimic human-like perception capabilities.
+
+So here we present a roadmap for implementing these models.
+
+And by the way, a PyTorch code repository for applying FVP in a predictive coding network is going to be introduced here.
+
+The link is here that that's the code.
+
+It's publicly available.
+
+Also, as I said, the paper will soon be available by the NeuroAI workshop.
+
+And so hopefully you guys will have a chance to take a look at that as well.
+
+Now let's get started with the refresher of the math.
+
+So first and foremost, the idea of a PDF.
+
+So it's an acronym for a probability density function, which is a function that describes the likelihood of a continuous random variable taking on a particular value.
+
+It has two conditions.
+
+It has to be positive.
+
+So for a given parameter theta zero, for example, the mean of a Gaussian, let's say, for any input x, it's always positive.
+
+And second, we have this normalizer sort of condition that if you integrate a PDF across the support space of the input, name the all possible values of x, you will inevitably must get to the actual value of one.
+
+What this means is
+
+The probability of x, the input, getting any value in any range within its support is always 1, which means that x will always fall in a range in its own accepted range of value.
+
+So that's 100%.
+
+So you need these two if you want to have a PDF.
+
+Next is the idea of an expectation.
+
+I just want to remind you that the reason I'm going through this math is because later on when I introduce the steps of deriving variational free energy, these concepts are absolutely crucial.
+
+So hopefully I'm not going too fast, but yeah, just bear that in mind that these are very important.
+
+And for those of you who are math savvy, and these are two basics, my apologies,
+
+Now the idea of expectation is actually the weighted average of all the possible values that the variable consume, weighted by their probability.
+
+So you have in the first line the expected value of x over the probability distribution, the PDF, p .
+
+So as you notice, we are integrating all possible values of x multiplied by, or weighted by, their corresponding probability.
+
+And it's important to note that you're not limited to calculating the expected value with respect to a variable, but you can also do exactly the same thing with a function.
+
+So the expected value of function is, again, the same thing, but you're basically calculating a weighted average of a function where the weights are the probability of the input to that function, which is x.
+
+Now, some key probability components here.
+
+Now, we have this idea of a joint probability.
+
+So a joint distribution between two variables, x and y, you can divide it up between some conditional term, which is the probability of x given y multiplied by the probability of y in the first place.
+
+Or you can go the other way around, the probability of y given x times the probability of x. You notice that if x and y are independent, this conditional term reduces to probability of x, or this conditional term would reduce to probability of y. So either way, on both sides, you're going to have the probability of x given y if x and y are indeed independent.
+
+next if you want to move from a joint distribution to a marginalized distribution where you're actually marginalizing one of the variables out this is how you can do it so in this case if you integrate p of x y across all possible possible values of x
+
+In other words, if you literally break this down and basically write it down in its constituent terms, if you do this integration, you're inevitably, basically what you're doing is you're getting rid of x, and then you end up with a term with a probability distribution that is only a function of y.
+
+and that's what you call a marginalized probability distribution or pdf again this is key where will this come in handy it's going to come in handy when when i'm going to be talking about the bayesian brain hypothesis and bayes rule and so on and so forth so keep these two equations in mind please
+
+Now, some properties of logarithms.
+
+So this is basically just the definition of a log.
+
+So log of A with base B equals C. The definition says that it just means A equals B to the power of C. So for example, the log of 8 base 2 equals 3, because 2 to the power of 3 is 8.
+
+So the log of a multiplication is sum of the logs of individual terms.
+
+The log of a division is the subtraction of individual log terms.
+
+That's the log of the nominator minus the log of the denominator.
+
+The log of a fraction is literally minus the log of the swapped fraction.
+
+Literally swap B and A together.
+
+You end up with just a negative of the new log term.
+
+The power law, the log of b to the power of c, so basically c drops down as a coefficient, so you end up with this term, c times log of b with base a. Log of a with base a, if the value and the base are both the same, you end up with value 1, and by extension, if you have this term, c drops down as a coefficient, and this term equals 1, so you end up with c.
+
+log of 1 with any base is always equal to 0.
+
+Why?
+
+Because a, whatever it is, to the power 0, is 1.
+
+And last but not least, this one is again very important, ln of a is basically just
+
+logarithm a logarithm with you know where the base is natural number e or it's called the natural log and e is basically the euler euler's number so you got log of a with base e it's called just the natural log so when in python you say numpy dot log is basically the natural log now the free energy principle
+
+it is a theoretical framework in neuroscience it's been developed by carl friston so basically things that persist over time especially living systems look as if they are minimizing a certain quantity it's called free energy it is as if they're sort of maintaining this boundary
+
+that is called a Markov blanket, to persist in the face of random fluctuations in the environment.
+
+This really connects well with the Bayesian brain hypothesis, as you will see shortly.
+
+The brain, from the perspective of Bayesian brain hypothesis, it's actually in the game of inferring the hidden causes behind its sensations.
+
+So namely, if you have, let's say, y to denote the sensations and x as the hidden state.
+
+And then this inference basically means that given my observation y, I want to estimate the probability distribution over x.
+
+It's basically called a posterior probability, which means that after having seen an observation, what is causing in the world beyond my Markov blanket this particular sensation or observation?
+
+Inevitably, this requires having a generative model, GM, of the world.
+
+And this actually connects really well with Helmholtz's concept of unconscious inference.
+
+And it is defined like that perception is kind of unconscious inference, which means that we are in the game of
+
+you know inferring the hidden cause behind our our sensations for example right now you're looking at the monitor and the photons but the light is hitting the your sensory epithelia on your eyes those excitations those those hits those are your sensation
+
+And when you realize that I'm watching this presentation at Active Inference Institute, and this guy is talking, his name is Mehran, this is the slide of a face, Helmholtz's picture is here.
+
+These are the inferences that your brain is making given that particular sensation that is hitting the neurons on the surface of your eyes, right?
+
+So it's estimating this probability distribution about what's happening beyond your Markov blanket.
+
+Now, let's talk about the idea of a generative model versus a generative process.
+
+This is actually very, very important.
+
+On the right-hand side, you see this generative model as a box, and it has some internal states.
+
+Let's call them hidden states.
+
+This represents the neuronal activities in your brain, the excitability, the voltage level, let's say, of your neurons that keep changing all the time, they fluctuate all the time.
+
+And these guys are basically holding information about what's happening beyond your Markov blanket, right?
+
+Remember, what's happening beyond your Markov blanket is out of your reach.
+
+You have absolutely no way of observing exactly what's happening, right?
+
+and here we have the generative process where x star denotes the actual things that are happening in the world which are completely out of reach to you now if you imagine here you have the face of a person let's say steve jobs standing in front of me but this is no like i'm not going to see the truth
+
+what i'm going to see is some sort of a map some sort of a noisy transformation of the truth x star right let's call it y this is what i'm gonna be experiencing this is what's gonna hit and induce excitation at my sensory epithelia on my eyes
+
+and then if you want to look at like basically dig deeper into the idea of perception as um unconscious inference the game the game is this your brain the generative model in your brain predicts a sensation like i'm expecting this sensation to be felt or received at my sensory epithelia and my markov blanket and then the actual sensation y is received
+
+the difference between the actual sensation and my prediction is called the prediction error so using that prediction error i will update my generative model about the world namely i will update my belief about what's happening in the world so this is where my internal states will change to reflect the better image of the unknown world beyond my markov blanket or the parameters of my generative model are going to change
+
+to, again, do a better estimate of what's happening in the world so that I will have a better prediction about the sensations that that world is going to cause.
+
+So, the generative process, again, is not directly observable.
+
+And the internal states X, this is very important, carry information about the invisible external states X star beyond my Markov blanket.
+
+This is where this connects to the discipline of information theory.
+
+This is a very important link, by the way.
+
+So the generative model, what do we mean by that, mathematically speaking?
+
+Now, in a dynamical world, a generative model has a belief about the dynamics of the world.
+
+What it means is, how fast is the world changing, for example, or how is it changing?
+
+Now, if the world is at a given state x,
+
+What does its dynamics look like?
+
+For example, its velocity or acceleration or even higher temporal derivatives are like jerk.
+
+basically all sorts of rates of changes, the rates of change about the world.
+
+That's what I mean by dynamics.
+
+So in a generative model, your generative model will have an understanding, it has to have a belief about how the world is changing beyond a smart cop blanket.
+
+So in other words, if I'm in the game of estimating the dynamics of the world, it means I'm chasing a moving target.
+
+What it means is,
+
+At any given time when I want to infer what's happening in the world, by the time I've made that inference, the world has already moved.
+
+So that basically makes inference a tricky task, especially if I'm in a highly dynamical world.
+
+It makes it more challenging.
+
+The second thing that in a generative model we should have is the generative model has a belief about how the world causes its sensations.
+
+Namely, if the world is at any given state, by my estimation, beyond my Markov blanket, what is the most likely sensation y that I will be experiencing?
+
+So these two are the key components of a generative model.
+
+So mathematically, this is how you show it.
+
+x dot is literally the velocity of the world, how fast it's changing.
+
+Mathematically, it's just dx over dt.
+
+And then you have some function of the states, x, and causes, nu, and theta, the parameters of my generative model, plus some random fluctuation, omega x. So that equation is called the state dynamics equation.
+
+what it basically is telling you is that the dynamics of the world is driven by x by the position of the world basically and these are all my belief about how the world is changing dx over dt the velocity of the world
+
+And technically speaking, F is called the flow of the state dynamics.
+
+It's the deterministic part of the state dynamics.
+
+Omega X, random fluctuation, is what encodes your uncertainty about your belief about how the world is changing.
+
+The second equation basically connects to the second concept that I introduced here.
+
+It's basically telling you that my belief about my sensation, about what's the most likely sensation that I'm going to be receiving, is encoded in this equation, where my observation
+
+is equal to the g of the function of, again, hidden states, the causes new, and the parameters, some parameters, plus some random fluctuation omega y. It's called the observation model.
+
+Again, omega y encodes your uncertainty about your belief about the most likely sensation that you will be experiencing.
+
+sensation that is caused by the world you notice that we have this these again your hidden state here x and then uh the cause is new now if you're wondering so you you know what the thetas are these are just the parameters of the functional form of fng but if you're wondering what causes are this is something that i'm not going to be focusing on this particular talk but just imagine that if you have a hierarchical generative model these causes are just
+
+a subset of the hidden states, like the hidden states that do not have dynamics, but they are the tools that different levels in the hierarchy use to be able to talk to each other.
+
+So interlayer communication is done using these news or the causes.
+
+These are the ones that basically drive the dynamics.
+
+You notice that that's why we have x dot equals f of x and nu.
+
+They drive the dynamics.
+
+Without them, the layers cannot talk to each other, basically.
+
+Now, if you want to turn this into a belief-based system where you have probabilities in play, you just need to assume a Gaussian distribution over your random fluctuation, namely with mean 0 and some precision over your random variable x and your observation y. Open brackets, precision is just inverse uncertainty.
+
+And close brackets, that's just a notion in statistics.
+
+Now, using this, if you literally replace this notion of Gaussian distribution into your original equation, you end up with this probabilistic notion that the probability of x dot, given all of these three elements,
+
+is distributed according to our normal distribution where again the precision is the same as the precision of your random fluctuation but you notice that because we're summing up f with this guy over here the the mean of that gaussian distribution becomes this f term same story for the your belief about your y your observations and that is why i'm saying that f of x and nu and theta is the expected your expected
+
+dynamics about x dot, because it's literally the expected value of the Gaussian distribution.
+
+Same story here.
+
+g of x, nu, and theta is your expectation about your observation, your sensation.
+
+Again, it is the sort of expected value of this Gaussian distribution, the value that is most likely to occur.
+
+So that's generative model.
+
+Two things.
+
+We know the dynamics of the world.
+
+We have belief.
+
+Let's say we don't know it.
+
+We have beliefs about the dynamics of the world, and we have belief about basically the most likely sensation that we will be experiencing if such and such was the state of affair of the world.
+
+Let's say X was the state of affairs in the world.
+
+now we talked about inference let's talk about bayes rule really quickly now here this is bayes rule and the components of bayes rule are as follows we have the likelihood term which is the probability of my observation given the state of the world we have a prior belief which means that before observing why this is my belief about what the world looks like
+
+We have the model evidence, which is probability of data, and these two together is called basically the generative model.
+
+Again, this is in line with what we discussed here.
+
+This is basically your prior belief about the dynamics, and this is literally the mapping between X and Y, which is your likelihood term.
+
+So I'm not saying anything new here.
+
+These two together are your generative model, and this is your model evidence.
+
+This is a devil, right?
+
+This is intractable.
+
+You notice that in a real-life scenario, we will not be able to calculate this.
+
+And this term on the left-hand side is called the posterior probability.
+
+It's your belief about the distribution over hidden state of the world, x.
+
+And when you map your genital model using basal to this posterior distribution, we call this model inversion.
+
+So whenever you hear model inversion in the context of FEP, that's what we mean by that.
+
+So this evidence, again, going back to our idea of marginalizing a variable out, if you, again, just remind yourself that this is how you marginalize the hidden state or x out, you just end up with the probability of, let's say, sensation y, you notice that
+
+this integration could get really nasty really fast which means that if you have you could have basically any number of hidden states x and for each x you would have a range of possible values so this thing could turn into
+
+a potentially like potentially infinite number of nested integrals basically it can it can become intractable really really quickly so what this means is we will not be able to calculate this posterior probability exactly so what should we do the answer is variational inference
+
+So because you see probability of data, your model evidence is intractable, but at the same time, ironically, it's the true measure of how good your generative model is.
+
+which means that we call this also marginal likelihood, right?
+
+So if it is high, it means whatever sensation you're experiencing right now under your model of the world, under your generative model of the world, the probability of that particular sensation is very high.
+
+It means under your model of the world, everything that you're sensing, you already expected to sense it.
+
+So it means you have such a strong and precise belief about the dynamics of the world and how the sensations are generated from those dynamics that whatever you're receiving is not surprising.
+
+But that's why model evidence is such a strong metric for evaluating how good a generative model is.
+
+But unfortunately, it's intractable.
+
+So can we find a bound to this?
+
+namely a lower bound?
+
+And the answer is yes.
+
+I'm going to introduce the idea of an evidence lower bound in the next slide.
+
+So by doing this, I'm turning the problem on its head.
+
+So I'm converting, let's say, an intractable exact calculation of the posterior, and I'm replacing that with a tractable approximation, well, basically a tractable approximate estimation.
+
+the posterior and that's called variational inference and i'll tell you what why we call this variational by the way because the objective function that we're going to be minimizing to do that is variation of free energy is actually a function of a function it's a functional so wherever you're dealing with functionals and optimizing functionals uh that's where the calculus of variation comes into play that's what what it means by variational inference
+
+on the right hand side i'm just going to put some reminders the expected value and the this particular particular law of logarithms and in the middle this is called jensen's inequality just keep keep keep an eye on this one it just says that the expected value of a log of something is always a lower bound to the log of the expected value of that thing right so this is going to come in handy so let's
+
+study this amazing concept of evidence lower bound.
+
+Remember, P is intractable, we want to find the bound to it.
+
+So this is log of probability of data.
+
+This is how we marginalize x out.
+
+And you can multiply and divide by something, whatever it is.
+
+So here qx is, we call this surrogate, the surrogate posterior over the hidden state.
+
+This is going to be a representative or your approximation to the true unknown posterior belief.
+
+So let's call it qx.
+
+And it's, by the way, it's really a key factor in variational inference and FEP.
+
+So keep that in mind, this q variable, this q function.
+
+So moving on, you do a little bit of play here.
+
+So this sort of Q moves to the denominator.
+
+And you notice that this is the definition of expectation with respect to this particular distribution Q, right?
+
+Just getting the definition from here.
+
+And according to Jensen's inequality, this term has a lower bound, and this is the lower bound to it.
+
+So the expected of this term, the expected value of this term over this probability distribution.
+
+You have the joint here and you have the surrogate distribution here.
+
+And
+
+You see that this right-hand side, again, remind yourself, this is your log model evidence, and we found the lower bound to it using Jensen's inequality, right?
+
+So the lower bound is found.
+
+This guy is your evidence lower bound.
+
+And that's a key finding.
+
+By maximizing this evidence lower bound, you're actually maximizing your log model evidence, and you're getting closer and closer to the true posterior.
+
+Now, elbow and VFE, just want to make sure that we're clear on this.
+
+We have elbow here, but VFE or variational inference is just negative of your elbow.
+
+So if you multiply minus one by both sides of this, you end up with this term, always bigger than minus log probability of data.
+
+This is called surprisal.
+
+and this is called variational free energy that's why we say vfe is always an upper bound to surprise so maximizing elbow or minimizing vfe they both mean the same thing and um this is basically called variational free energy and that's why we call it the functional because this thing is a function of a of another function and it's called surprisal or surprise
+
+and just shows you in a plot that here you've got variation of free energy that's always an upper bound to the true unknown surprisal or by extension you've got your elbow here that's always a lower bound to the true log model evidence
+
+so vfe has multiple incarnations it comes in different forms by playing with the math so if this is your this is your vfe just expand you can just expand the joint and the denominator and then literally use the log rule of the you know the division turned into the subtraction and then you can distribute the expectation across the two different terms and this
+
+um this basically results into like just basically swapping these two terms uh by each other you end up with this equation right and these terms have names so this one actually this expected value between your belief about the hidden state and the true unknown posterior this expectation is called a a kl divergence it measures how different your belief about x qx
+
+is from the true unknown posterior that's why it's called an approximate error approximation error and the second term is your surprise right
+
+um so um if i want to like show you like what this actually means visually this is really interesting so this is your surprisal right and on top of surpriser you're adding this approximation error this is this sort of length over here and then this constitutes your free energy what this means is like free energy is always an upper bound on surprisal and the error that that
+
+gap is your approximation error is how far your belief about x is from the true posterior so by tuning your generative model your variational free energy goes down and when it goes down this gap is reducing so it which means that your q
+
+gets closer and closer to the true posterior which means a better and better perception about the world and this doesn't end here your free energy will get closer and closer to the surprisal um basically by extension to the model evidence which is the metric that we're going to be used using for you know comparing different models with one another
+
+A second incarnation of VFE is, again, we're going to expand the denominator again into this joint.
+
+So previously it was p of x given y times probability of y. Now we go probability of y given x times p of x. And again, distributing the log, and then we distribute the expectation.
+
+and then just you know swapping the terms again you have the scale divergence over here and you have this negative this negative expectation now this thing over here is called accuracy it means how accurate am i under my belief of the world the expect the expected value of
+
+observing y under my estimation of where the world is x so the higher this is it means the more accurate your belief about the world is that that is basically causing your observations but at the same time this term over here is called complexity it means that if you have some prior belief about the world you you will not be able to just move your cue wherever you want it is it has to stay close to your prior belief over here so this is basically a regularizer if you will
+
+And the third incarnation is basically again here, this is the definition of VFE again, you know, the log rule.
+
+So we end up with these two terms.
+
+So this guy over here is called expected.
+
+Sorry.
+
+It's called expected internal energy.
+
+And this guy is your entropy.
+
+So that's the expected value of log of Qx.
+
+We call this entropy.
+
+How do we minimize variational free energy?
+
+We have to maximize our entropy and we have to maximize our internal energy.
+
+Now, this term makes sense that we need to maximize it.
+
+But what does this one mean?
+
+It means that your queue will stay as smooth as possible, as simple as possible.
+
+This connects really well with Occam's Razor, if you're from machine learning background, that the best model is the one that provides the most accurate account of the data
+
+But at the same time, the simplest explanation for that data, this simplicity is enforced by this entropy term.
+
+It stays smooth.
+
+So this is very interesting.
+
+So these were just three incarnations of variational free energy.
+
+And the goal of inverting degenerative models, basically, the GM strives to minimize its VFE.
+
+This achieves two things.
+
+I hinted this just a little bit previously, but it means that the actual value of VFE will approach the intractable minus log probability of data.
+
+This is going to be used for model comparison.
+
+And the surrogate distribution will approach
+
+the unknown posterior belief.
+
+Remember, that was the goal of perception in the first place.
+
+And once you reach to that, basically minimize your variational free energy, you can use the actual value of free energy as the metric, as a proxy for the unknown model evidence to compare different generative models together, right?
+
+So the model with the lowest variational free energy is going to be the best model.
+
+Yeah, I think I've explained that one.
+
+Now,
+
+Just to let you know that the true form of the posterior is unknown.
+
+And you see that the terms like the probability distribution, the joint distribution here is not guaranteed that they're analytically simple to derive and work with.
+
+Because of that, there is this idea that we can actually use Laplace approximation to break down each one of the distributions and basically approximate them using a Taylor expansion.
+
+um particularly up to the third term which means that i'm providing a quadratic approximation using taylor expansion for each one of the components um within variational free energy um unfortunately i don't have the time to go over the detailed derivation but
+
+Suffice it to say that the result of approximating all the components is that the variational free energy simplifies to this equation.
+
+For those of you who are interested to know the details, I encourage you to look at the primer on variational Laplace paper, which is an amazing paper.
+
+It goes through all the details of derivation.
+
+So basically, free energy reduces to log of the joint distribution
+
+and you have the posterior covariance, and then n is basically the number of parameters and the states that you have, and so on and so forth.
+
+Now, predictive coding, this is basically where it gets even more interesting.
+
+It is basically a hierarchical generative model that we're going to be using to model human perception.
+
+And the goal is to invert this hierarchical model.
+
+So it's a powerful framework to describe how the cortex accumulates evidence from noisy stimuli
+
+It's an application of the free energy principle.
+
+It focuses on how this literally fantastic organ can perform probabilistic inference about the most likely hidden cause that has caused the sensory signal.
+
+It assumes that the brain has a generative model of the world through which it constantly infers the hidden states of the world, and it can also learn the parameters while inferring the hidden states of the world.
+
+So model inversion happens by minimizing variational free energy.
+
+Again, even though it's hierarchical, but the concept stays the same.
+
+predictive coding we have this concept of top-down predictions where predictions go from inside out about your sensations right and then the prediction error is calculated like what i described before and then this these errors if i want to be more precise the precision weighted prediction errors are sent back from outside in or they call it bottom up
+
+sort of direction, so that the estimations of the world, the estimation of the posterior beliefs about the world, are corrected, basically.
+
+That's when model inversion happens, when the posterior estimates get adjusted.
+
+And it looks like something like this, we have this hierarchical
+
+model that we have the same story of state dynamics and observation model but here we have this happening at each level and then you notice that these news these causes are the ones that link layer i to i minus one that's the important part that without these news without these causes the layers cannot talk to each other you notice that it is a hierarchical dynamical system uh basically um
+
+now how do we design an experiment um for you know for for this kind of perception neuromimetic modeling using the free energy principle i just want to give you the sort of ingredients here you the designer you first have to define your genital process that's x that's the true uh hidden states i should have maybe said x star yeah x star would have been a better notion
+
+then you will generate the observations this is some sort of some transformation of the axis you can add noise to it you can transform it the way you want but that's going to be the observations that's going to hit the markov blanket this these are what this uh this is basically where the sensory state observes and receives those sensations
+
+You have to define your generative model.
+
+This part is the tricky part, right?
+
+The Fs and Gs in your dynamical system, that's where everything gets really tricky.
+
+How would you define them?
+
+If it's hierarchical, how many layers should it have, basically?
+
+These are the big questions.
+
+You have to define the evaluation metric, that how would you define different generative models with each other.
+
+And then you have to design the online state inference loop.
+
+Now this is, by the way, just for this case, for this presentation, it's just about state inference.
+
+And then you have to compare different generative models.
+
+This is where Bayesian model comparison comes into play.
+
+Now here, you basically use a dynamical system.
+
+Here I'm just using a Lotka-Volterra process that captures the dynamics between a hunter and the prey together.
+
+It's a two-dimensional sort of world, if you will.
+
+So by solving the trajectories, by solving the differential equations, you get to this sort of trajectory.
+
+So you have 1,000 data points here, each of which is two-dimensional.
+
+So this is the unknown states of the world.
+
+right this is the unknown dynamics of the world regenerative process again it's unknown it's beyond the markov blanket
+
+Again, so this is the figure that we saw before.
+
+Now you can assume that you've got the brain here and you've got degenerative process X star on the left-hand side.
+
+The observations Y are basically a noisy version of the same hidden states that you notice that this is really noisy here, right?
+
+So the brain has to receive that and then infer the true states here, right?
+
+So for a one-layer predictive coding network for these particular experiments, you have just a simple sort of generative model, just one layer.
+
+And then I'm sort of comparing two generative models here, where the flow of the state dynamics are different.
+
+On the left-hand side, you have something that we call just a pullback attractor.
+
+We have this 2x2 matrix here, and we have this sort of point of attraction, which assumes that everything collapses into this world.
+
+Just to be clear, it means that my generative model of the world assumes that the world beyond the Markov blanket is attracted to a particular center called psi.
+
+That's what I mean by believing something about the world.
+
+Whereas the second flow, the second generative model,
+
+it's a sinusoidal sort of belief it means that i believe there is something periodic about the world beyond my markov blanket and the g's i just kept them as identity which means that whatever new is is going to be my prediction about my sensation right so i kept the g's identical now the evaluation metric this is very important
+
+as the inference is happening online for every observation you have to make an inference and then predict the sensation and then calculate the prediction error and then eventually calculate your variational free energy because it's happening online you can actually literally accumulate your free energy variation free energy across the entire inference period so at the end you will end up with one scalar value
+
+It's called the time integral of your variational free energy.
+
+They call it free action, right?
+
+It's just a fancy way of summing up variational free energy across the entire inference period.
+
+Basically, it's time integral.
+
+and it is interestingly it's an upper bound to the accumulated surprise so variational free energy is an upper bound to surprise and um free action is an is an upper bound to the accumulated surprise because free action is in and out itself an accumulation of variational free energy
+
+and this is you have to also then define the online state inference loop uh i don't want to go into too much detail here but um basically for each observation you will make predictions and you calculate prediction errors you calculate your free energy you calculate the gradient of free energy with respect to your estimations of the posterior that's the key part and then this is where you have to update your beliefs about the world
+
+and it's you notice you notice that it's a differential equation because the way you're going to update your um your belief about the world it's continuous it happens in continuous time it means between each two observations y i and y i plus one i have to integrate over this update rule to move from my previous belief about the world mu x to a new mu x at the next time step
+
+and that's why the integration happens here and just so you know this equation is basically saying that the amount by which i'm gonna change my belief about the world mu x is first of all the gradient of free energy with respect to mu x right that's typical gradient descent but the second term it serves as a momentum it means that if i'm gonna update my belief about where the world is i'm gonna
+
+consider the velocity of the world as well right if i'm going to estimate the velocity of the world i'm going to consider the acceleration of the world as well it's similar to the idea of momentum in optimization algorithms this is the bit that helps you you know catch up with the chasing target that is the world that i talked about in the beginning
+
+and then by you integrate this differential equation to update your belief about the world and then the next observation happens so this continues for all the observations and you're accumulating your free energy as time goes by and the result will be your your free action so the result is this so this is the first genitive model with the pullback attractor
+
+So this is the inferred state, right?
+
+And this is interesting.
+
+This is the accumulated free action, right?
+
+Very, very interesting.
+
+You notice that free action is having these regular jumps.
+
+It means...
+
+periodically, I'm getting surprised about my sensations.
+
+Remember that if you note here, this is where these nonlinearities happen.
+
+It means that my simple pullback attractor fails to capture those dynamics, so it gets surprised.
+
+But interestingly, where things are linear and simple, I'm not getting much surprise.
+
+So it's almost constant here.
+
+So I'm good at capturing simple dynamics, but not the ones that are highly nonlinear, whereas the sinusoidal one,
+
+you notice that we are capturing the magnitudes much better.
+
+We have a steady increase in free action.
+
+We don't get surprised for some dynamics and less surprised for other dynamics.
+
+We are always equally surprised for everything, which is interesting that here we are getting surprised consistently for everything.
+
+but here we are not getting much surprise for these particular dynamics so one is good catch a good and capturing non-linear dynamics periodic dynamics the other one is better in capturing simpler linear dynamics which is interesting and notice that the reaction here is much lower than the free action here so basically this means that this model is much better
+
+looking at the gen the generative power of these uh gm's so this is the g function if you remember g of x and mu that's the prediction of your one layer predictive coding network about the sensation that's the bit that gets compared with the true sensation and the prediction error is calculated remember that observations just like hidden states are two-dimensional so this is the first dimension of why the true sensation and why had the
+
+predicted sensation, you notice that they're almost close.
+
+And also with the second dimension, it's not doing a bad job, right?
+
+But for the second generative model, again, it's doing a much better job in capturing the magnitudes of the system.
+
+Again, you'll notice that it's not so good in generating these bits, whereas the first model is better in generating more accurate predictions of the first type.
+
+these are the results the pullback attractor and trigonometric the sinusoidal sort of flow you notice that the free action of the second model is lower it's better and mse loss which basically compare compares the estimated x and the true x the inferred x and true x together is also slightly lower so free action shows that
+
+The second model is good.
+
+And this is where Bayesian model comparison comes into play, where we use Bayes factor for comparison.
+
+It basically says that we take the model evidence for each one of the models and we divide them.
+
+Now, because these are intractable, we are using free action as a proxy.
+
+And when you put the values of free action, you get to this value.
+
+because it's higher than one it basically means that you have to pick the second model because it has a lower free action it doesn't get as surprised as the first one and at some point of caution free action versus mse mse as a measure of accuracy should never
+
+and I repeat, never be consulted on its own because it ignores complexity.
+
+So, for example, what if the free action of Model 1 and Model 2, the Model 1 had a lower free action, but what if the MSE of the first model was actually higher than the second model?
+
+Which one would you choose?
+
+Again, you have to choose Model 1 because this has higher power of generalizability to the unseen data.
+
+so it has less chances of overfitting to the data.
+
+We call that free action again as complexity minus accuracy.
+
+So what if we remove complexity?
+
+Again, we will overfit.
+
+So that was important.
+
+Some final thoughts.
+
+You can definitely learn the parameters and also estimate uncertainty about the world.
+
+So these are the things that are not covered in this presentation, but you can do that.
+
+This is where the separation of time scales will come into play.
+
+The DEM algorithm does exactly that.
+
+This is dynamic expectation maximization.
+
+I encourage you guys to take a look at that algorithm.
+
+Using that, you can solve the triple estimation problem.
+
+Now, can I go beyond x dot?
+
+Yes, you can.
+
+That's where you jump into the world of the generalized coordinates of motion, where you're not only estimating x dot, but you're also estimating higher temporal derivatives of the world.
+
+You have a system of coupled differential equations rather than having just two equations, which is very, very interesting, actually.
+
+Also, remember that active inference is not the same as predictive coding.
+
+Particularly in the philosophy communities, I've heard that people use active inference when they're talking about predictive coding.
+
+Remember that in predictive coding, we are simply making sense of the world.
+
+There is no concept of planning or action in play.
+
+The ML community, unfortunately, does not work with the dynamics of the world and AI basically is going to the opposite direction.
+
+Instead of using smart data, we are just going bigger and bigger data.
+
+So we would like a world that ChatGPT would also ask you a question and becomes curious about you to receive information that it selects, basically.
+
+So where should you start with, uh, with the free energy principle?
+
+These are the resources that I strongly recommend you some videos on YouTube.
+
+Hopefully you can later on, pause this video and go through these links, some papers that I'm recommending here.
+
+And the last one, the two books that I believe the red one, the predictive minus for philosophy community.
+
+And the first one goes through the math extensively.
+
+It's a beautiful book.
+
+And the videos, I recommend that you guys start with the videos in the first place.
+
+And I would like to just acknowledge our funding from the Marie Curie and also my colleagues Simon Urbas and Professor Friston, and also acknowledge the folks at UCL, UCD, and Monash University who have always supported our work.
+
+And here's the link to the code that everybody can just take a look and run.
+
+The README file is self-explanatory.
+
+Unfortunately, I ran out of time, and I won't be able to show a demo.
+
+But yeah, that's it.
+
+
+SPEAKER_01:
+Thank you, Mehran.
+
+That was great.
+
+And we have 10 minutes if you want to show anything, or I can ask some questions.
+
+But we have till five minutes after if you want to show anything, or even just scanning the repo could be cool.
+
+okay sure sure sure that's great thank you for that but just wanted to comment your your educational materials and the youtube channel are great and and they are they're an excellent supplement to the textbook and to the math learning
+
+
+SPEAKER_00:
+I appreciate that.
+
+Yes, absolutely.
+
+So yeah, I also have a YouTube channel, ML Don.
+
+Feel free to take a look.
+
+I'm actually reading the active inference book on that channel, so hopefully it would be of interest to you guys.
+
+And this is the repository that is publicly available.
+
+The README file is pretty self-explanatory.
+
+And this is just a one-layer predictive coding network for the task of inference and modeling human perception as a task of inference.
+
+These are the same plots that you've seen.
+
+So basically, all the functions are here.
+
+Everything you need is here.
+
+So the main function is the one that you're going to be dealing with.
+
+And this YAML file is where you actually choose the parameters.
+
+of your experiment.
+
+Just to show you in action what it looks like.
+
+So if you actually clone this repository on your machine, you just have to go to the YAML file and just do a quick scan of the README file.
+
+But basically, this is where you define your generative process.
+
+For example, you can say I want it to be a Lotka-Volterra process.
+
+And this is how I'm going to be picking the DT and the total time to actually solve the trajectories of my generative process.
+
+You can define your generative model here.
+
+You can define the dynamics to be like a pullback attractor or a trigonometric one.
+
+The likelihood, for example, is identity here.
+
+These are the dimensions of your x and y, 2 and 1.
+
+You might wonder why it's 2 for x. It's because you have x and x dot together, where the world is and how fast the world is changing.
+
+And this is just y in your generative model.
+
+you can increase them that's where you jump into the world of generalized coordinates of motion but this is beyond the scope of my talk today again this these bits are beyond the scope of our talk today this is where you basically talk about the correlation between the noise process across different levels of the generalized coordinates so the noise on the velocity how does it correlate with the noise process on the acceleration your belief about the acceleration of the world
+
+So how do they interact with one another?
+
+That's where these values come into play.
+
+And then this is the kind of noise that you will use to alter the true states of the world and generate your observations.
+
+For example, you can use a colored noise here.
+
+You define the mean and basically the standard deviation of noise.
+
+And we're using the sort of kernel here that convolves with the white noise to actually generate a more smooth
+
+noise.
+
+The reason being that all the signals that you work with in biological and organic systems are believed to have been generated by some sort of dynamics.
+
+That's why we keep them as smooth noises, infinitely differentiable noises rather than just white noise.
+
+And if you actually run this, so this is basically a pullback attractive.
+
+This is the first sort of generative model that we worked in.
+
+So you just run this main function.
+
+So we have 1000 observations, noisy observations, right?
+
+And immediately this happens.
+
+So for every 10 observations, we are accumulating free action.
+
+You notice that free action is ever increasing because it just accumulates free energy.
+
+And on the right hand side, you have VFE or variational free energy.
+
+Again, if you look at the definitions inside the functions folder of how we calculate or compute the variation of free energy, you notice that it's a far more simplified version of what you would see about free energies because everything is under Laplace approximation.
+
+And you end up with far more simpler terms.
+
+And the final result is reaction is this much.
+
+And basically your final MSE loss is 0.53.
+
+And if you want to see the final output, you just have to go into the results folder.
+
+And these are the folders that are generated.
+
+that you have two dimensions in x one dimension and y lotka volterra is a general process for example degenerative model follows a pullback attractor scheme and then your g is just identity this is your free action and then that is your mse loss and if you open it all the plots that i showed you in the presentation are saved as pdf here just to give you an idea like this is your x this is your true invisible
+
+states of the world, right?
+
+And if you want to look at X hat, this is the inferred states of the world.
+
+And these are, for example, the noisy observations of the world.
+
+Yeah.
+
+So I hope that the repository would be of help and of interest to all of you.
+
+Thank you very much.
+
+
+SPEAKER_01:
+Great.
+
+What kinds of problems or settings do you feel that this could be adapted to or useful for?
+
+
+SPEAKER_00:
+I would say, first and foremost, this could be used for... Basically, it's all about any kind of problem that's about inference.
+
+You have some noisy observations that you want to infer the hidden state, but in terms of adaptability, you can build on that by introducing parameter learning as well as uncertainty estimation.
+
+So our goal is to
+
+develop this into a triple estimation sort of package predictive coding network and add more layers to it so to have a hierarchical predictive coding capable of solving the triple estimation problem yeah that's the ultimate thing that you can actually adapt this to cool um
+
+
+SPEAKER_01:
+What are you excited about for ML Dawn or for your learning or research in next year?
+
+
+SPEAKER_00:
+I'm very much excited in embedding these kinds of calculations into the world of AI, because as I said, AI is moving, in my opinion, and my humble opinion is moving towards the wrong direction.
+
+Instead of bombarding models with all sorts of data, the model should be able to choose its data.
+
+So I'm very excited in developing this framework into a hierarchical predictive coding network, and then
+
+sort of compare the performance of such a model with other traditional AI-based generative models and basically show its superiority that I believe it has in different scenarios.
+
+And ultimately, this model is going to be used for, in my grand proposal, in the project I'm working on, it's going to be used for modeling hallucinations as a kind of false inference about the world.
+
+And it's going to be used as a proxy for us to understand what happens in neuropsychiatric disorders when people actually suffer from hallucinations in the brain.
+
+So this predictive coding network is going to be a brain-inspired AI model for us to understand what goes wrong in the skull of a human being when they suffer from hallucinations about the world.
+
+So that's what I'm really, really excited about and really hoping to achieve.
+
+
+SPEAKER_01:
+Cool.
+
+It's like inspired by the brain for the brain.
+
+
+SPEAKER_00:
+Absolutely.
+
+Thank you, Mehran.
+
+
+SPEAKER_01:
+Great presentation and good luck with the continuation of the work.
+
+
+SPEAKER_00:
+Appreciate it.
+
+Thank you for having me.
+
+Okay.
+
+Till next time.

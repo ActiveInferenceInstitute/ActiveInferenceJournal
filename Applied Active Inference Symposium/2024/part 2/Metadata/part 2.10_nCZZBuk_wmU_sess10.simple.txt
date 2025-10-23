@@ -1,0 +1,1000 @@
+SPEAKER_01:
+Hello, welcome back.
+
+We're here with real Bradley Lycia and recorded Stefan Bohlmann.
+
+There will be a pre-recorded talk with some discussion too.
+
+So thanks all and looking forward to the talk.
+
+Go for it.
+
+
+SPEAKER_02:
+Okay.
+
+Okay.
+
+Is this coming through?
+
+Yes.
+
+Okay, wonderful.
+
+Well then, yeah, welcome everyone to my presentation about NeuroDesk.
+
+My name is Jeffen Bollmann.
+
+I'm a senior research fellow at University of Queensland in Australia.
+
+And sorry, I can't be there live, but the time zones are just too difficult.
+
+I want to start with why we built NeuroDesk and then introduce what it is.
+
+But we saw a couple of challenges in open science.
+
+And one of them is really non-reproducible workflows.
+
+So we have different great tools.
+
+They run on lots of different data sets.
+
+But the challenge is that if underlying dependencies change, they produce slightly different results.
+
+And that's really not great if we want to infer anything on this data.
+
+The other challenge that we saw is infrastructure disparities.
+
+So lots of people have access to different computer resources.
+
+So be it their own notebook, the HPC cluster, or their cloud provider to process their data.
+
+And wherever they want to run data analysis, they need to come and install their software again.
+
+And the software will be different across these installations and often costs a lot of time.
+
+Again, it produces different results, but also costs a lot of time in maintaining these different installations.
+
+other challenge that we see is data management so when you acquire experimental data then from an mri scanner for example or behavioral data then we have to organize in some sense and a lot of different tools but we wanted to see if we could make that a lot easier and then also data storage and privacy so where we store this data how we collaborate with others how can we make this data
+
+openly available to others these are really questions that we had and thought well can we somehow make this nice and nicer for people and easier to use so why is it so difficult um in the end all the software that i use for neuroimaging analyses are are software pieces that depend on other software pieces and these we often call libraries and what they do is these libraries provide
+
+functionality that you don't want to re-implement.
+
+For example, you have your software here that does some brain imaging analysis, and then you don't want to reinvent how windows are drawn on a computer or how data is plotted or how images are processed.
+
+So you want to use what other people have already built to do these functionalities.
+
+And then what happens is your software starts depending on these because you're using functionality from these.
+
+this usually works quite well and the reason is that we have in linux for example with package managers like apt yum or if you use python for your work we have conda and pip but pretty much all languages systems have some kind of package management system that keep dependencies compatible with each other and that's really how it looks like it's like a puzzle piece where if one thing upgrades another thing has to upgrade as well they have to have matching versions and then we're hoping that this all works
+
+The challenge is with a lot of the scientific software that we work with, it's often built by scientists who don't have a lot of time.
+
+They're not really software engineers a lot of the time.
+
+So what happens is they have unpackaged scientific software.
+
+So these
+
+scientific software packages are not available in standard package systems.
+
+And that means that if the operating system upgrades, the package manager doesn't know about this software because it's not registered there.
+
+And then what happens is the package manager changes something.
+
+And because it didn't know about the software, then it breaks.
+
+And that's
+
+happens, unfortunately, quite often with scientific software.
+
+And it leads to two problems.
+
+Again, here's our reproducibility problem, because if we're just dependent on a library and even if it doesn't break, let's say it just changes functionality, our results will be different.
+
+And that's really bad for reproducibility.
+
+And also, this means portability, because if our software is tightly integrated with the system, it means we can't install software on our notebook and then run exactly the same software on a high-performance computing system, because that will have slightly different dependencies.
+
+So we need to install it again, often compile it from source code, which can be really a lot of work.
+
+So just to show this reproducibility problem in a little bit more detail, this is a great article that looked at software that depends on glibc.
+
+glibc is a very fundamental Linux library.
+
+And what they did is they varied only that library version
+
+um and they left the main piece of the software intact so they used free server and lots of other pieces but i'll focus here on free server um so it's the same software installation just a different operating system just in different linux versions in the end
+
+and what happened is in glibc the exponential function for example was altered and was made more efficient but unfortunately this meant that the precision of this function changed so now you would think that this doesn't matter right it's like very uh a couple digits after um uh so yeah so it should be quite insignificant unfortunately it's not because free suffer in particular has a it's a long running pipeline where we segment the human brain
+
+and this means that if you have small changes this accumulates over thousands of processing steps so this means in the end here they found differences in millimeter up to 0.2 millimeter in the cortex where
+
+This is a change that's only based on a software version of this underlying glibc.
+
+So FreeSoft was identical.
+
+The only thing that changed was the operating system.
+
+And the thing is, this was even statistically significant in some areas.
+
+And that's really not what we want, because if you acquire patient data on one software version and then you have matched controls on another software version, then that would really lead to significant results that are actually meaningless because they're just based on computational noise.
+
+So the organic solution that I've seen in my career is that we just have people set up different computers and don't touch them, don't try to update them because people are aware of these problems.
+
+and this is not great because it's not a great use of resources and also it means we can't easily take our software and run it in different computers and this is this portability problem where let's say you want to run the same software on your notebook on your lab workstation in a secure environment on a cloud provider on a high performance computing cluster or even on the instrument where you're acquiring your data like your MRIs you can't just easily build an algorithm on your notebook and then run it on the MRI scanner it's currently not possible
+
+But that would be cool, right?
+
+For translational studies in patients, it would be fantastic if you had a model that you build on your notebook, you validate it on lots of data, and then you can actually deploy it in real clinical environments.
+
+That would be fantastic.
+
+So this is really the problems that we're trying to solve with this project.
+
+And we adopted one solution for this, which is called software containers.
+
+So I quickly want to introduce what software containers are and how they work, because our software is based on all of this.
+
+So software containers, if you've never heard of them, a very simple thought pattern is they're just boxes.
+
+They're boxes to put software in.
+
+And I really like the stuff where you put food in and put it in your fridge.
+
+It's fantastic because it keeps things separated and you can move them easily.
+
+They're very portable and they don't depend on each other.
+
+And that's really what software containers do.
+
+They use specific Linux kernel features called namespaces and cgroups.
+
+They isolate processes and dependencies from each other.
+
+So this means we can put everything our software needs into a standardized box and we can move that across operating systems.
+
+And what it basically changes from our mental model when I said earlier, we have this Lego piece where this piece depends tightly on the other things in the system.
+
+This now changes to where we take these dependencies, we put them into the same box.
+
+So now we actually don't have dependency on the system anymore.
+
+The box got a bit bigger because we have these dependencies not included.
+
+But in the end, storage is cheap.
+
+but experiments scientific experiments are expensive so this is a very low price to pay for a lot of great features and the whole cloud world everything the internet depends on today is based on software containers so this is really a very mature standard that has been adopted everywhere in the computing industry so in science we're just we should just do it as well um
+
+So what we can do, we can package all of our software in these boxes.
+
+And then because we have these standardized interfaces now, we can run this on Windows, Linux, and Mac.
+
+On Linux, this is a standard kernel feature.
+
+So no performance penalties, very easy to run.
+
+On Mac and Linux, we have some virtualization technology that we need, but that got really good over the last years.
+
+So you will not feel that it's slow.
+
+It still feels very native, but there is some virtualization, there is some overhead, but it's tiny compared to what we had a couple of years ago.
+
+so then let's come to what we built um before i show what we've built in your desk is i want to acknowledge all the people working on this project because yes i'm giving a talk here today but i'm just one of many contributors um we started this project really during covert because we are all bored and sitting at home and we said well let's let's solve that problem why not right we have time um so we got together a couple people uh all highlighted in in
+
+in bold here and said, okay, let's build this.
+
+We built a prototype during a hackathon at the OHPM and we got funding from the AIDC to build a bigger version of this.
+
+And then, yeah, we got lots of people involved.
+
+Slide change, sorry.
+
+We got lots of people involved from across the world and lots more supporters like the big cloud providers, AWS.
+
+Google had supported us in the past as well.
+
+And then also the
+
+the university cloud providers like EGI, Jetstream, AIDC, Nectar Cloud.
+
+So that helps a lot.
+
+And yeah, we're currently funded by the Mark & Chan Zuckerberg Initiative and the Wellcome Trust to build that system out further over the next years.
+
+So this is what we built.
+
+So I'll start here at the container level.
+
+So this is really the software containers that I introduced earlier, where we build a software container for every piece of software that people want in this.
+
+So here we have a couple of neuroimaging pieces, so fMRI prep, FreeSurfer, FieldTrip, ENTS, and then we can control everything in there from the binaries, the libraries that we have in there, up to the actual software that people want in the end, like M&E, which then depends on Python, which then depends on Conva, and so on.
+
+So we can control all of these dependencies.
+
+And then if you've used the software container before, they are fantastic, but they're not always easy to use.
+
+Like you have to run specific commands like Docker run, or if you're on an HPC, you need to run Singularity or AppTainer run.
+
+And we didn't want that people have to think about this.
+
+And we build an accessibility layer, we call it.
+
+But in the end, it's just an abstraction across multiple container technologies that we use.
+
+and it's also a way how we can stream containers to end users so people don't have to download these containers so this this little block here was actually the most of the work that we spend on how do we get these containers to end users and how do we make it easy for people to use that
+
+But ultimately, what this allows us now to do is we can run these containers on any system.
+
+So we can run this on Mac OS, on Linux, on the cloud, on Windows, on high performance computing clusters, in Jupyter notebooks like Google Colab, on the terminal.
+
+pretty much anywhere and we try to indicate this here with this little script that goes between systems and that's not the thing that wasn't possible before we can code up an analysis on our notebook and we can move it across all these systems and will perform identically and behave identically across all of these systems so this really is fantastic for collaboration for translation of results and for reproducibility in general
+
+And then the community uses that interacts with the system, but also finds problems, bugs, and then reports back and contributes new containers, new things that people want to use in the system.
+
+And that's really the ecosystem that we've built.
+
+So the best way to get started with NeuroDesk is go to our website, neurodesk.org, where you find two very quick ways to get started.
+
+If you want to run a hosted version of this, which runs on the cloud, or if you want to run a local version, which runs on your computer.
+
+And it depends on your use case.
+
+If you have data, patient data, you definitely want to run this locally.
+
+If you have open data, you can use a hosted version and you're fine.
+
+And then we have a more fine grained table down here where you can select what your compute platform is, what your operating system is, what the interface is that you use.
+
+And then you get guided to the documentation where we guide you through how to run this on your system.
+
+in the end what you're getting is you're getting a virtual desktop which is just a linux desktop with all the tools installed and the cool thing is all the software is ready to go so you don't need to install anything everything is there we have no dependency issues so we can even have
+
+the same software in different versions.
+
+So, for example, FreeSurfer is almost impossible to install different versions of that software on your computer because it will replace dependencies that other pieces depend on.
+
+But because we wrap all these dependencies in a software container, we can actually provide all versions of FreeSurfer, for example, going back over the last years without any problem.
+
+because of this containerization analysis reproducible down to the software level we're not reproducing anything hardware effects i can show this later but yeah if there's like a cpu difference between intel and amd or arm we don't control that but down to the software level it's reproducible
+
+then this whole uh system is only 1.5 gigabyte in size and the reason is we can stream all the software we need on demand in here so when you actually click on a software it is streamed live to this endpoint you can also choose to download it but then we realized that
+
+We look at brain imaging data and check if things worked or didn't work.
+
+Then also we wanted to support high performance computing systems.
+
+So high performance computing systems, they don't often come with a desktop interface.
+
+So you need to work from the command line.
+
+So we build everything to integrate with these HPC systems so you can easily run NeuroDesk on there.
+
+Often you can't install things on there.
+
+So we took care of making that possible.
+
+So you don't need any elevated privileges if you have Singularity or Optane already installed on your HPC.
+
+And then we also support Jupyter and notebooks, computation notebooks in general, because we think this is a great way of documenting and analysis, experimenting, collaborating with other people and sharing results in the end.
+
+So we really build it into JupyterLab as well and provide with this very nice interface to people that they are used to, that I know how to work with.
+
+Then it's also very easy to contribute new software to it.
+
+It's all automated on GitHub.
+
+So we have GitHub actions where people can propose a recipe for a software that gets automatically built, tested and integrated into the whole system and made available.
+
+And then we have a system which is called CDMFS, the streaming of software that I mentioned.
+
+It's developed at CERN.
+
+So CERN used CDMFS to stream software and instrument data across the world.
+
+And we use exactly the same system and also collaborate with the people who run these servers.
+
+So we have a primary server where we ingest all the software.
+
+And then we distribute it worldwide.
+
+So wherever you are in the world, you should get a quick access to the software.
+
+And there's a client in there that localizes where you are and gives you the closest server.
+
+And even if the server is down, it just goes to the next server.
+
+So it should be a quite reliant system.
+
+And we're using this as a couple of years and have never had any issues with that.
+
+And then for the end user, it just appears magically there.
+
+They just see the software there.
+
+And when they started, it just magically works.
+
+It's just on the first start, it's a little bit slower because it has to download certain things.
+
+But then on the second start, it's cached locally and it behaves like it was installed locally.
+
+So the uptake in the community is pretty impressive and we saw really big growth over the last years.
+
+So we have more than a thousand monthly users on our systems that come from over 60 countries.
+
+So really worldwide adoption.
+
+We see that more than 16,000 people downloaded our main software container that provides a lot of these things.
+
+It's used in university courses for teaching.
+
+It's used in conference workshops because it's fantastic for
+
+standardizing teaching material because you can't, you don't have the problem that students have different software requirements on their computers.
+
+They all log in into either a cloud-based system or to install our software container, and then they can run all the same analysis, which is fantastic.
+
+And we also have various collaboration models that we support with this because we realized that in some instances, it's nice to have a central compute instance where people all log in and they all work on the same data.
+
+And this is fantastic for open data sets.
+
+This is fantastic if people are actually all in the same institution and they all collaborate on an institutional server.
+
+and that's really useful and used a lot also for teaching obviously that's a really great setup because teachers can then log into the other students notes and quickly have a look what's happening there if they if they struggle if they have a problem
+
+But then we also have this federated model where every, let's say, researchers are collaborating from different institutions.
+
+They just install it on their infrastructure, on their computer, and they run analysis on their data.
+
+And then they can, for example, aggregate high level results in a publication without sharing actual any confidential data.
+
+So let's say brain extraction or brain, let's say,
+
+cortical thickness measurements, right?
+
+So you could easily share those without actually exposing the patient data that's underlying this, and then that can be shared across different institutions.
+
+So that's a really cool model as well that we see often used with our project.
+
+And with this, I claim that we made maintaining and installing scientific software fun again.
+
+So it's now very easy.
+
+Basically, you install NeuroDesk on these different systems, and we make sure that the software runs on these systems.
+
+So even very recently, we managed to get our containers running on an MRI scanner.
+
+So this works particularly well for the Siemens ecosystem.
+
+So Siemens has a software platform called Open Recon.
+
+So we can actually build a software container
+
+that can directly be integrated into a reconstruction running on the system.
+
+And that is really closing the loop.
+
+So now you could acquire data, build a core model, and then deploy it on an MRI scanner where patients can directly be scanned and the results end up in the PACS system for people to look at.
+
+So that's really great progress over the last months that we've made there.
+
+So I want to quickly show the open data workflow in NeuroDesk.
+
+So this is something that we always focus on a lot.
+
+We want to make consuming and producing open data a lot easier.
+
+And what we've built there over the last years is that we support a lot of tools and databases that make that possible.
+
+So I'll start with importing data.
+
+So usually if you produce open data, you would start from, for example, an MRI scanner or an EEG system.
+
+Or you would download data from, for example, Open Neuro or the Open Science framework.
+
+And then we have a tool in there that's called DataLad that can handle a lot of these cases where we can download data from these systems.
+
+Also, XNet we support, which is a tool commonly used in the neuroimaging space to archive data.
+
+And then we, of course, support any cloud provider or any local connection.
+
+So pretty much anything.
+
+This is not a complete list.
+
+This is just a couple of examples of what we support.
+
+And then
+
+Once the data is in the system, we can process the data using pretty much any software out there.
+
+If the software is not yet there, it can easily be added.
+
+We currently have more than 100 pieces of software in there that the community wanted.
+
+And then we can organize the data and we can document our analysis.
+
+We highly work with the BITS standard for the brain imaging data structure, but also BITS has been extended to the EEG world.
+
+So we support this as well.
+
+We support Jupyter, as I said, as a way of documenting this data.
+
+But you can use also your own script system, whatever you're used to, you can install it.
+
+And then we wanted to make it very easy to share data with the community.
+
+So we support Google Colab, for example.
+
+So you can write your analysis in Jupyter and then you can provide, for example, a Google Colab notebook with your paper where all the analysis run and we stream the software into Google Colab.
+
+So with this, we can even run software that wouldn't be able to run in Google Colab.
+
+So for example, because you couldn't install it because Google Colab doesn't have enough disk space, for example, to install a certain piece of software.
+
+And we can actually run the software in Google Colabs for our streaming service.
+
+But also, we made sure that we can easily upload data back to Open Neuro, again, through Data Lab, or we can share data out to OSF, or that we can share our analysis quickly on GitHub.
+
+And then people can start again from this and can use our data that we produced or our derivatives that we produced, and then start the cycle again, and then really, yeah, enrich the open ecosystem out there.
+
+So people often ask, what is our sustainability model will be around in the next couple of years?
+
+And of course, that's a very good question, because if you start adopting a framework like this, you invest time learning it and you want to be sure that it's around.
+
+So we try our best there.
+
+So we, as I said, we have been funded
+
+through an AITB platform grant in the past.
+
+We're currently funded by the Mark and John Zuckerberg Foundation through Wellcome Trust.
+
+And we're applying for grants left and right to keep the system growing and developing.
+
+But of course, grant funding is very competitive.
+
+And of course, grants always want to fund things that are new.
+
+They don't want to fund things in maintenance mode.
+
+So that is definitely something that we anticipate.
+
+So that's why we really want to build the community.
+
+So we already have 10 more than 10 active contributors.
+
+We have a lot of the infrastructure hosted through the community, through the Open Science Grid, the EGI Foundation, where we don't have basically cloud builds for us, which keeps our costs very low, which is good.
+
+Also, if we have helpers from the community, we can also lower our costs because we don't have to do certain work.
+
+And then we provide NeuroDesk as a service as well.
+
+So this goes through a non-for-profit foundation, which is called the Queensland Cyber Infrastructure Foundation.
+
+And what they do is they provide NeuroDesk at a certain cost for, for example, a conference, for a workshop or for university.
+
+So let's say you don't want to use the open source software and do everything yourself.
+
+You can go to QServe and say, I want this professionally managed.
+
+i want a service contract i want an sla i'm happy to pay money for that and i don't i want to use cloud resources for example and then qsif can can provision that and set it up in a way that it's uh really it's at scale and working really well with with certain guarantees as well
+
+And then this money flows back to us to develop things further.
+
+And then we also have a lot of support from cloud providers.
+
+So as I said, we were heavily around cloud technologies.
+
+So we had been supported by Oracle Cloud in the beginning, then Google Cloud, and now currently our main sponsor there is AWS and the research clouds like EGI, Jetstream, ARDC, which support us with cloud resources and make that all possible.
+
+So I want to quickly show you some results from this reproducibility aspect, because I'm always claiming that NeuroDesk is reproducible, but isn't.
+
+And how reproducible is it?
+
+So this is something that we looked at.
+
+So a PhD student in my group took that original paper that I showed earlier from Tristan Klattar, where they found these reproducibility issues with software.
+
+So we took that paper and tested, can we reproduce the non-reproducibility of software?
+
+So the analysis is the following.
+
+We picked this part where we have data was scanned from an MRI scanner in anatomical space.
+
+What we have to do is we have to register it to the MRI space.
+
+So this means we align it to a template space with a tool called FSL Flirt.
+
+then we take this data and we segment it so we segment subcortical areas and we measure for example the size of that so it's a very simple pipeline where you think that should be pretty easy to reproduce so what we did is we used a very similar setup than what klatar used in their paper where we have a local installation of fsl so fsl is the same
+
+But then once we run on glibc versions 2.3.1, so on a Ubuntu 20.04, at the NeuroDesk, we chose a quite old version of Ubuntu with a quite old version of glibc.
+
+But the cool thing is the glibc version is consistent, whereas here, the glibc version is 2.28, so something in the middle.
+
+It's on an Alma Linux 8.5.
+
+And then also what we varied is we varied the processors.
+
+So here's an Intel i7, and here's an AMD EPYC processor.
+
+so let's see what happens so we of course we compare these different systems now let's see what happens so the first thing is image intensity differences so the first thing is we were able to replicate the problems from the paper so if you have a local installation with two different glibc versions then you get different results and this is really intensity so we
+
+We only focus on the intensity in the area where we will later do an analysis.
+
+So it is actually intensity changes for brain, but just to show where the problems are.
+
+So we basically see that the intensity of a voxel is like up to one
+
+one integer value different and this is small because when you think about the images are usually like 0 to 1024 so a change of one doesn't matter much but still it's a change and it shouldn't be there so
+
+the cool thing is when we run as a neural desk where we control glibc the glibc version this effect is not there there's nothing there and that's exactly how it should look like there shouldn't be a difference between this it's a fully deterministic analysis there shouldn't be any variance between that and that's cool
+
+So then when we look at the classification differences, so this is now when we segment this data, we see again in the local installation with different glibc versions, we see quite high disagreements between labels.
+
+And this is now a dice score.
+
+So this is between 0 and 1.
+
+and a 0.16 die score is quite a lot when you think about it um so this means we actually disagree in certain areas quite a lot between segmentations and again that shouldn't be the case now in neurodesk you still see something then however note that the scale is an order of magnitude
+
+scaled down so we had to scale it down to make anything visible there but we wanted to show it and why is that why is neurodesk here showing some non-reproducibility because i just claim that we are reproducible right and why are we suddenly not
+
+and we looked into this so we looked we traced the executions of this program and we found that as expected in the local installation the software diverges so we're doing different things on different computers with different glibc versions and that's why we're getting different results so that explains it it's great on neurodesk we're not diverging we're doing exactly the same thing on both computers
+
+So this means on a software level, it's reproducible.
+
+But why is there still a different result?
+
+And the reason is that we use different processors.
+
+So it was an Intel processor.
+
+One was an AMD EPYC processor.
+
+So different instruction sets, different floating point positions can still have an effect that we cannot control for, even if we do
+
+everything the same we get still small differences they're tiny but they're still there so it's something to to note that 100 reproducibility will only be possible if you also control the hardware but then
+
+In the end, you have to have a trade off there, right?
+
+When is reproducibility enough and how much effort do you want to put into having reproducible results there?
+
+So yeah, that's just our results there.
+
+So a little bit of an outlook what we're working on next.
+
+So there's a lot of things we do work on, but one thing that I really want to see
+
+alive in the next years is interactive papers because that's what we can do now we can have an analysis in a jupiter notebook where we describe what we've done we can show all the results we can show all the analysis and we could run everything and everyone could rerun it as well and then base their analysis on it and fork papers and really say well my analysis based on that paper and have open data for pretty much everything and really
+
+uh yeah make it easy to to contribute to this open science world and we already see some adoptions from this from from bigger journals like eLife they already have like some of these executable papers so we're seeing this coming through there's still a quite a bit of work required to make this easy and and very doable but our Neurodesk paper for example we already did that so the Neurodesk paper you can go and reproduce it and you can reproduce our reproducibility analysis for example which we thought was quite nice
+
+with this i'm at the end uh of my talk so i just want to highlight that um it's an open community so if you uh we we need we need community we need community engagement so if you like what we've done if it's useful for you get in touch help us build new things find bugs and
+
+um yeah we also have a little bit of time still left to show neurodesk connection if this is something you want to see go to our website um neurodesk.org click on hosted and then you see we have different services and i said we choose the place service with different regions australia us and europe so if you're roughly in one of these regions pick that one
+
+So I said, I'll pick Australia.
+
+I just want to quickly highlight here that all of these servers require some kind of a login.
+
+Australia, you need to be an Australian researcher because that's how the service is funded.
+
+In the US and Europe, you need to have a GitHub login at least.
+
+um so i'll click australia then what happens is we'll authenticate you with an account in case of australia we use an australian access account in then you just say okay i want a default environment there shouldn't be anything else available for you this will start up a jupyter notebook on cloud resources that are in that country so you don't want to put patient data there of course but you can put
+
+open data there and in terms of storage you have a home directory which has about two gigabytes of storage you will get a warning if it's full and then nothing will work anymore so we need to be care that this is not happening and then everything else you change in the system will be reset after after your session is done but that's basically how it looks like you go into the system and then it's just a very familiar Jupyter notebook system so I quickly want to show now
+
+We have, for example, an example repository, which I quickly want to show.
+
+So I'll just show it on the website first.
+
+So what we've done is we build an example repository of lots of different workflows where we, for example, show how to use pipeline systems on here.
+
+We show how to do diffusion analysis for MRI.
+
+lots of lots of different things and we're currently building that out so if you have a tool that you want in there please go and contribute an example contribute a tool and what we can also do is i can i can easily take this and also run this on our website so for this uh we'll just check out this repository so i'll just show that um so just clone our example notebooks and then
+
+we'll take a couple yep so here are example notebooks and then we can just pick an example here so i'll pick structural imaging and then i'll take the uh i'll take the functional imaging where is it intro to pre-processing i just wanted to have a very quick one to show
+
+Yeah, okay, so night pipe short.
+
+So that's a really quick one to show.
+
+So what we do is we have a first cell where we set up NeuroDesk.
+
+This is not needed if you run this in a NeuroDesk environment, but it's needed outside, for example, Google Colab.
+
+And then we output which CPU you're running on just for review usability reasons.
+
+And then you can import any software into this notebook.
+
+So for example, here, I install
+
+i import fsl and this is a software that we provide so this software will now get streamed into this notebook and then we can run any tool from the software you can also install any python libraries anything um you need but yeah that was uh really the streaming that you saw so that
+
+This bad tool was now streamed into this notebook and now can be used in anything.
+
+And just the same way we can load pretty much any software and have it also documented what software we're using, in which version we're using it.
+
+And then I'll just download some test data and show that.
+
+So I'll quickly run this notebook.
+
+While this is running, I want to show something else because notebooks are great, but sometimes it just needs more.
+
+It needs a desktop.
+
+And this is what we can do.
+
+So we can launch a full virtual desktop in the system, which should look familiar if you've used the Linux desktop before.
+
+but ultimately it has a little start button down here where you go into NeuroDesk menu and you see we have lots of different categories right now for functional imaging, electrophysiology, diffusion imaging.
+
+And then you can start pretty much anything from here.
+
+with visualization software and you can just start a software it should start it should run and should behave exactly as what you're used to as i said the first startup will always be a little bit slower because it has to stream the software but then you can browse brain imaging data and access everything you want so now i want to show quickly as well um one more one more way of using that
+
+So I said earlier, we have this Jupyter Notebook.
+
+So I can also open this in Google Colab.
+
+So when I open this in Google Colab, I'll just do the same thing here, run all.
+
+This is now really cool because this is what I mentioned, like this you could attach to your paper where you have your whole analysis coded up in there and then run it on Google Colab.
+
+And it will behave identically than what you just built on the NeuroDesk instance, for example.
+
+While this is running,
+
+see yeah i'll keep this running i just want to show one more way of doing it so uh oh yeah okay but that will not work currently just sharing the screen because i only shared a browser but yes so then there's a ways of how you can run it locally on your computer uh with a docker container so you only need docker installed it can run on high performance computing clusters pretty much anywhere where you should need it it should run um and when i just go back to our website quickly
+
+Yeah, your high performance computing system.
+
+We have instructions here how to do this.
+
+Even if you don't want this whole setup around, we have ways of just installing a single container and you can use that in Docker and Singularity.
+
+So it's really a very layered approach of this whole system.
+
+So if you just want everything and no work, then just take the top hosted versions and then you can just go down the technology stack and use what you need for your work.
+
+That's really what we've built.
+
+And let's see if that now finished by now.
+
+So this will still take some time.
+
+Let's see.
+
+I'll see if this one is finished by now.
+
+Yeah, so basically now this random analysis, it downloaded data and then.
+
+Maybe I can show that one.
+
+We also have built-in visualizations, which is quite nice.
+
+So we can, in a Jupyter notebook, this is using a library called WeView, where we can browse and visualize neuroimaging data.
+
+So yeah, so the notebook is still running, so that's why it's not executing it yet.
+
+But yeah, once it's getting there, it will.
+
+So yeah, that's really...
+
+That's really what we've built.
+
+So yeah, while it's running, we can take some questions.
+
+Bradley, if you have anything that people might want to ask, I can show that.
+
+But otherwise, that's pretty much what I had prepared.
+
+
+SPEAKER_00:
+Yeah, that sounds good.
+
+Thank you.
+
+I'm interested in the containerization aspect of this.
+
+So this is something that you can run on any machine, on any kind of computing.
+
+paradigm, like, you know, if you want to run it in the cloud or on your laptop.
+
+So a lot of the people in the group, you know, they're interested in active inference, they're interested in sort of building their own tools, and then how maybe to do containerization as part of that strategy.
+
+So can you speak to that a little bit?
+
+
+SPEAKER_02:
+Yeah, exactly.
+
+Exactly.
+
+So if you build your own tools, you can just basically build them in here, just get them to work first.
+
+And then once they work, I'll quickly show how this would look like then when you want to containerize it.
+
+So, for example, let's say it's a Python tool or a MATLAB tool.
+
+MATLAB, we have to compile and then we download it.
+
+I can show that quickly.
+
+So for example, SPM is an example there.
+
+So SPM is a brain imaging software as well.
+
+And if you're ready to containerize it, you can send us this build.sh file where you basically build a container based on a certain Ubuntu version and you set everything up yourself.
+
+And here's an example where we download a compiled zip file for MATLAB that then runs in the MATLAB runtime environment.
+
+And we have lots of tricks to make this recipe quickly writeable.
+
+So this is actually a higher level language, which is developed by NeuroDocker team.
+
+And this higher level language makes it easy to build containers because if you
+
+you want to build containers yourself there's actually a lot of optimization that has to go into it and with this higher level abstraction makes it easier to build these containers but then yeah once you have a software it's pretty easy to run it in here and even if you don't want to containerize it if you got it to work in here and you have the steps to do it it will run on any neurodesk system pretty much so that's the uh that's the cool thing so if you have a python library
+
+and it's just three steps to install it you can do that as well you don't have to containerize it only if you really want to freeze it in time make it really robust across different systems then this is the way to go yeah so does this make sense yes yes and then i i would like to ask you know what does the future look like i mean do you have a road map where you're going out five years or so and if so what are the needs that you need to kind of address in that roadmap
+
+Yeah, exactly.
+
+So yes, we have lots of ideas how to go forward with this.
+
+It always will depend on funding, what we can do in terms of new features.
+
+One thing we do want is, and we're heavily working with this right now, is getting into the clinical space more to make it very easy to run the software anywhere.
+
+So currently we're still needing some containerization like Docker, Podman, Singularity, AppTainer.
+
+We want to, and we just have a prototype for that, where we actually bring everything we need, like we use a QEMU-based emulation or virtualization.
+
+And if virtualization framework is enabled on a computer, it's not even emulated.
+
+So it's really native speed.
+
+And with this, we can run anywhere on any system, really.
+
+And we have no limitations anymore.
+
+Currently, you still need some privileges to start a container on a system.
+
+And this is really needed for these clinical scenarios where we want to get into.
+
+So this is one thing we're building out.
+
+Running these containers on an MRI scanner, that will be a lot of work in the next months.
+
+And then the other thing is lots of other communities have contacted us.
+
+So this is now focused on brain imaging, but Active Inference might have lots of different tools there, and they might want to build their own flavor of this, like an Active Inference Neurodesk.
+
+and we have communities like the genomics community microscopy dermatology they want to do this as well so what we will be doing is we will refactor everything that's not neural imaging and put that into a new project and then we have spin-off projects like neurodesk that uses underlying technology but then they build the software around it and then community maintains that one
+
+um and builds their own flavor of this this is something we're going to do in the next years we still need some funding to accomplish that but I'm thinking that is yeah that is absolutely needed to support other communities there and there's also a whole underlying thing of what cloud technology we're using right so all of these things don't have to be reinvented if another community wants to use that so that's that's really our roadmap for the next years making that yeah more general and yeah
+
+specific at the same time like more clinical as well yeah well thank you yeah it's good cool okay um yeah not sure i so i know some situations came through so i can quickly show that so this is something which is i think really valuable for a lot of brain imaging people so you can just quickly yeah look at the brain which is really cool in in a browser so you don't need any fancy software there and
+
+yeah that's what for example in this case new view makes possible and i think this is really our our fundamental um philosophy with this right we want to just bring the right tools to the right people and make it easy to use them so they can do awesome work that's really what our project is about yeah thank you very much and yeah well if people have questions after this talk shoot me an email um and contact us through github or github discussion forums and we're happy to help
+
+Thank you.
+
+
+SPEAKER_00:
+All right.
+
+Thank you.
+
+Yeah.
+
+All right.
+
+That's all we have for that.
+
+I don't know if we have any questions we want to ask.
+
+I can try to answer them.
+
+
+SPEAKER_01:
+Okay.
+
+If people have any questions in the live chat, they can add.
+
+But thanks for sharing this and for bringing this important flavor into the mix.
+
+where it took me was right where you asked at the end with stripping back to the desk and then allowing the spin-offs and thinking about how we could use that
+
+and just how it's like the through line of the education the research the application that's kind of tracing back the community and information supply chain to applications of active inference
+
+So when we come to a symposium like this, or think about planning a symposium like this, think about making a startup or something like that, using this in an application setting, and we trace it back, and then that's where these topics like reproducibility and research integrity are the foundations of the application.
+
+And if there's ambiguity and all these different threads and loose ends, like from the availability of the papers, things that have been focused on in open science across fields, and then these really specific computational issues.
+
+And then the example with a versioning of a library, having these cascading consequences to say nothing of like security issues is just completely
+
+it's like an empirical open science point that was very well made.
+
+And so now, where do we go from that observation?
+
+
+SPEAKER_00:
+Right, right.
+
+Yeah, I mean, I've had experience with containerization, you know, in the open worm foundation, which I also work with, they've developed a container for demos, and they run their simulations in a series of demos.
+
+And the idea is to be able to get people to
+
+use the demo and get everything to run.
+
+You don't need any dependencies on your machine.
+
+You just worry about running the container and that's it.
+
+And it's been successful.
+
+I mean, it's a little tricky to use and get to work, but you know, the idea is to make things reproducible.
+
+So if you see something in a paper or see something that I show you a demo of, you can reproduce it for yourself and everything's the same.
+
+So you get the same answer.
+
+And you can even maybe modify some of the variables or parameters in that model and work with it on your own and know that what you're seeing is an actual result, not just some noise or difference that comes from the computational environment.
+
+
+SPEAKER_01:
+yeah um like practically what are some interesting ways that as we digest all of this year and think about what projects like as a scientific advisory board or just as an institute or as part of coalitions what would be interesting how do you how do you see that popping up across these different research communities
+
+
+SPEAKER_00:
+Yeah, I think well for one you could use some of the packages that we've seen in the symposium.
+
+You could run them in a container and it would help people if you're running them in different locations.
+
+Like if you're in a research group or if you're in a just a casual, you know, learner who's trying to run an analysis, it would equalize the ability to run those tools.
+
+But also, you know, we can develop demos.
+
+if people are interested, where you show, you demonstrate active inference and you put it in a container.
+
+So someone might run a container, you know, someone who is learning about active inference could run a container and they could run these simulations and they'd be, you know, able to run them no matter where they are.
+
+And it doesn't take them a lot of effort to sort of install dependencies because sometimes when you want to say demonstrate something in a simulation, you need to have people run like
+
+you know, a bunch of things on top of one another.
+
+And not everyone can either do that or can run them on their own machine successfully.
+
+So that hinders what we can do in terms of demonstration and education and research.
+
+So that just takes care of that layer.
+
+And then everything else is like, you can worry about like doing the good stuff, doing the demos, doing the science.
+
+
+SPEAKER_01:
+as you've had many years of working in open source like what heuristics or intuitions do we have in our toolkit when again just because something could be open source doesn't mean it necessarily should so how do we add signal not noise or worse how do we
+
+navigate between getting overwhelmed with the technical complexity of trying to take on all of these new research practices and and just like
+
+We could spend all of our computer time making something reproducible.
+
+I don't know exactly where I'm going with that, but just how do we guide and just put out, especially if we're putting out capacities related to cognitive modeling, perception, control, then is there any kinds of considerations that we should think about before just releasing really effective containers for that?
+
+
+SPEAKER_00:
+Yeah, so I mean, I guess what's in a container is basically the software that you release as open source.
+
+And of course there has to be a strategy for releasing open source software.
+
+You just don't dump software out on the web or you just don't like kind of produce a bunch of files and then you know with limited documentation until people have at it.
+
+Every group has their own strategy and a lot of that is, you know, to think about the utility of what you're releasing as an open source package.
+
+So sometimes you're interested in
+
+commercial value.
+
+Sometimes their proprietary value in releasing something or not.
+
+Sometimes you release you have code, but it's not well documented, so the utility there is limited in that people can't reuse it.
+
+So that doesn't necessarily make it good to release.
+
+You know, so you want to be able to have, I think, and I say this is being a full supporter of open source activity, but to release things that are very.
+
+Polished.
+
+in the sense that you know why you want to release it, and you have the right support in place.
+
+And sometimes groups will have the resources to do that, and sometimes they won't.
+
+So if you're a small academic lab, then you don't really, you can't spend a lot of time, you know, polishing the software.
+
+In the talk I gave earlier, I think it was yesterday, I talked about like kind of these practices of software engineering and that sort of thing, and that's something that not every group can do.
+
+That means that we maybe need either organizations to kind of have that layer of, you know, making things work well before we release them, or having meta organizations that can help scientific organizations do these kind of releases.
+
+And I'm not against like making something open source for like a paper.
+
+I'm just saying that like in tool building, you know, you have to have a deliberate strategy for it.
+
+And it pays off if you do.
+
+
+SPEAKER_01:
+yeah that's very wise like your talk in part one and seeing this again and um the prior talk on ngc learn and the museum of examples and going beyond just curating links to to hosting more and more
+
+And that is what will allow learners to have access to these tools, build their intuition about the topic, maybe continue on and kind of converge into the development attractor.
+
+But even finding friction points and bugs and reporting it and just putting up a yellow flag or just asking a question, a lot of times it feels like people who are outside of the development
+
+don't realize that those visibilities that and experiences that they have into the outcome can be in the blind spots or just forgotten by by bandwidth constrained developers and then that is like our research community with people who are at different stages and using tools differently
+
+So it's like, how can we not have this?
+
+Yet it's hard to hold that.
+
+And it is a commons for computational science, which wasn't really part of the pre-internet, pre-computer research world.
+
+And so there's all these forms and functions that
+
+we're barely barely even able to describe let alone what has really been tried in different epistemic niches so it's it's super exciting because there's so much experimentation across multiple scales
+
+people doing things on their own, being their own program manager on through just with friends, working with AI and the kinds of things people are asking, and the artifacts they're getting to and then even up to like the meta gov type coordinations of organizations who want to have
+
+and be particular, but also find the interfaces that will help them do things together they can't do separately.
+
+Yeah.
+
+Do you have any sort of last thoughts or questions?
+
+And what would be some exciting directions for you and or the Institute in the year to come?
+
+
+SPEAKER_00:
+Yeah, so I mean,
+
+Daniel asked me to contribute something on this topic and kind of in the abstract, because we do, we looks like we do a lot of open source and things and it's this kind of, you know, to develop a strategy there, to develop a vision there as the thing that we want to get to.
+
+So, you know, I would say that like, you know, one thing might be, and I think this is very useful, is to have a sort of educational component where you can have
+
+some you know tools for active inference and to teach people sort of how do you you know we usually use simulations as an educational tool and making simulations are you know a nice tool because you people can interact with them and so you know and it doesn't have to be like a very high level simulation it'd be a very simple thing that demonstrations of things demonstrations of concepts where we might package some sample data with a sample simulation and say
+
+here, build your own sort of active inference model.
+
+And, you know, you kind of walk people through how to do it.
+
+And then eventually they'll start playing with it and they'll say, oh, this is great.
+
+And I want to get in more into some of these topics.
+
+And then that's, that's sort of a gateway into the Institute for people who may not feel comfortable with a lot of, you know, kind of diving right into the technical jargon.
+
+They want to have like a, a nice sort of way to ease in and, and something that's intuitive.
+
+And then that helps.
+
+But other things, like as Stefan said, the thing that they're working on, NeuroDesk is for neuroimaging, but you can use different versions of this for different sorts of things.
+
+And there are also different versions of Linux that you can build your own custom version of.
+
+So in the talk that I gave earlier, there's NeuroDebian,
+
+which has the ability to build these builds, where you build them as like a specialized operating system for a certain thing.
+
+They have NeuroDebian, which is for neuroscience, but there can be other versions of Debian for like musicians or data scientists.
+
+And maybe, I don't know if it's useful, but to have something for active inference with all the tools included, and you just download that distro,
+
+
+SPEAKER_01:
+and you get the tools and there they work thank you these are all great directions a closing note i think it'd be very appropriate in a history rhymes kind of way that the more generalized cybernetics arose out of neuroimaging and we saw spm package in one of the
+
+presentations and then also neuroimaging and the special constraints like computational resources patient privacy those constraints in that community of neuroimaging also leading the way on the tooling which we can also learn from with more general systems yeah yeah okay thank you for this all right see you
