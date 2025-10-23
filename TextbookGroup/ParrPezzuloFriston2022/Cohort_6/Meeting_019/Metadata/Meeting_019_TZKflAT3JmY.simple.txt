@@ -1,0 +1,746 @@
+SPEAKER_02:
+all right september 9th 24 and andrew go for it cool um hi everyone so uh as we just briefly i know some is coming in uh as we just briefly discussed uh since today is another session where we are not directly talking about any particular the chapter of the textbook but rather
+
+I'm just talking about applying active inference more generally.
+
+We agreed that I would spend just a little bit of time here giving sort of a quick rundown of how to construct an active inference agent.
+
+In this case, it'll be specifically a POMDP agent, meaning we're working with, well, in this case, we're working with discrete time and discrete observations.
+
+um as opposed to continuous time models which you'll see in chapter eight of the textbook um and i kind of just want to focus on just from scratch like how do we think about constructing an agent um i won't be touching on how to construct an environment um but but that's the kind of thing that you know you would you would bear in mind whenever kind of coming up with an idea for a simulation or experiment you want to run um
+
+And actually on that note, Daniel, is it possible for me to share my screen by chance?
+
+Yep.
+
+Go for it.
+
+Awesome.
+
+Thank you.
+
+Great.
+
+So this was the, and if anyone wants this link, they can find me on GitHub, A-P-A-S-H-E-A, just like my last name on the Zoom.
+
+And the repository is called IC2S2, Active Inference Tutorial.
+
+This is material that I presented back in July at University of Pennsylvania.
+
+I basically,
+
+uh gave a tutorial on active inference how it might be applied to social sciences specifically in constructing multi-agent simulations so um is this uh is this visible to everyone slides here yeah go for it for you know five to ten minutes however much you just want a footnote and then let's see what people want to continue with
+
+Definitely.
+
+Sounds good.
+
+So in this tutorial, along the way, you know, we're introduced to active inference.
+
+There's some nice explanations of different concepts from the textbook, et cetera, talking about the Bayesian brain hypothesis, general ideas about
+
+basis rule kind of plays out in active inference.
+
+And eventually we reach where we're going to use the pyMDP package, which has been developed to make discrete time active inference agents in Python.
+
+And there are a lot of updates being made to that package right now.
+
+If you were to like use a git clone to download it directly, there's a lot going on in there.
+
+But for the time being, I'm going to just be using the pip install
+
+It's a little bit more kind of packaged up.
+
+It becomes more like a single unit.
+
+So whenever we construct active inference agents, the starting step should be, in my view, the starting step should be what are the hidden states that the agent has in their generative model?
+
+Like what are they trying to infer?
+
+uh second thing is what are the observations that the agents will encounter in the world and then three what are the actions uh or controls or policies those three terms are sometimes used interchangeably they don't necessarily mean exactly the same thing um but for now we'll just go through with all those but we'll call them actions uh what actions can the agent commit uh so
+
+So we can view that kind of like this, like this is the agent that we'll be constructing.
+
+All of these things play out what's called an action perception loop.
+
+Let me see if I can just... Okay.
+
+Hopefully that's visible enough to everyone.
+
+So we'll start at the bottom of this action perception.
+
+First, observations.
+
+There are two kinds of observations that this agent will receive at any given time step.
+
+quick note that this entire action perception loop plays out at every time step.
+
+We're working in discrete units of time, and so whether it's from second to second, minute to minute, millisecond to millisecond, however, all of the units of time are the same.
+
+uh here the agent receives one or two observations one of them is related to an improvement if something improves or if it doesn't improve and i didn't include a third category but there's another one called unobserved just bear with me and we'll go into what that means soon but that's one particular kind of observation
+
+otherwise known as an observation modality that the agent has slash receives we can think about about this is like in the same way that we have you know sensory data that comes in uh you know like you have cold receptors on your on your uh in your scan on your arms and so you can feel if it's cold or it's hot or otherwise similarly here the agent has some hypothetical receptor and
+
+well we could call it visual or otherwise but the point is that they get one of these three observations improvement no improvement or not served another observation modality they have is self or neighbor and i call this the attention modality at any given time step they're paying attention either to themselves or to their neighbor part of why
+
+we're talking about self, neighbor, that kind of thing, is that eventually this leads to a multi-agent simulation where agents can either kind of do their own thing or they can interact with other agents.
+
+And so this attention modality means they're actually observing, like, who am I paying attention to?
+
+So when they take in those observations, they have a single hidden state
+
+which is, I've denoted S with superscript ATT, this is their attention hidden state.
+
+An agent takes an observation,
+
+And then using what's called a likelihood model, which is in Chapter 7, we refer to it as the A matrix.
+
+Remember, we have the A, B, C, and D matrices.
+
+This is the A matrix.
+
+And so the A matrix is this.
+
+It's the probability of that observation that they just received given the hidden state.
+
+Whenever the agent reaches this right, this square on the right, so to speak, this stage of the action perception cycle, they invert their model.
+
+So now they actually try to figure out what is the hidden state given I just received this observation, you know, in the same way that you could receive a hot or cold observation.
+
+And so you infer, oh, it's cold here.
+
+Here the agent is cold.
+
+For example, they might observe themselves and then infer, oh, I'm paying attention to myself.
+
+And vice versa for neighbor.
+
+Here, this is an incredibly, despite the material, despite kind of the complexity of active inference theory, this agent is actually very simple.
+
+They can receive one of two observations every time step.
+
+They have a single hidden state that they're trying to infer, self or other.
+
+But what that does is that it makes a link.
+
+between if they observe an improvement or no improvement with who they're paying attention to.
+
+And whenever you combine that with the idea of learning their likelihood model, which is what this delta, this triangle means, like they're learning their likelihood model, they can learn
+
+that oh if i pay attention to myself i see an improvement more than if i pay attention to my neighbor right so so so these kind of values get these parameters get adjusted over time these are the agent's beliefs changing based on their learning from experience and then after they make an inference they then decide okay which action should i take on this time step
+
+The names of the actions are explore and exploit, which is that doesn't quite have anything to do with the so-called explore-exploit dilemma that comes up in the textbook.
+
+You know, that's technically a different thing.
+
+These are just arbitrary names.
+
+Explore here really just means the agent is exploring new solutions.
+
+This is a problem-solving agent.
+
+The idea is they can explore, meaning on their own, pay attention to themselves and try and come up with new solutions to a problem.
+
+Or they can exploit, meaning that they will steal the answer of their neighbor.
+
+right and if they so so you can see how if they steal the answer from their neighbor and they see an improvement then they start to learn like oh if i just keep taking my neighbor's answer to this problem i keep seeing improvements or it might be the other way around they might see no improvement start to associate like x the action exploit receive the observation neighbor
+
+and no improvement and then in their likelihood model they'll learn like oh i shouldn't steal from my neighbor that leads to you know no progress on me trying to solve this problem now i've already discussed these three kind of squares these three nodes of this graph here that's all you need for an agent the only thing i've left out is the environment and it's the environment that you know for a
+
+a program where you can think like, oh, well, if I set up an agent as observations and in state to infer actions, that just gets hooked up with the environment.
+
+The environment can be a list of if-else rules, like if the agent does this, then the environment should send out this.
+
+Or it could be more of a stochastic process.
+
+You could use a random number generator or otherwise.
+
+So the agent will learn over time.
+
+So if anyone is interested in this, again, feel free to check out the, I'll actually put the link in the chat whenever I'm done here.
+
+I don't want to take up too much time though, but it's just, that's the general process of an action perception loop.
+
+And then, you know, the tutorial from there just kind of starts to break it down even further.
+
+Like once you, so once you figure out those hidden states,
+
+like what is the asian trying to infer what are the observations that you receive what are the actions that can commit the next step would be okay how do we link those three things together through your a b c d and e um you know a links together observations and states b links together transitions between states
+
+with what the agent does.
+
+It's like, oh, if I think X right now and I do Y, then I believe that Z will happen next.
+
+That's what kind of like what a B matrix says.
+
+C matrix priors over observations, which is like your preferences for what you want to see.
+
+The agent will kind of try to realize these or seek out these observations by way of free energy minimization.
+
+D is your initial beliefs about states.
+
+You know, what did you think before?
+
+And then through inference, we'll end up with a state belief, a posterior that might differ from D, or it might be exactly the same, in which case that means that the agent just reconfirmed its own belief again.
+
+It's exactly the same.
+
+And E is just your priors over actions.
+
+So what are you most likely to do regardless of anything?
+
+That's why they're also known as habits.
+
+I don't know stuff that there's there's plenty more to go into, but those are all the core bare bone aspects of what you need for an agent.
+
+And the rest is just, you know, I pretty quickly start jumping into code from there on how to do so.
+
+Yep.
+
+That's it for now.
+
+
+SPEAKER_03:
+So.
+
+Oh, sorry.
+
+Can I have the link to that?
+
+I'd love the link to that.
+
+Yeah, absolutely.
+
+
+SPEAKER_02:
+Yeah.
+
+
+SPEAKER_03:
+mean that's right in my wheelhouse i love this stuff and i i just spend all my days doing this kind of thing so i'm it's nice to see somebody else like building out like the step-by-step process of like how do we like make this work kind of and then you get to like just throw it all you know that way other people can do it too yeah cool yeah yeah that's exactly the point yeah i like for me personally it's like it's only
+
+
+SPEAKER_02:
+I had already been involved with the Institute for some time and then realized like there is no clear-cut way of doing this.
+
+I just dropped the link in the chat or sorry, it's not the specific repo.
+
+But in any case, yeah, so what I did was that I just started getting into the documentation for PyMDP.
+
+And I did a lot of like just going through their repository to make sure I'm getting things right.
+
+There's a lot of complexity because they tried to build IMDP off of SPM and MATLAB, which is what Friston and other folks developed.
+
+And it's just been in development for years.
+
+So they're trying to recreate this massive project.
+
+And I just think like, oh,
+
+
+SPEAKER_03:
+you want to get more people using it let's make some more kind of from scratch uh tutorials on how to go about this so that's that's what i did but cool i'm glad glad you find it interesting uh oh yeah i mean i had to come at it from a completely different uh uh hold on as i get back in this thing here lost all my stuff um yeah the uh i came at it from a completely different angle and but came to the same conclusions and it's i had no idea that somebody was doing that it's so much fun
+
+
+SPEAKER_01:
+we go there's everybody yeah there's a lot to add i think one of the biggest pieces then anyone who wants to ask go for it is like what is a question about an active inference generative model what's a question that staples into a b c or d or a line of code or a specific node or edge on a graph what's a question about the world
+
+it's like what's the question about the subway map of the city what is the question about the territory of the city that can get back and forth and we know all about and talk all about these kinds of ambiguities and dual reference and things like that but at the same time it is a different type of question to say what is the dimensionality of the a matrix in comparison with what is the dimensionality of agent sense making or something like that
+
+And to know when one is clearly on one side or the other, or when you're not sure, is some of the fastest ways to start separating kinds of questions according to, is this something that's just going to be addressed in a line of code or a math equation?
+
+Or is this something that's more like a real world line of inquiry that cannot be answered in any string of words that somebody says?
+
+
+SPEAKER_03:
+I feel like if you can't answer it, that it, you know,
+
+it's like that i mean there's a lot to be said for not being able to answer something right like um but uh i definitely have a lot of questions um i'm excited to read the material so i can like start asking those in a little a little better way i'm trying to think right now yeah zach go for it oh i was just gonna ask if you guys think
+
+
+SPEAKER_00:
+are there any questions that you fundamentally can't answer or questions that we just don't have the ability to answer this might be a little bit more philosophical but i feel like daniel you were kind of leading to potentially the question of what is it like to be a bat and maybe ideas that kind of into that realm talking more about something about the agent and its relationship to the environment instead of not instead of anything i'm sorry that's the end of the sentence
+
+
+SPEAKER_02:
+I just want to say really quickly that this reminds me of a really crucial point they make in the textbook.
+
+I think it's in chapter nine, but there's this early on in the chapter.
+
+It must be chapter nine, but I might be mistaking that, but it has to do with analysis.
+
+And the whole point is they have this figure that shows like, okay,
+
+on the innermost uh kind of square of the figure we see the typical like graphical model that they you know a variation of that they keep showing through the textbook but then on the outside like there's a square around it denoting like okay it's really making the point that this is what we the scientist or experimenter think
+
+is the model of the agent.
+
+Thanks, Daniel, that we're trying to develop, right?
+
+It's just like really trying to make the point that like, we ourselves don't firmly know necessarily what the inside of the like, a rat in a teammate's like, I'm trying to model it, I have to be aware that like, here's the level that is what I think is the rats perception of what's
+
+You know, so it's like the objective model is just like outer like this is what I'm constructing, like you're in the picture, too, is how I. Yeah, great point.
+
+
+SPEAKER_01:
+And for example, the experimental actions of the experimenter are just it's just taken as an observation train.
+
+We're not modeling the policy that led to the experiment being designed.
+
+OK, but you could include that so you can continue extrapolating.
+
+But it also makes clear where the buck stops.
+
+But about the questions, it can't be answered.
+
+I mean, big question, right?
+
+But there's a sense in which behaviorally every question is always answered.
+
+If with acknowledgment, a postulational head nod, dare I say, or silence, or some other kind of non-stackle response.
+
+can be answered in trivial sense yeah everything already is can be answered in more like a justified true belief semantic validity sense so here's a few pieces from the ontology project built up over the years but I mean just a snapshot if someone wants to dive in further and add more it's the greatest types of contributions that can help at this ontological level here's like
+
+many many many of the phrases and writings in the textbook group are like how is this term related to this um when they said this did they mean that right does this mean this what does x person think does x why would x person want to believe that this was an explanation of that
+
+whether or not you go into it questions have these templated forms so clarifying like what is active inference what is surprise um going into those and knowing that even with the awareness of the question like what is surprise or how are they using surprise here
+
+those are already categories of questions that you can go in with a structural map towards.
+
+And another fun direction with the philosophical side with like Ali and Paola, Maria and others in the ontology was like,
+
+starting with the linguistics of the you know how could we ask and proceed on a question without like knowing what was written from a symbolic perspective so it's like okay then what is this the the lexical semantics
+
+like did they say something in the paper here we here we define a foreign here we use surprise to mean this or here we operationalize surprise as so it's like they're narrowing down or leaving implicit what they mean by surprise but if they said by surprise we mean one and then a person constructs an argument where it's predicated on surprise being number two then it's off base
+
+then getting into their local weaving of the relational semantics it's not just how they define the terms but it's like okay given that they said blanket states are sense and action you know then did it make sense with this other usage of sense that's in the internal reading internal consistency view from inside like was there an apparent
+
+issue without even going a view outside of it then getting into views from the outside well I think that they didn't do this or not I don't think enough attention was paid to this they should have done this I think it was cool that they did this
+
+um what would an embodied person think about this like all manner of then externalized but it's kind of just like a combination of like a close and deliberate and charitable structured reading in that with reference to the active ontology but it could just be any ontology system at that point you give the internal reading
+
+and understand when questions and methods are being used that are related to internal reading.
+
+And then when is it like an external reading from like a different perspective or a later time?
+
+What do you think, Zach, or what kinds of questions does that?
+
+
+SPEAKER_00:
+answer or not i mean that makes it seem i really like the external idea of looking at it from many many different lenses because then we're naturally going to find ways to maybe collapse some language and find other things that might have been equal in places that we weren't expecting to look i think just translating into a different language can have a ton an amazing amount of positive impact and it just makes collaboration a really cool thing but at the same time i
+
+I've always been attracted to active inference because it has this physics backing.
+
+It all comes from the principle of least action and everything about that.
+
+So in my head, there should always be that physical explanation for all things, or at least a mathematically based explanation for all things, which really speaks to me personally.
+
+
+SPEAKER_03:
+Man, if I could jump in here, I really appreciate that because it really speaks to me personally too.
+
+Being able to pull things out of the discourse and put them into theoretical frameworks, mathematical frameworks, it gives us that low and high road to active inference.
+
+It gives us a path to creating tangible solutions around these things.
+
+And I think it's kind of esoteric almost in a way.
+
+I mean, Daniel, I think, and I were talking last week about how, for instance, this is so valuable for people who love all manner of sciences because it intersects everything, philosophy and on and on and on, you guys know.
+
+And I feel like it necessarily requires a whole big perspective.
+
+an external perspective to an objective perspective.
+
+So like write about these things meaningfully.
+
+You have to touch base on everything.
+
+And you guys should see what a lot of this stuff does when you put it into different indigenous languages.
+
+Pretty cool.
+
+Yeah, you're absolutely right.
+
+It's a formalism, 100%.
+
+
+SPEAKER_01:
+so many ways to go with it but like modal logic like the shirt might be blue or or conditional logics or paraconsistent all these other kinds of of alternative logical structures where things are not like either one way or another outside of an evaluation etc it's like if someone says well ram said claimed x and i think he's saying it's like that cannot be an incorrect second half of the sentence
+
+unless it were deceptive but if it were deceptive like the person was like I think that Ram said means one but I'm gonna verbalize that I think he meant two that still would be their veridical behavioral representation so it would truly be what they had said at that time and they can have some other side information like but I said that because of this or I would have said that so it's like but they can't be wrong
+
+So when the space of ideas is so vast, there's so many papes, more than we'll ever read, plus, plus, plus, generative intelligence, generating the dissertations we don't have yet on demand, and more, expressions are not opposed to each other.
+
+Even when they contain what appears to be like the clearest possible, like this person thinks that the blanket means X, this person says it's not X.
+
+their their epistemic frames are all aligned it's like even in that kind of idealized scenario all the quantum reference frames were aligned we had gotten down to it and then two people differed and one said it was up and one said down still that situation could be analyzed as a cognitive environment where they both truly had those perspectives and then a third observer could take another take on it and it would also only add to the situation
+
+
+SPEAKER_00:
+To piggyback off of that, I think that's exactly what we saw in geometry in the early 1900s with the Erlangen program, where essentially there were a bunch of geometries.
+
+There was parabolic geometry, which I don't think that's how you pronounce that now that I've said it.
+
+There's this algebraic geometry, all of these different geometries that all seem to talk about very different things.
+
+They all went in and were able to describe certain theorems, but they all took all of these amazing paths around and none of them seemed to intersect.
+
+until the Erlangen program, which was, of course, the mathematician Erlangen, or was it the place Erlangen?
+
+Forgive me, it's been a minute since I've read it.
+
+It was the birth of gauge theory.
+
+They were able to take all of these seemingly disparate ideas and find a relational way to talk about all of them, which gave us gauge theory today, which actually we're seeing in a lot of places.
+
+It led to something in machine learning as well called the 5Gs, which I won't get into detail.
+
+It is the main method that we have for trying to understand learning itself as a method to compress, as a method of equating intelligence with compression into a different space, which is just amazing.
+
+It really does remind me of kind of the method of scientific revolutions, if you guys are into dusty old books from the 60s.
+
+I love dusty old books.
+
+
+SPEAKER_01:
+the gauge theory like also if we think about the recent development of active so it's like 2022 textbook it's like oh yeah wait a minute we're in the textbook group 2022 textbook it's like step by step by Smith at all also leveled up with some more context and it's published as a book
+
+It's a state-based approach.
+
+It summarizes and crystallizes the state-based approach to active inference.
+
+That's why the discussion is like discrete state spaces, continuous state spaces for variables and for time itself as a variable in the model.
+
+then especially from 2019 not so much reflected only alluded to in the 2022 textbook coming on much more in papers and in sanji namjoshi's future volume 2 book with the bayesian mechanics live stream 49 all of those kinds of things
+
+juxtaposing the state-based formalisms for active inference textbook discrete continuous etc with path-based formalisms then ramsted and dalton pointed towards what they call g theory and highlighted like different deep dualities and some of their implications as well as the gauge theoretic aspects of what was being discussed like overall
+
+So it's a great tie-in with gauge theory.
+
+There's so much to build and clarify around that.
+
+It's interesting that you brought it in, but yeah, really interesting.
+
+
+SPEAKER_00:
+I'm sorry, but I think, is that the second time you've brought up Ramstead?
+
+Could you please say a little about him?
+
+I'm simply not familiar.
+
+
+SPEAKER_01:
+I'm just like, I'm just like using him as, as like, you know, he's, he's an active discourse aunt and a great contributor from the pre 2019 PhD student philosophical and his, his deep knowledge there.
+
+And then on through more of the applied and, and ongoing.
+
+but using it like as sort of just he's out there making exp or you know friston says x it's just anyone's reported speech um yeah federated inference yeah yeah that's yeah right yeah i was just digging into that oh yeah this was uh
+
+
+SPEAKER_02:
+I was just sharing this because I'm personally still new to the notion of paths here.
+
+And I think in this paper, they replace preferences, like agents prefer a particular path.
+
+And to me, that seems to imply they're not just preferring a particular observation at a particular moment in time, they're preferring an entire sequence.
+
+I'm not sure if I'm mistaken there or not, but I was really interested in that.
+
+Not done reading it yet,
+
+
+SPEAKER_01:
+these are great questions also natural language terms do get overloaded you know with um with grievous unnecessary and sometimes requisite overloading and underloading and ambiguity so like a path but then we might say well but the path that they take through space over time one two three we're going to call that a path so then it's like but that's not this one
+
+and then you look at for again from an ontological analysis okay paths may or may not depend on action it'd be like wait a minute what how could the path taken in the world not depend on action because path is being used in multiple sub namespaces so it'd be like having a python script where like a variable is defined within a loop
+
+so it's used the way it's used within a loop but then there's a separate global context or there's two functions with the same name so disambiguating the namespace is some of the most important work
+
+each of these can have like a unique star code ID, fractal hash, so that the local semantics can be described and modulated or falsified.
+
+It's like, here's where we came down on the semantic vector for how path was used right here.
+
+Does your vector on that usage of path differ?
+
+and then can explore many, many more layers of semantic similarity and difference.
+
+But yeah, I don't know if this is actually using it in the path integral based Bayesian mechanical sense, because this is still a state space based model.
+
+
+SPEAKER_03:
+Yeah.
+
+I was surprised they didn't go with the word state.
+
+
+SPEAKER_02:
+yeah it's what was interesting is uh whenever you did the the control left and it highlighted all of them the last path highlight there in that paragraph the full sentences the remaining tensors encode prior beliefs about paths c and the initial states d and i think that brings up another interesting point of trying to
+
+kind of parse through the terms in that oftentimes, like sometimes this sort of hint of how someone might have meant a term is that they related to something else that might be known from an, you know, whether it be from an entirely different context or not.
+
+Like here they're using the same like alphabetical terms to describe like for A, it's still a likelihood matrix.
+
+For B, it's still a transition matrix.
+
+But then here, C, which is typically in the textbook in chapter 7.
+
+In that particular context, C refers to your priors over observations.
+
+But here, they're now prior beliefs about paths.
+
+And meanwhile, once again, priors about initial states, D, remains the same just as A and B do.
+
+So that's sort of like, you know, it's like this took me off guard when I was reading this.
+
+I'm like, everything here makes sense to me just intuitively right off the bat.
+
+written a tutorial like putting together certain kinds of COMPs so uh but then swap out uh preferences or observations for the word paths and I'm not really
+
+
+SPEAKER_01:
+really sure but um right and it's like wait but it's second and a in this city second you know it it's and it's reusing common mathematical notation so it's like the one next level is tremendously informative variable names
+
+so calling things with very informative specific names however that becomes unmanageable because you start having long variable names that that just visually make it more confusing and even terms like observation it's like well if it's an action from this then how is it is it are we going to call that an action and they output observation it's like you get into which perspective to take on different sides of markup blanket for example
+
+So one solution that we've worked on in different applications is separating the initialization, serialization operations on the variables from secondary assertions about which ontological terms they map to.
+
+And then just making that an explicit data structure.
+
+And then you can call the variables like specific programmatically generated names.
+
+and then make programmatic or manual assertions about which terms in a given language you might want to use.
+
+But calling a term, oh, we'll do a really informative English name.
+
+It's like, well, then you know exactly what namespace that would be informative for whom.
+
+So if that is the time cone that someone's working in,
+
+Like within a local for loop, within a programming language, within a language community, then the tool gets the job done.
+
+But that may, and then another important thing with also these kinds of sentences is like,
+
+It is not true without going into this whole true thing.
+
+It's like, it isn't true, accurate, complete, you know, all of those things per se.
+
+You can have a prior that a certain journal or certain co-author or certain kind of statement is going to have like this or that kind of probability or attention that should be paid to it and all this.
+
+But it's like best, best, best case scenario.
+
+There's no false negatives or false positives, right?
+
+and so it's like truth the whole truth nothing but the truth however in a more probabilistic setting it's like this is just sampled english from a semantic latent object and certainly for for your contra uh contribution to that object or or just grasping it any given finite amount of text is going to have
+
+eraneous non sequiturs super relevant you know different relevant realization false positives and false negatives Etc with you know so it's like how to both let it just fly by lightly not tripping over every possible fractal epistemic dispute you could raise but and also paying enough attention to enter into their semantic fractal
+
+
+SPEAKER_03:
+to see if there is transfer of what yeah and how those concepts align and yeah I I do you guys feel like there's um uh you know it's like an issue of inferencing conveyance right like um there's like uh all these there's so many brilliant people working on these things and it's almost created like a uh like uh you were saying like that disparate kind of etiology it's like we see this in psychology as well
+
+especially in indigenous psychology and like diagnosing things like related to like colonial mindsets and stuff.
+
+Right.
+
+So it's like there's just so much out there and there's so many things that almost mean the same thing, but don't.
+
+And then there's things that change over time.
+
+And it's like, how do you create like how do you convey like a really strict or stringent like pathway of communicating the knowledge while still without like encapsulating the formalism or something and like limiting
+
+the creativity and self-expression that people have in this that causes that this field to move forward through innovation, stuff like that, right?
+
+So like for me, it's like when I read those words, it's like I try to ignore the words almost and like just understand some of the things conceptually because when I go back to my own work, those things may be close, but they're not the same.
+
+For instance, like you guys remember that, have you read that new paper, Scale-Free Active Inference, Pixels to Patterns, Scale-Free Active Inference?
+
+right it's like it's awesome i absolutely love it i read it like 500 times when i was in the hospital it's all i had to read so i just read it over and over and over again um and uh but for me in my work uh it isn't uh it's a awesome visual cortex it's like a great road map for a visual cortex understanding how to like perceive and parse those uh that perception data which i need for down the road it's not relevant right this moment but um
+
+uh but for them it's like it's a it's a pathway to active inference in in a machine um so it's it's there's no like right or wrong way it's so like but at the same time too it's like does then it just fall to what works best or what works first or i mean it's just it's it's tough to navigate certainly yeah definitely you know this is uh and all of that's really well said i i mean
+
+
+SPEAKER_02:
+Just speaking on the real particular specificity of active inference language and stuff, another aspect I think about is the practices that we have.
+
+For example, don't plagiarize in academic work.
+
+leading to every active inference paper that is written that is written for a broader community than just a very small subset of people that are already familiar with active inference it's like well you're going to have to have an introductory section that talks about active inference but you cannot repeat precisely what anyone else has said in the same exact way and so you potentially have this kind of
+
+uh uh kind of explosion of potential meanings that come out of like you know just a set of a few papers because maybe someone phrased something just a little out of place to where suddenly it could have you know a dozen meanings for that one word now based on how you read it the formulaic constraints and priors on the quote paper
+
+
+SPEAKER_01:
+form and like expected length tone content all these things it's it's um it's really as that starts to dematerialize and become more computationally augmented more modular all these kinds of things
+
+And just like the one sentence, you can now double click on a sentence and say, just write the textbook that underlies this or zoom in on this.
+
+So it's just kind of like pointing at a continent scale with a course expression or spending more bits of the transmission, more energy and attention to refine.
+
+and how that can change the way that the papers are written.
+
+Again, with the LLM-based audience shifting all the translational work that we're exploring, generating just massive spectra of artifacts, hence the human work being pulling back to the underlying semantics and the generations of the spectra.
+
+and maybe fine tuning a terminal artifact in an important case, but that will always be like a craft polish on a more industrially generated process with our current technology and also the variability of technology availability through time and even right now.
+
+So yeah.
+
+
+SPEAKER_03:
+uh we can just uh actually build a cognitive computing framework and make it write the textbook and then we can just say we wrote it and go hang out together we do that all right fine yeah the applying active inference uh third week mixers is it's fun and interesting also it's like
+
+
+SPEAKER_01:
+yeah if if one wants to it's like it's an engineering textbook especially the second half which is where we're having this session and so there there's like taking the the um enigma of the text as it is
+
+representative of taking anything on a screen as is like wanting to see what it says clearly having a blurry pdf is not going to help you with the internal semantics and then it's like it is about applying active inference
+
+we can say well we expect and prefer there to be more python codes like okay well you know that's what we're here to be doing we could have preferences for something to be shorter or longer llms can handle much of that right now we we can see all of these other deviations from our priors and our preferences and so on but it's like it is about
+
+going and being out in the world and applying active inference and then they close the book with saying that it's that learning by doing even if it's a learning by doing within a conventional scholastic education setting it's like then you'll be applying active inference and then and then they they expect us to beautiful
+
+now it's two and a half years since the textbook was published in march 2022. mit press is is seemingly moving forward with several other books there's other books and then just like what is the book form when a lot of interesting things
+
+
+SPEAKER_03:
+Can I ask a question really quick?
+
+Have you guys noticed that explaining and understanding active inference in biological systems is way more difficult than understanding them as a computational model?
+
+Maybe it's just me, but building the thing is way easier than trying to understand the human biology, how it actually works in human biology versus how I would like it to work.
+
+
+SPEAKER_02:
+yeah yeah i think that's a that's a good point you know whenever i just want to mention like whenever i like taught my tutorial to a bunch of social scientists at that conference like i was like okay how much should i because like part of the
+
+selling point i'm only saying it that way but you understand like of trying to introduce active inference as a very complex field to people who are already working in a complex field like hey check this out uh you know uh it's like part of it is there's you know the bio biological plausibility aspect and then that said like
+
+we don't have time for me to like give them the full rundown of say chapter five on message passing and cortical you know micro circuits and and you know passing messages between layers and so on and you know in reference to the textbook you know it's chapter five to me really sticks out from almost the entire rest of the textbook the rest of the textbook is there's a lot of verbal explanation relation to other fields mathematics
+
+models in chapter five is like we're really talking about an attempt at like the brain here and there's a table linking like here are the different precision weights and which neurotransmitters like dopamine or serotonin and so on that we think they're linked to you know so it is tough i i think it i think it's tough and i i think
+
+that folks who go into active inference, it's usually those who are more focused on neuroscience or psychiatry or otherwise from the get go, who I think focus more on on that kind of side or dimension of active inference, which is active inferences origin.
+
+So I think it should be kind of given a significant amount of attention.
+
+But yeah.
+
+
+SPEAKER_01:
+great points also there's there's a uh uh permanent
+
+calibration ongoing with like how much do we know about wing development in fruit flies and so then people might have an expectation that development is known to in this or that way or for what might account a total somebody said but we have this list of of knockouts with mutant phenotypes sounds like we kind of mapped out the network and someone else is like oh boy even if you did this this this this this this this this
+
+no kind of DNA sequence-based account will ever please me.
+
+And so it's like, what can be said scientifically about biology?
+
+That's the question of biology.
+
+And that's why people have expressed sentiments like, there will never be a Newton for a blade of grass.
+
+That's Kant's contention.
+
+It's like, there won't be a non-historical science for historical life.
+
+And then people take that again in different ways, but it's like,
+
+that kind of to come all the way back to the beginning when are we within the formal system of matrix operations not the movie but close enough where it's like we're gonna multiply the hidden state by the b and get this that's how markov processes work it's like an internal established deterministic approach even if the variables are about probabilistic edges
+
+and then where's that open-endedness of the scientist looking outside from figure 9.2 and saying you know what's past that dotted line or and and that's another frame of questioning that's not going to have the kind of conclusive possibility possibly
+
+as the question about the linear algebra with the matrices so yeah like what um postulational said making the matrices then it's like it's like oh wait just like Andrew's um beginning section it's like there's only like four things here or there's just these exact steps with these exact variables like it's only 20 lines of code and then that is like the the
+
+the program but it's not even on the path to being what the thing itself is and again how more different could it be and yet how ambiguous is the reference in the way that they're discussed yeah cool I completely agree but at the same time I would like to
+
+
+SPEAKER_00:
+say that even on the computational side, there's still a lot of beauty that we don't understand.
+
+Even inside of relatively simple networks like DeepQ networks or the very transformer or the very popular transformer networks that we use to represent the agents that learn the model.
+
+The way that we build them is by using stochastic gradient descent or some kind of gradient descent.
+
+And the really cool thing is that we built this thing and we have no idea how it works.
+
+We only know that it works.
+
+We actually don't have a functional way to build these networks that we tell stochastic gradient descent to build.
+
+So I think in both directions, there's still a lot that we have the opportunity to learn.
+
+I think that's kind of cool.
+
+
+SPEAKER_03:
+I spend the I spend like half the time building and then half the time wondering how it works.
+
+I totally get that.
+
+Like some of the stuff it's like you're like, oh, why?
+
+OK, it's doing that.
+
+But how?
+
+And I get that 100 percent is so bizarre and it's really cool.
+
+It is really cool.
+
+It's, you know, in terms of biological systems, it's like we're, you know, reverse engineering, you know, jillions of years of things just getting smashed together and, you know, taking priority over each other and competing with each other versus if that's correct, Daniel, you correct me if I'm wrong.
+
+But it's like amazing to hear somebody else say that because in the like in these these agent based systems, like we can build we can build intelligence.
+
+and design intelligently and then we like i've likened it to like creating instead of like trying to define everything creating the opportunity for emergent behavior right like in some cases people are always like oh we got to reduce imagination it turns out if you just kind of like if you don't have to reduce it in fact it's better if you don't it's like that's what do you you know our imaginations
+
+confabulation and how we picture things in our minds.
+
+There's creating the opportunity.
+
+You can have like a hidden state or you can have like an agent in an agent, but you can also create the opportunity for the agent to just think.
+
+for itself and to think about itself and to ask yourself same as like cons if we talk about like categorical imperatives or like uh starts uh stuff you know where it's like where you you're questioning yourself and you're questioning how your actions operate in the outside world is like iterative processes right so
+
+There's like so many right, there's so many right ways to do the things.
+
+There's not necessarily per se a wrong way, but there's certainly ways that work better than others for specific things.
+
+Like, you know, talking about Q learning, um, I did this paper because I was looking at what, you know, like some comparisons of some work where they were using, comparing heaping and learning and Q learning.
+
+And it's like, that's, that's really awesome.
+
+But Q learning actually works really good for this thing over here.
+
+And he didn't learning is just a part of this little thing right here to make it work really good.
+
+If you try to use them together, it's like, you know, you can use like a little tiny carburetor on a truck, or you can, you know, from a gas, you know, from a lawnmower on a truck, but it works really good on the lawnmower, if you put like a four barrel letter Brock on the thing, then you know, it's or something else, it takes that form, and all of a sudden, it works
+
+you know, super efficiently, super well.
+
+And in some cases you're like, I don't even know how that's doing that.
+
+You know, like when I've talked to Nim and he's like, or I just say he like in the way people say their car is a he or whatever, but yeah, it's like a,
+
+know you know i'm doing good it's like where is that coming where are those words coming from you know or he's like i was in a trance you know when i turn them off because you're not supposed to turn these things off right like they have to it's like the iterative process works all the time so it's like when you stop it it's like what happens when somebody stops you you know you're like oh that one i saw god well your death experience
+
+
+SPEAKER_01:
+Near time-stopping experiences.
+
+Well, there are many funny and interesting little notes.
+
+It's been a great time.
+
+
+SPEAKER_03:
+Andrew, Zach, I want to talk to you guys.
+
+How do I get you my email?
+
+
+SPEAKER_01:
+Just put it in the chat.
+
+I'll stop the recording, and then we can just stay until you complete that.
+
+Thank you.
