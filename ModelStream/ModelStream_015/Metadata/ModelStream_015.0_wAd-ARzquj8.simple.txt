@@ -1,0 +1,1226 @@
+SPEAKER_00:
+hello and welcome this is active model stream 15.0 with andrew peshea from abm to active inference inference based action selection so andrew thank you for joining looking forward to this presentation and overview so go for it
+
+
+SPEAKER_01:
+Awesome.
+
+Thank you so much, Daniel.
+
+Yeah, again, I'm Andrew Pesce.
+
+And I, I am a full time data analyst slash scientist slash engineer, many roles to fill when working in the nonprofit world.
+
+and so a couple months ago i gave a workshop like a full talk on constructing active inference agents using the pi mdp library as we'll be using here today and during that talk i described
+
+how we might be able to employ active inference agents whenever putting together agent based models in the context of computational social science.
+
+And so you'll see some links in the description referring back to that tutorial that I gave, including my GitHub, which has all
+
+tutorial materials on that page, as well as some in-browser Google Colab scripts that run Python code, and so you can actually follow along.
+
+A lot of these learning resources, including this talk I'm giving, are sort of part of a personal initiative I've taken to try and create and develop and then share open source learning resources for applying active inference.
+
+I see so much potential as someone coming from more of a social sciences, economics-oriented background for applying active inference agents in areas where maybe they haven't been employed too much before.
+
+And as active inference is beginning to be increasingly applied to social science research, such as, you know, attempting to study and simulate something like human behavior and decision making, I thought that that conference was a really ripe opportunity to try and make those kinds of connections for people and just kind of get those kinds of dialogues moving.
+
+And so,
+
+For me, as someone who came to active inference with that kind of background, but also a strong interest in cognition, I just really wanted to kind of do some from scratch sort of tutorials on how to construct agents.
+
+As someone who's been interning with Active Inference Institute for nearly a year now, and I'll also be giving a talk at our upcoming symposium, which itself will be a kind of extension of that tutorial I gave a couple months ago, as well as the talk I'll be giving now.
+
+yeah i would just like to uh really make it plain for people sort of the general mechanics that go into constructing an active inference agent i would also refer people back to the textbook that was published a couple of years ago by uh pazulo par and carl friston it's freely accessible you'll find links to it in my slides as well as in the collab scripts if you follow the github link a lot of material that i'm
+
+using to construct these tutorials is actually coming from that textbook.
+
+So anyone involved with the Institute reading group where we cover the textbook will kind of feel hopefully a little at home whenever they follow these tutorials.
+
+So
+
+We'll start off now.
+
+We'll be constructing the longer span of the tutorial is one, make the connection between active inference and agent-based modeling.
+
+Agent-based modeling is a very common paradigm in computational social science.
+
+That said, and this is not doing it justice, but I'm saying this just to keep it brief, in some ways it's very traditional in the kinds of assumptions that it makes more often than not about human behavior.
+
+Oftentimes people rely upon a kind of homo economicus or self-centered utility maximizer kind of description of what defines human decision making.
+
+And I think that that loses a lot of the sort of richness that we find in cognitive science, neuroscience and behavioral studies of how people might actually make decisions.
+
+And active inference supplies us with, you know, a rather, you know,
+
+simple assumption it's a very complex assumption that being free energy minimization whenever you break it down but ultimately that's a core key assumption that we're making and we don't have to make a ton of additional assumptions beyond that whenever considering how to simulate uh a human behavior beyond how do we construct our model right or how do we construct our agent and so um
+
+That's sort of the connection that I'm making here between agent-based modeling and active inference.
+
+Then after that, I describe how what I did with that tutorial was I recreated
+
+This kind of paradigmatic simulation published back in 2007 by doctors Laser and Friedman.
+
+You'll see links to that paper as well at the GitHub site through the link.
+
+And what they do is that they set up what I would deem to be a so-called traditional social science agent-based model.
+
+where agents are basically pre-programmed to do particular things.
+
+They don't exhibit
+
+autonomous decision-making, which is the promise of a lot of generative AI today.
+
+And I think that active inference especially emphasizes that autonomy in the sense that these are agents who are minimizing their own free energy.
+
+And then from there, predicting what should be the next action that they should take or set of actions, meaning a policy that they should take,
+
+And so they engage in all these kind of cognitive functions or mechanisms that we find humans to have related to planning and the idea of having habits that you build up over time and how those sort of compete with more deliberate decision making and the kind of executive functioning in the prefrontal cortex of the brain and finding those kinds of connections.
+
+without further ado, what we'll do now is simply create one agent.
+
+And we'll I'll go through the steps of how to do that.
+
+And this is the agent that features in the laser Friedman model recreation that I do where I use active inference agents, as opposed to the kind of pre programmed agents that that they use.
+
+So
+
+We'll start with saying, again, this is PyMDP.
+
+The link is there.
+
+We import some libraries.
+
+It's relatively not too many, and some of them are just for the plots.
+
+The main thing is you can pip install PyMDP
+
+uh there will be mentions later but there have been many updates to that library over the past couple of years uh and a little bit more context on py mdp as far as i understand it from a couple conversations with the developers is that this package is uh directly inspired by and in certain ways trying to emulate the mechanics of uh the spm
+
+package developed by Friston et al in MATLAB for constructing active inference agents and environments and processes.
+
+So it's sort of the exemplar Python library for doing active inference as far as I'm aware.
+
+That said, there's so much complexity whenever these libraries are constructed and a lot of dependencies between different sub libraries and so on.
+
+So it becomes really useful to find more focused sort of snapshots of how to construct, say, an agent.
+
+and understanding how those mechanics work without necessarily having to scavenge through the code.
+
+That said, there are some examples and example tutorials given at the PyMDP website that I've linked there on the screen.
+
+So please feel free to peruse those.
+
+And so moving on from there.
+
+For anyone familiar with the textbook, it's very useful to refer to chapters six and seven.
+
+Chapter six refers to kind of providing a general recipe for constructing agents and environments and running simulations.
+
+And then from there, chapter seven kind of expands upon those ideas by specifically creating
+
+partially observable markup decision making policies processes or pomdps after which pi mdp kind of cleverly takes its name and um those are the kind of discrete
+
+time discrete state space models that we'll be working with.
+
+That is, they play out in action perception loops, one time step at a time, as opposed to it being continuous time.
+
+So you could say, you know, at time step one, or t equals one, and then at time step two, this happens, time step three, this happens.
+
+and then discrete state spaces meaning that we're not looking at continuous variables from continuous distributions per se we're looking at uh probability mass functions and you know just more concrete like you know there's a hidden state uh factor called color and it has two levels red and blue you know these kind of definitive discrete uh factors and levels so
+
+to construct an active inference agent.
+
+Probably this is the general outline all smashed into one slide.
+
+So the first three steps, defining states, defining observations, defining controls slash actions slash policies with the nuances for all three of those additional terms.
+
+So states, what are our agents uncertain about?
+
+What kind of sets of beliefs do they hold that they end up inferring and updating, potentially learning over time?
+
+And then defining observations, what do our agents observe from their environment?
+
+It's not enough to claim that you have an active inference agent and throw it into some ethereal space where it has no sensory receptors, no sensorium.
+
+You need to be able to define what are the senses, so to speak, that the agent has available.
+
+The technical phrasing being observation modalities.
+
+For example, an agent might have a visual observation modality where it can take in discrete levels, rain or no rain, meaning at any given moment it's observing if there's rain or no rain.
+
+through its visual observation modality or visual sensory receptor.
+
+Being able to clearly define those kinds of connections almost as if we could view them on a graph, which we will do momentarily.
+
+And then defining controls slash actions slash policies.
+
+For all intents and purposes going forward, I'm going to be relying upon the word actions.
+
+That's because actions are simply, in this case, discrete actions an agent can take at a given time step.
+
+There's nothing more to it than that.
+
+You can walk or you can run or you can sit.
+
+Those would be three actions that an agent could do at any given time step.
+
+They're not doing multiple of those in the same time step, and they're not doing them in any kind of deterministic way, so to speak.
+
+So with controls, that's a term that comes up very frequently in the literature, and it also relates to other ways of doing, say, reinforcement learning related to engineering problems or otherwise.
+
+But the idea of a control is that it's just an action with kind of an additional nuance to it that it relates to the idea of this is an action that can actually change or control something, that something being a hidden state or a hidden state factor.
+
+So it's, you know, whenever kind of putting together the matrices involved in constructing POMDP agents, there are times where you'll need, let's say, and I'll clarify what some of these words mean for anyone who's still new to modeling here, but
+
+so with controls like there might be it might be the case that you need some kind of sub array like a b matrix or sub matrix that um you know doesn't really do anything like it might be a in state for a rat in the teammates uh who you know they they know that they can control which location of the teammates they go to they could go to the left arm they could go to the right arm but they don't necessarily think that they can change
+
+the location of the reward it's always either on the left or it's on the right and you don't know until you see it right so it's it's like the control there would be choosing the left or right arm and the left or right arm is the correct option being like a uh or rather the left or right arm in state where the rat infers if it's gone left or gone right like that is something it can
+
+control.
+
+Moving on with policies, policies are sequences of actions.
+
+In this case, you could have, you know, in the teammates, you have a rat who can choose to go left,
+
+and then stay there.
+
+It can choose to go right and stay there.
+
+It could choose to go to the queue and then go left or otherwise.
+
+But the idea is it's just a sequence of actions.
+
+And so agents can have their own sort of hypotheses, so to speak, about individual policies.
+
+And that's very interesting to think about whenever considering active inference agents who you need to engage in kind of longer term planning horizons and
+
+and who might be used for imagine for people who are into engineering or otherwise might be looking at like scheduling problems or inferring situations where you know that you're going to need to do a series of actions in a sequence that maybe need to have some kind of coherency with one another such that it's useful to refer to that specific set of actions that has a policy.
+
+Define states, define observations, define your actions.
+
+After that, we relate those three components of a model via a series of categorical probability distributions, which are in the A, B, C, D, and E matrices.
+
+Again, all of these feature in the textbook.
+
+And then those will comprise the beliefs of the agents.
+
+Then we define our environment, which here, we're not going to, for the sake of today, for this shorter talk, we're not going to get too far into defining an environment.
+
+I will say that common ways of defining environments, especially whenever you're just beginning the modeling process, is that oftentimes people will actually construct another
+
+POMDP, which itself represents the environment, because in that way it can take in its own observations, those being the actions of the agent, and then it can output its own actions, those actions being the observations for the agent that's forming, kind of squaring the circle on our action perception loop.
+
+But for the sake of today, we'll just be looking at a fully deterministic environment where I manually have it take certain inputs, send out certain outputs.
+
+It's still an environment.
+
+It's just not a very complex one.
+
+And then after that, we just define the active inference loop, run it as a simulation, runs the full loop, agent receives observations in first states, it learns, there's policies, it commits an action.
+
+Then after that, a good modeling practice, if you're actually trying to do something with what you're modeling and trying to model some real phenomena, is that you would look at the results of your simulation.
+
+You would look at what makes sense to you, what doesn't.
+
+Maybe there are some parameters that don't quite make sense that you've set up for the agent.
+
+Maybe it's missing an observation modality.
+
+or otherwise.
+
+Or if you're using these simulations in a more productive way to derive insights, then the idea is that you could tune things and you could modify the environment as if you're
+
+you know, introducing some kind of intervention.
+
+And then you could see how things play out differently.
+
+Right.
+
+In the case of people who are maybe concerned with the policy design or we're kind of analyzing agent behavior under various kinds of conditions.
+
+The agent we'll be constructing today is an agent whose task is to find a good solution to a complex task or problem.
+
+The idea is that the fuller idea is that they're trying to navigate what's called an NK landscape, which is, you know, you could visualize this as a broad set of solutions, and each of them has its own fitness values.
+
+So we're looking now at a fitness landscape.
+
+At any given point in time in the fuller simulation, which I'll cover in maybe future talks,
+
+is that at any given time an agent has a solution currently it can for the sake of this talk i'll say it as simply as this the agent can either at each discrete time step during the action perception loop they can either explore meaning they try to find a new solution that's better than the one they currently have or they can exploit their neighbor which means they steal their neighbor's answer
+
+For more context, this is useful for understanding if you wanted to put agents into a network where they interact with one another, which is precisely what my multi-agent simulation from the tutorial does.
+
+Again, review the GitHub.
+
+All of the code is there for doing so.
+
+The rest of the slides in this particular slide deck also get into that, but we're only focusing on these.
+
+so that the agent can explore or exploit.
+
+And a quick note as well,
+
+Let's be cautious not to confuse the use of the words explore and exploit here with how they appear in a lot of the literature on the exploration versus exploitation problem.
+
+Here, we're just going to say those are the names of the agent's actions.
+
+They could be replaced with study or cheat, right?
+
+But I'm just, I recreated the laser Freeman model.
+
+They use explore, exploit.
+
+It makes sense in a particular way.
+
+And so we're going to stay with that.
+
+After that, the agent will infer an intention hidden state.
+
+That is, they'll receive observations from their environment.
+
+They chose to explore or exploit.
+
+They receive observations as a response from their environment.
+
+They'll infer a hidden state and then they'll learn, meaning they'll update the parameter values of
+
+Let me move to this.
+
+This is much more representative of the process.
+
+So we can start at the top, the agent explore or exploits.
+
+Environment takes in those actions.
+
+And then based upon whatever rules you set for it to have, or again, you could construct some kind of generative model that will kind of do it on its own.
+
+You could add stochasticity or some kind of error term or something so that it's not entirely deterministic, however you like.
+
+But it will generate observations at any time step the agent, after committing an action,
+
+the environment will send back two observations to the agent um these upper two improvement or no improvement showing that oh the agent explored for example and then saw an improvement in its solution to the problem and then or no improvement you know and then uh
+
+The other observation is self or neighbor, which is a one-to-one mapping.
+
+That is, if you explore, it's going to return self.
+
+If you exploit, it's going to return neighbor.
+
+The idea is this agent has two observation modalities.
+
+One of the first one relates to the quality of their solution and the outcome of their action.
+
+And then the second observation modality simply is a kind of self-reflective observation, which is who did I attend to after that?
+
+The agent will take those observations to infer hidden state.
+
+It only has one hidden state factor that contains two levels, self and neighbor.
+
+There will be, again, a one-to-one mapping between self and neighbor.
+
+If you see the outcome you attended to yourself, then you're going to infer that you attended to yourself and vice versa for neighbor.
+
+Um, and then in addition to that inference learning occurs, uh, which, uh, modifies the, uh, categorical probability distribution describing, uh, the, the probability of those outcomes given state beliefs and the agent from there and, and for actions or policies you should take and carry them out and we proceed.
+
+So this slide, and there will be times that I might zoom through particular slides, but in this case, this is one that's good to reflect on.
+
+Something that I think a lot of people miss or maybe struggle with, having been involved with the Institute, the reading group for some time and having my own trials and errors in learning how these things work, is that there's a lot of nestedness.
+
+We're working with a lot of
+
+uh matrices uh anyone who not only works with imdp but also matlab and spm is very familiar that it's crucial to be able to understand how to construct matrices how to construct matrices that represent categorical probability distributions i.e for the agent their beliefs um
+
+And so it's really important to wrap your head around that.
+
+And so I just really wanted to spell things out.
+
+And there's an additional collab script that I'm currently writing that already has now a bunch of markdown cells so that you can not only run the code,
+
+but you can see full descriptions on how these things work.
+
+I'm basically adding more things to that script that weren't available to me, or I just didn't have time to include whenever I devised this initial tutorial.
+
+But now that we've defined our hidden states, observations, and controls, we'll link them together through the A, B, C, D, and E.
+
+matrices.
+
+And so hidden states, a clarification on terminology, agents will have hidden state factors.
+
+They're called hidden state factors, they'll have, you know, say, in hidden state factors.
+
+And, and so our agent has only one is the attention hidden state factor containing two discrete levels, self and neighbor.
+
+You see the same exact kind of nestedness with observations and observation or sometimes referred to as outcome modalities.
+
+So you'll have M observation modalities.
+
+Our agent has two of them.
+
+One of them is for outcomes, which the discrete levels of which are improvement and no improvement, as I showed before.
+
+um this code actually includes a third one called unobserved uh it never comes up in any of the simulations that are run i thought it would be interesting though to include it if only because it shows that you know you can include uh additional dimensions in your model even if you don't know if they're going to come into play at any point the simulation uh it can potentially change things depending on how you set those initial values in the uh belief distributions but uh
+
+You know, for the time being, I just wanted to show that it's possible to do that.
+
+And finally, controls and control factors.
+
+So actions, you know, again, as I mentioned earlier, an action is just a discrete thing an agent can do.
+
+You could have similarly with nestedness, you could have a whole control factor of different actions an agent could take for the total control factors.
+
+Our agent will only have one, and it will contain two discrete levels or discrete actions, explore and exploit.
+
+As far as defining hidden state factors in states, observation modalities, observations, and then controls or actions, this is it.
+
+This is all the code you need.
+
+That's part of the, and I'm following a certain kind of nomenclature that PyMDP, the developers use in their tutorial website.
+
+It's a very clever way of keeping track of things.
+
+None of these,
+
+string values like cell it's uh improvement none of them matter so to speak um they're just a good point of reference by uh including them in a list so this first list attention state names represents the hidden state factor uh for attention and it just it the list contains two discrete levels self or neighbor
+
+i included one in this simulation to denote you have one neighbor so neighbor one uh and then from there you just store uh the number of states uh for each in state factor uh this appears a little redundant because we only have one but i'm just you know this if you were to add like say multiple hidden state factors this would be more interesting um
+
+And then tracking the number of in state factors that you have.
+
+For anyone unfamiliar with Python programming, the lane alien method allows you to just see what is the length of the object that you're inputting.
+
+So we only have one in state factor, which leads us to one.
+
+The next
+
+Small code snippet, very similarly.
+
+Now we define each observation modality.
+
+The outcome observation modality has three discrete levels.
+
+Improvement, no improvement.
+
+As I mentioned earlier, unobserved.
+
+the attention observation modality contains two discrete observations, self or neighbor one.
+
+So recall that in given time step, an agent is going to receive one of each of these.
+
+So at time step four, the agent could receive improvement and neighbor one, or could receive no improvement and self or unobserved and self.
+
+The point is that it will receive one of each, right?
+
+Um, again, we track those using, uh, the length or LEN, uh, function.
+
+And then once again, actions, uh, we put them, we only have two actions.
+
+So I just referred to it as the action, uh, control factor, and we included our two actions.
+
+You can explore, or you can exploit neighbor one.
+
+And we track that and the number of controls available to the agent.
+
+Um,
+
+Again, that's it.
+
+And if you can determine this kind of design for your agent early on and then begin programming, as the authors of the textbook acknowledge, it's quite an iterative process whenever it comes to computational modeling of just about anything that includes active inference agents and running simulations.
+
+and so on.
+
+So this is a very crucial first step because it will inform a lot of what you do next, as well as what you might end up changing during that process of iteratively changing your model of your model.
+
+The A matrix is the first step of linking these things.
+
+The A matrix will link together the observation modalities and hidden state factors that we defined earlier.
+
+We need one subarray for each outcome modality.
+
+So I want to just draw attention to this upper right equation.
+
+Again, matrix operations are perhaps the main hurdle in learning how to construct PIMDP agents or any POMDP agents, including MATLAB.
+
+So a useful rule of thumb is just remembering that whenever you construct a matrix to represent, say, the A matrix, the likelihood matrix,
+
+uh you know that the probability of whatever outcome you're looking at whatever observation modality you're looking at we'll start with the outcome one which again uh includes improvement no improvement none observed the probability of any of those observations conditioned on
+
+every single one of your state factors, which nicely for us is as simple as the way it looks to the far left.
+
+Probability, observation, modality, outcome conditioned on the hidden state factor for attention.
+
+right so we're really just uh working with these these two dimensions um it would become three dimensional matrices if say we had two hidden state factors this would get expanded um so uh
+
+The typical way of doing this in PyMDP, PyMDP contains a sub library utils containing just different utility functions.
+
+And the sort of framework for constructing these kinds of beliefs in PyMDP is by using what are called object arrays, which are already available in the NumPy library.
+
+uh it's effectively a numpy array that allows for uh data types aside from float values so it's kind of a more flexible version of a numpy array and that allows you to do things like say create an a matrix that's your representative of your overall
+
+likelihood matrix for everything, all observation modalities and state factors.
+
+And then you can construct within it individual sub arrays, one for each observation modality.
+
+And those subarrays can be of different dimensionalities from one another.
+
+And so it's just, again, wrapping your head around kind of the nestedness here.
+
+And a lot of these things are better represented in the code I've written.
+
+So I might touch on that if there's time.
+
+Of course, this is code I wrote too, but the Colab script, which contains code that you can run, and it has different ways of expressing these different matrices.
+
+But you can see the point is that now that we've defined our hidden states, our observations, our actions, we're going to start linking them to represent our agent's beliefs.
+
+So for this situation, I print the outputs.
+
+All code that you've seen so far with the gray shading that is, you know, at the beginning we imported libraries,
+
+And then two slides ago, we looked at defining hidden state factors, observation modalities, actions.
+
+Now this is our A matrix.
+
+I'm not getting into the maths on this A matrix because it's easier to just look at the outcomes.
+
+This is how we construct, like all this code that I've shown so far can just be run, like in the order that I've shown it thus far.
+
+You'll see that in the Colab script.
+
+Here, the first subarray, again, which is for the outcome observation modality, we'll notice for those who are familiar with probability theory, probability distribution sum to one.
+
+What's helpful is that the utils sub-library has an isNormalize function where you can put any object array into it, and it'll tell you if it's normalized or not.
+
+It's a helpful rule of thumb to ensure that you've done everything right before you proceed further.
+
+And so what this does is that it lets us see that if we sum these values, each outcome per hidden state level,
+
+we can see that it's entirely uniform.
+
+It's totally uncertain.
+
+It's not useful to the agent.
+
+There's a third probability that they'll see an improvement if they attended themselves.
+
+Third probability of there being no improvement if they attended themselves.
+
+There's a third probability of seeing an unobserved outcome if they attended themselves.
+
+It's very common practice if you're attempting to model a more realistic phenomena
+
+or organism or human, and you have no idea what they would do.
+
+It's common practice to initialize them with uniform priors.
+
+Here, I'm just doing it for the sake of simplicity in a tutorial, right?
+
+And so, meanwhile,
+
+With the next subarray, as I said earlier, there's one-to-one mappings between the attention observation modality and the attention hidden state factor.
+
+So it's as if the agent has completely certain beliefs, like the polar opposite about who it's attending to.
+
+So if it sees that it's attending to someone
+
+um attending to itself then it will refer it's into the attending to itself and vice versa for neighbor and that's it uh that's the a matrix and then we have the b matrix which i would say is equally complex and then things become immensely simpler from there the b matrix again equation top right um uh
+
+We need one subarray B matrix for each hidden state factor.
+
+This is very simple.
+
+We only have one hidden state factor.
+
+It's the attention hidden state factor.
+
+And so our agent wants to be able to track if I'm currently attending to, let's say, myself, and I choose to explore,
+
+what will the hidden state be at the next time step thus s tau plus one conditioned on s tau the hidden statement uh present uh combined with pi which is representative of the action or policy undertaken in the present um this is also going to be incredibly simple it's really going to be one to one so at any given point in time um
+
+the agent will believe that regardless of what state it is in currently, it will transition to self if it chooses explore, probability one.
+
+If the current state is neighbor, it'll transition to self with probability one if it chooses explore.
+
+And similarly, it always believes that it'll transition to the neighbor in state if
+
+regardless of whatever state it currently believes it is in.
+
+So a comment that might come up for anyone who is familiar with these things, this is not terribly different from just a standard Markov decision making process, right?
+
+It's kind of like, well, if the agent has all these fully certain beliefs, why create a partially observable environment?
+
+There's a certain reason for that.
+
+And then there's another just more direct reason for that.
+
+The direct one is that this is how PMDP works.
+
+And then also the other reason is I think that partially observable environments are more representative of our reality.
+
+I think it aligns with the idea that we do often have noisy sensory receptors
+
+know whether you have 20 20 vision or not uh it doesn't mean that you can uh you know see every
+
+color that's every, uh, ever existed.
+
+And it doesn't mean that, you know, you can see perfectly anything.
+
+Uh, and, and so the, the idea of just, just noise being there and the idea that you have to infer, you have to rely upon observations to infer beliefs and having those kinds of loops, you know, it all, um, kind of makes sense.
+
+And then there's another aspect, uh, that will come up soon whenever we discuss learning.
+
+For the C matrix, which is representative of preferences or priors over observations, this is basically denoting, it's as if we're saying, what are the outcomes the agent actually wants to see or observe?
+
+What are the observations it wants to see happen as opposed to those that it doesn't?
+
+right and so this is immensely uh easier to construct uh versus the the a matrix or the b matrix in that we're really just effectively creating these vectors
+
+So we need one subarray for each outcome modality or observation modality.
+
+For the first one, the outcome modality, the way that we've defined this is take a list.
+
+Each one of these values is indexed to the observation in the outcome
+
+observation modality as we saw before so recall in order the first one is improvement the second one is no improvement and the third one is unobserved these line up exactly in the same way and reiterating again the matrix operations and being able to grasp like how indexing goes here as long as everything lines up
+
+it'll be solvable, right, the free energy calculation will be able to be carried out as long as everything kind of is in its place.
+
+Right.
+
+So so it's do your best to never confuse, you know, which position each of these represents.
+
+So
+
+The reason why these values don't sum to one common practice that I've seen a lot in previous MATLAB scripts and so on is people will actually use these like whole integers and even negative values because it's just kind of a more human friendly, human interpretable way of experimenting with an agent's preferences.
+
+Whenever you run this through the softmax function,
+
+which is also applied here.
+
+This basically strongly amplifies the final probability distribution that arises and also turns it into a probability distribution that does sum to one.
+
+And then
+
+uh before we move on to see what that looks like for the second observation modality uh the attention observation modality we're going to make that entirely uniform as well what each of these really is saying is that the agent strongly prefers to see improvements in its solution it dis prefers seeing no improvement in its current solution
+
+And it is indifferent to the unobserved observation.
+
+It's not exactly how the math would play out because of the softmax function, but it's effectively something like that.
+
+And in any case, in this simulation, we won't be seeing the unobserved observation.
+
+um observation come up at all anyway uh and then for the second one uh fully uniform preferences uh that simply means that the agent has no particular preference towards um whether it's attending to itself or to its neighbor right so you could experiment with this you could see like what what happens whenever an agent actually prefers to
+
+its due diligence and primarily just explore and come up with its own answers to the solution.
+
+Or what if you come up with an agent who more so prefers to steal or exploit their neighbor's answer.
+
+In any case, here we'll stay totally agnostic to that and just say that the agent has uniform preferences.
+
+So those end up looking like this.
+
+Whenever we print them out, again, these are normalized.
+
+We see how the softmax function strongly amplified
+
+where the preference for improvement was a five, it's now become a 0.9908 continuing probability.
+
+And so this relates back to the idea that agents are self-evidencing.
+
+Based on how particularly expected free energy is computed, where it includes C within the pragmatic value term, this is what will guide the agent towards, you know,
+
+towards observations that it prefers as opposed to others, making this move beyond just, you know, an agent who's hyper reactive to what's going on in the present, instead of an agent who might prefer to see certain things and therefore act in a way to kind of realize what it prefers.
+
+Again, here, preference really just meaning it being what you expect.
+
+And then
+
+Again, uniform distribution for the second modality.
+
+It has no particular preference towards observing itself or observing its neighbor as who it's attending to.
+
+Then D.
+
+Fortunately for us, we only have one hidden state factor.
+
+So this is the shortest description.
+
+It's similarly to how C results in a probability distribution that describes the priors over observations.
+
+The D matrix does the same thing, but for states.
+
+And we only have one hidden state.
+
+So we just have one subarray for the attention hidden state factor.
+
+And so again, we just...
+
+And I didn't mention this earlier, the NP dot ones is just generating a vector equivalent to the number of hidden state levels that you have.
+
+So a vector of two ones, and then you're normalizing it using the utils library, right?
+
+So take two ones, normalize them, you're going to end up with point 5.5.
+
+The E-matrix are your habits.
+
+You don't actually necessarily have to define these whenever you're constructing a PyMDP agent.
+
+I find it to be very useful if either one, you actually want to run some kind of experiment where you think that the agent will actually have more of a sort of
+
+uh habit of doing one particular action over the other um it's also useful if say you're trying to set up a different kind of simulation that's more focused on uh policies in which case you know it might be the case that you know you only want uh the agent to have a strong prior belief for entire particular policy versus another uh and and use that as a way to to define the agent as having beliefs that you know a particular policy
+
+won't at all work versus one that will such as, you know, dry off and then jump in the pool as a kind of an odd thing to do.
+
+Or, you know, it could come up with some better example on the fly, but I think the point comes across right.
+
+So in any case, this is just basically your priors over your actions that get incorporated.
+
+So what did we do?
+
+We related states and observations in the A matrix.
+
+We related states and actions in the B matrix.
+
+And then C, D, and E are just the priors on states, excuse me, observations, states, and actions, respectively.
+
+also recall uh from the from the textbook and elsewhere that the agent has a separation from its environment uh recall the notion of a markov blanket and so uh for the for the agent uh themselves like despite certain things occurring during three minute energy minimization to where uh observations and actions do in fact end up influencing one another vicariously uh we have not expressed a probability distribution
+
+that actually directly links observations and actions.
+
+So it's kind of maintaining the blanket states of your active states and sensory states.
+
+And you'll see that in the textbook reading the section about Markov blankets.
+
+So it's just maintaining that kind of separation.
+
+Then
+
+I will go just a little bit longer than what I expected.
+
+So now that we have our A, B, C, D and E, one additional thing that our agent will do is that it will learn the idea of learning and active inference.
+
+There's plenty of literature on this, but it can relate to the idea of for the sake of a model, what we're doing is that we're assigning sort of these hyper parameters or priors to
+
+to the matrices that we just defined themselves.
+
+So more specifically, what our agent will do is it will learn its A matrix, the likelihood matrix that we defined first out of those five things, A, B, C, D, and E. And it will just update it based on the new observations it receives and the state that it infers.
+
+And it will also answer a question as to why did we set up hidden states and observations and actions in that way?
+
+Why are we doing these identity mappings between particular things?
+
+By learning the A matrix, that will allow our agent to learn
+
+If it's the case that when it explores, it'll be more likely to see an improvement or no improvement, right?
+
+This will allow our agent to, by accumulating observations over time in the action perception loop,
+
+it will begin to better update its beliefs about which thing it should do.
+
+And so even though previously we defined E as being uniform over those two actions to where the agent initially has no particular bias towards
+
+exploring or exploiting it will actually probably start to bias the agent towards one of those directions because it prefers to see improvements and that can only occur through learning without learning and modifying internal parameters of your model you're effectively you know sort of like a pre-programmed
+
+a thermos thermostat or something, right, you're not adaptive, you just act in the same way as you always do.
+
+And so an agent who doesn't learn as the one if we define an agent like we just did, but it never learns and what it will do is more than likely just with 5050 chance to explore exploit, just keep going from
+
+there so um the way that we update the a matrix for the imdp agent here um
+
+is that we it is quite simple and this is it you don't even need all of this code you only need the code in the upper right but it's basically uh this uh small p capital a is the prior that we're creating uh what we're doing is that we're using that utils sub library this dearestly like function which basically you construct your a send it through the dearestly like function
+
+It'll convert it into what is a kind of exemplar conjugate distribution of a categorical probability distribution, that being a Dirichlet distribution.
+
+Whenever you print it out, you see that we set scale to one.
+
+It looks exactly like our A matrix.
+
+What that scale argument does is that it scales the values.
+
+That's the special thing about the matrix Dirichlet distribution is that it's something like an accumulation of pseudo counts that will then weigh particular
+
+parts of the competition of free energy minimization.
+
+For example, the agent might start to see more instances of improvement.
+
+And so it might start to upweight the likelihood of improvement, given the association that it saw it with.
+
+And so these don't actually have to sum to one.
+
+They're just kind of like weighting our A matrix.
+
+And they're very relatable to the notion of precision.
+
+right like if the agent hardly has any previous experience uh with anything and it's and it's it's it's uh uh prior over a is highly scaled down meaning it has very few pseudo counts of any prior experience uh it's the agent is going to be less certain in its ability to make connections between uh exactly what the a matrix tries to model which is the relationship between observations and states so
+
+so these values and themselves you know be set differently and and you can set the precision differently and then they can impact the agent uh differently that way i have all of that this is it for constructing the agent
+
+It's basically just an agent class.
+
+And so you just feed in the arguments.
+
+There are actually many, many arguments that can go into the agent constructor.
+
+It might seem like a lot.
+
+There are actually, I think, literally a couple dozen more.
+
+but it very much mirrors the construction of the MATLAB SPM package for anyone familiar with that.
+
+There's a whole script, you know, that will run through and try and construct your Markov decision-making process, your agent, and it'll check to make sure that all of these, you know, boxes are correct.
+
+Like, is the A normalized?
+
+You know, how did you set gamma or some other such thing?
+
+And so it's, you know, in spirit, this is very similar to that.
+
+What's nice is that the PyMDP package, it has different inference algorithms, not many, but as opposed to choosing sort of the standard one, I've chosen MNP, which is marginal message passing.
+
+There's a nice paper on it that can be found in the speaker notes of the tutorial slides.
+
+I make a brief reference to it here, par at all 2019.
+
+And so marginal message passing basically being a kind of, in a certain way, it's a kind of compromise between overcoming intractability and achieving something like computational efficiency and approximation that you get with variational message passing.
+
+But at the same time, it overcomes some of the issues of not having certain precision terms involved.
+
+that leads to issues with variational message passing that it can lead to overconfident posteriors in the computation.
+
+Meanwhile, belief propagation is much more holistic, but more computationally expensive, sometimes tractable depending on the situation.
+
+So MMP is a nice way of striking the balance, trying to find that balance between complexity and accuracy as we are always trying to do.
+
+So you'll notice that we plugged in everything that we defined so far, A, B, C, D, E, and then the priors over A, which was M and P. There's a little bit more explanation of what some of these other arguments are, but given the time and also simply the fact that, I mean,
+
+We would have to go into a lot more to look at the other options available.
+
+I would say this suffices.
+
+If you want to play around with any of these, certainly go for it.
+
+And I'd especially recommend looking at Inference Horizon and the policy link.
+
+uh arguments um this agent is very simple in the sense that it makes no future planning steps for for constructing policies that go beyond just should i explore now or should i exploit now um it can make inferences uh one additional time step into the future though so it does in a certain way allow it to have this kind of forward-lookingness where it'll not just try to anticipate what will happen next but it'll try to
+
+anticipate what will happen next next so you know the next time step and the one following that um and uh yeah i also chose stochastic action selection you could choose deterministic instead there's a note on how that works um basically you know if uh if your posteriors over policies or that uh
+
+you know uh explorer has a value of 0.1 you'll choose that with probability 0.1 right so there's still stochasticity involved um but you're just going to be more likely to choose the option with the highest probability deterministic means you would automatically go for the the action that has the highest probability assigned in the posterior
+
+So all those things in mind, this is the general process that will be carried out during an active inference loop for our agent.
+
+It'll infer states, which once we've constructed our agent, the agent, and this is common for other reinforcement learning paradigms as well.
+
+You have an agent, and then that agent will have a series of attributes that you can access at any given time.
+
+Our agents have an infer states method, which can then take in the observation.
+
+And then after that, whenever it comes to learning, the pip install version of PIMDP has update A, B, and D matrices available.
+
+To briefly harken back to this, there have been many updates to the PIMDP library over the past couple of years.
+
+It's very exciting, but I didn't want to give anything too definitive because I think many things are still in progress, but right now they're actively developing means of doing model fitting, which are already there.
+
+It's just, I can see that they're kind of cleaning some things up.
+
+They've also, you know, there will be means of using the JAX backend to speed up a lot of the processes, which is very exciting.
+
+And also they've implemented a sophisticated inference, which is another way of doing policy inference.
+
+using a kind of optimizing a tree search.
+
+But in addition to those updates, they'll also be updating the ability such that the agent could learn its preferences or its habits or other aspects.
+
+These are just the pip install versions currently available methods.
+
+Then agent will infer its policies and then it will sample its action.
+
+So in state inference, again, we're using marginal message passing.
+
+The interesting thing about PyMDP is that the only time that F, variational free energy, really comes up as far as the code goes is that F gets scored across policies rather than being the more general free energy of the overall system per se.
+
+But in certain ways from looking at the raw code that carries that out, it appears that there are other aspects involved.
+
+But for the sake of the tutorial, we'll just say what's interesting is that free energy is the same for both actions at any given point in time.
+
+And I think that in part is due to the fact that the complexity term
+
+uh and uh very defining variational free energy for each um action or policy um it's dependent on this uh the posteriors over states versus uh your your prior which starts to look like your b matrix regarding uh state transitions and the agent has a fully uh
+
+predictable fully uh you know identity mapping one-to-one mapping and it's B transition matrices and I think that's what actually brings this complexity term uh down to uh virtually zero right uh it's like the the posteriors are basically matching what it it it knows what state it'll transition to
+
+And if it doesn't ever learn its B matrix and never has any opportunity otherwise to see something different from what it already believes, then it's as if the agent fully believes like, okay, you know, complexity is gone.
+
+All it's left with is accuracy.
+
+And so it's accuracy, actually the difference between observations and states, that's what's going to lead to the fluctuations in the variational free energies.
+
+But this is all the code you need.
+
+A really important part is the way that this OBS variable or object is defined.
+
+Again, it's very important to keep track of your indices.
+
+At any point in time, you could define an OBS object like this, which is a list.
+
+The first element of OBS corresponds to the first observation modality, which for us was outcome.
+
+And then the value itself refers to the index of the particular observation in question.
+
+So what we're saying here is the first value representing the observation modality, outcome modality, that first value zero is index to improvement.
+
+And you can see that same logic
+
+plays out for the second element in the ops list.
+
+This is for the attention observation modality and zero representing self as what it's indexed to.
+
+And so it's as if the agent just observed that it was attending to itself and it saw an improvement.
+
+We simply run that through the agent.infirstStates method and plug into ops.
+
+And then the agent will update.
+
+It'll find QS, meaning its posteriors over in states.
+
+And those will actually get stored in the agent as an attribute as well.
+
+But the method returns the object.
+
+And so we're keeping it here, QS.
+
+And then you can look.
+
+We didn't have to explicitly say anything about computing F. It's just this infer states.
+
+run then led to an internal computation of F in the agent that we can now access print.
+
+This starts getting into let's be through this a little bit, but because I already touched on various things, but this is another breakdown.
+
+You know, it's very useful to look at the different breakdowns of variational free energy and expected free energy and so on.
+
+But I'm going to move through this slide and come because we'll get back to policy inference shortly.
+
+This is to show that Qs, the posteriors over hidden states, is rather complex whenever you use the marginal message passing algorithm.
+
+But it's also very interesting in that the way it gets broken down, itself being a rather complex three-dimensional matrix, is that the first dimension refers to policy.
+
+if we if we kind of open it up, as it were.
+
+The second one where is the time step.
+
+And the third is the hidden state factor.
+
+So what this is saying is that for the first entry, which relates to explore, and then the time step
+
+If you make the first entry of that now and then in state factor, we only have one of them.
+
+So the first entry is the only entry of the attention in state factor.
+
+That effectively means if you print QS zero, zero, zero, it'll print out this first value representing this is what the agent believes to be the hidden state given the policy.
+
+you know given the explorer policy and so we can actually extract that out whenever i have these slightly out of line we can extract that out and then the excuse me this line here agent.qs we can we can
+
+extracted out via QS action sampled ID zero.
+
+All that means is we're grabbing the agent's posterior beliefs given the actual hidden state that it chose.
+
+There's a little bit of complexity and it's much clearer in the Google Colab script that I've included.
+
+So I advise having a look at that.
+
+But this is the code that allows the agent to update its A matrix.
+
+The only reason why we need a couple extra lines of code is because of the complex structure of the QS that comes out of a marginal message passing agent.
+
+And then we'll look at
+
+um policy inference you saw that there are more slides than what i really need to explain it but um this is the final step of the action perception loop so for policy inference your posterior beliefs over your policies uh in this case are um your negative expected free energy times uh gamma which uh i have a better slide to represent that
+
+Here we are.
+
+Gamma, which is your action precision.
+
+So just as I mentioned, we can put these hyper priors or parameters on our A matrix to learn the A matrix and that scale argument kind of down tunes or up tunes the precision on the A matrix.
+
+Similarly here,
+
+we can down tune or up tune the precision over G, expected free energy.
+
+And since expected free energy is what is directly involved in realizing one's preferences that I mentioned earlier with the C matrix, it's kind of like, whenever we look at this equation,
+
+is that we're seeing a sort of balancing act between expected free energy related to sort of deliberate decision making to realize goals.
+
+These are very contextual kind of beliefs and ways of computing free energy.
+
+And then you have variational free energy, which is sort of like the free energy of the present.
+
+And it doesn't necessarily take
+
+into account anything regarding preferences, the C matrix and what you say you want to see.
+
+It's more about just kind of optimizing your model in the moment.
+
+And then habits, which we already touched on earlier.
+
+And then those we take the actually take the natural log of those so that they kind of fit similarly on the same scale with expected free energy and variational free energy.
+
+So it's kind of like you have these three different, you know, you have your habits built up from the past.
+
+you have your variational free energy of the present and then you have your expected free energy of the future all sort of contending with one another and then being run through this soft max function which as we saw earlier when we used it for the c matrix that converts it into something that sums to one and then acts as our categorical probability distribution
+
+And the number of entries will be equivalent to the number of actions you have available.
+
+And so that will look like in the case of G alone, it'll look like this.
+
+You'll have your free energy for the explore action and your free energy for the exploit action.
+
+And recall that
+
+that we want to minimize this quantity so it's actually the the quantity with a smaller number that's uh better so to speak um and then these values will get plugged into the policy inference equation up top in addition to what we already saw earlier the variational free energy values we saw
+
+And then the habits which we programmed even earlier than that.
+
+So we have now all components for constructing an active inference agent, we have all the components needed for doing hidden state
+
+inference of having our agent receive observations that it uses to receive to infer hidden states and then to infer policies and to select an action.
+
+That's what this slide represents is the ability to infer policies.
+
+You can print out G and have a look at it.
+
+And then with sample action, this just basically has the agent sample from its posteriors over policies.
+
+And then this extra code here is simply because whenever you have the agent sample an action, it returns it within a list.
+
+And so we need to extract that out of there.
+
+And then
+
+these last two slides were to represent uh two example simulations that i ran um they're i'm sure they look rather busy as many of these other slides have it was just so much to kind of look at and
+
+and get into.
+
+What this figure attempts to do is that you can read it from left to right, like over time steps, from the start of the simulation to the end.
+
+In this case, it was 30 time steps long.
+
+And then you can also read it from top to bottom, where the agent receives an observation, it computes variational free energy, it learns its A matrix,
+
+It infers policies and the expected free energy of each action.
+
+uh along with that that g then gets included along with f and habits to compute um posterior beliefs about policies and then uh finally the agent chooses an action that gets sent in so it's kind of like from left to right we're looking at each time step where a whole uh action perception loop is happening and then vertically we're looking at
+
+an entire uh action perception loop or you could flip that say perception action loop given the agent is getting an observation first right and so uh in this simulation i'll just stick with this one uh but uh you know in the in this simulation uh the agent um receives an initial observation uh it just forced it to say like self
+
+and improvement, which seems good.
+
+Or excuse me, it gets initialized with improvement and neighbor.
+
+And then for the first half of the simulation, we're in what I'll call the neighbor context, where in that case, the simulation is, it's programmed in a loop.
+
+So the agent will receive, it will always receive an improvement if they exploit.
+
+and they'll always receive a no improvement if they explore.
+
+So you can see this is a very deterministic and very extreme environment where choosing to explore always leads to a bad outcome for the agent.
+
+Choosing to exploit always leads to a good outcome for the agent.
+
+And so during the first couple steps, recall that our agent starts off with
+
+Um, you know, these uniform beliefs, uh, as far as its habits go of whether it should explore exploit.
+
+Uh, and so that's where these red and blue lines and this probability, uh, sub graph here, subplot, uh, they line up with one another.
+
+They're 0.5 0.5.
+
+So effectively the agent is just kind of randomly choosing one of these two options.
+
+And it just happened to choose to explore both times whenever it shows to explore both times.
+
+for the next two time steps, it saw that there were no improvement like bad outcomes.
+
+You know, given that, and the agents free variational free energy of the present kind of kind of got jerked the downward in a good way.
+
+It's meaning that it's informative to the agent during those time steps to see that it's accumulating evidence that it's saying that it might be learning something in the meantime,
+
+during the second time step, the agent learned it's a matrix, right?
+
+So, um, that also means that there was a lot of updating in its internal model, uh, that has led to changes in its free energy as well.
+
+And then over time, uh, things start to diverge.
+
+The agent quickly realizes, oh, if I exploit, I
+
+receive this green improvement observation again and again.
+
+So the agent proceeds to exploit, and it actually does it all the time.
+
+As it's doing it, it's seeing that there's less and less expected free energy to just exploit.
+
+And then similarly, in the final policy inference, it actually reaches a 1.0 probability that the agent should exploit to where the agent is effectively doing this deterministically.
+
+practically, given that it keeps inferring that.
+
+And also this yellow line is especially interesting.
+
+And part of why I wanted to do all this in the first place, what this yellow line is doing is that this is me extracting out from it the probability of the agent seeing an improvement given that it attended to its neighbor, which links up with exploiting.
+
+So this is teaching the agent that it should
+
+Keep exploiting.
+
+It'll see improvements.
+
+It'll get what it wants.
+
+It'll keep going that way.
+
+His agent is adapting to an environment where that's exactly how this world works.
+
+And then halfway through the simulation, everything is reversed.
+
+So now we went from one environmental extreme to another.
+
+In the first case, the agent saw improvements from attending to its neighbor.
+
+Now the agent will only see improvements from attending to itself and only see no improvements when attending to its neighbor.
+
+And because there have been so many instances in its past experience of seeing beneficial outcomes when it exploits its neighbor, the agent now actually has to unlearn
+
+what it is learned, right.
+
+And by the end of the simulation still hasn't fully done that.
+
+And we can see this reflected in the expected free energy, the it starts to rise again for exploit as the agent no longer sees any more improvements, even though it's continuing to exploit because that's what it expects.
+
+So
+
+This is a toy simulation in that you might not have learning happen after every two time steps.
+
+That's a very arbitrary thing that I've chosen to do.
+
+And it's actually a rather rapid learning rate, all things considered.
+
+More often than not, whenever setting up a simulation, you'll have an agent who might say, learn at the end of a trial where you run 10 trials of three time steps each or something along those lines, right?
+
+It's less common to run trials over 30 time steps.
+
+However, in more traditional agent-based modeling paradigms, because of their simplicity, you often do run a simulation over many, many time steps, right?
+
+And so I wanted to make sure that this code is set up in a way that you could run this as long as you prefer to without too much complexity, because I wanted to show the value to computational social scientists as to what they might be able to do.
+
+with active inference stages.
+
+But now that we're significantly beyond, you know, where I wanted to wrap up, I'll just take one more minute to say, you know, there, again, there is, you can land at the GitHub website that I made, it's very short, to the point, and all the links here are available for
+
+The slides that I was just showing, there are many more slides.
+
+I tried to be rather comprehensive, given how much material I'm trying to show.
+
+And then the two Colab scripts, with this second one being a further development of the original code, but now I'm adding more explanatory Markov.
+
+Markdown cells that kind of better describe things, including giving examples of how the A matrix works and the B matrix works.
+
+And furthermore,
+
+Again, I repeatedly emphasized being able to get your matrix construction and structuration down.
+
+I actually provided code on here's how you create an A matrix and you can manually define the values.
+
+It's a good idea to learn how to manually
+
+define the values of the A matrix or of the B matrix.
+
+It looks rather tedious than it is, but to be able to do them one by one is a great sort of
+
+didactic means of like learning how to construct these including whenever we get into these more complex like ways of um you know representing probability distributions where you have three or more dimensions but once you're able to do that you might just at some point realize oh there's a loop i could write that could do this for me um but you don't quite know what that loop looks like until you kind of get a sense of what value should be there right so um
+
+Anyway, so the point is that there are just some additional tools and information that can be used here.
+
+And then all the code is available for, say, printing out, like running the example simulations and then looking at the plots at the end.
+
+Feel free to modify and adapt those as pleases you.
+
+So that's all I have for today.
+
+And I would love in future
+
+to give another talk and or prerecord something that goes into a lot of the other material and probably give some more kind of cursory overview of the rest, especially for people who would be interested in
+
+multi-agent simulations and um and especially kind of using leveraging packages like network x which will allow you to kind of connect agents and graphs and define like sort of like the relationships with one another and it gives clever ways of of giving them actions that are specific to only the agents in their network or other things like that so um yeah that uh concludes thanks
+
+
+SPEAKER_00:
+nice great work um why or how would somebody use it other than to get a good handle on the pomdp how would you see it being used or adopted for research cool yeah yeah um so i think uh in scenario like this kind of provides a general agent who can like
+
+
+SPEAKER_01:
+do things that are defined as exploring or exploiting and so um
+
+What you could do is use it to create the NK landscape laser Friedman model that I mentioned earlier, and then tweak things from there.
+
+Or you could use this as a more general template, like take out the idea that these are intention and outcome modalities and stuff, swap them out for whatever you want.
+
+The template is here for including as many
+
+observation modalities and state factors as you want, for example, just change the names and make sure you define the ABCDs, you know, to your liking.
+
+And so that, that's really what I wanted to do.
+
+Just like, here's, here's an example agent.
+
+because we need to know what the final picture should look like.
+
+But you know, from there, just just tear it apart and like, you know, to your heart's content and make it into to what you want to see.
+
+These agents can be used to, you know, the idea of autonomous decision making that if there are any discrete number of things that you'd want to set up some kind of agent to do, and you know, what kind of data you want it to read,
+
+um you know and what what should be the impact of each of those discrete actions it has like you have this as a kind of like agent that you can plug into uh that that sort of design diagram right stuff big answer it's pretty abstract too sorry but yeah cool what will be coming up for the next several weeks
+
+yeah um so with the symposium i'm looking forward to giving a talk that's a little bit more uh to the script uh and less focused on coding and more on how these kinds of things might be applied in social science research uh including looking at uh you know some other research that has also been done uh just to try and give a sense that there is in fact a sort of subfield forming here and
+
+Of course, we have the course on social science done with the institute itself last year.
+
+You know, different people making headway in that area.
+
+So looking forward to that.
+
+And who knows what else?
+
+I very much look forward to maybe presenting some other research where I'm using agents like this and having them interact in kind of interesting ways with, let's say, LLMs.
+
+And you know, these become a kind of fun way of trying to imagine autonomous decision making whenever it comes to things like prompting.
+
+So yeah.
+
+
+SPEAKER_00:
+Cool.
+
+Well, the video description has the links and where things will be versions.
+
+And it's a great demo.
+
+So thank you.
+
+Any other comments?
+
+
+SPEAKER_01:
+Uh, not, not currently aside from, you know, uh, thanks to everyone who, uh, joined the textbook group and, uh, you know, over the recent reading, uh, we're currently talking through, uh, other ways that we might go about the textbook group going forward, but we had a really nice wrap up conversation yesterday.
+
+So looking forward to future talks.
+
+
+SPEAKER_00:
+Cool.
+
+Okay.
+
+Thank you again, Andrew, looking forward to the next.
+
+
+SPEAKER_01:
+episodes in the series yeah fantastic thanks daniel thank you

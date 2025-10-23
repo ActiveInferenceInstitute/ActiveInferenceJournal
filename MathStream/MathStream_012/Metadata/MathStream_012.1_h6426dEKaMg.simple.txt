@@ -1,0 +1,932 @@
+SPEAKER_01:
+hello welcome it is april 10th 2025 we're in active inference math stream 12.1 with ola running going to be discussing elbowing stein variational bays with stein mixture inference so thank you for joining looking forward to this presentation and discussion
+
+
+SPEAKER_00:
+All right, thanks for having me.
+
+Yeah, I'm all running and presenting the work I've done, but together with Eric Nolistic, Christophe Lai, Frederik Smits and Thomas Hammerhoek on relational base with Stein mixtures.
+
+So let's get into it.
+
+So this is the plan.
+
+We'll talk about patient inference and particle-based methods, and in particular Stein-based methods, which came about in 2016.
+
+We'll just go over an overview of what these are to get everybody up, and then the key problem with them, which is to underestimate the variance as our models get high dimensional.
+
+Then I'll show you shortly about our approach, which is Stein mixture inference.
+
+The new thing here is introducing a neighborhood to each of the particles.
+
+We'll talk a little bit about that and then evidence that this mixture actually helps with the issue of dimensionality, of course of dimensionality.
+
+And finally, Stein mixture inference is a
+
+black box inference engine in the probabilistic programming language on Pyro.
+
+So I'll plug that a little bit at the end.
+
+Yeah, so just to set the stage here, so making predictions and sort of modeling systems is ubiquitous.
+
+So the group I'm in works with structural biology, but I'm looking to applications in robotics and potentially finance as well.
+
+And sort of at an abstract level, what we're looking for is trustworthy systems.
+
+We want something that's accurate when it meets, when our data meets our expectation, and uncertain when it's either surprising, ambiguous, or missing.
+
+So illustrating it here, we have a data generating process dotted line, and then we have a method which is trying to infer the process.
+
+This is the red line.
+
+And so we only give it sufficient data in the green regions.
+
+And what we're looking for is something that captures the process in the green region and gets uncertain in this in-between region.
+
+And so on the left-hand side, you would have something that's accurate, but it's overly confident because the uncertainty is collapsed in the in-between region.
+
+And the right-hand side is what we want.
+
+So here, the blue region could be any potential curve.
+
+And it's like 95% or 90% HDI, so it's like the likeliest curves would have been here.
+
+Good.
+
+Yeah.
+
+And so just to make it slightly more concrete.
+
+So in prediction, you might have something like an overconfident mobile robot.
+
+So if you, for example, have a robot navigating no terrain,
+
+it will have a sort of uncertainty about its orientation and position.
+
+But as you put it into new terrain, for example, by removing a tree, you would want this uncertainty to spread out so that you can invoke emergency protocols.
+
+And then overconfident protocol would, sorry,
+
+overconfident a robot might lead to crashes because there's a disambiguity between its actual location and where it believes it's at.
+
+this is a this is a we have a talking with some underwater robotics labs and they say that this is an issue in one out of 250 missions and this can be quite expensive with a robot costing between 20 000 euros and 10 million depending on on the size of the robot or deep sea robots
+
+another issue so that was sort of when we're talking about prediction but when we're talking about modeling protein structures three-dimensional protein structures have regions which are so conserved so they stay ordered so they don't fluctuate very much but it's a molecule interacting with the solvent around it so the whole thing will move slightly and then you have
+
+some regions which are unstructured and highly disordered, and they will be moving around.
+
+So if you want a description of the structure, it's not enough of the three dimensional structure of the protein.
+
+It's not enough to know just sort of an image of the structure, because there might be some areas which are not, which will only be
+
+very unlikely to be in that particular position.
+
+So you want some sort of representation which captures that you have flexibility within the molecule and uncertainty is a natural way of representing this.
+
+Okay, so and the way we are going to go about this is with Bayesian inference.
+
+So just a short reminder of Bayesian inference.
+
+So we're given observations x, so this is things we get to see.
+
+And we have a model with some latent parameters, unseen parameters, which I'm going to call theta throughout.
+
+And then we can apply Bayes' rule to get to take our prior beliefs about theta and incorporate the observations we're seeing to get to our posterior.
+
+And we commonly use this posterior to either want to sample from it, which is the techniques I'm going to show you here, or in some cases want to compute expectations with respect to the posterior.
+
+Now we have two challenges.
+
+This first challenge is key.
+
+It's important in terms of what we're doing here, which is our model of data is high dimensional.
+
+And the other problem, which is something you work around when you're doing this type of algorithm, is you don't want to evaluate the normalizing constant because it's analytically intractable.
+
+So this methodology first came about in 2012, and the key idea is to take a simple measure and then find a push-forward, so a deterministic map, such that you transform this very simple measure into the target measure.
+
+And our target measure in Bayesian inference setting is our posterior.
+
+And so this is one aspect of it.
+
+We're trying to find this deterministic map.
+
+And secondly, we're going to move not the entire density, because that would require us to compute normalizing constants.
+
+We're only going to be moving particles.
+
+So we're going to move something that looks like samples from this simple distribution towards the target distribution.
+
+And so Mulzi and Masuk did this using orthogonal polynomials.
+
+They had this basis of orthogonal polynomials and then they constructed one function which did the move the entire transport.
+
+That was in 2012.
+
+And then in 2016, Steinversion Green Descent came out.
+
+So the way they find that they determine the transport is they choose a distance between distributions.
+
+So the simple distribution row and the target distribution from the posterior.
+
+And then you apply the transport.
+
+And so they did two things.
+
+The first thing was they deconstructed the transport into an iterative process.
+
+And secondly, they gave a simple form to each of these transports, which is just a perturbation to an identity map.
+
+And then after iterating this process, they would then make sure that each iteration you would get closer from the sort of simple prior metric towards the stereo metric.
+
+And the key result here is that they get a close form for finding this vector field, which is giving us the direction of our transport.
+
+So just taking this apart, the name apart, we see the Stein variation of gradient descent.
+
+So it's a gradient descent like algorithm.
+
+We get an update rule, which looks like the classical gradient descent, only our thetas here are random variables and not the parameters as we would be used to.
+
+And the way it works is we draw a set of particles from our prior.
+
+This set of particles we put an empirical measure on, and then we compute, we find the minimizing distance in terms of KL for the next step, and we apply that transport, so that vector field to the particles rather than the entire density.
+
+And this eventually converges to our target density.
+
+And then there's the Stein part.
+
+So this is going to get us the direction in which to move particles.
+
+So what they find is they find a direction, which is the maximal decreasing direction in terms of KL, where the vector field is contained within a large enough class of functions, which we call big pi.
+
+Okay, and so this was known before, but there's a relation between the KL divergence when you have this particular form of transport and the Stein, well, kernelized Stein discrepancy.
+
+And so this kernelized Stein discrepancy is really looking at an operator operating on the vector field, and it takes this particular form.
+
+Turns out there are more, but this is the most common one.
+
+And here we have the score function and then we have our vector field.
+
+Because I had questions about this before, the score function allows us to, this should be a theta down here, and then we don't have to evaluate the
+
+the gradient with respect to the evidence, sorry, derivative with respect to the evidence that will just be zero.
+
+So we can evaluate the score by just having a joint over theta and x or over a latent in our observations.
+
+And the second insight that one was, well, we can have a
+
+a form for the vector field, but we can actually also compute it if we choose the space correctly.
+
+And the space of functions that we're choosing is a reproducing kernel of Hilbert space.
+
+And what we get with a kernel is the partial evaluation is a point in the Hilbert space.
+
+So if we have kernels available to us with simple functional forms, then we also have a way of computing the optimal direction.
+
+And repetition kernel Hilbert spaces have sort of been studied both in
+
+in Gaussian processes.
+
+And I think support vector machines before this, we have quite a few.
+
+available.
+
+The one we're going to be focusing on here is the squared exponential kernel.
+
+The function form is given here.
+
+There's quite a few different ones.
+
+There's also, so these are scalar kernels, and what you do is you can take the identity matrix to make it into a vector field over Rd.
+
+There's also matrix variants, and then we have operators, which allows us to combine kernels.
+
+And there's a lot of equations here, and this is a simpler view of the whole thing.
+
+So if we have a kernel, and its partial evaluation gives us a kernel in the function hill, but in the repetition kernel,
+
+kernel-Helbert space.
+
+So, for example, a constant for a kernel, our constant will decide exactly which value we take.
+
+In a linear kernel, you would have something like the partial values in which everyone will choose the slope of our function.
+
+and the key one we'll be working with is the squared exponential also known as the caution and there the partial evaluations uh give us the mean whereas we have a hyper parameter we have to set ourselves which is the bandwidth and that is going to choose the the width of our of our caution can you just clarify what the red and the blue are are for these different kernels
+
+I'm taking a kernel, right?
+
+A kernel is a function, in this case, it's just r goes to r goes to r. So x here is a free variable, and our number is a fixed one of the parameters.
+
+And so the blue dotted line corresponds to fixing one of the parameters to 2.
+
+The gray one is fixing it to 0, and the red is fixing it to 2 minus 2.
+
+
+SPEAKER_01:
+Is there a reason for two and negative two?
+
+Or is this just showing the two directionalities you can take from zero?
+
+Or is there something about the two?
+
+
+SPEAKER_00:
+No, there's nothing particular about choosing minus.
+
+It's choosing both sides of when we just have a line, right?
+
+It was just to illustrate what happens with the only interesting boundary here, which is over zero.
+
+
+SPEAKER_01:
+Awesome.
+
+So they're like the two directions you can go updating the kernel.
+
+
+SPEAKER_00:
+Yes, if we're in one-dimensional space.
+
+And then they all have hyperparameters, like a length scale, which I've shown down here, but they're also just chosen arbitrarily just to illustrate this functionally.
+
+All right, so recall that I showed you this functional form of the update.
+
+Just writing it out with expectations, so right now I'm just applying it to a two-particle system, we get something that behaves like we see this vector field actually behaves like forces acting on physical particles.
+
+So the first term is a defective force.
+
+It's moving towards the nearest mode in our posterior.
+
+and it's moving each of the particles like we're taking the it's a mean field method right so we're taking the average effect and moving the particle according to that so we have the attractive force in blue and then we have a repulsive force which acts pairwise between particles and that is keeping the particles apart
+
+so they will not collapse onto each other.
+
+If we only had the first term here, the attractive force, we would have no benefit of having more than one particle, because everything would just collapse through the Newton bubble.
+
+In our final system, we initialize these positions randomly, we run this system forward, and what we get is something that looks akin to samples from the posterior.
+
+They are not exactly samples, which is also why we call them particles.
+
+They have correlation structures, which are sort of different than you would have from MCMC, but they do retain some sort of correlation structure.
+
+I don't think it's well characterized, though, at the moment.
+
+So that sort of gives an idea about a particle approach.
+
+And so particle approaches, in one dimension, they're short.
+
+They are as good as MCMC.
+
+But as we go up in dimensionality, we start seeing issues.
+
+So I'm doing the same system I was doing before.
+
+I'm using a Bayesian neural network which has, in the low dimensions, 41 dimensions and a high 10,401 dimension.
+
+And we capture some uncertainty in this in-between region when we're using in the low dimensional system.
+
+But as we move up in dimensions, this completely collapses.
+
+Now the Euler-Bayesian network, how many parameters also decides how expressive our model is.
+
+And so as you can see with the ideal, you get less expressive.
+
+There's fewer curves you're actually able to fit with a lower dimensional BNN, which is why you see a difference in terms of uncertainty in the ideal case going from low to moderate.
+
+An interesting question then is, well, when do we stop trusting Stein version of gradient descent?
+
+And Jimmy Barr in 2001 came up with an interesting experiment where you have take a Gaussian, we let its multivariate Gaussian, let its dimensionality grow slowly, and then you're looking at what is the average empirical variance you get per dimension.
+
+of your estimate and what you see with time version of grain descent is already at five dimensions you've sort of halved this marginal variance and so you should really not trust uncertainty estimations if you have a problem which is five or higher dimensional and there's a lot of these how does that relate to the factorization like the difference between doing five parameters in a joint distribution or factorizing some of the variables apart
+
+I'm not sure I completely follow.
+
+
+SPEAKER_01:
+Like when you're talking about the dimensionality increasing, this is doing a joint distribution of all of those in their possible mutual influence.
+
+
+SPEAKER_00:
+Yeah, so here we're actually, so our multivariate Gaussian is assumed completely independent, which is why we can compute this very simply, easily.
+
+So it was an interesting question whether or how it actually works if you start having covariances as well.
+
+But this experiment is really the simplest version you could imagine where you just have a
+
+
+SPEAKER_01:
+Okay, and if there were covariances, do you think that would make the situation worse or more tractable?
+
+
+SPEAKER_00:
+I would assume it would make it worse.
+
+This is sort of the simplest version of the system I could imagine.
+
+So this would make it worse.
+
+So this is sort of a lower bound on what we should expect.
+
+Yeah.
+
+Yes, good.
+
+So on to our approach, Stein mixture inference.
+
+So what we propose is to separate the particle space and the latent parameter space so that you get a hierarchical model.
+
+and you let the particles move in the psi space, and then you let each particle parameterize its own variational distribution, which then exists in the same space as our posterior.
+
+And so what you get is you get a mixture approximation of the same rational distribution to our posterior.
+
+And here m is the number of particles, so it would be 2.
+
+So if you're using 10 particles, then you would have a 10 component mixture approximation.
+
+And just to motivate it, we can rethink the Steinberg should be in descent particles as sort of the, if you could imagine taking a Gaussian and then letting the variance go to zero, you would get something that's just be a direct delta function distribution, but it will just be like a probabilistic atom.
+
+And so you can think of, in this sense, you could think of sort of a Stein particle as just the view location of this sort of degenerate caution.
+
+And so going in the opposite direction, you could say, well, if we then allow the variance of the normal to also be represented by the particle, then each particle now becomes two dimensional.
+
+and summarizes this Gaussian.
+
+So our particles now both have a location, but they also have a component for the variance.
+
+And then with multiple, like having many of these particles, you suddenly get a mixture approximation, and in this case, a Gaussian mixture approximation.
+
+And so our goal now is to be able to move these particles in
+
+in such a way that we're minimizing a distance to the posterior to get a version of base.
+
+That's it.
+
+And to do this, we're going to go back to a sort of mean field variational inference.
+
+And just to recall here, you have a simple parametric distribution.
+
+So we're not necessarily trying to get the shape right of our posterior.
+
+However, we are going to work with something that is tractable.
+
+So here, just a Gaussian summarized by this midline, it's mean, and we sort of then move the mean such that it's covering as well as it can the posterior distribution.
+
+And we'll do this with a proxy distance.
+
+So it will not be the KL we're minimizing anymore.
+
+It will be an evidence lower bound.
+
+And so just to recall that as well, our evidence lower bound is just the difference between the
+
+our evidence of log probability of log data and the KL between our approximate distribution Q and our true posterior.
+
+And it's this expression.
+
+And the reason we work with this expression here, it's very easy to compute, especially if we have a very simple variational distribution Q, we might even be able to compute the differential entropy analytically.
+
+Good.
+
+So the idea of... So as I mentioned, we're going to take our particles and give them a neighborhood.
+
+So in terms of the equation I was showing you before, we could think of making the parameters of our rational distribution, we can make those into random variables.
+
+And if we do that,
+
+then uh we would get uh and we had multiple of them and we have uh we would have an empirical measure on uh on the parameters of our of our rational distributions and it would be the same as replacing the score function in the stein version of gradient descent uh with with some sort of uh of loss function here which is going to be similar to an elbow
+
+Now we'll have to do a bit of massaging to make sure that this is still a valid methodology, but sort of in its simplest form, this is all we're doing.
+
+We're taking our transport, we're moving on these particles, which are now a hierarchy higher than it was before, and we are moving them using this elbow formulation instead of in terms of the score function.
+
+And the evidence lower bound that we're using takes this particular form.
+
+You could use simpler versions of this, but it doesn't behave well.
+
+So in particular, we need to take this differential in terms of our rational approximation, not just each of the terms.
+
+In order to show that this is correct, we do have a constraint on this, which is our guide distribution, operational distribution Q, that needs to be the same for every single particle.
+
+In other words, our functional of rho needs to be symmetric.
+
+So it can't depend on the ordering in which you parameterize it.
+
+With this change, we can use an extension of Steinvariation gradient descent called non-linear Steinvariation gradient descent.
+
+And what this is again dealing on John Lee.
+
+What they did was they replaced, so in Steinvariation gradient descent, we're minimizing the KL divergence.
+
+And what this extension does, it allows us to minimize functionals of our initial distribution row
+
+with our differential entropy as a regularizer.
+
+And what that is doing is ensuring uniformity, so ensuring that our density rho gets spread out.
+
+There are some prerequisites for this.
+
+First of all, as I already mentioned, our functional, when parameterized by an empirical measure, needs to be symmetric.
+
+Secondly, we need to have a differential evaluation map.
+
+Oh, this is again the old version.
+
+I'm sorry.
+
+This should be.
+
+This is all the way up to M. There's nothing special about M here.
+
+But we need to be able to evaluate the functional given R-particles and using an empirical measure that's trivial.
+
+It's just evaluating each of the points.
+
+And finally, we have this regularizing term, which is ensuring that R-particles are spread out.
+
+So our, as we show, okay, but this is, we have an instance of non-linear Steinbergian gradient descent.
+
+First of all, it fulfills that the particle approximation is symmetric because we chose the same Q for each of our articles, so the same guide.
+
+We have a differentiable map.
+
+It's trivial to evaluate on the empirical measure, and if we choose it needs to be differentiable, so we also choose our guide to be differentiable.
+
+And finally, when I showed you, we were placing sort of the inner part of the
+
+the vector field by an evidence lower bound.
+
+But recall, we are now, this is the objective we're actually optimizing is this functional plus some entry particular mon row, which is up here.
+
+And so we need to show that that is also an evidence lower bound.
+
+in order to have a valid operational approach and if you choose so they have this alpha parameter if you choose that to one and you look at the population limit so like infinitely many particles and i'm moving this then we actually we can actually show that this is the case so it's a valid operational base method
+
+And so if we revisit the experiment I was showing in the beginning, with Stein version gradient descent, we had collapse.
+
+And now with our Stein mixtures, we see that as we're going up in dimensionality, our particles are in theta space, so in the posterior space.
+
+Our particles now have uncertainty estimation in the moderate dimensional case as well.
+
+However, it's not ideal yet.
+
+Here we're using five particles, and so you can get better approximations using more, but the cost of each step is quadratic in the number of particles, so you want to use as few particles as possible.
+
+So there's still room for improvement, but we are...
+
+it works better than the Stein version of gradient descent for this uncertainty estimation.
+
+So, as I said, there are still improvements to be made.
+
+There are some key design dimensions that we can address.
+
+First of all, dynamic stability.
+
+The Stein version of gradient descent has been understood as a gradient flow in
+
+in the space of distributions.
+
+However, if you just tune that naively with mixture models, then your gradient flow might move somewhere which is no longer a mixture model.
+
+So in order to sort of analyze and understand
+
+Dying mixture inference, you need some new theory there.
+
+But with this, if you get this gradient flow, if you nail that, then you start being able to do things like you can choose hyperparameters by choosing different formulations of the gradient flow.
+
+And for example, look at the Weisselstein flow versus, this is getting too difficult, sorry.
+
+What you can do, you can start determining something like kernels based on having this type of formulation.
+
+It also allows us to tell things about how fast it converges, which is currently not a result on Steinberg's Green descent at IC law this year, which shows that in KSD, it's actually as good as MCMC.
+
+So that's very good in terms of KSD.
+
+Then there's kernel design, like actually choosing the kernel.
+
+So one way to do this is knowing the actual dynamics are, but also then understanding based on which kernel you choose, how does this affect dynamic stability?
+
+And Duncan has an interesting paper on that for Steinberg to create in December, which I believe can also lift to the time mixtures.
+
+Finally, there's acceleration options, like Newton methods.
+
+preconditioning for gradient flows to completely avoid computing kernels.
+
+Yeah, so that's sort of a rough outline of Stein mixture inference.
+
+It's available in NumPyro, the deep probabilistic programming language.
+
+It separates model from inference.
+
+It has a DSL
+
+For probabilistic programs embedded in Python, so you can have arbitrary Python in between random sites, it uses non-standard interpretation.
+
+And most importantly for this talk, I guess, is that Steinmixture is a black box inference engine in the system.
+
+Of course, we need to be able to take derivatives, hardware exploration, linear algebra, and all of that is handed off to JAX, so it's just built the layer on top of JAX.
+
+There's been a lot of people involved in this, so first of all the Pyro devs that helped me build the inference engine, Martin Jankowiak and Yu Feng, and Ahmed Al-Zabahi who did the first version of it, which then evolved into our
+
+the current version of Stein BI, which is the name of the inference engine, and then my co-authors.
+
+So Liz Nick, who first formulated this problem when he was a PhD with Patrick Smith, and then Thomas Hamerick, who's my PI and has worked with me for the last couple of years, and Christoph Lai, who's an expert in Stein's method at the University of Luxembourg.
+
+the key references sum up so if the introduction into this approach to patient inference is the first one then there's the two stein papers from 2016 and 19 and then our my paper here which is going to be at icla this year yeah it's the inference group and uh yeah thanks
+
+
+SPEAKER_01:
+awesome thank you all right i'll ask a few questions and then if anyone watching along wants to ask a question i'd be happy to so to kind of pull back and re-summarize what makes kl divergence optimization for particle transport plausible where distributional transport is not plausible
+
+
+SPEAKER_00:
+The key issue here is computing the normalizing constant.
+
+You need to be able to renormalize the density.
+
+If you choose a very nice space of functions, such as, so they were using this orthogonal polynomial basis, then you can do it, but it restricts sort of how expressive you are able to be in terms of what you're transporting.
+
+Particle methods, it scales proportional with the number of particles, so it's cheap to compute.
+
+
+SPEAKER_01:
+Great.
+
+So you mentioned that the compute is quadratic in the particle number.
+
+So what are the computational complexity considerations for this method?
+
+And then how does that even kind of qualitatively relate to the MCMC approach?
+
+Like if that's giving a better posterior estimate of the real paths, what are the conditions where MCMC is just straightforwardly a better method to use versus exploring how many particles, et cetera, for this method?
+
+
+SPEAKER_00:
+So first in terms of MCMC, in a toy example, you would probably just use MCMC, but it becomes truly intractable.
+
+The issue, especially if you're using HMC or something like this, is that you need to work on all data points because you need to compute the gradient.
+
+When you're doing a complex integration, you need to compute at every step, you need to compute the gradient with respect to every data point.
+
+and that's why mcmc just doesn't that doesn't scale to the type of data data sets we're interested in in terms of how is the complexity with compared between stein version going to send an smi the key sort of the expensive part is computing the kernel you need to compute the pairwise
+
+components.
+
+This is why it's N squared.
+
+And we have the same kernel structure for SVD and SMI.
+
+Though the difference here is that what you can do with five particles with Stein mixtures, you might not at all be able to do on conventional hardware with the Stein version of great descent if your problem is high dimensional enough.
+
+
+SPEAKER_01:
+Okay.
+
+So from the
+
+live chat so first quick question from gary wrote what language are you using so you mentioned the software package just could you re-describe or even show the software package or what programming language is it in and what does that domain specific language look like
+
+
+SPEAKER_00:
+Okay.
+
+Yeah, sure.
+
+So first of all, the language is in Python.
+
+And it's maybe should I share something else?
+
+
+SPEAKER_01:
+Yeah, sure.
+
+
+SPEAKER_00:
+One second.
+
+See if I have something lying about.
+
+Let me show you.
+
+Alright, one second.
+
+Here we go.
+
+Okay.
+
+
+SPEAKER_01:
+Yep.
+
+So can you see?
+
+It's a little small if you could zoom in, but we see it.
+
+
+SPEAKER_00:
+Well, I have to do like this.
+
+We can see it.
+
+All right, good.
+
+So this is a VAE, so a variational autoencoder, right?
+
+So what you're doing is you're taking, you have...
+
+have a guide which takes a picture or something down to some low dimensional model.
+
+So we call this the encoder.
+
+And then we have a model which takes our latent low dimensional and back to it.
+
+And so what I'm showing you here is the decoder, so what takes our latent representation and moving us back into the original space.
+
+So you can think of this as compression, maybe.
+
+Okay, and so... Let's see...
+
+This is what the random sites look like.
+
+So you have a random variable here.
+
+We're going to be using...
+
+non-standard interpretation, so I have a set of operators which operate on these sample sites, or handlers which operate on these sample sites and make them behave differently than otherwise, just straight executing like that.
+
+So here I have a random sample site, it's over angles,
+
+It's distributed according to a sign-by-variant on Mises distribution, so it's just normal.
+
+Think of it as a normal on a torus.
+
+It has some parameters, and then I have some observations.
+
+So this is like conditioning, the same as conditioning on these angles that I observed.
+
+These parameters for my sign-by-variable premises, I have some location, some concentration, these come in this case from applying a neural network, a Bayesian neural network.
+
+And that's just coded up in FLAX.
+
+So that's just straight up standard Bayesian neural network, and then we can
+
+We can make it into a Bayesian network by just introducing a prior over the width.
+
+So this is what's happening here.
+
+Making a Bayesian neural network, we're saying we have a recurrent neural network.
+
+It's a random site called decoder, so we can apply our handlers to this site.
+
+uh and then uh this this just make sure that uh it's the right the parameter like the right parameters are being updated when we're doing our equation uh updates okay so and that then uh given some some latent remember they said uh they gave us my some representation which i can then map into the parameters my sign barrier from my system
+
+This is what modeling looks like.
+
+We introduce random sites and we can do arbitrary things in Python in between our random sites to manipulate whatever samples we have.
+
+That's one side of it.
+
+And then when you then want to do inference,
+
+So we're setting up our inference method.
+
+So right now I'm just testing things out.
+
+So it's just mean field operational inference.
+
+I have the model, which is what I just showed you.
+
+I have a corresponding guide.
+
+So this is my queue I was talking about.
+
+This is the thing encoding my space into this latent representation.
+
+I'm going to decide on the type of optimizer using Atom.
+
+And then I'm saying I'm going to use just a standard evidence lower bound here.
+
+In non-Pyro, we need to be explicit about the state of our random case.
+
+That's what's going on here.
+
+And then I'm running my inference.
+
+So now I'm conditioning the parameters
+
+the parameters of the guide on the observations that I have available, which are stored in FI Insight.
+
+And from there, I just dump the object and I have
+
+of a separate thing, which does my diagnostics.
+
+So I can get my predictive distribution out.
+
+I can see what does the Hamashandan plot look like.
+
+If I want to look at histograms of parameters, I can get those out from my predictive.
+
+So that's sort of the high scale view of a typical implementation or project in Noir.
+
+
+SPEAKER_01:
+awesome okay next question in the chat burt burkers wrote in the slide showing attraction and repulsion there are two particles with vectors pointing in many directions how should one interpret these directions and their angles should i yes perfect
+
+
+SPEAKER_00:
+Good.
+
+Okay.
+
+So the blue arrow will always point towards the closest mean.
+
+So we're looking at a Gaussian distribution here, and it's just immobile, right?
+
+So the particles are just, the closest mean will always be the center of the Gaussian.
+
+um so that's what the blue arrows are showing you and then the the if you aligned up the red arrows they're the forces acting on the particles by each other and so they will all in a two system particle system they will always be plus and minus at least if you choose a gaussian kernel of the same
+
+expression, so they will be of the same magnitude.
+
+You have three particles, it becomes more complex.
+
+And then the black, and I should have mentioned this, that's the net effect of the two.
+
+So it's looking at, when you add up these two components, then you get the net effect of the black arrow.
+
+that's when you're then taking a step you're moving in the direction of the black arrow and then like depending on how you choose your epsilon you might not take the full length of this uh of the of the course field put some epsilon size of it
+
+
+SPEAKER_01:
+And just to kind of clarify, what tunes the relative strength of the attractive and the repulsive force?
+
+Like, at the end of all of this procedure, how do you ensure that you haven't over- or underestimated the variance envelope?
+
+
+SPEAKER_00:
+like this system of equations will when we are at convergence this will there will be no force acting on any of them right and so this this this equation will be zero got it so the particles engage in these attractive repulsive physics like interactions amongst observations delta like
+
+
+SPEAKER_01:
+kind of hidden Gaussian observations that can be variance reinflated and that particle transported particle distribution it's almost like recapitulating what the MC would give you from samples because you do want a sample from a posterior distribution with a finite number of spikes
+
+and instead of actually just doing that gradient calculation at the data point level as done in mc here you're learning these transport functions with certain conditions that lets you move the distribution project down to particles and re-inflate the particles back in your contribution to this mixture model
+
+
+SPEAKER_00:
+We're moving the particles so that they get towards the posterior.
+
+So like the data of all our observations are hidden in Steinberg's gradient descent, at least in our score, right?
+
+
+SPEAKER_01:
+okay i guess just taking one step back and then if anybody else wants to write any questions how did you come to this problem for your postdoc like what led you through studies and everything to want to target this uh yeah so yeah so actually it was uh it was uh
+
+
+SPEAKER_00:
+It was Ahmed who, so my original PhD was on, I'm sort of trying to find, to determine three-dimensional structure of proteins given the sequence of the protein 3D structure problem.
+
+And when I started, we had AlphaFull come out two months after.
+
+which was declared a solution to the problem, which made it a bit of an interesting situation to be in.
+
+But Ahmed had started working on this because he thought it mapped well onto... So one thing we want, right, is we want to be able to, with the probabilistic
+
+probabilistic program is is we want to automate uh automate inference and we sort of we know that there like this can't be done entirely but we want something that's very expressive and cheap to compute with and and it's time version creating descent had
+
+had these two attractive properties, very cheap and easy to understand, and it's cheap to compute with, so we sort of, we built a Steinberg-Schuppe descent inference engine, and then we were looking at, well, we have this issue, and we wanted to apply it to proteins eventually, and what I was showing you before is, well, now I'm getting to that phase, because it turned out to be a lot
+
+harder than we first expected to actually like getting the inference engine running was not as much work and as then finding out is this thing correct and that's what we spent the next while on a couple of years there's always a funny postdoc story um what does it look like to go from the open source code that you have to adapting it to a problem
+
+
+SPEAKER_01:
+Like what's the kind of recipe that somebody would take from, that's one question.
+
+And then the second question, however you wanna do this is, where do you see this method in terms of the landscape of like generative AI, pure neural network-based approaches, et cetera?
+
+
+SPEAKER_00:
+I'll take the first one first.
+
+So what we would do there is we would go, we would,
+
+And so we would import our method instead of instead of instead of SVI and then we would replace it.
+
+And now, of course, we need to choose a kernel to the RBF kernel.
+
+That's it.
+
+
+SPEAKER_01:
+Okay, just to confirm that move.
+
+Because it's largely built upon the Jax Pyro approach, it's not so different than just flipping an import for a model that's already written within that way.
+
+Okay, so how about, how does somebody, even if this is sort of a basic question for Pyro users, let's say somebody is looking at the temperature and the humidity in a room and making a kind of active inference model where they're going to run a heater or a cooler or some other kind of, how do we go from just
+
+the observables and the unobservables of our target system of interest into representing it in a way that allows it to be inferred using this probabilistic approach.
+
+
+SPEAKER_00:
+So what you're describing sounds like the patient network or factor graph.
+
+Right and that's the model I was showing you is how I write that off, so I like whenever I have a random variable in this case, this is not greatest of examples to look at but, but I guess I have a set right, so I have a random variable here.
+
+Which is my latent and then i'm saying that that there's an arrow between said and and and my my angles right and that's the same as say I have to have a graph structure action to show you start telling me.
+
+Let's see.
+
+So this is the sort of view that I think you were thinking of.
+
+We have random variables.
+
+Here we have set, and we have another one which is observed as angle.
+
+But that's just described as a Python function, which is a model which is using these specialized
+
+like, effectful methods, one of them being sample, another one being what, and a sample corresponds to a circle here, plate corresponds to what you would know in a plate in a graph, and then we have deterministic, so these dotted line circles.
+
+
+SPEAKER_01:
+Awesome.
+
+And is this generated or specified
+
+
+SPEAKER_00:
+in another file in this repo how the bva model yeah yeah that's so that's just so the thing i was showing you at first this model is just that it's specifying this thing and it's just written as a function and that function i then act on with uh with my particular inference engine
+
+
+SPEAKER_01:
+Awesome.
+
+Okay, so then kind of, again, pulling back, where do you see these methods in the toolkit of what people could do with pure neural network approaches or transformer-based approaches today?
+
+
+SPEAKER_00:
+I mean, so the Bayesian neural network is sort of lifting this up, right?
+
+And like pretending that we can actually get access to the posterior of its parameters instead of point estimates.
+
+And there are, I think, I like the idea of Bayesian neural networks because, exactly because they sort of, at least seems like they could give us an idea about risk or uncertainty.
+
+There's a couple of problems with it, right?
+
+Like it's,
+
+We have two networks, which look different in terms of weight, but represent the same function.
+
+So whether Bayesian networks are actually
+
+When we're moving in weight space, whether we're actually getting different samples, even though we're changing our weights, is not clear.
+
+And so you can't really determine whether you get different.
+
+If you were running something like FCMC, you wouldn't actually know that your particular samples are different networks necessarily.
+
+So estimating how well you've done or even determining convergence becomes very hard.
+
+But it does handle misspecification quite well.
+
+If you have something that's exceedingly flexible, you probably have the right model in there.
+
+So that's why I think Bayesian networks are attractive, but we need to address this non-identifiability eventually.
+
+And I might be able to do that with kernels, but we don't know yet.
+
+We have some ideas.
+
+
+SPEAKER_01:
+Cool.
+
+Well, is there anything else you want to show or add or like, how can people, other than reading the paper and checking out the repo learn more?
+
+
+SPEAKER_00:
+Yeah.
+
+I mean, there's a, sorry, this is where you get started.
+
+So pyro.air, take a look.
+
+Our version is the non-Pyro version, but Pyro's also very large and very fully-fledged deep probabilistic programming language, which I highly encourage you to take a look at.
+
+
+SPEAKER_01:
+Cool.
+
+Anything else you want to add?
+
+Okay, awesome.
+
+Thank you again, Ola, for joining.
+
+Super interesting.
+
+I hope we can continue to learn and that people in the Institute community explore like Pyro, Cure Methods, RxInfer, and we can start to see where these different methods complement each other, top differences, all that.
+
+Cool.
+
+Thank you.
+
+Bye.

@@ -1,0 +1,966 @@
+SPEAKER_00:
+hello welcome everyone it is may 20th 2025 we're in act inf math stream number 13.1 with alexi toomey discussing disco pi monoidal categories for active inference this should be a very exciting and useful presentation and stream so thank you very much for joining and looking forward to learning more
+
+
+SPEAKER_01:
+yeah thanks a lot um so thanks a lot for the invite and yeah i guess um as i was saying just a couple of minutes ago um i'm very much looking forward to this talk and it's a bit of a challenge for me i guess in a sense that i'm no expert in active inference so i'll do my best at explaining what i think active inference is about and i also try to
+
+uh yeah convince the audience here that um disco pi uh this python library uh for uh string diagrams is a promising way to to experiment with active inference so i guess um most of the the references i'll be using for for today would be this main disco pi paper um
+
+You can also check out the documentation on GitHub.
+
+It's quite extensive.
+
+We've got plenty of examples and notebooks to play around with.
+
+And then I'll give a small glimpse of what this compiled software is used for.
+
+idea of QNLP, Quantum Natural Language Processing, which is what motivated the library in the first place, what I wrote my PhD thesis about.
+
+And I guess I'll give some introduction to category theory, which is the sort of mathematical foundations on which this COPA is built.
+
+And then I'll be using mostly this recent paper from Toh, Kleiner, and Smythe on active inference in string diagrams, where essentially they use the same mathematics that I was using for quantum NLP and apply that to active inference.
+
+And in a sense, that's where I learned all I know about active inference.
+
+i'll be giving a summary of the sort of theoretical background um and then i'll be mostly showing some screenshots from that paper to try and show how that theory applies to active inference in particular and then then we can discuss uh how disco pi could be used um to implement active inference experiments so yeah let's uh let's get going um so i guess the main um
+
+theoretical concept in this company is a box so like we we draw these boxes a lot and i guess uh i um i don't roast coffee every morning but i grind coffee i make a brew coffee every morning and i i guess that's uh something that you're gonna understand in terms of a black box where you you put
+
+put a bunch of inputs like green coffee beans, electricity, roast level, start signal.
+
+It could be physical.
+
+It could be information.
+
+These boxes are sort of abstract conceptual operations that just have a name, a designated list of inputs and outputs, and a designated list of
+
+So yeah, a designated list of inputs and a designated list of outputs.
+
+So you've got two sets, the objects, so the things that are on the wires and the boxes have names too.
+
+And then you have these two maps from boxes to lists of wires.
+
+So that gives you all the processes that you can talk about in your theory.
+
+And then you can translate one theory into another using these morphisms of signatures.
+
+So first, if you have a box from X to Y, you draw it with an arrow in this way.
+
+And then if you have a morphism of signature, what it means is you can translate wires of one into lists of wires in the second.
+
+And then you can translate a box in one into a box in the appropriate thing in the other.
+
+So if you have... So this should be sigma prime.
+
+I guess it's a typo.
+
+But you translate boxes in a way that respects the inputs and outputs.
+
+And so that's very useful because...
+
+If you have different kinds of processes and you want to translate between them, that concept of morphism of signatures is going to be the key one.
+
+And so I guess with that, you can define the set of diagrams.
+
+So that's going to be the main definition for this talk.
+
+And you start with a signature, and then you define diagrams by induction.
+
+where every box is a diagram.
+
+The identity is a diagram, and you draw it with just a bunch of parallel wires.
+
+The composition of a diagram from x to y and y to z is also a diagram.
+
+So if you have two diagrams, you can plug them one after the other.
+
+And then the tensor of two diagrams is also a diagram.
+
+So if you have f and f prime, you can put them side by side, and you get something that goes from xx prime to yy prime.
+
+And that's it.
+
+So you can put diagrams in sequence and in parallel.
+
+And you can also do nothing, so this identity diagram.
+
+And then I guess the subtlety that we'll use here is that, well, I guess first, you need to put some axioms on these.
+
+So I guess you want tensor and composition to be associative.
+
+You want them to be unital.
+
+So if you compose with the identity, it doesn't do anything.
+
+If you tensor with the empty diagram, so the identity on nothing on the empty list, that's also doing nothing.
+
+And then you want just these two equations that tell you that you can switch identity and tensor.
+
+So ID of tensor or tensor of ID is ID of tensor.
+
+And similarly for the composition, the tensor of two compositions is going to be the composition of the tensors.
+
+And we'll see what that looks like in terms of diagrams in a second.
+
+But as I was saying, this sort of nice thing that you get is that if you take a signature and you look at all the diagrams that you generate from it that makes a new signature, and you can use that as a signature where essentially now the boxes have diagrams inside them.
+
+And so that's a way of formalizing an idea of hierarchical diagrams where
+
+Essentially, a subdiagram will contain or a subdiagram is a box that contains a diagram inside it.
+
+So we'll use a lot of these hierarchical diagrams where we'll see the boxes serve to encode normalization.
+
+And so, yeah, to get back to this main equation, I guess that's the only equation you need to remember and you don't actually need to remember it because essentially you got it built into your visual system.
+
+So that's the sort of main argument for why you should use string diagrams is that essentially they encode this very natural way of looking at processes as
+
+things on the plane where the axioms become just manipulation of these diagrams geometrically.
+
+So, for example, this axiom of naturality where
+
+you exchange the composition and the tensor this amounts to having either the boxes composed uh first sequentially and then in sequence or first in sequence and then sequentially and that gives you the same um the same diagrams in the end so the only thing that counts is how things are connected i guess is the the main uh idea for that axiom
+
+And so you can apply that to cooking.
+
+The ingredients are going to be your wires.
+
+The cooking steps are going to be your boxes.
+
+And now anything that you can compose with these cooking steps will be a recipe.
+
+It takes a bunch of inputs, like eggs, and gives you a bunch of outputs, like whites and yolks.
+
+And yeah, I guess this axiom of exchanging tensor and composition, essentially, it amounts to formalizing what we mean by independence.
+
+So if we have two boxes that are not connected, like tracking here and tracking here, we can perform them in any order.
+
+If they're independent, it doesn't matter how we decompose this tensor of composition.
+
+So yeah, I guess.
+
+Let's look at what this diagram looks like in Python.
+
+So the main feature of this copie is you get this very nice syntax for expressing any such string diagram as essentially as a Python function.
+
+So you start by declaring some types for the ingredients of your recipe, like egg, white and yolk.
+
+You have a box for cracking an egg and giving white and yolk.
+
+you have these parameterized boxes, so merge, you can merge anything, so any X, and that takes two Xs and gives you an X. And now, to define the diagram on the right, you'll just define a Python function, declare its inputs and its outputs, and now, if you take X and Y for the two Xs, you crack them, you get AB is a white yolk pair, CD is a white yolk pair, so you can merge the whites together, merge the yolks together, and return.
+
+So you get your diagram, and you can draw it.
+
+So this output on the right is actually what this gives you as a drawing.
+
+And you can also write it in terms of pure operations of tensor and composition.
+
+So this at symbol is how you do the tensor, the parallel composition.
+
+And these chevrons do the sequential composition.
+
+And here, you notice that we need this special box for the swap, right?
+
+At first with just tensor and composition, you can only do planar processes.
+
+So here you need this special swap box that takes yoke and white and gives you white and yoke.
+
+So yeah, I guess that's the sort of simplest example of how to use this copier is you can
+
+Define a bunch of types.
+
+Define a composite model, composite diagram out of these basic steps, basic boxes and types.
+
+And then you can draw the results.
+
+I guess drawing the result would be the first step.
+
+And in a second, we'll look at what else you can do with diagrams.
+
+So a more interesting example, I guess, in our context will be a generative model as a diagram.
+
+So on the left,
+
+You have the basic example of a probabilistic model where you have random variables numbered x1 to x5.
+
+And then you have these arrows.
+
+I guess here some arrows are designated as input arrows.
+
+Here on the left, x2 and x3 are sort of
+
+variables that I guess you get to control.
+
+You can choose some distributions over these.
+
+Then you have some hidden variables like this X1, X2, and X4.
+
+And you have observed variables, right?
+
+The X5 and X3 would be the things that you can actually observe in the end.
+
+And then sort of implicitly in every
+
+such probabilistic model, graphical model, you would have conditional probability distribution for every variable given the variables that point to it, right?
+
+And so in the world of string diagrams, these conditional probability distributions become the
+
+the important thing in a sense like the i guess here the labels you could almost forget about these labels x1 to x5 they help to make the correspondence here but the actual important operations are these conditional distributions so x1 well you need a distribution on it it's this latent variable that's going to be your a is going to be a prior on
+
+on x1 and then you you need a distribution for b that gives you x4 based on x1 x2 you need distribution c that takes uh gives x5 given x4 x2 x3 and so on and then here you also need this important operation that does copying right so here the variable x2 will be used um in the
+
+in the conditional distribution for X4 and for X5.
+
+So you feed it to B and you feed it to C. So you need to copy it, right?
+
+You need to broadcast this, whatever input you feed in here, right?
+
+And so if you take a distribution that's non-trivial, well, this will create some correlation between those distributions, right?
+
+And so at the end, what you get are the observed variables, which are these outputs of your diagram.
+
+And so you get this mechanical translation where every probabilistic model can be faithfully encoded as such a string diagram.
+
+The wires are the random variables.
+
+I guess the sort of here is like the wires up to this copying, right?
+
+So here the variable X2 appears twice.
+
+So you need to split the wire in some formal sense.
+
+The boxes are conditional probability distributions that define your model.
+
+And the diagrams are the generative models themselves, right?
+
+So here's what the same code would look like in this code pipe.
+
+Again, you're going to instantiate a bunch of types for X1 to X5, and then you're going to have these boxes, ABC, and you can define your model as a Python function that takes a bunch of variables and just does the
+
+usual thing.
+
+And I guess the magic of these Python decorators is that your function here is not going to be interpreted as an actual function.
+
+It's going to be executed sort of symbolically.
+
+And these variables x2 and x3 are going to be turned into the input wire of your diagram.
+
+And then these x5, x3 will be the output wires of your diagram.
+
+And so, in a sense, what this code pi gives you is a sort of domain-specific language where you can write any such generative model, and you will get a data structure for it.
+
+So I guess today I won't have much time to get into the data structure underlying these, but I guess there's sort of...
+
+Two main ways of understanding these diagrams is the first one is as a sort of sequence of layers where each layer of your diagram is like, for example, this first layer, you've got a box A in parallel with copying, in parallel with another copying.
+
+The second layer would be B in parallel with a bunch of identities, and the last layer would be C. So this sort of list-like representation is very convenient for drawing.
+
+And I guess if we go back to our cooking example, this is why you get to see these sort of stacking of boxes is essentially it's more convenient to have one box at each layer.
+
+So you just get a list of these guys, a list of operations that you perform.
+
+And then there's sort of the graph-like representation, which is the more natural one when you think of a graphical model.
+
+They're called graphical because it's a graph, right?
+
+So I guess DiscoPy gives you this ability of going back and forth between graph-like and sort of list-like.
+
+And the list-like operation is also how you define
+
+the evaluation of these diagrams.
+
+So we'll get to see that in a minute.
+
+These diagrams, you can draw them, you can store them as combinatorial representations of graphs.
+
+And I guess the main point is you can evaluate them and you can do experiments with them.
+
+Let's get to that.
+
+I guess the theory we need behind this is that of strict monoidal categories.
+
+So I just say category for sure, because I guess they'll all be strict and monoidal in this talk.
+
+And essentially, once you know what a signature is, so this set of wires and boxes with domain, codomain, you can define a category as a signature with
+
+a way of evaluating diagrams essentially so a way of taking a composition of boxes and wires to give a single box so first you need a way of interpreting identity uh for each object you need a way of interpreting uh composition and you need a way a sequential and parallel composition right so now essentially a category will be a concrete way of interpreting these diagrams and i guess
+
+the the key sort of structural theorem for well okay let's first look at some uh some examples um so i guess the main example we've seen so far of a category is the category of wires and diagrams where the objects are these these wires the lists of inputs or outputs and the diagrams are this composition of boxes that you can represent combinatorially as graphs and then um
+
+I guess the most natural interpretation of these, if you come from some sort of mathematical background, would be to think of sets and functions, right?
+
+So every box will be a function of its input wires into its output wires.
+
+So you think of Cartesian products, you get multiple inputs and you get multiple outputs.
+
+I guess sets and relations are super interesting too.
+
+So I guess in that case, you can do a lot fancier diagrams if you think of relations.
+
+So you don't have inputs and outputs anymore, but you can essentially think of them going both ways.
+
+Then I guess, yeah, the main example of these monoidal categories was
+
+to do linear algebra, to sort of formalize things that physicists were already doing, drawing diagrams, linear maps as diagrams.
+
+So I guess that's the main example.
+
+And in our case, what we're interested in will be more something like the category of measurable spaces and stochastic maps.
+
+So we'll think of each wire as a measurable space with the product space being the tensor,
+
+the operation that puts wires side by side.
+
+And then a box will be essentially a stochastic map that takes a product space and gives you a new product space.
+
+And so I guess with this interpretation in mind, essentially a graphical model, a generative model is precisely a diagram with an interpretation in stock.
+
+I guess, yeah, then the main way to formalize this idea is essentially to define what's called a functor.
+
+It's going to be a morphism of categories, so something that translates a signature into another and also preserves identity, composition, and tensor.
+
+And then you have this sort of main theorem that tells you that diagrams are the free monoidal category.
+
+So what this means intuitively is that if you want to define a functor from the category of diagrams, the only thing you need to do is to define an interpretation for each wire and an interpretation for each box.
+
+So on the left hand side, you've got all the functors from C Sigma to D. And here you've got all these much smaller objects where essentially you just need measurable space for each of the wires and a stochastic map for each of the boxes and or conditional probability.
+
+And now you get an interpretation for each composition of these.
+
+So that's sort of the
+
+the structural theorem, the sort of foundational theorem that justifies why are string diagrams the right data structure when you're looking at composition in sequence and in parallel.
+
+Any such composition is a diagram.
+
+And so I guess
+
+with that theorem in mind like on the right hand side you've got something that you can represent as a small data structure that uh that there is uh you just need uh the representation for a stochastic map for each of the boxes in your diagram and on the left hand side you've got the sort of algorithm that's going to take these diagrams and compute their their meaning by plugging these distributions together and essentially performing inference so on on the right hand side you've got
+
+You've got something that is sort of data-like on the left-hand side.
+
+You've got the algorithm that's going to compute that data to give you inference algorithms.
+
+and i guess yeah i was um promising some some short um detour into uh quantum uh natural language processing so i guess here it's just a small code snippet to um show i guess how concise you can make a particular model if you write it as a functor
+
+So here we've got boxes are worlds.
+
+So we've got a box for Alice, a box for love and a box for Bob.
+
+We're going to compose them together according to their grammatical structure.
+
+So here the word Alice is connected to love via this cup and the word Bob is connected to love via that cup.
+
+And overall, you get a sentence.
+
+So that's the natural language side of things.
+
+And then you get the quantum side of things by saying, look, every noun, I'm just going to interpret it as a qubit.
+
+So as a quantum system that I can control, the noun Alice is going to be one state of the qubit, the state zero.
+
+The word Bob is going to be the state one.
+
+and now the world loves is going to be where interesting stuff happens where i'm going to entangle or correlate my inputs in my output my subject in my object and so here you represent it as a quantum circuit that's going to be some some hard amount gate and some control gate so essentially a bunch of quantum gates represented as boxes that you compose in sequence and in parallel so
+
+I won't get into much quantum theory here, but I guess the main punchline is that you can replace quantum by probabilistic circuits, and the same theory applies in a sense that you get this compositional way of
+
+interpreting, well, natural language, but interpreting any sort of compositional system in general.
+
+So here you take your sentence, you apply the functor to it, you will get a circuit, a quantum circuit, and then essentially this eval is going to be a second step of the functor that's going to take your quantum circuit and turn it into
+
+a bunch of matrices so it's going to turn it into vector spaces and linear maps and compute the meaning of that circuit compute the meaning of that sentence right so i guess that's one qnlp experiment in um in a few lines of python and i guess yeah the argument for this talk would be that
+
+we can replace quantum with active inference here and get a very similar recipe for how to build larger active inference systems from smaller ones in the interaction.
+
+So yeah, I guess that was my thesis, three years of PhD thesis in one slide.
+
+So let's move on.
+
+Yeah, I guess I'll try and give some of the sort of necessary theory
+
+to look at active inference formally, but give it all in terms of diagrams rather than complicated formulae.
+
+So now that you've seen a bunch of diagrams, you've noticed that if you only have tensor in parallel and in sequence, you can only do planar diagrams.
+
+If you want arbitrary diagrams, you need this special swap.
+
+And the swap is going to just satisfy these four axioms you see here.
+
+If you swap with nothing, it doesn't do anything.
+
+If you swap and swap back, it doesn't do anything.
+
+If you swap F and G, it's the same as doing G and F and then swap.
+
+And finally, you can decompose a complex swap in terms of basic swaps.
+
+so that's all you need to get a symmetric monohedral category and essentially in the symmetric category you don't care about the order of wires because you can permute them so in the case of probability theory you don't care about the order of your probabilistic model you can permute the variables what matters is what's connected to what via boxes not the order of the inputs and the outputs
+
+And yeah, I guess in natural language, you do care about the order of worlds.
+
+So in that case, you're not symmetric.
+
+But another kind of category, once you have symmetric, is the idea of a compact category.
+
+And that's where you have the ability of bending wires.
+
+I guess in a normal string diagram, the wires are going to flow from the inputs to the outputs.
+
+In a compact diagram, you can flow backward.
+
+And in the first paper, applying category theory to Bayesian inference,
+
+That was the technical apparatus to formalize the idea of Bayesian inversing.
+
+So I guess with these cups and caps, you can take a joint distribution on A times B and bend one of the legs to get a stochastic map from A to B.
+
+And similarly, if you have a stochastic map, you can bend the output and get a joint distribution.
+
+And now if you have a stochastic map from A to B and you have a prior on A, so I guess that's the little trick that they had to hide is this little black box on the cup here, then you can invert.
+
+you can perform Bayesian inversion and you will get a stochastic map from D to A. And I guess there are many ways of formulating this caveat of you need a prior if you want to be able to do
+
+Bayesian inversion.
+
+And yeah, I guess I won't get too much into the literature of how you formalize categories of stochastic processes, a very big topic.
+
+But in that context,
+
+having a compact category means essentially every object, every wire comes with a prior.
+
+And now when you invert, you use that prior.
+
+So yeah, I guess in quantum, it's got a very different interpretation where these wires are going to represent
+
+Bell states, entangled states, and entangled measurements.
+
+And then this equation amounts to teleportation.
+
+In the context of Bayesian probability, this equation is just the Bayesian inversion of a trivial probabilistic channel is itself.
+
+So I guess not very interesting.
+
+In quantum, it's like, wow, we can teleport things.
+
+In Bayesian, it's just the inverse of the identity is the identity.
+
+So that's a compact category.
+
+You can bend things around.
+
+So if you have symmetric plus compact, you can truly talk about a graph structure for your diagrams because you can connect any input to any output in a graph-like way.
+
+So now I guess an important ingredient we've seen for defining a generative model is the ability to use the same variable in multiple places.
+
+So that's formalized in terms of these co-monoids.
+
+So you have an operation that splits a wire and it's co-commutative.
+
+So if you split and then you swap, it's the same thing as just splitting.
+
+It's got a unit which is discarding, so if you split and then if you copy something and then you discard, or if you split and then you terminate the wire, you haven't done anything.
+
+And it's co-associative, so it doesn't matter if you copy the left-hand copy or the right-hand copy, you get three identical copies.
+
+And yeah, I guess the main two axioms for being a Cartesian category are these two.
+
+So the second one, I guess you can call normalization.
+
+So essentially in terms of stochastic maps, what this means is that if you apply a stochastic map and then take the weight of the results, take the mass of the results for any distribution coming in here,
+
+it's the same as the mass of the input.
+
+So essentially, it takes a normalized distribution to a normalized distribution.
+
+And so on the left-hand side, it's more controversial.
+
+It's not going to be true in the category of stochastic maps.
+
+This says that f is deterministic.
+
+So if you perform f and then copy the result, it's the same as copying the inputs and performing f twice.
+
+And I guess if you take the special case where F has no input, this means that essentially F can be copied, means that it's deterministic in a sense that performing F, if F was a toss coin, you would take F through a coin and then copy the results.
+
+You would get a different result as if you toss two coins, right?
+
+The second one is going to hold in terms of Bayesian probability theory if you have normalized processes.
+
+And it's this idea of essentially you can also formalize it as causality.
+
+So if you discard the output, it cannot influence the input.
+
+And yeah, the first one is essentially what brings you back to the world of deterministic processes.
+
+So it's a good way of characterizing which stochastic map is in fact a deterministic one.
+
+And so if you have these two axioms, you're called the Cartesian category.
+
+If you don't have them, you're called the copy-discard category.
+
+And so I guess in our context, we are really interested in copy-discard categories where these two are different processes.
+
+And yeah, I guess what can you prove at this abstract level of generality is a really nice no-cloning theorem where you don't need to assume any complex numbers or any quantum stuff.
+
+And in fact, it holds as well in the context of probability theory.
+
+and I think it's called the no broadcasting theorem in that case.
+
+But the idea is that you cannot have both cups and cats and copying.
+
+So here, I guess you assume that you have cups,
+
+And then because you have copying, then the copy of a cup is also going to be two cups, right?
+
+But you can also do some shenanigans where you bend the wires because copying is co-commutative.
+
+So on one side, you're going to swap the wires.
+
+And now you've essentially proved that two cups like this side by side are actually equal to two cups nested inside out.
+
+you bend all the legs and you get that a swap is equal to the identity, which is basically, yeah, it means you've done something wrong, right?
+
+Like if you can't even distinguish swapping stuff from not doing anything, your category is very much trivial.
+
+So I guess that's the main, the no cloning theorem is that if you're both compact, so you have cups and caps and copying, now you have to be a trivial category in the sense that everything is a,
+
+essentially a scalar multiple of the identity.
+
+So that's not the case in probability theory.
+
+So probability theory also has this no-cloning feature, and that's essentially, well, you can't copy something if it's a non-trivial distribution.
+
+You can't copy a correlated state, right?
+
+The same way you can't copy an entangled state in quantum.
+
+um so yeah um i guess um the last ingredient we need in order to talk about active inference is the idea of normalization um and a in the context of string diagrams that's going to be represented as i was saying it by hierarchical diagrams where you have a sub diagram that's uh inducted lines will just represent the normalization of it with some caveat if there's no support for the um
+
+for the particular state.
+
+So here you have a stochastic map from X to Y and you put it inside of a dotted line and you get its normalization.
+
+So I guess to get inside is not really a stochastic map anymore.
+
+It's more of a
+
+just any measurable function, not necessarily normalized, and the thing outside becomes a proper stochastic map.
+
+And that means for any measurable function, you can decompose it in terms of something that's normalized and then something that you discount.
+
+So these three lines are the discounting operation that we drew as a white dot before.
+
+So essentially, here, that equation tells you that every measurable function is going to be a normalized one up to some renormalization.
+
+So I guess it's sort of intuitive.
+
+And also, normalization behaves nicely with respect to parallel composition.
+
+So if you have f and g, and then parallel, you normalize them, you get the normalization of f times the normalization of g.
+
+It behaves well with respect to copying a particular variable of your generative model.
+
+But the thing it doesn't behave well with is the composition.
+
+So it's not true that the normalization of composition is the composition of normalization.
+
+And that's essentially what gives you the difference between a Jeffrey update and a Perl update in the context of Bayesian inference.
+
+So on the left hand side, you've got a Jeffrey update where you first normalize and then pre-compose with the prior.
+
+On the right-hand side, you've got your Perl update, where you do first the precomposition with the prior, and then you normalize.
+
+And so I guess here on the left, if you want to obtain something normalized overall, you will need to renormalize.
+
+So you get two normalizations.
+
+On the right-hand side, you only get one.
+
+And that's the difference.
+
+That's the fact that normalization is not a functor.
+
+In a sense, it doesn't commute with the composition.
+
+So then another kind of bubble we'll need is taking the logarithm of a function.
+
+So if we have a function from x to the reals, positive reals, we can take its logarithm.
+
+This function is just going to be, if we think of the category of measurable functions, well, the empty diagram is going to correspond to the real numbers, to the one-dimensional space.
+
+And so such a function will just be a box, an effect, which takes something and gives you just a renormalization factor, right?
+
+And now if you have such an effect, you can put it into a green box and you'll get the
+
+the negative log of it.
+
+So that's sort of a mere sort of notational gadget.
+
+And essentially, yeah, it only becomes interesting if you start using it inside a more complex diagram where this green box will not commute past the composition and will give some interesting hierarchical structure to your diagram.
+
+And I guess here I'm just copying some caveats from the Tor et al paper.
+
+And yeah, I guess they give some pointers to some interesting category theory that could be formalized to explore these log boxes further.
+
+But in our context, what we need them to is essentially, yeah, we just want the nice properties of logarithms.
+
+If this copying operator acts like essentially a product, then we want that the log of a product is the sum of the logs, so you get this nice operation, nice homomorphism property of the log.
+
+The discarding operator acts like the unit of this multiplication.
+
+So the log of the units will be zero.
+
+And then you get this nice product rule, this sort of Leibniz rule for the logarithm of
+
+of a tensor product in that sense will be the sum of two tensor products.
+
+So that's also the kind of equation you'll find in an automatic differentiation framework where the gradient of D tensor E is going to be the gradient of D plus the gradient of E. And finally, if X is deterministic, so that's what they call sharp states, then it also commutes past the log.
+
+So you get this nice property of the logarithm, which allows to take a diagram with these green boxes and sort of massage them into a sum of diagrams.
+
+And finally, you can define this notion of open vibrational free energy.
+
+instead of looking at the free energy of a closed model, so something that wouldn't have an input i here, so just a joint distribution of internal states and observed variables, you have this idea of an open model, so you have
+
+some of the inputs that you can control and now you can define the free energy of this model with respect to joint distribution on the inputs with respect to the and the internal state and a prior on the observed variables and here's the formula.
+
+So I guess that was sort of the main point of the paper was to build all this categorical apparatus to get to the point where you can just
+
+draw the definition of free energy as diagram and then the main theorem being that essentially this gives you a compositional definition in the sense that the free energy for composition so it's the tensor composition
+
+the free energy of the tensor will be some composition of the individual thing.
+
+So I guess in the case of tensor is the simplest case.
+
+I won't show the case for sequential composition where you need to take a more complicated operation to compose the subsystems.
+
+But I guess that's sort of the main theorem of that
+
+categorical active inference framework is that you get this idea that the free energy for the whole is composition of the free energy of its parts.
+
+And essentially, monoidal category theory gives you the high-level layer of abstraction to describe these sorts of compositional phenomena.
+
+And yeah, I guess with this sort of foundational theory, you want to turn it into application.
+
+And so I guess that's what this copier was built for.
+
+So what we already have to support this sort of
+
+of active inference implementation in terms of diagrams.
+
+Well, we have most of the finite dimensional case implemented already in the sense that if your random variable span is a categorical distribution, then you can turn this Bayesian inference problem into a tensor network contraction problem.
+
+We have a bunch of automatic and diagrammatic differentiation algorithms implemented with some compilation with the JAX library.
+
+So essentially, you can take your diagram and compile it into a bunch of GPU code for very fast execution.
+
+And finally, the sort of more experimental, more speculative part of the library is this idea of the geometry of interaction, where you formalize bidirectional processes.
+
+So sadly, I won't have much time to get into that side of things.
+
+But there's this very interesting idea of a Bayesian lens where you have these bidirectional operations that also have some stochastic side to them.
+
+So essentially, you can talk about updates, about the forward part of your process being some inference and the backward part being some update.
+
+And this geometry of interaction will give you a way of composing these updates together.
+
+in a compositional structure of Bayesian inference.
+
+So we already have the sort of purely abstract implementation of this geometry of interaction.
+
+What's missing is sort of plugging these two things together.
+
+So just looking at how
+
+If you take finite dimensional as a first step and you look at how it updates, you should be able to implement it in a purely compositional way with DiscoPy and also be able to draw the results in the end.
+
+And I guess what's missing would be a more continuous implementation where I guess to go beyond finite dimensional, you need some sort of more involved implementation based on monads, I guess is a very well-developed theory on the category side.
+
+And there's one thing we've started working on, which is this idea of delayed interaction, where essentially you can represent discrete time processes.
+
+So a very natural way of talking about time series.
+
+And yeah, I guess the main ingredient that's missing to develop this library further would be having experimentalists ready to take the challenge to,
+
+build their experiments in a way that you can compose them with other experiments in the future and build it upon a theory of how to compose processes together.
+
+So I guess that was sort of the main objective of this compile was to sort of lower the entry to the cost of entry to understanding string diagrams so that
+
+any experimentalist from quantum computing or active inference can pick up just enough abstract mathematics to turn these experiments into something you can compose together.
+
+And yeah, I guess I'd be happy to get some questions from the audience and looking forward to more interactions with the active inference community.
+
+Thanks for the, thanks a lot.
+
+
+SPEAKER_00:
+Thank you.
+
+Great talk.
+
+Okay.
+
+Anyone watching live can write a question in a live chat.
+
+And I wrote down some questions as well.
+
+First though, just to kind of pull back, like, how did you get into writing Disco Pie?
+
+What brought you to wanting to build this toolkit and what made you interested in the area?
+
+
+SPEAKER_01:
+yeah i mean so i guess it started with the the master's thesis in oxford was um mostly quantum stuff uh with the course that bob cook was teaching there and um i was interested in ai already and uh nap in particular at the time and
+
+i guess um yeah there was this program of bridging the two together and making uh quantum nlp uh and so i i got involved in that and when it came to implementing it it felt like it would be a shame to implement uh quantum nlp uh as a as a one-shot thing where you
+
+build your experiment and throw it away.
+
+And I guess we took it as an excuse to develop something that we thought was much more broadly applicable, where you take this general theory of monohedral categories and implement that and use QNLP as a sort of proof of concept that
+
+it can do something useful and then hope that other people will start formalizing more stuff as monoidal categories.
+
+So I guess this paper from Thao et al came after the thesis and I guess they took active inference as something that you could formalize with diagrams too.
+
+So yeah, I guess
+
+qnlp was a bit of an excuse to get into some very cool maths and to develop some some cool software to back it up and now i'm sort of yeah looking forward to seeing other ways to apply this software
+
+
+SPEAKER_00:
+Awesome, okay, I'm gonna read and answer one question from the live chat, and then I'll ask you a question.
+
+So Divital wrote, is this under a specific group project at Active Inference Institute like Ontology or other project?
+
+So just to briefly address that, it could be super relevant for Ontology.
+
+We could use the Active Inference Ontology to extract natural language descriptions of generative models, for example, represent them in DiscoPy.
+
+So it could be a tool used in Ontology project,
+
+or it could be spun up as a category theory project as we've done in the past when we for example focused on some of toby uh st claire smith's work so everyone's welcome to uh get involved and reactivate projects as they are excited by this is definitely something exciting so let me ask you this question
+
+how do we connect the properties of diagrams for example the ability to swap capture causality in the era of time cups and caps and all that with the features of cognitive systems which we're interested in like how do we know which kinds of formal constraints are overkill non-sequitur how do we really like reconcile and
+
+build with the right formal systems when we're dealing with embodied cognitive systems that don't on a first pass have those kinds of constraints?
+
+
+SPEAKER_01:
+Yeah, I think that's a super interesting question.
+
+And in a sense, like not being an expert in active inference, I don't feel entitled to really say what are the properties that you guys are interested in.
+
+But I guess as a sort of parallel to other ways diagrams have been applied in
+
+particularly in quantum, I felt like one interesting way to look at diagrams is to look at them in terms of combinatorial structures that have some structural properties that you can exploit to turn the computational problems associated with them into tractable problems.
+
+and maybe as a as a bet i would say that characterizing which models are efficiently simulable uh simulatable or not it's sort of a key question that you ask yourself when you you get to build a model of of cognition in general in a sense that if you cannot simulate it if you cannot um build an efficient implementation for it then it's
+
+likely that the brain isn't going to be working that way.
+
+In a sense, the brain is efficiently solving this cognition problem.
+
+So behind it, there must be some sort of tractable algorithm.
+
+And I guess there's a way of characterizing which problems will be tractable by the shape of the diagrams associated with them.
+
+So one particular way this happens is when you look at tensor networks.
+
+if you can bound the width of your diagram and make it look like it's almost a tree, and you have this idea of bounded tree width where you can show that your network has some sort of hierarchical structure to it where it's shaped in terms of a main route that splits into branches, even if these branches are thick in a sense, it's not necessarily a tree.
+
+then this bounded tree width will give you a bound on how hard it will be to compute this tensor network.
+
+So in a sense, from the sort of graph structure of your diagram, from the fact that this graph has a nice decomposition, you can
+
+exploit that fact and turn it into an efficient algorithm to solve inference on that model to contract the tensor network in the case of physicists.
+
+But I think this general principle applies in a very broad range of cases and there's some like very deep intersections with complexity theory where
+
+I guess this P and NP question is all about like, how do you separate between things that you can solve efficiently or not, right?
+
+So diagrams gives you an interesting way of looking at this P versus NP question where the, yeah, I guess you can try and tell about these two classes by looking at the shape of diagrams that represent these problems.
+
+
+SPEAKER_00:
+awesome okay so what makes the variational free energy open or not open and then some more vfe related questions how did you connect that to the log properties since of course the free energy is used as a bound on log probabilities as surprise
+
+and then what does it mean that the vfe is compositional since from a numerical perspective the compositionality is kind of trivial like of course i could calculate the free energy for two different situations and just add those numbers together so what do we really get with the semantics of composition that go beyond just calculating two numbers and then adding those two numbers
+
+
+SPEAKER_01:
+Yeah, so I guess to go back to that definition of open free energy, I guess the main difference here compared to the standard definition is this extra wire I, right?
+
+The idea is that if this wire is empty, if there's no particular input, you get back to the usual definition.
+
+And it's the idea of instead of trying to compute the free energy of a big monolithic system that represents
+
+your the overall thing you want to study you first decompose that into a composition of different things being independent and being composed in sequence so that's where you get the the correlation and this decomposition of your problem will give you a formula to compute the the composition of the the corresponding free energies
+
+And I guess this example wasn't necessarily the best one to pick.
+
+So it's the fact that it's compositional with respect to independent parallel composition.
+
+Well, I guess it's a bit of a trivial property of free energy that
+
+um the free energy of the tensor of two things will be the sum of the free energies um and i guess um i yeah um i should have included the more interesting case where you have a sequential composition of things and where this um sequential composition gives you a non-trigger way of decomposing the formula for your free energy so i guess that would be the
+
+the place where you can get some traction in a particular experiment where essentially you can.
+
+Yeah, I guess the same way that an automatic differentiation framework would
+
+would use the structure of your program to compute the structure of its derivative.
+
+Well, here you could have, I guess, automatic free energy idea of the structure of your model informs the structure of the formula for its free energy.
+
+and potentially implying some algorithmic speed up.
+
+So I guess here, obviously there isn't any speed up to be found in this particular instance of compositionality.
+
+And yeah, I guess I'm...
+
+Yeah, I don't feel qualified enough to advance any conjecture on how the non-trivial case would give you algorithmic speedups, but I guess that's the sort of promise.
+
+And there's the idea of a speedup.
+
+There's also the idea of having software that's more modular, so having software for one experiment that you can potentially reuse to compose with a later experiment.
+
+
+SPEAKER_00:
+yeah like where that kind of lands for me is we can use these nested box structures to reflect the articulations of different
+
+causal and spatial and temporal systems in sequence and parallel and also proposed cognitive mechanisms so not necessarily related to the material connections on substrate but related to different kinds of interactions amongst like attention memory all these kinds of cognitive features so first there's the benefit of the interpretability legibility modularity reuse angle and then
+
+getting to that speed up if it's possible to have strong decomposition composition type rules large boxes with a lot of stuff in them whether that's 100 nest mates in a multi-agent simulation or 100 different cognitive systems in a complex single agent simulation those can be brought down to their most atomic computational rules and possibly certain kinds of
+
+calculations will have certain methods that would be like the most effective for this kind of distribution or for this size so that gives a unified way to look at the topology of information flows and calculations in a notational disco pi framework
+
+rather than those connections being kind of semi-implicit in the control flow of a Python script or maybe scattered across different files with different functions calling each other, not necessarily in a unified way.
+
+For example, a common approach is like to
+
+have an agent class and then have them be communicating back and forth with an environment and that could still be really well structured but it leads to kind of a fundamental division between what's happening within the agent and within the environment and that's
+
+understandable and a useful design pattern however the stronger direction to kind of steer towards would be unifying systems for notation possibly like disco pi that could get us like the best of both worlds with well-structured interfaces and unification across really different representations
+
+
+SPEAKER_01:
+Yeah, I think also one important aspect is this idea of separation of concern between syntax and semantics, where you want the ability to describe your models in a syntactic way that will be reused in different cases with different semantics in mind, different ways of computing inference on the same diagram, right?
+
+with this idea of uh separating you have the diagrams on one side that represent the description of your model itself and then you have the functors that describe what the computation you do on that model and i think the separation of concern means that well you can compose the syntax together and compose these descriptions to form a louder description and then that way of building your model will inform the computation side of things and
+
+I guess, yeah, speedups are sort of one of the theoretical results or experimental results you could get out of this.
+
+And I guess, I mean, other ways of thinking about it, I think when you're talking about topology, it really...
+
+it really feels like there's some connection to be made there in the sense that a lot of what people do with these diagrams is try and embed them onto some topological space where your computation doesn't live in the abstract anymore and is actually embedded in a particular space.
+
+And I guess for physicists, this will be like embedded into space-time, you know, so you will have like these relativistic quantum mechanics ideas where you have quantum processors on a
+
+on a manifold for your spacetime.
+
+But I think a similar idea can be used to take your abstract description of a generative model and embed it onto an actual topological space, which is the sort of space-like organization of a particular brain or a particular machine.
+
+
+SPEAKER_00:
+Cool.
+
+Yeah, I think of the saying, slow is smooth and smooth is fast.
+
+Like the speed up sounds like it's going to be the pot of gold at the end of the rainbow, but actually the modularity
+
+and the legibility of the software is what is going to get that infrastructure-grade long-term templated reuse of cognitive models.
+
+And if those take slightly longer to run than some super special case optimized situation, first off, we're only going to get to that optimized runtime from the modular design.
+
+And then in the end, I think it's going to be the compositionality
+
+that leads to ecosystems of components that are effective,
+
+And then speed can be sort of a secondary consideration that's runtime and situation specific.
+
+But like the benefits of bringing category theory to active inference, I hope we can draw out over the coming months and years because it really represents a upgrade in how these models are represented and communicated.
+
+And they kind of bring an aesthetic
+
+possibility with its own grammar that is clearly to be learnt and also a really strong machine readability so i hope that people who view this are excited to try disco pie and that we can continue to like look back at the models that have been built
+
+and bring them into these notation systems to demonstrate how they can exactly recapitulate and give reproducibility to past examples and i think that act alone is going to reveal a sort of adjacent possible and it would be awesome if that could all be happening in a flexible environment like disco pi
+
+
+SPEAKER_01:
+yeah i i can't agree more i mean i think there's a similar effort that's been going on on the machine learning side where people have taken category theory to formalize existing models and it's always the question of okay i mean you can do existing stuff but what's the um what's the new stuff you can do with it and i felt like yeah active inference is definitely a place where you can look for this these new models where potentially there's um there's something there that you can
+
+um describe in a succinct elegant way using categories and show has some experimental value in practice and i guess software is going to be key to turn these theoretical insights into experimental experimental value and and i think yeah this this ability of category theory to make bridges between different topics and to to make metaphors become formal is also a good way to
+
+get inspiration from other fields into active inference and back.
+
+So I think, I guess, yeah, it would be super exciting that the same library gets used by quantum natural language processing people and active inference that have a priori nothing to do with each other.
+
+
+SPEAKER_00:
+Cool.
+
+Well, do you have any last comments?
+
+And also, like, what directions are you taking it now with the package or just in your own work?
+
+
+SPEAKER_01:
+Yeah, I mean, I guess we're looking very much for contributors, especially people who can bring projects to apply the library in new directions.
+
+And so please get in touch on GitHub or otherwise, and we'll be very happy to
+
+to welcome new people to the DiscoPipe contributors.
+
+And in terms of new directions we're pushing it in, I guess, yeah, the sort of education effort is something we're trying to invest a lot of time in.
+
+So we spend a lot of time writing documentation, examples, notebooks.
+
+hopefully will lower the barrier to entry to something that's quite scary at first.
+
+I mean, category theory is one of the most intimidating topics out there.
+
+So making it more childish and talk about snakes and spiders and sort of making it fun is a part of it.
+
+And I guess, yeah, in terms of developments, I think
+
+There's a lot of work on category theory for probabilities, and I think that has a very strong connection with functional programming.
+
+Like, I guess there's this monad-based library in Haskell that implements a lot of Bayesian inference in terms of monads and very elegantly in terms of category theory.
+
+I think some of that could be ported to Python and built into DescopePy so that you could
+
+potentially go beyond the sort of toy examples where you have a bunch of categorical distributions and go into something where it's a very powerful system that can handle all kinds of Bayesian inference problems and in the same sort of nice looking diagram world.
+
+
+SPEAKER_00:
+The future is diagrammed.
+
+
+SPEAKER_01:
+Yeah, that's I mean, matrices were the maths of the 20th century diagrams will be the maths of the 21st.
+
+
+SPEAKER_00:
+Cool.
+
+Thank you very much.
+
+Looking forward to learning more and appreciate all the work and the outreach that you all do.
+
+
+SPEAKER_01:
+So yeah, thanks a lot for the invite.
+
+And hope get in touch soon.
+
+
+SPEAKER_00:
+Thank you.
+
+Bye.
+
+
+SPEAKER_01:
+Take care.

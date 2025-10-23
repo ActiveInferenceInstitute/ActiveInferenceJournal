@@ -1,0 +1,2570 @@
+[
+  {
+    "start": 7.473,
+    "end": 26.376,
+    "text": " hello welcome it is april 10th 2025 we're in active inference math stream 12.1 with ola running going to be discussing elbowing stein variational bays with stein mixture inference so thank you for joining looking forward to this presentation and discussion",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 28.988,
+    "end": 30.693,
+    "text": " All right, thanks for having me.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 30.713,
+    "end": 41.624,
+    "text": "Yeah, I'm all running and presenting the work I've done, but together with Eric Nolistic, Christophe Lai, Frederik Smits and Thomas Hammerhoek on relational base with Stein mixtures.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 42.386,
+    "end": 43.369,
+    "text": "So let's get into it.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 44.986,
+    "end": 46.649,
+    "text": " So this is the plan.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 47.09,
+    "end": 55.604,
+    "text": "We'll talk about patient inference and particle-based methods, and in particular Stein-based methods, which came about in 2016.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 55.624,
+    "end": 68.867,
+    "text": "We'll just go over an overview of what these are to get everybody up, and then the key problem with them, which is to underestimate the variance as our models get high dimensional.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 68.847,
+    "end": 73.775,
+    "text": " Then I'll show you shortly about our approach, which is Stein mixture inference.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 73.795,
+    "end": 78.802,
+    "text": "The new thing here is introducing a neighborhood to each of the particles.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 79.443,
+    "end": 87.836,
+    "text": "We'll talk a little bit about that and then evidence that this mixture actually helps with the issue of dimensionality, of course of dimensionality.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 88.357,
+    "end": 94.787,
+    "text": "And finally, Stein mixture inference is a",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 95.628,
+    "end": 100.453,
+    "text": " black box inference engine in the probabilistic programming language on Pyro.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 100.633,
+    "end": 102.414,
+    "text": "So I'll plug that a little bit at the end.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 104.957,
+    "end": 112.284,
+    "text": "Yeah, so just to set the stage here, so making predictions and sort of modeling systems is ubiquitous.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 112.864,
+    "end": 122.293,
+    "text": "So the group I'm in works with structural biology, but I'm looking to applications in robotics and potentially finance as well.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 123.421,
+    "end": 129.116,
+    "text": " And sort of at an abstract level, what we're looking for is trustworthy systems.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 129.858,
+    "end": 138.983,
+    "text": "We want something that's accurate when it meets, when our data meets our expectation, and uncertain when it's either surprising, ambiguous, or missing.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 138.963,
+    "end": 150.514,
+    "text": " So illustrating it here, we have a data generating process dotted line, and then we have a method which is trying to infer the process.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 150.554,
+    "end": 151.715,
+    "text": "This is the red line.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 152.355,
+    "end": 156.399,
+    "text": "And so we only give it sufficient data in the green regions.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 156.599,
+    "end": 166.388,
+    "text": "And what we're looking for is something that captures the process in the green region and gets uncertain in this in-between region.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 167.262,
+    "end": 180.797,
+    "text": " And so on the left-hand side, you would have something that's accurate, but it's overly confident because the uncertainty is collapsed in the in-between region.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 181.218,
+    "end": 184.161,
+    "text": "And the right-hand side is what we want.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 184.221,
+    "end": 187.685,
+    "text": "So here, the blue region could be any potential curve.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 189.107,
+    "end": 194.873,
+    "text": "And it's like 95% or 90% HDI, so it's like the likeliest curves would have been here.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 196.642,
+    "end": 197.745,
+    "text": " Good.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 198.968,
+    "end": 199.65,
+    "text": "Yeah.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 199.67,
+    "end": 202.397,
+    "text": "And so just to make it slightly more concrete.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 202.818,
+    "end": 209.314,
+    "text": "So in prediction, you might have something like an overconfident mobile robot.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 209.615,
+    "end": 214.026,
+    "text": "So if you, for example, have a robot navigating no terrain,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 214.006,
+    "end": 220.818,
+    "text": " it will have a sort of uncertainty about its orientation and position.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 221.8,
+    "end": 231.557,
+    "text": "But as you put it into new terrain, for example, by removing a tree, you would want this uncertainty to spread out so that you can invoke emergency protocols.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 232.018,
+    "end": 235.204,
+    "text": "And then overconfident protocol would, sorry,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 235.184,
+    "end": 244.671,
+    "text": " overconfident a robot might lead to crashes because there's a disambiguity between its actual location and where it believes it's at.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 244.786,
+    "end": 266.98,
+    "text": " this is a this is a we have a talking with some underwater robotics labs and they say that this is an issue in one out of 250 missions and this can be quite expensive with a robot costing between 20 000 euros and 10 million depending on on the size of the robot or deep sea robots",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 269.457,
+    "end": 295.161,
+    "text": " another issue so that was sort of when we're talking about prediction but when we're talking about modeling protein structures three-dimensional protein structures have regions which are so conserved so they stay ordered so they don't fluctuate very much but it's a molecule interacting with the solvent around it so the whole thing will move slightly and then you have",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 295.141,
+    "end": 300.227,
+    "text": " some regions which are unstructured and highly disordered, and they will be moving around.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 300.547,
+    "end": 308.797,
+    "text": "So if you want a description of the structure, it's not enough of the three dimensional structure of the protein.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 308.937,
+    "end": 319.63,
+    "text": "It's not enough to know just sort of an image of the structure, because there might be some areas which are not, which will only be",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 319.61,
+    "end": 322.775,
+    "text": " very unlikely to be in that particular position.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 323.156,
+    "end": 336.178,
+    "text": "So you want some sort of representation which captures that you have flexibility within the molecule and uncertainty is a natural way of representing this.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 338.422,
+    "end": 342.529,
+    "text": "Okay, so and the way we are going to go about this is with Bayesian inference.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 343.37,
+    "end": 346.954,
+    "text": " So just a short reminder of Bayesian inference.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 346.974,
+    "end": 350.838,
+    "text": "So we're given observations x, so this is things we get to see.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 351.338,
+    "end": 357.024,
+    "text": "And we have a model with some latent parameters, unseen parameters, which I'm going to call theta throughout.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 357.945,
+    "end": 368.736,
+    "text": "And then we can apply Bayes' rule to get to take our prior beliefs about theta and incorporate the observations we're seeing to get to our posterior.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 370.285,
+    "end": 381.865,
+    "text": " And we commonly use this posterior to either want to sample from it, which is the techniques I'm going to show you here, or in some cases want to compute expectations with respect to the posterior.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 382.908,
+    "end": 384.19,
+    "text": " Now we have two challenges.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 384.311,
+    "end": 385.733,
+    "text": "This first challenge is key.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 385.934,
+    "end": 392.006,
+    "text": "It's important in terms of what we're doing here, which is our model of data is high dimensional.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 392.547,
+    "end": 405.051,
+    "text": "And the other problem, which is something you work around when you're doing this type of algorithm, is you don't want to evaluate the normalizing constant because it's analytically intractable.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 407.63,
+    "end": 428.483,
+    "text": " So this methodology first came about in 2012, and the key idea is to take a simple measure and then find a push-forward, so a deterministic map, such that you transform this very simple measure into the target measure.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 428.884,
+    "end": 434.633,
+    "text": "And our target measure in Bayesian inference setting is our posterior.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 435.777,
+    "end": 438.501,
+    "text": " And so this is one aspect of it.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 438.521,
+    "end": 440.464,
+    "text": "We're trying to find this deterministic map.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 440.965,
+    "end": 449.057,
+    "text": "And secondly, we're going to move not the entire density, because that would require us to compute normalizing constants.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 449.398,
+    "end": 452.963,
+    "text": "We're only going to be moving particles.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 453.183,
+    "end": 460.975,
+    "text": "So we're going to move something that looks like samples from this simple distribution towards the target distribution.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 460.955,
+    "end": 471.13,
+    "text": " And so Mulzi and Masuk did this using orthogonal polynomials.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 471.37,
+    "end": 481.225,
+    "text": "They had this basis of orthogonal polynomials and then they constructed one function which did the move the entire transport.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 482.403,
+    "end": 483.806,
+    "text": " That was in 2012.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 484.046,
+    "end": 488.475,
+    "text": "And then in 2016, Steinversion Green Descent came out.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 489.016,
+    "end": 495.087,
+    "text": "So the way they find that they determine the transport is they choose a distance between distributions.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 495.168,
+    "end": 499.256,
+    "text": "So the simple distribution row and the target distribution from the posterior.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 501.159,
+    "end": 502.622,
+    "text": "And then you apply the transport.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 502.838,
+    "end": 506.483,
+    "text": " And so they did two things.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 506.583,
+    "end": 510.549,
+    "text": "The first thing was they deconstructed the transport into an iterative process.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 511.79,
+    "end": 524.408,
+    "text": "And secondly, they gave a simple form to each of these transports, which is just a perturbation to an identity map.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 524.995,
+    "end": 541.415,
+    "text": " And then after iterating this process, they would then make sure that each iteration you would get closer from the sort of simple prior metric towards the stereo metric.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 541.515,
+    "end": 549.265,
+    "text": "And the key result here is that they get a close form for finding this vector field, which is giving us the direction of our transport.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 550.932,
+    "end": 555.524,
+    "text": " So just taking this apart, the name apart, we see the Stein variation of gradient descent.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 555.684,
+    "end": 558.01,
+    "text": "So it's a gradient descent like algorithm.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 558.331,
+    "end": 567.996,
+    "text": "We get an update rule, which looks like the classical gradient descent, only our thetas here are random variables and not the parameters as we would be used to.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 569.123,
+    "end": 574.149,
+    "text": " And the way it works is we draw a set of particles from our prior.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 574.75,
+    "end": 593.034,
+    "text": "This set of particles we put an empirical measure on, and then we compute, we find the minimizing distance in terms of KL for the next step, and we apply that transport, so that vector field to the particles rather than the entire density.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 593.234,
+    "end": 598.641,
+    "text": "And this eventually converges to our target density.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 601.085,
+    "end": 602.307,
+    "text": " And then there's the Stein part.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 602.367,
+    "end": 607.254,
+    "text": "So this is going to get us the direction in which to move particles.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 609.637,
+    "end": 625.86,
+    "text": "So what they find is they find a direction, which is the maximal decreasing direction in terms of KL, where the vector field is contained within a large enough class of functions, which we call big pi.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 625.84,
+    "end": 641.336,
+    "text": " Okay, and so this was known before, but there's a relation between the KL divergence when you have this particular form of transport and the Stein, well, kernelized Stein discrepancy.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 641.356,
+    "end": 649.364,
+    "text": "And so this kernelized Stein discrepancy is really looking at an operator operating on the vector field, and it takes this particular form.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 649.724,
+    "end": 652.607,
+    "text": "Turns out there are more, but this is the most common one.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 652.587,
+    "end": 659.038,
+    "text": " And here we have the score function and then we have our vector field.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 660.941,
+    "end": 673.161,
+    "text": "Because I had questions about this before, the score function allows us to, this should be a theta down here, and then we don't have to evaluate the",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 674.322,
+    "end": 683.573,
+    "text": " the gradient with respect to the evidence, sorry, derivative with respect to the evidence that will just be zero.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 684.374,
+    "end": 691.583,
+    "text": "So we can evaluate the score by just having a joint over theta and x or over a latent in our observations.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 694.967,
+    "end": 700.414,
+    "text": "And the second insight that one was, well, we can have a",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 700.85,
+    "end": 709.47,
+    "text": " a form for the vector field, but we can actually also compute it if we choose the space correctly.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 709.831,
+    "end": 715.905,
+    "text": "And the space of functions that we're choosing is a reproducing kernel of Hilbert space.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 715.885,
+    "end": 724.436,
+    "text": " And what we get with a kernel is the partial evaluation is a point in the Hilbert space.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 724.456,
+    "end": 734.849,
+    "text": "So if we have kernels available to us with simple functional forms, then we also have a way of computing the optimal direction.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 737.353,
+    "end": 745.403,
+    "text": "And repetition kernel Hilbert spaces have sort of been studied both in",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 746.193,
+    "end": 748.988,
+    "text": " in Gaussian processes.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 749.852,
+    "end": 753.672,
+    "text": "And I think support vector machines before this, we have quite a few.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 755.238,
+    "end": 755.779,
+    "text": " available.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 756.4,
+    "end": 759.785,
+    "text": "The one we're going to be focusing on here is the squared exponential kernel.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 760.286,
+    "end": 762.048,
+    "text": "The function form is given here.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 763.23,
+    "end": 764.652,
+    "text": "There's quite a few different ones.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 764.672,
+    "end": 777.972,
+    "text": "There's also, so these are scalar kernels, and what you do is you can take the identity matrix to make it into a vector field over Rd.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 777.952,
+    "end": 783.219,
+    "text": " There's also matrix variants, and then we have operators, which allows us to combine kernels.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 784.02,
+    "end": 788.105,
+    "text": "And there's a lot of equations here, and this is a simpler view of the whole thing.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 788.866,
+    "end": 797.057,
+    "text": "So if we have a kernel, and its partial evaluation gives us a kernel in the function hill, but in the repetition kernel,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 797.037,
+    "end": 798.079,
+    "text": " kernel-Helbert space.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 798.46,
+    "end": 805.674,
+    "text": "So, for example, a constant for a kernel, our constant will decide exactly which value we take.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 806.655,
+    "end": 818.438,
+    "text": "In a linear kernel, you would have something like the partial values in which everyone will choose the slope of our function.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 818.418,
+    "end": 841.81,
+    "text": " and the key one we'll be working with is the squared exponential also known as the caution and there the partial evaluations uh give us the mean whereas we have a hyper parameter we have to set ourselves which is the bandwidth and that is going to choose the the width of our of our caution can you just clarify what the red and the blue are are for these different kernels",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 842.903,
+    "end": 845.726,
+    "text": " I'm taking a kernel, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 845.766,
+    "end": 859.059,
+    "text": "A kernel is a function, in this case, it's just r goes to r goes to r. So x here is a free variable, and our number is a fixed one of the parameters.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 859.219,
+    "end": 865.105,
+    "text": "And so the blue dotted line corresponds to fixing one of the parameters to 2.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 865.746,
+    "end": 871.932,
+    "text": "The gray one is fixing it to 0, and the red is fixing it to 2 minus 2.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 873.768,
+    "end": 875.77,
+    "text": " Is there a reason for two and negative two?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 875.81,
+    "end": 881.075,
+    "text": "Or is this just showing the two directionalities you can take from zero?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 881.655,
+    "end": 882.876,
+    "text": "Or is there something about the two?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 884.157,
+    "end": 886.78,
+    "text": "No, there's nothing particular about choosing minus.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 886.8,
+    "end": 892.765,
+    "text": "It's choosing both sides of when we just have a line, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 892.845,
+    "end": 898.811,
+    "text": "It was just to illustrate what happens with the only interesting boundary here, which is over zero.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 899.812,
+    "end": 900.112,
+    "text": "Awesome.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 900.232,
+    "end": 903.555,
+    "text": "So they're like the two directions you can go updating the kernel.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 905.02,
+    "end": 906.985,
+    "text": " Yes, if we're in one-dimensional space.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 909.211,
+    "end": 920.92,
+    "text": "And then they all have hyperparameters, like a length scale, which I've shown down here, but they're also just chosen arbitrarily just to illustrate this functionally.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 924.764,
+    "end": 932.495,
+    "text": " All right, so recall that I showed you this functional form of the update.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 932.936,
+    "end": 946.194,
+    "text": "Just writing it out with expectations, so right now I'm just applying it to a two-particle system, we get something that behaves like we see this vector field actually behaves like forces acting on physical particles.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 946.875,
+    "end": 949.719,
+    "text": "So the first term is a defective force.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 949.739,
+    "end": 953.725,
+    "text": "It's moving towards the nearest mode in our posterior.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 953.705,
+    "end": 972.675,
+    "text": " and it's moving each of the particles like we're taking the it's a mean field method right so we're taking the average effect and moving the particle according to that so we have the attractive force in blue and then we have a repulsive force which acts pairwise between particles and that is keeping the particles apart",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 972.655,
+    "end": 976.947,
+    "text": " so they will not collapse onto each other.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 977.248,
+    "end": 986.614,
+    "text": "If we only had the first term here, the attractive force, we would have no benefit of having more than one particle, because everything would just collapse through the Newton bubble.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 992.753,
+    "end": 1002.443,
+    "text": " In our final system, we initialize these positions randomly, we run this system forward, and what we get is something that looks akin to samples from the posterior.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1002.944,
+    "end": 1006.767,
+    "text": "They are not exactly samples, which is also why we call them particles.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1006.808,
+    "end": 1015.737,
+    "text": "They have correlation structures, which are sort of different than you would have from MCMC, but they do retain some sort of correlation structure.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1016.277,
+    "end": 1019.841,
+    "text": "I don't think it's well characterized, though, at the moment.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1023.213,
+    "end": 1028.482,
+    "text": " So that sort of gives an idea about a particle approach.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1029.103,
+    "end": 1033.751,
+    "text": "And so particle approaches, in one dimension, they're short.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1034.693,
+    "end": 1038.299,
+    "text": "They are as good as MCMC.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1038.319,
+    "end": 1041.525,
+    "text": "But as we go up in dimensionality, we start seeing issues.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1041.505,
+    "end": 1044.228,
+    "text": " So I'm doing the same system I was doing before.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1044.408,
+    "end": 1055.56,
+    "text": "I'm using a Bayesian neural network which has, in the low dimensions, 41 dimensions and a high 10,401 dimension.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1055.68,
+    "end": 1064.77,
+    "text": "And we capture some uncertainty in this in-between region when we're using in the low dimensional system.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1064.85,
+    "end": 1067.833,
+    "text": "But as we move up in dimensions, this completely collapses.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1068.792,
+    "end": 1076.903,
+    "text": " Now the Euler-Bayesian network, how many parameters also decides how expressive our model is.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1077.284,
+    "end": 1082.03,
+    "text": "And so as you can see with the ideal, you get less expressive.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1082.651,
+    "end": 1094.327,
+    "text": "There's fewer curves you're actually able to fit with a lower dimensional BNN, which is why you see a difference in terms of uncertainty in the ideal case going from low to moderate.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1100.821,
+    "end": 1106.347,
+    "text": " An interesting question then is, well, when do we stop trusting Stein version of gradient descent?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1106.948,
+    "end": 1126.39,
+    "text": "And Jimmy Barr in 2001 came up with an interesting experiment where you have take a Gaussian, we let its multivariate Gaussian, let its dimensionality grow slowly, and then you're looking at what is the average empirical variance you get per dimension.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1126.808,
+    "end": 1156.579,
+    "text": " of your estimate and what you see with time version of grain descent is already at five dimensions you've sort of halved this marginal variance and so you should really not trust uncertainty estimations if you have a problem which is five or higher dimensional and there's a lot of these how does that relate to the factorization like the difference between doing five parameters in a joint distribution or factorizing some of the variables apart",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1161.149,
+    "end": 1162.611,
+    "text": " I'm not sure I completely follow.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1163.932,
+    "end": 1173.183,
+    "text": "Like when you're talking about the dimensionality increasing, this is doing a joint distribution of all of those in their possible mutual influence.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 1174.465,
+    "end": 1183.275,
+    "text": "Yeah, so here we're actually, so our multivariate Gaussian is assumed completely independent, which is why we can compute this very simply, easily.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1184.926,
+    "end": 1189.479,
+    "text": " So it was an interesting question whether or how it actually works if you start having covariances as well.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1189.54,
+    "end": 1193.772,
+    "text": "But this experiment is really the simplest version you could imagine where you just have a",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1194.393,
+    "end": 1202.004,
+    "text": " Okay, and if there were covariances, do you think that would make the situation worse or more tractable?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 1202.905,
+    "end": 1204.327,
+    "text": "I would assume it would make it worse.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1205.489,
+    "end": 1208.453,
+    "text": "This is sort of the simplest version of the system I could imagine.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1209.935,
+    "end": 1211.077,
+    "text": "So this would make it worse.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1211.678,
+    "end": 1215.864,
+    "text": "So this is sort of a lower bound on what we should expect.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1220.751,
+    "end": 1220.991,
+    "text": "Yeah.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1223.114,
+    "end": 1224.357,
+    "text": " Yes, good.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1224.677,
+    "end": 1227.583,
+    "text": "So on to our approach, Stein mixture inference.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1228.445,
+    "end": 1238.946,
+    "text": "So what we propose is to separate the particle space and the latent parameter space so that you get a hierarchical model.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1239.365,
+    "end": 1255.703,
+    "text": " and you let the particles move in the psi space, and then you let each particle parameterize its own variational distribution, which then exists in the same space as our posterior.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1256.645,
+    "end": 1264.743,
+    "text": " And so what you get is you get a mixture approximation of the same rational distribution to our posterior.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1265.164,
+    "end": 1268.612,
+    "text": "And here m is the number of particles, so it would be 2.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1269.053,
+    "end": 1275.447,
+    "text": "So if you're using 10 particles, then you would have a 10 component mixture approximation.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1277.587,
+    "end": 1300.202,
+    "text": " And just to motivate it, we can rethink the Steinberg should be in descent particles as sort of the, if you could imagine taking a Gaussian and then letting the variance go to zero, you would get something that's just be a direct delta function distribution, but it will just be like a probabilistic atom.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1300.79,
+    "end": 1309.862,
+    "text": " And so you can think of, in this sense, you could think of sort of a Stein particle as just the view location of this sort of degenerate caution.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1311.324,
+    "end": 1325.143,
+    "text": "And so going in the opposite direction, you could say, well, if we then allow the variance of the normal to also be represented by the particle, then each particle now becomes two dimensional.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1325.815,
+    "end": 1329.199,
+    "text": " and summarizes this Gaussian.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1329.599,
+    "end": 1336.186,
+    "text": "So our particles now both have a location, but they also have a component for the variance.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1338.048,
+    "end": 1345.777,
+    "text": "And then with multiple, like having many of these particles, you suddenly get a mixture approximation, and in this case, a Gaussian mixture approximation.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1346.718,
+    "end": 1353.105,
+    "text": "And so our goal now is to be able to move these particles in",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1353.946,
+    "end": 1361.482,
+    "text": " in such a way that we're minimizing a distance to the posterior to get a version of base.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1362.607,
+    "end": 1362.808,
+    "text": "That's it.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1365.202,
+    "end": 1369.19,
+    "text": " And to do this, we're going to go back to a sort of mean field variational inference.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1369.23,
+    "end": 1372.858,
+    "text": "And just to recall here, you have a simple parametric distribution.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1372.898,
+    "end": 1379.873,
+    "text": "So we're not necessarily trying to get the shape right of our posterior.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1380.133,
+    "end": 1385.725,
+    "text": "However, we are going to work with something that is tractable.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1386.65,
+    "end": 1400.39,
+    "text": " So here, just a Gaussian summarized by this midline, it's mean, and we sort of then move the mean such that it's covering as well as it can the posterior distribution.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1400.41,
+    "end": 1403.073,
+    "text": "And we'll do this with a proxy distance.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1403.534,
+    "end": 1406.018,
+    "text": "So it will not be the KL we're minimizing anymore.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1406.038,
+    "end": 1407.72,
+    "text": "It will be an evidence lower bound.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1409.182,
+    "end": 1416.032,
+    "text": "And so just to recall that as well, our evidence lower bound is just the difference between the",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1416.113,
+    "end": 1427.444,
+    "text": " our evidence of log probability of log data and the KL between our approximate distribution Q and our true posterior.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1427.464,
+    "end": 1429.426,
+    "text": "And it's this expression.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1429.587,
+    "end": 1444.922,
+    "text": "And the reason we work with this expression here, it's very easy to compute, especially if we have a very simple variational distribution Q, we might even be able to compute the differential entropy analytically.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1449.172,
+    "end": 1449.432,
+    "text": " Good.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1449.953,
+    "end": 1457.907,
+    "text": "So the idea of... So as I mentioned, we're going to take our particles and give them a neighborhood.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1457.947,
+    "end": 1472.191,
+    "text": "So in terms of the equation I was showing you before, we could think of making the parameters of our rational distribution, we can make those into random variables.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1473.633,
+    "end": 1474.875,
+    "text": "And if we do that,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1475.497,
+    "end": 1501.673,
+    "text": " then uh we would get uh and we had multiple of them and we have uh we would have an empirical measure on uh on the parameters of our of our rational distributions and it would be the same as replacing the score function in the stein version of gradient descent uh with with some sort of uh of loss function here which is going to be similar to an elbow",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1503.222,
+    "end": 1514.436,
+    "text": " Now we'll have to do a bit of massaging to make sure that this is still a valid methodology, but sort of in its simplest form, this is all we're doing.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1514.676,
+    "end": 1532.638,
+    "text": "We're taking our transport, we're moving on these particles, which are now a hierarchy higher than it was before, and we are moving them using this elbow formulation instead of in terms of the score function.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1534.306,
+    "end": 1539.554,
+    "text": " And the evidence lower bound that we're using takes this particular form.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1539.814,
+    "end": 1544.681,
+    "text": "You could use simpler versions of this, but it doesn't behave well.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1545.382,
+    "end": 1556.078,
+    "text": "So in particular, we need to take this differential in terms of our rational approximation, not just each of the terms.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1557.492,
+    "end": 1572.368,
+    "text": " In order to show that this is correct, we do have a constraint on this, which is our guide distribution, operational distribution Q, that needs to be the same for every single particle.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1572.388,
+    "end": 1578.835,
+    "text": "In other words, our functional of rho needs to be symmetric.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1579.035,
+    "end": 1584.141,
+    "text": "So it can't depend on the ordering in which you parameterize it.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1588.154,
+    "end": 1596.467,
+    "text": " With this change, we can use an extension of Steinvariation gradient descent called non-linear Steinvariation gradient descent.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1596.627,
+    "end": 1598.83,
+    "text": "And what this is again dealing on John Lee.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1599.572,
+    "end": 1605.741,
+    "text": "What they did was they replaced, so in Steinvariation gradient descent, we're minimizing the KL divergence.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1606.683,
+    "end": 1614.094,
+    "text": "And what this extension does, it allows us to minimize functionals of our initial distribution row",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1614.53,
+    "end": 1618.795,
+    "text": " with our differential entropy as a regularizer.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1618.835,
+    "end": 1625.264,
+    "text": "And what that is doing is ensuring uniformity, so ensuring that our density rho gets spread out.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1625.965,
+    "end": 1627.266,
+    "text": "There are some prerequisites for this.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1627.527,
+    "end": 1638.04,
+    "text": "First of all, as I already mentioned, our functional, when parameterized by an empirical measure, needs to be symmetric.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1638.841,
+    "end": 1642.005,
+    "text": "Secondly, we need to have a differential evaluation map.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1643.167,
+    "end": 1644.609,
+    "text": " Oh, this is again the old version.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1644.649,
+    "end": 1645.009,
+    "text": "I'm sorry.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1645.049,
+    "end": 1645.65,
+    "text": "This should be.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1646.031,
+    "end": 1649.495,
+    "text": "This is all the way up to M. There's nothing special about M here.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1651.358,
+    "end": 1659.508,
+    "text": "But we need to be able to evaluate the functional given R-particles and using an empirical measure that's trivial.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1660.309,
+    "end": 1662.993,
+    "text": "It's just evaluating each of the points.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1663.553,
+    "end": 1667.959,
+    "text": "And finally, we have this regularizing term, which is ensuring that R-particles are spread out.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1670.268,
+    "end": 1676.201,
+    "text": " So our, as we show, okay, but this is, we have an instance of non-linear Steinbergian gradient descent.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1677.303,
+    "end": 1688.226,
+    "text": "First of all, it fulfills that the particle approximation is symmetric because we chose the same Q for each of our articles, so the same guide.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1688.206,
+    "end": 1690.33,
+    "text": " We have a differentiable map.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1690.47,
+    "end": 1699.587,
+    "text": "It's trivial to evaluate on the empirical measure, and if we choose it needs to be differentiable, so we also choose our guide to be differentiable.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1699.607,
+    "end": 1706.299,
+    "text": "And finally, when I showed you, we were placing sort of the inner part of the",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1706.684,
+    "end": 1709.91,
+    "text": " the vector field by an evidence lower bound.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1710.351,
+    "end": 1720.752,
+    "text": "But recall, we are now, this is the objective we're actually optimizing is this functional plus some entry particular mon row, which is up here.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1721.133,
+    "end": 1724.119,
+    "text": "And so we need to show that that is also an evidence lower bound.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1724.099,
+    "end": 1744.048,
+    "text": " in order to have a valid operational approach and if you choose so they have this alpha parameter if you choose that to one and you look at the population limit so like infinitely many particles and i'm moving this then we actually we can actually show that this is the case so it's a valid operational base method",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1746.357,
+    "end": 1755.008,
+    "text": " And so if we revisit the experiment I was showing in the beginning, with Stein version gradient descent, we had collapse.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1755.068,
+    "end": 1767.723,
+    "text": "And now with our Stein mixtures, we see that as we're going up in dimensionality, our particles are in theta space, so in the posterior space.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1769.005,
+    "end": 1775.453,
+    "text": "Our particles now have uncertainty estimation in the moderate dimensional case as well.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1776.749,
+    "end": 1779.854,
+    "text": " However, it's not ideal yet.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1781.096,
+    "end": 1795.039,
+    "text": "Here we're using five particles, and so you can get better approximations using more, but the cost of each step is quadratic in the number of particles, so you want to use as few particles as possible.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1796.802,
+    "end": 1802.672,
+    "text": "So there's still room for improvement, but we are...",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1804.711,
+    "end": 1811.138,
+    "text": " it works better than the Stein version of gradient descent for this uncertainty estimation.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1814.502,
+    "end": 1818.727,
+    "text": "So, as I said, there are still improvements to be made.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1819.008,
+    "end": 1821.651,
+    "text": "There are some key design dimensions that we can address.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1821.891,
+    "end": 1823.232,
+    "text": "First of all, dynamic stability.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1823.873,
+    "end": 1829.74,
+    "text": "The Stein version of gradient descent has been understood as a gradient flow in",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1831.019,
+    "end": 1833.525,
+    "text": " in the space of distributions.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1834.026,
+    "end": 1842.748,
+    "text": "However, if you just tune that naively with mixture models, then your gradient flow might move somewhere which is no longer a mixture model.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1843.309,
+    "end": 1847.88,
+    "text": "So in order to sort of analyze and understand",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1849.042,
+    "end": 1853.406,
+    "text": " Dying mixture inference, you need some new theory there.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1853.526,
+    "end": 1868.26,
+    "text": "But with this, if you get this gradient flow, if you nail that, then you start being able to do things like you can choose hyperparameters by choosing different formulations of the gradient flow.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1869.001,
+    "end": 1878.39,
+    "text": "And for example, look at the Weisselstein flow versus, this is getting too difficult, sorry.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1878.37,
+    "end": 1885.061,
+    "text": " What you can do, you can start determining something like kernels based on having this type of formulation.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1885.422,
+    "end": 1902.049,
+    "text": "It also allows us to tell things about how fast it converges, which is currently not a result on Steinberg's Green descent at IC law this year, which shows that in KSD, it's actually as good as MCMC.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1902.229,
+    "end": 1905.154,
+    "text": "So that's very good in terms of KSD.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1905.134,
+    "end": 1908.397,
+    "text": " Then there's kernel design, like actually choosing the kernel.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1908.437,
+    "end": 1921.75,
+    "text": "So one way to do this is knowing the actual dynamics are, but also then understanding based on which kernel you choose, how does this affect dynamic stability?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1921.931,
+    "end": 1929.678,
+    "text": "And Duncan has an interesting paper on that for Steinberg to create in December, which I believe can also lift to the time mixtures.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1930.079,
+    "end": 1934.483,
+    "text": "Finally, there's acceleration options, like Newton methods.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1934.463,
+    "end": 1939.411,
+    "text": " preconditioning for gradient flows to completely avoid computing kernels.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1942.817,
+    "end": 1947.365,
+    "text": "Yeah, so that's sort of a rough outline of Stein mixture inference.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1947.385,
+    "end": 1951.572,
+    "text": "It's available in NumPyro, the deep probabilistic programming language.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1952.634,
+    "end": 1954.818,
+    "text": "It separates model from inference.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1955.239,
+    "end": 1956.1,
+    "text": "It has a DSL",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1957.43,
+    "end": 1965.601,
+    "text": " For probabilistic programs embedded in Python, so you can have arbitrary Python in between random sites, it uses non-standard interpretation.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1965.641,
+    "end": 1974.193,
+    "text": "And most importantly for this talk, I guess, is that Steinmixture is a black box inference engine in the system.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1976.176,
+    "end": 1984.888,
+    "text": "Of course, we need to be able to take derivatives, hardware exploration, linear algebra, and all of that is handed off to JAX, so it's just built the layer on top of JAX.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1989.458,
+    "end": 2011.45,
+    "text": " There's been a lot of people involved in this, so first of all the Pyro devs that helped me build the inference engine, Martin Jankowiak and Yu Feng, and Ahmed Al-Zabahi who did the first version of it, which then evolved into our",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2013.168,
+    "end": 2018.975,
+    "text": " the current version of Stein BI, which is the name of the inference engine, and then my co-authors.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2019.135,
+    "end": 2036.897,
+    "text": "So Liz Nick, who first formulated this problem when he was a PhD with Patrick Smith, and then Thomas Hamerick, who's my PI and has worked with me for the last couple of years, and Christoph Lai, who's an expert in Stein's method at the University of Luxembourg.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2040.151,
+    "end": 2065.382,
+    "text": " the key references sum up so if the introduction into this approach to patient inference is the first one then there's the two stein papers from 2016 and 19 and then our my paper here which is going to be at icla this year yeah it's the inference group and uh yeah thanks",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2067.269,
+    "end": 2086.594,
+    "text": " awesome thank you all right i'll ask a few questions and then if anyone watching along wants to ask a question i'd be happy to so to kind of pull back and re-summarize what makes kl divergence optimization for particle transport plausible where distributional transport is not plausible",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2088.785,
+    "end": 2092.974,
+    "text": " The key issue here is computing the normalizing constant.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2094.617,
+    "end": 2102.153,
+    "text": "You need to be able to renormalize the density.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2104.478,
+    "end": 2122.825,
+    "text": " If you choose a very nice space of functions, such as, so they were using this orthogonal polynomial basis, then you can do it, but it restricts sort of how expressive you are able to be in terms of what you're transporting.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2122.865,
+    "end": 2129.575,
+    "text": "Particle methods, it scales proportional with the number of particles, so it's cheap to compute.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2131.867,
+    "end": 2132.167,
+    "text": " Great.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2132.267,
+    "end": 2136.573,
+    "text": "So you mentioned that the compute is quadratic in the particle number.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2137.193,
+    "end": 2142.299,
+    "text": "So what are the computational complexity considerations for this method?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2142.92,
+    "end": 2148.447,
+    "text": "And then how does that even kind of qualitatively relate to the MCMC approach?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2149.228,
+    "end": 2161.502,
+    "text": "Like if that's giving a better posterior estimate of the real paths, what are the conditions where MCMC is just straightforwardly a better method to use versus exploring how many particles, et cetera, for this method?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2164.469,
+    "end": 2171.956,
+    "text": " So first in terms of MCMC, in a toy example, you would probably just use MCMC, but it becomes truly intractable.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2172.056,
+    "end": 2184.348,
+    "text": "The issue, especially if you're using HMC or something like this, is that you need to work on all data points because you need to compute the gradient.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2184.368,
+    "end": 2191.675,
+    "text": "When you're doing a complex integration, you need to compute at every step, you need to compute the gradient with respect to every data point.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2191.655,
+    "end": 2213.275,
+    "text": " and that's why mcmc just doesn't that doesn't scale to the type of data data sets we're interested in in terms of how is the complexity with compared between stein version going to send an smi the key sort of the expensive part is computing the kernel you need to compute the pairwise",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2213.255,
+    "end": 2214.056,
+    "text": " components.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2214.076,
+    "end": 2215.278,
+    "text": "This is why it's N squared.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2215.758,
+    "end": 2220.985,
+    "text": "And we have the same kernel structure for SVD and SMI.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2221.006,
+    "end": 2238.629,
+    "text": "Though the difference here is that what you can do with five particles with Stein mixtures, you might not at all be able to do on conventional hardware with the Stein version of great descent if your problem is high dimensional enough.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2241.053,
+    "end": 2241.353,
+    "text": "Okay.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2241.593,
+    "end": 2242.755,
+    "text": "So from the",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2244.085,
+    "end": 2261.605,
+    "text": " live chat so first quick question from gary wrote what language are you using so you mentioned the software package just could you re-describe or even show the software package or what programming language is it in and what does that domain specific language look like",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2262.901,
+    "end": 2263.842,
+    "text": " Okay.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2263.862,
+    "end": 2265.144,
+    "text": "Yeah, sure.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2265.184,
+    "end": 2266.966,
+    "text": "So first of all, the language is in Python.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2268.087,
+    "end": 2274.394,
+    "text": "And it's maybe should I share something else?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2274.855,
+    "end": 2275.335,
+    "text": "Yeah, sure.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2277.798,
+    "end": 2278.319,
+    "text": "One second.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2278.939,
+    "end": 2282.984,
+    "text": "See if I have something lying about.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2283.685,
+    "end": 2286.428,
+    "text": "Let me show you.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2291.875,
+    "end": 2299.324,
+    "text": " Alright, one second.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2299.364,
+    "end": 2300.225,
+    "text": "Here we go.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2300.245,
+    "end": 2300.866,
+    "text": "Okay.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2320.289,
+    "end": 2320.87,
+    "text": "Yep.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2322.47,
+    "end": 2322.991,
+    "text": " So can you see?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2324.112,
+    "end": 2326.515,
+    "text": "It's a little small if you could zoom in, but we see it.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2330.46,
+    "end": 2335.646,
+    "text": "Well, I have to do like this.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2336.607,
+    "end": 2339.431,
+    "text": "We can see it.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2339.551,
+    "end": 2340.011,
+    "text": "All right, good.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2340.031,
+    "end": 2347.02,
+    "text": "So this is a VAE, so a variational autoencoder, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2347.32,
+    "end": 2350.384,
+    "text": "So what you're doing is you're taking, you have...",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2351.14,
+    "end": 2359.636,
+    "text": " have a guide which takes a picture or something down to some low dimensional model.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2359.956,
+    "end": 2363.243,
+    "text": "So we call this the encoder.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2363.583,
+    "end": 2370.516,
+    "text": "And then we have a model which takes our latent low dimensional and back to it.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2371.188,
+    "end": 2383.571,
+    "text": " And so what I'm showing you here is the decoder, so what takes our latent representation and moving us back into the original space.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2383.651,
+    "end": 2388.079,
+    "text": "So you can think of this as compression, maybe.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2388.36,
+    "end": 2392.808,
+    "text": "Okay, and so... Let's see...",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2394.357,
+    "end": 2398.146,
+    "text": " This is what the random sites look like.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2398.367,
+    "end": 2400.793,
+    "text": "So you have a random variable here.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2401.936,
+    "end": 2404.823,
+    "text": "We're going to be using...",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2406.575,
+    "end": 2421.576,
+    "text": " non-standard interpretation, so I have a set of operators which operate on these sample sites, or handlers which operate on these sample sites and make them behave differently than otherwise, just straight executing like that.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2421.937,
+    "end": 2425.782,
+    "text": "So here I have a random sample site, it's over angles,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2426.15,
+    "end": 2431.86,
+    "text": " It's distributed according to a sign-by-variant on Mises distribution, so it's just normal.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2432.16,
+    "end": 2433.843,
+    "text": "Think of it as a normal on a torus.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2435.085,
+    "end": 2440.695,
+    "text": "It has some parameters, and then I have some observations.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2440.715,
+    "end": 2447.787,
+    "text": "So this is like conditioning, the same as conditioning on these angles that I observed.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2448.037,
+    "end": 2462.054,
+    "text": " These parameters for my sign-by-variable premises, I have some location, some concentration, these come in this case from applying a neural network, a Bayesian neural network.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2463.997,
+    "end": 2466.22,
+    "text": "And that's just coded up in FLAX.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2466.46,
+    "end": 2473.909,
+    "text": "So that's just straight up standard Bayesian neural network, and then we can",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2473.889,
+    "end": 2482.744,
+    "text": " We can make it into a Bayesian network by just introducing a prior over the width.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2482.764,
+    "end": 2484.086,
+    "text": "So this is what's happening here.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2484.928,
+    "end": 2490.197,
+    "text": "Making a Bayesian neural network, we're saying we have a recurrent neural network.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2491.178,
+    "end": 2496.808,
+    "text": "It's a random site called decoder, so we can apply our handlers to this site.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2497.244,
+    "end": 2521.362,
+    "text": " uh and then uh this this just make sure that uh it's the right the parameter like the right parameters are being updated when we're doing our equation uh updates okay so and that then uh given some some latent remember they said uh they gave us my some representation which i can then map into the parameters my sign barrier from my system",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2521.342,
+    "end": 2525.246,
+    "text": " This is what modeling looks like.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2525.306,
+    "end": 2539.101,
+    "text": "We introduce random sites and we can do arbitrary things in Python in between our random sites to manipulate whatever samples we have.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2540.142,
+    "end": 2543.005,
+    "text": "That's one side of it.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2543.305,
+    "end": 2548.21,
+    "text": "And then when you then want to do inference,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2549.135,
+    "end": 2552.14,
+    "text": " So we're setting up our inference method.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2552.24,
+    "end": 2553.602,
+    "text": "So right now I'm just testing things out.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2553.903,
+    "end": 2555.706,
+    "text": "So it's just mean field operational inference.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2556.186,
+    "end": 2558.19,
+    "text": "I have the model, which is what I just showed you.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2558.45,
+    "end": 2560.413,
+    "text": "I have a corresponding guide.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2560.634,
+    "end": 2562.677,
+    "text": "So this is my queue I was talking about.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2562.717,
+    "end": 2568.807,
+    "text": "This is the thing encoding my space into this latent representation.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2569.528,
+    "end": 2573.775,
+    "text": "I'm going to decide on the type of optimizer using Atom.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2573.755,
+    "end": 2579.823,
+    "text": " And then I'm saying I'm going to use just a standard evidence lower bound here.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2582.787,
+    "end": 2587.534,
+    "text": "In non-Pyro, we need to be explicit about the state of our random case.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2587.734,
+    "end": 2589.156,
+    "text": "That's what's going on here.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2589.436,
+    "end": 2590.838,
+    "text": "And then I'm running my inference.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2591.039,
+    "end": 2596.506,
+    "text": "So now I'm conditioning the parameters",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2596.992,
+    "end": 2605.873,
+    "text": " the parameters of the guide on the observations that I have available, which are stored in FI Insight.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2605.893,
+    "end": 2608.639,
+    "text": "And from there, I just dump the object and I have",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2609.041,
+    "end": 2611.585,
+    "text": " of a separate thing, which does my diagnostics.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2611.705,
+    "end": 2614.189,
+    "text": "So I can get my predictive distribution out.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2614.549,
+    "end": 2617.854,
+    "text": "I can see what does the Hamashandan plot look like.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2618.355,
+    "end": 2624.724,
+    "text": "If I want to look at histograms of parameters, I can get those out from my predictive.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2624.984,
+    "end": 2632.956,
+    "text": "So that's sort of the high scale view of a typical implementation or project in Noir.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2635.754,
+    "end": 2664.394,
+    "text": " awesome okay next question in the chat burt burkers wrote in the slide showing attraction and repulsion there are two particles with vectors pointing in many directions how should one interpret these directions and their angles should i yes perfect",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2665.235,
+    "end": 2665.896,
+    "text": " Good.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2665.916,
+    "end": 2668.279,
+    "text": "Okay.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2669.381,
+    "end": 2676.03,
+    "text": "So the blue arrow will always point towards the closest mean.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2676.11,
+    "end": 2682.218,
+    "text": "So we're looking at a Gaussian distribution here, and it's just immobile, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2682.278,
+    "end": 2686.804,
+    "text": "So the particles are just, the closest mean will always be the center of the Gaussian.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2687.881,
+    "end": 2712.538,
+    "text": " um so that's what the blue arrows are showing you and then the the if you aligned up the red arrows they're the forces acting on the particles by each other and so they will all in a two system particle system they will always be plus and minus at least if you choose a gaussian kernel of the same",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2712.518,
+    "end": 2714.582,
+    "text": " expression, so they will be of the same magnitude.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2714.942,
+    "end": 2717.507,
+    "text": "You have three particles, it becomes more complex.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2717.888,
+    "end": 2722.476,
+    "text": "And then the black, and I should have mentioned this, that's the net effect of the two.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2723.277,
+    "end": 2731.692,
+    "text": "So it's looking at, when you add up these two components, then you get the net effect of the black arrow.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2732.768,
+    "end": 2747.301,
+    "text": " that's when you're then taking a step you're moving in the direction of the black arrow and then like depending on how you choose your epsilon you might not take the full length of this uh of the of the course field put some epsilon size of it",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2747.872,
+    "end": 2755.409,
+    "text": " And just to kind of clarify, what tunes the relative strength of the attractive and the repulsive force?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2756.01,
+    "end": 2765.391,
+    "text": "Like, at the end of all of this procedure, how do you ensure that you haven't over- or underestimated the variance envelope?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2769.134,
+    "end": 2798.533,
+    "text": " like this system of equations will when we are at convergence this will there will be no force acting on any of them right and so this this this equation will be zero got it so the particles engage in these attractive repulsive physics like interactions amongst observations delta like",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2798.969,
+    "end": 2822.125,
+    "text": " kind of hidden Gaussian observations that can be variance reinflated and that particle transported particle distribution it's almost like recapitulating what the MC would give you from samples because you do want a sample from a posterior distribution with a finite number of spikes",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2822.24,
+    "end": 2851.302,
+    "text": " and instead of actually just doing that gradient calculation at the data point level as done in mc here you're learning these transport functions with certain conditions that lets you move the distribution project down to particles and re-inflate the particles back in your contribution to this mixture model",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2851.788,
+    "end": 2856.723,
+    "text": " We're moving the particles so that they get towards the posterior.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2856.743,
+    "end": 2864.667,
+    "text": "So like the data of all our observations are hidden in Steinberg's gradient descent, at least in our score, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2867.836,
+    "end": 2890.182,
+    "text": " okay i guess just taking one step back and then if anybody else wants to write any questions how did you come to this problem for your postdoc like what led you through studies and everything to want to target this uh yeah so yeah so actually it was uh it was uh",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2893.25,
+    "end": 2914.539,
+    "text": " It was Ahmed who, so my original PhD was on, I'm sort of trying to find, to determine three-dimensional structure of proteins given the sequence of the protein 3D structure problem.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2914.739,
+    "end": 2922.97,
+    "text": "And when I started, we had AlphaFull come out two months after.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2923.068,
+    "end": 2935.427,
+    "text": " which was declared a solution to the problem, which made it a bit of an interesting situation to be in.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2935.728,
+    "end": 2949.109,
+    "text": "But Ahmed had started working on this because he thought it mapped well onto... So one thing we want, right, is we want to be able to, with the probabilistic",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2950.051,
+    "end": 2967.115,
+    "text": " probabilistic program is is we want to automate uh automate inference and we sort of we know that there like this can't be done entirely but we want something that's very expressive and cheap to compute with and and it's time version creating descent had",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2968.242,
+    "end": 2992.242,
+    "text": " had these two attractive properties, very cheap and easy to understand, and it's cheap to compute with, so we sort of, we built a Steinberg-Schuppe descent inference engine, and then we were looking at, well, we have this issue, and we wanted to apply it to proteins eventually, and what I was showing you before is, well, now I'm getting to that phase, because it turned out to be a lot",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2992.222,
+    "end": 3021.098,
+    "text": " harder than we first expected to actually like getting the inference engine running was not as much work and as then finding out is this thing correct and that's what we spent the next while on a couple of years there's always a funny postdoc story um what does it look like to go from the open source code that you have to adapting it to a problem",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3021.787,
+    "end": 3028.778,
+    "text": " Like what's the kind of recipe that somebody would take from, that's one question.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3028.898,
+    "end": 3040.436,
+    "text": "And then the second question, however you wanna do this is, where do you see this method in terms of the landscape of like generative AI, pure neural network-based approaches, et cetera?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3043.3,
+    "end": 3044.662,
+    "text": "I'll take the first one first.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3044.682,
+    "end": 3049.009,
+    "text": "So what we would do there is we would go, we would,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3057.848,
+    "end": 3065.607,
+    "text": " And so we would import our method instead of instead of instead of SVI and then we would replace it.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3071.46,
+    "end": 3075.891,
+    "text": "And now, of course, we need to choose a kernel to the RBF kernel.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3089.152,
+    "end": 3089.954,
+    "text": " That's it.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3091.196,
+    "end": 3092.88,
+    "text": "Okay, just to confirm that move.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3093.481,
+    "end": 3105.928,
+    "text": "Because it's largely built upon the Jax Pyro approach, it's not so different than just flipping an import for a model that's already written within that way.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3108.794,
+    "end": 3128.271,
+    "text": " Okay, so how about, how does somebody, even if this is sort of a basic question for Pyro users, let's say somebody is looking at the temperature and the humidity in a room and making a kind of active inference model where they're going to run a heater or a cooler or some other kind of, how do we go from just",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3128.251,
+    "end": 3139.987,
+    "text": " the observables and the unobservables of our target system of interest into representing it in a way that allows it to be inferred using this probabilistic approach.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3142.49,
+    "end": 3147.897,
+    "text": "So what you're describing sounds like the patient network or factor graph.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3148.045,
+    "end": 3165.413,
+    "text": " Right and that's the model I was showing you is how I write that off, so I like whenever I have a random variable in this case, this is not greatest of examples to look at but, but I guess I have a set right, so I have a random variable here.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3166.287,
+    "end": 3182.423,
+    "text": " Which is my latent and then i'm saying that that there's an arrow between said and and and my my angles right and that's the same as say I have to have a graph structure action to show you start telling me.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3183.871,
+    "end": 3186.115,
+    "text": " Let's see.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3186.636,
+    "end": 3189.841,
+    "text": "So this is the sort of view that I think you were thinking of.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3189.902,
+    "end": 3191.224,
+    "text": "We have random variables.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3193.929,
+    "end": 3197.014,
+    "text": "Here we have set, and we have another one which is observed as angle.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3197.194,
+    "end": 3204.968,
+    "text": "But that's just described as a Python function, which is a model which is using these specialized",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3205.876,
+    "end": 3225.241,
+    "text": " like, effectful methods, one of them being sample, another one being what, and a sample corresponds to a circle here, plate corresponds to what you would know in a plate in a graph, and then we have deterministic, so these dotted line circles.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3228.585,
+    "end": 3228.966,
+    "text": "Awesome.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3229.626,
+    "end": 3232.39,
+    "text": "And is this generated or specified",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3233.635,
+    "end": 3252.775,
+    "text": " in another file in this repo how the bva model yeah yeah that's so that's just so the thing i was showing you at first this model is just that it's specifying this thing and it's just written as a function and that function i then act on with uh with my particular inference engine",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3255.033,
+    "end": 3255.494,
+    "text": " Awesome.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3255.615,
+    "end": 3267.405,
+    "text": "Okay, so then kind of, again, pulling back, where do you see these methods in the toolkit of what people could do with pure neural network approaches or transformer-based approaches today?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3270.102,
+    "end": 3274.186,
+    "text": " I mean, so the Bayesian neural network is sort of lifting this up, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3274.206,
+    "end": 3282.254,
+    "text": "And like pretending that we can actually get access to the posterior of its parameters instead of point estimates.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3282.594,
+    "end": 3295.647,
+    "text": "And there are, I think, I like the idea of Bayesian neural networks because, exactly because they sort of, at least seems like they could give us an idea about risk or uncertainty.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3296.007,
+    "end": 3298.249,
+    "text": "There's a couple of problems with it, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3298.269,
+    "end": 3299.13,
+    "text": "Like it's,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3299.228,
+    "end": 3307.828,
+    "text": " We have two networks, which look different in terms of weight, but represent the same function.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3307.908,
+    "end": 3313.12,
+    "text": "So whether Bayesian networks are actually",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3315.007,
+    "end": 3326.297,
+    "text": " When we're moving in weight space, whether we're actually getting different samples, even though we're changing our weights, is not clear.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3326.397,
+    "end": 3332.302,
+    "text": "And so you can't really determine whether you get different.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3332.322,
+    "end": 3340.369,
+    "text": "If you were running something like FCMC, you wouldn't actually know that your particular samples are different networks necessarily.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3340.389,
+    "end": 3344.372,
+    "text": "So estimating how well you've done or even determining convergence becomes very hard.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3345.263,
+    "end": 3348.709,
+    "text": " But it does handle misspecification quite well.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3348.729,
+    "end": 3354.198,
+    "text": "If you have something that's exceedingly flexible, you probably have the right model in there.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3354.839,
+    "end": 3361.129,
+    "text": "So that's why I think Bayesian networks are attractive, but we need to address this non-identifiability eventually.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3361.33,
+    "end": 3364.395,
+    "text": "And I might be able to do that with kernels, but we don't know yet.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3364.976,
+    "end": 3365.837,
+    "text": "We have some ideas.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3368.618,
+    "end": 3369.018,
+    "text": " Cool.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3369.038,
+    "end": 3378.329,
+    "text": "Well, is there anything else you want to show or add or like, how can people, other than reading the paper and checking out the repo learn more?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3381.273,
+    "end": 3381.793,
+    "text": "Yeah.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3381.813,
+    "end": 3398.473,
+    "text": "I mean, there's a, sorry, this is where you get started.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3399.938,
+    "end": 3402.182,
+    "text": " So pyro.air, take a look.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3402.523,
+    "end": 3414.885,
+    "text": "Our version is the non-Pyro version, but Pyro's also very large and very fully-fledged deep probabilistic programming language, which I highly encourage you to take a look at.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3414.925,
+    "end": 3417.97,
+    "text": "Cool.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3418.15,
+    "end": 3422.959,
+    "text": "Anything else you want to add?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3427.31,
+    "end": 3428.612,
+    "text": " Okay, awesome.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3428.852,
+    "end": 3430.554,
+    "text": "Thank you again, Ola, for joining.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3430.634,
+    "end": 3431.475,
+    "text": "Super interesting.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3431.675,
+    "end": 3444.711,
+    "text": "I hope we can continue to learn and that people in the Institute community explore like Pyro, Cure Methods, RxInfer, and we can start to see where these different methods complement each other, top differences, all that.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3447.074,
+    "end": 3448.176,
+    "text": "Cool.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3448.196,
+    "end": 3448.977,
+    "text": "Thank you.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3448.997,
+    "end": 3449.217,
+    "text": "Bye.",
+    "speaker": "SPEAKER_01"
+  }
+]
