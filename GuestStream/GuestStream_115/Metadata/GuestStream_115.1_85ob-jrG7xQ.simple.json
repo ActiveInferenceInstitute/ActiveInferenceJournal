@@ -1,0 +1,3296 @@
+[
+  {
+    "start": 7.962,
+    "end": 9.044,
+    "text": " Hello, welcome.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 10.025,
+    "end": 24.267,
+    "text": "It is July 30th, 2025, and we're in Active Inference Guest Stream 115.1 with Alexi Gladstone, who will be presenting and discussing energy-based transformers and the future of scaling.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 24.247,
+    "end": 45.917,
+    "text": " there will be a presentation followed by a discussion so if you're watching live please write any questions in the live chat otherwise thank you alexi at all for the paper and the work and for joining and looking forward to the presentation thank you thanks for having me daniel excited to uh start this presentation so let's go ahead and get started",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 46.623,
+    "end": 51.392,
+    "text": " And I'm going to ask a philosophical question at the start of this, just to get everyone thinking.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 51.913,
+    "end": 53.897,
+    "text": "And we'll circle back to this at the end of the presentation.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 54.558,
+    "end": 64.537,
+    "text": "But that question is, would you trade off 100 times the amount of computation, so burning your GPUs for 100 times longer, for 1% better generalization?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 65.358,
+    "end": 68.985,
+    "text": "So generalizing 1% better out of distribution, tiny amount.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 69.286,
+    "end": 72.311,
+    "text": " And you might say, this question sounds absolutely ludicrous.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 72.351,
+    "end": 76.898,
+    "text": "Who in their right mind would spend 100 times the amount on computation just to do 1% better?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 76.938,
+    "end": 79.923,
+    "text": "And maybe we're already actually seeing it, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 79.983,
+    "end": 86.113,
+    "text": "So this is an example with OpenAI as 01 and it thinking for a very long time to generalize better.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 86.33,
+    "end": 87.972,
+    "text": " albeit maybe not 1% better.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 88.433,
+    "end": 97.083,
+    "text": "But this is kind of the insight that I think will lead you into the ideas behind energy-based transformers that we are going to dive into now.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 97.924,
+    "end": 106.514,
+    "text": "So to give some contextualization, there's been lots of interest recently in what are called thinking and reasoning models broadly in AI, especially in language modeling.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 106.995,
+    "end": 108.777,
+    "text": "So in language models, particularly with",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 108.757,
+    "end": 111.244,
+    "text": " Large language models, we've seen tons of models.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 111.344,
+    "end": 116.638,
+    "text": "In fact, this slide is now outdated because Grok 4 and Cloud 4 Sonnet have come out.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 117.219,
+    "end": 124.96,
+    "text": "So many models, including open source Chinese models, have been used to basically perform this reasoning or thinking for longer during inference.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 125.581,
+    "end": 127.504,
+    "text": " And the same thing has actually happened in vision.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 127.524,
+    "end": 134.375,
+    "text": "So there's been lots of interest in scaling diffusion models at test time as well for image generation or for video generation.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 134.896,
+    "end": 143.87,
+    "text": "So broad interest from the field in basically making models perform better at inference by kind of doing search or thinking or reasoning or test time compute, whatever you'd like to call it.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 145.132,
+    "end": 153.445,
+    "text": "But today I'm going to take a perspective on these approaches that these approaches are ultimately unsatisfying in the quest for human level intelligence.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 153.762,
+    "end": 154.543,
+    "text": " And you might say, why?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 154.583,
+    "end": 157.206,
+    "text": "These approaches have had widespread success.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 157.687,
+    "end": 163.314,
+    "text": "I mean, I use O1 every day and these models have been largely successful in doing great in math and coding benchmarks.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 164.215,
+    "end": 166.037,
+    "text": "So why are these approaches unsatisfying?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 166.138,
+    "end": 167.259,
+    "text": "And what is my argument today?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 167.279,
+    "end": 177.932,
+    "text": "Well, from the intellectual perspective of achieving human level intelligence, we need approaches that are modality agnostic because humans are able to reason and think over any modality.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 178.153,
+    "end": 180.816,
+    "text": "And the current approaches do not have that characteristic.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 181.792,
+    "end": 183.755,
+    "text": " Another challenge is problem agnosticness.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 183.995,
+    "end": 189.322,
+    "text": "So current approaches very much rely on, especially in language, verifiable rewards, i.e.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 189.362,
+    "end": 194.469,
+    "text": "domains or problems such that they can be easily verified with a binary reward.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 194.889,
+    "end": 200.897,
+    "text": "An example of this is coding or math, where we can verify very easily whether or not a coding or a math solution is correct.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 201.822,
+    "end": 207.652,
+    "text": " And ultimately, this kind of hints at another problem, which is the reliance of these approaches on external supervision.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 208.333,
+    "end": 217.189,
+    "text": "So us models, or sorry, us humans are able to get to human levels intelligence without any external rewards or verifiers or supervision.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 217.71,
+    "end": 222.598,
+    "text": "We're able to learn how to think on any modality or any problem without this type of supervision.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 223.034,
+    "end": 243.472,
+    "text": " So I'm going to make an argument today that if we want human-level intelligence, so if we want artificial general intelligence or artificial super intelligence, whatever you'd like to call it, we really do need systems that learn to think on their own, on any modality, problem, and without any additional supervision, just like us humans.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 243.832,
+    "end": 246.074,
+    "text": "So you might ask, OK, this makes sense.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 246.615,
+    "end": 251.539,
+    "text": "I want my model to be modality agnostic, problem agnostic, supervision agnostic, et cetera, et cetera.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 251.992,
+    "end": 252.934,
+    "text": " But how can I achieve this?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 253.314,
+    "end": 253.535,
+    "text": "Right.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 253.555,
+    "end": 258.804,
+    "text": "The current paradigm is very much rely on tons of humans labeling tons of data for verifiable rewards.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 259.305,
+    "end": 260.346,
+    "text": "Same thing with the fusion models.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 260.367,
+    "end": 263.772,
+    "text": "They rely on external verifiers kind of labeling how good responses are.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 264.734,
+    "end": 266.958,
+    "text": "So how can we do this without external supervision?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 268.02,
+    "end": 276.835,
+    "text": "And the point that this kind of leads to, which our paper energy based transformers asks, is how can we learn to think from unsupervised learning?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 277.557,
+    "end": 283.967,
+    "text": " And this is the goal of today is to demonstrate to you that we actually can teach models to learn how to think from unsupervised learning.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 284.568,
+    "end": 287.172,
+    "text": "And there's a clever way of doing this, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 287.513,
+    "end": 291.56,
+    "text": "And we'll kind of go over that briefly and describe in detail how that works later on.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 291.98,
+    "end": 296.047,
+    "text": "But the general idea is in order to do thinking, we generally need a verifier.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 296.427,
+    "end": 298.671,
+    "text": "So we're going to learn to verify our predictions.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 299.242,
+    "end": 304.069,
+    "text": " And then what we'll do is we'll learn to optimize predictions with respect to this verifier.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 304.93,
+    "end": 309.817,
+    "text": "So given a verifier, it can tell me how good any prediction is with a given context.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 309.857,
+    "end": 316.906,
+    "text": "So given a sequence and a next distribution prediction for a language model, this verifier can tell me how good that distribution is.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 317.768,
+    "end": 324.557,
+    "text": "Or doing classification on ImageNet, given an image and a class, that verifier can tell me how good that class is with the image.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 325.465,
+    "end": 332.012,
+    "text": " It turns out that all these ideas can actually kind of be summed up in one framework called energy-based modeling.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 333.333,
+    "end": 335.996,
+    "text": "And in the active inference community, I'm sure many of you are familiar with this.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 336.076,
+    "end": 338.658,
+    "text": "In the broader AI community, energy-based models have been less popular.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 338.719,
+    "end": 348.649,
+    "text": "The general idea is energy-based models frame thinking or system two or reasoning as optimization over what is called a learned energy landscape.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 349.57,
+    "end": 352.873,
+    "text": "And we'll talk more in detail about what that means to train an energy-based model.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 354.035,
+    "end": 356.879,
+    "text": " So I'm gonna make everyone in the next two minutes an expert.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 357.78,
+    "end": 360.704,
+    "text": "Okay, so what are feedforward models?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 360.804,
+    "end": 368.114,
+    "text": "Feedforward models generally take the form for supervised learning of given an input, given an X, predict a Y hat, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 368.134,
+    "end": 373.501,
+    "text": "So given an image, predict the image's label, or given a sequence of tokens, predict the next token.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 373.521,
+    "end": 376.785,
+    "text": "This is the way language models work, classification models work, et cetera, et cetera.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 377.558,
+    "end": 383.246,
+    "text": " The idea behind an energy based model is that they are given an input X and a prediction Y hat.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 383.587,
+    "end": 389.014,
+    "text": "So, for example, a context or a sequence of tokens and a distribution over next tokens.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 389.635,
+    "end": 392.84,
+    "text": "And they tell you how high energy or low energy those are.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 392.88,
+    "end": 398.067,
+    "text": "And the general idea is like low energy is high probability and high energy is low probability.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 398.167,
+    "end": 400.731,
+    "text": "So high energy is unlikely or not compatible.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 401.386,
+    "end": 405.753,
+    "text": " And then this ultimately brings about the question of, okay, I've trained this energy-based model.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 406.414,
+    "end": 408.677,
+    "text": "How do I predict using my energy-based model, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 408.998,
+    "end": 410.72,
+    "text": "I have this X and this Y hat.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 410.981,
+    "end": 412.202,
+    "text": "How do I predict this Y hat?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 412.223,
+    "end": 414.746,
+    "text": "Because we ultimately care about using these models for prediction.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 416.289,
+    "end": 419.894,
+    "text": "It turns out that there's an elegant way to do this that's very similar to diffusion models.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 420.515,
+    "end": 422.398,
+    "text": "The general idea is this.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 422.632,
+    "end": 426.359,
+    "text": " What we will do is we will start like diffusion models with a random prediction.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 426.76,
+    "end": 430.187,
+    "text": "So this Y hat will start as, for example, random noise.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 430.908,
+    "end": 437.562,
+    "text": "And what we'll do is we'll input this Y hat into the model and we'll get the energy of this Y hat, right, with the context.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 438.223,
+    "end": 443.273,
+    "text": "And ideally, this energy will be very high because this Y hat is not compatible with the current X.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 443.607,
+    "end": 451.923,
+    "text": " And then what we'll do is we'll get the gradient from this energy to this y hat and iteratively refine this y hat with respect to this energy.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 451.963,
+    "end": 465.649,
+    "text": "This is actually doing exactly what we said earlier, which is learning a verifier, which is this energy scalar, and then learning to optimize predictions with respect to this verifier by updating y iteratively or updating y hat iteratively.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 466.793,
+    "end": 491.282,
+    "text": " you can kind of visualize this so for example if you're training a video model the initial prediction would be a random frame if you're training a language model the initial prediction would be a random noise distribution and the idea is what you'll do is you'll feed this into the model you'll get the energy and then you'll iteratively perform energy descent or energy minimization and you continuously doing that until convergence so i tell people about this and they often ask me",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 491.667,
+    "end": 493.869,
+    "text": " Why do we care about formulating models in this way?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 494.35,
+    "end": 496.252,
+    "text": "Feedforward models seem much simpler.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 496.312,
+    "end": 502.578,
+    "text": "With the feedforward model, all we do is input X and we get Y. Why do we care about doing this energy minimization thing?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 503.439,
+    "end": 506.342,
+    "text": "And there's a couple theoretical perspectives on why this is useful.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 506.402,
+    "end": 508.084,
+    "text": "The first one is flexibility.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 508.585,
+    "end": 510.487,
+    "text": "So energy-based models are very broad.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 510.527,
+    "end": 516.133,
+    "text": "It turns out that virtually anything can be, any model can be formulated as an implicit energy-based model.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 516.733,
+    "end": 520.117,
+    "text": "And you're really just doing density estimation over all the possible variables.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 520.377,
+    "end": 521.218,
+    "text": "So it's very broad.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 522.11,
+    "end": 523.492,
+    "text": " also very theoretically sound.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 524.172,
+    "end": 545.417,
+    "text": "So we'll kind of talk about this in more detail later, but one of the huge theoretical benefits of these energy-based models is that they could potentially be Turing complete per prediction, which means that for predictions that require an inherent amount of serial computation, energy-based models could actually solve these problems, whereas a feedforward model cannot because feedforward models have a finite program.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 545.988,
+    "end": 552.282,
+    "text": " Energy-based models can also verify predictions with this energy scaler and can learn uncertainty in continuous state spaces pretty easily.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 552.783,
+    "end": 557.854,
+    "text": "So it's very much more difficult to do this with feed-forward models.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 559.015,
+    "end": 562.22,
+    "text": " And it turns out that energy-based models are a very broad framework.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 562.36,
+    "end": 563.501,
+    "text": "I kind of hinted at this earlier.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 563.922,
+    "end": 571.833,
+    "text": "And I like to think about energy-based models under two different perspectives, explicit energy-based models and implicit energy-based models, to kind of clarify this.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 572.614,
+    "end": 580.566,
+    "text": "And the reason I say this is because a lot of models that exist, for example, GANs and diffusion models, can actually be seen as implicit energy-based models.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 580.586,
+    "end": 588.617,
+    "text": "So what this means is models where you can implicitly derive an energy function, but where this energy function is not an explicit output of the model.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 588.597,
+    "end": 600.281,
+    "text": " So just want to clarify that the models that we focus on in this paper are explicit energy-based models, where the entire model, given a set of inputs, maps to a single scalar field called the energy.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 601.022,
+    "end": 604.369,
+    "text": "And implicit energy-based models, you need to do some work to get this scalar energy.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 605.391,
+    "end": 609.66,
+    "text": "And it's worth noting that these explicit energy-based models have never really worked well.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 610.636,
+    "end": 619.046,
+    "text": " So what I'm telling you about the attraction of these energy-based models for verification and prediction and turn completeness, it sounds great, but they've never really worked.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 619.126,
+    "end": 624.452,
+    "text": "And the general intuition behind practitioners pursuing energy-based models in AI is like, don't.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 625.113,
+    "end": 625.894,
+    "text": "They don't work.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 625.914,
+    "end": 626.575,
+    "text": "They don't scale.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 626.595,
+    "end": 627.516,
+    "text": "They're unstable.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 627.756,
+    "end": 628.537,
+    "text": "There's tons of issues.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 628.577,
+    "end": 629.779,
+    "text": "They're slow, et cetera, et cetera.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 629.819,
+    "end": 634.264,
+    "text": "So the goal of this work, the TLDR, if I had to give one,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 634.582,
+    "end": 637.186,
+    "text": " would be we wanna make energy-based models actually work.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 637.547,
+    "end": 647.643,
+    "text": "We want to make them relevant, we wanna see how they scale, and we wanna make them work practically so that we can get these great benefits of dynamic computation and verification, et cetera, et cetera, at inference.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 648.765,
+    "end": 653.232,
+    "text": "And in order to do that, we need a stable and parallelizable architecture.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 653.465,
+    "end": 663.399,
+    "text": " particularly because energy-based models have very much failed to scale because of inherent serialness and computation and non-paralyzability, as well as instability.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 663.439,
+    "end": 668.245,
+    "text": "So when people try and scale energy-based models, they tend to be very unstable and have issues with the gradient.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 669.908,
+    "end": 672.251,
+    "text": "And it turns out that transformers are a great fit.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 672.351,
+    "end": 675.996,
+    "text": "Transformers have amazing gradient control, having a very long residual stream,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 676.246,
+    "end": 684.475,
+    "text": " And there's strong empirical evidence suggesting that transformers can scale hugely, widely, and to multi-trillion parameter scale regimes.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 685.836,
+    "end": 690.622,
+    "text": "Okay, so this is why we created energy-based transformers with this natural synergy.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 691.402,
+    "end": 698.09,
+    "text": "And I like to visualize how energy-based transformers look compared to existing approaches, just to understand what are the qualitative differences.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 699.051,
+    "end": 704.937,
+    "text": "And I like to think about this in the perspective of some of the kind of cognitive facets or abilities we talked about earlier.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 704.917,
+    "end": 713.065,
+    "text": " So if you have a feedforward model, and we're just thinking about autoregressive modeling for now, the amount of computation that you have for every prediction made, i.e.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 713.085,
+    "end": 715.327,
+    "text": "with current language models, is fixed.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 715.728,
+    "end": 722.014,
+    "text": "So these have finite depth, the program ends, the amount of computation it has is equivalent to the amount of depth, and that's it.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 722.194,
+    "end": 724.817,
+    "text": "You can't use any more computation for a specific prediction.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 726.218,
+    "end": 730.182,
+    "text": "RNNs generally, the way that they are trained currently, have the same flaw.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 730.55,
+    "end": 744.171,
+    "text": " So because we usually train RNNs to only update their hidden state, given new state information, they don't have this ability to dynamically compute, at least in the current regime, for most of the popular RNN variants per prediction.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 744.573,
+    "end": 747.741,
+    "text": " Diffusion models, on the other hand, actually do have this capability.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 747.781,
+    "end": 752.913,
+    "text": "So diffusion models can have an unbounded amount of computation for every prediction being made.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 752.933,
+    "end": 761.434,
+    "text": "So that means essentially that my diffusion model can denoise for an unbounded amount of time and therefore can be potentially turned complete.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 761.414,
+    "end": 768.626,
+    "text": " One of the challenges with diffusion models in practice, theoretically they have this, but in practice they don't really, is being able to verify predictions.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 768.646,
+    "end": 773.213,
+    "text": "So let's say I generate sample A with my diffusion model and sample B with my diffusion model.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 774.055,
+    "end": 776.899,
+    "text": "My diffusion model has no clue whether sample A or sample B is better.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 777.08,
+    "end": 779.203,
+    "text": "It generally does not work in practice.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 779.538,
+    "end": 781.403,
+    "text": " Energy-based models actually can do this.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 781.423,
+    "end": 793.395,
+    "text": "So with an energy-based model, I can generate sample A, generate sample B, pass both of these into the model, get a single scalar energy for both of them, and then use the argument of the energies to determine which sample is better.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 795.535,
+    "end": 800.762,
+    "text": " Okay, so I'm going to dive into quickly kind of the theoretical properties that these models have.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 801.463,
+    "end": 808.372,
+    "text": "And feedforward models, per prediction, don't really have many of the properties that would be desirable for making predictions with dynamic compute.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 808.852,
+    "end": 814.059,
+    "text": "So feedforward models, per prediction, are not turn complete, and they also cannot give likelihoods without tricks.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 814.299,
+    "end": 823.551,
+    "text": "So particularly in continuous state spaces, if you're using a feedforward model, you have to resort to stuff like ELBO or VQ for discretization in order to give, like,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 823.531,
+    "end": 845.758,
+    "text": " likelihoods and this results in kind of some icky compression and some other uh undesirable traits so generally kind of standard vanilla feed forward models can't do many of these things in continuous state spaces diffusion models can be turned complete because they can have potentially unbounded amount of computation for making predictions but in practice they don't verify or give likelihoods",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 845.738,
+    "end": 848.344,
+    "text": " Energy-based models can do all these things.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 848.365,
+    "end": 853.598,
+    "text": "So you can run energy-based inference for longer, giving you this Turing completeness from a theoretical perspective.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 854.079,
+    "end": 858.229,
+    "text": "And you can also give relative likelihoods with these energy-based models.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 858.985,
+    "end": 864.331,
+    "text": " I think it's also worthwhile to visualize how these energy-based models actually look and how they perform inference.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 865.092,
+    "end": 870.598,
+    "text": "So this is an example here of what an energy-based model would learn during training, which we call an energy landscape.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 871.379,
+    "end": 887.878,
+    "text": "And the idea is this energy landscape is a high dimensional space spanning your predictions that tells you, it's a scalar field, telling you at each point in this prediction space, how high or low energy is this, essentially how high or low probability this is,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 887.993,
+    "end": 890.556,
+    "text": " based off the prediction, its compatibility with the context.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 892.197,
+    "end": 894.7,
+    "text": "So let's say we have a context of the dog caught though.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 895.18,
+    "end": 899.084,
+    "text": "If we feed in a random noise distribution prediction, this would likely be high energy.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 899.124,
+    "end": 910.916,
+    "text": "And the idea would be what you're doing during inference is you're performing energy minimization to get to this local minima, which corresponds to like a local energy minima that is strong and has a good prediction.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 911.497,
+    "end": 916.802,
+    "text": "This prediction is a good distribution corresponding to a token that has high likelihood under this context.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 917.255,
+    "end": 927.151,
+    "text": " And the idea is like learning this energy landscape allows you to dynamically allocate computation, verify predictions, have uncertainty in continuous state spaces, et cetera, et cetera.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 927.691,
+    "end": 944.578,
+    "text": "Dynamic computation can be performed by performing energy minimization for longer, prediction verification can be done by getting the energy at specific points, and uncertainty can be done with highly multimodal energy landscapes, where if there's multiple local minima, you know that the model is uncertain about which prediction is best.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 946.111,
+    "end": 950.303,
+    "text": " Okay, so I'm gonna dive into how energy-based transformers perform in practice.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 950.824,
+    "end": 956.34,
+    "text": "We did a lot of scaling results in this paper to kind of dive into this and to determine whether or not they actually can scale well.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 956.759,
+    "end": 959.263,
+    "text": " And generally the results were very good, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 959.283,
+    "end": 960.866,
+    "text": "So we tested on a variety of axes.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 961.006,
+    "end": 962.989,
+    "text": "I'll show parameters scaling and flop scaling later.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 963.51,
+    "end": 974.869,
+    "text": "But if you're just holding everything else constant, just changing the amount of data or the batch size or the depth, energy-based transformers scale faster than the strong transformer plus plus autoregressive baseline.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 975.33,
+    "end": 978.755,
+    "text": "And it's worth noting that these are autoregressive energy-based transformers as well.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 979.116,
+    "end": 981.079,
+    "text": "They could be bidirectional potentially, but...",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 981.059,
+    "end": 983.563,
+    "text": " We compared fairly to the transformer plus plus.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 984.224,
+    "end": 988.512,
+    "text": "And what we really care about is the slope or the asymptotic down into the right performance.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 988.552,
+    "end": 992.419,
+    "text": "And you can see that these energy based transformers generally have much higher slope.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 992.799,
+    "end": 999.25,
+    "text": "So as much as like almost 36% for data scaling and perform better down into the right, which is great.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 999.351,
+    "end": 1004.299,
+    "text": "That's what really matters when you're scaling these models to foundation model level compute.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1005.292,
+    "end": 1009.384,
+    "text": " We also did parameter scaling, or these are commonly referred to as scaling laws in NLP.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1010.126,
+    "end": 1018.491,
+    "text": "And you can see that the trend for energy-based transformers is generally better, especially in video, for basically scaling during pre-training.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1019.956,
+    "end": 1029.508,
+    "text": " We also did downstream inference results, or what I like to call thinking scaling, and basically testing the generalization of these models given a similar pre-training performance.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1030.289,
+    "end": 1036.877,
+    "text": "And you can see that at first the energy-based transformers have more perplexity degradation, which is like, corresponds to performing worse.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1037.518,
+    "end": 1041.002,
+    "text": "But when you basically run these energy-based transformers for",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1040.982,
+    "end": 1051.482,
+    "text": " longer or have them think for longer the performance actually gets better so asymptotically they generalize much better than the transformer plus plus by dynamically allocating more computation",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1052.525,
+    "end": 1058.896,
+    "text": " And then another thing that's great is we see many of the metrics that we care about with these energy-based transformers improving during training.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1059.617,
+    "end": 1078.549,
+    "text": "So verification improves as you train the model for longer, which essentially means that if you were to train a foundation model with energy-based transformers, the verification would get better and better during training, which is great for avoiding adversarial examples or generalizing even better during test time.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1080.031,
+    "end": 1087.157,
+    "text": " We also compared energy-based transformers to diffusion models in this sort of bidirectional variance on like a simple image denoising task.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1087.177,
+    "end": 1090.821,
+    "text": "And we can see that energy-based transformers generally denoise much faster, i.e.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1091.762,
+    "end": 1094.604,
+    "text": "with less forward passes and have better quality.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1094.784,
+    "end": 1096.666,
+    "text": "So the downstream metrics are better.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1097.387,
+    "end": 1102.631,
+    "text": "And one thing that's really important that I think is potentially very impactful is representation learning.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1103.372,
+    "end": 1108.136,
+    "text": "And representation learning with diffusion models tend to be very difficult.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1108.577,
+    "end": 1110.038,
+    "text": "And there are a lot of tricks that you need",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1110.018,
+    "end": 1112.304,
+    "text": " for representation learning with diffusion models.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1112.966,
+    "end": 1119.403,
+    "text": "With energy based transformers, we've pretty easily seen that they learn decent representations, albeit better than diffusion models.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1121.02,
+    "end": 1126.446,
+    "text": " One other great property that we kind of investigated qualitatively was the ability to learn uncertainty.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1126.466,
+    "end": 1129.97,
+    "text": "And the idea is like, and you could do this in continuous space as well.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1130.851,
+    "end": 1133.734,
+    "text": "We want the models to know what they don't know.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1133.775,
+    "end": 1143.906,
+    "text": "And this is a huge challenge and perhaps like why a lot of the current models struggle at inference and with hallucination and other stuff like this, because they don't really know what they don't know.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1144.797,
+    "end": 1148.081,
+    "text": " So generalizing out of distribution tends to require knowing what you don't know.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1148.582,
+    "end": 1154.209,
+    "text": "And we can see here that energy-based transformers have higher energy for tokens that are hard to predict.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1154.229,
+    "end": 1155.871,
+    "text": "So for example, a quick round fox.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1156.511,
+    "end": 1158.113,
+    "text": "Same thing with research and problem here.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1158.674,
+    "end": 1164.221,
+    "text": "Whereas tokens that are easier to predict, such as is, a, but, period, have lower energy.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1164.241,
+    "end": 1172.391,
+    "text": "So this is very promising for principle generalization out of distribution or for teaching models what they don't know.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1172.911,
+    "end": 1178.507,
+    "text": " And that is one of the general kind of theoretical benefits of energy-based models, especially in continuous state spaces.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1182.117,
+    "end": 1186.228,
+    "text": "Okay, this wraps up the last of the results.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1186.681,
+    "end": 1196.136,
+    "text": " Now I'm going to transition the talk a bit and talk a bit about something more reflective and sort of prospective based off a lot of the learnings from this paper.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1196.857,
+    "end": 1209.418,
+    "text": "So I conducted a lot of experimentation for this paper, lots of scaling runs, and I kind of realized something, realized that there's something deeper going on and particularly something that is kind of the whole field is trending towards.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1209.558,
+    "end": 1210.9,
+    "text": "And that's what I'm going to talk about.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1211.403,
+    "end": 1212.964,
+    "text": " So if we ask the question, where are we headed?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1213.805,
+    "end": 1216.688,
+    "text": "Where are models headed as we train them longer and longer?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1216.728,
+    "end": 1219.39,
+    "text": "And there's a trend in all loss plots.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1220.111,
+    "end": 1231.142,
+    "text": "So if we can imagine that we have 10,000 times the amount of computation that we have now, virtually all models would approach approximately zero loss or close to zero loss.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1232.243,
+    "end": 1238.068,
+    "text": "So given 10,000 times the amount of GPUs instead of 10,000 GPUs having, I don't know, 100 billion or whatever.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1238.622,
+    "end": 1240.866,
+    "text": " all models will approach zero loss.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1240.886,
+    "end": 1242.248,
+    "text": "And this kind of looks like this, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1242.268,
+    "end": 1250.942,
+    "text": "So all models eventually achieve close to zero loss or whatever the irreducible slash random noise or loss corresponding to prediction of random noises.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1251.082,
+    "end": 1256.631,
+    "text": "And I kind of like to visualize that as a perplexity of one or an MSE of 0.5 here.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1257.522,
+    "end": 1262.429,
+    "text": " And in fact, I'd argue that frontier labs are already starting to achieve this, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1262.509,
+    "end": 1267.697,
+    "text": "So frontier labs are already very much saying that they are not compute bound, but rather that they are data bound.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1268.398,
+    "end": 1269.56,
+    "text": "That data is the main issue.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1269.62,
+    "end": 1274.507,
+    "text": "And what this kind of signals is most of these models are achieving close to zero loss, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1274.607,
+    "end": 1277.171,
+    "text": "Or potentially what is called the irreducible loss.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1279.514,
+    "end": 1286.685,
+    "text": "And what this means is that we care much less when we're not compute bound, but rather data bound about convergence speed, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1286.918,
+    "end": 1295.611,
+    "text": " So all these models, regardless of the scaling rate, even if EBTs do scale faster during pre-training, reach the same kind of zero loss or close to zero loss.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1296.632,
+    "end": 1298.855,
+    "text": "So different journeys, but the same destination.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1300.317,
+    "end": 1301.199,
+    "text": "Okay, so what am I getting to?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1301.96,
+    "end": 1307.888,
+    "text": "This is like approximate zero loss, irreducible, the best models can possibly do, et cetera, et cetera.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1308.309,
+    "end": 1309.05,
+    "text": "What matters here?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1309.731,
+    "end": 1315.339,
+    "text": "If models really are approaching this kind of close to zero loss regime, what actually matters?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1316.45,
+    "end": 1319.055,
+    "text": " And I kind of hinted at this earlier, but it's not the scaling rate.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1319.075,
+    "end": 1323.342,
+    "text": "So all models will eventually kind of reach close to zero loss, all decent models at least.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1324.064,
+    "end": 1325.406,
+    "text": "So the question is like, what matters here?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1325.847,
+    "end": 1329.333,
+    "text": "And you might say, what about inference speed or flops or latency?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1329.513,
+    "end": 1331.096,
+    "text": "And I would also argue that these don't matter.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1331.236,
+    "end": 1336.486,
+    "text": "If we have 10,000 times the amount of computation, models are already getting close to being able to run on device.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1337.127,
+    "end": 1340.533,
+    "text": "With 10,000 times the amount of compute, inference speed and flops won't really matter.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1341.205,
+    "end": 1342.606,
+    "text": " So is our job done, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1342.626,
+    "end": 1347.591,
+    "text": "Do we have to do anything else in this 10,000 X compute regime once our models achieve close to zero loss?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1348.913,
+    "end": 1352.796,
+    "text": "And today I'm going to argue that the answer is no, and that we have a lot of work left to do.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1353.517,
+    "end": 1355.779,
+    "text": "And this is the insight that I gained from doing this project, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1356.64,
+    "end": 1366.69,
+    "text": "So there's sort of a secret, an unspoken secret of AI research that a lot of the big tech companies don't want the public to know, which is that zero training loss",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1366.67,
+    "end": 1372.476,
+    "text": " does not equal real world perfection, or 100% benchmark saturation does not equal real world perfection.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1372.876,
+    "end": 1384.828,
+    "text": "In other words, even if your model achieves 100% on every single difficult AI benchmark there is and does perfect on your validation set, this model will still not generalize perfectly out of distribution, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1384.848,
+    "end": 1394.398,
+    "text": "So in other words, there will always, always, always be novel unseen situations in the real world that your model has to adapt to and then it has to generalize to.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1394.733,
+    "end": 1399.188,
+    "text": " And it turns out that humans adapting to this novelty is what we are very good at.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1399.89,
+    "end": 1405.148,
+    "text": "So we're able to generalize every day to out of distribution scenarios that we have never seen in our life.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1406.596,
+    "end": 1413.226,
+    "text": " In fact, I really like this example of a counterintuitive fact about just how much we generalize.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1413.967,
+    "end": 1426.005,
+    "text": "So if you just think hypothetically for a second about training a model on all possible human data, so all video data that humans have ever seen, all language data that humans have ever spoke, all audio data, etc., etc.,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1426.812,
+    "end": 1427.713,
+    "text": " Right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1427.734,
+    "end": 1432.742,
+    "text": "The crazy thing about this data is that most of it will still be out of distribution.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1433.623,
+    "end": 1438.772,
+    "text": "Most of this data will still be very much data that the model has to generalize to.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1440.314,
+    "end": 1448.027,
+    "text": "In fact, something very interesting is that you can mathematically guarantee that this video that you have observed for the past five minutes",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1448.378,
+    "end": 1470.522,
+    "text": " this is the first time you are seeing in this video in fact this is the first time anyone in our universe has ever observed this past five minute video that you're observing right so this is how high dimensional the data we are dealing with is and that's why this out of distribution generalization problem is the core problem that we have with ai right now and that we'll have to tackle over the next 10 years",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1472.071,
+    "end": 1477.407,
+    "text": " So what matters in the zero loss regime, I kinda said this earlier, is generalization, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1477.447,
+    "end": 1481.338,
+    "text": "So how your model performs on this out of distribution data.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1481.504,
+    "end": 1484.629,
+    "text": " And I like to refer to this as the era of generalization, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1484.669,
+    "end": 1491.2,
+    "text": "So this era where all models in the frontier labs are essentially achieving the same performance or approximately zero loss.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1491.821,
+    "end": 1494.626,
+    "text": "What really matters is how well does your model generalize?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1495.227,
+    "end": 1506.465,
+    "text": "And this kind of explains why there's been a lot of interest in reasoning or thinking models, because these models allow for better generalization at test time, more adaptability, more test time compute, more thinking, et cetera, et cetera.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1507.559,
+    "end": 1515.152,
+    "text": " Okay, this brings us to the question, which is if we care about generalization instead of just flop scaling, how do we measure it, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1515.894,
+    "end": 1524.589,
+    "text": "And today I'm gonna propose a simple metric that I believe will be more helpful than relying on many downstream benchmarks.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1524.569,
+    "end": 1549.615,
+    "text": " and that is because downstream benchmarks tend to be very high bias and variance right so depending on which benchmarks you use to measure models they'll look better or worse you can see this in the frontier you know the benchmarks that different companies use show their bench their models being better but oftentimes are worse etc etc so i'm going to give insight into a potentially more useful and practical metric for generalization which is data efficiency",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1550.303,
+    "end": 1553.948,
+    "text": " And I'll be arguing that data efficiency is actually a form of generalization.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1554.549,
+    "end": 1567.608,
+    "text": "And the reason for this is if I have given you three concepts, sorry, three examples, and you were able to learn a new concept given those three examples, but it takes me four examples to learn such a new concept, you have generalized better.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1568.509,
+    "end": 1576.621,
+    "text": "So you have used less data to achieve the same compression rate or the same representations or potentially better representations with less data.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1576.761,
+    "end": 1579.365,
+    "text": "So that's data efficiency, but you've also generalized better.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1579.953,
+    "end": 1586.984,
+    "text": " So given that you keep everything constant, same metric, same architecture, same parameter count because you need the same compression ratio.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1587.746,
+    "end": 1594.577,
+    "text": "If you achieve the same metric during pre-training with less data, your model is actually generalizing better.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1595.418,
+    "end": 1597.101,
+    "text": "And that's what I'll argue for here today.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1597.604,
+    "end": 1605.315,
+    "text": " Okay, so I've claimed that data efficiency is how we will measure generalization and that generalization is what we should care about.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1605.835,
+    "end": 1612.705,
+    "text": "So this ultimately brings us as researchers or engineers to the question of how do we measure models, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1612.805,
+    "end": 1615.849,
+    "text": "What X axis do we use to measure model performance?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1616.892,
+    "end": 1622.802,
+    "text": " And over the last five years, it's an X axis that makes energy-based transformers look very bad, which is flop scaling.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1623.443,
+    "end": 1633.921,
+    "text": "Energy-based transformers, they need to do MCMC or optimization during pre-training, are inherently more expensive, although I'm sure you can make this better, but are inherently more expensive than feed-forward models, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1633.961,
+    "end": 1637.207,
+    "text": "And hence why you see that this flop count is much higher.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1637.848,
+    "end": 1642.596,
+    "text": "So you might say, okay, these models are terrible for flop scaling.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1642.846,
+    "end": 1644.348,
+    "text": " What about the era of generalization?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1644.849,
+    "end": 1647.333,
+    "text": "So what about when all we really care about is generalization?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1647.433,
+    "end": 1660.252,
+    "text": "If all models achieve close to the zero loss or close to approximately zero loss, then what really matters is not their flop scaling, because all models will eventually achieve this, but actually their data efficiency and their generalization.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1661.114,
+    "end": 1668.685,
+    "text": "And I like to propose that we take a look at this graph and focus more on this over the next couple of years, because generalization is becoming the big bottleneck.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1670.268,
+    "end": 1679.261,
+    "text": " Okay, now I'm going to bring the talk back to a question from the start, which is, would you trade off 100x times the amount of compute for 1% better generalization?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1679.341,
+    "end": 1681.764,
+    "text": "So running your GPUs for 100 times longer.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1681.804,
+    "end": 1699.549,
+    "text": "And I hope that under this perspective, under this perspective that potentially we are in this era of generalization, where the bottleneck really is just generalizing out of distribution rather than being more flop efficient, the answer becomes an undoubtable yes, because generalization will be all that we care about.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1701.082,
+    "end": 1702.203,
+    "text": " That's it for the presentation.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1702.223,
+    "end": 1705.667,
+    "text": "I'm happy to answer any questions and thank you very much for listening.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1707.488,
+    "end": 1707.849,
+    "text": "Awesome.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 1709.01,
+    "end": 1709.731,
+    "text": "Great talk.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 1710.632,
+    "end": 1710.992,
+    "text": "Okay.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 1711.813,
+    "end": 1720.261,
+    "text": "While everyone in the live chat gets some questions ready and enters them, which I will read to you, could you just give a little background?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 1720.341,
+    "end": 1722.664,
+    "text": "How did you come to this problem?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 1723.545,
+    "end": 1724.586,
+    "text": "What about grad school?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 1724.666,
+    "end": 1728.81,
+    "text": "What was your trajectory to get to this question and collaboration?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 1729.752,
+    "end": 1740.353,
+    "text": " yeah good question i would say that i very much started working on energy-based models just from a uh i thought they were very intuitive perspective so to me",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1740.569,
+    "end": 1767.049,
+    "text": " know if you ask me like is the brain doing something more similar to energy-based modeling or feed forward modeling and no doubt there's no doubt in my mind that it's more similar to energy-based modeling at least in some respects um particularly with regards to like some of the capabilities we talked about right so being able to dynamically allocate computation verify predictions but i think one key thing is also learning like this joint distribution over variables",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1767.434,
+    "end": 1794.015,
+    "text": " think that's very important especially when we eventually take these to multimodal learning to kind of learn like this compatibility between all the input variables and like predictions right so you don't just learn given an image to map to a classification head it's not like there's some classification head in my brain that tells me the logic value for each class when you're doing image classification no it doesn't work like that right you learn this joint distribution over all the possible images",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1793.995,
+    "end": 1823.614,
+    "text": " in all the possible language and then you learn how compatible these are right you know whether this image of a dog is compatible with the word dog you don't just learn a distribution over the possible classes so to me they were always very intuitive and that's kind of why i started working on them um and then i saw that there was lots of room for reasoning with them and uh eventually started working on them during around two years ago and yeah i just kept working on them for a while and making them try and making them work and exploring and",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1824.05,
+    "end": 1834.701,
+    "text": " yeah now we're here so that's the the journey very much just curiosity led started from the energy Maxima now we're here yeah",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1835.322,
+    "end": 1857.263,
+    "text": " okay there's so many entry points and i'm sure people will have interesting questions but you brought up one of the advantages being the flexibility so what exactly is that energy landscapes flexibility what data matters and why what could we say about what kinds of generalization",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 1857.327,
+    "end": 1887.132,
+    "text": " would be in out of distribution scope versus out of out of distribution scope like what is it about the energy landscape do you just dump random data is it about organic data what is it that is about the data and what does the energy landscape reflect that would or does have flexibility yeah um this is a challenging question i would say uh the",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 1889.12,
+    "end": 1894.786,
+    "text": " The general intuition is this energy landscape is learned over all possible values based off the data.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1894.806,
+    "end": 1898.39,
+    "text": "So your data shapes this landscape that's learned over all possible prediction values.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1899.511,
+    "end": 1904.957,
+    "text": "And a feedforward model doesn't learn this landscape over all possible values.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1905.098,
+    "end": 1907.7,
+    "text": "It learns a single pointwise estimate of the prediction.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1908.782,
+    "end": 1916.41,
+    "text": "And the ability to learn this estimate over all possible predictions rather than just predicting a single prediction, like a pointwise estimate,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1916.558,
+    "end": 1926.492,
+    "text": " is what enables this better generalization because at test time, what you can do is instead of just giving a point wise prediction estimate, you can search over these predictions, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1926.512,
+    "end": 1930.858,
+    "text": "So that's what you're actually doing with energy minimization is you're searching over the prediction space.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1931.94,
+    "end": 1933.582,
+    "text": "And that's why this energy landscape is great.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1934.303,
+    "end": 1941.013,
+    "text": "And then with regards to your questions about data, which data is important, you know,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1941.398,
+    "end": 1944.021,
+    "text": " where can energy based models generalize better?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1944.081,
+    "end": 1949.786,
+    "text": "I would say that in general, energy based models have generalized better, which we show as well as some other papers show.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1950.267,
+    "end": 1955.132,
+    "text": "I think that on certain tasks, energy based models generalize orders of magnitude better.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1955.212,
+    "end": 1969.566,
+    "text": "So there's this other paper that we cite that shows that for some synthetic tasks, energy based models can generalize like ten times better than a feed forward model because the energy function or like this verification is very well defined.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1969.546,
+    "end": 1972.31,
+    "text": " So I can give an example of this, which would be solving a maze.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1973.612,
+    "end": 1979.702,
+    "text": "So if you were to generate a solution to a maze with a feedforward model, you could imagine the maze is like this and solving that.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1980.283,
+    "end": 1987.334,
+    "text": "You need to be able to predict in a single forward pass all of the different routes or all of the different turns and everything to solve this maze.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1987.354,
+    "end": 1993.944,
+    "text": "Whereas an energy-based model, this energy function, will just learn whether or not the solution is a valid solution.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1994.125,
+    "end": 1996.228,
+    "text": "That is the solution verification.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1996.31,
+    "end": 1999.736,
+    "text": " And on that problem, it's much easier to verify than it is to generate.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 1999.916,
+    "end": 2006.206,
+    "text": "And because of that, I think you could see that EBMs would generalize much better because this energy function is very well defined.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2006.226,
+    "end": 2011.194,
+    "text": "So I would say that in general, EBMs can generalize better, but there are certain problems where they can generalize much better.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2011.675,
+    "end": 2023.093,
+    "text": "And then with regards to the question on what data can EBMs generalize better on, I think that in the short term, we'll see EBMs more applicable for",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2023.073,
+    "end": 2032.273,
+    "text": " data that is for applications where there is limited data, particularly because of this data efficiency that we've seen with IBM's and you can train them.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2032.774,
+    "end": 2035.48,
+    "text": "They do require more flops at least in the short term.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2035.73,
+    "end": 2040.916,
+    "text": " But you can train them such that they kind of learn this energy landscape over this very limited amount of data.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2041.076,
+    "end": 2045.681,
+    "text": "And because you might have a limited amount of data, you have tons of compute to work with that data.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2046.102,
+    "end": 2055.112,
+    "text": "And that essentially means that you can generalize better out of distribution by kind of learning this huge distribution over all possible predictions with this limited data.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2055.272,
+    "end": 2057.975,
+    "text": "So I see that as the primary use case in the short term.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2057.995,
+    "end": 2062.56,
+    "text": "But in the long term, I think that most data we could definitely see EBMs perform better on.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2063.061,
+    "end": 2064.302,
+    "text": "So, yeah.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2065.244,
+    "end": 2077.451,
+    "text": " So in the provocative opening question, at first, when I heard it, I was thinking, oh, this is kind of like a Pascal's wager or how many cousins to save a brother and those kinds of questions.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2078.012,
+    "end": 2085.008,
+    "text": "But then it's like, actually, we're, if, as you're describing, looking to",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2085.967,
+    "end": 2109.257,
+    "text": " research to where the puck is going and head to a place if we're not already past it where compute isn't a limitation and then it's like yes it is worth it to spend more compute so that was just that was definitely very counterintuitive but also helps contextualize and yet out of that provocation",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2109.777,
+    "end": 2133.237,
+    "text": " are coming models which could be more efficient per watt and per data set so it just is like but that question is the entry point to understanding what we're really limited in okay i'll read a question from the live chat so tucker chambers wrote",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2134.972,
+    "end": 2138.535,
+    "text": " Do any current models generalize into the real world at all?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2139.376,
+    "end": 2146.942,
+    "text": "Maybe Tesla vision-based models have a leg or a wheel up on the competition as they're using real world data in the physically embodied sense.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2148.984,
+    "end": 2153.748,
+    "text": "Yeah, I think this is a debatable question that depends on who you ask.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2156.291,
+    "end": 2159.033,
+    "text": "I mean, I think, yes, some models are generalizing to the real world.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2159.053,
+    "end": 2164.658,
+    "text": "The question is how well are they generalizing and are they generalizing to the point where they're widely useful?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2165.465,
+    "end": 2172.061,
+    "text": " Robotics is very much unsolved and seems to be very far from being solved, which is one of the biggest use cases of AI.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2173.906,
+    "end": 2178.537,
+    "text": "Completely autonomous driving has been promised to be solved for a long time, but it's still unsolved.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2178.798,
+    "end": 2182.647,
+    "text": "Even with Waymo, there are still people watching.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2183.032,
+    "end": 2193.967,
+    "text": " So I would say that some models are generalizing, but they are not generalizing as well as humans would, which is the core challenge is like generalization to the same extent as humans, the same performance.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2195.109,
+    "end": 2203.42,
+    "text": "Ideally, given the same data, all of these models are trained on orders of magnitude, thousands of times the amount of data that humans have ever seen.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2203.838,
+    "end": 2205.059,
+    "text": " Yeah, I hope that answers your question.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2205.079,
+    "end": 2207.542,
+    "text": "So they're generalizing, but not to the extent that we would like.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2207.943,
+    "end": 2217.915,
+    "text": "And then, Daniel, I want to kind of hit on what you said earlier, which is like this provocative question of, is it just a tradeoff or, you know, in this regime, is it really even a tradeoff anymore?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2217.935,
+    "end": 2223.001,
+    "text": "Because like if our GPUs are just idling, if we have 10,000 times the amount of GPUs, it might not even matter, right?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2223.401,
+    "end": 2227.446,
+    "text": "We might really just say, OK, we don't care about burning 100 times the amount of GPUs.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2227.486,
+    "end": 2229.048,
+    "text": "We really just care about generalization.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2229.168,
+    "end": 2231.09,
+    "text": "So, yeah, I think it's interesting.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2231.11,
+    "end": 2232.512,
+    "text": "And I think that, yeah,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2232.492,
+    "end": 2246.788,
+    "text": " you know we're definitely not there especially in academia right now everywhere maybe the frontier labs are starting to get there and like people have said like open ai released a video where they talk about gpt 4.5 and they basically say that and actually have this on here um",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2246.887,
+    "end": 2250.853,
+    "text": " that we're more data bound than we are compute bound, which is cool.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2250.893,
+    "end": 2253.737,
+    "text": "So I'm sure that many of the frontier labs are starting to face this as well.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2254.118,
+    "end": 2264.853,
+    "text": "And I think that as this happens more and more, we'll tend to see like a shift more from like flop scaling and that being the predominant thing that people care about to like data efficiency and generalization.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2265.314,
+    "end": 2271.643,
+    "text": "Because at the end of the day, what really matters is how well does your model generalize once it's gotten to this point of kind of fitting the training set already.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2271.803,
+    "end": 2272.945,
+    "text": "So, yeah.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2274.68,
+    "end": 2276.284,
+    "text": " Super interesting.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2276.885,
+    "end": 2286.286,
+    "text": "Again, anyone can write more questions in the live chat, but how about a little bit on the almost developer experience here?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2286.907,
+    "end": 2288.571,
+    "text": "What was it like?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2289.732,
+    "end": 2291.033,
+    "text": " getting those results.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2291.834,
+    "end": 2300.724,
+    "text": "Was there a lot of under the hood and fine tuning and what kinds of software and methods are useful and what are they like today?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2300.744,
+    "end": 2314.238,
+    "text": "And then what kinds of methods could unlock the amount of attention that's currently going into alternative methods to make use of what you're demonstrating in the paper?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2315.281,
+    "end": 2327.248,
+    "text": " yeah so in terms of getting the results it was i would say a very difficult journey mostly because there's not much practical advice on how to train energy-based models online",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2328.055,
+    "end": 2333.701,
+    "text": " A lot of the work that's online is very much theoretical and also hasn't really been tested at scale.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2334.462,
+    "end": 2351.482,
+    "text": "So a lot of work in this paper that's kind of not necessarily super cool but is important nonetheless for practicality is just determining like what hyperparameters are necessary, how to tweak things so that things work, what are kind of the core challenges with stability and what tricks do you need to solve them.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2351.982,
+    "end": 2354.265,
+    "text": "We have a lot of tricks that we mentioned in the paper.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2354.245,
+    "end": 2379.814,
+    "text": " um and that help that you know help us with stability and can help with scalability but I think that this is one of the key challenges it's just kind of like pretty much all models now rely on tricks like diffusion models there's tons of tricks flow models there's tons of tricks even on regressive models at scale there's tons of tricks with layer norm and all this stuff so it's all about really figuring out like what are the right tricks for these models and it took a while and it was a lot of just like kind of",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2379.794,
+    "end": 2382.862,
+    "text": " and banging your head on the wall and just trying things out and seeing what sticks.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2383.324,
+    "end": 2390.282,
+    "text": "But I think eventually, and to the point where we are now, we have hyperparameters and general tricks that make things work more generally.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2390.302,
+    "end": 2392.208,
+    "text": "And we know how to scale these things.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2392.268,
+    "end": 2395.677,
+    "text": "So if you told me to train a 7B model and you gave me the compute, we could.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2395.657,
+    "end": 2405.771,
+    "text": " So I think that once we started figuring out how to make things stable and scalable and kind of, you know, look good without loss spikes or anything like that, the results started to look really great.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2405.791,
+    "end": 2409.336,
+    "text": "And that's when we started to get like really great data efficiency curves and other stuff like that.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2409.356,
+    "end": 2414.763,
+    "text": "And it was super rewarding having worked on just kind of tuning these tricks for a very long time.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2415.484,
+    "end": 2424.837,
+    "text": "And then with regards to long term adoption and kind of making energy based models adopted more widely as compared to something like diffusion models or",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2424.817,
+    "end": 2429.323,
+    "text": " pure feed forward autoregressive models, I think that there's a couple of things that need to happen.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2429.904,
+    "end": 2434.87,
+    "text": "I think one is like it would be great if a foundation model energy based model was scale.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2435.891,
+    "end": 2439.015,
+    "text": "That way people can really see that these do work out foundation model scale.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2439.456,
+    "end": 2448.968,
+    "text": "Our results are just that, you know, given extrapolation that things could scale well, but we don't actually know because we haven't trained them and we didn't have the computing resources to do that.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2448.948,
+    "end": 2450.851,
+    "text": " So I think kind of at scale would be nice.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2451.573,
+    "end": 2455.881,
+    "text": "Another thing that would be helpful is just like more tricks and tuning with diffusion.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2455.901,
+    "end": 2461.611,
+    "text": "I like to bring up this example where it took lots of tricks and papers to kind of figure out, like, how do I sample from this?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2461.671,
+    "end": 2463.434,
+    "text": "How do I make sampling faster?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2463.514,
+    "end": 2465.939,
+    "text": "How do I make them efficient and more practical, et cetera, et cetera.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2466.48,
+    "end": 2470.467,
+    "text": "I have no doubt that over the next year or two, lots of effort will come.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2470.447,
+    "end": 2492.033,
+    "text": " go into basically just having tricks that are better for these energy-based models and kind of making it so they're faster to train faster during inference etc etc um but i think with those things and given kind of the way that compute is headed there will start to be interest in the next couple years so i'm very hopeful yeah tucker asks a follow-up question there",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2492.435,
+    "end": 2496.26,
+    "text": " Can EBM be built and trained on normal civilian hardware?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2496.661,
+    "end": 2516.206,
+    "text": "Or I guess just more generally like what kind of hardware resources within the von Neumann paradigm are most relevant and what kinds of unconventional or thermo informational or biomimetic computing could be a little bit on the horizon to go even beyond that?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2517.488,
+    "end": 2521.193,
+    "text": "Yeah, so I will clarify that",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2522.202,
+    "end": 2528.309,
+    "text": " We focus very much on energy based models that are, you know, sort of efficient on von Neumann hardware here.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2528.329,
+    "end": 2533.314,
+    "text": "So that's like models with matrix multiplications using back propagation.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2533.354,
+    "end": 2544.446,
+    "text": "There are other energy based models or like, for example, predictive coding learning algorithm that are faster to implement on other hardware that I am by no means an expert.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2546.188,
+    "end": 2548.851,
+    "text": "So these energy based models are very much",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2548.831,
+    "end": 2561.187,
+    "text": " strong on modern von Neumann architectures, especially GPUs, because everything is done with matrix multiplications and is learned end-to-end with back propagation, which we can compute quickly on modern hardware.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2561.605,
+    "end": 2569.413,
+    "text": " So, yeah, you can definitely train these energy based transformers on, you know, smaller GPUs.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2569.433,
+    "end": 2571.676,
+    "text": "They do take more memory than a feed forward model.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2571.836,
+    "end": 2576.881,
+    "text": "But, you know, most of our experiments were done at very small scale on smaller GPUs.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2576.921,
+    "end": 2585.891,
+    "text": "So you can definitely do this on potentially laptop GPUs or like a, you know, small scale school setup that you have for the smaller scale models, at least.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2586.091,
+    "end": 2589.655,
+    "text": "So, yeah, very akin to modern hardware.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2590.816,
+    "end": 2603.762,
+    "text": " we return to the slide with the architectural layouts yes of course actually let me just do this okay",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2604.653,
+    "end": 2627.286,
+    "text": " yeah so maybe just highlight what is different here structurally and then possibly take that towards what would that look like in practice is this the same chat gpt perplexity interface that's just doing better but giving the same kind result is this like",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2627.266,
+    "end": 2656.159,
+    "text": " horse and buggy versus car and we're talking about different kinds of assessments like what is happening under the hood and structurally and then is that a hot swap competing on the same kinds of measures and input output structures that we see today with all the zoo of available models or what other kinds of harnesses are needed or functions arise",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2657.118,
+    "end": 2657.458,
+    "text": " Yeah.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2658.199,
+    "end": 2658.359,
+    "text": "Yeah.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2658.379,
+    "end": 2659.0,
+    "text": "Great question.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2659.761,
+    "end": 2663.945,
+    "text": "So I'll start to dive into the first part, which is like a general overview.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2666.587,
+    "end": 2677.498,
+    "text": "So with feed forward models, you'll get this input X and you'll predict this like just for autoregressive modeling, this X hat of T plus one, which is like the next token.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2677.879,
+    "end": 2684.205,
+    "text": "If you're turning a language model and then you'll back propagate with an RNN, you'll do essentially the same thing.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2684.843,
+    "end": 2695.427,
+    "text": " the diffusion model it's a little bit different where uh these are normally not trained auto aggressively but i kind of visualize that here for ease of visualization but um what you'll do",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2696.167,
+    "end": 2724.942,
+    "text": " is you will take as input prediction of noise and then you will essentially predict like the sound of noise uh so yeah so you'll start with random noise and you'll predict uh based off the schedule and like the current time of this score here or like kind of the denoising to apply to this x hat of t plus one um and you'll do this for all the different x hat of t plus ones that kind of go from like pure random noise to uh the actual data itself um",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2725.276,
+    "end": 2736.431,
+    "text": " With an energy based model it's a lot like a diffusion model that you initialize this X hat of T plus one as or this next token prediction for language models as random noise or a random distribution in this case.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2737.112,
+    "end": 2744.382,
+    "text": "And then, instead of just predicting the noise and like subtracting out the noise we'll do is you'll predict the energy and then.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2745.273,
+    "end": 2774.993,
+    "text": " will get the gradient from this energy to this prediction right and you'll subtract that gradient out so it's just like gradient descent um and like you'll multiply by step size etc etc and then you will pass this back into the model get the energy again update it using the gradient etc etc and you continue doing this for every next token at once so it's worth noting that we we train these as like gpt2 decoder style language models so every single prediction is made at the exact same time",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2775.395,
+    "end": 2780.123,
+    "text": " And that's part of a lot of the effort that went into these decoder-only energy-based transformers.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2780.677,
+    "end": 2790.406,
+    "text": " And yeah, you're basically just predicting the grading of every single next token prediction at the exact same time using the energy scaler for each token.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2792.208,
+    "end": 2792.468,
+    "text": "Yeah.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2792.588,
+    "end": 2805.62,
+    "text": "And then in terms of kind of integrating these things from a more applied perspective on actual like applications or in a UI, I see in the short term, very similar applications to like what we currently see, such as like chat GPT or perplexity.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2806.101,
+    "end": 2807.863,
+    "text": "We're just doing inference with the language model.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2808.443,
+    "end": 2809.384,
+    "text": "I think that the",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2810.444,
+    "end": 2835.355,
+    "text": " the short term you'll especially see like hybrid or ensembling of like a feed forward model with an energy based model where what you do is you initialize the prediction with this feed forward model like initialize the distribution and then you pass this into the energy based model and just refine this distribution right so you're kind of just like uh amortizing a lot of the work that's done with this energy based model with this feed forward model or you can consider ensembling these models um",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2836.178,
+    "end": 2844.992,
+    "text": " And then another thing that you could do is use like speculative decoding to kind of like speed up the iterative decoding with these energy-based transformers.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2845.012,
+    "end": 2855.728,
+    "text": "So instead of doing every single next token prediction with these energy-based transformers, have a lighter weight model and then just check which logits are kind of, or sorry, which distributions are different and sample that way.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2856.029,
+    "end": 2861.477,
+    "text": "So you kind of don't have as much inference costs because they do require more flops during inference.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2862.335,
+    "end": 2871.046,
+    "text": " And then in the long term, yeah, I think that there's a couple of things that you could potentially see with energy based models that you wouldn't be able to see with these other feed forward models.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2871.726,
+    "end": 2873.869,
+    "text": "One thing that's exciting is like compositionality.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2874.55,
+    "end": 2882.96,
+    "text": "So there's been a lot of work with energy based models and compositionality, basically like combining different models with different attributes and generalizing to something new.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2882.98,
+    "end": 2889.608,
+    "text": "So this could be something like, for example, generating new images or generating new languages or whatever it is you want to do.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2891.225,
+    "end": 2893.449,
+    "text": " That's one thing that you could see in terms of applications.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2893.869,
+    "end": 2900.3,
+    "text": "But I think in the short term, from a practical perspective, most of what you will see would just be similar to what you would see with the feed forward model.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2900.921,
+    "end": 2913.722,
+    "text": "It might also be that the way that you do inference with these energy based transformers kind of gives you like a separate way of reasoning where you're kind of reasoning through this iterative optimization rather than in token space with next token prediction.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2913.702,
+    "end": 2943.102,
+    "text": " so the current models are doing this like next token prediction uh iterative reasoning rather than doing it like in a latent space so yeah what exactly makes a transformer a transformer such that it could be feed forward diffusive or energy based and is that part more durable or could something else be there in that green box yes um yeah great question so",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 2943.773,
+    "end": 2947.218,
+    "text": " I think the definition of a transformer depends on who you ask.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2947.878,
+    "end": 2960.415,
+    "text": "I would say to me the general definition is like you have per token level computation and then like global sequence mixing via attention.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2961.176,
+    "end": 2968.245,
+    "text": "So every token is operated on independently besides for attention where you kind of mix information globally across the sequence.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2969.069,
+    "end": 2973.538,
+    "text": " And then, is there different architectures you can use?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2973.598,
+    "end": 2974.42,
+    "text": "Yes, actually.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2974.5,
+    "end": 2984.8,
+    "text": "I think that we just focus on Transformers because it's one of the most popular architectures that has proven itself to be very successful across wide modalities and domains, etc., etc.,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2985.286,
+    "end": 2989.771,
+    "text": " Ideally, you could use any new architecture with energy-based models that comes out.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2989.791,
+    "end": 2998.46,
+    "text": "So there's a recent paper on autoregressive U-Nets, or I think they're also called H-Nets, that is essentially a new architecture for autoregressive modeling.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 2998.8,
+    "end": 3007.61,
+    "text": "And I think it'd be great to combine these things as well, as long as these other architectures are stable and scalable and parallelizable in addition to transformers.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3007.99,
+    "end": 3012.475,
+    "text": "So I don't think that energy-based models necessarily need to be paired with",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3012.455,
+    "end": 3039.407,
+    "text": " transformers it's just there's good synergy here due to the high success of transformers and high computational efficiency and stability so makes sense could you go to the energy landscape with the dog catching the uh yes okay yeah okay burt burkers asks do ebm get stuck in local minima during inference",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3040.315,
+    "end": 3052.35,
+    "text": " yes yeah that is a great question so the answer is yes and unfortunately this is not necessarily something that is easy to avoid but",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3052.972,
+    "end": 3057.381,
+    "text": " This isn't a huge problem because in high dimensional spaces, there are less local minima.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3058.102,
+    "end": 3061.028,
+    "text": "So it turns out that there are less local minima and more saddle points.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3061.93,
+    "end": 3064.816,
+    "text": "So it's hard to get stuck in local minima in very high dimensional spaces.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3065.737,
+    "end": 3071.048,
+    "text": "But you are not guaranteed to converge to a global minimum with these energy-based models.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3071.332,
+    "end": 3082.399,
+    "text": " So part of one of the benefits of sampling many, many times is that you can converge two different local minima, one of which may be your global minimum, and then you use this as your response.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3083.402,
+    "end": 3087.973,
+    "text": "So I think it would be interesting to try and kind of enforce some constraints to",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3088.544,
+    "end": 3097.296,
+    "text": " Actually, I don't think it's possible to enforce constraints to have a single global minima because then you would restrict the expressivity of your model and you wouldn't be able to kind of fit very high dimensional data.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3097.737,
+    "end": 3100.581,
+    "text": "But it's very, it's a difficult problem.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3100.601,
+    "end": 3107.331,
+    "text": "And there's lots of theoretical work broadly on MCMC and kind of converging to the best minima.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3107.691,
+    "end": 3109.033,
+    "text": "So, yeah.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3110.33,
+    "end": 3111.151,
+    "text": " Definitely.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3112.394,
+    "end": 3119.806,
+    "text": "There's problems slash data sets that are easy and monotonic, and there's ones that are wickedly designed.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3120.728,
+    "end": 3124.694,
+    "text": "You brought up MCMC and you mentioned sampling as well.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3124.895,
+    "end": 3133.249,
+    "text": "So how do you see sampling based approaches with variational optimization based incremental",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3133.229,
+    "end": 3133.97,
+    "text": " approaches?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3134.732,
+    "end": 3140.943,
+    "text": "Where do sampling particle based distribution based methods come into play?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3140.983,
+    "end": 3145.611,
+    "text": "How do we know where to use different balances of those?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3147.234,
+    "end": 3149.097,
+    "text": "Yeah, I'm not an expert on this.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3149.137,
+    "end": 3149.878,
+    "text": "I'll preface with that.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3149.938,
+    "end": 3152.082,
+    "text": "But um, I think that all of these are pretty like,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3153.192,
+    "end": 3178.542,
+    "text": " disjoint from this work and not disjoint i should say like compatible with this work and sort of adjacent slash like not necessarily in conflict to so you can in principle use particle based approaches or other more complex mcmc samplers to sample from your ebm like one example would be using hmc hamiltonian monte carlo to kind of sample better we just use first order information or like launch of on dynamics",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3178.522,
+    "end": 3184.995,
+    "text": " But you could, in principle, use more complex samplers as well as particle based algorithms to sample better.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3185.035,
+    "end": 3188.382,
+    "text": "You can kind of consider that what we are doing.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3188.422,
+    "end": 3193.813,
+    "text": "I'm forgetting the name by sampling many times and choosing the minimum energy.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3193.793,
+    "end": 3217.253,
+    "text": " is sort of it's like there's some reference to this in statistical physics you can also use many of the ideas from statistical physics and kind of like inspiring better inference or sampling algorithms where you like anneal the step size or you like determine whether or not the energy decreases and then if it increased like decrease the step size so you kind of better get to local minima um",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3217.233,
+    "end": 3218.457,
+    "text": " there's tons of ways you can do it.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3218.477,
+    "end": 3224.599,
+    "text": "And I think that broadly, you know, this work and the work on MCMC can only help each other basically.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3224.699,
+    "end": 3228.874,
+    "text": "So they're sort of adjacent and can help in tandem.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3229.657,
+    "end": 3229.757,
+    "text": "Yeah.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3230.024,
+    "end": 3231.245,
+    "text": " Yeah, I agree with that.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3231.285,
+    "end": 3243.059,
+    "text": "There's work on Stein mixture models and particle transport and accelerated optimization on different kinds of information geometries.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3243.119,
+    "end": 3246.363,
+    "text": "It's kind of just like exciting how it's all coming together.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3246.744,
+    "end": 3257.196,
+    "text": "So one reflection, which I'd be curious to hear your thoughts seeing from an academia researchy and from an industry side is like,",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3257.868,
+    "end": 3264.555,
+    "text": " In the data-driven or data-based approach, there is some extant data.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3264.655,
+    "end": 3269.561,
+    "text": "Maybe you can acquire more, but it's about doing something with that data.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3270.121,
+    "end": 3286.879,
+    "text": "Whereas on, at least in the active inference, computational psychiatry, cognitive modeling space, often it's more like a priori systems modeling where we're designing that joint generative model, but",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3287.602,
+    "end": 3292.291,
+    "text": " An empirical data set doesn't actually have to come into play.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3292.772,
+    "end": 3300.266,
+    "text": "You might be interested in just ab initio modeling of a cognitive agent and generating synthetic data.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3300.447,
+    "end": 3305.897,
+    "text": "And then there's methods for tuning the parameters to recapitulate empirical",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3306.299,
+    "end": 3330.091,
+    "text": " parameters, but it's just sort of interesting to see the difference between having an extant data set as like the block of marble that you want to do the best on, like you have a language corpus and you want it to be fluent and write awesome PhD dissertations, but not much structural information about linguistics has to be encoded.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3330.632,
+    "end": 3335.378,
+    "text": "And that's the sort of stochastic parent type critique perspective.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3335.645,
+    "end": 3360.876,
+    "text": " in comparison or in compliment to making models who structurally embody linguistic constraints and using that to then meet in the middle also you'd hope with reasonable looking linguistic expression but that approach wouldn't necessarily need to be trained",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3360.856,
+    "end": 3374.393,
+    "text": " from unstructured text corpuses so if we're thinking about general purpose ebms or domain specific ebms are you arbitrarily narrow to arbitrarily broad",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3375.149,
+    "end": 3392.375,
+    "text": " where is that going to be from just dumping a blob of data, setting the number of parameters and some other aspects, kind of like how vision neural networks might work, just here's my data folder, here's the architecture, now go.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3392.395,
+    "end": 3403.772,
+    "text": "And where is it going to take more of a scaffolded, structured approach that",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3405.085,
+    "end": 3411.028,
+    "text": " has a model that embodies aspects of the situation yeah",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3412.088,
+    "end": 3440.678,
+    "text": " yeah that is very hard i think that it's very dependent on the amount of data that you have and the problem i think there are certain problems where you need a prior and that without this prior you sort of or some inductive bias with your model to be more data efficient such that without this inductive bias you will not succeed and i think that particularly we'll see that more often on domains with limited data",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3441.13,
+    "end": 3454.622,
+    "text": " So if you have very limited data, having just a model and just the data, no prior on the structure or inductive biases of your model, your model will very much overfit that data and not generalize.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3455.803,
+    "end": 3462.329,
+    "text": "I think the reason that we're able to do this with language and video and audio is because we have huge amounts of data.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3462.55,
+    "end": 3470.597,
+    "text": "I mean, data that is on orders of magnitude more than any human will ever read or see in their lifetime.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3471.337,
+    "end": 3487.354,
+    "text": " So it may very well be that when we actually care about, well, we do care about this, but when we care very much about achieving human level intelligence, given the same amount of data as humans, we need stronger priors on architecture and structure.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3487.334,
+    "end": 3502.609,
+    "text": " etc it may also be that from a practical perspective these are more useful on specific modalities or domains where we don't have as much data as we do for language or for video so for example for medical data",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3503.028,
+    "end": 3513.608,
+    "text": " I am not an expert on this, but I very much believe that there is many more data constraints with medical data than there is with just general videos online or general language online.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3514.189,
+    "end": 3525.61,
+    "text": "And because of this, it may be that, you know, inductive priors or kind of structures in your model that are more akin to how human cognition works or however your model of",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3525.691,
+    "end": 3550.618,
+    "text": " know psychology works uh are much better at making decisions and performing or generalizing so i think the key is really data you know if you have infinite data you don't need any priors you just learn everything from the data if you don't have infinite data then priors are helpful and this is kind of broadly what we've observed in ai in the last decade where",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3550.953,
+    "end": 3557.939,
+    "text": " Over time, the amount of priors that these models have has decreased, and you really just let the model fit the data.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3557.979,
+    "end": 3559.58,
+    "text": "You don't really make any assumptions.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3560.521,
+    "end": 3571.971,
+    "text": "10 years ago or 15 years ago, when we didn't have that much data in compute, people did a lot of hand-tweet things in engineering and feature engineering, et cetera, et cetera, for their vision models to make them work better.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3572.332,
+    "end": 3575.474,
+    "text": "And they did work better with those hand-engineered features at the time.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3576.095,
+    "end": 3579.778,
+    "text": "So I think the key is how much of a bottleneck is your data?",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3582.442,
+    "end": 3609.411,
+    "text": " I believe I'm resonant with you on that with this sort of zigzagging forward moving pendulum between expert systems focus so-called and more unstructured and to combine the structured and the unstructured is the chocolate chip cookie that has these kind of neuro symbolic hybrid synthetic intelligence there's just a million ways to point at these architectures that have",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3609.391,
+    "end": 3616.789,
+    "text": " different sorts of elements ranging from logical discrete to interpolated continuous.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3616.849,
+    "end": 3617.51,
+    "text": "So that's awesome.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3618.292,
+    "end": 3627.113,
+    "text": "Okay, last sort of two areas that I'd love to hear your take on and then I'll see if there's any final comment in the live chat would be,",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3627.582,
+    "end": 3633.189,
+    "text": " How would somebody who's wanting to learn and apply get onboarded?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3633.709,
+    "end": 3637.574,
+    "text": "What resources did you all provide in the repository?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3638.295,
+    "end": 3644.582,
+    "text": "And what kinds of things would somebody want to learn up on and train up on to be able to replicate and extend?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3645.443,
+    "end": 3648.828,
+    "text": "And then of course, where is this all going?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3649.468,
+    "end": 3651.09,
+    "text": "What is the next shoe to drop?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3651.531,
+    "end": 3654.214,
+    "text": "What is the next pheromone that will be deposited?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3655.696,
+    "end": 3657.9,
+    "text": " Yeah, I like that last question a lot.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3658.641,
+    "end": 3662.707,
+    "text": "With the first question, yeah, we tried to make it a little bit easier to get started.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3662.808,
+    "end": 3673.485,
+    "text": "So at the end of the paper, like section, I think, H and I, there's some intro to EBM tutorial and stuff like that and some pseudocode.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3674.208,
+    "end": 3677.094,
+    "text": " There's also some videos by Yannick Kilcher.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3677.114,
+    "end": 3681.123,
+    "text": "He's a YouTuber that he made on energy based models that I think are really great for getting started.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3681.804,
+    "end": 3692.267,
+    "text": "But I recommend like checking out those videos and checking out those later sections in the paper that are sort of more easily written because I found it even for me, you know, like I've been doing EBMs for a while.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3692.247,
+    "end": 3717.748,
+    "text": " very difficult to read a lot of the literature because it's super theoretical and sort of like maybe not catered towards beginners so i think that you know just maybe checking this out or checking out some intro or tutorials on ebms would be great as well as just pie torch in general um yeah the yana culture videos are great as well and then the second question where where are we headed",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3718.707,
+    "end": 3721.502,
+    "text": " Yeah, that is a great question.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3721.522,
+    "end": 3724.819,
+    "text": "I think in the long term,",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3725.693,
+    "end": 3737.746,
+    "text": " Like what we'll see with diffusion models is kind of like what we saw with energy or sorry, what we'll see with energy based models is kind of like what we saw with diffusion models where like at first they're kind of like, oh, these are impractical.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3738.026,
+    "end": 3745.734,
+    "text": "No one's going to use these to like, okay, maybe there's some promise to like, okay, these have narrow applications to like, oh, wow, we can apply these to almost everything.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3746.595,
+    "end": 3751.38,
+    "text": "Like now diffusion language models are very much becoming very popular when it used to just be image generation.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3751.85,
+    "end": 3754.796,
+    "text": " And now they're used for planning and robotics, et cetera, et cetera.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3755.518,
+    "end": 3763.014,
+    "text": "I think we'll see the same thing with energy-based models where over time they will become more and more widespread because of potentially better generalization.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3763.815,
+    "end": 3766.742,
+    "text": "So I think that that is the future.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3766.762,
+    "end": 3768.846,
+    "text": "I think the question is really like how much time",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3769.366,
+    "end": 3797.955,
+    "text": " much compute do we need and what are the the kind of core tricks and algorithms you know and the improvements that can be made so that is what i see but i think that if you believe that generalization will be the blocker in the next decade for sure energy-based models are a good way good bet to put your money on so if you generalize from your past experience to update your belief that generalization is important belief to have updated to",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3799.184,
+    "end": 3800.648,
+    "text": " This is an interesting architecture.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3802.552,
+    "end": 3802.893,
+    "text": "Yeah.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3803.775,
+    "end": 3806.321,
+    "text": "Yeah, yeah, yeah, yeah.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3806.562,
+    "end": 3808.005,
+    "text": "I agree with that.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3808.747,
+    "end": 3816.045,
+    "text": "Any final comments or just what's next for you and your graduate and beyond adventures?",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3816.599,
+    "end": 3844.159,
+    "text": " um not much final comments just thank you guys for the the interest and it's been kind of amazing I did not expect as many people to be interested in the paper so it's super super grateful for people even listening and for giving me the time to speak um in terms of my future uh yeah we'll have to see it's it's hard to know I mean I I definitely plan to continue working on ebms but um",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3844.797,
+    "end": 3847.621,
+    "text": " Yeah, I have some crazy ideas planned in the future as well.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3847.701,
+    "end": 3849.143,
+    "text": "So we'll see how those go.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3850.826,
+    "end": 3851.286,
+    "text": "Amazing.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3851.907,
+    "end": 3852.308,
+    "text": "Thank you.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3852.809,
+    "end": 3853.73,
+    "text": "Super informative.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3853.79,
+    "end": 3859.298,
+    "text": "There's really a big community of researchers and people kind of in the engine room.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3859.338,
+    "end": 3868.191,
+    "text": "And I think also broader and broader peripheries of interest from everything AI ethics and just the future of what is going to happen.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3868.912,
+    "end": 3871.376,
+    "text": "So it's awesome to see.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3871.636,
+    "end": 3872.998,
+    "text": "And I hope we can have a follow-up",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3874.177,
+    "end": 3874.982,
+    "text": " I hope so as well.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3875.143,
+    "end": 3875.405,
+    "text": "Yeah.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3875.445,
+    "end": 3876.451,
+    "text": "Thank you so much for having me.",
+    "speaker": "SPEAKER_01"
+  },
+  {
+    "start": 3876.652,
+    "end": 3878.021,
+    "text": "Really appreciate it.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3878.041,
+    "end": 3878.262,
+    "text": "All right.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3878.906,
+    "end": 3879.127,
+    "text": "Peace.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3879.288,
+    "end": 3879.651,
+    "text": "Thank you.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3880.878,
+    "end": 3881.039,
+    "text": "Bye.",
+    "speaker": "SPEAKER_00"
+  },
+  {
+    "start": 3881.059,
+    "end": 3881.2,
+    "text": "Bye.",
+    "speaker": "SPEAKER_00"
+  }
+]

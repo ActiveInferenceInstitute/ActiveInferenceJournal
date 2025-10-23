@@ -1,0 +1,692 @@
+SPEAKER_01:
+hello and welcome it's december 13th 2024 we're in active inference guest stream 93.1 with nassim dihush we're going to be discussing a paper we wrote together enhancing population-based search with active inference so thank you nassim for joining looking forward to your presentation in the discussion
+
+
+SPEAKER_00:
+My pleasure.
+
+Thank you, Daniel.
+
+I'm very happy to be here and to share this joint work we did together a few months ago.
+
+Perhaps I could give a brief background information about how this work came to be.
+
+We did a podcast together and we had a few chats on Discord about Active Inference, and it was actually a way you used to explain Active Inference.
+
+You said
+
+that it's like the sense of touch, for example, wouldn't be really active unless you move your hand to really discover the texture.
+
+And it's the idea that, indeed, perception is not a passive process where you're just receiving data and processing it.
+
+it's that agents have an intact, right?
+
+And this is something that meditators can also, you know, experience is that even seeing, you know, sight, if you are really empty inside, wouldn't really be active unless you have some intent, you know, so I thought about this in the context of a class of multi agent systems that are
+
+used for optimization problems.
+
+So perhaps I'll give an overview of our work.
+
+So this is a kind of meta heuristic methods that are used to solve all sorts of optimization problems.
+
+but we mainly focus on combinatorial optimisation, so problems in graphs, typically.
+
+And they use a population of agents to explore different solution paths.
+
+and one one common feature as i will highlight later of these methods is that they just like you know the the the naive perception we have of uh you know how how um even humans perceive is that they they consider that these agents have only reactive responses to the data they discover in the environment uh we'll see it in more details later when i do a brief literature review and so
+
+We try to incorporate predictive modeling, giving these agents an intent, which is to reduce their surprise and also update their belief.
+
+We'll talk about that as well.
+
+So the idea is to minimize the difference between the outcomes they observe and what they expect.
+
+And we tried to integrate this to this class of methods known as population-based search methods with an instantiation on one method called the ant colony optimization.
+
+That's also inspired by you, Daniel, and your background working with ants.
+
+And so this would be applied to a problem which I think is famous enough.
+
+So I don't have to give a very detailed explanation of it, but perhaps for people who are not familiar with the traveling salesman problem, I will briefly explain it with this little app we put together for the paper.
+
+So it's a problem in graphs where you have typically
+
+set of cities or locations the problem consists in finding a route that visits all cities and goes back to your initial point okay now with this kind of problems um
+
+There are two classes, typically, problems in P, which can be solved in polynomial time.
+
+One example would be finding the shortest route from one point to the other.
+
+That is very easy to solve, and it remains easy even for very large-scale graphs, very large numbers of CDs.
+
+But this problem, the traveling salesman problem, the idea of visiting all CDs and going back to your initial point, happens to be in a different class, NP-hard.
+
+So it is as hard as any computational problem you can think of.
+
+And here again, the difficulty comes with scale.
+
+It's that we don't have a better method than exhaustively listing all paths.
+
+So there are approximate
+
+solution methods known as heuristics and meta heuristics.
+
+A very simple one, a very intuitive one could be to visit the nearest city from your starting point and repeat this process until you go back to your initial point.
+
+So this is known as the nearest neighbor heuristic.
+
+So here I would start, for example, from this one, go to the next one, next one, next one, next one.
+
+And then with this, you can get stuck in very bad, you know,
+
+branches of the tree of possible solutions.
+
+For example, if the last city is very far here, you would need to waste a lot of distance in your solution.
+
+So nearest neighbor is not that great and the diameters that try to improve on it.
+
+One of them is the one we will discuss.
+
+this presentation beyond colony optimization method so as i was saying it's part of a large class of methods known as population-based search meta heuristics they are typically nature inspired or biology inspired but one very good point you raised daniel is that uh well can there be anything that is not nature inspired that's a good question to
+
+to ponder.
+
+In any case, these are inspired by phenomena in nature.
+
+Initially, I think the first method in this class was invented in the 70s.
+
+It's the genetic algorithm that is inspired by evolution.
+
+And here again, there will be interesting bridges with active inference.
+
+Ant colony optimization is also one of the most successful and oldest.
+
+But then there was a deluge of nature inspired methods for about 30 years.
+
+anything from honeybees to cuckoo to wolves to lions, dolphins, what have you, even the way jazz players, human jazz players, synchronize when they improvise, were used as inspiration for these methods.
+
+And just as a fun fact, artificial neural networks were considered as part of this class of methods
+
+up until the mid-2000s when I was an undergrad myself.
+
+And they were usually listed in textbooks like the two I have cited here among these population-based meta-heuristics before taking a life on their own.
+
+But because of this
+
+a very large number of methods that offer very little innovation.
+
+Some authors, notably Kenneth Sorensen here with this important paper that was published in 2013,
+
+call for a stop to these very superficial improvements and innovations, just taking inspiration from the next natural process, and to go back to more abstract ways of seeing these methods.
+
+So more abstractly, we can break down these population-based search methods
+
+by the fact that they have these three characteristics.
+
+First, there is, of course, a population of agents that cooperate.
+
+So each one of them is going to explore some solution parts since exploring, you know, exhaustively exploring the whole tree of possible solutions is not feasible.
+
+Agents would have some way to explore solutions themselves, and they're going to cooperate, share information,
+
+Another common characteristic of these methods is that they usually include self-adaptation.
+
+The agents respond to their environment, and we'll come back to this one later, and modify their search strategy accordingly.
+
+And there is also competition among the solutions discovered so far by the population of agents, and we keep the best subset of solutions.
+
+So if we see it this way,
+
+Many of the nature-inspired methods we have here come down to just ways to define these three characteristics.
+
+But one common thing among all methods pretty much is that they all assume, and I think it's a common bias we have in designing algorithms and multi-agent systems, is that we assume that agents passively receive information and in the way they retrieve this information, they have no intent.
+
+And so that's one thing that
+
+we could possibly explore as a way to improve these meta-heuristics, particularly ant colony optimization.
+
+So to present the method briefly, the population is a population inspired by the behavior of ants.
+
+Each agent would be exploring one possible path of solutions.
+
+So it mimics how ants behave in that once an ant or agent finds a promising path, they're going to leave a trail of pheromones that is going to be more and more attractive to other agents as it is explored by more ants.
+
+So the pheromone system is a way for agents to leave information for others and progressively reinforce the best solutions.
+
+And so one subtlety is that there is also a phenomenon of evaporation of these frameworks, as would happen naturally, in fact, so that we don't get stuck in local minima and that we forget bad solutions over time.
+
+And the choice of the next node to explore in the application to the traveling settlement problem, for example,
+
+would be based on what trail of pheromone other ants left and also the intrinsic potential of that choice in finding a minimum length traveling route.
+
+so this is the basic ant colony optimization but here again as you can see agents are considered to be passive you know receptors be it of pheromone or information in general they don't have any any intent in their in their exploration and so ant colony optimization was a very successful method for the traveling seismic problem up until very recently now there are better uh you know approximate methods
+
+And as I was briefly explaining, the way the ants are going to collectively construct a good route would be that each ant visits node by node until it completes one tool.
+
+And the most promising tools are going to have the most promising edges, in fact, between nodes are going to have a higher concentration of pheromone over time.
+
+And at the end, we keep the best encountered solution by the population as a whole.
+
+Now, on the other hand, active inference and here I speak under your supervision, Daniel.
+
+It's a shift in the way we view perception itself from just reacting to data that is assumed to be received passively to considering that agents have an intent, which is to predict some outcome and also minimize their surprise
+
+when encountering real outcomes, the surprise compared to what they had predicted.
+
+So there could be interesting discussions to be had about the statistical models that you use for modeling this prediction and also the surprise.
+
+But speaking again abstractly and at the high level,
+
+He will assume that agents anticipate some future state.
+
+They build a belief about the current observations they are making, and the choices they make in the future are not just based on the immediate data they receive, but also on this belief that they have built and overall that their objective will be to minimize free energy.
+
+And so the way we implemented this in ant colony optimization
+
+is that it is going to change the way we calculate the node selection probability, which was initially just based mainly on pheromones.
+
+And here we're going to balance
+
+the thermal level available in that choice, with the total distance of the route built so far, and also the current belief of the agent, the aunt that is exploring it.
+
+We also have a calculation of free energy, the typical way with the logs of B in this case.
+
+And we'll adjust the belief or confidence level of the ant in its current exploration path based on the length of the current path compared to the best path encountered so far by the whole population.
+
+And then the pheromone would be updated based on the typical way, based on the length of the current path.
+
+And so we're going to integrate this in the typical scheme for ant colony optimization with these changes in the way we update, the way we calculate the probability of selecting the next node.
+
+So the typical steps would be that we start with some uniform pheromone levels for all choices.
+
+the ants, each one of them is going to update its belief based on its current exploration.
+
+We calculate the free energy for each agent.
+
+And then we're going to iteratively update both the beliefs and the best encountered solutions.
+
+And at the end, we keep the best route discovered by the
+
+the population.
+
+And here again, there would be some adjustments to be made about the number of agents in the population that you would like to consider, the amount of computation time that you give yourself that could more or less influence the quality of the resulting solutions.
+
+But again, abstractly, this is how we would structure the algorithm.
+
+And so we have applied this to the traveling salesman problem.
+
+problem I have presented here.
+
+Let me clear them up to take another example.
+
+And we compare this enhanced anti-colony optimization, as we call it, or active anti-colony optimization with both basic anti-colony optimization and the nearest neighbor, the very naive heuristic as baseline.
+
+So we took random symmetric graphs of increasing sizes.
+
+And one interesting thing we found, we found a few interesting things.
+
+It's that first
+
+This simple change in the way you calculate the probability of selecting the next node does improve the quality of the results significantly.
+
+So it does give you shorter routes on average than basic ant colony optimization.
+
+I don't know if we can see it on this example.
+
+Let's try.
+
+So I will run the basic ant colony optimization here.
+
+We find
+
+root of this length 1 1 2 8 6 with active inference seems to be the same so maybe we should add more nodes and here again the the difference is really uh only appears when you have large enough graphs
+
+
+SPEAKER_01:
+complex enough graphs let's try again with this one maybe it would be luckier i'll give a comment on that i'll give a comment on that while you're running the different ones yeah yeah this and this gives possibly an interesting uh case so first off there's many graphs where a number of heuristics could and would and should converge on the same simple output so there's never any thing wrong with running multiple uh parallel meta heuristics
+
+And so I was seeing that free energy calculation as counteracting with an entropic force, the convergent tendency of the attractive pheromone.
+
+So you have the ants laying down pheromones based upon shorter paths and prior success.
+
+And then there's this kind of expansive force that's keeping an additional variance element around.
+
+And so it's kind of like,
+
+ball is is rolling to the bottom of the hill that's the standard ant colony optimization and then the free energy is in keeping it a little bit off the bottom so then looking at a huge numbers of replicates for graphs it was interesting that on many cases it would do a tiny bit worse
+
+but then in several cases keeping it lifted off the ground with that entropic force would actually let it explore a totally different neighborhood and find vastly better solutions so that that overall it found shorter paths but that it found basically either the same or almost the same in most cases and then a few situations where it found something that was hugely shorter
+
+
+SPEAKER_00:
+Well, I have two comments on this.
+
+That was actually going to be my conclusion for this presentation.
+
+The way I see it is that at this point, it is interesting and useful to do applied work like we do here, to show in practice that this simple shift in the way you define the behavior of your agents does improve things empirically.
+
+And here we have an improvement, actually, with this graph.
+
+So it is actually significant.
+
+Basic ant colony gives us something like 17.4.
+
+and we get 16 something with active inference.
+
+So there is definitely value in applied work like this.
+
+And what I would be interested in exploring would be whether this also replicates for other population-based meta-heuristics, notably genetic algorithms or other approaches, simulated annealing, et cetera.
+
+But the point you raise,
+
+Well, it's a little beyond my understanding of active inference, to be honest.
+
+But I think there is definitely need for more theoretical grounding.
+
+And it sounds very interesting.
+
+It's that active inference, just this change in the way you calculate probability can allow you to escape minima that are not that promising.
+
+So that would be definitely needed at some point.
+
+of course, when and if we get promising results with other methods is to justify it theoretically, because right now it's just based on intuition.
+
+Indeed, agents can be improved by having this intent in their exploration.
+
+But I would be very interested in reading more about the relationship with entropy and how it can be seen in the graph of the tree of possible solutions.
+
+That's one point.
+
+And the second one is that indeed,
+
+The complexity of the graph matters, of course, but even in the paper, let alone in my toy example here with this mini app, we are still considering relatively small graphs.
+
+The largest graph we have considered was 500 nodes, which remains significant.
+
+You see important improvements.
+
+But of course, the real value would come only with perhaps hundreds of thousands of nodes.
+
+That's when you really need meta heuristics.
+
+So perhaps I didn't give, I wanted to share this as well, you know, an overview of why this problem matters, why the traveling salesman problem matters.
+
+First, theoretically, it matters because, as I've said, it is as hard as any problem you can think of computationally.
+
+and all NP-hard problems reduced to each other so you could reduce you could express any NP-hard problem as a traveling salesman and also because it has well practical applications it could be literally you know determining routes for trucks or for drones but more and more it is
+
+being used in chip design, in electronic chips design, that's when you may have a very, very large number of nodes and you need methods that are progressively better at the limit for tending towards infinity.
+
+So Daniel, you have an idea about the theoretical grounding of the method?
+
+
+SPEAKER_01:
+well i mean just um well learning from you about the this broader metaheuristic space and and seeing how this builds on prior work in ants optimization and in an active and for ants um
+
+There was just a few interesting pieces and I agree that there could be theoretical and empirical exploration to
+
+flesh out some of the decisions that we made here like the bigger picture on these collective intelligence algorithms and the reason why there's so many species and so many different metaphors is because there's no free lunch if the collective behavioral algorithm recapitulates important features of the environment then it might be able to do well
+
+However, if it doesn't recapitulate features of the environment, then it won't necessarily do well.
+
+So I'm thinking now about how each ant's nestmate knows the best solution.
+
+Several slides, I think 11.
+
+They know their own path length and the best path length.
+
+So that's an example of an abstraction or a calculation that a real ant nestmate wouldn't necessarily know.
+
+However, it might have expectations about path length from its own learned experience or from evolution.
+
+So I think that this design space of how do we recognize natural history and understand what the cognitive constraints and what the cognitive functions are in nature for harvester ants and turtle ants and leafcutter ants, just going to nature, understanding what kinds of problems are being solved and then being able to
+
+work and abstract that to find slightly more generic forms of those collective intelligence methods that can be transferred to other analogous situations.
+
+like more generally collecting resources or information or finding short paths and then what what other elements need to come into play and what can can situationally supercharge the algorithms again like having each nestmate know at all times whether it's itself is on a short or long path
+
+yet paths of real ant colonies don't have that feature so i i just see it as like kind of like a mechanic shop with all these different options and meta meta heuristics how do we design that biological metaphor so that it
+
+captures relevant features of our task and domain, because there could be some incredibly efficient algorithms, which isn't even to say that they would be super transferable.
+
+But there might be some really specific algorithms that could have incredible interpretability or performance attributes, if we can select appropriately among collective behavioral algorithms.
+
+
+SPEAKER_00:
+what could really help here i think um you know to to to feed this this um reflection about what could be you know the underlying um abstract principles that that explain this this improvement uh would be perhaps if we could visualize the tree of you know solutions being explored for small scale problems like we have here of up to a few hundred notes uh i think it would be very interesting to to have
+
+perhaps some colorful visualization of basic SEO, basic anti-colony optimization versus the active version.
+
+And I would really like to explore this idea you have mentioned, which is that this small change you make to the way the probability of selecting the next node is calculated does allow you to escape potentially
+
+not very good uh neighborhoods so that's definitely something we'll keep in mind in any case for this paper uh and the the so far limited experience we have run one very consistent uh trend is that the larger the the graph the the higher the relative percentage of improvements so you only see the the real value for for large scale graphs there is a little hiccup here for 100 node for some reason uh and i think we had
+
+100 graphs per node size.
+
+So it may be because of the samples or in any case, we can see the trend, which is that the larger the size of the graph, the higher the percentage of improvement.
+
+But on the other hand, and very interestingly, the computation time does not increase proportionally to the size of the graph.
+
+In fact, it decreases.
+
+so again it's it's it's not much um adding new new operations to the the method new you know uh new steps but simply changing the way one operation is done which is the the you know the the probability of selecting the next node uh so obviously that's going to add some complexity but very interestingly uh this decreases with the the size of the graph
+
+So it may even become neglectable for very large scale graphs where this kind of improvements matter.
+
+
+SPEAKER_01:
+so yes please yeah i think another another design pattern or something to explore is having more simpler nest mates versus having fewer more cognitively sophisticated nest mates and that's something again that that real colonies trade off in
+
+the wild too but now we can explore ranging from um truly multi-threadable simple nest mates no information sharing not even finding out these colony level summary statistics super multi-thread super paralyzable all the way on through having
+
+more advanced nest mates at the per-thread level, but maybe they can send each other messages, or they can plan ahead explicitly three time steps.
+
+but if they're planning ahead explicitly three time steps and each of them is doing a little tree rollout at each time step, it's like, then the computational complexity increases a lot.
+
+And so that space of being able to do sweeps across more simpler to fewer, more complicated nest mates or cuckoos or whatever the metaphor is,
+
+and then understand where are we getting the most bang for the buck for a given type of graph
+
+Maybe if it's a lattice-like graph, simpler colonies do better.
+
+But if it's a small world graph topology or preferential attachment, then having the planning capacity so that you can know that you're going to get out of a small neighborhood, maybe that comes into play again.
+
+So it just shows that there isn't going to be a general approach other than this sort of meta-heuristic design approach
+
+
+SPEAKER_00:
+level of generality helping us articulate which collective behavioral methods and how they should be tuned to bring to a given problem so i i think yeah there are two points here that could be interesting uh definitely graph um topology matters that's something we definitely need to explore uh whether the structure of the graph
+
+influences the quality of the results you get.
+
+And I think for your first point, which is basically what is the most bare bones population search method we could explore to really just pinpoint what is the improvement brought by the active inference, something we could also see would be, I think, genetic algorithms.
+
+evolutionary genetic algorithms.
+
+Evolution is really the most general metaphor, right, for behavior of populations.
+
+And there you don't have information sharing across generations.
+
+You just have message transmission, you know, in the genes.
+
+You may also have some randomness introduced by mutation, random mutations that can happen and that can help you, you know,
+
+can help you escape not-very-promising neighborhoods.
+
+And I think you wrote a paper with Carl Frist, if I'm not mistaken, about an application of active inference to evolution, Daniel, right?
+
+
+SPEAKER_01:
+Yes, the variational synthesis for EcoEvoDevo.
+
+
+SPEAKER_00:
+Exactly.
+
+And I found a very interesting idea there.
+
+Again, without getting into the technicalities, it's that what can explain the evolution of species or populations could also explain the evolution of individuals.
+
+So I thought it's a very powerful idea that you have this multilevel insight.
+
+And that's perhaps something we could also explore within the scope of genetic algorithms, which are really just a simple model for evolution that does perform very well for problems like the TSP.
+
+
+SPEAKER_01:
+Yeah, just a short comment on that.
+
+So in cognitive sciences, the unifying imperative is kind of like, well, why should we have a separate theory of anticipation or memory or attention?
+
+Why not seek this unifying approach to model various cognitive phenomena?
+
+now applying that to to ecology or to biology why why would we have one method or analytical framework for studying dynamics and change within a lineage vertical transmission and then have a separate theory for change that happens across lineages or communication across lineages like in ecology so
+
+by unifying analogy how could we look at ecosystems as consisting of these composed interacting components that are changing and constituting of of sub components as well how can we see all of those processes sometimes which look more like vertical lineage-based transmission
+
+other times which look more like horizontal ecological message passing and start to look at those overall dynamics as part of a unified at least measurement observation modeling approach like let's just say we were to do um two different colonies or two populations of colonies and then we have them doing different algorithms
+
+then we start to let that whole thing play out we could be talking about the variational free energy of the nestmate within a colony the the colony as a collective with its best solution the populations and and and so on um will that
+
+yield better explanations, predictions, transferable methods?
+
+That's the question, but that's the setup.
+
+
+SPEAKER_00:
+Yeah, it would be very interesting to find this.
+
+I think that would be the most, at least aesthetically and in terms of Occam's razor,
+
+simplest theory it's to have something that does apply indeed for both the individual agents as well as the the whole population and here another in terms of you know elegance and and beauty another thing that's also helpful is to have agents share as little information as as possible
+
+between them.
+
+And also, as you have mentioned before, plan ahead as little as possible, which also has, of course, practical computational implications.
+
+You would consume less computation.
+
+So I think that would be useful for that, to have this unifying theory that will apply both for the behavior of individual agents as well as the population as a whole.
+
+So perhaps something to explore with genetic algorithms.
+
+In any case, for this particular work, and to conclude,
+
+We have shown, and we can demonstrate it even more potently on larger scale graphs, that active inference does improve the performance of recreation-based metaheuristics with a very simple change, again, that is very cheap computationally, that may even disappear, become neglectable for very large scale graphs, this additional computational cost.
+
+And for future research directions, I think we have mentioned the main ones.
+
+It's that, in my opinion, the most important one, and if there's someone to provide this, I think it would be yourself, Daniel.
+
+We need better theoretical grounding for what is going on.
+
+We could definitely, of course, inform that with visualizations, like I've mentioned, of
+
+the the tree of solutions and how it is explored in in both methods but uh it would be useful to understand how uh you know this this enhancement uh occurs fundamentally you know in abstract terms uh we also need to apply it to to other uh meta heuristics
+
+I think the best candidates, as I've mentioned, would be first genetic algorithms, but also particle swarm optimization, which has its own peculiarities.
+
+We also need, as I've said, simpler and more bare bones methods.
+
+This is just an engineered belief update mechanism, but there is certainly a simpler and more elegant way to state the equation.
+
+And to go even beyond population-based search, and I know that many people are working on this in the Active Inference Discord, what about other multi-agent systems?
+
+Not just language model systems, but in general, multi-agent systems for robotics, et cetera.
+
+Could we also improve their collective behavior by including active inference?
+
+That's something I would also love to explore.
+
+And so some references, if you are interested in taking it further.
+
+First, our paper, which is on archive and also on preprints.io.
+
+But the advantage on preprints.io is that you can listen to podcasts in layman's terms about the paper.
+
+So enhancing is here.
+
+You can download the AI-generated podcast
+
+layman's overview of the paper we have also open sourced the whole code and process from the beginning in both our githubs so active aco is the the name of the repo and we have this mini app active acu dot repeat dot app where
+
+you can experiment with different solutions, different paths on real maps, for example, South America here, both for neighborhood traveling salesman problems as well as global optimization problems, and compare the outcomes of both active SEO, basic SEO with the baseline nearest neighbor.
+
+So this is it for me.
+
+Thank you very much for the invitation, Daniel, and the listeners, if any, for their attention.
+
+If you'd like to chat about this paper or the integration of active inference in general into operations research problems or theoretical CS, here is my contact.
+
+Thank you.
+
+
+SPEAKER_01:
+Awesome.
+
+I'll make a comment and then read a question from the chat.
+
+Well, I also really like all these accessory... Fractal.
+
+All these accessory pieces to the work, the preprints and also the Replit app.
+
+I think it also is like kind of building out this meta publication
+
+
+SPEAKER_00:
+That's something I learned from you as well, Daniel, was that the PDF is just the beginning of the lifecycle of research work, which is absolutely true.
+
+We tend to see it as the end game.
+
+You got published.
+
+You got the PDF posted somewhere.
+
+But that's really just the beginning of it.
+
+The real fruits may only appear three, five years later with the contacts you make, the discussions, the products you build on top of it.
+
+So that's definitely important.
+
+
+SPEAKER_01:
+Yeah, I think that's super cool.
+
+And we can continue making that really multimedia and accessible and rigorous.
+
+So it's like on that sort of DeSci level, that's really exciting.
+
+Okay, I'll ask a question from the chat.
+
+Okay, Bert wrote, would this approach be suited for multivariable optimization, like adding in travel time or time slots?
+
+
+SPEAKER_00:
+So multi-objective, right?
+
+Optimization is what we're talking about.
+
+And here, I think, well, that's pretty much my PhD topic, multi-objective optimization.
+
+So I feel very strongly about the kind of methods that can work there.
+
+Meta heuristics in general, I mean, there are different classes of meta heuristics
+
+that work better for multi-objective optimization.
+
+But this is definitely something to explore, integrating active inference.
+
+Notably, to generate, as you know, multi-objective optimization problems don't have one optimal solution.
+
+But even the meaning of optimal is kind of moot for multi-objective problems.
+
+Say, for example, that you have a car that is iterated on both its price, its cost,
+
+and its performance well what would you do if one is good the other is not that great you would only consider efficient solutions right so the main problem is to generate or explore this front this large potentially large set of solutions that are not dominated
+
+And I wouldn't make any guess about whether active inference would work there or whether this method would be translatable.
+
+But as a research product, it could be really a PhD or postdoc project to explore the use of active inference in generating and exploring the frontal front of multi-objective optimization problems.
+
+perhaps the Active Inference Institute could get something like that going.
+
+
+SPEAKER_01:
+Cool.
+
+Yeah.
+
+What comes to mind there?
+
+One would be keeping the kernel method the same and using program logic to implement other constraints, like adding some day-night cycle.
+
+So not even trying to make that part into active inference, but just add some secondary logic or one in every hundred nodes just randomly disappears or something like that.
+
+and then see how these meta heuristics in a in a more changing constraint setting adapt to changes in the environment and then the the more fully active inference approach would be develop more sophisticated generative models so more multi-variable joint distributions for nestmate and colony perception cognition action impact
+
+and then explore, okay, as we bring in more joint
+
+variables into the distribution, obviously it's taking more computational resources.
+
+It's a higher dimensional front to explore.
+
+So when and how should we pursue that full joint distribution?
+
+And then what ways would there be to factorize it down to solve that as a subset of linked problems?
+
+And how do we find which subsetting and factorizing of linked problems allows
+
+
+SPEAKER_00:
+the simplest possible nest mate to still have relevant performance and then we we sketch out those subspaces with parameter sweeps and sampling yeah the reason why I think uh you know active inference is honestly even more promising than for um you know single objective problems like this in multi-objective it's at another dimension if you have a car for example that costs a lot but
+
+is performance another one that is cheap but not that great is that there is no objectively optimal solution and there is a whole class of methods known as interactive methods where you try to integrate the preferences of decision maker into the exploration method so it is really a person guiding the
+
+you know, getting the expression with their own preferences.
+
+And here we are touching on, you know, something that neuroscience and active inference is familiar with, which is how to integrate reasoning and perception.
+
+So I would be very interested in exploring this, reading about it, if anyone is inspired to write about it, you know, how to integrate active inference in these interactive methods that are typically used for, you know, exploring large scale parietal fronts.
+
+
+SPEAKER_01:
+yeah one one i think footnote there for the the curious would be
+
+in the language model space, we have these reward reinforcement driven models that then get tuned through human feedback, RLHF, with humans giving a rating or a preference score.
+
+So you have the algorithm is focusing on maximizing satisfaction, and then the human feedback has to do with, do I like this more or less?
+
+we could be exploring some interactive optimization methods with more expressivity
+
+Like I'm interested in paths for the traveling salesmen that have small turning angles.
+
+And then that would adjust the decision-making if there was a turning angle variable.
+
+Now we're focusing on making that small.
+
+And then we say, actually, I care 20% about the small turning angle and 80% about short path length overall.
+
+And so be able to have this interactive blending and a more expressive epistemic toolkit for having interactive optimization, co-optimization, and that could be really cool.
+
+
+SPEAKER_00:
+Or, you know, a pod that is just aesthetically pleasing.
+
+There are actually routing methods used in tourism that try to integrate both the
+
+the length of the route.
+
+But if you are designing tourist routes, you also want it to be pleasant.
+
+So there are definitely methods that are applied this way.
+
+And here, it's a remark in general about single objective optimization.
+
+It's that it's always an oversimplification where you say that this is the one objective that matters.
+
+It's never
+
+fully the case.
+
+And there are always other dimensions that can be integrated.
+
+Now, our percentages, or, you know, just a weighted sum of the objectives, are they enough, they are more often than not limiting, because there's a whole, you know, whole part of the part of from that you will be able to reach with a weighted sum.
+
+So it's definitely interesting to you mentioned, language models, you mentioned,
+
+reinforcement learning from human feedback.
+
+So these are definitely interesting approaches to integrate in exploring this.
+
+In general, you know, having a multi-objective optimization 2.0 with all these recent advances, I think is sorely needed.
+
+
+SPEAKER_01:
+Cool.
+
+Okay, do you have any closing comments or thoughts?
+
+
+SPEAKER_00:
+Well, my last thoughts is that it was a very pleasant
+
+time i thank you very much for this invitation and uh honestly i thought it was just five minutes or ten minutes of presentation but i look at my clock and i see that we have spent almost an hour so it is really a rare pleasure to to have this kind of experiences where you don't you don't feel time anymore thank you very much daniel thank you awesome okay looking forward to the next chapters until next time thank you bye

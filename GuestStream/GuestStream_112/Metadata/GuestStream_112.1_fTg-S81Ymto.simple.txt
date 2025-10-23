@@ -1,0 +1,1748 @@
+SPEAKER_00:
+hello welcome everyone it is june 25th 2025 we are in active inference guest stream 112.1 brain-like variational inference with hadifafai and i looked and found that actually model stream 11.1 when we discussed
+
+Poisson variational autoencoder was on June 26th, 2024.
+
+So just kind of funny that it's like exactly one year or all but a day away from a year.
+
+So it's awesome to check back in with you and hear these research updates.
+
+So thanks again for joining and looking forward to the presentation.
+
+
+SPEAKER_01:
+All right.
+
+Awesome.
+
+Thanks, Daniel, for the invitation.
+
+I had a great time last time when I presented, and I hope we can have fun this time again.
+
+All right.
+
+So the work that Daniel mentioned, the Poisson, it's, I think, this one.
+
+So you can check it out.
+
+It's from last year, and it is published in NeurIPS last year.
+
+And this is the new preprint, Brain-like Variational Inference, which we're going to talk about today.
+
+And that's a work in collaboration with Dekel, who's an PhD student in Berkeley, and Jake, who's my postdoc mentor.
+
+All right, but in the title, there's several words, brain-like variational inference.
+
+And I hope that I can communicate what each of these words mean to you by the end of this talk.
+
+And let's first start by inference.
+
+What is inference?
+
+It's understanding the world.
+
+So our brains receive sensory information from the world out there, and we have to make sense of the state of the world.
+
+We have to understand how the world is right now so that we can act in it and survive.
+
+And in fact, this is the topic of a new blog post that I have written.
+
+I'm going to plug it here.
+
+So this blog post is coming soon.
+
+It's probably in a week on my website, mysterioustune.com.
+
+And inference is I claim that it's your brain trying to guess the hidden cause of its observations.
+
+And to just drive this point home, I give you three very concrete examples, each more difficult than the other.
+
+For example, if you go outside and see there is extensive wetness of the ground, you might guess that there was rain last night.
+
+So the cause of what you observe, which is wet ground, was rain.
+
+So that's inference.
+
+You're actually doing inference when you reach that conclusion, which is a very simple kind of inference.
+
+Also, I discuss this problem of degeneracy in visual perception.
+
+When you see a circular shape, it could be a 2D circle held perfectly perpendicular to your direction of gaze, or it could be actually a 3D sphere.
+
+and um you know intuitively you might think that it's most likely a sphere but where does that come from that's your prior knowledge so having lived in this world we have seen more spheres than circles therefore you might actually intuitively think that what you're seeing is actually a sphere and um
+
+Last one is the most difficult, nearly impossible type of inference is the social inference.
+
+So when somebody says something to you, you want to understand what they actually meant, and that also can be understood as an instance of inference.
+
+In linguistics, this is technically called pragmatics, but I claim and develop an argument that all of these examples are basically performing inference.
+
+And so I'm going to post this blog post in like a week or so.
+
+And you can either subscribe to the website or follow me on social media like Twitter and LinkedIn.
+
+I'm going to post it there too.
+
+um here's another example from the blog post um most of us here probably are familiar with this allegory of the cave so plato argued that being alive is just like you know being prisoners but in the back of a cave you know you're separated from the real world out there this is the real world you don't really have access to it but you see shadows from the real world projected on the wall that you have access to
+
+And when you see those shadows or observations, you perform inference to understand the likely causes that caused those observations.
+
+Well, in the case of vision, those shadows are probably just like, you can think of them as photons originating from real objects out there.
+
+And it's your brain's job to interpret those photons and build a 3D model of the world from that.
+
+that can be understood as uh bayesian inference and this is an idea that um famously helmholtz says perception as unconscious inference you know it's the same idea you know people since 380 bc have been thinking about it and we're still thinking about it you know that's that's what inference is it's a very broad thing that we have to understand
+
+But the point of the paper is that, okay, this is inference, and this is a very, let's say, a big challenge that we have to deal with in our lives.
+
+And how does brain do it?
+
+How can you get a brain-like inference algorithm, especially from first principles?
+
+So that's the idea.
+
+We want to derive a brain-like inference algorithm from first principles.
+
+because we want to understand how does the brain perform this inference task.
+
+Okay, that's the idea.
+
+So just to summarize what is in the paper, we start from this unifying principle of variational free energy minimization, which is in machine learning, people more commonly refer to free energy as evidence lower bound or ELBO, but it's the same thing.
+
+And we're going to use that unifying principle to derive different inference algorithms as instances of free energy minimization.
+
+And this paper really is like a half synthesis review and half new algorithm.
+
+For the synthesis part, we're going to show that variational autoencoders, predictive coding, and sparse coding are all instances of free energy minimization.
+
+And then we use that insight to derive new architecture, which is the iterative Poisson DAE, just by starting from free energy minimization.
+
+So that's kind of a top-down derivation of an algorithm.
+
+We don't put anything there by hand.
+
+We just say, like, look, we accept free energy minimization as our principle, and then we add some other assumptions to it to derive this algorithm.
+
+And I'm going to be explicit about all those assumptions.
+
+Could you provide...
+
+like this a bit better okay all right um so when we derive this algorithm we also test uh whether it has any empirical benefits because of course you know it's it's very cool and it's very theory driven but um we are also interested in empirical benefits um and and we explore convergence properties sparsity reconstruction trade-off and out of domain generalization
+
+And I'm going to explain why each of these empirical benefits are interesting or important when we get to that result.
+
+But this is just a summary of the empirical results.
+
+OK, now let's just talk about Bayesian posterior inference.
+
+So probably most of you are just familiar.
+
+This is just a Bayes rule.
+
+What we have on the left-hand side is the posterior.
+
+If you remember from the previous examples, you could imagine like x are the observations.
+
+This could be just an image, like a retinal pattern of photon, whatever that you receive.
+
+And you want to infer what are the causes.
+
+Z are the causes.
+
+So you want to compute this probability distribution.
+
+What is the likelihood of certain cause Z given that I have observed certain observation X, right?
+
+And Bayes tells us you can compute it by dividing this likelihood times prior with the marginal distribution.
+
+So this is fairly standard stuff, so I'm not going to linger too much here.
+
+And probably there are many interesting videos on this YouTube channel that you can find that explains this idea.
+
+So I'm going to move on.
+
+But the point I want to make here is that if you want to compute this posterior distribution exactly, you have to go through this
+
+computing this integral, which is I just expressed this marginal distribution as an integral over all the possible causes, where this is just the joint distribution broken into this kind of structure.
+
+And this is very, very difficult to compute.
+
+First of all, in most cases, there is no closed form solution, except if you have a very simple Gaussian distribution for prior and likelihood, then maybe you can compute this.
+
+But in most real world cases, you don't have access to that closed form solution.
+
+And also, it's computationally hard to approximate as well.
+
+You have to go through all the possible latent configurations, add them up to compute this.
+
+Therefore, what I want you to remember from this part is that posterior inference actually is a difficult task computationally.
+
+Therefore, people have come up with approximate methods.
+
+And one of them is variational inference.
+
+So you introduce some distribution, q.
+
+And you call this approximate posterior or variational posterior.
+
+And then you want to use Q to approximate the actual true posterior or optimal posterior.
+
+How do you do it?
+
+By minimizing the callback Leibler divergence between Q and P. And this is just a very standard textbook level introduction to variational inference.
+
+Again, I'm not going to spend too much time.
+
+This is just very standard stuff.
+
+And here's another.
+
+This is the main equation that we're going to work with.
+
+And I think this is very important.
+
+Therefore, I want to make sure that we understand every detail here.
+
+In the paper, in the appendix, we derive this equation.
+
+So if you haven't seen this before, this is a very standard result in variational inference.
+
+And you can see the paper appendix for a derivation.
+
+But here, let's just take this equation as given.
+
+It's not a very complicated derivation.
+
+It's a very straightforward one.
+
+But it's true.
+
+This equation holds for any distribution q that is a proper density.
+
+So let's actually try to understand what this is.
+
+OK.
+
+On the left-hand side, we have the log of the marginal distribution.
+
+P theta of X. And then we have this object here, which is an expectation over samples drawn from the approximate posterior.
+
+And this log ratio of the joint distribution divided by the approximate posterior.
+
+And then this thing is what we actually want to minimize to find our best approximate posterior.
+
+And one thing I want to mention here is that if you notice, I have these color-coded things.
+
+So in this presentation and also in the paper, I'm using red to indicate the inference components of the model and blue to indicate the generative model components.
+
+And you can think of the blue parameters as just theta as parameters of the neural network for the generative model.
+
+Or if you believe that the brain has a generative model of the world, you can think of theta as the synaptic weights of the connections between neurons.
+
+And phi are just parameters that you have to optimize to find the best Q.
+
+And for example, a very standard example here is that if you have a variational autoencoder, phi and theta are just both neural networks.
+
+And specifically, you have, for example, q can be understood as a neural network that takes any input x and outputs the parameters that define this distribution.
+
+Like for example, if phi are neural network parameters,
+
+you apply that to x to get back the mean and variance of a Gaussian, if you think q should be a Gaussian.
+
+But why is this equation interesting?
+
+let me actually just show you this visualization because i think this helps us remember so i told you this is model evidence so um that's evidence you have evidence lower bound or elbow and then the kl divergence so evidence plus elbow is kl okay and and why is this equation interesting to us because we're interested in inference um i want you to take a look at
+
+the both left-hand side and right-hand side of this equation.
+
+If you notice, there are no red parameters on the left-hand side.
+
+So, you know, the right-hand side is the only part of this equation that depends on those red variational parameters, phi, right?
+
+Therefore,
+
+Intuitively, if you want to minimize the KL, that's our goal.
+
+We defined good inference like, you know, the faithful inference as just a queue that is close enough to P and
+
+And we define that as a Q that minimizes the KL.
+
+So minimizing this KL term on the right-hand side directly is going to maximize ELBO, because the left-hand side doesn't depend on phi.
+
+Or if you want to see it in algebraic form, you can just say, if you compute the derivative of this whole equation with respect to phi,
+
+This is going to vanish.
+
+There is no phi here.
+
+It's going to have 0 equals gradient of this elbow with respect to phi plus gradient of KL with respect to phi.
+
+Therefore, another way to see how minimizing KL is exactly equivalent to maximizing elbow.
+
+And this is the whole idea behind maximizing elbow to do inference, which is elbow is just negative free energy.
+
+So that's kind of one way of thinking about free energy principle.
+
+Okay, so this is a very important equation.
+
+I just wanted to spend quite some time here.
+
+And if there's any questions, maybe we can actually turn this into a kind of a discussion rather than like keeping it to the end.
+
+And I'm happy to answer questions if there are any.
+
+Now that we defined Elbow and we know its utility, we are maximizing Elbow because we're interested in inference, let's actually just see what Elbow looks like if we expand it.
+
+This is the definition.
+
+And one way to carve up the Elbow is
+
+This is the joint distribution, p theta x and z. You can easily see that it can be broken into p theta of x given z. That's what this term is.
+
+And then plus p theta of z. And again, if you just invert the denominator and denominator, it turns out that this just looks like another KL term.
+
+This is a different KL from the previous one.
+
+The previous one was between the approximate posterior and the true posterior.
+
+This is between approximate posterior and the prior.
+
+Just an important distinction.
+
+And there's different ways to interpret this.
+
+This is just a reconstruction term, which says if you go from the latent cause and reconstruct your observation, under your posterior, this should have high likelihood.
+
+That's the intuition for that.
+
+And this just term, it appears from the math.
+
+And the interpretation is that you don't want to deviate too much from your prior.
+
+this is a penalty this is a regularization penalty that says reconstruct your your input as as good as possible while not deviating too much from your prior and and this has a theoretical analog and information theory where you can think of this term as distortion the other term is rate and um alex alami has a really nice paper where they um make this rigorous okay so this is so far all of this is just standard you know vae
+
+kind of theory, right?
+
+There's nothing new so far.
+
+But I want to highlight, if you want to define this elbow, you have to make decisions about three distinct distributions.
+
+The first one is, of course, the approximate posterior.
+
+You have to choose what form it has.
+
+It could be Gaussian.
+
+It could be Poisson, like our Poisson VAE paper from last year.
+
+And the likelihood also is a distribution.
+
+You have to choose what it is.
+
+And the prior as well.
+
+So there are three independent choices you have to make.
+
+And here's a synthesis part of the paper that we just say that, look, and this is not new, not all of this is known, but we're just putting it nicely in a figure, right?
+
+We're saying, look, variational free energy minimization unifies all of these different models across neuroscience and machine learning.
+
+And this is the kind of a taxonomy model tree that comes out of that.
+
+So you have to first choose a prior.
+
+um let's say you choose gaussian okay and then the next decision you're faced with is what is your approximate posterior
+
+you choose direct delta you actually recover predictive coding and this you know if you want to i think there's there's a video on this channel that um goes through uh baron millage review paper where they discuss this uh derivation so it's it's not it's not new um but if you choose approximate posterior to be gaussian then you have to also choose what your encoder is right so
+
+If you choose a neural network that takes any image x and spits out the parameters, like it's a Gaussian, so you need to give me, in order to construct this queue, you have to give me what is the mean and what is the variance.
+
+If you have a neural network that produces those for you, you just recover variational autoencoders, Kingma and Bellum.
+
+But if you just don't do that, if you do iterative inference procedure, more like neuroscience approaches like predictive coding, then you have iterative Gaussian VAE, which is just a model we introduced in this paper.
+
+And it's... Yes.
+
+
+SPEAKER_00:
+Can I ask a few questions on this slide?
+
+Yes, go ahead.
+
+Awesome.
+
+Okay, so you have the prior can be Poisson, Gaussian or Laplace form.
+
+So what other edges could be coming out of the prior?
+
+Or why would somebody select one of those three forms that you have listed here?
+
+
+SPEAKER_01:
+OK, yeah, I think this is not definitely there are many more priors that you can choose from.
+
+There are other papers in the literature that you can, for example, you can choose a student t distribution for your prior if you think that your prior should be heavy tailed.
+
+And certainly there are other examples other than these three.
+
+I'm just here using these three to illustrate how different models that in the leaves of this tree can be
+
+unified through this unifying picture and and you're right like what really um
+
+Why would you choose Poisson instead of Gaussian, for example?
+
+That's our paper from last year.
+
+You would choose Poisson because if you want your model to have representations that are more brain-like, you know that neurons in the brain, they don't have continuous unsigned activations.
+
+They communicate through action potentials or spikes, and Poisson is one way to model that.
+
+Or in the case of sparse coding, the prior is chosen to be Laplace because it has this sparsity-inducing property.
+
+So because you might think that, look, my neurons in the brain, we have observed that they're very sparsely active.
+
+Therefore, Laplace is a better choice than Gaussian.
+
+That's the possible types of reasoning that could go into your choices.
+
+
+SPEAKER_00:
+Cool.
+
+And then one more, and you may go into this more
+
+How is iterative different than iteratively applying amortized inference?
+
+
+SPEAKER_01:
+It's a very good question.
+
+I think here what I mean by iterative is that you don't have any neural networks.
+
+There's no free parameters that you train for your encoder.
+
+That's like fully iterative.
+
+However, there are iterative amortized hybrid models, such as one from Joseph Marino from 2018,
+
+where they actually do exactly what you suggested they have they iteratively apply um some there's some amortized neural network that produces um parameters of your of your distribution there's another auxiliary network that produces i think the gradients um i don't i don't exactly remember but they also had this auxiliary network was a pretty complicated algorithm but um but you're right that you know there might be uh hybrid cases where you have iterative
+
+iteratively applied amortized neural networks to get to the final posterior.
+
+Which, by the way, in the appendix of the paper, so this paper is like, I don't know, like 64 pages, and we wanted to make it self-contained.
+
+So the appendix actually contains all sorts of background information and review of all these existing iterative amortized, hybrid iterative amortized, all of that is in the paper.
+
+So you can take a look there if you're curious.
+
+I just want to mention one thing here is that I didn't know about this derivation, actually deriving sparse coding as Laplace plus Dirac delta posterior.
+
+I gave this talk here at the Redwood Center for Theoretical Neuroscience, and Bruno Olshausen, the same Olshausen as here, was like, okay, yeah, this is cute, but I did this derivation back in 96, I'll send it to you.
+
+So he sent me this paper.
+
+It's not even a paper.
+
+It's just a technical report.
+
+It's like five pages.
+
+He was inspired by Peter Dayan's Helmholtz machine.
+
+And then he says, OK, yeah, you can actually derive sparse coding through this.
+
+And I think it's a pretty interesting paper, but it's missing from the literature.
+
+So I hope that this citation will help fix that.
+
+Every time you cite Dirac delta posterior with Gaussian can give you predictive coding from free energy minimization.
+
+you can also cite this sparse coding which is like parallels that but it's from 96 so
+
+It's a pretty interesting revelation for me.
+
+All right.
+
+The last one is if you choose Poisson for both prior and approximate posterior and choose amortize, he gets the PVAE paper, which is from the last year.
+
+And now we just replace the encoder with an iterative procedure, and we get iterative Poisson VAE.
+
+And we're going to discuss why iterative is a little more brain-like than amortize, and what are the empirical benefits, and all of that.
+
+But yeah, the whole point of this figure is that, you know, really, you can embrace free energy minimization as just one principle that can give you all sorts of various algorithms.
+
+And and also we use this to just say, like, you know, there's all sorts of possibilities and you just make different choices and you get wildly different algorithms.
+
+So there's there's a lot more left to explore here.
+
+That's one of the points.
+
+
+SPEAKER_00:
+Just one short comment on the distributions that you have here.
+
+Poisson is waiting time, so it's always a positive number, like how much time until the next bus appears.
+
+The appearance of the bus is like the Dirac delta because it's a spike event.
+
+
+SPEAKER_01:
+Wait, no, no, I wouldn't say Poisson is waiting time.
+
+I think Poisson, you can actually construct a Poisson process from those waiting times that are exponentially distributed.
+
+And Poisson is the event count for a finite observation window.
+
+
+SPEAKER_00:
+Thank you for the clarification.
+
+And then Gauss is just sort of the mother distribution or the sort of central limit theorem type large number convergence.
+
+So it's helpful, well-behaved in a lot of ways, but this is sort of like events and their waiting time relationships.
+
+
+SPEAKER_01:
+right exactly like you're saying look gaussian but by the way i one thing i forgot to mention uh from previous slide i said there are three distributions but right now i in this figure i have only prior and approximate posterior because the reason for that is for literally all of these models uh the likelihood the last third distribution is always gaussian
+
+even in the Poisson cases.
+
+And I think I also like the idea of thinking about the central limit theorem that could be used to justify why your observations can be Gaussian distributed.
+
+And yeah.
+
+i i i guess that's it right you know you just think about your problem like whatever you want to model um in our case we want to model neural activity and you know gaussian seems less biologically plausible than integer spike counts but we're not saying that integer spike counts is actually literally what the brain is doing we're just saying like relative to gaussian it's a better choice which reflects that you know discrete um event-based signaling that is ongoing in the brain
+
+That's the idea.
+
+okay all right so in the paper we also talk about prescriptive theories uh i want to just use this opportunity to to clarify what we mean by prescriptive this is just something that comes from uh physics inspiration so um another thing that we are interested in is that you know uh as when we go through the paper i'm gonna i'm gonna talk about inference which is a computation and dynamics interchangeably like i'm saying like look uh and this is like not
+
+you know we didn't come up with this there's a frisson paper like a you know free energy principle uh process theory where they say like neural activity dynamics can be understood as they're just minimizing free energy so so we're interested in dynamics we're interesting in deriving dynamical equations uh for neurons and um
+
+that's where this dynamics comes from but but what is the physics inspiration here so in physics you don't really put terms by hand like if you want to come up with a dynamical equation that describes a physical system you usually don't you know for example in effective field theory um
+
+You start from the principle of least action, and then the prescription here is that you just look at the symmetries that your system has to satisfy, and that fully dictates the entire Lagrangian that you plug in to this action equation, and you can derive the dynamics from there.
+
+So this is pretty elegant, right?
+
+You don't put in terms by hand.
+
+You just derive it from a top-down approach.
+
+Just say, here's my symmetries, and it fully determines what your Lagrangian should be.
+
+Of course, we don't have this much elegance in the messy world of neuro-AI, but we can do something
+
+roughly similar so we're saying look in our case our principle is free energy minimization so we're saying this this object free energy is is just you have to construct it and you have to minimize it that's going to give you the dynamics and then the prescription is the kind of the important part um in the paper we say like if you choose these three things uh false on distributions for your posterior and online inference and natural gradient descent on free energy you can derive
+
+the architecture iterative Poisson VAE, which is a spiking recurrent neural network with stochastic leaky integrative fire neurons and lateral competition.
+
+And I'll describe what any of all of these mean.
+
+It's just a way of framing.
+
+We derive these things from top-down principles.
+
+That's kind of the emphasis here.
+
+And before going to actually show you the paper and the derivations and the results, I want to show you something very gimmicky that I quite like.
+
+So for those of you from neuroscience background, you might have seen those videos of Hubel and Wiesel showing a bar of light to an anesthetized cat and then recording from the cat's visual cortex.
+
+And then there's these noises that you can hear, like the neurons are being activated by that bar of light.
+
+So what I'm going to show you here is a replication of those experiments, but from just the model neuron.
+
+And this neuron never saw neural activity, never saw data from actual neurons.
+
+What it did, we derived the algorithm from first principles, and we trained it on natural image patches.
+
+And then, for example, here you see that
+
+the top right um it it learns receptive fields that look like gabor's which is what you would observe if you stick an electrode to like a primate visual cortex and what i'm gonna do is i'm gonna just slide this bar of light the red bar here uh across that receptive field and i'm gonna here plot
+
+the firing rate of this neuron in response to that.
+
+So the y-axis is firing rate, and also the sample spike counts.
+
+It's a stochastic spiking model.
+
+And x is time index.
+
+Let's see if you can hear it.
+
+One more time.
+
+All right.
+
+So I'm really excited about this because there's no neural activity.
+
+This algorithm was derived from just equations from top down.
+
+That's what excites me about that.
+
+But anyway.
+
+Here is where I switch to paper PDF, and I'm going to walk you through the derivations there, because I think the paper is written decently well, so it's easy to understand.
+
+Let's do that.
+
+And you see it.
+
+OK, yeah, so let's just skip that.
+
+And by the way, you can think of this, as I'm going through the PDF, you can think of this as just a step-by-step guideline.
+
+If you wanted to read this paper on your own, this is, I think, how you should do it.
+
+So OK, here you notice the notation.
+
+We have this generative model defined here.
+
+And again, the color coding generative and inference are always blue and red.
+
+And then we start from the main equation.
+
+And of course, I have lots of citations to the appendix here.
+
+I provide all the necessary information.
+
+You don't need to read anything else, just the appendix.
+
+For example, here, just very quickly, this is the perception as inference, more like a philosophical and historical background.
+
+Here, I define what is Bayesian posterior inference and why is it difficult.
+
+and this is this equation is where i derived that elbow equation that i had on slides so it's very um i think intuitive yeah as if you if you read it you'll see and then here i say okay you need three distributions for the elbow and then
+
+The rest is just like carving up the elbow.
+
+You know, Gaussian VAEs, what is it?
+
+How do you exactly define a Gaussian VAE?
+
+And then going to Poisson VAE, which is our work from last year.
+
+Here I discuss amortized versus iterative inference and so on.
+
+And then...
+
+This is my pedagogical intuitive derivation of a linear predictive coding, which, of course, the more complete version is in this millage review.
+
+You can check it out.
+
+And then finally, this is a summary of the models in this paper and also from elsewhere in this table.
+
+So appendix A is just an extended background.
+
+And that's all you need to know to be able to understand this paper.
+
+But back to this.
+
+OK, now we're back at the main paper background section.
+
+Okay, as we discussed, you start from elbow, and then you recognize that maximizing elbow is equivalent to minimizing the scale term, which is, in our case, which means you enhance the quality of posterior inference by maximizing elbow.
+
+or minimizing free energy, which is exactly negative ELBO.
+
+So that's the key insight here that you can connect theoretical neuroscience to machine learning by recognizing F is just negative ELBO.
+
+Next, again, just to remind you, we have these three distributions we have to choose.
+
+And also the next choice you have to make is the inference method.
+
+Is it amortized or is it iterative?
+
+Then the introduced VAEs, sparse coding and predictive coding as variational inference, same figure as you just saw.
+
+And importantly, I put this derivation of...
+
+the dynamics of a predictive coding model, because I'm going to compare our result to this.
+
+And we're going to find that, in our case, we get something a little more biologically plausible than this standard predictive coding dynamics.
+
+And I guess there's no time for me to really go through this.
+
+This is a very standard result.
+
+It's an original Rao Ballard paper or any review papers that came after that.
+
+Therefore, let's just keep this in mind.
+
+This is just the dynamics you derive from standard predictive coding with Gaussian assumptions.
+
+And we're going to, you know, then we derive our own iterative Poisson VAE dynamics.
+
+We're going to come back and compare to this.
+
+Okay.
+
+So yeah, here, I think there's several papers that we mentioned here in this paragraph that are, I think, super cool and interesting.
+
+So if you're interested, you should check them out.
+
+This paper is,
+
+is fascinating, Bayesian learning rule.
+
+It was published, I think, a couple of years ago.
+
+And they basically say that any learning algorithm that has been successful, including, I don't know, Adam, Dropout, whatever, SGD, you can actually cast them as instances of variational inference.
+
+So they start from a variational objective, and then they show that if you just swap, if you choose your approximate posterior in different ways, and then you make some additional
+
+like approximation assumptions and look elsewhere.
+
+And then you apply natural gradient descent on that variational objective to derive many, many different learning rules as instances of variational inference.
+
+So this paper shows the unification potential of variational inference in more like an optimization machine learning type of land.
+
+So you should check it out.
+
+It's very interesting.
+
+And then later, building on DLR, this is a paper Jones et al.
+
+It's a Kevin Murphy paper.
+
+They introduced Bayesian online natural gradients.
+
+They just say, if you want to do online inference, you should do it using natural gradient descent on the variational objective.
+
+which is exactly the same prescription following PLR.
+
+They also do natural gradient descent.
+
+And just briefly, why natural gradient descent?
+
+Because when we are optimizing the posterior, the posterior is a probability distribution.
+
+Its parameters are, they don't live in Euclidean space.
+
+There's an intrinsic geometry induced by the Fisher metric.
+
+And if you don't respect that geometry, you're going to perform poorly.
+
+That's the intuition.
+
+which if you're interested, there's a bunch of citations in the paper that you can go dig deeper.
+
+But following these two very inspiring papers, Bong and DLR, here's where we introduce our FOND framework.
+
+So what does it stand for?
+
+It's Free Energy Online Natural Gradient Dynamics.
+
+So we're interested in dynamics, neural dynamics.
+
+That's why we emphasize dynamics, but that's our framework.
+
+We're saying, look, if you want to derive dynamics from first principles, just start from free energy minimization.
+
+And then first, you have to identify the dynamical variables.
+
+What are the things you're optimizing?
+
+How do you parameterize your posterior?
+
+That's the first choice you make.
+
+And then the temporal evolution of your posterior parameters is fully determined by natural gradient descent on variational free energy.
+
+That is our prescription, which will become concrete as we go through the paper.
+
+And finally, we also embrace this online update scheme because that's how brain performs inference.
+
+Just to give you an intuition what online means here.
+
+So in most machine learning cases, you have one single image.
+
+And you perform inference on that single image to find a posterior for that.
+
+But in reality, the brain doesn't have a prior that is fixed in the past.
+
+And it never changes.
+
+And you always have images that you have to perform inference.
+
+In biological systems, online inference makes a little more sense to modeling how brains perform inference.
+
+And online means that your prior constantly gets updated as time goes on.
+
+you always have a moving prior that is being updated and um if you perform inference like let's say you have a movie and there's a new frame comes in you perform inference you get to the posterior and that posterior at time t becomes the prior at time t plus one that's what it means to have online updated scheme and i'll let me just show you the figure real quick so if you start these red
+
+is just how your posterior distribution is getting evolved in time.
+
+Every single point along this curve is a posterior distribution.
+
+And in the static inference, you have one prior that is fixed in the distant past, t equals zero.
+
+And you evolve in time, you always compare back to that prior.
+
+But in online inference, your prior itself gets updated.
+
+And you compare your posterior at t to the prior from the previous time point, which is also what Bong does.
+
+All right, that's it.
+
+So we're going to apply these prescriptions, and we're going to derive a bunch of different VAE models, including the iterative Poisson one that is going to give us interesting theoretical and empirical results.
+
+So let's go through that real quick.
+
+OK.
+
+The first step, we have to choose the distributions, right?
+
+And as I mentioned earlier when we were talking about that model tree slide, we choose Poisson because that's a better approximation for brain-like integer-valued spike count representations.
+
+At least compared to Gaussian, Poisson is a little more brain-like.
+
+But here in Appendix B1, we discussed that we're not saying that the brain is literally Poisson.
+
+We're saying it's just a better approximation relative to Gaussian.
+
+And then for the likelihood, this is what we go with.
+
+This is just
+
+simple Gaussian with a linear decoder.
+
+So you go from latent cause z, so in our case, these are just spike counts, and you multiply this linear decoder layer phi to that to get to the mean of the Gaussian with some fixed variance.
+
+This is the simplest possible case that we go with in this main paper, but we extend that to more complicated cases in the appendix, including a nonlinear decoder.
+
+and this phi is actually called dictionary in sparse coding literature so it's the same thing as a dictionary okay so
+
+Now let's talk about the prescriptive choices.
+
+To derive dynamics from first principles, we have to address two additional questions.
+
+What are the dynamical variables, and what equations govern their time evolution?
+
+And in Appendix B2, I connect this again back to physics through this prescriptive theories in physics.
+
+So OK.
+
+First question, what are the dynamical variables?
+
+So for Poisson, the only parameter you have to give me so that I can construct a Poisson distribution is the rate parameter, the firing rate.
+
+But that's a positive value, and the rate parameter itself is very hard to optimize.
+
+Therefore, we're going to make the following choice.
+
+We're going to say, look, we're going to start with
+
+these real valued vector u, which is k is the number of neurons, and you have u is some real number.
+
+And if you exponentiate u, you're going to get the firing rates.
+
+And you're going to be able to construct Poisson distribution from those firing rates.
+
+And this makes it easier because u is a real number.
+
+You don't have to do constrained optimization.
+
+You can just do a natural gradient descent on free energy without having to constrain your gradients so that it remains always positive.
+
+That's like a pragmatic, like a mathematical convenience.
+
+But also, this is not too biologically implausible because
+
+you can actually interpret you as membrane potentials.
+
+So from neuroscience, we know that neurons have this local private signal to them.
+
+There's their membrane potential that fluctuates, goes up and down.
+
+And then if it reaches a certain threshold, neurons emit an action potential or a spike.
+
+And there's some work that shows that you can actually model that relationship between the membrane potential and the firing rate through expansive nonlinearities like power loss or exponential.
+
+That's basically two reasons why we chose this parameterization.
+
+Mathematical convenience, and it's not biologically too implausible.
+
+And once you choose that, you can just derive the dynamics through natural gradient descent on variational free energy.
+
+That's what we're going to do next.
+
+OK, so this equation shows if you take negative elbow,
+
+with the assumptions that we discussed above and construct your free energy, this is how it's going to look like for Poisson.
+
+So first of all, this reconstruction term is kind of familiar, right?
+
+You have this mean squared error that appears because you chose Gaussian for your likelihood.
+
+So this part should be familiar for all of us.
+
+If you've seen like, you know, predictive coding or variational load encoders, this part kind of might look new to you because this is the KL term between the approximate posterior and the prior.
+
+And for Poisson distribution,
+
+parameterized in its canonical form, which is like the log rate parameterization, it's going to look like this.
+
+And it's fine if you don't really understand this equation right now.
+
+Just know that there is a derivation over here, appendix B3, where I just start from the Poisson distribution and derive this KL term.
+
+So if you're curious, you can check it out there.
+
+What we're going to do is now we're going to differentiate this F because we want to derive our dynamics for the membrane potentials U.
+
+Okay, the first thing is let's focus on this reconstruction term here.
+
+So this is an expectation.
+
+We want to differentiate.
+
+We want to compute this, right?
+
+We want to compute the gradient of F with respect to U because we have U dot equals...
+
+this is our prescription.
+
+So I told you in words, but in equations, it's just, you know, the rate of change of your approximate posterior parameters u is going to be given by the inverse Fisher metric.
+
+This is just the Fisher preconditioning.
+
+That's what natural gradient descent means.
+
+And the actual gradient of free energy with respect to u. So we're going to
+
+Forget about this for now.
+
+Our focus is to compute this quantity, gradient u of f. And f has two terms.
+
+This is the reconstruction term.
+
+This is the KL term.
+
+And we're going to do that derivation right now.
+
+So first off, gradient of this term with respect to u.
+
+OK, yeah, this is a little bit difficult because, first of all, the U dependence appears here in the expectation, right?
+
+Let me clean this a little bit.
+
+And you see that whatever is inside here does not depend on U. It's only in the expectation.
+
+So we have to also make another approximation here.
+
+And the standard approximation is that you just take a single sample.
+
+You draw a single sample from the posterior.
+
+And that sample, importantly, is going to depend on the parameter u. And this sample, of course, because q is a Poisson distribution, this is just an integer spike count.
+
+So it's a bunch of integers, right?
+
+And you plug that in.
+
+And then you say that, oh, this is my approximation of the reconstruction term.
+
+Now let's actually compute the gradient of this instead of that expectation.
+
+It's technically just a single Monte Carlo sample.
+
+And then once you do that, you recognize that the chain of dependence here is that, first of all, you have u, which is the log rate.
+
+You exponentiate it to get to the rate.
+
+And then you draw a sample to get to this spike count sample.
+
+And then you have this reconstruction term as a function of that z.
+
+So we have to apply the chain rule several times to actually compute that gradient.
+
+So gradient U of reconstruction term is these things.
+
+You have to compute three different gradients.
+
+And here, the gradient of reconstruction term with respect to z is pretty simple.
+
+It's just going to look like this.
+
+It's negative phi transpose times x minus phi z. It's very standard.
+
+We're going to leave partial z to partial r. We're going to use the straight through approximation to just say that this is going to be 1.
+
+And then the partial of r with respect to u is just
+
+know e to the u because r is exp of u so if you differentiate r with respect to u you end up with the same thing it's just an exponential so with these approximations the net result is that we have this expression for gradient of the reconstruction terms
+
+And now let's go back and look at the KL term.
+
+This one is actually a lot easier.
+
+You want to compute the gradient of this thing with respect to u. And it's very easy to see that I'm not going to do it, but it's very easy to see that this is actually the final result.
+
+So you have e to the u times u minus u0.
+
+And u is your posterior membrane potential.
+
+u0 is your prior because it's blue.
+
+So if you just combine this reconstruction gradient with the KL gradient, you end up with this expression.
+
+Now we have the gradient of free energy with respect to you.
+
+And then the last step is to apply this Fisher preconditioning.
+
+Again, in Appendix B4, I do the derivation, and it turns out if you parametrize a Poisson distribution in its canonical log rate form, the Fisher metric is actually just e to the u. That's just your rate.
+
+And it amazingly cancels out this e to the u that appeared here, and you end up with this final equation.
+
+OK, so I know that I was being a little fast, but I just wanted to go through that real quick so that I can just interpret the final result.
+
+OK.
+
+u dot is how your membrane potential changes in time to minimize free energy.
+
+That's because that's how we define our dynamics.
+
+And whatever appears on the right-hand side is just that's what the math gave us, like the free energy expression for Poisson distributions and all the other approximations we made, like the Monte Carlo sample, whatever.
+
+If you do all of those, you end up with these terms.
+
+And I want to emphasize, we didn't put any of these in there by hand.
+
+It was given to us by the mathematics of the free energy with Poisson assumptions.
+
+But now we're going to interpret those terms.
+
+So what appears here is that there's this phi transpose X. Phi was our dictionary element, the transpose of our decoder.
+
+And you can think of this as a feedforward drive because this says, look, if you have this image X multiplied with this like receptive field, quote unquote, and then this is going to tell you how much your membrane potential should increase given that image X. And then this other term appears that has this like kind of recurrent term.
+
+And it also importantly applies to the spiking activity from other neurons.
+
+It says how much your membrane potential should drop as a function of how much influence you receive from other neurons.
+
+And finally, there's this other homeostatic leak term that says you just don't want to deviate too much from your prior membrane potential.
+
+That's what this term is.
+
+You know, there's an appendix, one of these appendices, yeah, B5, where I go through, like, explaining why we interpret these terms with these, you know, phrases like feedforward drive, you're kind of explaining away.
+
+There's a little bit of discussion there.
+
+What I want to emphasize here is that, first of all, this format of the recurrent dynamics equation that we ended up deriving from first principles, this is not new.
+
+This has been studied since at least 1970s.
+
+There's a paper from Sunichi Amari from like 72 or something, where he explores properties of these types of equations.
+
+And you can think of this as a canonical circuit model that different people have studied.
+
+But interestingly, in our case, it just popped out of the math.
+
+We didn't put any of these terms by hand.
+
+That's what I want to emphasize here.
+
+So that's one thing that's pretty interesting.
+
+Another thing I want to emphasize is, if you remember, I told you the predictive coding equation has certain limitations in terms of biological plausibility that this equation doesn't.
+
+Let me emphasize that now.
+
+This is just standard predictive coding dynamics.
+
+So mu dot is mu is just another real variable that you can plausibly interpret as membrane potential.
+
+And in predictive coding, you also get this feedforward drive and leak term and lateral connections term.
+
+You get all of them.
+
+There's one important difference here.
+
+Here, the influence of other neurons
+
+if you interpret mu as membrane potential, these neurons through these lateral recurrent connections influence each other through their membrane potentials.
+
+And we know that that's biologically not plausible because membrane potential of a neuron is a private signal to that neuron.
+
+You cannot expect that other neurons in your vicinity to be able to directly be influenced by whatever your membrane potential value is.
+
+More biologically plausible is that you receive influence from your neighboring neurons through their spiking activity.
+
+So remember this, and now let's go back to our equation.
+
+Whatever we get for iterative Poisson VAE, this is what we get.
+
+So the recurrent influence comes through spiking activity.
+
+And I think that's a very interesting, more biologically plausible outcome that I wanted to highlight.
+
+So when you influence your neighboring neurons through this recurrent term, it happens through your spiking activity, not directly through your membrane potential.
+
+OK.
+
+Yeah, I guess here next we just go from continuous time to discrete time because we want to implement this.
+
+So that's what you see here.
+
+This equation is just a discrete time version of that.
+
+One last thing before going to the empirical results is that there's some sort of lateral competition or some sort of divisive normalization that appears from the way we construct this problem.
+
+I want to mention that before going to the empirical results.
+
+okay so remember u is our membrane potentials right so we defined u is just log rate if you exponentiate this equation which is are just you know iterative update rule you get to this equation
+
+which says the rate of a neuron at neuron i at time t plus 1 is just its rate at the previous time point modified with this term that appears here.
+
+So first of all, there's this feedforward drive term that says if you're being stimulated through the stimulus, you can just increase the firing rate.
+
+But there's these other terms that stabilize the dynamics because this says if...
+
+this w is by the way just a recurrent connectivity matrix it says if if two neurons have overlapping tuning if they're if they care about the same feature you know if wij is a positive value then if neuron j fires a lot it's going to actually silence this other neuron so this competition
+
+is something that has been hypothesized to contribute to many things like stability of cortical computation and emergent sparsity and so on.
+
+I just wanted to mention that it just pops out of our math also.
+
+just because we made those choices, Poisson, whatever, log rate, something like that appears here.
+
+And we're going to see empirically that the algorithm is stable.
+
+It actually never diverges.
+
+It converges beyond the training regime and so on.
+
+So this is kind of a theoretical reason for that.
+
+But yeah, let's just move on because we spent too much time on the theory side.
+
+I'll just show you some experimental results.
+
+If you use the iterative update rule and then turn that into an architecture that performs inference and then train it on natural image patches, this is the type of results you can get.
+
+This is the convergence result.
+
+We trained these models using 16 training iterations.
+
+And here we are comparing a Poisson model with a Gaussian model and a Gaussian plus ReLU model.
+
+So before actually looking at these results, let me just mention what is different between these models.
+
+So to derive the theory, we just said, look, you can choose Poisson for your posterior.
+
+And that gives you all these cool results.
+
+But then we don't stop there.
+
+We just say, OK, but you can also have Gaussian for your posterior.
+
+You can still have the same iterative update through natural gradient descent for Gaussian.
+
+Or you can even have Gaussian and follow that up with the ReLU so that you get the positivity of Poisson.
+
+So these are different models aimed to tease apart different properties of Poisson that might contribute to its performance.
+
+So a Gaussian doesn't have the positivity of Poisson or its discreteness.
+
+Gaussian ray loop has its positivity, but it's not discrete.
+
+So it's like a continuous positive and continuous unsigned.
+
+So that's why we compare these models.
+
+So what we have here in the results is that we want to make sure these models converge to good approximate posteriors.
+
+And we measure that using these two measures.
+
+We want to have a good reconstruction of the input.
+
+That's the R squared.
+
+And it's a number between 0 and 1, and larger is better.
+
+And portion zeros is the number of zeros in your representation.
+
+So the idea here is that if you want to represent the world, you have to represent it in a very high fidelity reconstruction, and ideally using not many active neurons.
+
+That's how you save energy.
+
+That's the sparse coding idea.
+
+Therefore, we want both the blue and green curve to be large values.
+
+And ignore red for now.
+
+And yeah, if you compare these models, we see that Poisson has both high reconstruction and high sparsity.
+
+Gaussian has the highest reconstruction, but it's not sparse at all by definition.
+
+And Gaussian plus ReLU gets a little bit of sparsity, like a little less than 60% around the same reconstruction performance of Poisson.
+
+Therefore, just the conclusion of this figure is that it seems like Poisson
+
+reconstructs the images, at least as well as Gaussian.
+
+But it doesn't lose much in the reconstruction, but it is very sparse.
+
+That's the point of this figure.
+
+And also, all of the models converge beyond their training regime.
+
+And another interesting thing to notice is that after training these models on natural image patches, you can visualize the dictionary elements, the learned decoder, and then you can see that the Poisson looks like these Gabor's that you would see from, you know, if you look at the selectivity from primate visual cortex, Gaussian looks pretty structure-less, and Gaussian Prostarelu learns these pixel-like representations.
+
+So the conclusion is that Poisson is not only more brain-like in this particular way, and also it's more sparse.
+
+In the next figure, which is a very dense one, we want to see if that result holds across hyperparameters.
+
+So we do a very large hyperparameter sweep.
+
+To understand this figure, first of all, let's just focus on what's on there.
+
+First of all, on the x-axis,
+
+we have sparsity, which we measure as portion of zeros in your representations.
+
+And on the y-axis, we have reconstruction.
+
+So we want to be ideally here.
+
+That's the impossible to achieve ideal point.
+
+You have maximum reconstruction using no activation at all.
+
+So that's hard to achieve.
+
+But the closer you are here to this point, the better you are.
+
+And on here, we have all the models that we compared to.
+
+We have amortized models, first of all.
+
+We have models that have a neural network encoder, and we're going to compare these amortized models to their iterative counterparts.
+
+And for the iterative models, one thing that I skipped, I didn't mention, is that as you increase the number of iterations during training, you expect to see different behavior.
+
+But that's a detail that you can check out the paper for if you're curious.
+
+So let's focus for now just on the iterative versus amortized, because the point of this figure is that iterative inference yields better performance when you measure performance as high sparsity, high reconstruction.
+
+Like, for example, in the Poisson case, the blue ones, you have these are the iterative models.
+
+They're kind of having this burrito front.
+
+And amortized models fail to match that performance, the blue empty squares.
+
+And the idea is that these amortized models have
+
+deep neural network encoders with 6 million parameters, yet they still cannot match the performance of iterative models.
+
+That's the takeaway here.
+
+And same is true for Gaussian ReLU, for example.
+
+These are the iterative ones, these are the amortized ones.
+
+And for Gaussian, again, the reconstruction iterative is better than amortized, but they're not very sparse.
+
+So to summarize this figure, really, panel A, we just said, OK, let's just take each of these performances.
+
+Each of these points is a model with different hyperparameter, different beta.
+
+And we're going to compute the Euclidean distance between that and the star.
+
+And that's the summary over here.
+
+And here, lower is better.
+
+We see that, first of all, the first observation we have is that in all of these cases, iterative model is better than its amortized counterpart.
+
+So one takeaway here is that if you have an amortized neural network encoder and your model is not performing well, it's possible that it's because of the amortization gap, which is a technical term that means you don't
+
+you're failing to find the optimal posterior through that neural network.
+
+And iterative Poisson VAE does best compared to these models.
+
+And also LCA, this locally competitive algorithm, which is the sparse coding algorithm, does also as good as iterative Poisson VAE.
+
+So one conclusion we draw from here is that
+
+Yeah, I kind of skipped this because it's too much details, but the equation we derive for iterative Poisson VAE looks very much like the equation for LCA.
+
+Therefore, we can conclude that iterative Poisson VAE is just like LCA, but it's a spiking stochastic version of it.
+
+That's one of the takeaways.
+
+But yeah, so these are the two main results that we report in the main paper, and we just run out of space, basically.
+
+But there's a bunch of, you know, appendix results that are also equally interesting.
+
+So let me just really quickly go through them.
+
+Yeah, so if you want to read the appendix, this is the extended background, just all you need to understand this paper.
+
+Then there's extended theory, where we extend the Poisson derivations to Gaussian and to nonlinear decoders and so on.
+
+And there's all sorts of other information, if you're curious.
+
+And then extended experiments, where we explore other properties of the model.
+
+Yeah, I want to show you this one.
+
+Where is it?
+
+Yeah, so we have these out-of-distribution generalization results that I think are equally interesting, but we just didn't have space, so we put them in the appendix.
+
+What is out-of-distribution generalization?
+
+If you train your models on some data set,
+
+and then you test it in some other dataset, if those two datasets are sufficiently different, then usually what you get from machine learning models is that they fail to generalize.
+
+That's a typical failure mode of machine learning models.
+
+But if you have iterative inference, we're going to find that that's really not the case in our iterative Poisson VAE.
+
+So that's the point of these results.
+
+What we do is we train models on MNIST here and then test it on out-of-distribution data sets like extended MNIST, which is just a character data set, OmniGLOT, and even ImageNet32, so grayscale cropped versions of natural images.
+
+And also we tested on rotated MNIST.
+
+And we also compare it to alternative models.
+
+As we briefly discussed, there are hybrid iterative amortized models, such as iterative amortized VAE.
+
+This is the Marino paper, 2018.
+
+There's another one, semi-amortized VAE.
+
+also from 2018, where they initialize the posterior with an amortized network, and then they perform stochastic variational inference, a few iterative updates on that initial amortized guess.
+
+And we're going to compare to those two.
+
+Our model is fully iterative.
+
+There's no neural network at all.
+
+But these two models are hybrid.
+
+And you want to find out if hybrid models perform as well on these kind of OOD tasks.
+
+And the spoiler alert, no.
+
+The answer is no.
+
+Iterative wins, basically.
+
+So this is, I think, too much detail.
+
+I'm going to skip that.
+
+Let me just show you this result.
+
+What we have here, let's just focus on this panel.
+
+We trained all of these models, including iterative Poisson VAE, amortized PVAE.
+
+This is iterative Poisson.
+
+This is amortized PVAE.
+
+This is amortized iterative.
+
+There's a hierarchical and single layer version.
+
+And this is semi-amortized.
+
+We're going to compare all of these models in this task.
+
+You have these MNIST digits.
+
+All of these models were trained on the standard MNIST data set, which is the first row.
+
+And then we're going to rotate the digits by 90 degrees.
+
+And we're going to look at two things compared to the rotated digits, the original ground truth.
+
+Amortized Poisson fails really bad.
+
+It just doesn't reconstruct any of these digits.
+
+And among the hybrid models that we compared to, semi-amortized does the best out of those three.
+
+And if you quantify this on the right-hand side over here, we find that iterative Poisson VAE does best.
+
+The first figure, this one, is reconstruction, where we report mean squared error.
+
+And the x-axis is just the amount of rotation we apply.
+
+And this other figure is just the classification accuracy.
+
+So this is important because if it was just reconstruction, who knows if the model really understands the data?
+
+I mean, OK, sure.
+
+In this, for example, this is a 90 degrees task.
+
+Sure, we see that in the reconstruction, we see does best.
+
+It's the lowest reconstruction error.
+
+But it could be just the shallow features of the data set.
+
+It doesn't mean that this model has learned to actually understand the semantic meaning of this data.
+
+And that we confirm by looking at the classification.
+
+But this is downstream classification.
+
+We just show these images to the model and extract the final posterior, and we train logistic regression to just classify those rotated digits.
+
+It turns out that the performance of the iterative Poisson, the blue bars, it doesn't drop.
+
+It remains flat.
+
+But as the task gets harder and harder, all the other models go down and up.
+
+This indicates that it actually learns to interpret the distorted data not only well enough to reconstruct it, but also well enough to be able to classify those rotated digits.
+
+And I think there's other experiments that I'm going to skip.
+
+There's too much.
+
+I think this is a pretty crazy result.
+
+Here we just say, okay, let's just take MNIST digits, rotate, crop them, and make them grayscaled.
+
+Because, you know, sorry, yeah, these are for ImageNet 32 by 32, but we're cropped so that they're...
+
+this center image is where there's variance in ms digits.
+
+And if you show these inputs to the model and then let them perform inference across time, as you see, the iterative Poisson VAE starts to actually reconstruct these images.
+
+You can recognize this is a panda, this is a dog, and so on.
+
+Even though this model, the iterative Poisson VAE, I want to emphasize this, this was trained on MNIST.
+
+it hasn't seen any natural images, yet it can reconstruct them.
+
+And all the other models, including the semi-amortized, they don't do as well.
+
+I mean, this model, amortized iterative, just does the worst.
+
+None of these reconstructions look anything like the actual image.
+
+The semi-amortized does decently well, but not as good as iterative Poisson VAE.
+
+And of course, we also quantify that here.
+
+So we have the number of iterations at test time and reconstruction error on these cropped natural images.
+
+And there's really two things to notice in this figure.
+
+The first thing to notice is the final performance.
+
+It's just much better than all of these other models.
+
+That's one thing.
+
+But equally interesting to me is that the model actually keeps improving as time goes on.
+
+you know it's the the other models they don't improve as much or you know they even diverge at the end but iterative Poisson VAE keeps improving and that that shows that it's you know basically you can interpret this as like it's thinking more and more to to be able to understand this difficult data set out of distribution data set
+
+And why is that?
+
+We provide one possible explanation for why this out of domain generalization happens through this visualization.
+
+So if you visualize the learned decoder weights for the last layer of this iterative Poisson VAE, it learns Gabor's from MNIST.
+
+I'm sorry, yeah, from MNIST.
+
+These are, you know, primitive kind of like universal features that you can construct any image from these.
+
+And iterative Poisson VAE learns those Gabor's.
+
+The Poisson VAE is the same latent distribution, same integer, whatever sparse representation, but with a NLP encoder, it just learns these like digits, like ghost digits that it doesn't really learn any Gabor's.
+
+So the conclusion is that if you have a model,
+
+that learns these universal features, and it has an inference algorithm that can utilize those universal features, it's going to be able to reconstruct any dataset, even as crazy as grayscale cropped natural images.
+
+So that's the conclusion for these OD results in page 58 of the appendix.
+
+But the reason we put this in the appendix is that
+
+I think this is a very cool result, and it just warrants more deeper exploration, and even in tasks beyond reconstruction.
+
+I suspect that with this iterative inference algorithm, the model learns compositional features that allows this generalization, and we want to test that on more difficult tasks, more involved tasks than reconstruction so that we can explore it, give it the attention that it deserves.
+
+But yeah, that's pretty much it.
+
+And there's an extended discussion too, which I think there's really no time to go through.
+
+But I hope that this was actually interesting enough for you to actually go read the paper, because there's a lot more in the paper that I just simply couldn't talk about.
+
+It's just too much.
+
+But yeah, with that, I'm happy to take questions.
+
+
+SPEAKER_00:
+Great.
+
+That last reconstruction was awesome.
+
+thank you very cool uh in the image of the child it almost looked like like the fingers of the like the the the base image was it almost looks like the child has extended their fingers
+
+yeah this one is a little creepy yeah um yeah very cool yeah kevin just wrote nice result and figures emergence of the primitives rather than overfitting yeah like and seeing the seeing the ghost digits in the mnist it's kind of like
+
+Yeah, we know we can pull out the template of a digit from overlaying a bunch of copies of the digit and just looking for sort of like the K-means clustering of what does the archetypal representative look like.
+
+But to be able to do it the way that the visual system algorithmically does, extracting with the lateral relationships amongst layers to pull out the edges is the kind of neuromorphic transfer.
+
+Yeah.
+
+Okay, I'll ask some of the questions in the live chat.
+
+Anyone else can write.
+
+Okay.
+
+
+UNKNOWN:
+Okay.
+
+
+SPEAKER_00:
+Y asks, does this architecture solve catastrophic forgetting?
+
+
+SPEAKER_01:
+Okay, we haven't tested that.
+
+So I think my understanding of catastrophic forgetting is that you train the model on some task, and then you retrain it, you change the model parameters on a new task, and it fails to work on the first task you trained on.
+
+We haven't really explored that.
+
+And by the way, this model is fairly underparameterized.
+
+It just has a decoder.
+
+And therefore, I expect that if you train it on one task, and then
+
+you know, train it on another task, it might actually have some sort of catastrophic forgetting.
+
+But yeah, I haven't, I haven't really experimented with that.
+
+So I just don't know.
+
+
+SPEAKER_00:
+Okay, little curveball question.
+
+Are you on the Active Inference Institute discord?
+
+
+SPEAKER_01:
+I am not.
+
+I should join.
+
+
+SPEAKER_00:
+Okay, I'll put in the chat or afterwards a join link.
+
+That would be cool though.
+
+
+SPEAKER_01:
+Definitely.
+
+
+SPEAKER_00:
+Yes.
+
+Okay.
+
+There was one question about this relates to the lateral relationships amongst neurons.
+
+You mentioned that the membrane potential is a private variable.
+
+So how do we think about, and not that the goal of the model was to give a mechanistic accounts of neural tissue, but how would you account for non-neural cell types like glial cells or like local field potentials?
+
+
+SPEAKER_01:
+Mm-hmm, mm-hmm.
+
+okay yeah i think i should uh highlight here that you know um one of the words we used in the title of this paper brain like you know it's it's a very interesting word because i think it's true to some extent this model is brain like in the following ways okay so it uses
+
+discrete and sparse representations that's relatively more brain-like than gaussian it uses iterative inference that gets better and better over time it also you can uh like you know hypothetically we can think that's more brain like even though that's not it's not settled we don't really know maybe brain is actually more amortized iterative hybrid in a particular in a sense but it's really not brain-like in terms of these biological details so
+
+Even this recurrent explaining away, like, okay, for example, another important way in which this model is not brain-like is that there are no explicitly inhibitory neurons.
+
+If you look at these biologically plausible circuit models that people in computational neuroscience have been working with, they have explicit population of neurons that are excitatory and inhibitory, and they have different...
+
+exhibit different behaviors and so on that is missing from this model let alone glia right so i think that it's yeah it's relatively more brain-like than let's say a gaussian model but it's still far from being brain-like in a truth and full sense of the term
+
+
+SPEAKER_00:
+so in the postdoc phase you're in like looking back on some of these pretty theoretically synthetic but also implementably useful techniques that you've been working on with colleagues like what are you looking to next or what kinds of work are you going to turn to now okay that's uh um i i think that's
+
+
+SPEAKER_01:
+I really want to emphasize the engineering aspect these days.
+
+I want to make models that work on real data sets.
+
+So this paper is pretty theory heavy.
+
+I guess just let's derive things from first principles.
+
+And it works on toy data sets.
+
+It works on natural image patches.
+
+It works on NNIST.
+
+It generalizes.
+
+All of these are very...
+
+I would say preliminary, but highly encouraging results that shows that this model might actually work on real datasets.
+
+So right now I'm exploring many different directions.
+
+Like one of them is
+
+In this particular paper, we talk about an online update scheme where your posterior at time t literally becomes your prior at t plus 1.
+
+There's no predictive dynamics.
+
+There's no anticipatory dynamics where you evolve the posterior to become the next prior.
+
+I think that's a key missing piece.
+
+And without that, it's not going to work on videos.
+
+We've only trained this on natural images, like static images repeated many times.
+
+That's one thing I'm working on, predictive component.
+
+And this model had a single layer.
+
+It's not hierarchical.
+
+But we know that from predictive coding, and I have another paper from two years ago, that hierarchical inference has many benefits.
+
+And if I
+
+want to make this work on real data sets like a video it should have hierarchical latent structure so these are two directions uh i think they're related but independent directions like predictive component and hierarchical architecture is what i'm pushing this toward one last thing that i'm actually pretty excited about these days is that you know this out of domain generalization is is a big big challenge in robotics you know people train their robots in some
+
+you know in some environments and when you test those robots in some slightly different environment even even just like simple luminance change and things like that breaks the the perception algorithm of those those robots and because i have these like very promising od results i'm hoping that i can beef up this model and then show that it actually uh helps
+
+address some of those very difficult challenges in robotics, especially when it comes to OD.
+
+So just to summarize, predictive component, hierarchical robotics.
+
+
+SPEAKER_00:
+Awesome.
+
+Just while we're right here, could you say a little bit about the natural aspects?
+
+And what does Fisher preconditioning do?
+
+What values are being transformed or conditioned how?
+
+
+SPEAKER_01:
+then how would you say that relates to whether something is like natural i think i'm just borrowing that term from you know the literature natural gradient descent if you just look at the uh amari's papers or like you know recent reviews of that that's just how you define natural gradient descent and what is so natural about it is just it it respects the intrinsic geometry of the you know parameter space i can go back to this figure here so
+
+know we have okay um now we have you know uh if you remember we are these we have these membrane potentials that's our state space and this curve red curve here is just how you evolve a posterior distribution like each point literally is just the posterior distribution through this operation you exponentiate you construct a poisson distribution from each point and
+
+it's not an euclidean space in the sense that if you want to go from here to here and this is like one unit of distance it might be different if you go in this other direction and i think
+
+If you want to understand why it's important, why do we have to have this preconditioning specifically for inference, I'm going to actually find the references to point you to because they do a lot better job than I can doing this to motivate that.
+
+I'm going to actually just do it right now because I think this is not appreciated enough in the literature.
+
+important thing first of all if you want to appreciate why natural gradient definitely check this out the bayesian learning rule is a great paper and this amari paper is of course you know it's the
+
+canonical, like the original paper that talks about that.
+
+And there's another paper from Imtiaz Khan from 2018.
+
+I think I do cite it, but I might not be able to find it right now.
+
+That is a four or five page paper where they show some figures and they discuss the intuition why natural gradient is so central and important, especially if you're doing inference.
+
+There we go.
+
+Start with this.
+
+Check out this paper.
+
+It's a five-page paper, and they provide an intuition why computing distances in the distribution space and computing or doing stochastic gradient descent in the distribution space is not ideal.
+
+You have to do natural gradient descent to respect the intrinsic geometry.
+
+
+SPEAKER_00:
+And intrinsic geometry should be respected.
+
+
+SPEAKER_01:
+Exactly.
+
+
+SPEAKER_00:
+Anything else you want to add?
+
+This was awesome, though, and I think gives a lot of technical details and really useful aspects.
+
+
+SPEAKER_01:
+Oh, yeah.
+
+Thanks for having me.
+
+I mean, I always enjoy these discussions.
+
+And I guess if you have any questions, you can find me.
+
+You can email me here.
+
+You can check out the code.
+
+And yeah, that's it.
+
+
+SPEAKER_00:
+Cool.
+
+I put the Discord link in the chat if you want to join or you can find other ways and see you in one year.
+
+
+SPEAKER_01:
+Definitely.
+
+Yes.
+
+Looking forward to it.
+
+
+SPEAKER_00:
+Okay.
+
+Thank you.
+
+Bye.
+
+
+SPEAKER_01:
+Okay.
+
+Thanks again.
+
+Bye.
