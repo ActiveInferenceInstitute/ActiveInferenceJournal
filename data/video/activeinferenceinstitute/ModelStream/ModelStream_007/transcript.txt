@@ -1,0 +1,2464 @@
+Hello, welcome.
+It is April 9th, 2026
+and we're in active inference model
+stream 007.3
+on pymdp 1.0, the JAX first release of
+pymdp
+with Connor Hines and other guests. So,
+we will be hearing about pymdp release
+and discussing some topics about
+applications of active inference and the
+package. So, thank you to Connor and all
+the developers for their work. And
+Connor to you, thank you.
+Cool. Yeah, thanks a lot, Daniel.
+Um yeah, happy to be with you all.
+Thanks for attending.
+Uh yeah, so I'm really excited to share
+this release with you. Um this is
+the 100 release of pymdp. Um this is an
+active inference package
+that we first started working on back in
+2019 and it's matured and changed a lot
+over the years.
+So, this um talk uh this presentation is
+about the 100 release, which is an
+upgrade from the last release, which I
+think was
+almost 3 years ago or maybe a little
+over than 3 years ago.
+Um and the kind of biggest headline
+change to highlight here is the fact
+that we rewrote the entire back end of
+pymdp in JAX.
+Um so, now it's a kind of a JAX first,
+JAX only package.
+And because [clears throat] of that
+rewrite
+and motivating that rewrite
+we have a bunch of new uh capabilities
+uh for active inference agents in in
+discrete state spaces. So, first of all,
+just because it's in JAX, it's really
+trivial to now put everything on GPUs
+and TPUs.
+Um that's just comes from having
+everything in JAX. So, now you can run,
+you know, whole groups, hundreds,
+thousands of active inference agents uh
+paralyzed on GPUs. You're only
+constrained basically by your hardware
+memory, whether it's GPU or TPU.
+Um also, because it's in JAX, which is
+natively fully differentiable, you can
+kind of hook up arbitrary differentiable
+modules to the front end or the back end
+or in the middle of any pymdp agent. So,
+that means you can pass gradients
+through the whole system and do like
+end-to-end learning sort of uh
+workflows, which is cool.
+Um and you know, it it it I would say um
+significantly increases the
+sort of things that you can do with
+discrete pymdp agents. So, you can
+imagine hooking up a pymdp agent to say
+images or audio or more high-dimensional
+uh input data than normally you couldn't
+because of the kind of poor scaling
+features you get with fully uh discrete
+categorical inputs.
+Um another big uh benefit of JAX is the
+just-in-time compilation uh feature. So,
+that allows you to basically run things
+much faster uh cuz the kind of com-
+computation graph of the full active
+inference process is being compiled
+ahead of time. And then you can actually
+just execute that in this lower uh
+accelerated linear algebra language XLA
+that that JAX kind of writes and
+dispatches to. So, um what that means in
+practice is that now pymdp can be used
+like a lot of these other JAX-based RL
+frameworks where you can get really high
+throughput simulations on arbitrary
+JAX-based reinforcement learning
+environments.
+Um so, you can kind of JIT or
+just-in-time compile the full
+agent-environment loop and that allows
+you to run things like orders of
+magnitude than you would be able to in
+the old um
+un-JITed NumPy back end.
+And so, beside all those I kind of just
+core capabilities that are unlocked by
+putting everything in JAX, there's also
+just loads of new features.
+Um so, new kind of algorithms that have
+been developed in the last couple years
+in the active inference community, like
+sophisticated inference, inductive
+inference,
+um those are all now uh in integrated
+into the new pymdp. So, those just allow
+you uh to have smarter agents in the
+end. So, you're actually using better
+planning algorithms, better inference
+algorithms.
+Um another nice thing and actually this
+is what originally motivated me and
+Dimitri Markovik, who's on this call, I
+believe.
+What originally motivated us to write
+the JAX back end, this was like, I think
+going back to 2022 even, was the ability
+to fit pymdp models or or active
+inference pomdps to experimental data
+from from, for instance, experimental
+um psychology or or uh cognitive uh
+computational neuroscience sort of
+settings where you're actually measuring
+the behavior of people as they perform
+some task.
+Um one of the things that's that many
+people in the kind of more experimental
+applied field of active inference do is
+they want to fit the parameters of pomdp
+models to data. So, it's basically like
+kind of creating a uh synthetic active
+inference agent that behaves like your
+experimental participants. And um now
+that everything is in JAX, you can
+actually do that very efficiently using
+uh NumPyro, using basically there's
+there's other third-party JAX-based
+probabilistic programming software like
+NumPyro that allows you to um use
+any of those variational or
+sampling-based inference algorithms to
+fit the parameters of pomdps to data.
+So, this has been um really nicely
+enabled by a package that Dimitri
+Markovik wrote called
+uh PyBaFit, which is a a package that
+allows you to fit different models of
+behavior to experimental data with both
+NumPyro and Pyro, which is torch-based
+back ends. So, pymdp now integrates with
+PyBaFit, so you can fit uh
+pomdp models to data really easily and
+very quickly as well because uh NumPyro
+is highly optimized and NumPyro is kind
+of the JAX back end of PyBaFit.
+Um there's a bunch of other things, so
+I'll get into those with the slides. But
+also, I just want to um kind of flag, as
+you did Daniel at the beginning of this,
+that this I'm I'm kind of a mouthpiece
+for a larger team of people that have
+been working on this for three, four
+years uh that this this back end. So,
+although I've done a lot of the work
+maintaining and developing it, I do want
+just everyone to, as you listen to this,
+to know that what went into this was
+like many, many man-hours, lots of
+blood, sweat, and tears of many people.
+So, I'm just kind of the the messenger
+here.
+But I'm happy and proud to to be showing
+this to all of you.
+Um so, yeah, as I mentioned, the back
+end upgrade, uh the the accelerator
+friendliness of it is one of the biggest
+advantages.
+So, if you really want to run very large
+generative models or you want to run
+them very quickly or you want to run
+many generative models in parallel,
+the best way to do that with JAX pymdp
+is now on GPU or TPU. You can still get
+quite good throughput and um speed on
+CPU as well cuz JAX is just natively
+fast because of the JIT thing. But if
+you really want to crank like fitting uh
+or running tens of thousands of active
+inference agents in parallel, then you
+can throw all your normal pymdp code
+onto um a a Nvidia GPU accelerated
+device and then you can just put all
+your and then you'll just see huge gains
+in throughput because of that, which is
+really nice.
+So, yeah.
+Another big aspect of this is this is
+both because of JAX and the way that
+we've restructured the code is that
+everything is now uh natively and
+trivially parallelized. So, every
+parameter tensor, every agent, every um
+set of beliefs or actions or
+observations now has an implicit leading
+dimension. So, you can always basically
+just arbitrarily stack observations,
+agents, beliefs um in parallel. And so,
+all the methods of the seemingly single
+agent class are actually under the hood
+broadcasted uh along this leading
+dimension. So, it means you can
+basically run
+like the difference between running one
+and 10,000 agents is just a matter of
+one batch size parameter. Um so, this
+makes it really nice for high-throughput
+experimentation. Say you want to try
+uh a batch of a thousand agents, 500 on
+one environmental configuration and
+another 500 on another, like two say
+experimental configurations or they
+maybe have different generative models
+or different hyperparameter
+configurations. That's really trivial to
+do with just one instance of this agent
+class, which is the main like entry
+point and API for pymdp.
+Um as I also mentioned, the JIT
+compilation of the full
+agent-environment interaction is
+incredibly powerful. So, this does
+require that your environment be
+JITable, so it needs to be something
+that you can pass into uh JAX
+operations. So, that puts certain
+constraints on on the sort of
+computations happening inside the
+environment. But once you have a
+JAX-friendly environment, and if you go
+on GitHub, there's loads of now uh
+JAX-friendly RL environmental
+simulators, like Gym Nax, Jumanji,
+Navix, those are a few examples,
+then you can just JIT the entire or
+just-in-time compile the entire active
+inference inference and planning and
+action loop together with the
+environmental step.
+And then that whole thing can run super,
+super fast. I mean, I'll show you some
+figures later to just kind of
+demonstrate the the speed gain.
+And then finally, uh the
+differentiability aspect. So, I kind of
+mentioned this before, but you can
+arbitrarily tie together differentiable
+modules with pymdp agents and uh and
+use gradients however you want. You
+could freeze the encoder, you could
+define the variational free energy or
+expected free energy at the agent level
+and then backpropagate that to the
+encoder or decoder or whatever you want.
+So, I think that native
+differentiability of JAX, and we
+specifically tested all the methods of
+the agent class to make sure they're
+differentiable and they pass like valid
+finite gradients, that enables a lot of
+different new creative um ways to to
+generate uh pymdp agents.
+Um so, yeah, because of the JAX back
+end, there are do new constraints on the
+way that you write code. So, there's a
+lot of data structures that have changed
+and a lot of kind of control flow
+primitives that have changed like the
+way you do for loops, the way that you
+write agent environment loops has has
+changed a bit. So, um
+the biggest change I would say, I mean,
+yeah, I'll go through all of them cuz
+it's hard to like rank which one's the
+biggest, but one of the big changes is
+the way that we store uh
+ragged arrays. So, before a ragged array
+is basically arrays where the the sub
+elements have different dimensions.
+So, before we're using something called
+an an uh NumPy object array, which is
+kind of just like a list of arrays,
+except that you can um you could in
+theory create higher dimensional
+versions like an array of of differently
+shaped arrays.
+So, to make uh that convention
+compatible with JAX's uh
+operations, which assume basically
+everything is a PyTree, which is just a
+sort of collection or or a data
+structure with leaves at the end of the
+day,
+uh we made everything into
+um lists, lists of JAX arrays. So, now
+instead of NumPy object arrays, you just
+have lists of arrays, and that's the
+kind of the base data structure
+uh
+that that we store say
+uh different posterior marginals. So, if
+you have marginal distributions over
+different hidden latent variables have
+different lengths, different support uh
+cardinalities, then you would store
+those each as a different entry in a
+list of of arrays. And these arrays
+themselves, of course, are are JAX
+arrays now. So, JAX has a sub library of
+NumPy.
+And that's the kind of um and it has
+like the same semantics as an API as
+as classic NumPy does.
+And the other big thing is the using use
+of explicit control of randomness
+through these PRNG keys. So,
+typically in NumPy, you'll you'll kind
+of set randomness globally or at least
+outside of particular operations. Like
+you might have a script local seed or
+like a repo or global um execution
+runtime global seed. In JAX, you
+actually have to pass seeds and keys all
+all the way through every computation
+that requires randomness.
+So, that means most of the classic
+functions that in involve randomness
+like sampling from action, sampling
+observations, all those things you now
+have to actually pass a PRNG key into
+the relevant function. So, it adds a
+little bit of API overhead in the sense
+that you're now passing in a new
+argument all these functions, but the
+nice thing is it it's really nice for
+controlling reproducibility at different
+parts in in a in a computation graph.
+So, if you want to inject stochasticity
+into just one part of an agent
+environment loop, like just into the
+action sampling or just into the
+observation sampling, or if there's some
+kind of stochasticity happening in the
+inference, then you can kind of control
+that along the way using these JAX uh
+PRNG keys. Cuz the key point to to state
+here is that every time you pass one of
+these keys into a stochastic function,
+the output will be the same if the key
+is the same cuz it's just a
+uh way of seeding um reproducibly the
+randomness.
+Another big um kind of API and like
+programming philosophy shift is the fact
+that now PyMDP is a lot more functional.
+So, because it's JAX, there's a lot of
+things you can't do. Like mutability is
+um is different. There's really no uh
+in-place operations and mutability of
+data structures. What you actually have
+to do is more write things as changes or
+um creating instantiating new copies of
+arrays.
+So, there's no more in-place updates.
+You can use there's conventions in JAX
+like the {dot} {at} index set value
+notation.
+And uh and there's also constraints on
+um having static shape and dtype of
+input inputs to functions that are
+just-in-time compiled. So, it means that
+if you're say doing a uh a for loop in
+JAX and you want to use the scan uh
+primitive, which is a way to do really
+fast just-in-time compiled for loops, it
+means that you need to make sure that
+all the inputs and outputs say if it's
+the updates to a posterior belief that
+they have the same shape and dtype. So,
+often times you as a user do will not
+have to worry about this at all because
+it's all handled by the agent class, but
+if you're ever like creating PyMDP
+agents on your own, these are like new
+constraints that you have to be aware
+of. And basically any JAX-based uh
+software has this these sorts of
+constraints. But they they take a little
+bit of getting used to, but they're
+they're not honestly too hard to to
+master.
+And then as I also men- mentioned, old
+uh NumPy kind of assumed single agent um
+semantics everywhere. So, the agent
+class really represented one agent, but
+now the agent class in the JAX backend
+na- uh naturally assumes that you can
+always basically add
+arbitrarily numbers of agents in in into
+your single agent parameter tensor. So,
+instead of having one A or B or C or D
+tensor, you can just expand the leading
+dimension and really run 50 different
+agents in parallel. The only constraints
+there is that you have to make sure that
+all the generative models of those
+agents have the same dimension so that
+you can stack the parameter tensors
+um vertically onto each other.
+Um
+Yeah, so what else?
+Yeah, I guess
+a big a big change is the um the the way
+we do things like for loops. For
+instance, instead of writing a a classic
+Python for loop, you can use this
+lax.scan notation. So, this is basically
+a way of of JAX pre-compiling all the
+steps of a for loop in advance given
+that it knows like the the start and end
+of the loop, and then as executing it
+really quickly. Um also parallelization
+is enabled by things like vmap. So, vmap
+is vectorized map, and that's how this
+vmap operator is how we
+basically take methods that act on
+single agent parameters and just
+very trivially broadcast them across
+multiple um agents, observations,
+actions, or whatever. We're basically
+just defining a bunch of methods that
+operate on single agent
+information, and then we broadcast using
+vmap across multiple agents. So, that's
+why it's very trivial in JAX once you've
+written a function that operates say on
+one row or one column of an array to
+just trivially vmap it without having to
+write your own custom broadcasting
+semantics.
+And of course, the biggest one is
+probably JIT, the just-in-time
+compilation. As I'll show in a bit,
+JITing operations is like one of the
+biggest ways to it's it is the biggest
+way to increase throughput and speed
+um in in in any JAX-based computation.
+So, there's a little bit of overhead
+time, very little relatively, to
+actually compile the program in advance.
+So, you always like JIT the program,
+there's a warm-up time in actually
+computing pre-computing that XLA
+computation graph, and then once you
+execute execute the JITed function, it's
+incredibly fast. And it has a couple
+constraints like you need to know the um
+input
+types of the arrays, the input shapes of
+the arrays, and also the
+types and shapes of the output arrays.
+So, those are the constraints on like
+JITed functions. That's more just like
+kind of JAX 101, but these um properties
+of JAX have now propagated forward into
+PyMDP.
+Um so, [clears throat] yeah, now I'll
+give a just a quick example. So, in
+old-style PyMDP, you might have a couple
+of lines like this.
+Don't know if you can see my cursor, but
+on the left I'm highlighting this agent
+um construction where you pass in some
+AB
+arrays. You might pass in some here
+single modality trivial observation. You
+do some state inference using that
+observation using agent.infer_states.
+You estimate the posterior over policies
+and then the negative expected free
+energy using infer_policies, and then
+you sample an action. So, the nice thing
+about this is very simple and clean.
+Um and we've tried to make the the JAX
+backend as little as little extra
+complexity. We want to respect this
+old-style like very
+object-oriented API, but we're still
+getting all the benefits of of JAX. So,
+now in JAX,
+in addition to just your A and B tensors
+that you pass in, you can also pass in a
+batch size.
+So, if A and B, for instance, are just a
+single agent parameter tensors, it'll
+just broadcast this to be 10 different
+agents all with the same A and B's. Or
+you can pass in heterogeneous A's and
+B's that have that leading dimension,
+and then this will just basically this
+can either be inferred or you can state
+it declaratively to just basically tell
+the agent class in advance, yeah,
+there's 10 agents and they So, you can
+look in the leading dimension of these
+tensors to find the different models of
+every agent.
+Um the agent.infer_states now uh returns
+a a QS variable. So, in the previous
+um NumPy version, you could return QS,
+but also QS was stored, which is the
+posterior over hidden states. That was
+stored internally on the agent. Now, the
+posterior over hidden states is is
+natively returned. That that's in line
+with this whole functional philosophy of
+JAX. So, there's no more posterior
+belief variables stored on the agent
+except for the parameters. The
+parameters stay on the agent, but now
+like the um
+beliefs and actions get uh always
+returned. So, the agent.infer_states
+method acts more like a function, but we
+still maintain the kind of method-like
+API.
+And so again, you pass in obs, and you
+also pass in some kind of empirical
+prior. So, this is very useful in
+functional workflows where sometimes the
+empirical prior will be something that's
+stored on the agent. This is basically
+the belief from the last time step, like
+the D vector at the first time step of
+inter- inference, or it can be something
+that you're passing in from the outside,
+for instance, like the last value of QS,
+which is no longer available on the
+agent because everything is functional
+now.
+Um and then infer_policies is basically
+the same except now, again, because QS
+is not stored on the agent, you actually
+have to pass in the posterior belief
+upon which the rollouts are going to be
+based.
+And also we've done some trivial things
+like we renamed G to the negative EFE
+just to be more explicit about that cuz
+that was causing some confusion.
+And then as I said before, you have to
+be very um explicit about randomness
+whenever you're doing something random.
+So, for instance, when you're doing
+action sampling, not only do you pass in
+the posterior over policies, which again
+was the return of agent.infer_policies,
+but you also pass in random keys.
+And these random keys can either differ
+per agent, in which case you'll sample
+random actions for every agent, or if
+you want all the agents to use the exact
+same random seed when they sample their
+action, you could just use the same key
+for all agents. But the point here is
+that the random keys you have to pass
+in, they have to have the same number of
+elements as there are agents in your
+batch. So, if you have 10 agents, then
+you have to split the random key into 10
+different keys, one for every agent.
+Um so, that's really nice cuz then you
+can basically control randomness
+selectively across different agents,
+uh either uniformly or you can break the
+symmetry kind of in the in the agent
+sampling.
+Another really uh interesting and I
+think semantically uh user-friendly
+feature we added was this idea of the
+model and distribution API. So, in these
+um
+in in this new kind of way of compiling
+and building a model, you can actually
+specify the whole graphical model using
+a dict. So,
+uh
+basically the dict will will store
+things like the names of the random
+variables, like the observations, the
+control states, and the hidden states.
+And then within each of those um random
+variable specific sub dicts, you'll have
+a dict like the position observation
+modality, which will have
+its different elements, basically the
+support of that categorical
+distribution. The nice thing about all
+these things is that they they just have
+semantic labels, so it's no more like 1
+2 3 4 and kind of arbitrary linear
+indices into tensors, but all of these
+variables actually can be associated
+with semantic names that perhaps capture
+some um specific constraints for your
+task. So, this would be like
+uh example of one of these model
+description for a grid world where you
+have some position observations that
+correspond to like left, um
+center left, center right, right. So,
+this is like a 1D grid world. You could
+have a move left or move right action.
+And as you're writing these strings,
+you're basically just assigning labels
+to each of the kind of variables or
+levels in the support of your
+categorical distribution. So, once you
+assemble this dict, which basically has
+these high level observations, controls,
+and state variables, then you can just
+kind of pass that into this compile
+model function, and it'll immediately
+generate you a model which has fields
+like A, B, C, D. And then what you can
+do with that is you can actually index
+semantically into those arrays using the
+names of the modalities, like the
+position observation modality, and then
+within that modality index into
+particular rows and columns of that A
+matrix using the semantic labels of the
+values. So, instead of doing some weird
+nested indexing of like A01,2,3,
+you're actually indexing with more um
+semantically uh meaningful and
+semantically like relatable uh terms.
+So, for instance, this uh this line
+right here, model.b_position,
+is saying I want to look at the position
+state factor, the the transitions
+corresponding to the the position state
+factor, and I want to look at what is
+the probability of moving to the center
+left given I'm currently in the left
+uh position and I took action move
+right.
+So, it makes sense. If you're in the
+left and you go closer to the center by
+taking the move right action, that
+probability is one. So, you can both
+inspect, like query the generative
+models, as well as set them um using
+this sort of notation.
+And then finally, once you've compiled
+the model, you can just pass that model,
+you basically unpack it with this double
+uh asterisks notation cuz it's it's it's
+a kind of a dict sort of structure. You
+just unpack it, pass it into the agent
+class, and then you will just create an
+agent that has the A and B tensors um
+that have been specified in this kind of
+more semantic way. You still have to
+fill out the probabilities in your
+tensors. So, just by the uh providing
+the description of what are the elements
+of the tensors, what random variables
+drive what other variables, you haven't
+actually specified what those
+probabilities are. So, you still have to
+go in and build the generative model
+that way, but at least you can establish
+the connectivity and the names of all
+the variables in your model just through
+this kind of more string-based
+interface.
+Okay, yes. So, now that um I've kind of
+introduced what the main features are of
+the new JAX backend,
+um there's still a a bit on model
+fitting I want to get to, but I want to
+just show some benchmarks on actually
+um what the new JAX
+backend buys you. So, here I just took a
+kind of standard generative model. This
+is the epistemic huge chaining task, so
+it's kind of like a version of the
+classic T maze that's a little bit more
+temporally deep and it has multiple
+cues.
+So, just I just fixed the generative
+model, um and then I
+ran different backends of PyMDP for
+different numbers of agents.
+And I compared it, like so, the legacy
+NumPy version, the JAX um version on
+both CPU and GPU, and then I also
+compared it to C++ active inference,
+which is a a really optimized C++ based
+active inference implementation that
+came out a couple years ago, and which
+showed really uh competitive I mean,
+just superior results to NumPy uh PyMDP
+at the time, which was incredibly slow.
+So, I just wanted to like reproduce
+those results and then also compare them
+to um JAX.
+So, just like quick before I get into
+them, just quick details on the
+epistemic huge chaining. These rollouts
+were 12 steps, so pre- pretty small, so
+you're not actually running into the
+benefits of JITing the rollout at this
+stage.
+Um policy length four, still quite
+small. The main thing here I wanted to
+get out was the parallelization benefits
+you get from running multiple agents, so
+up to 512 agents.
+And the NumPy legacy, I only ran up to
+128 agents cuz it was just getting too
+slow if you if you push it. So,
+basically what you can see is you get
+really high throughput that gets even
+better on A100 GPU. I mean, running 512
+of these small agents on the A100 is not
+even getting close to the to the maximum
+throughput you can get. So, I don't
+exactly know what this number is and cuz
+I it's somewhere between 10K and 100K,
+but the point but on this logarithmic
+scale, but it's incredibly incredibly
+fast.
+JAX, [snorts] even on the CPU, this is
+Cython line, is also incredibly high
+throughput. So, that Y axis I should
+mention is agent steps per second. So,
+this is like a classic measure of
+throughput, it's like how many agent
+steps are you performing for per second.
+And the big throughput gain here is
+because we're running multiple agents in
+parallel. So, that's going to factor in
+to the to the throughput. Basically, the
+number of agent steps is going to scale
+proportionally to the number of agents.
+Um and then you have CPP AIF, which is
+actually incredibly fast as well,
+especially compared to the
+um legacy
+uh PyMDP, and you can see that if you
+use 12 threads, so I think this supports
+up to 24 threads. I guess it just
+depends on how many threads you have in
+your CPU, you can get really high
+throughput, but it's still not as fast
+as JAX, and I think that's just because
+um CPP AIF also doesn't natively batch
+across multiple agents. So, you can't
+really parallelize effectively across
+hundreds of agents. I think there's
+still natively some sort of for- I mean,
+there would have to be some sort of for
+loop because the the parameter um
+tensors are not don't have a leading
+batch dimension. Where you get really
+high throughput just by V-mapping over
+that leading dimension in JAX.
+Um [clears throat] so, another uh
+kind of metric to look at is scaling in
+the number of policies. So, once you
+increase the horizon, say of your
+planning problem, a classic issue with
+this discrete time uh exhaustive tree
+search active inference is that you get
+really bad scaling in the number of
+policies. So,
+I'm still using native tree search here.
+I haven't actually in- improved the
+algorithm for doing tree search. I'm
+still doing an exhaustive search over
+very large number of policies,
+but at least the the ability to run that
+algorithmically still expensive tree
+search, the cost of that is much lower
+now with JAX. So, now on this Y axis,
+we're just showing the raw runtime in
+milliseconds, so lower is going to be a
+better score.
+And again, comparing NumPy legacy in
+orange, the two types of C++ active
+inference in one thread in purple, 12
+threads in pink, and then the two
+backends for JAX um PyMDP.
+So, with 100 JAX PyMDP on on M2 on this
+MacBook that I'm on right now, you get
+increasing runtime just like all of the
+rest in the number of policies, but it's
+it's clearly much um
+lower, absolutely. But the scaling
+property is still pretty much the same.
+It eventually gets kind of linear in the
+number of policies.
+On the GPU, it's much longer before you
+start hitting this linear increase, and
+that's because on with this much memory
+on an A100 GPU, you're V-mapping over
+policies, and you're really not hitting
+kind of the hardware limits at that
+level. So, once you start going to very
+um many policies, and these are long
+policies, too, of length 24, you'll
+start getting you'll start
+bottom-necking on memory and stuff like
+that, and you'll start getting uh linear
+increases in runtime. But absolutely
+speaking, you're still running 16,384
+policies in less than 50 milliseconds on
+on the GPU. So, that's really nice. And
+that's just because we're V-mapping. So,
+we're not writing any fancy extra math
+to deal with like parallelized
+computation of uh policy posteriors.
+We're just writing a single function
+that evaluates the expected free energy
+of one policy, and we've just written
+that function in a way so that you can
+V-map it trivially over, say, 16,000
+policies.
+So, that's just a really nice thing you
+get out of the box by switching to this
+uh JAX backend.
+And then finally, I want to show some
+results on time horizon scaling. So,
+um this is basically showing the the
+effect of using this rollout function
+where you're kind of getting the entire
+agent environment loop.
+So, what's interesting here is if you
+just look at
+normal JAX,
+um
+increasing time horizon on the x-axis
+measuring throughput, so agent steps per
+second on on the y-axis.
+If you just do a native JAX for loop
+with no getting, none of that, it's
+actually slower than NumPy. So, that
+that just goes to show you really have
+to get if you want to use JAX. Um and
+this is So, this is measuring basically
+the whole agent inference, um planning,
+and action, and the environmental step
+all in one for loop. That actually ends
+up being slower than NumPy. I think if
+you pushed the size of the generative
+model, the batch size, of course,
+because NumPy would have to for loop,
+and then the number of policies, this
+orange would actually
+hop ahead of the Or sorry, the purple
+would go ahead of of the orange in terms
+of throughput. But for this small kind
+of um
+somewhat reasonable generative model
+that you would might imagine someone's
+using in like a pedagogical or research
+context, JAX is actually going to be
+slower.
+Uh just the native for loop. However,
+once you start getting things, uh
+immediately the JAX
+uh pops ahead. And this is all on CPU,
+by the way. This is not on GPU.
+So, the throughput is like basically
+more than It's probably what 2,000
+2,000 steps per second for just JIT
+stepping. Uh so, just getting the full
+step function and then running that
+JITted step function in a for loop. And
+then you get even better throughput if
+you then JIT the entire agent
+environment loop. So, the difference
+basically between this green and the
+yellow is whether we're getting the
+entire agent environment interaction or
+we're just getting the single step time
+step function, which is just the agent
+taking one active inference step and
+then the environment taking one sampling
+an observation given the action step.
+So, there's already a difference there,
+but it's actually not that big. But
+then, once you start moving it to very
+big time horizons and you put it on on a
+a GPU, you're actually really taking
+advantage of of the high throughput on a
+GPU.
+And also the fact that you're minimizing
+dispatch between the CPU host and the
+the GPU, the hardware that you're
+running it on, that's when you really
+start seeing the difference between
+getting the full agent environment cycle
+and um just doing a a Pythonic for loop
+of the JITted step function. So, when
+you have a really long time horizon, so
+that imagine like a really long um agent
+environment interaction,
+then you start getting really, really
+high throughput on a GPU. And this is
+also batch size equals one. So, the
+difference would be even greater if we
+say we're running 1,000 agents in
+parallel. But even for a single agent,
+you can see that at a time horizon of
+2,048, we're getting 3,400
+agent steps per second. So, that's like
+a really, really fast latency. Um you
+can run loads of experiments this way.
+Okay, so that's kind of the the
+benchmarks and the sort of acceleration
+that you just trivially get from putting
+everything on JAX and V-mapping
+everywhere.
+And now I just want to highlight some of
+the new planning and inference
+algorithms.
+So, um I think the biggest thing to
+highlight here is the sophisticated
+inference um algorithm. So, this is
+uh basically a way to This is based on a
+paper that came out in 2021. So,
+sophisticated inference is a way to kind
+of just do more intelligent planning.
+Um
+it actually, from an algorithmic
+perspective, has worse scaling than the
+original tree tree search-based active
+inference cuz in sophisticated
+inference, you're branching on both
+future states
+and future actions and future
+observations. So, the thing about
+sophisticated inference is what it
+simulates is an agent taking an action,
+getting a
+a possible imagined observation given
+that action, and then updating its
+belief given that observation, and then
+planning from that new belief state at
+this imagined forward point in time. So,
+you have to branch on the possible
+observations you might see at each time
+step in the future and then branch on
+the actions you might take in the
+future. So, from a pure algorithmic
+perspective, it's actually a really bad
+scaling algorithm in time horizon
+because of this exponential explosion.
+But there's a bunch of tricks you can
+use to basically make the actual search
+size of the search tree much, much
+smaller. So, you can basically prune off
+branches of the search tree based on the
+expected um expected free energy that
+you might get down one branch. And so,
+we have a highly optimized JIT and JAX
+compatible version of sophisticated
+inference now in PyMDP. Um this was
+mainly the work of Tim Ver Balen and
+Riddhi Pitliya. Um so, they did a really
+good job in in implementing that and
+demoing it. So, just wanted to shout
+that out cuz I think that's one of the
+most powerful things about this new
+release is the use
+of sophisticated inference. Um there's a
+lot of cases where you get demonstrably
+better planning because of sophisticated
+inference. The fact that you can
+counterfactually update your or like
+imagine how your beliefs would update in
+light of new evidence allows you to make
+much better informed decisions about
+where to go next. So, one of the biggest
+things I think about sophisticated
+inference that's really attractive is
+its ability to make information gain
+task relevant. So, one of the problems
+with classic
+active inference is that there's this
+intrinsic curiosity drive, so agents
+will get distracted with parts of the
+world that just have high information
+gain. With sophisticated inference,
+there will only be branches of the
+search tree that are kind of upweighted
+in terms of probability based on if that
+resolved uncertainty then allows you to
+further minimize expected free energy.
+So, say if there's some hidden structure
+in the world that upon discovering it
+then allows you to maximize utility,
+then that search tree will be or that
+path in your search tree will be
+preferred relative to one that's just
+discovering hidden structure in the
+world without any downstream
+consequences for accomplishing your
+goals.
+So, it doesn't actually change the way
+that curiosity or information gain
+enters the objective, but because of the
+recursive belief updating, it kind of
+contextualizes the info gain to be more
+sensitive to downstream rewards. So, I
+think that's a really powerful just like
+algorithmic feature or computational
+feature of sophisticated inference that
+hopefully people will explore and can do
+so now at scale with high throughput
+with this um implementation.
+Another big one is inductive inference.
+So, this is a way that you can kind of
+plan um for a goal future in the future
+that's in the future by kind of planning
+backwards. So, if you have some
+transition tensor that has very
+deterministic dynamics, you can kind of
+use your knowledge of the dynamics and
+the your knowledge of the goal state to
+kind of prune the the originally
+exponentially expansive search tree to
+just a set of paths that um they you
+know a priori
+uh uh
+have reachability between the goal and
+your starting state. So, it's kind of
+like um
+uh
+induction like the
+dynamic programming. It's sort of this
+the same principle where if you start
+with the goal and then back propagate
+the goal to to optimize your current
+policy, it's that same principle, but
+it's just using the the B tensor of your
+active inference model to kind of
+generate that
+that inductive uh planning algorithm.
+How it actually manifests in practice is
+just an extra cost to your expected free
+energy for policies. That's called an
+inductive cost. So, it basically is a
+cost that measures
+um sure I could take this policy, but
+how
+how reachable is my final end state if I
+were to take this policy. So, that
+inductive cost kind of suppresses
+policies that will bring you into parts
+of the state space that are kind of like
+um
+uh sinks in the dynamics in the
+transition dynamics of of the B matrix.
+Um another big thing that's again
+enabled by JAX is this um exact
+filtering and smoothing in HMMs.
+So, typically in active inference, we
+use
+message passing algorithms for the
+hidden state inference step. So, things
+like variational message passing,
+marginal message passing,
+belief propagation.
+Um
+but actually, there's nothing stopping
+you from using better inference
+algorithms for the hidden state
+inference. So, what we did here is we
+actually implemented exact inference on
+HMMs. So, you actually don't need to use
+an approximation for the inference if
+you if the
+generative model satisfies certain
+properties. So, for instance, if the
+generative model has a single hidden
+state factor, you can actually do exact
+inference on it.
+And so, what we do is we we took an
+inspiration from another JAX-based
+package called DynaMax, which is for
+fitting state space models in JAX.
+And they have a really efficient um
+associative scan-based algorithm for
+fitting HMMs, both linear Gaussian HMMs
+as well as discrete ones.
+And so, we just basically took that and
+and and did a more PyMDP-friendly
+implementation of it and now are using
+it here. The nice thing about
+associative scan is it's actually
+sublinear in time horizon. So, it kind
+of does a quasi parallelization of the
+treatment of time steps. Um
+It's I think logarithmic in time. So,
+the way it does this is it kind of takes
+the associativity of the transition
+operator as it operates on on a chain of
+of time steps, and you can take
+advantage of that to kind of divide the
+full inference problem into a bunch of
+subproblems that can be treated in
+parallel. That's why it's like a
+logarithmic in time because you're kind
+of bisecting the sequence and then
+bisecting the the subsequences. So, it
+has this logarithmic scaling property.
+Um so, that's also really nice and it
+scales really nicely in long sequences.
+So, you can do full filtering and
+smoothing of your posterior states using
+this associative scan.
+Um despite that algorithm existing, we
+still included the MMP and VMP
+algorithms in the repo, but now they're
+very highly optimized. They're much
+faster
+and they're fully differentiable, too.
+So, you can pass gradients through them
+and all that stuff.
+Another big thing is this sparse
+dependency structure. I think this was
+also released in the last PMD P007, but
+now it's actually just more flexible,
+more fully integrated through the repo.
+And what this means is you can kind of
+specify the conditional dependency
+structure of your generative model in a
+much more um sparse way. So, for
+instance, not all observation modalities
+depend on all hidden state factors, and
+you want to take advantage of that. In
+the old PMD P and the old SPM, although
+I think this is now also updated in SPM,
+you would have to assume the kind of
+naively that all hidden state factors
+drive all observation modalities, and
+what that in practice means is you just
+have loads of redundant information in
+your parameter tensors. But, if you know
+that say only um the position
+observation is driven by the position
+hidden state, then you can make your
+position observation no longer dependent
+on the weather hidden state or some
+other hidden state, and you can
+basically chop off the dependency, and
+the result is you get much smaller
+parameter tensors.
+So, now that's all integrated as well.
+You can do it both for the A like the
+hidden state to observation dependency.
+You can also do it for hidden state at
+time T to hidden state at time T plus
+one dependency. So, multiple hidden
+state factors can drive multiple other
+hidden state factors. And then you can
+also do this with action. So, action
+control factors um typically just drive
+a single hidden state factor, but now
+with these B action dependencies, it's
+another list of basically specifying the
+dependency graph. You can have one
+control factor drive multiple hidden
+states or multiple control factors drive
+one hidden state. So, all that
+flexibility is now um built in. It It's
+It was hard to engineer that in with all
+the constraints of JAX, but we managed
+to do it, so the inference is much
+faster, and you're not wasting
+computation.
+Okay, so one I think of the most This
+was actually one of the original
+motivations for moving to the JAX back
+end, and one of the most important
+things for people working in cognitive
+neuroscience and experimental psychology
+is the idea of fitting PMD Ps to
+behavioral data.
+So, the the setting is kind of that you
+have some participants in say a
+psychology or psychophysics or cognitive
+neuroscience study. They're taking
+actions. You You're recording what
+they're seeing say on like a screen or
+some kind of stimulus setup, and you
+want to describe their decisions as
+being driven by an active inference
+agent. So, this is like an inverse
+problem of what are the parameters of an
+active inference agent that best
+describe the experimental decisions that
+this person made.
+And now we can do that very easily in
+JAX. So, once we translated everything
+to JAX, it made
+putting PMD P active inference loops
+into the forward model of the likelihood
+model of a generative model of someone's
+behavior very trivial. And this is
+basically enabled by this package PyBa
+Fit by Dimitri Markovik, which is really
+nice cuz it allows you not [snorts] only
+to use PMD P to fit uh the new JAX PMD P
+to fit active inference models to
+experimental data, but you can compare
+it to other agent-based decision-making
+models like reinforcement learning, for
+instance, and variants of Bayesian or
+non-Bayesian reinforcement learning.
+So, here on the right, I just have a
+very simple example of
+using NUTS, which is the No-U-Turn
+Sampler. It's like a very optimized way
+of doing
+um Hamiltonian Monte Carlo to infer the
+parameter posteriors from a bunch of T
+mazes, these classic agents
+making decisions. So, the parameter that
+we're inferring here is the agent's
+beliefs about the reward probability
+associated with choosing the correct
+arm. Um so, that's like a classic thing
+that kind of trades off the
+explore-exploit dilemma for the T mazes
+agent, and you can see by using NUTS
+that you can basically recover uh
+distributions over the parameter
+posteriors that roughly track the true
+reward probability. There's different
+experimental setups where the
+recoverability will be much better, but
+this was something I whipped up probably
+in 20 minutes and just ran it, and you
+get a pretty nice correlation. So,
+there's nice things like that um they
+are now possible, and hopefully this is
+going to be one of the things that will
+actually allow people to start using PMD
+P actually to fit experimental data.
+Um the other nice thing about this is
+because it's all backed by NumPyro, you
+don't have to use HMC NUTS. You know,
+for certain inference problems, you
+might want to use
+um stochastic variational inference or
+black box variational inference to fit
+it, or you might want to use the Laplace
+method, like Laplace variational
+inference. So, basically, there's a a
+whole load of different
+priors and inference algorithms and
+parameterizations of those priors and
+posteriors that you can use uh in in
+NumPyro, and that's very nicely packaged
+together in PyBa Fit. So, a lot of the
+kind of low-level choices are abstracted
+away from you by PyBa Fit, and you can
+kind of try out different techniques for
+fitting your your experimental data. You
+don't need to commit to one particular
+inference algorithm.
+Um yeah, so another big thing is the new
+documentation. So, the documentation now
+includes way more examples than before.
+Um so, there's a ton of new JAX-focused
+notebooks that show different uses, all
+those things I talked about,
+sophisticated inference, inductive
+inference,
+um model fitting to behavioral data,
+uh
+just using sparse tensors. It's
+something I didn't even talk about. You
+can actually also do very
+high-throughput computation by using
+sparse tensors, which is something
+supported by JAX.
+Um there's now notebooks for all of
+these things that you can access on the
+docs, and after this I'll I'll just
+quickly hop over to the docs to show
+everyone that.
+Um and then yeah, there's also going
+back to the your simple grid world T
+mazes,
+all those like classic examples are
+still included there. There's also a T
+maze with distractors notebook that
+explains the whole benefits of using
+sophisticated inference.
+And also the docs themselves just have a
+better theme and kind of general
+makeover compared to how they used to
+be.
+>> [gasps]
+>> Um [clears throat] so, yeah, um I'll
+pretty much close up with that. I guess
+it's almost been an hour now. Um so,
+yeah, uh links here. Here's the code.
+The docs will We can hop over to that
+after this. Release notes, and then if
+there's any issues you ever have, feel
+free to create an issue in PMD P. Just
+added a little simulation of running a
+bunch of agents in parallel using
+inductive inference.
+Um and I also want to acknowledge
+There's a lot of people not on this list
+who also worked and contributed to PMD
+P, but just I wanted to highlight a few
+key people, especially um Tim Ver Balen.
+He put in a lot of effort into into
+building PMD P. I want to acknowledge
+his effort sophisticated inference,
+battle testing PMD P in different
+circumstances with his own use cases in
+like robotics and various kind of more
+high-dimensional specialized domains.
+Um Dimitri Markovik, he was the one who
+first convinced me and said we should do
+this in JAX if you want to fit people's
+behavior to it, and he was kind of the
+main architect of a lot of the key
+choices that went into the JAX back end.
+So, I want to thank him a lot. I mean,
+yeah, this basically wouldn't be
+possible without him. I didn't even know
+what JAX was when we first started
+talking about this.
+Um Reddy was also huge in developing the
+um
+sophisticated inference implementation
+and also using active inference in PMD P
+in
+a lot of her own projects and just
+adding new features, working on the
+model compilation,
+uh model description. Arun, who I think
+is also here, was really great in
+helping us organize the full um
+uh 100 release
+like
+workflow and getting all the issues in
+in play and also just keeping us on
+track on on getting things and also
+adding features as well, doing all of
+that, CI features, also fundamental PMD
+P features, doing an RGM implementation
+as well. There's like a lot of really
+good things, and and I'm really grateful
+for that. And then there's just loads of
+other people who have contributed
+various things. I can't name everyone's
+contribution,
+but uh yeah, so I just want to
+acknowledge that this was really a team
+effort, and it was
+it's a good expression of a lot of
+people being interested in this
+technology across a lot of disciplines.
+Um yeah, so with that I'll end. I don't
+know um Daniel, do you Should I first
+hop to the docs, or do you want to have
+some discussion first? I am pretty open
+to whatever.
+Yeah, how about um
+meanwhile, anyone else can can add any
+comments
+or ask any questions to Connor, or just
+bring up any points that weren't
+covered,
+and then we'll look at the docs, look at
+some of the examples.
+Yeah, sounds great.
+Yeah, Peter
+Yeah, Peter Yeah, Connor Connor, you can
+call on here if you want.
+You You're moderating.
+Thanks, Connor. But, also by the way,
+looking forward to seeing the docs, so
+I'm also happy to wait till after that.
+Uh
+what do you think?
+I have a
+few questions, as you can probably
+imagine.
+Yeah, okay. Maybe Maybe we just quickly
+go through the docs and do then do the
+questions then. Yeah, I think that'll be
+easier cuz it'll maybe then interrupt
+the discussion. So, yeah, this is the
+main documentation. It's still
+uh like Read the Docs base, but now
+using this MkDocs kind of thing, and I'm
+using the Dracula theme. Might change
+that at some point, but I kind of liked
+the colors for now. So, this is the main
+page.
+Um there's a getting started tab over
+here, installation. We're doing
+everything through UV now, so that makes
+things a lot easier. It's better than
+pip in my experience.
+There's a bunch of different dependency
+groups, like if you're doing model
+fitting, if you have a GPU on hand,
+um if you want to mess with the docs or
+run notebooks.
+So, that that's pretty extensive.
+Um see, there's also a JAX quick start
+uh, that just shows you how to like run
+something quickly in Jax. This is same
+idea as what we used to have in NumPy,
+but just now everything is more
+uh, Jax friendly. A lot of these default
+generation functions as well, they used
+to be just uh, NumPy only right now Jax
+based. So, ran generating random A
+arrays, B arrays, uniform distributions,
+stuff like that.
+Um, there's a lot of different guides on
+specific things. So, this rollout
+function for the compiled agent
+environment loops, um, this is really
+nice uh, uh,
+thing because of the throughput it gets
+you and it's really nice uh, the API as
+well. So, basically, once you've defined
+your agent and your Jax JIT compatible
+environment, you just pass the agent,
+the environment into the rollout
+function, set some time horizon, how
+many steps you want to run, and then RNG
+key, so a random key to seed the
+randomness.
+And then what you'll get is the
+trajectory of the agent states over the
+history of the rollout, so their
+beliefs, actions, observations, uh,
+posteriors over policies, as well as
+like the final state of the agent and
+any other like relevant info. Um,
+so I find that really nice.
+Um, yeah, so that's just a guide about
+how to use that uh,
+and as I said um, before the agent and
+invent and are both natively batched.
+So, if you just add a leading dimension
+to your agent or to your environments,
+you can just easily run multiple agents
+and multiple environments in parallel.
+One agent for
+every environment or one environment
+with 50 different agents, you can do all
+of that with this rollout thing.
+Um, yeah, there's just kind of new uh,
+building blocks for envs themselves, how
+you make the environments, how you
+instantiate them.
+Um, there's yeah, actually one thing
+that I didn't mention, there's this new
+PyMDP env structure. So, now you can
+make an environment and initialize it
+with the same parameters that you used
+to initialize the agent. So, you can
+basically make an environment using the
+A, B, and D tensors you used to generate
+the agent.
+And then you'll basically have an
+isomorphism between the generative
+process and the generative model. So,
+that's a good way to kind of test out
+uh, what assumptions can be broken on
+the environment side without
+compromising performance on the agent
+side. So, that's kind of this ideal
+situation. But, of course, you can also
+run
+any arbitrary environments with a PyMDP
+agent. They don't need to be structured
+this way. It's just a kind of a special
+case.
+This is uh, there's just a a classic
+tutorial on how to think about
+generative models, hidden state factors,
+and modalities.
+Oh, yeah, and then there's the kind of
+um, tutorials. So, we have this notebook
+gallery now that has subsections for the
+different tutorials. So, there's like
+kind of a getting started subset, which
+includes
+how to build generative models with this
+new model construction API, so the model
+description dict and all that stuff.
+So, this is showing how you would build
+this thing with like strings and then
+populate it with uh, probabilities. And
+then finally, once you have the actual
+model, you can create an agent with it
+and then start running things with
+rollout or with with whatever you want.
+Um, T maze demo, T maze with
+distractors, that's this one where
+there's like some sources of information
+that are irrelevant to the task, some
+that are.
+Um,
+graph worlds, yeah, there's there's all
+sorts of things. Uh,
+there's a a whole set of notebooks just
+on sophisticated inference and
+highlighting its different advantages
+under different um, settings. So, like
+in the T maze, the T maze with
+distractors, on a graph worlds where an
+agent is navigating a a gen a
+like a world that's structured like a
+graph, so some nodes are reachable from
+others.
+Two on inductive inference, um, learning
+parameters, so updating the A and B
+matrices from data. So, that's done on a
+grid world example.
+Maybe also fit uh, highlight the pipe of
+fit one. So, this is the one I I
+described before where you're basically
+uh, creating a T maze agent in a
+generative model, sampling the behavior
+of that T maze agent.
+So, for instance, here I was sampling
+looks like uh,
+10 different agents.
+And then using those 10 agents and
+fitting their posterior uh, parameters
+with nuts,
+um, the HMC, or fitting it with
+in just a couple lines you can, so
+that's fitting it with nuts or that you
+can switch to a different inference
+algorithm like black box variation
+variational inference and it's the same
+uh, same idea. You can basically use
+different inference algorithms to fit
+your your models uh, to experimental
+data, which is really nice. And this is
+all made super easy with this pipe of
+fit package. So, you have different kind
+of wrappers on nuts and SVI and
+different uh, inference algorithms.
+Um,
+oh, yeah, here's a kind of a cool one is
+uh, using PyMDP together with a neural
+encoder. So, this is training a very
+small MLP to embed um, continuous
+observations into the discrete
+observation space of a uh, a PyMDP
+agent. So, this is an example right here
+on the left, an agent is seeing
+basically continuous 2D observations
+from these Gaussian clusters, but it's
+learning end to end to map those
+continuous 2D observations to discrete
+states. And then it's doing planning in
+the that discrete state space to say go
+from
+mode one to mode two, three, four, five.
+So, this is just a demonstration of how
+you can basically train PyMDP agents end
+to end to map from continuous
+observations into a discrete space on
+which they can do all the message
+passing and planning.
+Um, so that was just one very
+yeah, this is an example of showing the
+agent um, doing the same planning, but
+now what I'm plotting here are the
+decision boundaries of the MLP, the
+multi-layer perceptron that was trained
+as a front end. So, you can see
+basically that the MLP is learning to
+partition the space into these discrete
+states that the agent can then do
+planning on.
+Um, yeah, but there's these are very
+elementary, I would say, demonstrations
+of the full capabilities. I feel like
+there's a lot more people can do with
+the whole differentiability side of
+things.
+Um,
+yeah, I think I'll I'll I'll end there.
+If anyone wants to dive into a
+particular notebook, I'm happy to do
+that as well.
+Maybe Pedro, we can come back to you
+now.
+Okay. Um, I'm just looking at my So,
+thank you, Connor.
+It's very exciting. Congratulations. The
+whole field has been waiting for this
+for a while and and there's joy in the
+streets and it's an inspiration.
+>> Thanks.
+Good to see.
+>> [laughter]
+>> And well, thank you to the rest of the
+people who worked on this. So, I see
+Dimitri and Aaron and some other people.
+And um,
+I was just as a note, as you know, I'm
+working on the Julia version, which kind
+of looks up to PyMDP as its big brother.
+So, that's it's very nice and a lot of
+the
+exciting points you brought up are
+exactly the
+the some of our goals, right? So, we're
+So, thanks for the inspiration on that
+point as well.
+Um,
+>> Yeah, definitely. I just but sorry to
+interrupt you. I This is one thing I
+actually want to do is to also benchmark
+it against active inference.jl and
+rxinfer, but I just didn't have time, to
+be honest. But, I I yeah, that that
+would be really cool to do as well cuz I
+know Julia is incredibly fast, too, and
+has the JIT stuff kind of built in.
+So, we are
+we are moving towards the new release.
+When that's done, I think it would be
+nice to do. Maybe we can do that
+together.
+Yeah, yeah.
+Um,
+but enough talk about my own package,
+that that's not the point right now. I
+suppose.
+Um,
+so maybe So, one question I had was
+because um, my only worry personally
+with Jax has been that it's harder to go
+and
+and poke
+as a not master expert level developer
+behind the package. So, let's say I want
+to add a different parameter learning
+function instead of
+uh, the Ryan Smith style and I want to
+have a different parameterization. I
+want to throw in a a Gaussian filter to
+do it or something like that.
+How easy is it to go and change kind of
+the internals in that way? Is it Can Can
+I just plug in a function for that? Is
+that a plan? What do you think? Yeah,
+that's a good question. So, I would say
+that I see I saw there's two ends on the
+on the it's harder as an entry point for
+sure on the functional programming side
+of things. Like you're forced to code
+functionally, so you
+have to s- um,
+kind of do away with these assumptions
+of storing state on objects, like on as
+properties and attributes of a class,
+right? It's a lot more You can of course
+have PyTrees that have properties, but
+it's a lot more instantiating a new
+instance of a class or a PyTree every
+time you want to change something. So,
+that takes some getting used to. And
+also passing keys everywhere.
+On the other hand, I think the way we
+wrote it is actually incredibly amenable
+to this modular, I want to go in and add
+a new thing approach. So, this is one of
+the things I had to deal with when
+adding the associative scan based
+inference cuz now I was adding a new new
+inference algorithm next to VMP and MMP.
+I think we've written it in a way that
+actually makes it easy specifically
+because of the V mapping aspect across
+agents. So, when you're thinking of your
+algorithm, you don't have to immediately
+imagine, oh, how's this going to
+broadcast against like a thousand
+agents? As long as you write it
+according to the Jax convention, so
+functional,
+uh, no in place updates, um, keeping
+dtypes and shapes static between input
+and output, again, that is a constraint,
+and passing in an RNG key if you need
+randomness anywhere. As long as you obey
+those constraints, you can basically
+just write a new function, add it to
+inference.py, which is still one of the
+libraries that handles inference,
+um, or algos.py if it's an inference
+algorithm or learning.py if it's a new
+learning algorithm. And then that can
+get and then you would also have to add
+some kind of um
+learning you would have to go into the
+update parameters method of the agent
+and say,
+you know, if if I want to use this
+algorithm then I'm going to dispatch to
+this learning.py function. So that kind
+of still that structure that was in the
+NumPy version where there's agent
+methods and those agent methods then
+call and import functions from the sub
+sub libraries and then call those rather
+than define all the all the math and
+computation in the agent class. That
+structure still remains. So you still
+have that modularity.
+Um
+yeah. I have a question um
+on that cuz I think it might be nice for
+the tutorial on
+I want PiMDP but with this other
+parameter learning function or something
+or with this other planning
+model or
+with this other
+variant of expected free energy as loss
+function or something like that.
+It's just a thought.
+Yeah, there So in this validating
+sophisticated inference I believe that
+there is
+a for specifically for this one case of
+switching between vanilla planning and
+and sophisticated planning I think there
+is an example that shows you how to
+easily toggle between the two.
+And for the inference algorithms
+maybe in this one there is.
+Or I mean if you want to add one I
+guess.
+Yeah, yeah. I can comment on that. So
+I'm actually at the moment halfway
+through trying to get the renormalized
+generative model
+stuff into a notebook
+and the active parameter learning is
+something that we don't currently have a
+good implementation of in PiMDP itself.
+So Carl has done some
+very specific stuff with that. So
+my first attempt at this is going to be
+have that defined in the notebook
+effectively as like a little module that
+we can like PiMDP agent plus this new
+learning algorithm this is how you would
+do that. But my long term goal is once
+it's actually there to then put it in
+the main thing. So
+I think that modularity of it works
+quite nicely. I will like we'll chat
+with the rest of the team on
+how much of the stuff we want to support
+ourselves as part of the PiMDP API. So
+like once cuz once an algorithm is there
+we want everyone to use it and rely on
+it and that it's not going to just
+disappear. So that nuisance burden is
+something that we need to be careful of
+because this field is moving so quickly.
+If we put every single new algorithm in
+this then it's going to explode. But if
+we focus on the modularity then you can
+have the core we maintain the core as
+like almost like a standard library and
+then everyone else can bring their own
+implementations if they so wish. And I
+think that's quite a nice sweet spot to
+be on in terms of us providing the
+infrastructure for doing active
+inference. But it allows particularly
+like users who are going to range quite
+widely from
+you know sort of PhD students who are
+doing they want to
+simulate an agent that's
+doing you know some sort of cognitive
+psychology experiment and you know it's
+maybe it's small scale but you know
+they're trying to show an interesting
+problem or maybe this disease affects
+this type of planning or parameter
+estimation etc. Compared to somebody
+who's like I want an active inference
+classifier that's like I don't care how
+the brain works I just want this to run
+at some speed on production.
+Um because we want to support a huge
+range of users it's better that we just
+provide the skeleton and then everyone
+else provides what they need in order to
+achieve their goal. Um so the modularity
+is absolutely key for that.
+Um but yeah the more we can show people
+how to use that the better. So uh yeah
+watch this space basically.
+I think there are exactly three groups
+of people active inference caters to one
+is the AI people who just want it to
+run.
+One is the theoretical people who want
+to simulate some proof of principle of
+for what some
+and then there's the applied modelers
+who want to fit it to behavioral data.
+And you're right that the
+the needs of those three groups are
+different.
+So it's so yeah.
+We had the same design philosophy of
+like
+build the skeleton make it very easy to
+plug in a user made bit or switch out
+bits and pieces and then
+the standard ones
+put them as a standard library where you
+can get them from something like that. I
+think that's
+something nice.
+Um
+on that on that note of like the
+modularity. So one of the things we've
+discussed I think in an issue somewhere
+but it's not currently implemented is
+the idea of
+instead of
+having like flags in the agent class
+um that are saying oh am I use MMP or
+VMP or exact
+as you add more and more algorithms
+that's going to be really ugly cuz
+you're just going to have like flags for
+every sub case. So one of the things
+that we started to explore also with
+this rollout function is the idea of
+either passing in something like an
+inference configuration
+that could be basically the parameters
+for some callable that does your hidden
+state inference and then that way you
+can just pass both the call like a a
+pointer to the callable in from outside
+like my my favorite inference algorithm
+and then the parameters like the
+configuration to that and then when you
+get to that
+inference step which like you said Arun
+is just kind of the the skeleton
+infrastructure that we provide then your
+particular JAX compatible callable gets
+used to actually perform the hidden
+state inference. And so we kind of have
+that with this idea. So for when you're
+using the rollout the policy search
+argument is sort of exactly that idea.
+You actually just pass in
+a callable which is some custom policy
+search routine. So you don't have to use
+the exhaustive tree search you don't
+have to use a sophisticated inference
+you could actually pass in your own
+domain specific or custom
+policy search function. So there is a
+world where we just expand that sort of
+pattern to inference learning all these
+different
+sub models.
+Maybe also exciting to talk because we
+were trying to do that with the Julia
+package and it might be nice to align
+that a bit like cuz I think even the I
+suppose if
+if you took that far enough it would
+mean that you could use much of your
+skeleton with an entirely different type
+of generative model.
+Yeah. As long as you have an inference
+procedure that works with it right?
+Even a sampler or something like that.
+Yeah definitely.
+Cuz then you can do maybe continuous
+state space
+stuff as long as you have some inference
+that works for it.
+I don't know. Want to share my
+excitement maybe about that
+idea. Yeah, yeah. That's something I've
+thought about as well. It's like cuz you
+could just yeah the the big problem with
+the continuous state space as you know
+is that defining the expected free
+energy is a bit trickier.
+So you need to use probably sampling to
+ex compute those information gains.
+If you say have a Gaussian mixture
+likelihood or like a Gaussian likelihood
+where you have one Gaussian component
+per hidden state then to evaluate the
+info gain of those rollouts you need to
+use some kind of sampling or
+approximation. But if you if you make
+everything really
+high level and abstract then there's
+nothing stopping you from doing that. So
+just in your policy search function you
+have some step that computes a bunch of
+samples to compute some you know
+conditional entropies or whatever.
+Exciting.
+So I have other questions but maybe I'll
+for a moment if
+all of you or Dimitri or Arun had your
+hand raised earlier and stuff.
+I did have a question for you Connor
+which is so
+first of all I'll say congratulations on
+getting us to V1. That's huge.
+What do you think is missing for future
+releases? What are you excited to work
+on?
+Yeah that's a great question.
+Yeah there's there's there's various
+one-off features that we just don't have
+like these things with sampling
+based schemes for estimating info gains
+in continuous spaces.
+So that I think would be the biggest
+thing is getting the continuous
+distribution front end in there.
+So yeah this I mean this I've gone back
+and forth on this because sometimes I
+think to myself it's a bit out of scope
+for PiMDP. PiMDP is very kind of wedded
+to the SPM inspired discrete state space
+models only. But one of the biggest
+blockers for people actually using PiMDP
+is the fact the scalability issues. Like
+I'm not I'm not going to encode my image
+in a bunch of discrete one hot vectors.
+I mean the RGM thing is like one
+solution to that but another solution is
+you just have more flexible
+distributions over your input variables.
+So part of me is like maybe that's the
+burden for another package and then you
+can just tie up your like something like
+RXInfer which does deal with continuous
+distributions right? It deals with all
+basically conjugate exponential family
+and I guess more now.
+So you could just link deal with that
+for continuous stuff and deal with PiMDP
+for discrete planning. But I also would
+just be personally excited to work on
+that because I think it would be really
+cool to have PiMDP agents that can do
+planning in like a Gaussian space. You
+can kind of now do that because of the
+modularity and because of the
+differentiability. So you could hook up
+instead of a neural network as this
+front end I was hearing you could hook
+up say a backward message from a
+Gaussian distribution right? There's
+nothing really stopping you from already
+hooking up continuous stuff. So anyway
+but I think that would be a big one to
+work on.
+Another one would be just to rigorously
+characterize and optimize not the
+sophisticated inference implementation
+which is really good but also all the
+hyper parameters. The sophisticated
+inference has loads and loads of hyper
+parameters which I don't fully
+understand and I think even the
+developers of sophisticated inference
+still don't know the the space of hyper
+parameters that gives you good
+performance of sophisticated inference
+in particular regimes. So, that's
+something that I want to get better
+characterization of. So, maybe some way
+of given a planning problem in a
+generative model, automatically
+determining the best hyper parameter set
+for
+uh sophisticated inference.
+Um another thing I think would be really
+cool would to be I don't know. This is
+more for pedagogy and like interactive
+visualization, but some kind of like
+POMDP server where you can actually
+that's like hosting inference and
+visualization. So, you can like upload
+like an environment or an agent
+configuration and then get in real time
+like an interactive visualization uh of
+your agent
+um
+interacting in that environment. Just as
+an intuition pump for people who want to
+say, "Okay, what if I change this? What
+if I change this?"
+That would break the ability to jit the
+entire interaction loop because you'd be
+a human human user giving input into the
+system, but you could still get the
+single time step rendering incredibly
+fast because of how efficient POMDP is.
+So, that would be cool, but that would
+also require some resources for actually
+hosting inference on some kind of
+server.
+Um yeah.
+Can I just come in with on a couple of
+those? So, I think um yeah, your your
+first point on
+just the flexibility of inputs that we
+can give to a POMDP P agent is
+exactly that, right? Like the more the
+wider that scope, the more users we can
+we can help. Uh I think that's that's a
+really good point. Whether this should
+be a separate package or in POMDP, a
+nice middle ground might just be
+notebooks. Just show, "This is how you
+can do it."
+But we don't necessarily have to support
+that in perpetuity. And I think that's a
+really good nice way of just basically
+having
+a garden with a thousand flowers bloom,
+and then we can see what the community
+uses, and if we then think, "Okay, this
+is something that everybody wants to
+use, and we are happy to support it,
+happy to maintain it." Then we can shift
+that into standard POMDP, but we don't
+have to.
+Um
+I think that's one thing that I'm really
+excited for for the next I'd say like 12
+months, 24 months, is to see how people
+use what we currently have.
+Yeah. Looking at the issues that are
+raised, what are people requesting, what
+are people what are people not using,
+and then going, "Right, okay, we can
+either break and change deprecate some
+stuff, but also like if there's stuff
+that's really important that people
+really value, then we can support that
+and maintain that and make sure that
+everybody's working from like a standard
+base. And then that makes it much easier
+for somebody like a PhD student who
+doesn't have a lot of training to just
+get up and running quickly, or software
+engineer who doesn't necessarily
+understand all of the maths behind
+active inference to go, "Yeah, okay, I
+can just use sophisticated inference out
+of the box with sensible defaults." And
+as you say, the hyper parameter space
+already having been somewhat tuned
+to get at least decent performance, if
+not optimal performance across all
+regimes.
+Uh that does lead onto the second point
+on the hyper parameter stuff. This is
+something that also, I'll be honest,
+highly confuses me.
+>> [laughter]
+>> Um
+It's an absolute zoo of etas and Greek
+letters just going, "Yeah, this is 512.
+Deal with it." Yeah.
+And I think that's I whenever I have
+like sort of
+sort of prodded um the people who know
+better than me about this, uh the answer
+I tend to get is, "Oh yeah, just wrap it
+in a loop, cook uh calculate your
+negative free energy over your hyper
+parameter space, and then you just pick
+the best one, right?"
+>> Mhm. And that is both
+I think a good answer and a bad answer
+because that's a lot of work for a user
+to do. Expensive, yeah. And it's
+expensive. I think POMDP getting as
+efficient as it is gets you closer to
+being able to do that without having to
+go, "Right, I have my very toy example.
+Let me set a CPU running for 2 weeks,
+and I'll come back later."
+Now we're actually getting closer to
+that, but I still think it would be nice
+to have
+I don't know, informed priors maybe on
+these hyper parameters a bit like I
+think that there are going to be some
+things where you're like, "You shouldn't
+set this value to this." Or Yeah. if you
+or if you're like if you have these
+values, you are in this regime of this
+type of agent. Yeah.
+>> That sort of guidance in the docs could
+probably get you 80% of the value for
+20% of the effort without having to just
+do exhaustive searching over a hyper
+parameter space that you don't really
+fully understand.
+Yeah, absolutely. There there there I
+think there's a lot that can't actually
+be done a priori without actually having
+to run those sweeps. Like for instance,
+certain thresholds on when do you prune
+branches, or when do you ignore certain
+um branches in the planning tree because
+the observation uh probability of those
+particular modalities has dropped below
+some threshold. A lot of that I think
+can at least be approximated a priori
+just given the structure of your A and B
+tensors. So, like your B tensor kind of
+sets some rate on the diffusion of
+future probability, right? Like you can
+just estimate that by just taking like
+an exponential of the B matrix X steps
+in the future, given some planning
+horizon, and some B matrix, you can
+basically estimate when certain noises
+will drop below some threshold. And then
+you could probably use that just at
+least put yourself in the right range
+for those hyper parameters.
+Um so yeah, I I totally agree, and I
+think there's actually pretty concrete
+ways you could start to do that.
+Yeah, Peter.
+I I presume we have to stop in 10
+minutes, right?
+Oh yeah, that's right. It's uh 6:20. I
+can stay a little longer, but yeah. Um
+so maybe because I I have many
+things to mention now, one tiny thing,
+Dimitri.
+So, I'm also making basically Julia
+version of PyBefit.
+And so maybe that's a good reason to
+chat at some point, Dimitri.
+Yes, and that would be great. I mean, I
+I wanted to thank Connor for promoting
+PyBefit.
+And also to announce that
+a place for a maintainer of the package
+is open, right?
+>> [laughter]
+>> So, I don't want to like be that person
+in the future, so
+I I mean, I I haven't used it in a
+while, and
+it's probably right for some
+improvements.
+Um but yeah, uh
+Uh that that's yeah, the state. So, I'm
+also not that much in the field of
+cognitive experimental cognitive
+neuroscience anymore, so
+Cognitive modeling is is the Exactly.
+Whoever wants to use it should also
+apply to for a maintainer position.
+But And I I have to jump now, so sorry.
+Uh yeah, but yeah, just write me an
+email, Peter, and we can chat from now.
+Okay. Yeah. Uh you got time. Thank you.
+I'll see you around.
+Thanks, Connor.
+No. Um so maybe I'll I'll happen pinging
+Dimitri,
+and I'll I know Tanner has his hand
+raised. And I was just thinking that
+maybe because there's a lot of these
+things like you said, the continuous
+state space models, Connor,
+we want to do, and we might use RXN
+first as back end
+for them, for example. But also the
+discussions on the planning stuff and
+hyper parameter like we're trying to
+separate that into
+what are really parameters of how to
+prune a tree search, and what are
+parameters of how to do
+sophisticated inference, right? You can
+you could do sophisticated inference not
+in a tree search way, and you would need
+that if you have a continuous action
+space or continuous observation space
+and stuff.
+Mhm. I just had the thought, I don't
+know if it's a good one,
+but maybe it would be nice to do like a
+regular
+monthly active inference software
+development
+experience sharing meeting or something
+like that. Mhm. Yeah.
+Because I I think there's a lot to talk
+about, and uh
+I'm sure we have a lot to learn from
+you, but but maybe the other way around,
+and there's also the CPP people and the
+SPM people.
+>> [snorts]
+>> I'm sure maybe I'm sure Carl would be
+kind of we could even [clears throat]
+make it a TMB
+uh thing. All right, yeah.
+Yeah, I'm definitely open to that. I
+think that's a great idea.
+Because I think one thing is to learn
+from each other, and another thing is to
+align the software tools a bit so that
+they
+use the same terminology, have the same
+kind of document examples, um
+link to each other, set up a shared
+testing workflow where we make sure that
+they do the same thing, for example.
+These kind of things.
+>> Yeah, validation, yeah, for sure.
+So, I just wanted to put that out there
+at least, and then I'll save the rest of
+my list of questions for maybe for those
+moments.
+Yeah, that sounds like a great idea.
+I mean, I know everyone's time is
+limited,
+right? So,
+not intending to
+grab time, but I just thought
+maybe that would be useful.
+Yeah, I'm definitely down with that.
+Um I don't know who is next. Does anyone
+know what the order
+I'll just briefly ask the questions from
+the live chat, and uh so, first question
+was from Andrew Bashier asking about
+basically what kinds of contributions
+and how to um
+offer contributions.
+And then Ted VR asked about any advice
+on updating old code from legacy POMDP.
+Mhm. Both great questions.
+Um so yeah, for the first one, the the
+usual workflow is basically
+uh GitHub issues. So, you raise an issue
+if there's a problem like a bug.
+And if you want to contribute to fixing
+that bug, then that's just basically a
+matter of having an open discussion in
+one of those issues. So, this is kind of
+how we did the 1.0.0 release. I don't
+know if Rune if we ever had even like a
+a meeting. We basically were just
+asynchronously talking through GitHub.
+So, GitHub issues is is one way just to
+report specific like features, bug
+fixes, things that you want to see
+implemented, you want to implement
+yourself.
+Another way is um through discussions.
+So, this is kind of how we
+uh did the organization of the um 1.0.0
+release. I think I closed that
+discussion now, but basically we had a
+discussion thread opened here where we
+were
+uh discussing how to go forward. So, you
+could also start a discussion.
+Um and in terms of like concrete like
+how to contribute, I mean the the
+easiest way is you fork the repo, like
+the concrete way is you fork the repo,
+and you open a pull request to um to
+main. And then we you tag me or someone
+else uh on the developer team uh as a
+reviewer. Arun, for instance, is pretty
+um good with with responding to reviews.
+Thank you, Arun. And uh and then we'll
+get we'll get uh reviewing it. Um in
+terms of like coding conventions and
+stuff, I haven't been that We haven't
+been that like
+um
+rigorous, I would say, or or uh
+standardized with like how to
+particularly do a contribution, but just
+pull request,
+informative description in the pull
+request, make sure the CI passes so like
+the unit tests and stuff.
+Um and then there's a bunch of automatic
+stuff. Like, there's a linter, there's a
+pre-commit hooks for the um
+cleaning up the Jupyter notebook. So, a
+lot of that stuff is kind of handled for
+you.
+Um and then the second question was
+about Oh, yeah, the uh migration guide.
+Yeah.
+That's a great point. So, we have this
+whole tutorial here. Think you can see
+it on the screen
+that is uh about exactly that question.
+Like, if I used to have a bunch of code
+in NumPy, how do I migrate it to JAX?
+And if there's any feedback on this, if
+like it's not clear like, "Oh, how do I
+migrate this thing? This isn't covered
+in the guide." Please raise an issue or
+raise a discussion um and then we can
+get that in there.
+Uh but yeah, so basically it's it's
+stepping through and describing all
+these things I briefly mentioned in the
+talk, which is
+the kind of old NumPy version versus the
+new JAX version columns, and then how to
+actually do that, how to deal with the
+new batch size parameter, which can be a
+bit unintuitive at first.
+Um yeah, so that that should hopefully
+help with all those migration uh issues.
+Uh whilst we quickly have time, can I
+come in on the contribution uh aspect of
+this? Yeah, yeah, go for it. Um I think
+in this day and age it's worth
+highlighting at the moment. First of
+all, like everyone who's working on this
+is doing this out of volunteering time,
+their own free time. No one is being
+paid for any of this. So, this is all
+out of because we are interested and we
+care and uh we want to be part of the
+community and we want to contribute to
+the community.
+Uh it is very exciting if other people
+want to also contribute to this as well,
+and we welcome that. I would caution
+though, please do not just get your
+large language model Claude code coding
+agent to just look at the pymdp repo,
+generate issues, generate require pull
+requests, all of this sort of stuff. Uh
+I am very aware that already active
+inference is a very difficult thing to
+understand. There is enough cognitive
+debt of people understanding what their
+code is doing.
+I do not want to put large language
+models in the mix without very careful
+control on what the code is doing. Um
+and yeah, we're all doing this because
+we're interested and we also want to
+learn and we also want to understand
+what the stuff is doing. Um so, please
+if you are going to contribute, um by
+all means use co- large language model
+coding tools if you would like,
+but use your brain first and foremost is
+my general plea to the community. And if
+we get just clearly, you know,
+automated automatic AI slop, we will
+reject it immediately.
+But like, you know, a good a good pull
+request is on
+Sorry, I actually myself
+A good pull request is something that a
+human being can easily understand. So,
+you know, like if it's 20,000 lines and
+we can't tell what's going on, obviously
+we're not going to accept that. So,
+general best practices of software
+engineering, please do apply. Small,
+dedicated pull requests that do a one
+clearly defined thing, one demonstrable
+thing, ideally coming with unit tests as
+well.
+We love to see it.
+Yeah, thanks, Arun.
+Any last comments anyone wants to make?
+Otherwise, this is um the tip of the
+iceberg of the tip of the iceberg
+because it's such a powerful
+methodological advance.
+And maybe we'll be able to revisit in
+sort of scheduled meetings or in future
+model streams like
+a little bit of a review
+example highlighting
+different kinds of contributions that
+people are making, different benchmarks.
+There's just so many ways to to go with
+it.
+And um
+if anyone has any extra or last comments
+for this one,
+please go for it.
+Uh yeah, I just I I wanted to say thank
+you, Daniel, for inviting me to um come
+give this presentation. I really
+appreciate it. Um and also thanks to
+everyone who uh contributed to the
+discussion and again to all the
+developers of pymdp. It was really
+pleasure to build this and now get the
+chance to kind of
+unveil it to the world to everyone here.
+So, thanks.
+Great. All right.
+Good work. Till next time.
+Thanks, everyone. Take care.

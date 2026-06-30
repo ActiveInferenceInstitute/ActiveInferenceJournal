@@ -9,27 +9,27 @@ video library.
 Learn more: https://www.activeinference.org/research/journal ·
 Tooling: https://github.com/ActiveInferenceInstitute/Journal-Utilities
 
-## Layout (v2 schema)
+## Layout
 
-The journal is organized by **series** → **item**, with a uniform, agent- and
-program-navigable structure per item:
+Content is **source-namespaced** so other channels and non-video sources can live
+alongside, e.g. `data/video/<other-channel>/…` or `data/<other-type>/<source>/…`:
 
 ```
-<Series>/<Series>_<NNN[.E]>/
-  metadata.json     # canonical record: series, item, parts[{video_id, url, title}]
+data/video/activeinferenceinstitute/<Series>/<item>/
+  metadata.json     # canonical: series, item, parts[{video_id, url, title, duration, upload_date}]
   transcript.txt    # clean text (part-tagged when multi-part)
-  transcript.json   # timestamped segments
+  transcript.json   # timestamped segments (where available)
   captions/         # original-language .srt
   translations/     # translated .srt (per language)
   assets/           # images, html, prose, appendices, bibliography, …
   README.md         # human nav: titles, links, contents
+docs/               # technical documentation (SCHEMA.md, …)
+INDEX.json          # machine entry point: every item, its videos, paths
+INDEX.md            # human index, grouped by series
 ```
 
-- **`INDEX.json`** (repo root) — machine entry point: every item, its videos, and paths.
-- **`INDEX.md`** — human index, grouped by series.
-- **`SCHEMA.md`** — the full schema spec.
-
-468 items · 615 videos · 18 series.
+573 items · 724 videos · 22 series. Every Institute channel video is represented
+(uncategorized videos live under `Other/`).
 
 ## Branches
 
@@ -39,6 +39,7 @@ program-navigable structure per item:
 
 ## Provenance
 
-Transcripts are pulled from the Institute YouTube channel (captions, or local Whisper
-where captions are absent) by [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal-Utilities);
-`scripts/refactor_journal.py` produced this v2 layout with verified zero data loss.
+Transcripts and metadata are pulled completely and idempotently from the Institute
+YouTube channel (captions, or local Whisper where captions are absent) by
+[Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal-Utilities)
+(`scripts/refactor_journal.py`, `scripts/download_channel.py`). See [`docs/SCHEMA.md`](docs/SCHEMA.md).
