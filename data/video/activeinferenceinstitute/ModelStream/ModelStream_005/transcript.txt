@@ -1,1662 +1,813 @@
 ## GR07coJNPUE
 
-SPEAKER_00:
-Okay.
-
-Hello and welcome everyone.
-
-It is January 28th, 2022.
-
-We're here in ACT-INF Lab model stream number 5.1 with Pietro Mazzaglia and Tim Verbellen.
-
-So this is going to be a model stream presentation and discussion on their recent work, Contrastive Active Inference.
-
-We're going to have a presentation section and then a discussion.
-
-So please feel free to ask any questions during the presentation that we can address in the discussion.
-
-And Tim and Pietro, thanks a ton.
-
-We really appreciate you joining to share your work.
-
-So please take it away and thanks again.
-
-
-SPEAKER_03:
-Yeah, thanks, Daniel, for inviting us as well.
-
-So I'm Tim Verbeel and together with my colleague Pietro, we'll talk on our work on contrastive active inference.
-
-So maybe first to set the scene, why are we looking at active inference?
-
-Well, basically, our lab wants to build intelligent agents.
-
-And so from that perspective, we noticed early on, if you want to build something intelligent, it needs to be embodied.
-
-It needs to be interacting with its environment.
-
-And then it's a small step, of course, to develop interactive inference, where basically your agent needs to understand the environment it's interacting with and need to build a model, basically.
-
-and the way that we approach this.
-
-A lot of this material has also been covered in a previous model stream, I think number three.
-
-So if you want more details, you can dig up that one again.
-
-And so then afterwards, Pieter will take over, and he will go into the pretty details of the contrastive approach to active inference.
-
-So let's get started.
-
-So basically, active inference, it's a process theory of the brain.
-
-And basically, it says that your brain or the agent, he builds a generative model of the environment, which is basically a joint probability distribution over observations.
-
-So a thing that you can see or experience actions, which we denote as A.
-
-states or hidden states of the environment.
-
-So basically you have your agent that is separate from the environment and it can do actions, it can interact with the environment and this gives rise to new observations.
-
-And so the idea of the generative model is basically the agent figures out which are kind of the hidden states that
-
-and that give rise to my observations and if you can build such a model then basically this enables the agents to plan some actions to bring the agent to some preferred observations or outcomes
-
-The crucial bit is basically how do you get this model of what happens if I do my actions?
-
-How does this influence the state and how does this influence the outcomes that I see?
-
-The crucial part in active inference is twofold.
-
-First of all, it says okay,
-
-This is what the agent does, and it does so by optimizing so-called free energy, which isn't a profound surprise or prediction error.
-
-So basically, the generative model allows the agent to predict the outcomes that it will see, that it will witness.
-
-And the better these match your actual observations, the more happier you are as an agent.
-
-And crucially, you will also select the actions that will minimize the free energy you expect in the future.
-
-So we'll dig a bit into the mods just to set the scene on the one hand notation-wise so that we all know what O's and S's and A's are, but also to then see the move
-
-that Piet will make from the, let's say, vanilla active inference presentation towards a more contrastive formulation of the active inference objective, of the energy objective.
-
-So we start off with setting the sea with a generative model.
-
-So it's a bit laid out, the diagram of the agents and the environment that was on previous slides.
-
-So basically, this unfolds over time.
-
-So you are in a certain state that gives rise to a certain observation.
-
-And then given an action on your previous state, you basically move ahead to the next state.
-
-And this process unfolds over time.
-
-And you can see some of the circles are colored gray.
-
-And these are basically the things that you can observe.
-
-So you know the actions that you did up until now.
-
-And you know the observations that you saw up until now.
-
-And all the rest is basically for you to infer.
-
-So you can only infer the hidden states until now, but you can also try to infer the hidden states of the future, the actions that you want to take, or the observations that you will experience.
-
-And so basically, the so-called joint model or joint distribution over the sequence of observation states and action is then basically characterized as follows.
-
-So you have a prior over actions,
-
-You have a likelihood model, so you have prior over actions, so this basically determines what is the probability you take certain actions at a certain time.
-
-You have some transition probabilities, so what is the probability that I will transition to this next state given my previous state and the action I did.
-
-And you have the likelihood model, which basically says, given the state I am,
-
-which observation I will see.
-
-And so this basically covers the so-called Markov assumption that your observation that you see at this time step, it only depends on your hidden state, and it does not really directly depend on anything else.
-
-Because if you know your current hidden state, then you know the observation you will see.
-
-So that's basically what is reflected here.
-
-But of course, as an agent, having this generative model, this allows you to assess how likely is a sequence of observations, for example, and it allows you to predict, given these actions, what will happen.
-
-But one crucial bit, of course, is still the inverse of this model.
-
-Like, given that I saw these observations, that I did these actions, which is my current state?
-
-And this is
-
-basically non-trivial.
-
-So even if you have the exact generative model, inverting this is typically intractable.
-
-So that's why in active inference, you resort to variation inference and you just say, okay, I just assume that I can build a model, the so-called, for example, steering model.
-
-And this is the thing that will tell me, given certain observations, what is my probability to be in a certain state.
-
-So this is what's depicted here.
-
-So we introduce this Q, and Q is basically a variational percent posterior.
-
-So it can be any distribution.
-
-You can choose it.
-
-And you just say, OK, given some observation, I want to have the best estimate for the state I am in.
-
-And the reality principle
-
-then this is easy.
-
-You just optimize the free energy, which is the node F here, and it's basically expectation over states generated by your approximate posterior, the expectation over the difference between the local accuracy of your approximate
-
-posterior and the likelihood of the gen-f model.
-
-And if you can minimize that, that basically means that you will have the best explanation for the observations you see, but at the same time you also have the best approximate posterior for the true one.
-
-You're not going to go to the
-
-whole derivation of this flow.
-
-But basically, you can convert this to the second equation line.
-
-And this is the one that we use most often in our models, which is basically Kähler version between this upper to the posterior.
-
-So basically, what is the state I am given the observations I saw.
-
-this prior that basically says this is my guess that I am in this state given my previous state and action.
-
-So I don't know the observation yet, but I want to have the best guess without my observation.
-
-And if I see the observation, I don't want my beliefs to completely switch.
-
-there's something wrong with my model.
-
-And then you have the second term, which is the log likelihood term.
-
-This is basically the accuracy of your model, or how good are you at reconstructing the outcomes.
-
-this is all for the past basically or up until your current time step so you know the observations you saw and you can evaluate the energy and then you can basically update your model in order to to minimize this thing but of course you also want to know your actions you want to look into the future and so
-
-If you look into the future, then we talk about the expected free energy.
-
+Okay, hello and welcome everyone. It is January 28th, 2022. We're here in ACTIMF Lab, model
+stream number 5.1 with Pietro Mazaglia and Tim Verbellen. So this is going to be a model
+stream presentation and discussion on their recent work, Contrastive Active Inference.
+We're going to have a presentation section and then a discussion. So please feel free
+to ask any questions during the presentation that we can address in the discussion. And
+Tim and Pietro, thanks a ton. We really appreciate you joining to share your work. So please take
+it away and thanks again.
+Yeah, thanks Daniel for inviting us as well. So I'm Tim Verbellen together with the colleague
+Pietro, we'll talk on our work on Contrastive Active Inference. So maybe first to set the
+scene, why are we looking at Active Inference? Well, basically our lab wants to build intelligent
+agents. And so from that perspective, we noticed early on, if you want to build something intelligent,
+it needs to be embodied, it needs to be interacting with its environment. And then it's a small step,
+of course, to delve into Active Inference, where basically your agent needs to understand the
+environment it's interacting with, and need to build a model, basically. So first, I give
+an overview on Active Inference and the way that we approach this. A lot of this material has
+also been covered in a previous model stream, I think number three. So if you want more details,
+you can dig up that one again. And so then afterwards, Pietro will take over, and he will
+go into the details of the Contrastive approach to Active Inference. So let's get started. So basically,
+Active Inference, it's a process theory of the brain. And basically, it says that your brain or the
+agent, he builds or he builds a generative model of the environment, which is basically a joint
+probability distribution over observations, so things that you can see or experience, actions,
+which we denote as A, and then states or hidden states of the environment. So basically, you have your
+agent that is separate from the environment, and it can do actions, it can interact with the
+environment. And this gives rise to new observations. And so the idea of the
+generative model is basically agent figures out which are kind of the hidden states that's the change
+by my actions, and that give rise to my observations. And if you can build such a model, then basically,
+this enables the agents to plan some actions to bring the agent to some preferred observations or
+observations and support. But so the crucial bits is basically how do you get this model of what
+happens if I do my actions, how does this influence the states and how does this influence the outcomes
+that I see. So the crucial part from Active Inference is two faults. First of all, it says, okay, this is what
+the agent does. And it does so by optimizing so called free energy, which isn't a proponent of surprise
+or prediction error. So basically, you turn this model allows the agent to predict the outcomes that it will
+see the witness. And the better these match your actual observations, the more happier you are as an agent. And
+you will also select the actions that will minimize the free energy you expect in the future.
+So we'll dig a bit into the mods.
+So we'll dig a bit into the results. Just to set the scene on the one hand notation wise so that we all
+know what O's and S's and A's are, but also to then see the move that Piet will make from the,
+let's say, vanilla Active Inference presentation towards a more contrastive formulation of the
+active Inference objective, free energy objective. So we start off with setting the C with a generative
+model. So it's a bit laid out the diagram of the agents and the environment that was on previous
+slides. So basically, this unfolds over time. So you are in a certain state that gives rise to a certain
+observation. And then given an action on your previous state, you basically move ahead to the next state.
+And this process unfolds over time. And you can see some of the circles are colored gray. And these are
+basically the things that you can observe. So you know the actions that you did up until now. And you know
+the observations that you saw up until now. And all the rest is basically for you to infer. So you can only
+infer the hidden states until now. But you can also try to infer the hidden states of the future, the actions
+that you want to take, or the observations that you will experience. And so basically, the so-called
+jointive model or joint distribution over the sequence of observation states and action is then basically
+factorized as follows. So you have a prior over actions. You have a likelihood model. So yeah, so you have a prior over actions. So this basically
+determines what is the probability you take certain actions, certain time. You have some transition probabilities. So what is the probability that I will transition to this next state given my previous state and the action I did. And you have the likelihood model which basically says, yeah, given the state I am
+given the state I am, which observation I will see. And so this basically covers the so-called Markov assumption that your observation that you see at this time step, it only depends on your hidden state. And it does not really directly depend on anything else. Because if you know your current state, then you know the observation you will see. So that's basically what's reflected here.
+And of course, as an agent, having this journey.
+And this is the current model. This allows you to assess how likely is the sequence of observations, for example, and it allows you to predict, given these actions, what will happen. But one crucial bit of course is still the inverse of this model. Like, given that I saw these observations that I did these actions, which is my current state.
+And this is basically non trivial. So even if you have the exact model inverting, this is typically intractable.
+And so that's why in active inference, you resort to variation inference and you just say, okay, I just assume that I can build a model, the so-called approximate posterior model.
+And this is the thing that will tell me given certain observations, what is my probability to be in a certain state.
+So this is what's depicted here. So yeah, we introduce this Q. And Q is basically a variation of a proximal posterior. So it can be any distribution. You can choose it.
+And you just say, okay, given some observation, I want to have the best estimate for the state I am in.
+And the free energy principle of general states, okay, if that's what you want, then this is easy. You just optimize the free energy, which is the note F here.
+And it's basically expectation over states generated by your proximal posterior, the expectation over the difference between the look like roots of your proximal posterior and look like roots of the Jeff model.
+And if you can minimize that, that basically means that you will have the best explanation for the observations you see.
+But at the same time, you also have the best approximate posterior for the true one.
+And you're not going to go to the whole derivation of this flow. But basically, you can convert this to the second equation line.
+And this is the one that we use most often in our models, which is basically a K-L divergence between this approximate posterior.
+So basically, what is the state I am given the observations I saw. And this prior that basically says, this is my guess that I am in the states given my previous state and action.
+So I don't know the observation yet. But I want to have the best guess without my observation.
+And if I see the observation, I don't want my beliefs to completely switch because then probably there's something wrong with my model.
+And then you have the second term, which is the the look like with term.
+This is basically the accuracy of your model or how good are you at reconstructing the outcomes.
+So this is all for the past, basically, or up until your current time steps.
+So you know the observations you saw, and you can evaluate the energy, and then you can basically update your model in order to minimize this thing.
+But of course, you also want to know your actions. You want to look into the future.
+And so if you look into the future, then we talk about the expected free energy.
 So here, we use pi as a shorthand for a sequence of actions into the future.
-
 I also switched from t to tau just to denote that we are talking about future time steps, basically.
-
-bit is now that in the expectation now you don't have expectations only over states but also over outcomes because you you couldn't sense uh your observations yet so you don't know them so you can just kind of do an expectation over anything that could happen and and then uh the move that uh is made in active inference is basically that uh
-
-on the one hand form a term which they call or which we call the instrumental value or realizing preferences and it's basically stating that okay as an agent for future outcomes
-
-have some prior that i think that i will regardless what happens that i think i will realize it's kind of your your preferred outcomes let's say you can also cause this more like homeostasis so my body temperature to be 37 degrees celsius so my expectation before knowing anything is that it will be at 37 degrees and have
-
-to make it so.
-
-So that's a bit reflected here.
-
-You disregard the dependency on your future actions.
-
-You just say, okay, my prior is that this is what I expect.
-
-So this becomes the instrumental value.
-
-And then the second assumption is basically that your approximate posterior model is basically very close
-
-then you can rewrite it in the second term, which basically means that you have, on the one hand,
-
-burn that says this is my belief of the state given the actions i will do and the other thing is also a belief about future states given the actions and some certain outcomes that i expect to see so basically it says
-
-What would be the information that I get from looking for certain outcomes?
-
-And it's kind of an epistemic value or an information gain, which can drive you to explore, basically.
-
-If you don't know how to get to your preferred state, at least you want to get to states that give you more information on where you are.
-
-Colferston often says it's like the owl that needs food.
-
-So what do you do?
-
-Do you eat first or do you search for prey first?
-
-And so the epistemic value is basically searching for prey.
-
-It's like, where should I go to get more information on where the prey is?
-
-And then once you know where it is, then you can realize your preferences and preferences.
-
-So how does the action selection work then?
-
-Well, basically, you want to select the actions that minimize your expected free energy.
-
-So at each time step, first thing you do is you use your approximate model to estimate your current state, like knowing in which state am I now given my latest observation.
-
-Then you can evaluate the expected free energy for each policy or plan.
-
-So for any future sequence of actions, you can evaluate the expected free energy.
-
-And then this basically results in a belief over policy.
-
-So you basically take the negative expected free energy, you multiply with this precision parameter, which just states how, yeah,
-
-how much confidence you have that your expected free energy is correct, basically.
-
-And then you use the softmax prediction.
-
-So basically, it just says the policies that have low expected free energy are the ones that are most likely, basically.
-
-That's the only thing this formula says.
-
-And then you refer the next action according to this.
-
-You just select the next action for the sequence that you think will give you the
-
-at the minimum expected energy, and that's how it goes.
-
-And then you take this action, you get a new observation, and the process repeats.
-
-So one crucial point in all our work
-
-model.
-
-And typically, you have a certain problem and you know how the problem looks like, what the observations are, what the hidden state might be.
-
-And then you can really pinpoint and write down the exact model and start optimizing.
-
-But in our case, this is often not true.
-
-If you look at the robots,
-
-How is the state space that you need to track?
-
-How do you convert these pixels to the state space?
-
-All these things are just not there yet.
-
-The goal in our work is that, can we completely start from scratch and learn this?
-
-For this, we use deep neural networks.
-
-to actually provide us with these models.
-
-And we optimize the parameters of these neural nets also by minimizing the free energy.
-
-That's the core idea, let's say.
-
-So how does it look like?
-
-We call this an artificial work model.
-
-So we start off with observations and actions.
-
-So this can be...
-
-pixels, basically, so an N by M matrix of numbers, let's say, and actions, which could be any action vector, it could be your velocity or whatever your agent can do.
-
-And these numbers are put into a neural net, which we call the encoder.
-
-And this basically then reflects this
-
-my previous state action and my current observation, it outputs a probabilistic state representation, which is basically the means and the variances of multivariate portions.
-
-And then we have a second neural net, which we call the transition model.
-
-And this is then saying, what will happen if I do a certain action?
-
-How will my state evolve if I do a certain action?
-
-Now, finally, we also have the decoder or the likelihood model that then outputs, given the states, some observations.
-
-So in the case of an image, for example, this will generate you a new image.
-
-And the goal is, of course, to have the best predictions possible.
-
-So if you look at the free energy formula again, in this case,
-
-it's again you have this likelihood term which basically just says that given the output of the decoder so the generated image i just want to have this close to the actual image that you then see basically so it's just a reconstruction loss in terms of uh neural net let's say and the second term
-
-The second term is the KL divergence between the distribution that you generate from the encoder and the distribution that you generate from the transition model, basically.
-
-So we applied this on a number of cases, which also were seen in the previous model stream.
-
-So just to give you some intuition.
-
-So first thing was the multi-core problem, which is a basic control problem.
-
-So here, the sensory input is the position you are with the card.
-
-you basically have to infer not only the position you're in, but also the momentum you have, the velocity you have.
-
-And so you can see that on the right, you can see the model
-
-for going left or right.
-
-And you can see how in the beginning, it's not sure on the velocity, so it's very spread out in what it will predict.
-
-But the more information it gets, the more it kind of collapses to, yeah, I'm pretty sure that this is the behavior that will happen.
-
-And then you can use this to drive the agent towards a preferred state, in this case, the flag.
-
-The second one was using the car racer environment.
-
-So here you get these observations that are now just pixels from this game.
-
-And the preferred state of the car was to be in the center of the track.
-
-And so you can see how it actually infers the actions that will bring it to the center of the track.
-
-And it might even get corners in order to reach its preferred state a bit faster.
-
-And finally, we also did this on the robots navigating our lab, where we equipped it with a number of sensor modalities.
-
-So you can see the camera, but also a front-facing lidar and also a radar range doppler.
-
-So the radar range doppler basically gives you, in the y-axis, the range, and in the x-axis, the velocity of the
-
-The reflection is basically the Doppler.
-
-And here you can see how in the beginning, we feed it with a number of observations.
-
-And then we basically let the model imagine what could happen.
-
-So these are real observations.
-
-And now it basically imagines what it will see if it turns around, for example.
-
-And you can see it actually learns basic dynamics, basic behavior of all these sensor modalities.
-
-So it's pretty cool.
-
-Okay, so what are the limitations of this thing?
-
-Well, there are two core limitations that we address in the work of Pietro.
-
-The first one is we use this pixel-wise reconstruction both to learn the model, but also to define your preferred state, like this is the image that you want to see and try to make it happen.
-
-But the problem is that mean squared error in terms of pixels is not really the best metric.
-
-So for example, if you have the left image and you want to assess how good an image is similar to that one, we have two examples here on the right, and you can see that
-
-is actually scoring worse in terms of mean squared error than an image where the two joint arm is actually incorrect.
-
-So although in terms of behavior, the left one is better in terms of mean squared error, the right one is better.
-
-So that's, of course, problematic if you want to control the arm towards the goal.
-
-And then the second limitation is that
-
-energy for a huge number of potential trajectories, potential actions you can do, then of course this becomes intractable as the number increases.
-
-And so the ways that we coped with this in the contrastive work is on the one hand,
-
-instead of using a pixel-wise reconstruction error, is to use contrastive learning instead.
-
-How exactly this works will become apparent in the next few slides.
-
-And then the second thing is, instead of evaluating the expected free energy for all the policies,
-
-we basically amortize the policy section scheme.
-
-So we also train neural net to output actions given .
-
-And so with that, we can now shift to Pietro, who will talk about the contrastive formulation of the executive inference problem.
-
-
-SPEAKER_00:
+But other than that, the same.
+But the important bit is now that in the expectation, now you don't have expectations only over states, but also over outcomes.
+Because you couldn't sense your observations yet.
+So you don't know them. So you can just kind of do an expectation over anything that could happen.
+And then the move that is made in active inference is basically that you on the one hand form a term, which they call the instrumental value, or realizing preferences.
+And it's basically stating that, okay, as an agent for future outcomes, I have some prior that I think that I will, regardless what happens that I think I will realize it's kind of your preferred outcomes, let's say, can also cause this more like homeostasis.
+So my body temperature to be 37 degrees Celsius. So my expectation before knowing anything is that it will be 37 degrees and hence, I will act in order to make it so so that's a bit reflected here, like you disregard the dependency on your future actions, you just say, okay, my prior is that this is what I expect.
+So this becomes the instrumental value. And then the second assumption is basically that your approximate posterior model is basically very, very close to the true posterior, so that you have a good approximation, then you can rewrite it in the second term, which basically means that you have on the one hand, and the third that says, this is my belief of the state given
+given the actions, given the actions, I will do. And the other thing is also a belief about future states, given the actions and some certain outcomes that I expect to see. So basically, it says, what would be the information that I get from looking for certain outcomes.
+And it's kind of an epistemic value or an information game, which can drive you to explore basically, you want to have if you don't know how to get to your preferred state, at least, you want to get to state to states that give you more information on where you are.
+Paul Versternand often says it's like the owl that needs foods. So what do you do? Do you eat first? Or do you search for prey first? And so the epistemic value is basically searching for prey. It's like, where should I go to, to get more information on where the prey is? And once you know where it is, then you can realize your preferences and go towards the prey.
+Paul Versternand often says it's like the prey. So how does the action selection works? Well, basically, you want to select the actions that minimize your expected free energy. So at each time step, first thing you do is you use your approximate model to estimate your current state, like knowing which state am I now given my latest observation.
+Paul Versternand often says it's like the expected free energy. Then you can evaluate the expected free energy for each policy or plan. So for any future sequence of actions, you can evaluate the expected free energy.
+Paul Versternand often says it's like the expected free energy. And then this basically results in a belief over policy. So you basically take the negative expected free energy, you multiply with this precision parameter, which just states how much confidence you have that your expected free energy is correct, basically. And then you use this soft mix function. So basically, it just says the policy is
+that have low expected free energy are the ones that are most likely that's the only thing this formula says. And then you refer the next action according to this, you just select the next action for the sequence that you think will give you the minimum expected free energy. And that's how it goes.
+Paul Versternand often says that you take this action. You get a new observation and a process.
+So one crucial point in our work is that it all starts with this generative model and is approximate model. And typically, you can you have a certain problem and you know how the problem looks like what the observations are what the hidden state might be.
+And then you can you can you can really pinpoint and write down the exact model and start optimizing. But in our case, this is often not true. If you if you look at the robots that drives around and gets camera inputs, for example, yeah, what is the state space that you need to track?
+How do you convert these pixels to the state space? So all these things are just not there yet. And the goal in our work is that yeah, can we can completely start from scratch and learn this?
+So all these things are just not there. And for this, we use deep neural networks to act as functional approximators to actually provide us with these these models.
+And we optimize the parameters of these neural nets also by minimizing the free energy. That's that's the quality. Let's see. So how does it look like?
+We call this an artificial work model. So we start off with observations and actions. So these can be pixels basically so and n by m matrix of numbers, let's say, and actions, which could be any action factor could be your velocity or whatever your agent can do.
+And these numbers are put into a neural net, which we call the encoder. And this basically reflects this approach to this year. This is just saying given my previous state action and like observation outputs.
+It outputs a probabilistic state presentation, which is basically the means and the variances of the very questions.
+And then we have a second neural net, which we call transition model. And this is then saying, yeah, well, what will happen if I do a certain action? How will my state evolve if I if I do a certain action?
+Now, finally, we also have the decoder or the likelihood model that then outputs given the states some observation. So in case of an image, for example, this will generate you a new image.
+And the goal is, of course, to have the best predictions possible. So if you look at the free energy formula again, in this case, it's again, you have this likelihood term, which basically just says, given the output of the decoder, so the generated image, I just want to have this close to the actual image that you then see, basically, so it's just a reconstruction loss in terms of
+the neural net, let's say, and the second term.
+So second term is a K-L divergence between the distribution that you generate from the encoder and the distribution that you generate from the transition model.
+So we apply this on a number of cases, which also were seen in the previous model stream. So just to give you some intuition. So first thing was the mounting core problem, which is a basic control problem. So here, the sensory input is the position you are with the card.
+So you basically have to infer not only the position you're in, but also the momentum you have the velocity you have. And so you can see that
+on the right, you can see the model predicting all likely trajectories for going left or right. And you can see how in the beginning, it's not sure on the velocity. So it's, it's very spread out in, in what it will predict. But the more information that gets the more kind of collapses to you. I'm pretty sure that this is the behavior that will happen. And then you can see that the
+you can use this to drive the agents towards preferred states in this case, the flag. The second one was using the
+using the car user environment. So here you get these observations are now just pixels from from this game.
+And the preferred state of the car was to be in the center of the track. And so you can see how it actually infers the actions that will bring it to the center of the track.
+And it might even cut corners in order to reach a preferred state a bit faster. And finally, we also did this on the robots navigating our lab, where we equipped it with a number of sensor modalities.
+So you can see the camera, but also a radar range Doppler. So you can see the camera, but also a radar range Doppler. So the radar range Doppler basically gives you in the y axis, the range and in the x axis, the velocity of the reflections basically Doppler.
+And here you can see how in the beginning, we feed it with a number of observations. And then we basically that the model imagined what could happen. So these are real observations. And now,
+it basically, it basically imagines what it will see if it turns around, for example, because you actually learn like basic dynamics, basic behavior of all the sensor models. So this is pretty cool.
+Okay, so what are the mutations of this thing?
+Well, there are two core limitations that we address in the work of Pietro. So the first one is we use this, this reconstruction,
+both to learn model, but also to define your preferred state, like, this is the image that you want to see and try to make it happen. But the problem is that mean squared error in pixel,
+in terms of pixels is not really the best metric. So for example, if you have the left image,
+and you want to assess how good an image is similar to that one, we have two examples here on the right. And you can see that the same image with some salt and pepper noise is actually scoring worse in terms of mean squared error than an image where the two
+the two to joint arm is actually incorrect. So although, in terms of behavior, the left one is better, in terms of mean squared error, the right one is better. So that's, of course, problematic, if you want to control the arm towards the goal.
+And then the second limitation is that if you need to evaluate the expected energy for the huge number of potential trajectories potential actions you can do, then of course, this becomes intractable as the number increases.
+So the ways that we cope with this in contrastive work is on the one hand, instead of using a pixel wise reconstruction error is to use contrastive learning instead, how exactly this works will come apparent in the next few slides.
+And then the second thing is, instead of evaluating the expected free energy for all the policies, we basically amortize the policy sections.
+So we also train neural net to output actions given in the state of the world. And so with that, we can now shift to Gertrude, who will talk about the contrastive formulation of the executive inference problem.
 Thank you, Tim.
-
-
-SPEAKER_01:
-All right, so thank you, Daniel, for having us.
-
-And thank you, team.
-
-I hope you can hear me well.
-
-
-SPEAKER_02:
-OK, so I'll try to share my screen now.
-
-
-SPEAKER_01:
-OK.
-
-All right, so now I will talk about our recent work, contrastive active inference.
-
-So this work was recently published at NeurIPS 2021, so it's very recent, it came out like last month, and let's start delving into it.
-
-So the setting that we discuss in Active Inference is very similar to the reinforcement learning one, with the difference that in reinforcement learning, all behavior learning is driven by rewards.
-
-So the agent receives a reward function
-
-And the positive rewards should reinforce positive behaviors, while negative rewards should penalize the agent to avoid those states and actions.
-
-However, one of the problems that comes with reinforcement learning is that in order to actually learn from rewards, you need a reward function.
-
-And that's not always easy to have.
-
-For instance, as Tim mentioned, especially when the state is not known in advance, so the agent doesn't exactly know its state.
-
-It's difficult in that case to design a reward function because you're not sure of what the agent knows and how it can assess its performance compared to the environment.
-
-So we instead focus on active inference.
-
-In active inference, the agent separates to the principle of minimizing free energy, as we have just seen.
-
-So the principle of minimizing free energy actually enables two things.
-
-The one thing is to learn a model of the world.
-
-We call this an artificial world model in our work, a steam show.
-
-And the other objective is to minimize the free energy in the future by trying to achieve some preferred outcomes of the agent.
-
-So we assume that the agent has some preferred outcome distribution that he wants to achieve, and that his goal will be in the future to actually achieve these preferred outcomes.
-
-So the environment setting we discussed is that one of PONDP, so a partially observable market decision process.
-
-So just to recap, we have observation that the agent receives.
-
-He has to infer the internal state of the environment, which is not observed.
-
-And then there's actions which are actually known for the past, but the agent should infer or somehow choose among a set of possible actions in the future.
-
-So this is just a summary of what an artificial world model looks like.
-
-So as we've seen in the previous slides, we have an encoder that encodes the information from an observation.
-
-We focus on visual environments.
-
-So here we have, again, an image, which is basically n by n metrics.
-
-So the encoder could be, for instance, a convolutional neural network.
-
-In our case, then we have the hidden state model, which takes the previous state and the previous action.
-
-And in particular, in our case here, we use some form of recurrent neural network model in order to keep preserving the history of the environment.
-
-And then we have the decoder that computes a reconstruction of the observation of the current state.
-
-So it tries to encode inside the hidden state as much information as possible.
-
-from what comes from the observation.
-
-So the problem with reconstruction is that computing them, especially in visual environments, is quite complicated because you need
-
-big models that have a very good representational capacity and also the models cannot be 100% accurate as in low dimensional settings because, for instance, predicting an image pixel by pixel is practically very unfeasible, so it very rarely happens.
-
-So I'll show an example here.
-
-So a few weeks ago, I was training
-
-VAE like models or like a model similar to this one on the left so where we have this encoder decoder architecture on an Atari game the breakout game and try to learn an hidden state to learn action on top of the interstate the problem is that
-
-the reconstruction of the VAE.
-
-So we're actually pretty bad in that they were losing very important information about the game.
-
-So for instance, it was kind of able, so with some uncertainty, to model where the paddle of the game is, but it wasn't able to model where the ball is, which is actually one of the two most important details in order to actually be able to play.
-
-So even adding the reward function in this case, so adding the
-
-the game score available and the agent wasn't able to learn the task because of the state which was lacking the most important information in order to keep improving.
-
-So this is one issue that we try to overcome in our work.
-
-And the second part of active inference involves learning to pursue the preferred outcome.
-
-So in order to pursue preferred outcomes, active inference agent will do two things.
-
-One, try to minimize the distance with respect to these preferred outcomes, but on the other way, also minimize the ambiguity with respect to the environment.
-
-So normally this is done by trying to match the two distributions or trying to match, as we saw with a KL divergence, try to match the distribution of the imagined outcome with the preferred outcomes distribution.
-
-However, again, in a high dimensional setting, this can be quite complex because how do you define a distribution on an high dimensional image?
-
-Could it be, for instance, just a center Gaussian around the pixel?
-
-So with the
-
-with the mean being the pixel value and then some fixed standard deviation.
-
-But in that case, we get into trouble because we have the same issue we discussed before with, for instance, having this kind of goal here and a noisy observation like this, which actually adds an higher mean squared error compared to an image that is very distant from the goal.
-
-And this kind of situation, especially when using reconstruction or in more realistic settings, are very, very likely because, for instance, you can think that the center image is actually just a reconstruction of the model, which is not 100% accurate.
-
-So that could be the case.
-
-And indeed, the agent could be confused, and he will think that he's not achieving the goal compared to maybe, for instance, a past observation, but it seemed that it was actually closer to the goal.
-
-Or again, when there is some noise in the environment in real world setup, like also robotic, we always have this noise into the observation.
-
-So it's hard to match a preferred outcome in a high dimensional setting.
-
-So we also try to overcome this issue here.
-
-So what we do propose is to use contrastive learning.
-
-Contrastive learning is a mechanism popular in the unsupervised learning scene that we will discuss more in depth in a few moments.
-
-The objective that we want to have with our method are to avoid reconstruction in learning the word model so we don't have anymore the decoder here as we see on the right.
-
-Then we want to be able to match preferred outcomes in a lower dimensionality space because we have seen that
-
-in a dimensionality that's problematic and also we we would like the this low dimensional state to be somehow representative of the task so that when we match our goal in this low dimensional state we are actually doing something that actually brings us closer to the actual preferred outcome that we we want to achieve in the high dimensional settings
-
-So let's try to compare to see what are the differences between using the likelihood active inference model and the contrastive model.
-
-So the idea in the likelihood active inference model is that we want to maximize the accuracy of reconstruction.
-
-So basically this means that we have this decoder that maximizes this maximum likelihood of the observation given the state.
-
-So we want the state to
-
-to maximize the information that it contains about the observation, basically.
-
-In contrastive learning, in contrastive active inference, we do something different.
-
-So instead of trying to reconstruct the current observation, we try to compress with the encoder again this observation and compare it to all the other
-
-not all the other as we'll see in a while because that's invisible, but many, many other samples that represent something different.
-
-So that in the latent space, in this compressed space, we want our state and the compressed image to be very close.
-
-while our state should be very distant from all the other images.
-
-So we are indeed maximizing the similarity with the corresponding sample, this is here called the positive sample, where we want to minimize the similarity, so maximize the distance against all the other samples that are called negative samples.
-
-in contrastive learning.
-
-So as we'll see also in a moment, this mechanism here maximizes the lower bound of the mutual information.
-
-So we are basically trying to maximize the information in between corresponding observation and state while minimizing the information with respect to all the other negative pairs.
-
-So as we've seen before, the free energy of the past can be summarized with this equation here.
-
-So here I'm just talking about one time, one moment in discrete time steps.
-
-So instead, the team presented for all sequences by using the tilde notation, while here we're just considering one time steps.
-
-the time so as we as we have seen the free energy is basically a
-
-an upper bound on the surprisal information that we want to minimize.
-
-So we minimize free energy in order to minimize the surprisal of the agent.
-
-And here is actually evident that we have this evidence bound.
-
-So the scale divergence is always greater or equal to zero.
-
-We wanted to basically to reach zero hypothetically in order to minimize this evidence bound.
-
-And this can also be rewritten in a way that is more practical to implement it.
-
-So by having the likelihood of the observation given the state, which actually means the accuracy of our model, and having, again, the complexity of the model, which is the KL divergence between our variational distribution Q, which we
-
-We use Q , which is basically using the autoencoding variation of a variational posterior.
-
-So this is as typical as is done in variational autoencoders.
-
-So when you try to infer the parameters of your posterior distribution by using the corresponding observation,
-
-And then we want to minimize the KL divergence between this autoencoded posterior and our prior about the current or future state, we can say, given the past state and actions.
-
-And in our case in particular, we generally learn this prior, so we don't just use a
-
-a uniform prior of a state, but we will learn our prior to be predictive of what the state is given the past state.
-
-So it can basically seem like for machine learning practitioner as a conditional variation of the encoder.
-
-With contrastive learning, what we try to do is, as I said, to maximize state similarity with the correct and corresponding observations of our positive sample while minimizing with the other.
-
-This means, again, that we want to maximize the mutual information between the positive sample and the corresponding state and minimizing the information with the negative samples.
-
-this can be written like this.
-
-So the noise contrastive estimation, so NCE, that's the abbreviation, basically provides, again, a lower bound on the mutual information.
-
-So where we see that we basically have like a soft max.
-
-So over all the
-
-the observational state, what does it mean?
-
-So for each pair of state and observation, we want this value, so the value of this critic function f to be as high as possible, or we want it to be very low with respect to the other, so that actually the exponential of this compared to the sum of all the other exponential is higher with the corresponding observation and very low with the rest.
-
-So this is basically saying that you want matching pairs to be very close and distant pairs to a very low value.
-
-This lower bound is an approximation, normally, when we take a number of samples key from a joint distribution that we define between x and y. In particular, in our case, this x and y represent our observation and our hidden states.
-
-So we define a priority.
-
-this joint distribution to actually represent the fact that this state corresponds to this observation.
-
-And we want to maximize the information in between them.
-
-And this function xy, again, is a so-called critic function.
-
-So what does it mean?
-
-It's a function that should approximate this log density ratio that we see here on the right.
-
-I won't go into the mathematical details of this, but basically, it's a mapping of the
-
-of the two inputs.
-
-So basically, it's a mapping of our observation and our state.
-
-And we want this, again, these outputs to be i for corresponding pairs and low for non-corresponding pairs.
-
-So how do we transition from the free energy of the past that we've seen to our contrastive formulation?
-
-So the first step that we do is adding to the free energy functional a term that we assume to be constant, that is the entropy of the observation.
-
-So how can we assume that the entropy of the observation is constant?
-
-So in machine learning, we generally have a data set from which we samples our observation about the past.
-
-So we assume when we train that our data set so that the distribution over the observation is fixed.
-
-So the entropy of this distribution will always be a constant because we cannot modify that, as opposed, for instance, to the states, which we instead learn.
-
-So the distribution of our outcomes cannot be modified, and so its entropy is a constant.
-
-If we add this term to the free energy functional,
-
-we can rewrite it as the KL divergence minus this information gain or mutual information term here between the states and the observation.
-
-So given this, we can now apply the fact that contrastive learning functionally is a lower bound on the mutual information to actually derive the free energy of the past
-
-we're expliciting all the terms out according to the previous slide math.
-
-We basically have, again, this KL divergence term.
-
-And then we have this, the value of F between O and S to maximize and then to minimize all the, again,
-
-the value of the function with respect to all the other negative pairs.
-
-So this brings us to
-
-Again, an upper bound on the surprisal term.
-
-We see that this upper bound is actually even higher than the normal free energy upper bound.
-
-But as we'll see later, these are some nice properties that explicitly help us to get rid of the reconstruction and to learn a different representational space that has some advantages compared to the likelihood-based representation.
-
-So let's now talk about how can we learn to behave using contrastive active inference.
-
-So in the likelihood-based active inference model, what we were trying to maximize was, again, the likelihood of the future observation, but under the preferred distribution.
-
-So we want the imagined outcomes to be as close as possible to the outcomes that we prefer.
-
-So this, for visual environment, implies that we reconstruct what we imagine will happen in the high-dimensional space, so the image, basically, and then we compare it to our preferred image, for instance.
-
-And as we said before, we can, for instance, use a max mean squared error distance, or we can just use like, we can use a Gaussian and compute the likelihood under the preferred distribution.
-
-For contrastive active inference, we again instead use a contrasting mechanism when we want now the future state to be corresponding with our samples from the preferred distribution.
-
-So we want the outcomes that we prefer to actually be close to the state that we imagine.
-
-So that now we don't need anymore to reconstruct what the outcome of our action will look like.
-
-But we can just say is.
-
-the state that we imagine matching with the preferred outcome that they want to achieve and that's what we maximize similarity with and again we also have some
-
-some form of ambiguity minimization or epistemic value in trying to minimize the similarity respect to other outcomes.
-
-So in this case, minimizing the similarity respect to outcomes that are not in the preferred distribution basically means that you either want to go far from something that you have already seen before,
-
-in order to maybe get closer to the preferred outcomes.
-
-Or you either just want to minimize your ambiguity.
-
-So you want to be as far as possible from other outcomes and as close as possible to the actual preferred outcome that you're hoping for.
-
-So as we've seen before, the expected free energy can be summarized like this.
-
-I'll first highlight some difference with respect to the
-
-equation the team presented so first of all here we we take action to be part of the of the active inference process so the inference process well uh before we have seen that you can you can have a distribution of our policies and then you can you can sample the action from the policy and and compute the free energy of the future a given a posterior on your
-
-on a policy, on a given policy.
-
-Instead here we make the actions part of the generative model for the future and we actually want the agent to infer the action from the future and not just compute them as a posterior over some distribution of the policies.
-
-So we have now in the posterior this AT that we infer both the future state and the future action, and also the prior over the preferred outcomes that I indicate with tilde.
-
-I hope that's not confusing, because before, the tilde was used to indicate sequences.
-
-In the paper, I actually used it to indicate the preferred outcomes.
-
-So yeah, notation issues, but I hope that's not confusing.
-
-So the tilde here is basically to say this is the preferred distribution over observation, state, and action.
-
-So this is basically our target distribution, what we hope to achieve in the future.
-
-And we can rewrite this as a
-
-as the sum of three terms.
-
-So we have this.
-
-So first of all, I'm assuming that the agent has no prior preference on action so that for him, any action that will bring it to the preferred outcomes, it's fine.
-
-So he has a uniform prior of action.
-
-So the action doesn't really matter with this as long as it brings to the goal, let's say.
-
-And so in this way, we obtain an action entropy term.
-
-And then the rest, the intrinsic value, is the same epistemic value that we've seen before.
-
-And so the one that should lead the agent to explore the environment more or either to reduce its ambiguity about the environment.
-
-And then we have the extrinsic value, which is basically rewards or just
-
-just a way to get closer to the actual preferred outcomes.
-
-So the value to pursue in order to minimize distance from the preferred outcomes.
-
-In our contrastive expected free energy, we again do a similar move as we did from the past.
-
-So here we assume that we are taking expectation over our preferred outcomes.
-
-Since we don't imagine outcomes in the future, we just assume that the outcomes will
-
-will be according to the preferred outcome distribution so that we can, again, sum the entropy over our fixed preferred outcome distribution.
-
-And then the steps are the same.
-
-So we have, again, this mutual information term between the preferred outcomes and the state that we imagine in the future.
-
-and the action entropy term and the scale divergence between the posterior over states and the prior over states.
-
-So it's a complex term, I'll say, because it basically should represent
-
-the difference between what the agent believes it will happen and what is supposed to happen in the environment.
-
-So normally in active inference, we assume for the future that the model of the world is correct.
-
-So that the agent does not control over his world model.
-
-So it cannot change how the environment dynamics will transition from one state to another.
-
-I'm assuming here that this scale divergent term is actually zero.
-
-Though I've seen that some work this could also be left being greater than zero, but then it's basically having the agent imagine that it can violate the impairment dynamics, hoping for a better dynamics that it will allow it to...
-
-to be optimistic and think, yeah, the thing that I imagine will happen is actually going to happen.
-
-So here, we don't allow the agent to modify how the environment moves from one state to another.
-
-And we just assume, yeah, the dynamics environment, so our posterior over the transition dynamics of the environment is correct.
-
-And so the scale diverges in zero.
-
-And then our objective, again, doing
-
-applying the contrastive learning lower bound translates into this, when we have this contrastive mutual information between the preferred outcomes and this
-
-this action entropy term.
-
-So if you write it out explicitly, we again have these two terms, which kind of reminds the two extrinsic value and intrinsic value for the free energy.
-
-So we have the term that actually should
-
-minimize the similarity with the negative sample that is doing something similar to what the intrinsic value in active inference should do.
-
-So basically trying to be distant from previously seen outcomes is kind of similar to explore the environment, to minimize your ambiguity.
-
-So try to find something that gives you more information, not something that you have already seen.
-
-And so the world model can be summarized in these three main components that we learn.
-
-We have our prior network that, as I said before, is learned and should learn the transition dynamics of the environment, so trying to predict future states given past states and actions.
-
-And then we have this GRU cell that is shared between the prior and the posterior network.
-
-And this is what allows us to bring our history with us.
-
-So just not stop to the previous state, but also to include some information about previous states so that we have more information available in order to...
-
-infer what the current state actually is.
-
-Then we have our posterior network, which also has access to the observation.
-
-And this posterior CNN, as I mentioned, is a convolutional neural network.
-
-And yeah, here we have the actual layer description for our environment, which are 64 by 64.
-
-But yeah, that's less important.
-
-The important thing is that we have a convolutional model that compresses the information from the observation for us.
-
-And this same convolutional network is also linked to the representation model that is the critic of the contrastive learning mechanism.
-
-So the function that is indeed matching states and the observation in order to learn a good contrastive learning representation.
-
-So the function that we minimize with respect to the past is our contrasting free energy of the past summed over an arbitrary number of discrete time steps over past sequences.
-
-It is important to say that for the past, the negative samples that we take are an observation
-
-of the same sequence of the corresponding observations.
-
-So let's say that we have an observation in the States.
-
-The negative samples will be all the other observations within the same sequence that are not the same in time, but also observations that come from other sequences.
-
-So that we're basically contrasting the current state with different time steps.
-
-So what happened in different moment of the same sequence of actions and what happened in different situations or different sequences.
-
-And that's how we try to foster our contrastive learning mechanism.
-
-Then we have the action model.
-
-So for our action model, we have two networks.
-
-One is the so-called action network, which basically infers the action to take a given state.
-
-And then we have this expected utility network.
-
-And this helps us pursuing what the team anticipated so that the fact that we are
-
-amortizing the action selection process for very long-term sequences by using a network that should estimate what the value of a certain state is in the future.
-
-So I'll try to be more clear here.
-
-So basically, you have the action network
-
-minimize this g lambda t functional that is basically an estimate of how much value is in a certain states
-
-And how do we get this estimate?
-
-So this estimate is provided by this formula here.
-
-So basically, at every step, we provide the actual expected contrastive free energy for that state.
-
-And then for the future,
-
-we sum, we compromise in between an estimate of what the network will predict is going to be the value in the future and the value itself that we are computing with the functional.
-
-So that at every step, we basically sum the value that we expect in that step
-
-We bootstrap, that's the way we normally say in reinforcement learning, so we apply some form of dynamic programming approach to sum this value with what we expect will happen in the future, and we use this as our
-
-target for learning the estimate.
-
-So we basically have the estimate and the estimate of the future plus the current value.
-
-And we compare the two.
-
-And we want the actual estimate to be closer to what is actually happening plus the future estimate.
-
-And this is actually what is normally done in reinforcement learning when you apply the so-called Bellman equation in order to estimate what's going to happen in the future by using what you actually know.
-
-So generally like the rewards and in our case the explicit free energy value and what you already can estimate for the future.
-
-So in our experiments, we compare four flavors that make for reinforcement learning using likelihood model.
-
-This is Dreamer, the Dreamer baseline.
-
-So it does a likelihood-based learned word model, and it uses rewards for learning action.
-
-So the reward function is already given to the agent.
-
-And then we compare with contrastive Dreamer.
-
-It is a modification of Dreamer using contrastive
-
-a learning for this word model instead of reconstructions.
-
-And then we compared the two flavors of active inference, the standard, let's say one, with the likelihood reconstruction model and our contrasting formulation.
-
-So we use similar architecture and training routine for all the four baselines.
-
-And the training routine can be summarized as we see here in pseudocode.
-
-So for a certain amount of number of training steps that we fix in advance, we are going to train our world model on the previous experience.
-
-So on a replay buffer that basically represents our data sets of past experiences.
-
-Then we are going to use the trained word model to imagine some trajectories in the future by using our action model and the replay buffer as well, which is used because we need to take the negative samples for the contrastive free energy functional.
-
-And then on the imagined trajectories, we are going to train our action model in order to actually try to pursue the preferred outcomes better.
-
-And then we are going to go back to the environment, collect a new trajectory using our word model to infer what the hidden state of the environment is at every time step, and using the action model to select the action according to the state that we inferred.
-
-and just collect the trajectory to the data set.
-
-And we do this continuously.
-
-So train the word model, imagine some trajectories, and train the action model, and again, keep collecting so that we continuously improve both the data collection process, because the word model and the action model gets better, and also our model indeed, so that we get closer to the goal.
-
-So one important insight that I first introduced before getting into an empirical evaluation of the method is the fact that using contrastive learning strongly reduces the computational requirements of the model.
-
-So here I am comparing the number of million multiplied accumulation operations
-
-for our models and the number of parameters that we as we see these are much lower when we use a contrastive mechanism compared to using a likelihood model and this is also reflected in term of work clock time so our model is quite faster compared to dreamer that
-
-that trains the likelihood-based model for the world that uses just three words for learning action and is much, much faster than the likelihood active inference model because the likelihood active inference model, other than having to do the reconstruction during the world model training, also has to imagine the high-dimensional outcomes in the future.
-
-So in that case, you have even more computation because for every imagined trajectory, you have to imagine all the possible images in our context that you will get pursuing a certain policy.
-
-So our model is quite faster than that.
-
-So the first task that I will discuss is a simple mini-grid task.
-
-So the agent represents the red arrow that will navigate a black grid in order to reach a green square that is placed in one of the corners of the grids.
-
-So the environment is partially observed because the agent doesn't know what's in every pixel of the grid.
-
-So in order to find the goal first, you should explore the whole grid and find the green square, or at least be in a position that allows him to see the green square in front of him.
-
-So for the reward model, of course,
-
-We have the highest reward and in correspondence of the goal state.
-
-So when the agent is actually on the goal square, it will receive a reward of plus one.
-
-And this is a sparse reward task.
-
-So for all the other states, the agent will just receive zero rewards.
-
-So it will be just encouraged to reach the goal.
-
-Well, for active inference method, the way that I chose to define the preferred outcome is to have an image of the agent that sees himself on the goal.
-
-So basically the agent sees himself on the goal and says, this is the position that they want to reach in the world.
-
-And let's see what happens from a qualitative level.
-
-So as I said before, the rewards for this task is just a plus one in the right square, in the goal square.
-
-What happens for the active inference model?
-
-So what will the active inference model provide as a value of a certain state to the agents in order to pursue the preferred outcome?
-
-So we see that the likelihood active inference that is imagining the outcome and comparing it to the preferred images is actually giving a very high value for the right square.
-
-In a scale from 0, 1, we can say that's a 1.
-
-Oh, sorry.
-
-We can say that's a 1.
-
-But other than that, the function it is providing is a bit confusing because it is giving some higher rewards in the centers compared to the, let's say,
-
-the last row and column that are the one that leads to the final goal the other corner are not even close to the goal one so it's just providing a perfect match and we have no control of what the distance the goal is because for the perfect match the goal that's
-
-that is indeed the correct value that it is providing.
-
-But other than that, it's difficult to understand what the likelihood active inference model is providing.
-
-With the contrastive active inference, we see that there is a different pattern.
-
-So the agent is providing a very low value for the center.
-
-So it's understanding that the center is, of course, not what it wants to see.
-
-But then it's providing high values to all the corners.
-
-And in particular, the highest value is provided to the right corner, so the one with the goal, because it's, of course, the one that corresponds the most with what we want to achieve.
-
-But then all the other corners also have
-
-a very high value.
-
-And the fact is that I would say that the contrastive active inference is probably capturing more, I would say, semantic information about the environment.
-
-So in order to distinguish a corner from a center of tile is actually modeling the fact that there is a corner in a certain state of the environment.
-
-And when it looks at the preferred outcome image, it actually says, first of all, this is a corner.
-
-And that's the way it distinguishes.
-
-And then there is the green tile where the agent is.
-
-So from a value perspective, we can say that a corner is closer in semantics with respect to a central tile to our goal.
-
-And then, of course, when you also have the green tile, which represents the goal, then you are the closest.
-
-So this is, of course, a bit risky because it can also lead to suboptimal behavior in some cases.
-
-But with good exploration of the environment, it will work through.
-
-lead to the optimal behavior because still the maximum value is still provided correctly.
-
-So it's still the value for the right corner.
-
-But if you didn't see the other corner, the agent will just go to another corner and say, okay, this looks similar to the goal.
-
-So I'm trying to do something similar to what I would like to do.
-
-If I didn't see anything else this closer, this is my goal.
-
-the best I can do.
-
-So this highlights how exploration is important in order to achieve preferred outcomes.
-
-And I think that also applies to likelihood-active inference as well.
-
-Because if you didn't see the goal, you just had some noisy signal in the center.
-
-So you wouldn't be able to reach the goal as well.
-
-And then here we quantify the performance.
-
-We see that with the likelihood active inference, the agent struggles to reach the goal consistently, while our method leads to consistent performance that are in line with the reward-based baselines.
-
-Of course, the reward-based baseline have an advantage because
-
-during training, they always have a filtered objective.
-
-So even if their model is not correct, they always have this reward function, filtered function that tells them, yes, this is where you need to go.
-
-Well, our model can take a little bit more time in order to first have a good model and then being able to match.
-
-But with the contrastive mechanism, this process actually happens fast and leads to consistent performance with likely the active inference we see that
-
-It will probably take more time to converge or it just leads to suboptimal behavior.
-
-So it's just inconsistent according to our evaluation.
-
-And yeah, these are two different grid environments.
-
-One is smaller, one is bigger.
-
-But yeah, the results are very similar in terms of performance obtained.
-
-Then the other task that we discuss is a continuous control task with a 2D planar environment where a robotic arm will penetrate a sphere goal, so the red sphere.
-
-and this sphere is bigger in the the so-called richer easy environment which is the one for which we see the preferred outcome on the left and it is smaller for the for the so-called richer art environment that is the one that we we see in the on the right so for a reward based agent we have the reward function that provides
-
-when the agent penetrates the sphere fully, a reverse of one.
-
-Otherwise, when it's
-
-off-penetrating or just partially penetrating the sphere, it provides a dense reward that tells you, yeah, you're getting closer to the goal.
-
-So in this case, the reward function is actually helping the agent a bit more because it's telling him that he's getting closer to the goal and he should just try in the neighbor area.
-
-While for active inference, we just provide the preferred state in the environment, which is...
-
-the agent penetrating the gold sphere.
-
-And let's see what happens.
-
-So again, we have a similar pattern actually
-
-Yeah, similar but different from the previous one.
-
-So in this case, the mean squared error distance from the goal is actually more confusing, as we've seen in previous example.
-
-So the likelihood active inference agent totally fails to reach the goal because probably all the states look alike in the environment because the background stays the same.
-
-So the background is not moving as it was happening, for instance, for the mini-grid environment.
-
-The goal is always in the same position.
-
-So the difference between two images is just provided by the few yellow pixels that move around.
-
-And if the model is not imagining perfectly where these pixels go, it's very difficult that it will provide some informative objective for the stars.
-
-Instead, our contrastive active inference agent is able to provide an informative goal.
-
-And apparently, the fact that it's providing some semantic information about the task is actually helping it to converge even faster than the reward-based baseline.
-
-Because the reward-based agents have access to rewards just when they're close to the goal.
-
-But the contrastive active inference provides a reward function everywhere in the environment.
-
-So when we see that the arm is very far, we have the mutual information term that should basically take over and tells you, yeah, you don't
-
-want to stay there, go elsewhere.
-
-And until we eventually find the goal sphere and we converge to the correct behavior.
-
-So the agent is actually converging a bit faster than the other baselines.
-
-And then, yeah, the contrastive dreamer baseline is converging a bit faster than dreamer one because its model is faster to learn because it's contrastive.
-
-so this is what actually happens these are gif on the right at some point they should they should reset so basically we just see here that the task is uh is correctly executed so that the agent is uh is able to match the
-
-the correct behavior.
-
-So yeah, this is taking a bit longer than expected.
-
-But yeah, you can see that, for instance, in the R task, the agent oscillates around the current behavior, but it keeps saying, okay, here we see it.
-
-So basically, the environment is oscillating in a position that is very close to the goal.
-
-So it tries to stay as much as possible to that point and not be driven far from the goal by the inertia of the arm.
-
-Then we analyze qualitatively what's happening in terms of the value is provided to the agent.
-
-So what is the objective that is given to the agent in order to learn here?
-
-And as I try to explain, the reward is somewhere in the middle between 0 and 1.
-
-when the agent is partially penetrating the goal, and it's totally 1 when the agent is fully penetrating the goal.
-
-In all the other situations, it is 0.
-
-For the active inference likelihood-based model, we see that the signal is very close for all the states.
-
-So the agent basically thinks that there is
-
-very little difference between being very close to the goal and being actually very far off from the goal.
-
-And that's likely the reason why it's not converging to the optimal behavior.
-
-For contrastive active inference instead, we see that the agent is provided an objective value somewhat in between 0 and 1 when it's
-
-not close to the goal and something that is very close to one when it's in the goal.
-
-And in particular, when it's closer to the goal, the value is actually a bit higher than when it's far off.
-
-So we see that there is, again, some semantic information provided, which is the actual distance of the arm from the right goal.
-
-Or we can just see it as the contrastive learning mechanism saying, OK, this pose of the arm is actually very different from the one that I hope to obtain.
-
-So let's try to move to a pose that is actually closer.
-
-And we indeed obtain higher values when the pose is similar to the one that we want to achieve.
-
-So we exploit the fact that some semantic information is provided to the agent by using contrastive learning to work on a more difficult setup, the richer distracting environment.
-
-So in the research destructing task, we have the same objective as before.
-
-So we want the agent to reach the goal by penetrating the red sphere.
-
-But now we have varying backgrounds, and we have destructuring the environment, which could be just altered colors on the tilted camera.
-
-And we still want to achieve the agent to penetrate the sphere despite that.
-
-So for the real world-based agents,
-
-The reward is the same as before, so being provided for the agent penetrating the goal sphere, while for active inference, the goal here is actually a bit troublesome to define because given the fact that the background is constantly varying across different episodes, we cannot a priori define what's the
-
-what the preferred outcome looks like.
-
-So instead of doing that, we attempted providing a more neutral preferred outcome, with the agent seeing itself achieving the goal, but with the standard task background.
-
-So we have the blue background with the arm penetrating the goal.
-
-And we aim for this preferred outcome to transfer
-
-uh to the to the distracting setup this is of course pretty much impossible for for the likelihood active inference model because of course it's trying to match this in uh with a mean squared error like uh function so of course the the signal provided would be very confusing
-
-Very interestingly, we see here that also the Dreamer method fails because it's based on likelihood-based models.
-
-And as we'll see, reconstructing all the variations in the environment is very difficult.
-
-So the reconstruction-based world model struggles to provide informative states of the environment, while the contrastive learning-based models succeed.
-
-And in particular, it's very interesting
-
-that our model was able to actually achieve the goal.
-
-Here we see less consistency than before, so there is a higher variance, but still the agent is often able to reach the correct position despite all the difference in the background and all the destruction present in the environment.
-
-So we see that the representation is actually
-
-learning what the pose of the robot should be and trying to match it in the future.
-
-And then here we see some videos what's happening.
-
-So we see here indeed that the arm is oscillating a bit more, so it's actually a bit more difficult for him to assess that he's doing the right thing, but still the
-
-The behavior obtained is still quite good, I would say, so it's pretty much achieving the goal.
-
-And this shows why a likelihood-based model will fail in this environment.
-
-So here we compare the ground truth in the different varying backgrounds and what the DREAMers or the likelihood active inference model sees through the reconstruction.
-
-So we see that either reconstructing from the posterior state or from the prior state, the agent cannot
-
-perfectly model important information of the environment, which in this case is the arm pose.
-
-So it sees where the first link of the robot arm is, but it is not able to see normally where the second part of the arm is because it's very uncertain about that.
-
-And that leads the agent to not being able to actually assess where it is in the environment and to provide the right value for what's going on.
-
-So using reconstruction in this environment leads to this kind of problem where the agent is not certain about the internal states.
-
-And so it's uncertain of what it should do next.
-
-because the signal of the state is uncertain, is confused.
-
-And so it is also the value provided to the agent by the model.
-
-And that's it.
-
-So I'll just briefly summarize what we have seen.
-
-And so basically, we used a contrastive model to reduce the computation of active inference.
-
-This also brought some advantages in reinforcement learning.
-
-But yeah, we focused on the active inference area where this model brought to
-
-to a twofold advantage, both in learning the word model faster, but also in imagining further trajectories faster because you don't have the reconstruction.
-
-Then we saw that the contrast representation learned features that better capture relevant information for the environment.
-
-And this was key in solving both the richer task and especially in the richer distracting task, where without this feature, we wouldn't be able to solve the task.
-
-And then we show that we can use this method to provide performance that are similar to engineering rewards, but in a much easier way.
-
-So you can just say, OK, this is what I want to achieve in the environment, provide the observation to the agent.
-
-and the agent will find itself a way to reach that state without actually having to provide a rework function for every possible states of the environment, which especially in realistic cases is usually unfeasible.
-
-And finally, we have also seen that the exploration is very key for our method to work because we don't want the agent to converge to a suboptimal behavior that looks like the right outcome, the preferred outcome.
-
-So it's very important to wisely explore the environment before actually delving into learning our preferred policy.
-
-And we aim to look more into this in the future.
-
-So thank you very much.
-
-That was it.
-
-I don't know if there's any questions.
-
-
-SPEAKER_00:
-Thank you both.
-
-Very interesting presentation.
-
-So if anyone watching live wants to ask a question, otherwise I have a few.
-
-So you mentioned a critic model.
-
-when you were describing the architecture, and that reminded me of language learning.
-
-Like if someone says, repeat after me, and then they give a sound, you might be accurate or you might not be.
-
-But if someone said, no, it was not .
-
-You have a negative and a positive example.
-
-So what does that speak to perhaps the biological basis of contrastive learning or how these contrastive learning
-
-settings, active inference or not relate to the ways that organisms learn?
-
-
-SPEAKER_01:
+All right, so thank you, Daniel for having us. And thank you, Tim. I hope you can hear me well.
+Okay, so I'll try to share my screen now.
 Okay.
-
-I will say that
-
-the contrasted learning mechanism, though it's not completely equal, I would say it somehow resembles the Abbeon learning mechanism, where you, when you have corresponding pairs of, so the things that should correspond, you actually want to strengthen the link, and when you have stuff that shouldn't be corresponding, you actually want to awaken the link.
-
-So I think that biologically, we could actually see it this way.
-
-So when you have something that you want to link further, in our case, the thing that we want to link further, so to reinforce, is the fact that a certain observation corresponds to a certain state.
-
-Then you strengthen this connection.
-
-you want to be far, and that's where the contrast, I think, a bit differs maybe from this biological perspective.
-
-We actually push it.
-
-We push it farther, which is not always the case for retinal learning because normally you don't have this pushing farther mechanism.
-
-So I would say this could be one possible links.
-
-As you said, yeah, the critic function is actually doing something very similar to what you mentioned.
-
-So you have positive samples and you reinforce.
-
-So the critic tells you, yeah, this is correct.
-
-And it should tell you that this is correct.
-
-So it's trained to do that.
-
-We do it with machine learning.
-
-But, well, if you have a good critic, you could use that.
-
-Yeah, it should tell you, yeah, this is the right samples while for non-corresponding states and observation, it should tell you, yeah, this is not what we want in our representation.
-
-We want this farther.
-
-
-SPEAKER_03:
-Maybe to add on, Daniel, I think what you're hinting at, providing it should be like this, is more like a way to define preferred states, so to speak.
-
-If you translate it to what we're doing, it's basically saying these observations are what you should like, basically.
-
-They come into place for creating the action model.
-
-observations.
-
-The contrastive learning port is more like
-
-being able to distinguish different things, basically.
-
-And it's more broad than what you like to have.
-
-So the contrastive learning just learns to distinguish all kinds of sounds, even all the bad ones.
-
-And you just now say, okay, but now I really want to have this sound.
-
-So try to get there.
-
-I think that's the difference here.
-
-
-SPEAKER_00:
-That kind of sounds like paying attention to the right details, which we saw with multiple times, like the breakout games, like how could you miss the ball?
-
-Humans are watching that GIF and we're watching the ball, but we also have a sense of how to pay attention to the right details.
-
-And then in terms of action to have curiosity about the right things.
-
-So it definitely starts to bridge into some very interesting behavior.
-
-Another question was about the action entropy term in the free energy calculations.
-
-So maybe could you restate what the action entropy term is since it's one of the major contributions?
-
-And also what does that say about adding terms
-
-to the free energy calculation.
-
-Like the action entropy is always greater than zero, kind of like a KL divergence.
-
-And so that you mentioned gives some perhaps nice properties about the boundedness of F within a lower and an upper bound.
-
-So maybe just what is the action entropy doing here?
-
-Can we just add other terms that are bounded at zero to free energy and use that in other ways?
-
-
-SPEAKER_01:
-Okay, so I'll start with the question about the action entropy term, and then I'll also delve into the using different bounds for the free energy term.
-
-So here in this
-
-In the way we casted the active inference process for learning the actions, the key part is that the actions are now part of the future inference process.
-
-So I could also go back to the previous slide if that's necessary, but normally the way that we see this objective is without this A term, here and here.
-
-But instead, we have like,
-
-a conditional on a policy, on a certain policy.
-
-So normally that means that you have some set of policies already, and you're just trying to decide which of them is better.
-
-So this could be done like using an Occam browser first, and then just assessing the one that you think are best, or just assessing all of them, but that's
-
-That's impossible, for instance, in a continuous action setup where you cannot assess all possible policies because the actions are continuous.
-
-The number is infinite for every dimension.
-
-So this makes infinite by infinite and so on.
-
-So it's a huge dimensionality space.
-
-So instead here, we make the action part of the inference process.
-
-So we want to have a
-
-separate model that tells us what's the action to take at every step.
-
-And I said that we obtain an action entropy term and that's because in choosing the best action, so in trying to match our actions to the one that we should actually prefer, we
-
-We think it like we don't have a preference over action.
-
-So for instance, if I want to reach a certain stated environment, so if I want to go from this room to the kitchen, maybe I don't care what the shortest path is.
-
-I just care about getting there at some point.
-
-Or I don't care about going left or going right now when I get off my chair.
-
-I just want to...
-
-to go where I need to go.
-
-So we don't place a prior over the action.
-
-We just say, whatever action is fine as long as it brings you the fastest as possible to the goal.
-
-Because the fastest thing is not given by the action itself, but by minimizing the free energy.
-
-So we don't want a preference over the actions.
-
-We want the free energy to lead us to the fastest spot.
-
-And so the actions are, we assume a uniform distribution over them, and what remains is just an entropy.
-
-So it will be a KL divergence between the Q over action, given the states, and this PAT, which basically becomes an entropy value if you assume this is a constant, because it's just subtracting a constant to that.
-
-And yeah, switching to the other part of the question.
-
-So what does it mean to us, this constant term here?
-
-So is adding constant term useful?
-
-So I don't know if there's any other useful constant term that we could add.
-
-So mathematically speaking, adding a constant, so
-
-Having an upper bound because of a constant, because you're minimizing the same objective.
-
-But then on top of that, we apply the contrastive approximation.
-
-And that leads to another upper bound.
-
-And as I said, there are some implications of this.
-
-We get maybe a better representation.
-
-But are we getting farther from the actual objective?
-
-From my point of view, as long as we achieve something that is actually better, it doesn't really matter how far are we from the actual surprise of the signal.
-
-So in any case, we will always get some kind of amortization or approximation
-
-And we will probably never get a hundred percent close to the surprise value.
-
-So, because we don't have a perfect model, so a perfect model of the world doesn't exist.
-
-It's impossible to imagine that we can model every details of the environment, even with a, with a billion machine learning parameter.
-
-And it's impossible to think that we will always act perfectly.
-
-and always get in the perfect route to the goal, choosing the always optimal action, especially because there's always some uncertainty in the environment.
-
-And there's a lot of things that we normally want to ignore in our everyday life.
-
-So a lot of things here is not actually important to capturing the world model or action wise not.
-
-always important to be 100% accurate in our movements in the action we take the important thing is that we get close to the goal so I would say yeah if there are any other term that we any other constant term or just any other modification that we could do to the free energy functional that actually leads to better results without compromising the original goal of minimizing free energy I think that's
-
-there would be a good way to address some of the issues that we currently have with active inference that could ultimately lead to improving the performance of the artificial implementation of active inference significantly.
-
-So that's also why I think that taking advantage of some lessons that we learned
-
-from reinforcement learning is actually useful in active inference as well because there has been a ton of research about a way to amortize this thing or approximate this thing better or train a better deep learning model for some very specific aspect.
-
-And I think the active inference research should benefit from this, should take inspiration from this.
-
-
-SPEAKER_03:
-Yeah, so maybe to make clear here for maybe people that are less familiar with reinforcement learning, but are coming from a more active inference background.
-
-So in terms of active inference, as Scott Whistling would look at it, this is basically something that you should not do.
-
-So basically what happens here is that we see action inference more like a habitual thing.
-
-Like I know I'm in this state or I think I'm in this state, so therefore I can just infer my action without even planning.
-
-It's kind of you become habituated
-
-amortize this action into an amortized policy so that's basically the kind of the mechanism that that we apply here in order to avoid planning um all the time because that's that's the the tricky part uh we have too much options to plan so we don't want to do this so we just say let's amortize it from the start which basically means that this a this this
-
-but also over actions.
-
-And then so the action entropy just falls out by introducing the action in the queue there.
-
-add an action attribute term to the formulation.
-
-It just comes out because of having the actions as part of our approximate posterior.
-
-But so keep in mind that this also means that we have an approximate posterior over our action selection.
-
-And this works in these reinforced flowing problems because they're
-
-yeah your goal is always the same your it does not shift uh it's it's not a it's also not a uh um if you if you think back on on biological agents it's not like a complex distribution to maintain homeostasis basically just yeah this is the reward this is where you get it it's always the same thing so this basically means that your environments wherein in which we test these agents and which also reinforce
-
-is tuned for, I can amortize what I have to do, because if I know my state, I know what I have to do, basically.
-
-Things will change, I guess, if you have another environment in which
-
-You could still have multiple options to do and you can only really know what to do by planning ahead or by first search for information on what's happening.
-
-And in these kinds of environments, I think that amortization trick won't help you a lot or you cannot do it.
-
-just by amortizing.
-
-So it's a trick we did to allow it to work in this kind of environment because we have to benchmark against some things and you have to be a bit on par there.
-
-But so keep in mind, it's not a silver bullet that
-
-do deviate from vanilla active inference here we cost action inference as like we just want to learn habits we don't want to plan but this also means that there might be situations where it will not work and then it's not due to active inference or free energy principle that's not working it's more like yeah we did a crude approximation here by which things might not work anymore
-
-
-SPEAKER_00:
-That's interesting about which training environments favor what kind of algorithms and then how that shapes the perception of different algorithms.
-
-Like the navigation task, what if there was a fuel tank or there was a larger space that was going to require multiple information foraging trips, for example.
-
-And so then the sort of single-minded seeker is going to...
-
-just die fast but then something that's able to actually engage in planning wouldn't so that was a little bit like to those who are familiar with active inference and then here's a variant on what we've seen before how about for those who are more familiar with the dreamer architecture or reinforcement learning what makes active inference active inference and how is it different
-
-
-SPEAKER_03:
-well i think um they are they're largely uh similar let's say i think that would be the starting point because of often people think about what's the difference but but i think the the main point that we
-
-is that there are a lot more similarities between reinforcement learning and active inference.
-
-I would say that active inference is a bit more general than reinforcement learning in the sense that on the one hand, we don't use a reward
-
-function per se but we relax that a bit as in we just have a distribution over preferred outcomes which is a bit more general I would say and then the second thing is that instead of by starting off from the free energy principle as in this is the objective that we want to minimize you also get the
-
-thing as what a reinforcement learning agent would optimize.
-
+All right. So now I will talk about our recent work contrastive active inference.
+So this work was recently published at NeorIPS 2021. So very recent.
+It came out by last month, and let's start delving into it.
+So the setting that we discuss in active inference is very similar to the reinforcement learning one, with the difference that in reinforcement learning,
+the all behavior learning is driven by rewards.
+So the agent receives a reward function and positive rewards should reinforce positive behaviors, while negative rewards should penalize the agent to avoid those states and actions.
+However, one of the problems that comes with reinforcement learning is that in order to actually learn from rewards, you need a reward function.
+And that's not always easy to have. For instance, as Tim mentioned, especially when the state is not known in advance, so the agent doesn't exactly know its state.
+It's difficult in that case to design a reward function because you're not sure of what the agent knows and how it can assess its performance compared to the environment.
+So we instead focus on active inference in active inference.
+In active inference, the agent operates to the principle of minimizing free energy, as we have just seen.
+So the principle of minimizing free energy actually enables two things.
+The one thing is to learn a model of the world.
+We call this an artificial world model in our work.
+And the other objective is to minimize the free energy in the future by trying to achieve some preferred outcomes of the agent.
+So we assume that the agent has some preferred outcome distribution that he wants to achieve and that his goal will be in the future to actually achieve these preferred outcomes.
+So the environment setting we discuss is that one of a POMDP, so a partially observable marketplace in process.
+So just to recap, we have observation that the agent receives.
+He has to infer the internal state of the environment, which is non observed.
+And then there's action which are actually known for the past, but that the agent should infer or somehow choose among a set of possible action is the future.
+So this is just a summary of what the artificial world model looks like.
+So as we've seen in the previous slides, we have an encoder that encodes the information from an observation.
+We focus on visual environments.
+So here we have again an image, which is basically an end by end metrics.
+So the encoder could be, for instance, a convolutional neural network.
+In our case, then we have the hidden state model, which takes the previous state and the previous action.
+And in particular, in our case, you use some form of recurrent neural network model in order to keep preserving the history of the environment.
+And then we have the decoder that computes a reconstruction of the observation of the current state.
+So it tries to encode inside the hidden state as much information as possible from what it comes from the observation.
+So the problem with reconstruction is that computing them, especially in visual environments, is quite complicated because you need big models that have a very good representational capacity.
+And also the models cannot be 100% accurate as in low dimensional settings because, for instance, predicting any much pixel by pixel is practically very noticeable.
+So it's very rarely happens.
+So let's go on example here.
+So a few weeks ago, I was training the DAE model similar to this one on the left.
+So where we have this encoder decoder architecture on an Atari game, the breakout game, and try to learn an hidden state to learn action on top of the hidden state.
+The problem is that the reconstruction of the VAE.
+So we're actually pretty bad in that they were losing very important information about the game.
+So for instance, it was kind of able, so with some uncertainty to model where the paddle of the game is, but it wasn't able to model where the ball is, which is actually one of the two most important details in order to actually be able to play.
+So even adding the reward function in this case, so having the game score available, the agent wasn't able to learn the task because of the state, which was lacking the most important information in order to keep improving.
+So this is one issue that we try to overcome in our work.
+And the second part of active inference involves learning to pursue the preferred outcome.
+So in order to pursue preferred outcomes, active inference agent will do two things.
+One, try to minimize the distance with respect to this preferred outcomes, but on the other way also minimize the ambiguity with respect to the environment.
+So normally this is done by training to match the distribution.
+So trying to match as we saw with a, with a, with a KL divergence, try to match the distribution of the imagined outcome with the preferred outcomes distribution.
+However, again, in a high dimensional setting, this can be quite complex because, uh, how do you define a distribution on an high dimensional image?
+Could it be for instance, just a center Gaussian around the, the pixel.
+So with the, with the mean being the pixel value and then some fixed standard deviation.
+But in that case, we, we get into troubles because we have the same issue discussed before with, for instance, having this kind of goal here and a noisy observation like this, which actually adds an eye, an eye, an eye, mean square compared to, to an image that is very distant from the goal.
+And this kind of situation, especially when using reconstruction or, uh, in more realistic settings are very, very likely because for instance, you can, you can think that the center image is actually just a reconstruction of the model, which is not a hundred percent accurate.
+So that could be the case.
+And indeed, uh, the agent will be confused and you will think that it's not achieving the goal compared to maybe, for instance, a past observation, but it seemed that it was actually, actually closer to the goal.
+Or again, when there is some, some noise in the environment in real world setup, like also robotic, we always have this noise into the observation.
+So it's hard to, uh, to match a preferred outcome in a, you know, a national setting.
+So we, we also try to, to overcome this issue here.
+So what we do propose is to use contrastive learning.
+Contrastive learning is a, is a mechanism popular in the, in unsupervised learning scene that we will discuss more in depth in a few moments.
+So the, the, the objective that we want to, to have with our method are to avoid reconstruction in, in learning the world model.
+So we don't have any more the decoder here, as we see on the right.
+Then we want to be able to match preferred outcomes in a lower dimensionality space, because we have seen that, uh, net dimensionality that's problematic.
+And also we, we would like the, this low dimensional state to be somehow representative of the task.
+So that we, when we match our goal in this low dimensional state, we are actually doing something that actually brings us closer to the actual preferred outcome that we, we want to achieve in the high dimensional setting.
+So, uh, let's, let's try to compare, uh, to, to see what are the difference in between using the likelihood, active inference model and the contrastive model.
+So the idea in the likelihood, active inference models that we want to maximize the accuracy of reconstruction.
+So basically this, this means that we have this decoder that maximize this, uh, maximum likelihood of the, the, the, of observation given the state.
+So we want the state to, to, to maximize the information that it contains about the observation.
+Basically in contrastive learning, we, in contrastive active inference, uh, we do something different.
+So instead of trying to reconstruct, uh, the, the current observation, we try to, uh, compress within coder, uh, again, this observation and compare it to all the other.
+Uh, to not all the other, uh, to, not all the other, as, as we'll see in a while, because that's invisible, but, uh, many, many, uh, other samples that represent something different.
+So that we, in the, in the latent space, in this compressed space, uh, we want, uh, our, uh, state and the, the compressed image to be very close.
+Uh, while, uh, this, our state should be very distant from all the other images.
+So we, we, we are indeed maximizing the similarity with this, uh, with a corresponding sample.
+That is here called the positive sample where we want to minimize the similarity.
+Minimize the similarity.
+So maximize the distance against all the other samples that are called negative samples in contrastive learning.
+So as we'll see also in a, in a moment, this, this mechanism here maximize the lower bound of the mutual information.
+So we are basically trying to maximize the information in between corresponding, uh, observation and state while, uh, minimizing the information with respect to, to all the other negative pairs.
+So as we've seen, uh, before the, the free energy pass can be summarized, uh, with this equation here.
+So here I'm just, uh, talking about one time, uh, one moment in, uh, in this for time steps.
+So instead, uh, team presented for all sequences by using the tilt denotation while here, we're just considering one time steps at a time.
+So, uh, uh, as we, as we have seen that the free energy is basically, uh, an upper bound on the surprise, uh, information that we, we want to, to minimize.
+So we minimize, uh, free energy in order to, uh, minimize the surprise of the agent.
+And, uh, here is, is actually evident that, uh, we have this evidence phone.
+So the, the scale diversion is always greater or equal to zero.
+So we wanted to basically to, to reach zero hypothetically in order to, to minimize this, uh, this evidence bound.
+And, uh, this can also be rewritten, uh, in a, in a way that is more practical to implement it.
+So by having, uh, the, the likelihood of the observation given the state, which actually means the accuracy of our model.
+And that being again, the complexity of the model, which is, uh, the, the KL divergence between, uh, our variational distribution Q, uh, which we.
+We, we, we, we use Q of F given O, which is basically using the auto encoding, uh, variation of, uh, a variational, uh, posterior.
+So this is, uh, as typical as is, as is done in, uh, in variational auto encoders.
+So when you, when you try to infer the parameters of your posterior distribution by using, uh, the corresponding observation.
+And then we, we want to minimize the KL divergence between this, uh, auto encoded, uh, posterior and, uh, our prior, uh, about the, about the, the core, the current or future state.
+We can say, given the, the past, uh, state and actions.
+And, uh, in our case in particular, we generally, uh, learn this, uh, this prior.
+So we don't just use, uh, a uniform prior of a state, but we, we learn, uh, our prior to be predictive, uh, of what the state is given, uh, the past state.
+So it, it can basically seem like, uh, for machine learning practitioner as a, as a conditional, uh, variational auto encoder.
+Uh, with, with contrastive learning, what we try to do is, as I said, to maximize state similarity, uh, with, uh, with the correct and corresponding observations.
+So our positive sample while minimizing with the other, uh, this, uh, means again, that we want to maximize the mutual information between the positive sample and the corresponding state and minimizing, uh, the information with the negative samples.
+So, uh, uh, the noise contrastive estimation.
+So, uh, uh, the noise contrastive estimation, so NCE, that's the abbreviation, uh, uh, basically provides, uh, again, uh, a lower bound on the mutual, uh, information.
+Uh, so where we, where we see that we basically have like a, like a soft max.
+So over the, over all the, the, the, the observation state, what does it mean?
+So, uh, for each pair of state and observation, uh, we won't, uh, this value.
+So the, the value of this critic, this fun, this critic function F to be as high as possible.
+What we want it to be, uh, very low, uh, respect to the other.
+So that actually the exponential of this, uh, uh, compared to the sum of all the other exponential is higher with the corresponding observation and, uh, very low with the rest.
+So this is basically saying that, uh, that you'd want, uh, matching pairs to be, to be very close and distant pairs to, to a very, very low value.
+And, uh, uh, the, this, this lower bound, uh, is a, is an approximation.
+Normally when we take, uh, a number of samples key from, uh, uh, a joint distribution that we define, uh, between X and Y in particular in our case is X and Y represent, uh, our observation and our hidden states.
+So we define a priorities, uh, this joint distribution to actually represent the fact that this state corresponds to this observation.
+And we want to maximize the information in between them.
+And, uh, this function X, Y again, is a so-called critic function.
+So what does it mean?
+It's a function that should approximate this log density ratio that we see here on the right.
+I won't go into the, the mathematical details of this, but basically, uh, is, is a mapping of the, of the two, the two inputs.
+So basically it's a mapping of our observation and our state.
+Uh, and we want this, uh, again, these outputs to be I for corresponding pairs and, uh, and low for non corresponding pairs.
+So how do we transition from the free energy of the past, uh, that we've seen to the, to our contrastive formulation?
+So what the, the, the first step that we do is adding to the, to the free energy functional, uh, a term that we, we assume to be constant.
+That is the, the entropy of the observation.
+So how can we assume that the entropy of the observation is constant?
+So in machine learning, we generally have a dataset from which we samples our observation about the past.
+So we assume when we train that our, uh, uh, data sets, so that the distribution over the observation is fixed.
+So the, the entropy, uh, of this distribution will always be a constant because we cannot modify that, uh, as opposed, for instance, to the states, which, which we instead learn.
+So the distribution of our outcomes cannot be modified.
+So it's entropy is a constant.
+If we add this term to the free energy functional, we can rewrite it as a K as the Kiel divergence minus this information gain or mutual information term here between the states and the observation.
+So given this, we can now apply, uh, uh, the fact that we, uh, uh, uh, contrastive learning, uh, uh, functional is, uh, is a lower bound on the mutual information to actually derive the, the free energy of the past.
+We're expliciting all the terms out, uh, according to the, to the previous slide math.
+We basically have, again, this KL divergence term, and then we have this, uh, the value, uh, of F, uh, between O and S to maximize and then, uh, to minimize all the, uh, again, uh, the, the, the value of the function of, uh, with respect to all the other negative pairs.
+So this brings us to, to, again, an upper bound on the surprise term.
+We see that the, this upper bound is actually even, uh, higher than the normal, uh, free energy upper bound.
+But as we'll see later, these are some nice properties that, uh, explicitly help us to get rid of the reconstruction and to learn a different representational space.
+We see that there's some advantages compared to the, to the likelihood, uh, based, uh, uh, representation.
+So let's now talk about how can we learn, uh, to behave using contrastive active inference.
+So in the likelihood based active inference model, what we were trying to maximize was again, the likelihood of, uh, the future observation, but under the preferred distribution.
+So we want to, uh, uh, we want the imagined outcomes to be as close as possible to the, to the outcomes that we prefer.
+Uh, so this for visual environment in place that we, we reconstruct what, uh, what we imagine will happen in the high dimensional, uh, space.
+So the image basically, and then we compare it to our, uh, preferred, uh, image for instance.
+And, uh, as we see before, we can, for instance, use a max mean squared error distance, or, uh, we can just use like, uh, we can use a Gaussian and compute the likelihood under the preferred, uh, distribution.
+For contrastive active inference.
+For contrastive active inference.
+We, again, instead use a contrasting mechanism when we want now the, the future state.
+To be corresponding with our, uh, samples from the preferred distribution.
+So we want the, the outcomes that we prefer to actually be, uh, close to the, to the state that we imagine.
+So that now we don't need anymore to reconstruct what the, what the outcome or action will look like, but we can just say is the, the state that we imagine matching with, uh, uh, the preferred outcome that they want to achieve.
+And, uh, uh, that's, that's what we, we maximize similarity with.
+And again, we also have some, some form of, uh, ambiguity minimization or epistemic value in trying to minimize the similarity.
+Respect to other, uh, outcomes.
+So in this case, minimizing, uh, the similarity respect to outcomes that are not in the preferred distribution basically means that, uh, you either want to go far from something that you have, uh, already seen before, uh, in order to maybe get closer to the, to the preferred outcomes.
+Or you either just want to, uh, minimize your ambiguity.
+So you want to be as far as possible from other outcomes and as close as possible to the, to the actual preferred outcome that you, that you're hoping for.
+So as we've seen before, the expect free energy, uh, can be summarized like this.
+I, I, I'll first, I like some difference in respect to, to the, the equation that Tim presented.
+So first of all, here we, we take action to be part of the active inference process.
+So the inference process, while, uh, before we have seen that you can, you can have a distribution of our policies and then you can, uh, you can sample the action from the policy.
+And, uh, uh, and, uh, and compute the free energy of the future, uh, given, uh, a posterior, uh, on your, uh, on a policy on a given policy.
+Instead here, we, we make the, the actions part of the, the generative model for the future.
+And we actually want the agent to, to infer the, the action from the future and not just compute them as a, as a posterior over, over some distribution of, uh, over the policies.
+So we, we have now in the posterior is, uh, this 80.
+So we, that we infer both the, the, the, the, the future state and the future action.
+And, uh, also the, the prior over, over the preferred outcomes that I indicate with tilde.
+I hope that's not confusing before, because before, uh, the tilde was used to, to indicate sequences, but in the paper, I actually used it to, to indicate the preferred outcomes.
+So yeah, uh, notation issues, but, uh, I hope that's not confusing.
+So the tilde here is basically to say, this is the preferred, uh, distribution over observation, state and action.
+So this is basically our target distribution.
+What we, what we hope to achieve in the future.
+And we can rewrite this as a, as the, the sum of free terms.
+So we have this, uh, uh, so first of all, I'm assuming that, uh, the agent has no prior preference on action.
+So that for him, uh, any action that will bring it to the preferred outcomes, it's fine.
+So he has a uniform prior of election.
+So the action doesn't really matter with this, as long as it brings to the, to the goal, let's say.
+And, uh, so this, in this way, uh, we, we obtain an action entropy term, and then, uh, the rest, the intrinsic value is, uh, is the same epistemic value that we've seen before.
+And, uh, uh, so the, the, the one that, uh, uh, should lead the agent to, to explore the environment more, or either to reduce its ambiguity about the environment.
+And then we have the extrinsic value, which is basically, uh, rewards or, uh, uh, just, uh, just a way to get closer to the, to the actual, uh, preferred outcomes.
+So the, the value to pursue in order to, to minimize distance, uh, from the, from the preferred outcomes.
+In our contrastive expected free energy, uh, we, we, again, it was similar move as we did from the past.
+So here we assume, uh, that we are taking expectation over our preferred outcomes.
+Since we don't imagine outcomes in the future, we just assume that the outcomes will, will be, uh, according to the, to the preferred outcome distribution.
+So that we can, again, some, uh, the entropy over the, our fixed, uh, preferred outcome distribution.
+And then the steps are the same.
+So we, we have, again, this, uh, mutual information term between the preferred outcomes and the, the state that we imagine in the future and, uh, the, the action entropy term and, uh, uh, uh, this scale divergence between, uh, the posterior states and the prior states.
+So this, uh, uh, complex term, uh, I'll say because it, it basically should represent, uh, the difference between what the, what the agent believes it will happen and, and what is supposed to happen in the environment.
+So normally in active inference, we assume for the future that the, the model of the world is correct.
+So that the agent does not control over, over his world model.
+So it cannot change how the, the environment dynamics will transition from one state to another.
+So I, I, I'm assuming gear that this is the, this scale, the version term is actually zero though.
+I've seen that some work, this could also be, be left are, are being greater than zero, but then, then it's basically, uh, adding the agent imagines that he can, um, he can, um,
+it can violate the, the impairment dynamics, hoping for a better dynamics that it will allow it to, uh, to be optimistic and think, uh, yeah.
+The, the thing that I, I imagine it will happen is actually gonna happen.
+So here we, we don't allow the agent to, to modify all the environment move from one state to another.
+And we just assume, yeah, these, the dynamics environment, so our posterior over the, uh, the transition dynamics of the environment is correct.
+And so this scale diverged in zero and then our objective, uh, again, doing the, applying the, the contrastive, the learning, uh, uh, lower bound, uh, translates into this.
+When we, we have this, uh, contrastive mutual information between the preferred outcomes and these, uh, this action entropy term.
+So, uh, if you write it out explicitly, we again have this, uh, this two term, which kinda reminds the two extrinsic value and intrinsic value for, for the free energy.
+So we have this, uh, the, the term that actually, uh, should, uh, minimize the similarity with the, with the negative sample that is doing something similar, uh, to what, uh, the intrinsic value in, uh, in active inference should do.
+So basically, uh, trying to, uh, to be distant from, from previously seen, uh, outcomes is, is kind of similar to explore the environment, to minimize your ambiguity.
+So try to find something that gives you more information, not something that you have already seen.
+And so the, the, the, the word model can be summarized in, uh, in these three, uh, main components that we learn.
+We have our prior network that, uh, uh, uh, as I said before is learned, uh, and should, should learn the, the transition dynamics of the environment.
+So trying to predict future states, uh, given, uh, past states and actions.
+And, uh, then we have these, uh, GRU cells that is shared between the, the prior and the posterior network.
+And this is what allows us to, to bring our history with us.
+So just not stop to the previous state, but also to include some information about previous states.
+Uh, so that we have more, more information available in order to, to infer what the current state is, uh, actually is.
+Then we have our posterior network, which also has access to the, to the observation.
+And, uh, uh, this posterior CNN, as, uh, as I mentioned, is a convolutional neural network.
+And, uh, yeah, here we have the actual layer description for our environment, which are 64 by 64, but yeah, that's, that's less important.
+Important things that we have, uh, a convolutional model that compresses the information from the observation for us.
+And this same, uh, convolutional network is also linked to the, to the representation model.
+Uh, that is, uh, that is, uh, the, the, the critic of the contrastive learning mechanism.
+So the function that, uh, is indeed, uh, matching states and the observation, uh, in order to learn the, uh, a good, uh, contrastive, uh, learning representation.
+So, uh, uh, the, the, the functional that we minimize respect to the past is, uh, is our contrasting free energy of the past, uh, summed over, uh, an arbitrary number of, uh, of discrete time steps in the other past, uh, sequences.
+Uh, it is important to say that, uh, uh, uh, for the past, uh, the, the negative samples that we take are, uh, uh, uh, observation, uh, of the, uh, of the same sequence of the, of the corresponding observation.
+So let's say that we have, uh, uh, an observation in the States, the negative samples will be, uh, uh, all the other observation within the same sequence that are not the same in time, but also observation that come from, uh, from other sequences.
+So, so that we're basically contrasting, uh, the, the current state with, uh, uh, different time steps.
+So, uh, what happened in different, uh, moment of, uh, of the same sequence of actions and, uh, what happened in different situations.
+So different sequences, and that's how we, we try to, to foster our contrastive learning mechanism.
+Then we have the action models.
+So for our action model, we have two, uh, networks.
+One, uh, is the so-called action network, which basically infers the, the, the action to the action.
+To, to take a given state.
+And then we have this expected utility network and this helps us pursuing what, uh, team anticipated.
+So that the fact that we, we are, uh, amortizing the action selection process for a very, uh, long-term sequences by using, uh, a network that should, uh, estimate what the value of a certain state is in the state.
+So I'll try to be more, uh, more clear here.
+So basically have the action network to, uh, minimize these, uh, this G Lambda, uh, team, uh, functional.
+That is basically an estimate, uh, that of, uh, of how much value is in a certain states.
+And how do we get this, this estimate?
+Uh, so this estimate is, is provided by this, uh, formula here.
+So basically at every step, uh, we provide the, the actual, uh, expected, uh, contrast the free energy for that state.
+And then for the future, uh, uh, we, we, some, uh, we, we compromise in between, uh, an estimate of what the, what the network would predict, uh, is gonna, uh, is gonna be the value in the future.
+And then, uh, the, the, the value itself that we are, uh, that we are, uh, computing with the, with the functional.
+So that at every step, we basically, uh, some, the value that we, we expect in that step, uh, we bootstrap, uh, this, that's the way we normally say reinforcement learning.
+So we, we apply some form of dynamic, uh, programming approach to, to some, this value with, uh, what we expect to happen in the future.
+And, uh, we use this, uh, as our, uh, target for learning the estimate.
+So, uh, we basically have the estimate and the estimate, uh, of the future plus the current value.
+And we compared the two, and we want the, the, the actual estimates to be closer to what is actually happening.
+Plus the future, uh, estimate.
+Uh, and this is, this is actually what is normally done in reinforcement learning.
+When you apply the, the so-called Bellman equation in order to estimate what's gonna happen in the future by using, uh, uh, what you actually know.
+So generally like the rewards and in our case, the, the, the explicit, uh, uh, free energy value and, uh, what you, you already can estimate for the future.
+So in our experiments, uh, we compare to, we compare four flavors that, uh, uh, make for, uh, reinforcement learning, uh, using likelihood model.
+This is dreamer, the dreamer baseline.
+So that does, uh, likely based, uh, learned word model.
+And, uh, uh, it uses rewards for learning action.
+So the, the river function is, uh, is already given to the agent.
+And then we compare with contrastive dreamer.
+It is a modification of dreamer using, uh, contrastive learning for this word model instead of reconstructions.
+And then we compare the two flavors of active inference, uh, the standard, let's say one with the likelihood reconstruction model and our contrastive formulation.
+So we use similar architecture and training routine for all the, the four baselines in the, uh, the training routine can be summarized, uh, as we see here in pseudo code.
+So for a certain, uh, for a certain amount of number of training steps that we fix in advance, we are gonna train our word model on the previous experience.
+So now on a replay buffer, uh, that basically represents our datasets of, uh, past experiences.
+Uh, then we are gonna use the trained word model to imagine some trajectories in the future, uh, by using, uh, uh, our action model and the, the replay buffer as well, which is used because we, we, we need to take this, the negative samples, uh, for the contrastive free energy functional.
+Uh, and then on the imagine trajectories, we are gonna train our, our action model in order to actually try to pursue the preferred outcomes, uh, better.
+And then we are gonna go back to the environment, collect a new trajectory, uh, using our word model to infer what the, what the hidden state of the, of the environment is at every time step.
+And using the action model to select the action according to the state that we inferred.
+And, uh, add the, the, just collect the trajectory to the dataset.
+And we do this continuously.
+So train the word model, imagine, uh, some trajectories and, uh, train the action model.
+And, uh, again, keep collecting so that we, we continuously improve both the data collection process because the, the, the word model and the action model gets better.
+And also our model indeed, so that we get closer to the goal.
+So one important insight that, uh, the first interviews before that into an empirical evaluation of the method is the fact that, uh, using contrastive learning strongly reduces the, the computational requirements of the model.
+So here, I, I, I, I'm comparing the number of, uh, uh, multiply million multiplier accumulation operation, uh, for our models.
+And, uh, the number of parameters that we, as we see, these are, uh, much lower when we use, uh, a contrastive, uh, uh, mechanism compared to, to using a likelihood model.
+Likely to model, um, uh, this is also reflected in term of, uh, work time.
+So, um, we were modeled is is quite faster compared to, to dreamer, uh, that, uh, the, the trains, the, the likelihood based, uh, model for the world, the, the, the, the, is, uh, just three words, uh, for learning action.
+rewards for learning action and is much much faster than the likelihood active inference model
+because the likelihood active inference model other than having to to do the reconstruction
+during the world model training also has to imagine the the high dimensional outcomes in the future
+so in that case you have even more computation because for every imagined trajectory you have
+to imagine all the possible images in our context that you're that you in you will get pursuing a
+certain a certain policy so it's our model is quite faster than that so the first arcs that i will
+discuss is a simple mini crit task so the agent represents the red arrow filled navigate a black
+grid in order to reach a green square that is placed in one of the corner of the grids so the
+environment is partially observed because the agent doesn't know what's in every pixel of the grid so in
+order to find the goal first you should you should explore the whole grid and and find the the green
+square or at least be in a position that allows him to to see the green square in front of him so for the
+the for the reward model of course we have uh we have the highest reward and in correspondence of the
+of the goal state so when the when the agent is actually on the on the goal square it could receive
+uh a reward of plus one and this is a sparse reward task so for all the other states the agent will
+just receive zero rewards so it will be just encourage to to reach the goal while for active inference method
+uh the way that i chose to define the preferred outcome is to have an image of the agent that is
+that sees himself on the goal so basically the agencies himself on the goal and says this is the
+position that they want to reach in the world and let's see what happens from a from a qualitative
+level so as i said before the rewards for for this task it's just a plus one in the right uh
+uh in the right square in the goal square what happens for the the active inference model so what
+will the the active inference uh model uh provides uh as a as value of a certain state of the agents in
+order to to pursue the preferred outcome so we see that the likelihood active inference when uh that is
+imagining uh the outcome and comparing it to the preferred images is actually giving a very high value for the for
+the right uh for the right uh square so this in a in a scale from zero one we can say that's that's a one
+oh sorry we can say that's a one but other than that the the function it is providing is a bit confusing
+because it is giving some higher rewards in the centers uh compared to the let's say the
+uh the the the last uh row and column that are the one that leads the to the final goal uh the the the
+other corner are not even close to the gold one so it is it's just uh it's just providing a perfect
+match and we have no no control over what the distance the goal is because for the perfect match
+the goal that's that is indeed the the correct value that it is providing but other than that we
+it's difficult to understand what the what the likelihood active inference model is providing with
+the contrastive active inference we see that there is a different pattern so the agent is providing
+a very low value for the center so it's understanding that the center is of course not what it wants to
+see but then it's providing high values to all the corners and in particular the highest value is
+provided to the to the right corner so the the one with the goal because it is of course the more the
+one that corresponds the most with uh we want what we want to achieve but then all the other corner also
+a very high value and uh the fact is that from i i will say that the contrastive active inference is
+is probably capturing uh more i would say semantic information about the environment so
+in order to distinguish a corner uh from from a central tile is actually uh modeling the fact that
+there is a corner in a certain state of the environment and uh when it when it looks at the preferred
+outcome uh image it actually says first of all this is a corner and that's the way it distinguishes
+and then there is the green uh the green tile in the in this in where the where the agent is so
+from from a value perspective we can say that a corner is closer in semantics uh respect to to a
+central tile to our goal and then of course when you also have the the green tile which represents the
+goal then you are the closest so this is of course a bit risky because uh
+it can also lead to to suboptimal behavior in some cases but uh with uh with good expression of the
+environment it will uh for sure lead to the optimal behavior because still the the maximum value is
+still uh provided correctly so it's still the value for the right corner but if you didn't see the other
+corner the agent will will just go to another corner and say okay this looks similar to the goal so
+i'm trying to do something similar to to what i i would like to do i if i didn't see anything else
+this closer this is my the best i can do so this these are like how exploration is important in order to
+to achieve uh preferred outcomes and i think that's that also applies to likelihood active inference as well
+because in if you didn't see the goal you just have some some noise some noisy signal in the center so
+you wouldn't be able to reach the goal as well and then here we quantify the performance we see that
+with the with the likelihood active inference uh the agent struggles to to reach the goal uh
+consistently while our our methods uh leads to consistent performance that are in line
+with the reward base baselines of course the reward base baseline have an advantage because
+during training they always have a filtered objective so even if their model is not correct
+they always have this reward function filtered function that tells them yes this this is where you need
+to go well our model uh can take a little bit more time in order to first have a good model and then
+being able to match but uh with the contrastive mechanism this process actually happens uh fast and
+leads to consistent performance where we with likely the active inference we see that uh it it will
+probably take more time to converge or uh it just leads to to suboptimal behavior so it's just
+inconsistent according to our evaluation and yeah these are two uh different uh agreed environment
+but this one is smaller one is bigger but yeah the results are very similar in terms of performance
+obtained then the other task that we discuss is a continuous control a task with a with a 2d a planner
+so it's a bit more environment when where a robotic arm will penetrate a sphere goal so the the red sphere
+and this sphere is bigger in the the so-called richer easy environment which is the one for which
+we see the preferred outcome on the left and it is smaller for the for the so-called richer art environment
+that is the one that we we see in the on the right so for a reward based agent we have the reward function
+that provides uh when the agent penetrates the the sphere fully every words of one otherwise when it's
+uh off penetrating or just partially penetrating the sphere it provides a dense reward that uh that tells
+you yeah you're getting closer to the goal so in this case the river function is actually helping
+the agent a bit more because it is telling him that he's getting closer to the goal and he should just
+try in the neighbor area while for active inference we would just provide the the preferred uh state in
+environment uh which is uh the agent penetrating the goal sphere and let's see let's see what happens so
+again we have a similar pattern uh actually uh similar but different from the previous one so in this
+case where the the the mean square there are different uh distance from the goal is actually more
+confusing as we we've seen in previous example so the the likelihood the active inference agent totally
+fails to to reach the goal because it's probably all the all the states look alike in the environment
+because the background stays the same so the the background is not moving as it was happening for
+instance for the mini grid environment the goal is always in the same position so the difference
+between two two images is just provide given by the the few yellow pixel that moves around and if the
+model is not imagined perfectly where this pixel go it's it's very difficult that it will provide some
+some informative objective for the stars instead our contrastive active inference agent is able to
+provide an informative goal and uh apparently the fact that he's providing some semantic information
+about the task he is actually helping it to converge even faster than the than the reward based uh
+baseline because the reward based agents have access to rewards just when they're close to the to the goal
+where the contrastive active inference provide a reward function everywhere in the environment so when
+the when we see that the arm is very far we have the the mutual information term that should basically
+take over and tells you yeah you don't want to stay there go elsewhere and until we we eventually
+find the the goal sphere and we converge to the correct behavior so the the agent is actually converging
+a bit faster than the other baselines and then yeah the the contrastive dreamer baseline is
+converging a bit faster than dreamer one because its model is faster to learn because it's contrastive
+so this is what actually happens these are a gif on the right at some point they should they should
+reset so basically we just see here that the task is uh is correctly executed so that the agent is uh is
+able to match the the correct behavior so yeah it's taking a bit longer than expected but yeah you can see
+that the for instance in the in the art task the agent oscillates around the current behavior but it
+keeps staying okay here we we see it so basically the the in the other environment is oscillating in a
+position that is a uh very close to the goal so it tries to stay as much as possible to that uh that
+point and uh not uh not be uh driven far from the goal by the inertia of the of the of the of the arm
+then we we analyze qualitatively what's what's happening in terms of uh the value is provided to the
+agent so what's what is the the objective it is given to the to the agent in order to learn here and
+as as i try to explain the reward is
+the goal is is somewhere in the middle between zero and one when the agent is partially penetrating
+the goal and is totally one when the agent is fully penetrating the goal in all the other situation
+this is zero for the active inference likelihood base model we see that the the signal is very close
+for all the states so the agent basically sees things that there is very little difference between
+being very close to goal and being actually far very far off from the goal and that's
+likely the reason why it's not converging to the to the optimal behavior for contrastive active
+inference instead we see that the the agent is provided a an objective value is some somewhat in
+between zero and one when is uh when it's not close to the goal and something that is very close to one
+when it's in the goal and in particular when it when it's closer to the goal the the value is actually
+a bit higher than when it when it's far off so we see that there is some again some semantic
+information provided which is the the actual distance of the arm from the from the right goal or
+we can just see it as a okay the contrastive learning mechanism saying okay this this pose of the arm is
+actually very different from the one that i that i opt to obtain so let's try to move to a pose that is
+actually closer and uh we we indeed obtain higher values when the when the pose is similar to the to the
+one that we we want to achieve so we exploit the fact that uh some semantic information is uh is
+provided to the agent by using contrastive learning to to work on a on a more difficult setup this uh the
+richer distracting environment so in the research distracting task uh we have the same uh objective as
+before so we want the agent to to reach the goal by penetrating the red sphere but now we have varian
+backgrounds and we have this structure in the environment which could be just altered colors
+on that tilted camera and then we still want to to achieve the agent to penetrate the sphere despite that
+so for the for the reward based agents the reward is same as before so being provided for the agent
+penetrating the goal sphere while for active inference the goal is is actually a bit troublesome to to
+define because given the fact that the the background is constantly varying across different episodes we
+cannot a priori uh define uh what's the what the the preferred outcome looks like so instead of doing
+that we were attempted providing a more neutral uh preferred outcome with the agent seeing itself achieving
+the goal but with the standard uh task uh background so we have this uh the blue uh just like uh
+background uh with the with the arm penetrating the goal and we we aim for this uh preferred outcome
+to transfer uh to the to the distracting setup this is of course pretty much impossible for for the likelihood
+the active inference model because of course it's trying to match this in a with a mean squared error
+like uh function so of course the the signal provided will be very confusing uh very interestingly we see
+heels that also the dreamer method fails because it's based on a on a likelihood based models and uh as
+we'll see uh reconstruction all the the variations in the environment it's very difficult so the the word the
+reconstruction based world model struggles uh to provide informative states of the environment while
+the contrastive learning based model succeeded in particular it's it's very interesting that our
+model was able to to actually achieves the goal here we see less consistently than before so the
+there is an iron variance but still the agents is often able to reach the correct position despite all
+the difference in the background and all the destruction present in the environment so we see that
+this actually uh the representation uh is actually learning what the the pose of the robot uh should be
+and trying to match it uh in the future and then uh here we see some some videos what's happening so we
+see here indeed that the the arm is oscillating a bit more so it's actually a bit more difficult for him to
+assess that he's doing the right thing but still the behavior obtained it's still quite good i would say
+so it's pretty much achieving the goal
+and this shows why a likelihood based model will fail in this environment so here we compare the ground truth
+in the different uh varying backgrounds and uh what the dreamers uh or the the likelihood active inference
+model sees through the reconstruction so we see that either reconstructing from the from the posterior
+state or from the prior state the agent cannot perfectly model uh important information of the
+environment which in this case is the the arm pose so it sees where the the first link of the the robot
+arm is but he is not able to see normally where the second part of the arm is because it's very uncertain
+about that and then and that leads the agent to to not being able to actually assess where it is in the
+environment and to to provide the right uh value for uh for what's going on so uh using reconstruction in
+this environment leads to uh this kind of problem where the agent is not certain about the the internal
+states and so it's uncertain of what it should do next because the signal of the states is uncertain it's
+the uh so it is also the value provided by the but to the agent by the model and that's it so i'll just
+briefly summarize what we have seen and so basically we use a contrastive model uh to reduce the computation
+uh of uh of active inference this also brought some advantages in reinforcement learning but yeah we focus on the
+on on the contract on the active inference area where this model brought to to a twofold advantage both
+in learning the the word model faster but also in uh imagining footer trajectories faster because you
+don't have the reconstruction then we saw that the contrast representation learned features that better
+capture relevant information for the environment and this was key in solving uh both the the richer task
+and uh especially in the richer distracting task where without this uh this feature we wouldn't be able to solve the task
+and then uh we will show that uh we can we can use uh this method uh to provide uh performance that are
+similar to engineering rewards uh but in a much easier way so you can just say okay this is what i want to achieve in the
+in the environment provide the the observation to the agent and the agent will find itself a way to reach that
+uh that state without uh actually having to provide a regular function for every possible states of the
+environment which especially in realistic cases is is usually unfeasible and finally we we have also seen
+that the exploration is very key uh for our method to work because we don't want the agent to to converge
+to to a suboptimal behavior that looks like the the right outcome the preferred outcome so it's it's very
+important to wisely explore the environment before actually uh delving into learning the uh our preferred policy
+uh uh uh we aim to look more into this in the future so thank you very much uh that that was it i don't know if there's
+any question
+thank you both very interesting presentation so if anyone watching live wants to ask a question otherwise i um
+have a few so you mentioned a critic model when you were describing the architecture and that reminded me
+of language learning like if someone says repeat after me and then they give a sound you might be
+accurate or you might not be but if someone said no it was not you have a negative and a positive example so
+so what does that speak to perhaps the biological basis of contrast of learning or how these contrast of
+learning settings active inference or not relate to the ways that organisms learn
+okay i i will say that the the contrastive learning mechanism though it's not
+uh completely equal i was it it somehow resembles the abbey on learning mechanism where you when when when
+you have corresponding pairs of uh so the things that should correspond uh you actually want to to
+strengthen the link and when you have stuff that shouldn't uh be corresponding you actually want to
+to awaken the link so you know i think that uh biologically we could we could actually see in
+this way so when you have something that you you want to be uh you want to link farther in in our case
+the thing that we want to to link farther so to reinforce is the fact that this a certain observation
+correspond to a certain state uh then you you strengthen this connection well when you when you want
+you want to to to be far and that's where where the contrast i think a bit differs maybe from these uh
+from this biological perspective we actually push it uh we push it farther which is not always uh the
+case for red mill learning because normally you don't have this uh pushing farther mechanism so i would
+say this could be one one possible uh links um as you said yeah the critic function is actually doing
+something very very similar to what you mentioned so you have a positive uh samples and you reinforce
+so the critic tells you yeah this is this is correct and it should tells you that this is correct so it's
+strange to do that uh we we do it with machine learning but uh well if you have a good critic you could
+use that uh yeah it should tell you yeah this is the the right samples while uh for for non-corresponding
+states and observation uh yeah this is not what we want in our representation we want this further
+yeah so maybe to add on daniel i think what you're hinting at at um providing like it should be like
+this is more like a way to uh to define preferred state so to speak so and if you translate it to
+to what we're doing it's basically saying these observations are what you should like uh basically
+so so they come into place for um portraying the action model like how how do i get to these
+observations the contrastive learning part is more like um being able to distinguish different things
+basically um and and and it's it's more growth than um than the the difference um but what you what
+you what you like to what you like to have it so the contrastive learning just learns to distinguish
+all kinds of sounds even all the bad ones and uh and you just now say okay but now i really want
+to have this sound so try to get there i think that's the the difference here
+that kind of sounds like paying attention to the right details which we saw with
+multiple times like the breakout games like how could you miss the ball humans are watching that gif
+and we're watching the ball but we also have a sense of how to pay attention to the right details
+and then in terms of action to have curiosity about the right things so it definitely starts to bridge
+into some very interesting behavior another question was about the action entropy term
+in the free energy calculations so maybe could you restate what the action entropy term is since it's
+one of the major contributions and also what does that say about adding terms to the free energy
+calculation like the action entropy is always greater than zero kind of like a kl divergence and so that
+you mentioned gives some perhaps nice properties about the boundedness of f within a lower and an upper
+bound so maybe just what is the action entropy doing here can we just add other terms that are bounded at
+zero to free energy and use that in other ways okay so i'll i'll start with the with the question about
+the action entropy term and then i i'll also delve into the using different bounds for for uh the free
+energy term so uh here in this uh in the way we casted the active inference process for learning the actions
+uh the the the key part is that we the the actions are now part of the the future inference process so uh
+i i i could i could also go back to the previous life this necessary but the the normally the way that
+we see this objective is without this a term here and dear but instead we have like uh a conditional
+on a on a policy on a certain policy so normally that means that you you have some set of policies
+already and you're just trying to decide which of them is better so this could be done like using a
+knock on browser for uh not cameras first and then uh uh just assessing the the one that you think are best
+or just assessing all of them but that's that's impossible for instance in a continuous action
+setup where uh you cannot assess all possible uh policies because uh yeah the actions are continuous
+a certain number is infinite for every dimension so let's make infinite by infinite and so on so it's it's
+a huge uh it's a huge dimensionality space so instead here we we make the action part of the of the
+inference process so we want uh we want to have a separate model that tells you to tell us what's
+what's the action to to take at every step and uh i i what i said that we obtain an action entropy term
+uh and that's because we in in choosing the the best action so in uh in trying to to match our
+actions to the one that we we should actually prefer we we think it like we we don't have a preference
+this other action so we so for instance i if i want to reach uh a certain stated environment so if i
+want to to go from this room to to the kitchen maybe i don't care what's the what's the shortest word
+the shorter passes i just care about getting there at some point or i don't care about uh going
+left or going wrong right now uh when i when i get off of my chair i i just want to to go where i
+need to go so we don't we don't place a prior over the action we just say uh whatever action is fine
+as long as it brings you the fastest as possible to the goal because the the the fastest thing is not
+given by the action itself but uh but by minimizing the free energy so we don't want a preference over
+the actions we wanted we want the free energy to lead us the fastest spot and so the actions are we
+assume a uniform distribution over them and what remains is just an entropy so it will be a kiel
+divergence between uh the q over action given the states and the this pat which would basically
+becomes a an entropy value if you if you assume this is a constant because it's just subtracting a
+constant to that and uh yeah switching to the to the other um part of the question so what what does it
+mean to us this constant term here so is having constant term useful so i don't know if there's any other
+useful constant term that we could that so uh mathematically speaking having a constant so
+having an upper an upper bound because of a constant shouldn't be arming because you're minimizing the
+same objective but then on top of that we apply the contrastive uh the contrastive uh approximation
+and that leads to another uh upper bound and uh as i said there are some implications of this we get uh
+maybe a better representation but uh are we getting farther from the from the actual objective so
+from my point of view as long as uh we achieve something that is actually better it doesn't really
+matter how how far are we from the actual surprise i'll see now so in any case we will always get some
+kind of uh amortization or approximation and we will probably never get a 100 close to the surprise
+value so because we don't have a perfect model so a perfect model of the world doesn't exist it's
+it's impossible to imagine that we can model every details of the environment even with a with a
+billion uh machine learning parameter and it's impossible to think that we will always act perfectly
+and always get in the in the perfect route to go uh choosing the the always uh optimal action
+especially because there's always some uncertainty in the environment and there's a a lot of things
+that we we normally want to to ignore in our everyday life so a lot of things here is not actually
+important to to capture in the world model or action-wise it's not always important to be 100
+accurate in our movements in the action we take the important thing is that we we get close to the goal
+so i i would say yeah if if there are any other term that we any other constant term or just any other
+modification that we could do to the to the free energy functional that actually leads to better
+results uh without compromising the original goal of minimizing free energy i think that's
+there would be a a good way to uh to address uh some of the issues that we that we currently have
+with uh with active inference that that could also lead to to improving uh the performance of the
+the artificial implementation of active inference uh significantly so that's also why i think that uh
+taking advantage of some lessons that that we learned from reinforcement learning is actually
+a useful in active inference as well because uh there has been a ton of research about uh way to amortize
+this thing or approximate this thing better or uh train a better deep learning model for some
+something some very specific aspect and i think which the the active inference uh research should uh
+to benefit from this should uh take inspiration from this yeah maybe if i might add pietro can you go
+back to the slide with the action uh this one uh yeah so so maybe to um to make clear here for
+for for maybe people that's that are less familiar with reinforcement learning but are coming from more
+active influence background so in in terms of um active inference um as scott briston would
+would look at it um this is basically something that you should not do uh uh so so so basically um
+um uh what happens here is that we we we see action inference more like um a habitual thing like i i
+know i'm in the states or i think i'm in the state so therefore i can just infer my action without even
+planning it's kind of uh you become habituated to i've planned this hundreds of times and it's always this
+outcome so i just stop planning and i just amortize this action into an amortized policy so that's basically
+the kind of the mechanism that that we apply here in order to avoid planning um all the time because
+that's that's the the the tricky part uh we have too much options to plan so we don't want to do this
+so we just say let's amortize it from start which basically means that this a this this our q or
+approximate posterior is not only over states but also over actions and then so the action entropy just
+falls out by introducing the the action in in the queue there so it's not that you that we magically
+add an action action entry term to the formulation it just comes out because of having
+the actions as part of our approximate posterior but so keep in mind that this also means that
+we have an approximate posterior over our action selection and this works um in at least we reinforce
+flowing problems because there um yeah your goal is always the same your it it doesn't shift uh it's it's
+not a it's also not a uh uh um if you if you think back on on biological agents it's not like a complex
+distribution to maintain homeostasis basically just yeah this is the reward this is where you get it it's
+always the same thing so this basically means that your environment where in which we test these agents
+and which also reinforcement learning solutions tester agents is exactly an environment is tuned for um
+um i can amortize whatever what i have to do because if i know my state i know what i have to do basically
+um things will change i guess if you have another environment in which this is not the case where you
+could be in a certain state and you could still have multiple options to do and you and you can only
+um you can only really know what to do by planning ahead or by first um forage for information on on
+what's happening and in these kind of environments i i think that amortization trick
+once uh will help you a lot or you cannot do it just by amortizing so it's it's a trick we did to
+to allow it to work in this kind of environment because yeah we have to benchmark against uh some
+things and you have to be a bit on on on par there but so keep in mind it's not a silver bullet that will
+always work we do deviate from vanilla active inference here we cost action inference as like
+we just want to learn habits we don't want to plan but this also means that there might be situations
+where it will not work and then it's not due to active inference or the energy principle that's not
+working it's more like yeah we did we did a crude approximation here by which things might not work
+that's interesting um about which training environments favor what kind of algorithms and
+then how that shapes the perception of different algorithms like the navigation task what if there
+was a fuel tank or there was a um larger space that was going to require like multiple foraging
+information foraging trips for example and um so then the sort of single-minded seeker is going to
+make this kind of skill to make this kind of skill to make this kind of skill to make this kind of
+
+
+
+
+to those who are familiar with active inference,
+and then here's a variant on what we've seen before.
+How about for those who are more familiar
+with the Dreamer architecture or reinforcement learning,
+what makes active inference active inference
+and how is it different?
+Well, I think
+they are largely similar.
+Let's say that I think that would be the starting point
+because often people think about what's the difference,
+but I think the main point that we should rather stress more
+as an active inference community is that there are a lot more
+similarities between reinforcement learning and active inference.
+I would say that active inference is a bit more general
+than reinforcement learning in the sense that on the one hand,
+we don't use a reward function per se,
+but we relax that a bit as in,
+we just have a distribution over preferred outcomes,
+which is a bit more general, I would say.
+And then the second thing is that instead of,
+by starting off from the free energy principle,
+as in this is the objective that we want to minimize,
+you also get the extrinsic value term here,
+which is exactly the same thing as what a reinforcement
+learning agent would optimize.
 So if you only look at extrinsic value, your free energy agents will also do this.
-
-But the added value, I would say, comes in the information gain terms.
-
-And these will only give you an additional benefit
-
-in environments where there is information to gain.
-
+But the added value, I would say, comes in the information gain terms,
+and these will only give you an additional benefit in environments where there is information to gain.
 And this is not your typical reinforcement learning environment.
-
-But if you look at, for example, the Team Mace mouse from Carl Friston,
-
-These are typical environments where you can actually show that if you only go for extrinsic value, you will be acting suboptimal.
-
-So you can actually prove almost that in some environments, only looking at extrinsic value, given the correct model of the environment, active inference will win.
-
-I think the crucial thing that we need to research on is how do you
-
-your world in which by optimizing your expected tree energy actually you do the sensible planning and this is still largely unresolved and with our models we are taking steps in that direction but as you can see there are lots of issues why to just find the correct model because in in if you just look at the mouse the likelihood based model should be perfectly fine but by
-
-by the way you optimize and practice, then you see all kinds of problems like, okay, this little pixel is actually the most important pixel of the thing, and that does not appear in my loss function, so that's why everything collapses.
-
-So in theory, it should work, but there are a lot of practical problems to
-
-to find the correct model that pays attention to the correct details or the correct aspects of your observations.
-
-And this is something that is shared with model-based reinforcement learning as well as active inference.
-
+But if you look at,
+for example, the team Mace mouse from Carl Friston,
+these are typical environments where you can actually show that if you only go for extrinsic value,
+you will be acting suboptimal.
+So you can actually prove almost that in some environments,
+only looking at extrinsic value,
+given the correct model of the environment,
+active inference will win.
+I think the crucial thing that we need to research on is how do you get the correct or the optimal model of your world,
+in which by optimizing your expected free energy,
+actually you do the sensible planning.
+And this is still largely unresolved.
+And with our models, we are taking steps in that direction.
+But as you can see, there are lots of issues to just find the correct model.
+Because if you just look at the mouse, the likelihood based model should be perfectly fine.
+But by the way you optimize and practice, then you see all kinds of problems like,
+okay, this little pixel is actually the most important pixel of the thing.
+And that does not appear so in my loss function.
+So that's why everything collapses.
+So in theory, it should work.
+But there are a lot of practical problems to find the correct model
+that pays attention to the correct details or the correct aspects of your observations.
+And this is something that is shared with model based reinforcement learning,
+as well as active inference.
 And I think there's a huge opportunity to find new techniques that can put forward both fields.
-
-And we also showed
-
-in the distracting environment also improve performance on the normal dream.
-
-So by having a technique that's
-
-lets you build a better model, any model-based algorithm will work, and Active Inference has this special notion of also taking into account information gain in environments where you might be unsure on what your status is.
-
-So that's where it can prevail, but I think in most
-
-probably get away with uh just maximizing rewards uh which is in in in fact also an active inference uh agents and to some sense if of course if it's if it's more i'm talking about a model-based technique so like dreamer agent in this case of course the model three uh ones are uh
-
-These are a bit different as they don't need a model at all, but at least for model-based reinforcement learning agents, I think it's pretty similar to what an active inference agent would do in these environments.
-
-
-SPEAKER_00:
+And we also show this like the contrastive dreamer in the distracting environment also
+improved performance on the normal dream.
+So by having a technique that lets you build a better model, any model based algorithm will work.
+And active inference has this special notion of also taking into account information gain in environments
+where you might be unsure on what your status.
+So that's where it can prevail.
+But I think in most of the benchmark environments that you see nowadays, especially in machine learning,
+you probably don't need these terms.
+You probably get away with just maximizing your words, which is in fact also an active inference agents
+to some sense.
+Of course, if it's, if it's, if it's, I'm talking to about a model based technique, so like dreamer agent,
+in this case, of course, the model free ones are, these are a bit different as they, they, they, they don't need a model at all.
+But at least for model based reinforcement learning agents, I think it's pretty similar to what an active inference
+agent would do in these environments.
 Thank you, Tim.
 
+Thank you.
 Pietro, anything you'd add to that?
-
-
-SPEAKER_01:
-Yeah, I would like to discuss
-
-overlooked is the fact that it makes this amortization similar.
-
-And it's also similar to what we have done.
-
-So yeah, we learn a policy, basically.
-
-We're in an action network that provides the correct state, the correct action for every state.
-
-But the key step that actually brings us closer to the active inference formulation is that we
-
-we imagine several time steps in the future.
-
-So it is true that we don't evaluate long policies over time that we have this prior about action that is given by our action network.
-
-But it is also true that given the fact that we
-
-We evaluate the state that we expect to see.
-
-And then from there, we restart doing the action optimization process.
-
-We actually get closer to the optimization scheme of active inference.
-
-In particular, there is a paper called Sophisticated Inference that discuss this.
-
-When you actually take an action and then you reimagine from that step what's going to happen.
-
-what's going to happen.
-
-There are some implications of this, but we are not completely drifting away from the original active inference theory because of this.
-
+Yeah, I would like to discuss one aspect of dreamer that we were a bit overlooked.
+It is the fact that it makes this amortization similar and it's also similar to what we have done.
+So yeah, this, this is, we learn a policy, basically we're an action network that provides the correct state,
+the correct action for every state, but it is the key step that actually brings us closer to the active inference
+formulation is that we, we imagine several time steps in the future.
+So it is true that we don't evaluate long policies and over, over times that, that we have this, this prior about action that is given by our action network.
+But it is also true that given the fact that we evaluate the state that we, we expect to see.
+And then from there, we restart doing the, the action optimization process.
+We actually get closer to, to the optimization scheme of active inference in particular, there, there is a paper called sophisticated inference that discuss this.
+When you, when you actually take an action and then you reimagine from that step, what's going to up, what's going to happen.
+There are some implications of this, but we are not completely drifting away from the, from the original active inference theory because of this.
 It's just a different way of doing the action selection process.
-
-And in that, indeed, the dreamer is also very close to active inference itself.
-
-
-SPEAKER_00:
-cool thank you I I wrote down if you don't know where you prefer to go you are lost drive fast if you know how to get there figure it out if you don't and then reassess continually and I hope that conveys some of the similarities and differences do you have any final comments
-
+And then in that indeed the driver is also very close to, to active inference itself.
+Cool.
+Thank you.
+I wrote down.
+If you don't know where you prefer to go, you are lost.
+Drive fast.
+If you know how to get there, figure it out if you don't and then reassess continually.
+And I hope that conveys some of the similarities and differences.
+Do you have any, you know,
+do you have any final comments?
 This is a very interesting line of research and we really appreciate this model stream.
-
 Hope to see you in the future, or should I say we expect and prefer it, but thanks again, Pietro and Tim.
-
 This is really awesome.
-
+You're welcome.
 Thanks for having us.
-
 Thank you for having us.
-
 Have a good day, everyone.
+See you.
