@@ -78,9 +78,11 @@ rewrites other keys, empty values are omitted, and re-running is idempotent:
   title; `parts[].title` stays the verbatim YouTube video title. They differ by
   design — do not "fix" one to match the other.
 - **`sessions[]`** (talks within one long video):
-  `{index, session_name ("<video_id>_sessNN"), start ("H:MM:SS"), title,
-  guests[], other_participants[]?}` — timestamps from the chapter list,
-  people/naming from the legacy session records.
+  `{index, session_name ("<video_id>_sessNN"), start ("H:MM:SS"), title?,
+  guests[]?, other_participants[]?}` — timestamps from chapter lists or video
+  descriptions, people/naming from the legacy session records or curated
+  rosters. `title` may be a segment label ("Roundtable") when the talk has
+  no distinct title.
 - **`duplicate_of`** marks an `Other/<video_id>` item whose content is a
   duplicate of a curated item (the two symposium full uploads).
 - **`data/video/activeinferenceinstitute/private_videos.json`** documents
