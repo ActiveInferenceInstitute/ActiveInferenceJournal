@@ -70,7 +70,7 @@ rewrites other keys, empty values are omitted, and re-running is idempotent:
 | `keywords` | string[] | Coda "Keywords" | item (union) |
 | `thumbnails` | object | Coda "Thumbnail Image" / "Cover image" | item |
 | `summaries` | object | Coda summaries: `human`, `ai`, `word_300`, `abstract` | item |
-| `enriched_from` | string[] | provenance: `coda`, `split_file`, `youtube`, `db` (legacy session DB), `generated` | item |
+| `enriched_from` | string[] | provenance: `coda`, `split_file`, `youtube`, `db` (legacy session DB), `generated`, `curated` (human-verified correction) | item |
 | `sessions` | object[] | split-files (multi-talk videos) | item |
 | `duplicate_of` | string | item path this uncategorized item duplicates | item |
 
