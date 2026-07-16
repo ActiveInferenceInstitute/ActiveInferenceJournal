@@ -57,7 +57,7 @@ rewrites other keys, empty values are omitted, and re-running is idempotent:
 
 | Field | Type | Source | Level |
 |-------|------|--------|-------|
-| `title` | string | Coda "Title or name of stream" (event title) | item |
+| `title` | string | Coda `"<Unique event name> ~ <Title or name of stream>"` | item |
 | `date` | ISO date | Coda "Date" | item (or per-part when parts differ) |
 | `guests` | string[] | Coda "Guests" | item (multi-row lists union) |
 | `other_participants` | string[] | Coda "Other Participants" | item (union) |
