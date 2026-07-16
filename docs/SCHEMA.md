@@ -37,6 +37,53 @@ cruft, audio kept off `main`, and top-level indexes.
 }
 ```
 
+Note: the example above shows aspirational per-part flags (`published`,
+`has_transcript`, …). Files currently on `main` carry the core keys
+`series, item, source, channel, category, episode` and `parts[]` entries with
+`video_id, url, title` (plus `duration`, `upload_date` where known).
+
+## Enrichment fields (v2.1)
+
+Items are enriched from the Institute's Coda table (now Superhuman Docs), the
+session split-files, and the channel manifest by
+`Journal-Utilities/scripts/enrich_metadata.py`. Regenerate with:
+
+```bash
+python scripts/enrich_metadata.py --apply   # from Journal-Utilities; dry-run without --apply
+```
+
+Enrichment-owned keys — the script only ever sets these; it never deletes or
+rewrites other keys, empty values are omitted, and re-running is idempotent:
+
+| Field | Type | Source | Level |
+|-------|------|--------|-------|
+| `title` | string | Coda "Title or name of stream" (event title) | item |
+| `date` | ISO date | Coda "Date" | item (or per-part when parts differ) |
+| `guests` | string[] | Coda "Guests" | item (multi-row lists union) |
+| `other_participants` | string[] | Coda "Other Participants" | item (union) |
+| `description` | string | split-file session description (shared text) | item |
+| `github` | url | Coda "Github" | item |
+| `slides_url` | url | Coda "Slides" / "Slides URL" | item / per-part |
+| `paper_link` | url | Coda "Paper link" | item / per-part |
+| `doi` | string | Coda "DOI" | item / per-part |
+| `zenodo` | url | Coda "Zenodo Link" | item / per-part |
+| `keywords` | string[] | Coda "Keywords" | item (union) |
+| `thumbnails` | object | Coda "Thumbnail Image" / "Cover image" | item |
+| `summaries` | object | Coda summaries: `human`, `ai`, `word_300`, `abstract` | item |
+| `enriched_from` | string[] | provenance: `coda`, `split_file`, `youtube` | item |
+| `sessions` | object[] | split-files (multi-talk videos) | item |
+| `duplicate_of` | string | item path this uncategorized item duplicates | item |
+
+- **`title` vs `parts[].title`:** the item-level `title` is the Coda *event*
+  title; `parts[].title` stays the verbatim YouTube video title. They differ by
+  design — do not "fix" one to match the other.
+- **`sessions[]`** (talks within one long video):
+  `{index, session_name ("<video_id>_sessNN"), start ("H:MM:SS"), title,
+  guests[], other_participants[]?}` — timestamps from the chapter list,
+  people/naming from the legacy session records.
+- **`duplicate_of`** marks an `Other/<video_id>` item whose content is a
+  duplicate of a curated item (the two symposium full uploads).
+
 ## Top-level
 
 - `INDEX.json` — machine index: every item + parts + paths + flags.
