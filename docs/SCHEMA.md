@@ -62,15 +62,15 @@ rewrites other keys, empty values are omitted, and re-running is idempotent:
 | `guests` | string[] | Coda "Guests" | item (multi-row lists union) |
 | `other_participants` | string[] | Coda "Other Participants" | item (union) |
 | `description` | string | split-file session description (shared text) | item |
-| `github` | url | Coda "Github" | item |
-| `slides_url` | url | Coda "Slides" / "Slides URL" | item / per-part |
+| `github` | url | generated: canonical link to the item's folder in this repo | item |
+| `slides_url` | url | Coda "Slides" / legacy session DB (a real URL always wins over a display label) | item / per-part |
 | `paper_link` | url | Coda "Paper link" | item / per-part |
 | `doi` | string | Coda "DOI" | item / per-part |
 | `zenodo` | url | Coda "Zenodo Link" | item / per-part |
 | `keywords` | string[] | Coda "Keywords" | item (union) |
 | `thumbnails` | object | Coda "Thumbnail Image" / "Cover image" | item |
 | `summaries` | object | Coda summaries: `human`, `ai`, `word_300`, `abstract` | item |
-| `enriched_from` | string[] | provenance: `coda`, `split_file`, `youtube` | item |
+| `enriched_from` | string[] | provenance: `coda`, `split_file`, `youtube`, `db` (legacy session DB), `generated` | item |
 | `sessions` | object[] | split-files (multi-talk videos) | item |
 | `duplicate_of` | string | item path this uncategorized item duplicates | item |
 
@@ -83,6 +83,9 @@ rewrites other keys, empty values are omitted, and re-running is idempotent:
   people/naming from the legacy session records.
 - **`duplicate_of`** marks an `Other/<video_id>` item whose content is a
   duplicate of a curated item (the two symposium full uploads).
+- **`data/video/activeinferenceinstitute/private_videos.json`** documents
+  private/unlisted channel videos known to the Institute (from the legacy
+  session database) that are deliberately absent from this public corpus.
 
 ## Top-level
 
