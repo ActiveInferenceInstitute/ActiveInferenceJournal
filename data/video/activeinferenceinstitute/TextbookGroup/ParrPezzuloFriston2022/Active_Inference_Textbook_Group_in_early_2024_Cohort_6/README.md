@@ -1,4 +1,4 @@
-# YxrIbWTjSp4
+# Active_Inference_Textbook_Group_in_early_2024_Cohort_6
 
 Series: **TextbookGroup**
 
