@@ -28,8 +28,10 @@ INDEX.json          # machine entry point: every item, its videos, paths
 INDEX.md            # human index, grouped by series
 ```
 
-573 items · 724 videos · 22 series. Every Institute channel video is represented
-(uncategorized videos live under `Other/`).
+Current item and video totals are generated in [`INDEX.json`](INDEX.json).
+Deliberate duplicate records are marked with `duplicate_of`; the index reports
+both indexed video records and unique video IDs. Every Institute channel video
+is represented (uncategorized videos live under `Other/`).
 
 ## Branches
 

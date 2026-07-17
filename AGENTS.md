@@ -22,8 +22,13 @@ curated materials from the Active Inference Institute video library. Read
 - **Audio is off `main`** — it lives on the `audio` branch only. Never commit `*.m4a`/audio
   to `main`.
 - **Never commit credentials** (cookies, tokens). See the security note in `docs/PIPELINE.md`.
-- Completeness invariant: every channel video is a part in exactly one item; reconcile to
-  `missing == 0` against the channel manifest.
+- Completeness invariant: every non-duplicate channel video is a part in exactly one
+  canonical item; records with `duplicate_of` are deliberate secondary copies and are
+  excluded from coverage reconciliation. Reconcile to `missing == 0` against the
+  channel manifest.
+- Generator entry points: `Journal-Utilities/scripts/enrich_metadata.py` updates the
+  canonical metadata, and `Journal-Utilities/scripts/generate_journal_indexes.py`
+  regenerates `INDEX.json` and `INDEX.md`.
 
 ## Layout
 

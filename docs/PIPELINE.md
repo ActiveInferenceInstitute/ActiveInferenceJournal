@@ -12,17 +12,23 @@ YouTube (@ActiveInference)
         ├─ transcripts (yt-dlp captions, cookie-free)
         └─ local Whisper (mlx-whisper) for caption-less videos
   └─ scripts/refactor_journal.py   → this repo's per-item v2 schema, namespaced layout,
-                                      INDEX.json/INDEX.md, audio split to the `audio` branch
+                                      audio split to the `audio` branch
+  └─ scripts/enrich_metadata.py    → Coda/session/manifest enrichment of metadata.json
+  └─ scripts/generate_journal_indexes.py
+                                   → INDEX.json/INDEX.md derived from metadata.json
 ```
 
 ## Completeness & idempotency contract
 
-- **All channel videos:** every video on the Institute channel is a part in exactly one
-  item. Coverage is reconciled against the channel manifest
-  (`Journal-Utilities/data/output/channel_videos.json`); the target is `missing == 0`.
+- **All channel videos:** every non-duplicate video on the Institute channel is a part
+  in exactly one canonical item. Records marked with `duplicate_of` are deliberate
+  secondary copies and are excluded from missing/duplicate coverage counts. Coverage
+  is reconciled against the channel manifest (`Journal-Utilities/data/output/channel_videos.json`);
+  the target is `missing == 0`.
 - **Idempotent:** re-running the generators only adds genuinely-missing videos/parts and
   rebuilds derived files (`metadata.json`, `transcript.txt`, indexes). Multi-part items
-  merge all parts (never last-write-wins).
+  merge all parts (never last-write-wins); `generate_journal_indexes.py --check` fails
+  if either derived index is stale.
 - **Zero data loss on refactor:** `refactor_journal.py --build` stages out-of-place and
   reconciles `total source files == captured + intentional drops` before any in-place apply.
 
