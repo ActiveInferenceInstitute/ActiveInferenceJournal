@@ -16,6 +16,8 @@ YouTube (@ActiveInference)
   └─ scripts/enrich_metadata.py    → Coda/session/manifest enrichment of metadata.json
   └─ scripts/generate_journal_indexes.py
                                    → INDEX.json/INDEX.md derived from metadata.json
+  └─ scripts/repair_split_transcripts.py
+                                   → session IDs/headings in merged transcript artifacts
 ```
 
 ## Completeness & idempotency contract
@@ -28,7 +30,8 @@ YouTube (@ActiveInference)
 - **Idempotent:** re-running the generators only adds genuinely-missing videos/parts and
   rebuilds derived files (`metadata.json`, `transcript.txt`, indexes). Multi-part items
   merge all parts (never last-write-wins); `generate_journal_indexes.py --check` fails
-  if either derived index is stale.
+  if either derived index is stale. `repair_split_transcripts.py --check` likewise
+  detects stale merged session transcript artifacts.
 - **Zero data loss on refactor:** `refactor_journal.py --build` stages out-of-place and
   reconciles `total source files == captured + intentional drops` before any in-place apply.
 
