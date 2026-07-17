@@ -86,7 +86,9 @@ corresponding display fields without losing the source text:
   design — do not "fix" one to match the other.
 - **`sessions[]`** (talks within one long video):
   `{index, session_name ("<video_id>_sessNN"), start ("H:MM:SS"), title?,
-  guests[]?, other_participants[]?}`. `title` may be a segment label
+  guests[]?, other_participants[]?, video_id?}`. `video_id` links a session
+  to its standalone per-talk upload when one exists; that upload's own item
+  carries `duplicate_of` back to the full recording. `title` may be a segment label
   ("Roundtable") when the talk has no distinct title.
   **Ownership: this repo.** The enrichment script *seeds* `sessions[]` —
   from YouTube chapter lists (timestamped video descriptions, cached by
