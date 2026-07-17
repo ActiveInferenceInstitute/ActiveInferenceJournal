@@ -98,6 +98,11 @@ corresponding display fields without losing the source text:
 - **Split transcript identity:** when source transcripts are split into sessions,
   corresponding `transcript.txt` headings and `transcript.json` `video_id` fields use
   the stable `<video_id>_sessNN` session name rather than an empty placeholder.
+- **`parts[].speakers`** (journal-owned): human speaker identifications for
+  WhisperX-diarized transcripts — `{"SPEAKER_NN": "Name", ...}` per video.
+  Record the mapping here, then run
+  `Journal-Utilities/scripts/apply_speaker_names.py` to replace the labels in
+  transcript.txt/.json (idempotent; unmapped labels stay SPEAKER_NN).
 - **`duplicate_of`** marks an `Other/<video_id>` item whose content is a
   duplicate of a curated item (the two symposium full uploads). The duplicate
   intentionally repeats the canonical video's ID; coverage reconciliation
