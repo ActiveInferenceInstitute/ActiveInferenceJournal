@@ -79,10 +79,13 @@ rewrites other keys, empty values are omitted, and re-running is idempotent:
   design — do not "fix" one to match the other.
 - **`sessions[]`** (talks within one long video):
   `{index, session_name ("<video_id>_sessNN"), start ("H:MM:SS"), title?,
-  guests[]?, other_participants[]?}` — timestamps from chapter lists or video
-  descriptions, people/naming from the legacy session records or curated
-  rosters. `title` may be a segment label ("Roundtable") when the talk has
-  no distinct title.
+  guests[]?, other_participants[]?}`. `title` may be a segment label
+  ("Roundtable") when the talk has no distinct title.
+  **Ownership: this repo.** The enrichment script *seeds* `sessions[]` —
+  from YouTube chapter lists (timestamped video descriptions, cached by
+  `fetch_chapters.py`) or curated data — only when an item has none, and
+  never overwrites. Edit sessions directly here (add speakers, fix titles);
+  regeneration preserves your edits.
 - **`duplicate_of`** marks an `Other/<video_id>` item whose content is a
   duplicate of a curated item (the two symposium full uploads).
 - **`data/video/activeinferenceinstitute/private_videos.json`** documents
