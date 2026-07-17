@@ -21,7 +21,7 @@
 - ✓ [`ActiveInferAntStream_017`](data/video/activeinferenceinstitute/ActiveInferAntStream/ActiveInferAntStream_017/) — 1 video record(s)
 - ✓ [`ActiveInferAntStream_018`](data/video/activeinferenceinstitute/ActiveInferAntStream/ActiveInferAntStream_018/) — 1 video record(s)
 
-## Applied Active Inference Symposium (7)
+## Applied Active Inference Symposium (10)
 - ✓ [`2021 Symposium with Karl Friston`](data/video/activeinferenceinstitute/Applied%20Active%20Inference%20Symposium/2021%20Symposium%20with%20Karl%20Friston/) — 3 video record(s)
 - ✓ [`2022 Symposium on Robotics`](data/video/activeinferenceinstitute/Applied%20Active%20Inference%20Symposium/2022%20Symposium%20on%20Robotics/) — 2 video record(s)
 - · [`First_Interval`](data/video/activeinferenceinstitute/Applied%20Active%20Inference%20Symposium/2023%20Ecosystem%20Symposium/First_Interval/) — 1 video record(s)
@@ -29,6 +29,9 @@
 - ✓ [`part 1`](data/video/activeinferenceinstitute/Applied%20Active%20Inference%20Symposium/2024/part%201/) — 1 video record(s)
 - ✓ [`part 2`](data/video/activeinferenceinstitute/Applied%20Active%20Inference%20Symposium/2024/part%202/) — 1 video record(s)
 - ✓ [`part 3`](data/video/activeinferenceinstitute/Applied%20Active%20Inference%20Symposium/2024/part%203/) — 1 video record(s)
+- ✓ [`part 1`](data/video/activeinferenceinstitute/Applied%20Active%20Inference%20Symposium/2025/part%201/) — 1 video record(s)
+- ✓ [`part 2`](data/video/activeinferenceinstitute/Applied%20Active%20Inference%20Symposium/2025/part%202/) — 1 video record(s)
+- ✓ [`part 3`](data/video/activeinferenceinstitute/Applied%20Active%20Inference%20Symposium/2025/part%203/) — 1 video record(s)
 
 ## ArtStream (4)
 - ✓ [`ArtStream_001`](data/video/activeinferenceinstitute/ArtStream/ArtStream_001/) — 1 video record(s)
@@ -333,11 +336,10 @@
 - ✓ [`OrgStream_008`](data/video/activeinferenceinstitute/OrgStream/OrgStream_008/) — 1 video record(s)
 - ✓ [`OrgStream_009`](data/video/activeinferenceinstitute/OrgStream/OrgStream_009/) — 1 video record(s)
 
-## Other (62)
+## Other (59)
 - ✓ [`-39CESDAfLM`](data/video/activeinferenceinstitute/Other/-39CESDAfLM/) — 1 video record(s)
 - ✓ [`0A36OXIDLhQ`](data/video/activeinferenceinstitute/Other/0A36OXIDLhQ/) — 1 video record(s)
 - ✓ [`1ZJBJGzOn0g`](data/video/activeinferenceinstitute/Other/1ZJBJGzOn0g/) — 1 video record(s)
-- ✓ [`5uTr029Vzkg`](data/video/activeinferenceinstitute/Other/5uTr029Vzkg/) — 1 video record(s)
 - ✓ [`7FuojyQMabw`](data/video/activeinferenceinstitute/Other/7FuojyQMabw/) — 1 video record(s)
 - ✓ [`8-wpEkwG8ck`](data/video/activeinferenceinstitute/Other/8-wpEkwG8ck/) — 1 video record(s)
 - ✓ [`8X9K_gZWhqs`](data/video/activeinferenceinstitute/Other/8X9K_gZWhqs/) — 1 video record(s)
@@ -364,7 +366,6 @@
 - ✓ [`TsQQX3ZdEmA`](data/video/activeinferenceinstitute/Other/TsQQX3ZdEmA/) — 1 video record(s)
 - ✓ [`U6Edc13EQ_k`](data/video/activeinferenceinstitute/Other/U6Edc13EQ_k/) — 1 video record(s)
 - ✓ [`UYD8CR_Xorg`](data/video/activeinferenceinstitute/Other/UYD8CR_Xorg/) — 1 video record(s)
-- ✓ [`VTivWre-8Kk`](data/video/activeinferenceinstitute/Other/VTivWre-8Kk/) — 1 video record(s)
 - ✓ [`WkWIqpxWRM4`](data/video/activeinferenceinstitute/Other/WkWIqpxWRM4/) — 1 video record(s)
 - ✓ [`WxTOeCnQNmY`](data/video/activeinferenceinstitute/Other/WxTOeCnQNmY/) — 1 video record(s)
 - ✓ [`XcoPRGZRO28`](data/video/activeinferenceinstitute/Other/XcoPRGZRO28/) — 1 video record(s)
@@ -392,7 +393,6 @@
 - ✓ [`rIemcswLfGg`](data/video/activeinferenceinstitute/Other/rIemcswLfGg/) — 1 video record(s) — duplicate of `Applied Active Inference Symposium/2023 Ecosystem Symposium/First_Interval`
 - ✓ [`rOoTkgLI1Z8`](data/video/activeinferenceinstitute/Other/rOoTkgLI1Z8/) — 1 video record(s)
 - ✓ [`rs6EjQM6EdI`](data/video/activeinferenceinstitute/Other/rs6EjQM6EdI/) — 1 video record(s)
-- ✓ [`v7aSUMX1nfs`](data/video/activeinferenceinstitute/Other/v7aSUMX1nfs/) — 1 video record(s)
 - ✓ [`wNCZmPM0V44`](data/video/activeinferenceinstitute/Other/wNCZmPM0V44/) — 1 video record(s)
 - ✓ [`yRhEbr4bpB0`](data/video/activeinferenceinstitute/Other/yRhEbr4bpB0/) — 1 video record(s)
 - ✓ [`ynekj8F4zeY`](data/video/activeinferenceinstitute/Other/ynekj8F4zeY/) — 1 video record(s)
