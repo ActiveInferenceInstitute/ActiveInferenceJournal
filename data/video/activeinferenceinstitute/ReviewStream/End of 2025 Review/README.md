@@ -1,5 +1,5 @@
-# gS-qhMNFm84
+# End of 2025 Review
 
-Series: **Other**
+Series: **ReviewStream**
 
 - [2025 ReviewStream](https://www.youtube.com/watch?v=gS-qhMNFm84) — `gS-qhMNFm84`
