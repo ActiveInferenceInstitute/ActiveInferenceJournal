@@ -1,6 +1,6 @@
 # ActiveInferenceJournal — Index
 
-573 items · 740 video records · 19 series · 736 unique video IDs. Root: `data/video/activeinferenceinstitute/`. Machine index: `INDEX.json`.
+579 items · 746 video records · 19 series · 742 unique video IDs. Root: `data/video/activeinferenceinstitute/`. Machine index: `INDEX.json`.
 
 ## ActiveInferAntStream (17)
 - ✓ [`ActiveInferAntStream_001`](data/video/activeinferenceinstitute/ActiveInferAntStream/ActiveInferAntStream_001/) — 2 video record(s)
@@ -55,7 +55,7 @@
 - ✓ [`SocialConstraints_Lecture`](data/video/activeinferenceinstitute/Courses/ActiveInferenceForTheSocialSciences/SocialConstraints_Lecture/) — 1 video record(s)
 - ✓ [`PhysicsAsInformationProcessing_ChrisFields`](data/video/activeinferenceinstitute/Courses/PhysicsAsInformationProcessing_ChrisFields/) — 11 video record(s)
 
-## GuestStream (126)
+## GuestStream (127)
 - ✓ [`GuestStream_001`](data/video/activeinferenceinstitute/GuestStream/GuestStream_001/) — 1 video record(s)
 - ✓ [`GuestStream_002`](data/video/activeinferenceinstitute/GuestStream/GuestStream_002/) — 1 video record(s)
 - ✓ [`GuestStream_003`](data/video/activeinferenceinstitute/GuestStream/GuestStream_003/) — 1 video record(s)
@@ -182,6 +182,7 @@
 - ✓ [`GuestStream_125`](data/video/activeinferenceinstitute/GuestStream/GuestStream_125/) — 1 video record(s)
 - ✓ [`GuestStream_126`](data/video/activeinferenceinstitute/GuestStream/GuestStream_126/) — 1 video record(s)
 - ✓ [`GuestStream_127`](data/video/activeinferenceinstitute/GuestStream/GuestStream_127/) — 1 video record(s)
+- · [`GuestStream_128`](data/video/activeinferenceinstitute/GuestStream/GuestStream_128/) — 1 video record(s)
 
 ## Insights (24)
 - ✓ [`Insights_001`](data/video/activeinferenceinstitute/Insights/Insights_001/) — 1 video record(s)
@@ -332,7 +333,7 @@
 - ✓ [`OrgStream_008`](data/video/activeinferenceinstitute/OrgStream/OrgStream_008/) — 1 video record(s)
 - ✓ [`OrgStream_009`](data/video/activeinferenceinstitute/OrgStream/OrgStream_009/) — 1 video record(s)
 
-## Other (85)
+## Other (90)
 - ✓ [`-39CESDAfLM`](data/video/activeinferenceinstitute/Other/-39CESDAfLM/) — 1 video record(s)
 - ✓ [`0A36OXIDLhQ`](data/video/activeinferenceinstitute/Other/0A36OXIDLhQ/) — 1 video record(s)
 - ✓ [`1ZJBJGzOn0g`](data/video/activeinferenceinstitute/Other/1ZJBJGzOn0g/) — 1 video record(s)
@@ -353,6 +354,8 @@
 - ✓ [`Ei8LHRlmbzI`](data/video/activeinferenceinstitute/Other/Ei8LHRlmbzI/) — 1 video record(s)
 - ✓ [`EkYlOX-f9sk`](data/video/activeinferenceinstitute/Other/EkYlOX-f9sk/) — 1 video record(s)
 - ✓ [`FlZa_odQymU`](data/video/activeinferenceinstitute/Other/FlZa_odQymU/) — 1 video record(s)
+- · [`FnYCaCkah4U`](data/video/activeinferenceinstitute/Other/FnYCaCkah4U/) — 1 video record(s)
+- · [`FtGnkRJwk6U`](data/video/activeinferenceinstitute/Other/FtGnkRJwk6U/) — 1 video record(s)
 - ✓ [`GMqkygROLO4`](data/video/activeinferenceinstitute/Other/GMqkygROLO4/) — 1 video record(s)
 - ✓ [`G_Jksni5o8I`](data/video/activeinferenceinstitute/Other/G_Jksni5o8I/) — 1 video record(s)
 - ✓ [`JkORFoyk8o8`](data/video/activeinferenceinstitute/Other/JkORFoyk8o8/) — 1 video record(s)
@@ -360,11 +363,13 @@
 - ✓ [`KR9KCKQ-KJo`](data/video/activeinferenceinstitute/Other/KR9KCKQ-KJo/) — 1 video record(s)
 - ✓ [`LI_ZIXys1xU`](data/video/activeinferenceinstitute/Other/LI_ZIXys1xU/) — 1 video record(s)
 - ✓ [`MRTULbP1ZKs`](data/video/activeinferenceinstitute/Other/MRTULbP1ZKs/) — 1 video record(s)
+- · [`MjeQeWeyYhE`](data/video/activeinferenceinstitute/Other/MjeQeWeyYhE/) — 1 video record(s)
 - ✓ [`OCCIDeeKOMA`](data/video/activeinferenceinstitute/Other/OCCIDeeKOMA/) — 1 video record(s)
 - ✓ [`P3h51-J4g8M`](data/video/activeinferenceinstitute/Other/P3h51-J4g8M/) — 1 video record(s)
 - ✓ [`PVeyvHSAwmk`](data/video/activeinferenceinstitute/Other/PVeyvHSAwmk/) — 1 video record(s) — duplicate of `Applied Active Inference Symposium/2023 Ecosystem Symposium/Second_Interval`
 - ✓ [`QmVuId8SY8k`](data/video/activeinferenceinstitute/Other/QmVuId8SY8k/) — 1 video record(s)
 - ✓ [`RDDfKm4yQIo`](data/video/activeinferenceinstitute/Other/RDDfKm4yQIo/) — 1 video record(s)
+- · [`SBCl8DeaJYU`](data/video/activeinferenceinstitute/Other/SBCl8DeaJYU/) — 1 video record(s)
 - ✓ [`TOZp_XNYijQ`](data/video/activeinferenceinstitute/Other/TOZp_XNYijQ/) — 1 video record(s)
 - ✓ [`TaFwI2zr_lE`](data/video/activeinferenceinstitute/Other/TaFwI2zr_lE/) — 1 video record(s)
 - ✓ [`TsQQX3ZdEmA`](data/video/activeinferenceinstitute/Other/TsQQX3ZdEmA/) — 1 video record(s)
@@ -372,6 +377,7 @@
 - ✓ [`U6Edc13EQ_k`](data/video/activeinferenceinstitute/Other/U6Edc13EQ_k/) — 1 video record(s)
 - ✓ [`UQGvfgp0bq4`](data/video/activeinferenceinstitute/Other/UQGvfgp0bq4/) — 1 video record(s)
 - ✓ [`UYD8CR_Xorg`](data/video/activeinferenceinstitute/Other/UYD8CR_Xorg/) — 1 video record(s)
+- · [`V46B4Xy1PeQ`](data/video/activeinferenceinstitute/Other/V46B4Xy1PeQ/) — 1 video record(s)
 - ✓ [`VTivWre-8Kk`](data/video/activeinferenceinstitute/Other/VTivWre-8Kk/) — 1 video record(s)
 - ✓ [`WkWIqpxWRM4`](data/video/activeinferenceinstitute/Other/WkWIqpxWRM4/) — 1 video record(s)
 - ✓ [`WxTOeCnQNmY`](data/video/activeinferenceinstitute/Other/WxTOeCnQNmY/) — 1 video record(s)
