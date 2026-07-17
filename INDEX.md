@@ -263,7 +263,7 @@
 - ✓ [`LiveStream_051`](data/video/activeinferenceinstitute/Livestream/LiveStream_051/) — 3 video record(s)
 - ✓ [`LiveStream_052`](data/video/activeinferenceinstitute/Livestream/LiveStream_052/) — 3 video record(s)
 - ✓ [`LiveStream_053`](data/video/activeinferenceinstitute/Livestream/LiveStream_053/) — 3 video record(s)
-- ✓ [`Livestream_054`](data/video/activeinferenceinstitute/Livestream/LiveStream_054/) — 3 video record(s)
+- ✓ [`LiveStream_054`](data/video/activeinferenceinstitute/Livestream/LiveStream_054/) — 3 video record(s)
 - ✓ [`LiveStream_055`](data/video/activeinferenceinstitute/Livestream/LiveStream_055/) — 3 video record(s)
 - ✓ [`LiveStream_056`](data/video/activeinferenceinstitute/Livestream/LiveStream_056/) — 3 video record(s)
 - ✓ [`LiveStream_057`](data/video/activeinferenceinstitute/Livestream/LiveStream_057/) — 3 video record(s)

@@ -1,0 +1,42 @@
+name: Validate journal integrity
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out journal
+        uses: actions/checkout@v6
+
+      - name: Check out Journal-Utilities
+        uses: actions/checkout@v6
+        with:
+          repository: ActiveInferenceInstitute/Journal-Utilities
+          path: .journal-utilities
+          fetch-depth: 1
+
+      - name: Install Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Check derived indexes
+        run: python .journal-utilities/scripts/generate_journal_indexes.py --journal . --check
+
+      - name: Check split transcript artifacts
+        run: >-
+          python .journal-utilities/scripts/repair_split_transcripts.py
+          --journal . --utilities .journal-utilities --check
+
+      - name: Run journal integrity gate
+        run: >-
+          python .journal-utilities/scripts/validate_journal.py
+          --journal .
+          --manifest .journal-utilities/data/output/channel_videos.json

@@ -8,7 +8,7 @@ The journal holds the *content*; Journal-Utilities holds the *code* that produce
 
 ```
 YouTube (@ActiveInference)
-  └─ scripts/download_channel.py   enumerate (videos+streams+shorts) → 729 videos
+  └─ scripts/download_channel.py   enumerate (videos+streams+shorts) → channel manifest
         ├─ transcripts (yt-dlp captions, cookie-free)
         └─ local Whisper (mlx-whisper) for caption-less videos
   └─ scripts/refactor_journal.py   → this repo's per-item v2 schema, namespaced layout,
@@ -18,6 +18,7 @@ YouTube (@ActiveInference)
                                    → INDEX.json/INDEX.md derived from metadata.json
   └─ scripts/repair_split_transcripts.py
                                    → session IDs/headings in merged transcript artifacts
+  └─ scripts/validate_journal.py   → read-only release/integrity gate
 ```
 
 ## Completeness & idempotency contract
@@ -34,6 +35,27 @@ YouTube (@ActiveInference)
   detects stale merged session transcript artifacts.
 - **Zero data loss on refactor:** `refactor_journal.py --build` stages out-of-place and
   reconciles `total source files == captured + intentional drops` before any in-place apply.
+
+## Maintenance sequence
+
+Run these commands from the Journal-Utilities checkout. Enrichment is dry-run by
+default; only the explicit `--apply` command writes canonical metadata.
+
+```bash
+cd ../Journal-Utilities
+uv run python scripts/enrich_metadata.py --journal ../ActiveInferenceJournal
+uv run python scripts/enrich_metadata.py --journal ../ActiveInferenceJournal --apply
+uv run python scripts/repair_split_transcripts.py \
+  --journal ../ActiveInferenceJournal --utilities .
+uv run python scripts/generate_journal_indexes.py --journal ../ActiveInferenceJournal
+uv run python run.py journal-check
+```
+
+`journal-check` is read-only. It verifies metadata/path consistency, derived
+indexes, duplicate targets and canonical ID uniqueness, transcript JSON shape,
+manifest coverage, URL-only enrichment fields, and the rule that `main` contains
+neither audio nor credentials. Use `--strict-manifest` after fresh enumeration
+when canonical IDs absent from the manifest must fail rather than warn.
 
 ## Metadata
 

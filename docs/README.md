@@ -20,7 +20,8 @@ materials from the Active Inference Institute video library.
 - **Content root:** [`../data/video/activeinferenceinstitute/`](../data/video/activeinferenceinstitute/).
 - **Tooling (separate repo):** [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal-Utilities)
   produces this layout; its `scripts/refactor_journal.py` and `scripts/download_channel.py`
-  are the canonical generators. See Journal-Utilities `docs/JOURNAL_SCHEMA.md` and
+  are the canonical generators. Its `scripts/validate_journal.py` is the read-only
+  integrity gate. See Journal-Utilities `docs/JOURNAL_SCHEMA.md` and
   `docs/REFACTOR_READINESS.md`.
 
 ## Branches

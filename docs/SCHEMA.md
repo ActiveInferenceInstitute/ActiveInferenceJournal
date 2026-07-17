@@ -51,6 +51,8 @@ session split-files, and the channel manifest by
 ```bash
 python scripts/enrich_metadata.py --apply   # from Journal-Utilities; dry-run without --apply
 python scripts/generate_journal_indexes.py --journal ../ActiveInferenceJournal
+python scripts/validate_journal.py --journal ../ActiveInferenceJournal \
+  --manifest data/output/channel_videos.json
 ```
 
 Enrichment-owned keys — the script only ever sets these; it never deletes or
