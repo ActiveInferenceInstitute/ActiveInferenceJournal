@@ -28,7 +28,8 @@ curated materials from the Active Inference Institute video library. Read
   channel manifest.
 - Generator entry points: `Journal-Utilities/scripts/enrich_metadata.py` updates the
   canonical metadata, and `Journal-Utilities/scripts/generate_journal_indexes.py`
-  regenerates `INDEX.json` and `INDEX.md`.
+  regenerates `INDEX.json` and `INDEX.md`; `Journal-Utilities/scripts/repair_split_transcripts.py`
+  repairs merged session transcript identities when split sources are available.
 
 ## Layout
 

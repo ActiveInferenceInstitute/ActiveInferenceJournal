@@ -11,7 +11,7 @@ cruft, audio kept off `main`, and top-level indexes.
   metadata.json        # canonical record (see below) — single source of truth
   README.md            # generated human nav: title(s), date, links, contents
   transcript.txt       # clean text (per part: "## Part N" headers when multi-part)
-  transcript.json      # timestamped segments (array; part-tagged)
+  transcript.json      # timestamped segments (array; part/session-tagged)
   captions/            # original-language *.srt
   translations/        # translated *.srt (one per language) — preserved verbatim
   assets/
@@ -91,6 +91,9 @@ corresponding display fields without losing the source text:
   `fetch_chapters.py`) or curated data — only when an item has none, and
   never overwrites. Edit sessions directly here (add speakers, fix titles);
   regeneration preserves your edits.
+- **Split transcript identity:** when source transcripts are split into sessions,
+  corresponding `transcript.txt` headings and `transcript.json` `video_id` fields use
+  the stable `<video_id>_sessNN` session name rather than an empty placeholder.
 - **`duplicate_of`** marks an `Other/<video_id>` item whose content is a
   duplicate of a curated item (the two symposium full uploads). The duplicate
   intentionally repeats the canonical video's ID; coverage reconciliation
