@@ -20,7 +20,7 @@
 - ✓ [`ActiveInferAntStream_016`](data/video/activeinferenceinstitute/ActiveInferAntStream/ActiveInferAntStream_016/) — 2 video record(s)
 - ✓ [`ActiveInferAntStream_017`](data/video/activeinferenceinstitute/ActiveInferAntStream/ActiveInferAntStream_017/) — 1 video record(s)
 - ✓ [`ActiveInferAntStream_018`](data/video/activeinferenceinstitute/ActiveInferAntStream/ActiveInferAntStream_018/) — 1 video record(s)
-- ✓ [`RDDfKm4yQIo`](data/video/activeinferenceinstitute/ActiveInferAntStream/RDDfKm4yQIo/) — 1 video record(s)
+- ✓ [`Active_Inference_in_Rust_For_Ants_4_4_2024_Active_InferAnts`](data/video/activeinferenceinstitute/ActiveInferAntStream/Active_Inference_in_Rust_For_Ants_4_4_2024_Active_InferAnts/) — 1 video record(s)
 
 ## Applied Active Inference Symposium (10)
 - ✓ [`2021 Symposium with Karl Friston`](data/video/activeinferenceinstitute/Applied%20Active%20Inference%20Symposium/2021%20Symposium%20with%20Karl%20Friston/) — 3 video record(s)
@@ -454,8 +454,9 @@
 - · [`Session_025`](data/video/activeinferenceinstitute/TextbookGroup/Namjoshi2026/Cohort_1/Session_025/) — 1 video record(s)
 - · [`Session_026`](data/video/activeinferenceinstitute/TextbookGroup/Namjoshi2026/Cohort_1/Session_026/) — 1 video record(s)
 - · [`Session_027`](data/video/activeinferenceinstitute/TextbookGroup/Namjoshi2026/Cohort_1/Session_027/) — 1 video record(s)
-- ✓ [`qwjwbiJ1LLw`](data/video/activeinferenceinstitute/TextbookGroup/Namjoshi2026/qwjwbiJ1LLw/) — 1 video record(s)
-- ✓ [`tmqPfDfQ5-s`](data/video/activeinferenceinstitute/TextbookGroup/Namjoshi2026/tmqPfDfQ5-s/) — 1 video record(s)
+- ✓ [`Fundamentals_of_Active_Inference_Open_Source_code_available`](data/video/activeinferenceinstitute/TextbookGroup/Namjoshi2026/Fundamentals_of_Active_Inference_Open_Source_code_available/) — 1 video record(s)
+- ✓ [`Fundamentals_of_Active_Inference_Open_Source_code_available_tmqPfDfQ5-s`](data/video/activeinferenceinstitute/TextbookGroup/Namjoshi2026/Fundamentals_of_Active_Inference_Open_Source_code_available_tmqPfDfQ5-s/) — 1 video record(s)
+- ✓ [`Active_Inference_Textbook_Group_in_early_2024_Cohort_6`](data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Active_Inference_Textbook_Group_in_early_2024_Cohort_6/) — 1 video record(s)
 - ✓ [`Meeting_001`](data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_001/) — 1 video record(s)
 - ✓ [`Meeting_002`](data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_002/) — 1 video record(s)
 - ✓ [`Meeting_003`](data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_003/) — 1 video record(s)
@@ -607,7 +608,6 @@
 - ✓ [`Meeting_018`](data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_7/Meeting_018/) — 1 video record(s)
 - ✓ [`Meeting_019`](data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_7/Meeting_019/) — 1 video record(s)
 - ✓ [`Meeting_007`](data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_8/Meeting_007/) — 1 video record(s)
-- ✓ [`YxrIbWTjSp4`](data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/YxrIbWTjSp4/) — 1 video record(s)
 
 ## Twitter Spaces (2)
 - ✓ [`TwitterSpaces_001`](data/video/activeinferenceinstitute/Twitter%20Spaces/TwitterSpaces_001/) — 1 video record(s)

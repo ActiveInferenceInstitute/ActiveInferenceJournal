@@ -1,4 +1,4 @@
-# tmqPfDfQ5-s
+# Fundamentals_of_Active_Inference_Open_Source_code_available_tmqPfDfQ5-s
 
 Series: **TextbookGroup**
 

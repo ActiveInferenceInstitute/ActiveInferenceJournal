@@ -1,4 +1,4 @@
-# qwjwbiJ1LLw
+# Fundamentals_of_Active_Inference_Open_Source_code_available
 
 Series: **TextbookGroup**
 
