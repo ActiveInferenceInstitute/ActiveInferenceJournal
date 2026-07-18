@@ -1,2299 +1,1739 @@
 ## TZNXs5jP9hE
 
-Hello and welcome. This is Active Inference Model Stream number 10.1 on April 4th, 2024,
-4-4-24. And we're really excited today to be with Bart Van Earp and Albert Potosenko
-talking about building a drone with RxInfer. We have an ongoing RxInfer learning group at
-the Institute and a lot of participants have been excited to use even early versions of this
-package and connect it to all the exciting math and developments. So thank you both for joining,
-looking forward to this very pragmatic presentation. Awesome. Thanks, Daniel. Thanks for the kind words,
-the nice introduction. Also welcome everyone online. As Daniel mentioned, we're going to build
-a drone today. So last week I didn't know anything about drones whatsoever, but in the meantime,
-I was able to craft one with the help of my colleagues. And I want to kind of transfer
-the learning experience that I obtained over this week to all of you, such that you can leverage
-the power of our toolbox RxInfer in the end to make your own very cool applications, your own drone,
-your own autonomous vehicle, whatever you want. And we will then be there also to support you in this
-journey. But for now, let's get started. How are we going to build a drone with RxInfer? So first of all,
-let me briefly introduce myself. My name is Bart Van Earp. I'm a PhD student and teaching assistant in
-BIOS App, which is the research group here at Eindhoven University of Technology. And together with Albert,
-we will be also live and we'll also be monitoring the chat in case there are any questions pop up
-along the way. We will be your host today together with Daniel. This talk will be supported by Reactive
-Base. So Reactive Base is the overcoupling GitHub organization of RxInfer and all the packages on
-which it's built. At the moment, we're looking for contributors. So if you're interested after this
-talk, please reach out and then definitely we can get you acquainted with the toolbox and with our
-environment there. So we're from BiosLab, the Eindhoven University of Technology. We are located
-here in Eindhoven, also called City of Light. And from here, we're doing very interesting research
-on building agents, probabilistic graphical models and using these to craft all kinds of engineering
-applications, trying to solve real world problems with our engine.
-Our engine, RxInfer, you might have already heard about this, but our engine is a Julia engine,
-which allows us to perform automatic Bayesian inference, specifically through reactive message
-passing. The engine that we have built is completely reactive, which means that it doesn't do anything
-unless there is something to do for it. So it's relatively energy efficient because it doesn't
-consume energy during all the other moments. And we perform message passing, but I'll give a more
-detailed discussion on this. More explanation will follow later in this talk. And we're going to use
-this toolbox in order to craft a drone, a drone that can actually fly using some simplified drone
-mechanics, go from position A to position B. And I'm very eager to show you how this journey, how this
-development journey looks like. So let's get started.
-So what I'm going to talk about are three parts, basically, in this talk. I'm going to first start off with
-the model specification. So in the Bayesian inference methodology, the first part is always that we need
-to craft a model. And this model will include some drone physics. So I'll be taking you back to high school,
-where you learned all these concepts, refresh a couple of them. And based on that, I'm going to construct a
-generative model of how a simplified drone would look like. Furthermore, I'll then continue upon
-the probabilistic inference. So if we have crafted this model, and we want this model actually to do
-something, inference allows us to compute posteriors in this model. And the inference on this model is
-actually the underlying control algorithm that we will be crafting. And this will be automated using our
-toolbox, RxInfer. Then finally, we'll wrap up with some experiments. And then there will be plenty of
-time to answer any questions that you might have. Let's get going. For the model specification, we're
-going to start off with some simplified drones physics. It will be very easy for some, a refresher for others.
-But hopefully, throughout this, throughout these following couple of minutes, you'll have a basic
-understanding of how a drone works. We have greatly simplified it. Because of course, going into the
-details of three, three dimensional drones, with wind, all that kind of stuff, would be a bit too much for
-just a single live stream. But we hope to offer you the tools and maybe the machinery to create these more
-complicated models yourself. So we have this very nice drone here. And what we're interested in is what
-forces act on this drone. So we're going to simplify this a bit. And we're saying that each of the rotors,
-so the left and the right rotor, produce some kind of upward force, pulling this drone from the
-from the ground. Of course, we also walk around on Earth, and we know that there is actually a force that
-opposes this, namely gravity, which tries to pull us to the ground. Well, combining these two forces
-allows us to either increase or decrease the altitude of this drone, and make it fly. That's the entire goal.
-In the end, the goal will be to come up with these forces, these FL and FR, such that our drone flies from
-location A to location B. If we do the computations a bit and see what are the kind of the net force
-forces acting on this drone, is in this case, we see that we have a vertical component, Fy, which is the
-sum of the individual forces created by the motor, minus the force of gravity that's acting upon the drone.
-And in the horizontal direction, because everything is nicely aligned,
-we have a net force of zero. If there would be wind, for example, there would be a contribution there.
-But in the simplified model, I assume that, well, there is no horizontal component as of yet.
-But if we tilt the drone a bit with a certain angle theta, we actually see that this theta
-not only affects, of course, the horizontal or the vertical net force, but also the horizontal one.
+SPEAKER_00:
+Hello and welcome.
+
+This is Active Inference Model Stream number 10.1 on April 4th, 2024, 4-4-24.
+
+And we're really excited today to be with Bart Van Erp and Albert Potasenko.
+
+talking about building a drone with rx infer we have an ongoing rx infer learning group at the institute and a lot of participants have been excited to use even early versions of this package and connect it to all the exciting math and developments so thank you both for joining looking forward to this very pragmatic presentation
+
+
+SPEAKER_01:
+awesome thanks daniel thanks for the kind words and nice introduction also welcome everyone online and as we daniel mentioned we're gonna build a drone today so last week i didn't know anything about drones whatsoever but in the meantime i was able to craft one with the help of my colleagues and i want to kind of transfer the learning experience that i obtained over this week to all of you
+
+such that you can leverage the power of our toolbox RxAffair in the end to make your own very cool applications, your own drone, your own autonomous vehicle, whatever you want.
+
+And we will then be there also to support you in this journey.
+
+But for now, let's get started.
+
+How are we going to build a drone with RX Infer?
+
+So first of all, let me briefly introduce myself.
+
+My name is Bart van Erp.
+
+I'm a PhD student and teaching assistant in BIOSEP, which is the research group here at Eindhoven University of Technology.
+
+And together with Albert who is also live and will also be monitoring the chat in case there are any questions pop up along the way.
+
+We will be your host today together with Daniel.
+
+This talk will be supported by ReactiveBase.
+
+So ReactiveBase is the over coupling GitHub organization of RxInfer and all the packages on which it's built.
+
+at the moment we're looking for contributors so if you have if you're interested after this talk please reach out and then definitely we can get you acquainted with the toolbox and with our environment there
+
+so we're from bias lab the eindhoven university of technology we are located here in eindhoven also called city of light and from here we're doing very interesting research on building agents probabilistic graphical models and using these to craft all kinds of engineering applications trying to solve real world problems with our engine
+
+our engine rx infer you might have already heard about this but our engine is a julia engine which allows us to perform automatic bayesian inference specifically through reactive message passing the engine that we have built is completely reactive which means that it doesn't do anything unless there is something to do for it
+
+so it's relatively energy efficient because it doesn't consume energy during all the other moments and we perform message passing but i'll give a more in detailed discussion on this more explanation will follow later in this talk
+
+And we're going to use this toolbox in order to craft a drone.
+
+A drone that can actually fly using some simplified drone mechanics, go from position A to position B. And I'm very eager to show you how this journey, how this development journey looks like.
+
+So let's get started.
+
+So what I'm going to talk about are three parts basically in this talk.
+
+I'm going to first start off with the model specification.
+
+in the bayesian inference methodology the first part is always that we need to craft a model and this model will include some drone physics so i'll be taking you back to high school where you learned all these concepts refresh a couple of them and based on that i'm gonna construct a generative model of how a simplified drone would look like furthermore
+
+i'll then continue upon the probabilistic inference so if we have crafted this model and we want this model actually to do something inference allows us to compute posteriors in this model and the inference on this model is actually the underlying control algorithm that we will be crafting and this will be automated using our toolbox rx infer
+
+then finally we'll wrap up with some experiments and then there will be plenty of time to answer any questions that you might have let's get going for the model specification we're going to start off with some simplified drones physics it will be very easy for some a refresher for others but hopefully throughout this uh throughout these following couple of minutes you'll have a basic understanding of how a drone works we have greatly simplified it
+
+because of course going into the details of three uh three-dimensional drones with wind all that kind of stuff would be a bit too much for just a single live stream but we hope to offer you the tools and maybe the machinery to create these more complicated models yourself
+
+So we have this very nice throne here.
+
+And what we're interested in is what forces act on this throne.
+
+So we're going to simplify this a bit.
+
+And we're saying that each of the rotors, so the left and the right rotor, produce some kind of upward force pulling this throne from the ground.
+
+Of course, we also walk around on Earth and we know that there is also a force that opposes this, namely gravity, which tries to pull us to the ground.
+
+well combining these two forces allows us to either increase or decrease the altitude of this drone and make it fly that's the entire goal in the end the goal will be to come up with these forces these fl and fr such that our drone flies from location a to a location b if we do the computations a bit and see what are the kind of the net force forces
+
+acting on this drone is in this case we see that we have a vertical component fy which is the sum of the individual forces created by the motor minus the force of gravity that's acting upon the drone and in the horizontal direction because everything is nicely aligned we have a net force of zero if there would be wind for example there would be a contribution there but in the simplified model i assume that well there is no horizontal component as of yet
+
+But if we tilt the drone a bit with a certain angle theta, we actually see that this theta not only affects, of course, the horizontal or the vertical net force, but also the horizontal one.
+
 So based on this, we can obtain equations for this horizontal and vertical force acting upon the drone.
-The motors, we assume that they are at a distance r, a radius r from the center of mass. So we
-very simplistically assumed that the center of mass of the drone is at the radius r from its rotor. So the force,
-you can think of it as acting upon an arm, creating a specific moment.
-So the torque that gets generated by these rotors with respect to the center of mass of the drone,
-the difference between the distance r is the difference between these two forces multiplied with the radius r.
-With these three equations, so the net force is acting upon the drone, and this net torque that we can compute
-based on the rotation that the drone wants to go to, we can already construct a big part of the model of this drone.
-So these are kind of the forces that act upon the drone, horizontal, vertical direction, the rotation as given by this torque.
-And we want to convert these forces into motion, because in the end we want to move the drone,
-and we want to figure out what forces are required to move from a position A to a position B.
-So let's see, using Newton's law, we can already know that our force is equal to our mass multiplied with our acceleration.
-In other words, our acceleration is our force divided by our mass. So based on the net forces that we just
-computed, we can also extract equations for the accelerations in the vertical and horizontal direction.
-These accelerations accumulate, so if we integrate over them, we get actually a velocity.
-So an incremental change in our velocity you can think of is actually this acceleration times this incremental change in time,
-which gives us kind of a relationship. So if we increase the acceleration over a period of time,
-then we also know that that will lead to an increase in our velocities in both the horizontal and vertical direction.
+
+The motors, we assume that they are at a distance r, a radius r, from the center of mass.
+
+So we very simplistically assumed that the center of mass of the drone is at the radius r from its rotor.
+
+So the force, you can think of it as acting upon an arm, creating a specific moment.
+
+So the torque that gets generated by these rotors
+
+with respect to the center of mass of the drone is the difference between these two forces multiplied with the radius r. With these three equations, so the net forces acting upon the drone and this net torque that we can compute based on the rotation that the drone wants to go to, we can already construct a big part of the model of this drone.
+
+so these are kind of the forces that we that act upon the drone horizontal vertical direction the rotation as given by this torque and we want to convert these forces into motion because in the end we want to move the drone and we want to figure out what forces are required to move from a position a to a position b using newton's law we can
+
+already know that our force is equal to our mass multiplied with our acceleration.
+
+In other words, our acceleration is our force divided by our mass.
+
+So based on the net forces that we just computed, we can also extract the equations for the accelerations in the vertical and horizontal direction.
+
+These accelerations accumulate, so if we integrate over them,
+
+get actually a velocity so an incremental change in our velocity you can think of is actually this acceleration times this incremental change in time which gives us kind of a relationship so if we increase the acceleration over a period of time then we also know that that will lead to an increase in our velocities in both the horizontal and vertical direction
+
 If we take this even a step further, then we can also start to model the actual position of the drone.
+
 So integrating over this velocity will give us our position in both the X and Y direction.
-Basically every small change in X will be a result of the particular velocity over a small period of time.
-And with this set of equations, it actually becomes possible to extract the movements from these net forces of the drone.
-So that's basically the movement. So how it moves from left to right, up and down.
-So we see this is the acceleration in the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of the direction of
-used for actually angular acceleration.
-Similarly, we can also compute the angular velocity,
-so omega, because a small increment in this angular velocity
-will be our angular acceleration
-times a small fraction of time.
-So integrating over the angular acceleration
-will give us the angular velocity.
-And you might have already guessed this,
-based on this, we can also compute a new angle.
-So the angle is this velocity integrated over time.
-Very similarly, as we derived the equations
-for the actual movement of the drone.
-And together, these net forces,
-these equations for the movement of the drone,
-and these simplified equations for the rotation,
-they constitute the drone dynamics.
-So it might have seemed like a recap from high school,
-but for the simplified example,
-this is all that we actually need
-in order to craft this drone.
-And that's what I'm gonna show you right now.
-Because these equations of motion,
-I'm gonna write down in a function,
-specifically a Julia function,
-because that's the language that RxInfer also uses
-under the hood.
-So we're gonna create this function F,
-and I'm gonna walk you right through it.
-There are just 15 lines of code,
-so I think this should be manageable.
-So we have a function F,
-which accepts the state.
-So you can think of this state as the positions,
-velocities, angle, and angular velocities of the drone.
-The actions, to which we refer to the forces
-on the left and right rotor.
-The particular drone,
-like what are the characteristics of that drone,
-and the environment.
-So are we on Mars?
-Are we on Earth?
-All those attributes that are environment related.
-So in the first three lines,
-what we're gonna do is we're gonna extract some information.
-So we're gonna extract the forces from our actions.
-We're gonna extract the mass,
-the moment of inertia,
-and the radius of the drone,
-because these are properties that correspond
-to the particular drone that we're using,
-and the gravity we're gonna just grab from our environment.
-Because if we would be on Mars,
-we would have very different dynamics, of course.
-Then from the state,
-what we extract are X and Y,
-which are horizontal and vertical positions,
-VX and VY,
-which are velocities in the horizontal and vertical direction,
-data, which was our angle,
-and omega, which was our angular velocity.
-With all these properties, characteristics,
-and states extracted,
-we can actually start implementing the equations
-that we have on the left.
-So FG, which is the force generated by the gravity,
-is simply equal to the mass times the gravitational constant.
-So FY and FX,
-I merely copied from the equations on the left.
-So it's the sum of the forces,
-multiplied with cosine or sine of the angle,
-and for the Y force,
-the net Y force,
-we also subtract the gravity,
-because there it has an influence.
+
+Basically, every small change in X
+
+will be a result of the particular velocity over a small period of time and with this set of equations it actually becomes possible to extract the movements from these net forces of the drone so that's basically the movement so how it moves from left to right up and down but there is this additional component to the drone namely its angle because its angle also changes
+
+the acceleration in the angle so the angular acceleration alpha here is the torque divided by the moment of inertia of the drone you can think of this as being very similar to newton's equation with the forces and the mass which give us the horizontal vertical acceleration but this is just the similar similar equation that's used for actually angular acceleration similarly we can also compute the angular
+
+velocity so omega because a small increment in this angular velocity will be our angular acceleration times a small fraction of time so integrating over the angular acceleration will give us the angular velocity and you might have already guessed this based on this we can also compute a new angle so the angle is this velocity integrated over time
+
+very similarly as we derived the equations for the actual movement of the drone and together these net forces these equations for the movement of the drone and these simplified equations for the rotation they constitute the drone dynamics so it might have seemed like a recap from high school but for the simplified example this is all that we actually need in order to craft this drone and that's what i'm going to show you right now
+
+Because these equations of motion, I'm going to write down in a function, specifically a Julia function, because that's the language that RxInfer also uses under the hood.
+
+So we're going to create this function f, and I'm going to walk you right through it.
+
+There are just 15 lines of code, so I think this should be manageable.
+
+So we have a function f, which accepts the state.
+
+So you can think of this state as the positions, velocities, angle and angular velocities of the drone.
+
+the actions to which we refer to the forces on the left and right rotor the particular drone like what are the characteristics of that drone and the environment so are we on mars are we on earth all those attributes that are environment related so in the first three lines what we're going to do is we're going to extract some information so we're going to extract the forces from our actions
+
+we're going to extract the mass, the moment of inertia, and the radius of the drone, because these are properties that correspond to the particular drone that we're using, and the gravity we're going to just grab from our environment.
+
+Because if we would be on Mars, we would have very different dynamics, of course.
+
+Then from the state, what we extract are x and y, which are horizontal and vertical positions.
+
+vx and vy which are velocities in the horizontal and vertical direction data which was our angle and omega which was our angular velocity with all these properties characteristics and states extracted we can actually start implementing the equations that we have on the left so fg which is the force generated by the gravity is simply equal to the mass times the gravitational constant
+
+Fy and Fx are merely copied from the equations on the left.
+
+So it's the sum of the forces multiplied with cosine or sine of the angle.
+
+And for the y force, the net y force, we also subtract the gravity because there it has an influence.
+
 And for the net torque, we do the similar.
-So we extract the difference between the force
-generated by the left and right rotor,
-and multiply that with the radius,
-in order to get us a torque.
-Then next up is we can, based on these forces,
-we can compute the accelerations in the X and Y direction.
-So F of X divided by M will give us these accelerations,
-or F of Y divided by M for the vertical acceleration.
-We're gonna take a very crude Euler approximation.
-So we're gonna do a linearization
-in order to actually create a new velocity.
-So V X new, which will be the velocity after enforcing the actions,
-will be our previous velocity,
-plus our acceleration,
-times this increment in time,
-is DT.
-And this DT we said beforehand.
-But this is a simplified assumption,
-which of course there are more complicated
-assumptions to be made.
-We could choose
-Euler-Maiwanger,
-and all those other fourth order approximations.
-But for now, let's keep it simple,
-and let's stick to this very simple order approximation.
-Then based on the velocities and accelerations,
-we can also do a similar trick for the new positions.
-So how does our X and Y coordinate change based on their previous coordinates,
-the velocities that we had at the previous moment,
-and the accelerations that we computed?
-Here we have this quadratic term over the accelerations,
-which are merely a matter of fact of the approximation,
-because over DT we also want to kind of integrate over the accelerations.
-So that's odds, the second term basically,
-odds for this effect and makes it a bit more realistic.
-With that out of the way,
-we can do similar things for the rotation.
-So the acceleration, the rotational acceleration,
-is our torque divided by our moment of inertia that we got from the drone.
-We again can update the angular velocity based on this previous angular velocity.
-The acceleration that we just computed and the time interval.
-And based on that, we can also update our angle.
-So what this function does,
-it accepts the state actions and some characteristics of the drone and the environment
-and some discretization over time.
-And it computes and returns a new state.
-So if we would have applied a specific action,
-force FL and FR,
-corresponding to the two rotor engines,
-what would be the new state or approximately the new state that we end up with.
-It's very simplified, but this you can think of as a state transition function.
-With that out of the way, now it's actually time to start with the easy work.
-Because we have now this function F,
-and this function F specifies how we think this internal state of the drone evolves over time.
-Something I forgot to mention, but Julia also supports Unicode.
-So the people who are paying attention might have already seen it.
-I still think it's a great feature,
-but you can actually use Greek symbols,
-which makes this translation going from physics to code way more easy,
-and also allows you to retain this physical interpretation to it.
-But that being said, let's continue with the proper model.
-So just remember now that we have F, which encodes our state transition.
-For our drone, we're going to construct a generative model.
-And here I have drawn it as a so-called Forney-style vector graph.
-But I'm going to talk you right through it.
-So what we have is these boxes.
-And these boxes correspond to factors or functions on how variables relate to each other.
-Which one relates to another one?
-And how are they interconnected through which functions and through which nodes, let's say.
-And the edges, so the arrows here in this case, correspond to the individual variables in our model.
-The variables S in this example correspond to the state of the agent.
-So that contains the position of the agent in both x, y.
-And the velocities also in the x, y direction.
+
+So we extract the difference between the force generated by the left and right rotor and multiply that with the radius in order to get us a torque.
+
+then next up is we can based on these forces we can compute the accelerations in the x and y direction so f of x divided by m will give us these accelerations or f of y divided by m for the vertical acceleration we're going to take a very crude euler approximation so we're going to do a linearization in order to actually create a new velocity so vx new which will be the velocity after enforcing the actions
+
+Will be our previous velocity.
+
+Plus our acceleration.
+
+Times this increment in time.
+
+This dt.
+
+And this dt we said beforehand.
+
+But this is a simplified assumption.
+
+Which of course there are more complicated.
+
+Assumptions to be made.
+
+We can choose.
+
+Euler-Marwanger.
+
+And all those other fourth order approximations.
+
+But for now let's keep it simple.
+
+And let's stick to this very.
+
+Simple order approximation.
+
+Then based on.
+
+velocities and accelerations we can also do a similar trick for the new positions so how does our x and y coordinate change based on their previous coordinates the velocities that we had at the previous moment and the accelerations that we computed here we have this quadratic term over the accelerations
+
+uh which are merely a matter of fact of the approximation because we over dt we also want to kind of integrate over the accelerations so that's odds the second term basically odds for this effect and makes it a bit more realistic with that out of the way we can do similar things for
+
+the rotation so the acceleration the rotational acceleration is our torque divided by a moment of inertia that we got from the drone we again can update the angular velocity based on its previous angular velocity the acceleration that we just computed and the time interval and based on that we can also update our angle so
+
+what this function does it accepts the state actions and some characteristics of the drone in the environment and some discretization over time and it computes and returns a new state so if we would have applied a specific action of force fl and fr corresponding to the two rotor engines what would be the new state or approximately the new state that we end up with it's very simplified but this you can think of as a state transition function
+
+With that out of the way, now it's actually time to start with the easy work, because we have now this function f, and this function f specifies how we think this internal state of the drone evolves over time.
+
+Something I forgot to mention, but Julia also supports Unicode, so the people who are paying attention might have already seen it.
+
+I still think it's a great feature, but you can actually use Greek symbols, which makes this translation going from physics to code way more easy.
+
+and also allows you to retain this physical interpretation to it but that being said let's continue with the proper model so just remember now that we have f which encodes our state transition for our drone we're going to construct a generative model and here i have drawn it as a so-called forney style factor graph but i'm going to talk you right through it
+
+so what we have is these boxes and these boxes correspond to factors or functions on how variables relate to each other which one relates to another one and how are they interconnected through which functions and through um through which nodes let's say and the edges so the arrows here in this case correspond to the individual variables in our model
+
+The variables s in this example correspond to the state of the agent, so that contains the position of the agent in both x, y and the velocities also in the x, y direction.
+
 Furthermore, this state also contains the angle and this angular velocity to make life a bit simpler.
-U in this case corresponds to the actions.
-So the actions that we want in the end to also infer.
-Based on this figure, we can for example see around this function f,
-which was our state transition.
-That we put in the previous state.
-And the actions.
-And we get something out.
-To that we add a bit of Gaussian noise to accommodate for any uncertainties that are maybe in the parameters.
-In the environment because we use simplified drone physics.
-Maybe we want to add a bit of process noise there.
-Just to accommodate for the fact that these dynamics are not perfect.
-And that there will always be internal, external fluctuations that drive this drone.
-And that's the case.
-So we can do that.
-And we can do that.
-If we write this down in a probabilistic manner, we can construct this particular vector graph.
-Where we have these time slices which repeat over time.
-And mathematically we can write that in the equation that's on the slide.
-So we have a prior on the initial state.
-Which we refer to as P of S0.
-Which encodes our starting position, starting velocities, starting angles.
+
+u in this case corresponds to the actions, so the actions that we want in the end to also infer.
+
+based on this figure we can for example see around this function f which was our state transition that we put in the previous state and the actions and we get something out
+
+To that, we add a bit of Gaussian noise to accommodate for any uncertainties that are maybe in the parameters, in the environment, because we use simplified drone physics.
+
+Maybe we want to add a bit of process noise there just to accommodate for the fact that these dynamics are not perfect and that there will always be internal, external fluctuations that drive this drone.
+
+If we write this down in a probabilistic matter, we can construct this particular factor graph where we have these time slices which repeat over time.
+
+And mathematically, we can write that in the equation that's on the slide.
+
+So we have a prior on the initial state, which we refer to as P , which encodes our starting position, starting velocities, starting angles.
+
 And all the way at the end of the model, we have our goal prior.
-So P of ST.
-Where capital T promotes the length of our model.
-Also known as our horizon.
-This P of ST describes, okay, where do we actually want the agent to go?
+
+So P , where capital T denotes the length of our model, also known as our horizon.
+
+This P describes, okay, where do we actually want the agent to go?
+
 What do we want its velocity to be at the end?
+
 What do we want its angle to be at the end?
-All these kind of things.
-So together, P of S0 and P of ST, these two priors,
-de-encodes the starting and end position of our drone respectively.
-Whereas this middle part with the F function, the transition function that we just described.
-And the control U of which we can put a Gaussian prior because we want to infer it.
-Together these encodes the dynamics of the drone, the generative model.
+
+All these kinds of things.
+
+So together, P and P , these two priors, de-encode the starting and end position of our drone respectively.
+
+Whereas this middle part with the f-function, the transition function that we just described, and the control U, of which we can put a Gaussian prior because we want to infer it, together these encode the dynamics of the drone, the generative model.
+
 How does this look like?
-I'm just going to port it directly into RxInfer.
-So over the past couple of months, our colleagues have spent significant amounts of time
-actually improving our modeling language.
-Which makes it now even easier to craft your own probabilistic models in RxInfer.
-And with these effectively four lines, five lines of code, we can construct the model, the graph that we have on the left.
-So what I'm going to do is I'm going to talk you through it.
-And I think at the end, I think, hope all questions or I don't think there will be a lot of questions surrounding this particular model any longer.
-Because it's merely a replication of what's on the left.
-We're going to define this variable S1.
-And S1 in this case actually refers to the first state.
-But Julia indexes with one.
-So that's why it's not S0, but S1 instead.
-And S1, which encodes our starting position, we're going to encode that with a multivariate normal distribution.
-Whose mean is given by some initial state that we provide to the function.
-And whose covariance matrix we assume to be very narrow.
-Because we assume that we know the position of the drone at the initial time step.
-Then inside this for loop, we're going to basically unroll this middle segment of the drone.
-Of the generative model.
-We're going to create a prior on the control.
-So on this U of T.
-And we're going to put there also a multivariate normal because that's nice to work with.
-Whose mean is the mass times the gravitational constant divided by two.
-And then as a vector of two.
-The reason for this is because our prior assumption of this drone is that it exerts a force.
-Because we think it's flying.
+
+I'm just gonna report it directly into RxInfer.
+
+So over the past couple of months, our colleagues have spent significant amounts of time actually improving our modeling language, which makes it now even easier to craft your own probabilistic models in RxInfer.
+
+And with these effectively four lines, five lines of code,
+
+we can construct the model the graph that we have on the left so what i'm going to do is i'm going to talk you through it and i think at the end i think hope all questions or i i don't think there will be a lot of questions surrounding this particular model any longer because it's merely a replication of what's on the left we're going to define the variable s1 and s1 in this case actually refers to the first state
+
+But Julia indexes with 1, so that's why it's not S0, but S1 instead.
+
+And S1, which encodes our starting position, we're going to encode that with a multivariate normal distribution, whose mean is given by some initial state that we provide to the function, and whose covariance matrix we assume to be very narrow, because we assume that we know the position of the drone at the initial time step.
+
+then inside this for loop we're going to basically unroll this middle segment of the drone of this generative model we're going to create a prior on the control so on this u of t and we're going to put there also immersive multivariate normal because that's nice to work with whose mean is the mass times gravitational constant divided by two and then as a vector of two
+
+The reason for this is because our prior assumption of this drone is that it exerts a force because we think it's flying.
+
 So it would make sense that we assume the force of the engines will be just enough maybe to balance the drone in the air.
-So this mg divided by two, which is actually the force of the left and right rotor respectively.
-They compensate for the force of gravity.
-If the engine or the drone were to be upright.
-So here we provide some additional information that allow us to improve convergence and improve also estimation.
-Because we know that the drone is probably not going to drop out of air.
-We want it actually to kind of stabilize and stay at its position.
-So we do that here by putting this prior on the control.
-Then following that is our state transition.
-So how do we think our state evolves over time?
-And this is where the dynamics of the simplified run that we talked about on the previous slide actually come into play.
-So the mean of the next state will be given by this function f over the previous state and the corresponding actions.
-And the drone, the environment and the discretization over time.
-Together with some noise because of the unknown dynamics.
+
+So this mg divided by 2, which is actually the force of the left and right rotor respectively,
+
+they compensate for the force of gravity if the mode of the engine or the drone were to be upright so here we provide some additional information that allow us to improve convergence and improve also estimation because we know that the drone is probably not going to drop out of air we want it actually to kind of stabilize and stay at its position so we do that here by putting this prior on the control
+
+then following that is our state transition so how do we think our state evolves over time and this is where the dynamics of the simplified run that we talked about on the previous slide actually come into play so the mean of the next state will be given by this function f over the previous state and the corresponding actions and the drone the environment and the discretization over time
+
+together with some noise because of the unknown dynamics.
+
 Maybe we've got some internal external fluctuations, uncertainties, stochastic behavior.
+
 So that's all something that we also encode in this multivariate normal distribution.
-So that incorporates this for loop.
-And that this for loop basically unrolls this segment that's on the left containing this p of u, this f, and this norm.
-Then finally we finish up our model by putting this goal prior at the end.
-So at the horizon plus one because of the indexing, we're going to put the multivariate normal,
-which mean is located at the goal containing our goal position, goal, the velocities that we wish to attain at the goal, the angle at the goal, etc., etc.
-And together these couple lines of code, effectively there are just five, they create the generative model that's on the left.
+
+So that incorporates this for loop and that this for loop basically unrolls the segment that's on the left containing this p , this f and this norm.
+
+Then finally, we finish up our model by putting this goal prior at the end.
+
+so at the horizon plus one because of the indexing we're gonna put the multivariate normal whose mean is located at the goal containing our goal position goal the velocities that we wish to attain at the goal the angle at the goal etc etc and together these couple lines of code effectively they're just five they create the generative model that's on the left
+
 So that's great.
+
 We have crafted the model of how we think the drone evolves over time.
+
 We have derived some simplified equations to model its states dynamics.
+
 And now we want to do inference.
+
 So we are interested in computing the marginal distributions over both actions and states.
+
 Basically, we want to ask our model, okay, it's nice that you have encoded this starting and end position in the model.
+
 But in order to obtain that, how can we actually reach that?
+
 How can we actually do that?
+
 So we're interested in figuring out what is actually the marginal distribution over the actions.
-So this q of u.
-And what is the marginal distribution over the states?
-So what forces do we need to apply to go from position a to position b?
-And how will this trajectory going from a to b look like?
-In the general case, if we were to just try to solve this equation and compute these marginal distributions,
-then we would have to integrate over all other parameters.
-But that's very computationally heavy, because there are a lot of parameters in our model.
+
+So this Q of U. And what is the marginal distribution over the states?
+
+So what forces do we need to apply to go from position A to position B?
+
+And how will this trajectory going from A to B look like?
+
+In the general case, if we were to just try to solve this equation and compute these marginal distributions, then we would have to integrate over all other parameters.
+
+But that's very computationally heavy because there are a lot of parameters in our model.
+
 So doing this in a naive way would not be efficient at all.
+
 But there is luckily a way to make it efficient, namely through message passing.
+
 So let's dive a bit deeper into how that actually looks like.
+
 So for this purpose, I've created this simplified factorized model to make sure everyone can kind of follow along.
-So we have the different factors, fa, fb, fc, and fd.
-Each linked to some of the variables from x1 ranging to x6.
+
+So we have the different factors FA, FB, FC and FD.
+
+Each linked to some of the variables from X1 ranging to X6.
+
 And each factor is only connected to the variables to which it also relates.
+
 It's a simple case, right?
-Suppose now that we wish to compute the marginal here over the variable x4.
-Doing this naively would require us to integrate out this factorized model over all variables x except for x4.
-However, that's computationally heavy, as I mentioned earlier, because we have five variables to integrate over.
-And that might be a challenge because we're in this very high dimensional space then.
-Luckily, what we can do is we can make use of that these factors are not connected to everything.
-So the factor nodes that are on the left are not connected to each of the variables.
-And this turns out to be very beneficial from an efficiency standpoint.
-So we can effectively split up this large integration over the entire model fx into a set of smaller integrals.
-Simply by making use of this distributive property of integration where we can kind of separate them out, put some parts into brackets.
-And by doing so, this large integration problem actually reduces into a couple smaller integration problems, which are more efficient to solve.
-So we can also give an interpretation to this.
-For example, this fa of x1, x2 integrated over the variable x1.
-You can also think of this as closing the box, as we demonstrate on the left, over that factor fa.
-And this is the result of this we call a message.
+
+suppose now that we wish to compute the marginal here over the variable x4 doing this naively would require us to integrate out this factorized model over all variables x except for x4 however that's computation heavy as i mentioned earlier because we have five variables to integrate over and that might be a challenge because we're in this very high dimensional space then
+
+luckily what we can do is we can make use of that these vectors are not connected to everything so the vector nodes that are on the left are not connected to each of the variables and this turns out to be very beneficial from an efficiency standpoint so we can effectively split up this large integration over the entire model fx into a set of smaller integrals
+
+simply by making use of this distributive property of integration where we can kind of separate them out put some parts into brackets and by doing so this large integration problem actually reduces into a couple smaller integration problems which are more efficient to solve we can also give an interpretation to this for example this f a of x1 x2 integrated over the variable x1
+
+You can also think of this as closing the box, as we demonstrate on the left, over that vector f .
+
+And this is, the result of this, we call a message.
+
 So this message you can think of as a summary of a particular part of that particular graph, of a part of the graph.
+
 And we can iterate this a couple of times.
-So this message mu of x2, if we propagate that into the next node, this fb, and we solve the corresponding integration with this double integration over now x2 and x3,
-we get a new message mu of x4.
-And we can do this on all the edges and over all the factor nodes here in our model.
-We can integrate over the single node fd, over the node fc, where we have an incoming message mu of x5.
-And what we end up with, and that's the interesting part, is that all these messages are relatively easy to compute.
-They're relatively small because they do not require this huge integration.
-The funny thing here is, is that this marginal, the one that we're interested in, this q of x4, is now simply the product of mu of x4 times the other mu.
+
+So this message mu ,
+
+if we propagate that into the next node this fb and we solve the corresponding integration with this double integration over now x2 and x3 we get a new message mu of x4
+
+and we can do this this on all the edges and all the over all the factor nodes here in our model we can integrate over the single node fd over the node fc where we have an incoming message mu of x5 and what we end up with and that's the interesting part is that all these messages are relatively easy to compute they are relatively small because they do not require this huge integration
+
+The funny thing here is, is that this marginal, the one that we're interested in, this Q of X4, is now simply the product of mu of X4 times the other mu.
+
 So the messages that are actually colliding on that edge, and then of course renormalized.
+
 But that marginal distribution can simply be computed on a very local level by multiplying the messages that are flowing over these edges.
+
 Hence making it very efficient to solve this integration problem.
+
 And this is also how we actually solve inference in our toolbox.
+
 So in the probabilistic generative model that we created for the drone, we can use message passing to solve this marginalization in a very efficient manner.
-To give you an example, these are some benchmarking results that we obtained with RxInfer.
-So this is the final step of the model that we've done.
-On the left you can see how long it takes for a simple stage-based model, which is similar to the model that I've shown before.
-But you can think more of this like in a common filter setting for people who have a bit of familiarity with control systems.
-And we can see that the filtering and the smoothing both scale very well.
-They scale very nicely in the number of observation, or in the length of the model.
-So just linearly basically.
-On the right we also do a comparison between RxInfer, so R toolbox, and Turing.
-Turing is another toolbox in Julia, which doesn't use message passing to solve the actual marginalization problem.
-But instead it reverts to sampling.
-So instead of computing everything kind of analytically or mostly analytically or with approximations, it draws a lot of samples and tries to extract statistics from this.
-But as you can see, the left axis is on the log scale.
-So we obtain significant performance improvements in comparison to the sampling-based methods.
-And that's also why we are pushing for RxInfer, because it's just way more efficient to perform these competitions with message passing in comparison to sampling-based methods.
-There is one thing in our model.
-So if you recall these drone dynamics, then our state transition was quite nonlinear.
-So it was very challenging, or it is very challenging, to do exact message passing with this nonlinear node.
-Because if we go from the previous state to the next state, then the distribution of this next state will no longer be nice in Gaussian.
-But it might be a distribution which is outside of the distribution or outside of the family of exponential distributions, let's say.
-So it requires some approximations in order to actually do inference around it.
-So in the experiments, I have used unscented, which we can just specify with the little code block on the right.
-And what this does, it draws a very small but very informative set of samples around the incoming Gaussian distributions,
-which capture the first and second moment of that distribution.
-So the mean and variances of these sigma points, these samples, these are still the same as the statistics of the incoming normal distribution.
-What we then do is we use these very carefully selected samples to propagate through the nonlinearity.
-And based on the transformed sigma points, we then reconstruct what the Gaussian at the output could have looked like.
-So this unscented allows us to make approximations through this nonlinearity.
+
+give you an example these are some benchmarking results that we obtained with rx infer on the left you can see how long it takes for a simple state space model which is similar to the model that i've shown before but you can think more of this like in a common filter setting for people who have a bit familiarity with control systems and we can see that the filtering
+
+and the smoothing both scale very well.
+
+They scale very nicely in the number of observations or in the length of the model, just linearly, basically.
+
+On the right, we also do a comparison between RxInfer, so our toolbox, and Turing.
+
+Turing is another toolbox in Julia which doesn't use message passing to solve the actual marginalization problem, but instead it reverts to sampling.
+
+so instead of computing everything kind of analytically or mostly analytically or with approximations it draws a lot of samples and tries to extract statistics from this but as you can see the left axis is on the log scale so we obtain significant
+
+performance improvements in comparison to the sampling based methods and that's also why we are pushing for rx infer because it's just way more efficient to perform these competitions with message passing in comparison to sampling based methods there is one thing in our model so if you recall these drone dynamics then our state transition was quite non-linear so it was very challenging
+
+or it is very challenging, to do exact message passing with this non-linear node.
+
+Because if we go from the previous state to the next state, then the distribution of this next state will no longer be nice and Gaussian, but it might be a distribution which is outside of the family of exponential distributions, let's say.
+
+it requires some approximations in order to actually do inference around it so in the experiments i have used unscented which we can just specify with the little code block on the right and what this does it draws a very small but very informative set of samples around the incoming Gaussian distributions
+
+which capture the first and second moment of the distribution so the mean and variances of these sigma points these samples these are still the same as the statistics of the incoming normal distribution what we then do is we use these very carefully selected samples to propagate through the non-linearity and based on the transformed sigma points we then reconstruct what the gaussian at the output could have looked like
+
+So this unsumpted allows us to make approximations through this non-linearity.
+
 With that in place, we can actually perform inference.
+
 So the code block on the left bottom is all you need in order to get the drone running.
-So inside the in var function, we specify a model, which was the drone model that we specified in one of the previous slides.
+
+So inside the infar function, we specify a model, which was the drone model that we specified in one of the previous slides.
+
 We specify its data.
-Although it's not observing something directly and it's more doing a planning task,
-we can still supply it with the initial state and the goal state.
-Where do we want the agent to move to?
-And this meta object corresponds to the approximations that we wish to take.
-And that's all.
-That's all that's necessary in order to actually get this drone up and running.
-And in order to demonstrate this, we have a very nice experiment created by Dimitri, one of our colleagues,
-where we have this drone moving around.
-But it will be, it's more complicated than, or I would say the plotting is more complicated than what I've shown on the previous slide.
-Because actually getting this plotting to work requires way more code than actually getting our inference to work.
-But what it allows us to do is not only to do this planning, but also to do this really in an online manner.
-So here in this particular example, we have created this video where on the fly we are changing parameters.
-So we're increasing the mass of the drone, making it heavier.
-We're increasing the size of the drone, so it's radius.
-It's engine power, like what are the limits of this drone, what can it obtain?
+
+although it's not observing something directly and it's more doing a planning task we can still supply it with the initial state and the goal state where do we want the agent to move to and this meta object corresponds to the approximations that we wish to take and that's all that's all that's necessary in order to actually get this drone up and running
+
+and in order to demonstrate this we have a very nice experiment created by dimitri one of our colleagues where we have this drone moving around it will be it's more complicated than or i would say the plotting is more complicated than what i've shown on the previous slide because actually getting this plotting to work requires way more code than actually getting our inference to work
+
+uh but what it allows us to do is not only to do this planning but also to do this really in an online manner so here in this particular example we have created this this video where on the fly we are changing parameters so we're increasing the mass of the drone making it heavier we're increasing the size of the drone so it's radius it's ancient power like what are the limits of this this drone what can it obtain
+
 Gravity, perhaps you want to move to another planet and test your simulation there.
+
 But we're changing these characteristics on the fly.
-And with RX and Ferb, we are still able to process kind of this, do this planning task.
-That being said, all the code and the examples that I showed you today,
-they are publicly available on the reactive base organization.
-So in the RX-infer-examples.gl repository, you can find the code required to run actually the drone experiment.
-It will be a simplified experiment, so not the one on the previous slide,
-because that would be way too intense to, that would be just too overwhelming to have a look at.
-But the main characteristics of this particular drone demo are available here.
-And if you have any questions, want to try it out, please let me know after,
-or contact me if you have issues.
-But the code that we developed for this particular live stream is actually publicly available.
-And with that, I would like to thank you, of course, for this very nice opportunity, for this nice audience.
-If you want to have more information, feel free to reach out to any one of us.
-Reactive base, file issue, whatever you've seen deemed pretty.
-You can contact us, research group, BiasLab, our spin-off, LACE Dynamics, for industrial applications.
-But most importantly, for reactive base, I want to say that we are also looking for collaborators.
-So if you got motivated by this talk, got inspired to create your own cool applications,
-please reach out to us and hopefully help us develop RX-infer into the toolbox of the future.
-I think that's something that I would like to strive for.
-So if you're inspired, reach out and we'll make sure that there are amazing opportunities lying ahead.
-And that's all. Thanks a lot for the attention.
-And I hope it was an inspiring talk that got you engaged with RX-infer, got you excited.
-So if you have any questions, please let me know.
-Awesome. Thank you.
-Very cool presentation.
-Albert, do you want to give any first or overview remarks?
-And then Chris and Kovac, we can discuss and ask some questions too.
-Well, not really in a sense that, yeah, it was, although it was the first time I saw this presentation,
-it was a great part.
-I mean, I knew the underlying project behind that and how the drone works,
-but the presentation, I think, was very nice.
-It also connected how, well, the Bayesian inference is basically,
-how is it connected to the goal-driven behavior.
+
+And with RX and VIRB we are still able to do this planning task.
+
+that being said um all the code and the examples that i showed you today they are publicly available on the reactive base organization so in the rx infer examples.jl repository you can find the code codes required to run actually the drone experiments
+
+it will be a simplified experiment so not the one on the previous slide because that would be way too intense to over that would be just too overwhelming to have a look at but the main characteristics of this particular drone demo are available here and if you have any questions want to try it out please let me know after or contact me if you have issues but the code that we developed for this particular live stream is actually publicly available
+
+with that i would like to thank you of course for this very nice opportunity for this nice audience if you want to have more information feel free to reach out to any one of us
+
+reactive base found issue whatever you've seen deemed pretty can contact us research group bias lab our spin-off lace dynamics for industrial applications but most importantly for reactive base i want to say that we're also looking for collaborators so if you got motivated by this style got inspired to create your own cool applications
+
+please reach out to us and hopefully help us develop rx infer into the toolbox of the future i think that's something that i would like to strive for so if you're in inspired reach out and we'll make sure that there are amazing opportunities lying ahead and that's all thanks a lot for the attention and i hope it was an inspiring talk that
+
+
+SPEAKER_00:
+got you engaged with rx refer got you excited so if you have any questions please let me know awesome thank you very cool presentation albert do you want to give any first or overview remarks and then chris and kobus we can discuss and ask some questions too
+
+
+SPEAKER_02:
+uh well not not really in a sense that uh yeah it was uh although it was the first time i saw this presentation it was a great part i mean i i knew the the underlying project behind that and how the drone works but the presentation i think was very nice it also connected how uh
+
+while the Bayesian inference is basically how is it connected to the goal-driven behavior.
+
 I think it's really cool.
-Yeah, I just wanted to add along the presentation that Bart was speaking about this noise component
-when he drew, when he has drawn the graph.
-So this noise component also could be seen as basically the compensation
-for our poor approximation of the dynamics, right?
-Because we use this first order linear approximation.
-And, well, that's arguably not the best way of approximating the underlying physics,
-although it worked for this simplified demo.
-And there, well, I think I can just maybe add on how this demo can be extended
-or this model can be extended.
-Well, the first thing to do is, well, just to use a different approximation, right?
-That's one thing that comes to my mind.
-And another thing would be, and I think from the active inference perspective,
-would be to omit some of the parameters in the transition function,
-deem them unknown, and to let the agent figure out it
-through the interaction with the environment.
-So you could achieve that also with RxInfer
-by putting some priors on the metrics
-or putting some prior on the components of this metrics.
-And you can see how fast the agent actually learns the physics of the environment.
+
+Yeah, I just wanted to add along the presentation that Bart was speaking about this noise component when he has drawn the graph.
+
+So this noise component also could be seen as basically the compensation for our poor approximation of the dynamics, right?
+
+Because we use this first-order linear approximation.
+
+Well, that's arguably not the best way of approximating the underlying physics, although it worked.
+
+this simplified demo and there well i think i can just maybe add on how this demo can be extended or this model can be extended well the first thing to do is well just to use a different approximation right that's one thing that comes to my mind and another thing would be and i think from the active inference perspective uh would be to omit some of the parameters in the transition function
+
+deem them unknown and to let the agent figure out it uh through the interaction with the environment so you could achieve that also with a rigs infer by putting some priors on the on the matrix or putting some prior on the components of this matrix and you can see how fast the agent actually learns the physics of the environment yeah
+
+
+SPEAKER_00:
+awesome i'll ask some quick questions from the live chat and then chris and kobus if you want to ask feel free okay so carlos asks is the reactive part based on events to trigger the pipeline or based on signals yeah yeah go ahead bart
+
+
+SPEAKER_01:
+yeah so what we or what dimitri did when he built it when he started building this rx inferred toolbox is he used a very different computing paradigm so normally you execute code from the top to the bottom but what he did is he used this reactive paradigm so based on events
+
+a particular computation is being executed and these events can be various it can change of course it depends very much on the context what an event is but often the event corresponds to making actual observations so especially for active inference agents if we make a new observation only then recomputations are being executed
+
+so basically the entire algorithm does nothing unless there is something to compute and i hope that kind of answers the question but i'm not entirely sure so
+
+
+SPEAKER_02:
+was a bit unclear maybe albert you can uh out to it if you have a better yeah i'm just not i'm just not sure which kind of reactive part was uh was meant in in the question because yeah there is the reactive part of the inference but also the demo itself was uh reactive right like when you are triggering this but but basically speaking about how how it works indeed it it it the
+
+it triggers on the event basically so in the event is that yeah something there are a few things that could be changed right it's either environmental change something changed in the environment
+
+uh and then we we sense this uh from from our sensors and then the inference follows right so there is uh just to add upon what bart said about this uh reactive part so message passing is a well-known algorithm i mean it's it's it's been around uh since uh pearl or i believe propagation perhaps later earlier but then
+
+The reactive is a particular implementation of this message passing, which is more kind of driven by how the system should work in the field.
+
 Yeah.
+
+
+SPEAKER_00:
 Awesome.
-I'll ask some quick questions from the live chat,
-and then Chris and Kobus, if you want to ask, feel free.
-Okay.
-So Carlos asks,
-is the reactive part based on events to trigger the pipeline or based on signals?
-Yeah.
-Yeah, go ahead, Bart.
-Yeah.
-So what we, or what Dimitri did when he built it,
-when he started building this RxInfer toolbox,
-is he used a very different computing paradigm.
-So normally you execute code from the top to the bottom.
-But what he did is he used this reactive paradigm.
-So based on events,
-a particular computation is being executed.
-And these events can be various.
-It can change, of course.
-It depends very much on the context what an event is.
-But often the event corresponds to making actual observations.
-So especially for active inference agents,
-if we make a new observation,
-only then re-computations are being executed.
-So basically the entire algorithm does nothing
-unless there is something to compute.
-And I hope that kind of answers the question,
-but I'm not entirely sure.
-So if I was a bit unclear,
-maybe Albert, you can add to it if you have a better.
-Yeah, I'm just not sure which kind of reactive part was meant in the question.
-Because yeah, there is the reactive part of the inference,
-but also the demo itself was reactive, right?
-Like when you are triggering this.
-But basically speaking about how it works,
-indeed it triggers on the event, basically.
-So in the event is that, yeah,
-there are a few things that could be changed, right?
-It's either environmental change,
-something changed in the environment,
-and then we sense this from our sensors,
-and then the inference follows, right?
-So there is, just to add upon what Bart said about this reactive part,
-so message passing is a well-known algorithm.
-I mean, it's been around since Perl,
-or I believe propagation, perhaps later, earlier.
-But then the reactive is a particular implementation of this message passing,
-which is more kind of driven by how the system should work in the field.
-Awesome.
-Yeah, with Magnus Kudal, we explored a lot of the message passing,
-talked a little bit about how all the messages could be passed at once,
-or the reactive paradigm where you could uncouple the rates of updating.
-Okay, I'll ask one more question from the live chat,
-and then Chris or Kobus.
-Fraser asks,
-Fantastic stuff!
-Double exclamation point!
+
+Yeah, with Magnus Kudal, we explored a lot of the message passing and talked a little bit about how all the messages could be passed at once or the reactive paradigm where you could uncouple the rates of updating.
+
+Okay, I'll ask one more question from the live chat and then Chris or Cobas.
+
+Fraser asks, fantastic stuff, double exclamation point.
+
 Uh-oh.
-If somebody wanted to help develop RxInfer with your organization,
-what are the ideal characteristics and backgrounds to have?
-I think we are very open.
-So also within our lab,
-we have a huge variety of backgrounds,
-ranging from computer science to physics,
-electrical engineering for myself, for example.
-So there is a wide variety of backgrounds possible.
-Of course, we assume that,
-or we would like coding to be something that you're good at or willing to learn,
-because I think that's one of the most important things,
-of course, to develop a software engine.
-And all the rest,
-I think we can provide you with excellent materials to get crossed,
-or to get familiar with the methods that we use,
-or get acquainted with the models that we have developed in the past.
-So,
-personally,
-when I started in this group,
-and when I started working on this project,
-I also didn't have any background.
-So I used to be an air electrical engineer.
-I never heard about,
-well,
-I was taught probability theory,
-and then quickly forgot about it.
-So my background was very different.
-And it's maybe a bit difficult to get started,
-started directly with all this probability message passing,
-and all this entire paradigm.
-But it's definitely a very nice ride to learn.
-So,
-I would say,
-if you're willing to learn,
-willing to make a nice contribution,
-then that's always welcome.
-Yeah.
-Yeah.
-Well,
-we are mostly writing stuff in Julia,
-right?
-So Julia is sort of,
-I mean,
-I mean,
-it's learnable language,
-right?
-It's not like,
-if you don't know Julia,
-you can't help us.
-No,
-that's not,
-absolutely not true.
-So we welcome people from different programming backgrounds.
-And besides,
-there are different branches on how you can help within this Rx-Inferrin,
-basically,
-the whole reactive base ecosystem,
-because it consists not only of the inference engine,
-which I must say,
-it's the most difficult part for contributing,
-because there are many intricacies involved within this inference language.
-But there is also GraphPPL,
-right?
-There's also Rocket.
+
+If somebody wanted to help develop RxInfer with your organization, what are the ideal characteristics and backgrounds to have?
+
+
+SPEAKER_01:
+i think we are very open so also within our lab in bias that we have a huge variety of backgrounds range from computer science to physics electrical engineering for myself for example so there is a wide variety of backgrounds possible of course we assume that or we would like coding to be something that
+
+you're good at or willing to learn because i think that's one of the most important things of course to develop a software engine and all the rest i think we can provide you with excellent materials to get across or to to get familiar with the methods that we use or get acquainted with the models that we that we have developed in the past
+
+so personally when i started in in this group and when i started working on this project i also didn't have any background so i used to be an electrical engineer i never heard about well i will start probability theory and then quickly forgot about it um so my background was very different and it's maybe a bit difficult to get started directly with all this probability message passing out this entire paradigm
+
+but it's definitely a very nice ride to learn so i would say if you're willing to learn willing to make a nice contribution then that's always welcome
+
+
+SPEAKER_02:
+yeah well we are mostly writing stuff in julia right so julia is sort of i mean i mean it's learnable language right it's not like if you don't know julia you can't help us no it's not absolutely not true so we welcome people from different programming backgrounds and besides there are
+
+different branches on how you can help within this RxInference basically the whole reactive base ecosystem because it consists not only of the inference engine which I must say it's the most difficult part for contributing
+
+Because there are many intricacies involved within this inference language.
+
+But there is also GraphPPL, right?
+
+There is also Rocket.
+
 There are other packages which basically constitute the whole ecosystem.
-And yeah,
-well,
-you don't have to be an expert in Bayesian inference to contribute to Rocket,
-or you don't have to be,
-again,
-an expert in particular approximations to contribute to a model builder.
-So,
-and of course,
-the documentation is something which always needs an update,
-right?
+
+And yeah, well, you don't have to be an expert in Bayesian inference to contribute to Rocket.
+
+or you don't have to be, again, an expert in particular approximations to contribute to a model builder.
+
+And of course, the documentation is something which always needs an update, right?
+
 So we don't dismiss people for contributing to the documentation.
-That's extremely important for the community and for ourselves,
-because we can see,
-okay,
-so where are the parts which we could explain better or actually improve our
-ecosystem?
+
+That's extremely important for the community and for ourselves because we can see, okay, so
+
+Where are the parts which we could explain better or actually improve our ecosystem?
+
+
+SPEAKER_03:
 Awesome.
+
 Kopus?
+
 Very interesting talk.
-Thank you very much.
-I have a question about categorical examples,
-where the control space consists of values from a categorical distribution.
-So,
-does RxInfer have any such examples available?
-We do.
-We do.
-So,
-we do not only support continuous variables in this case,
-but we also support a variety of categorical,
-yeah,
-Renouli distributions,
 
-The categorical distributions themselves.
+Thank you very much.
+
+I have a question about categorical examples where the control space consists of values from a categorical distribution.
+
+So does Oryx in Per have any such examples available?
+
+
+SPEAKER_01:
+We do, we do.
+
+So we do not only support continuous variables in this case,
+
+But we also support a variety of categorical distributions, categorical distributions themselves.
+
 We do have a lot of examples.
-So,
-if you visit the website,
-rxinfer.ml,
-there is this huge list of examples,
-use cases,
-some of which feature categorical distributions as well,
-modeling as,
-yeah,
-all the rate,
-ranging from modeling as simple coin tools,
-to more advanced examples.
-But we do offer functionality in both the discrete domain,
-as in the continuous domain.
-Yeah.
-Okay.
+
+So if you visit the website rxinferred.ml, there is this huge list of examples, use cases, some of which feature categorical distributions as well.
+
+All the way ranging from modeling a simple coin toss to more advanced examples.
+
+
+SPEAKER_02:
+but we do offer functionality in both the discrete domain as in the continuous domain yeah okay yeah go ahead yeah I just wanted to add there is well the most uh kind of uh
+
+famous example or hello world examples into the categorical world within I think is hidden market model and I think we have an example on that I'm not sure that we have incorporated the control within that example that's probably learning the transition matrices for observations and well the hidden state but there is
+
+I think nothing's stopping you from introducing the control for a certain discrete type of Markov model.
+
+
+SPEAKER_03:
 Thank you.
-Yes.
-Yeah,
-go ahead.
-Go ahead.
-Now,
-I just wanted to add,
-there is,
-well,
-the most,
-kind of,
-famous example on,
-or,
-hello world examples,
-into the categorical world within,
-I think,
-is,
-is hidden market model.
-And I think we have an example on that.
-I'm not sure that we have incorporated the control within that example.
-That's probably learning the transition matrices for observations and,
-and,
-well,
-the hidden state.
-But there is,
-I think,
-nothing stopping you from introducing the control for,
-for a certain,
-discrete type of Markov model.
-Thank you.
-And then I use VS code.
-And I do have problems with Greek symbols.
-When they contain multiple characters in a superscript or subscript,
-for example.
-So do you guys use VS code at all?
-And if so,
-do you have a best practice to,
-to solve my problem?
-We do use VS code.
-I think our entire lab uses VS code because it does turn out to be a very,
-very nice tool.
-So it's good that you mentioned this.
-Regarding the subscripts and the superscripts that you mentioned is,
-personally,
-I try to avoid them because oftentimes I completely agree that it looks nice to
-have this dot over variable,
-for example,
-to denote the derivative or to draw kind of the index with a superscript.
-But personally,
-to me,
-that clutters it a bit and also makes it more challenging to edit.
-So I just try to refrain from using sub and superscripts in VS code with this
-auto tab,
-although it looks very cool and might be nice for like demo purposes or actually
-experimentation or development.
-I always try to avoid them.
-So not a solution,
-but this is my kind of my take on it.
-Okay.
-Yeah,
-I can understand.
-Yeah,
-because,
-and another possible problem with super and subscripts is they can appear very
-small and I often find myself having to zoom in a bit to,
-you know,
-discriminate between symbols.
-And then my final question,
-to what extent can you guys parallelize within RX infer?
-Are there obvious low hanging fruit choices to,
-to apply parallelization?
-In RX infer?
-Yes.
-So,
-um,
-it's good that you mentioned this because at the moment we have actually a
-master's student who is kind of working on this particular,
-or trying to work on this project,
-uh,
-where we try to parallelize the message passing and the computation,
-for example,
-of the marginals.
+
+And then I use VS Code and I do have problems with Greek symbols when they contain multiple characters in a superscript or subscript, for example.
+
+So do you guys use VS Code at all?
+
+And if so, do you have best practice to solve my problems?
+
+
+SPEAKER_01:
+we do use vs code i think our entire lab uses vs code because it has turned out to be a very very nice tool so it's good that you mentioned this regarding the subscripts and the superscripts that you mentioned is personally i try to avoid them because oftentimes i completely agree that it looks nice to have this dot over a variable for example to denote the derivative or to draw kind of the index with a superscript
+
+but personally to me that clutters it a bit and also makes it more challenging to edit so i just try to refrain from using sub and superscripts in vs code with this auto tab although it looks very cool and might be nice for like demo purposes for actually experimentation or development i always try to avoid them so not a solution but this is my kind of my take on it
+
+
+SPEAKER_03:
+okay yeah i can understand uh uh yeah because and another possible problem with super and subscripts is they can appear very small and i often find myself having to zoom in a bit to you know discriminate between certain symbols and then my final question
+
+To what extent can you guys parallelize within RxInfer?
+
+Are there obvious low-hanging fruit choices to apply parallelization in RxInfer?
+
+
+SPEAKER_01:
+yes so it's good that you mentioned this because at the moment we have actually a master student who is kind of working on this particular or trying to work on this project where we try to parallelize the message passing and the computation for example of the marginals
+
 So there are opportunities there to do some sort of parallelization.
-Um,
-in general,
-at the current moment,
-our message passing is all linear,
-unfortunately.
-However,
-there have been papers where they also parallelize that,
-although it seems that it's impossible to do.
-Apparently it's still this,
-uh,
-but that's something perhaps for a future project.
-So at the moment we do not provide a lot of parallelization around RX infer,
-but in the future,
-this is definitely on top of our agenda to make also improvements,
-uh,
-in terms of performance and in computational speed.
-Um,
-uh,
-just one quick question,
-um,
 
-another one,
+In general, at the current moment, our message posting is all linear, unfortunately.
 
-um,
-have you guys thought of approaching,
+However, there have been papers where they also parallelized that, although it seems that it's impossible to do.
 
-big players like Amazon web services,
-for example,
-to,
+Apparently, it still is.
 
-you know,
-and present this to them and try and get them to incorporate it into their,
-into their tools.
-Um,
-we have been,
-um,
-so with Lace dynamics,
-kind of the spin off company,
-which also uses RX infer to develop real applications,
-let's say for customers,
-we have considered this,
-this option.
-Um,
-but at the moment we have not been in contact to any of these,
-these companies or clients.
-Uh,
-sorry.
-No,
-I just wanted that to,
-we,
-we haven't talked to none of,
-uh,
-Fang.
-
-so that's,
-that's,
-
-yeah,
-we haven't done yet.
-
-we are,
-
-we are in talks.
-There are a few interested parties in the pipeline,
-but,
+uh but that's something perhaps for a future project so at the moment we do not provide a lot of parallelization around rx infer but in the future this is definitely on top of our agenda to make also improvements in terms of performance and computational speed
 
 
-uh,
-no,
-we haven't approached Amazon.
-No,
-not yet.
+SPEAKER_03:
+Just one quick question, please.
+
+Another one.
+
+Have you guys thought of approaching big players like Amazon Web Services, for example, and present this to them and try and get them to incorporate it into their standard tools?
+
+
+SPEAKER_01:
+we have been um so with lace dynamics kind of the spin-off company which also uses rx inferred to develop real applications let's say for customers we have considered this this option but at the moment we have not been in contact to any of these these companies or clients sorry
+
+
+SPEAKER_02:
+No, I just wanted to add that we haven't talked to none of Fang yet.
+
+Although we are in talks, there are a few interested parties in the pipeline, but no, we haven't approached Amazon yet.
+
+
+SPEAKER_00:
 Excellent.
-Thank you.
-Kobus.
-I'll ask another question in the chat and then Chris,
-if you have anything,
-Fraser asks,
-what are the largest current challenges to the reactive message passing paradigm
-for doing this kind of approximate Bayesian inference?
+
+Thank you, Cobus.
+
+I'll ask another question in the chat and then Chris, if you have anything.
+
+Fraser asks, what are the largest current challenges to the reactive message passing paradigm for doing this kind of approximate Bayesian inference?
+
+
+SPEAKER_01:
 It's a very good question.
-I think it also depends a lot on who you ask this question to,
-to me personally,
-um,
-the message passing,
-I think is a great method in itself.
-And it's also overcomes already a lot of challenges.
-What I think would be the most fruitful next step is to really start working on the actual modeling,
-the modeling aspects.
-So can we create maybe universal models,
-uh,
-hierarchical models?
-How can we do this such that these hierarchical models or similar actually solve more complicated tasks than a simple stage-based model can do.
-Um,
-so for me personally,
-I think that's where we can achieve the biggest gains in this modeling part.
-I'm not sure about what Albert thinks are the most big,
-what is the,
-yeah,
-what the biggest outstanding challenge is,
-but there are,
-I think,
-I think from,
-from,
-yeah,
-totally agree.
-from the,
-from the research perspective,
-the structural adaptation of,
-of the model,
-that's the most,
-I would say,
 
-the hardest and the most interesting,
-uh,
+I think it also depends a lot on who you ask this question to.
 
-uh,
-from my opinion,
+To me personally, the message passing, I think is a great method in itself.
 
-problem.
-That's like hand crafting this model,
-like for,
-for this type of drones,
+And it also overcomes already a lot of challenges.
 
-It's nice.
-It can be easy.
-Sometimes not.
-Well,
-if you go to the three dimensional,
-that's significantly,
-uh,
-more,
+What I think would be the most fruitful next step is to really start working on the actual modeling, the modeling aspects.
 
-complex.
-indeed like having,
-um,
-a machinery.
-Well,
-the thing,
-the interesting thing that we,
-we do have a machinery to,
-to do a structural adaptation,
-uh,
-because,
-uh,
-Rix and Ferb,
+So can we create maybe universal models
 
-does provide the,
-uh,
-an opportunity to extend your model,
-to patch it.
-Uh,
-although how to do that in principle,
-how do you indeed,
-uh,
-grow or,
-or,
-uh,
-shrink your model.
-And so in time while observing and being,
-being in the field,
-uh,
-I think this is the most challenging part indeed.
-And as for,
-well,
-there are certainly,
-uh,
-problems with,
-uh,
-approximations and,
-uh,
-uh,
-well,
+hierarchical models how can we do this such that these hierarchical models or similar actually solve more complicated tasks than a simple stage-based model can do so for me personally i think that's where we can achieve the biggest gains in this modeling part
 
-universal rules.
-Uh,
-that's something we also,
-I think,
-uh,
-outline in a few demos that,
-well,
-there could be a situation where the rule for computing the message,
-which,
-uh,
-Bart was showing is not,
-is not available.
-Uh,
-so there is always this,
-uh,
 
-right?
-to,
-uh,
-well,
-to commit to a simpler approximation to do it faster.
-You want to commit to,
-uh,
-uh,
-more accurate approximation,
-but it will take more,
-uh,
-resources,
-uh,
-computational resources and how to balance between these two.
-That's,
-that's another interesting,
-uh,
-question.
-How to,
-how to automatically decide.
-Uh,
-I think,
-I think this is,
-uh,
-what I would call,
-um,
-I would also add from our kind of educational and research side that one of the big challenges,
-thankfully one being approached is to develop the documentation and the examples.
-The examples help us learn, but also a lot of us are having good success bringing in code examples into code and language models and using the working examples to template new examples.
+SPEAKER_02:
+i'm not sure about what albert thinks are the most the biggest yeah what the biggest outstanding challenge is but there are i think from from yeah i totally agree from the from the research perspective the structural adaptation of of the model that's the most i would say yeah the hardest and the most interesting uh from uh from my opinion uh problem that's
+
+like hand crafting this model like for for this type of drones right it's nice it can be easy sometimes not well if you go to the three-dimensional that gets significantly uh more complex so indeed like having um a machinery well the thing the interesting thing that we we do have a machinery to to do a structural adaptation uh because arix infer
+
+uh does provide the an opportunity to extend your model to patch it uh although how to do that in principle how do you indeed grow or or shrink your model and so in time while observing and being in the field i think this is the most challenging part indeed and as for
+
+Well, there are certainly problems with approximations and universal rules.
+
+That's something we also outline in a few demos that well.
+
+There could be a situation where the rule for computing the message, which Bart was showing, is not available.
+
+So there is always this question whether you want to commit to a simpler approximation to do it faster, or you want to commit to
+
+more accurate approximation, but it will take more computational resources.
+
+And how to balance between these two, that's another interesting question.
+
+How to automatically decide.
+
+I think this is what I would call the most interesting challenges.
+
+
+SPEAKER_00:
+I would also add
+
+from our kind of educational and research side, that one of the big challenges, thankfully one being approached, is to develop the documentation and the examples.
+
+The examples help us learn, but also a lot of us are having good success bringing in code examples
+
+into code and language models and using the working examples to template new examples.
+
 So as the library of open source published models grows, that will become more possible.
-And then also there's a lifelong, fascinating journey of talking about how do you go from seeing a drone in the sky to getting those physics equations down and that kind of like approach to modeling.
+
+And then also there's a lifelong fascinating journey of talking about how do you go from seeing a drone in the sky to getting those physics equations down and that kind of like approach to modeling
+
 And how do we get to a graph, assuming that that's where the software package can pick up and render it kind of no problem.
+
 But there's still this very human, very collaborative process, which also could receive a lot of documentation and examples about getting to that kind of a model.
-Chris?
-Yeah, absolutely.
-Yeah, yeah. Chris, do you want to ask anything?
-No, I just wanted to say thank you guys very much. I really enjoyed the presentation.
-I liked, I really enjoyed how you broke down a lot of the top of my head right now is like the integration example.
-It was very intuitive. It made a lot of sense and it really highlighted a lot of the benefits and true power in what you guys have developed.
-So thank you guys. And I really, really appreciate your time and explain this to us.
+
+Chris, absolutely.
+
+Yeah, Chris, do you want to ask anything?
+
+
+SPEAKER_04:
+No, I just wanted to say thank you guys very much.
+
+I really enjoyed the presentation.
+
+I really enjoyed how you broke down a lot of the top of my head right now is like the integration example.
+
+It was very intuitive.
+
+It made a lot of sense and it really highlighted a lot of the benefits and true power in what you guys have developed.
+
+So thank you guys.
+
+And I really, really appreciate your time and explaining this to us.
+
+
+SPEAKER_01:
 Thank you for the kind words.
-If I could also add one comment, just as we've been working on it week by week, a real like arising insight that got us both excited and not daunted,
-but just realizing the scope of the package and the work was in comparing the Rx and FUR active inference examples
-with other active inference simulations like from PyMDP or built kind of custom outside of a package like the In4ANCE examples.
-And we realized that a lot of alternative approaches, people try to go as fast as possible to developing an active inference agent
-and then talk about like the variational free energy or the expected free energy of the agent.
-And so the package serves as a helpful accelerator to get to an agent, but that's not like the general agent.
-And then even making small changes to that scheme can be buried and scattered across different packages.
-And then there's all these other kinds of limitations that one quickly finds themselves encountering like in the education application settings.
-Whereas in Rx and FUR, it's such an engineering driven approach.
+
+
+SPEAKER_00:
+if i could also add yeah thanks for having us one um comment just as we've been working on it week by week a real like arising insight that got us both excited and not daunted but just realizing the scope of the package and the work was in comparing the rx and fur active inference examples with other active inference simulations like from pi mdp or built
+
+kind of custom outside of a package like the inference examples.
+
+And we realized that a lot of alternative approaches, people try to go as fast as possible to developing an active inference agent and then talk about like the variational free energy or the expected free energy of the agent.
+
+And so the package serves as a helpful accelerator to get to an agent
+
+but that's not like the general agent and then even making small changes to that scheme can be buried and scattered across different packages and then there's all these other kinds of limitations that one quickly finds themselves encountering like in the education application settings whereas
+
+In RxInfer, it's such an engineering-driven approach.
+
 So a lot of the engineers on our team were immediately more comfortable.
-And then a lot of people who had been playing with active inference from a computer science or from a philosophical and mathematical side
-were a little bit surprised because we were getting very low level with the node engineering.
-And then after wiring that up and understanding it, it's just like press play.
-So a lot of the focus on developing an agent was actually that focus was moved to better understanding the graph
+
+And then a lot of people who had been playing with active inference from a computer science or from a philosophical and mathematical side were a little bit surprised because we were getting very low level with the node engineering.
+
+And then after wiring that up and understanding it, it's just like, press play.
+
+So a lot of the focus on developing an agent was actually, that focus was moved to better understanding the graph
+
 that represents the ecosystem of shared intelligence.
-And there was less upfront focus on merely making it like an agent-based model
-because you could make an agent-based model like the drone,
-or you could develop other kinds of graphs that don't necessarily have an agentic basis.
-So that helped us realize that this is a much broader toolkit than doing active inference or agent-based modeling of any kind,
-but that those are use cases that are benefited greatly by it.
-Definitely.
-I think you are...
-Actually, the main point of our package.
-So RX-Refur allows us to enable or enables us to create these agents very quickly, very adapt, very efficiently.
-So if we compare this, for example, to...
-And you mentioned this already also from your engineers.
-If you would go through a traditional design cycle for an engineering firm, you would create a single model kind of thingy,
-a single algorithm, let's say 50 pages of code or something.
-And that's nice, these 50 pages of code, but it's unmaintainable.
-You need a lot of engineers to actually make improvements upon it.
-Yeah, if something changes, you don't know what's going to happen, right?
-Whereas with RX-Refur, we just have to specify this little piece of code which specifies the model.
-And then inference is automated, as you mentioned, you just press play.
-It isn't that easy, of course, from the actual engine perspective.
-But we try to make the user experience as good as possible to make it as easy on the user to build agents, active inference agents,
-or any other applications where you might need such machinery to actually complete a specific task.
-And hopefully by doing so, by making this user friendliness, one of our priorities is we can also enable active inference
-getting adopted across industries and across research groups.
-Yeah.
-After today, if we have a quick question, is there an email that we could send those questions to?
-I think from the Active Inference Institute, there is a communication channel.
-But Daniel, please correct me if I'm wrong, directly to BiasLab.
+
+And there was less upfront focus on merely making it like an agent-based model because you could make an agent-based model like the drone, or you could develop other kinds of graphs that don't necessarily have an agentic basis.
+
+So that helped us realize that this is a much
+
+broader toolkit than doing active inference or agent-based modeling of any kind but that those are use cases that are benefited greatly by it definitely i think you are
+
+
+SPEAKER_01:
+actually picking the main point of our package.
+
+So Rx refer allows us to enable or enables us to create these agents very quickly, very adapt, very efficiently.
+
+So if we compare this, for example, to, and you mentioned this already also from your engineers, like if you would go through a traditional design cycle for an engineering firm, you would create a single model kind of thingy.
+
+single algorithm let's say 50 pages of code or something and that's nice these 50 pages of code but that all yeah it's unmaintainable you need a lot of engineers to actually make improvements upon it yeah if something changes you know you don't know what's going to happen right
+
+Whereas with RxAffair, we just have to specify this little piece of code, which specifies the model and then inference is automated.
+
+As you mentioned, you just press play.
+
+It isn't that easy, of course, from the actual ancient perspective, but we try to make the user experience as good as possible to make it as easy on the user to build agents, active inference agents or any other applications where you might need such
+
+machinery to actually complete a specific task and hopefully by doing so by making this user friendliness one of our priorities is we can also enable active inference getting adopted across industries and across research groups yeah after today if we have a quick question is there an email that we could send those questions to
+
+I think from the Active Inference Institute, there is a communication channel, but Daniel, please correct me if I'm wrong, directly to BiasLab.
+
 But if you have questions, feel free to start a discussion on GitHub because we actively maintain it.
+
 We keep also a close watch on what's happening.
+
 And there might also have been people with similar questions before you.
-So my first hunch would be to create a discussion on GitHub.
-And we will definitely then get involved with one of our colleagues in order to help you out.
-Okay.
-Thanks.
-Well, if you have questions regarding Easy Dynamics venture, then you could use our info at lacedynamics.com as well.
-And also just to dump any other questions you want.
-Yep.
+
+So my first hunch would be create a discussion on GitHub and we will definitely then get involved with one of our colleagues in order to help you out.
+
+
+SPEAKER_02:
+okay well if if if you have questions uh regarding uh his dynamics uh venture then you could uh yeah use our info at lacedynamics.com as well so just to dump any other questions you want yep
+
+
+SPEAKER_00:
 Cool.
+
 Well, thank you all again.
+
 It's really awesome.
+
 I was thinking about how the packages are kind of factorized and modular and separable, almost like that's a theme that helps ecosystems work.
-So overall, thank you very much for the work and for presenting.
-We've really appreciated the chance to work with a package in our learning groups.
-And we'll look forward to seeing more examples and sharing more also from the projects that people are working on in the Institute.
-Thank you, Daniel.
+
+So overall,
+
+thank you very much for the work and for presenting.
+
+We've really appreciated the chance to work with a package in our learning groups, and we'll look forward to seeing more examples and sharing more also from the projects that people are working on in the Institute.
+
 Thank you very much.
+
+
+SPEAKER_01:
 It was a pleasure.
+
+
+SPEAKER_00:
 Thank you for having us.
+
 Yeah.
-Okay.
-Great.
+
+Okay, great.
+
 So see you all next time.
+
 Bye.
+
+
+SPEAKER_03:
 Thank you.
-Bye.
+
 Bye.
 
 ## ygmAhA18mkQ
 
-all right hello it is May 16th 2024
-we're in the RX and fur JL project with
-some guests from bias lab and
-participants and vzer will be sharing
-with us about the RX environments. JL
-package so thanks all for joining
-looking forward to this presentation and
-discussion go for
-it all right thank you Daniel uh so my
-name is V I am a second year PhD student
-in bias lab uh you may know Bas laab
-because we are the uh main authors of
-the RX infer package a package for
-reactive Beijing
-inference and last year when I was
-working with RX and fur um and doing
-well reactive beijan inference I found
-that there was a a lacking support for
-environments in the same reactive
-Paradigm uh and we were relying on
-reinforcement learning uh packages such
-as gymnasium or or reinforcement
-learning
-and I didn't really like it so I wrote
-RX environments. JL a package for
-reactive um environments which aims to
-uh complement RX and fur in the
-reactive um agent
-development um ecosystem so if we look
-at RX environments it's a very
-lightweight boiler plate package it
-contains a boiler plate code to make
-something that I call a reactive
-environment a reactive environment is
-a an environment that consists of
-entities where an entity can be an agent
-but it can also be a component of an
-environment or the entire environment
-itself and what we have to describe is
-how entities communicate with each other
-so every entity has its own Mark of
-blanket with with which it can
-communicate with other entities in the
-environment so in that sense it's very
-um related to active inference because
-well
-we have a very specific notion of the
-interior of an entity and the exterior
-of the entity and it's Mark of blanket
-and I try to replicate that in ARX
-environments so um to give a short demo
-we can dive right into the code I have
-prepared um the mountain car example in
-the uh documentation of ARX environments
-but just to Showcase to you that this
-gives you um more
-um flexibility to work with so we have
-on the left hand side I have my code
-because I'm going to manipulate this
-environment uh in real time and on the
-right hand side I have the environment
-so I have my landscape I hope you guys
-can see my cursor by the way uh I have
-the landscape and in the middle I have
-one agent one car a DOT representing a
-car um what's nice about RX environments
-is that I can send um actions to the
-environment so my landscape the
-environment is one entity the agent the
-car is a different entity and I can send
-a command that contains Engine Force on
-a scale from minus one to one so I can
-send uh minus one to The Entity and
-you'll see that the car starts driving
-up the hill it doesn't have a lot of
-Engine Force and I can live send
-different commands and you'll
-see that the car responds accordingly
-now what's nice about arcs environments
-is that as I said uh you'll get native
-uh multi-agent environments out of the
-box so if I just add a different agent
-Mountain car agent with some hyper
-parameters to the
-environment you'll see that there is now
-a second dot at the bottom of the valley
-a second car and similar to how this
-first car can be
-controlled we can control the second car
-too 01 was
-maybe uh this uh I should have maybe
-given this car a bit less engine power
-because it's clearly flying off the
-screen um but you get the gist um that
-we
-can um well control both cars
-simultaneously um and RX environments
-handles all this uh this communication
-natively reactively under the hood so my
-idea is or my next steps for this
-project are going to be to uh
-incorporate better into the ARX and fur
-ecosystem because I think that building
-agents uh with ARs environments in this
-way U that both the active inference
-Community as well as the arcs Ander
-Community can can can benefit from this
-so this is a very short overview of the
-things that ARX environments can do it
-can do a whole lot more um but I think
-that this is a very short demo that
-gives you the best idea of why it's nice
-that we're going to go reactive because
-you get stuff like this we can control
-in real time we can control multi-agent
-environments um and it's very um active
-inference e in that sense so on that
-note um I'll stop sharing my
-screen let's see and um yeah if you guys
-have any questions about this which I uh
-which I heard you have then I'll be very
-happy to take
-it awesome
-thanks very informative and hilarious
-Mountain car example yeah this this you
-you you can play with this Engine Force
-of this mountain car and I probably
-should have prepared that it doesn't fly
-off the screen but you I mean it gets
-the point for us right
-it's yeah okay um I'll share screen and
-just type and so everyone else in the
-group just go for asking any of the
-questions we'd already identified or any
-new questions arising so go for
-it um interested Rel
-between I I I don't understand you very
-well maybe there's do you understand c
-as well okay
-relationship
-between you're you're very very
-faint uh yeah okay
-well with stuff I I actually had a
-question do not on this particular page
-that um Daniel's sharing right now I
-tried my hand at let's say plugging in
-the mountain car the existing Mountain
-car agent in the RX and thir
-documentation into your Mountain car
-environment I wasn't quite able to do
-that but it appears that you you have
-done that uh in that example just then
-and then maybe I was missing something
-because in the in the documentation the
-RX environments documentation from
-mounting car I didn't see that there was
-a an agent that had you know
-instantiated the generative model uh
-much in the same way that the ARX infer
-documentation had and I thought oh okay
-this this is a wrapper or you know a
-nice API for me to specify an
-environment I I now have to go away and
-then specify my agent also but it seems
-is that what you did for that example
-just then or or did you just no no I
-just for this example just now I just
-used my um you
-know custom commands that I just uh sent
-myself um so this is something that I'm
-actively working on on uh combining the
-two um the mountain active inference
-Mountain car example on the ARX and fur
-website I believe is a bit
-um cheating in a sense because we give
-it all Environ Dynamics all functions of
-the environment Dynamics and then we uh
-do some uh some approximation to the
-posterior of what we have to do but in a
-sense it doesn't really discover that it
-has to do anything because it knows all
-the environment Dynamics so that's why I
-haven't really spent time on um
-incorporating this specific example
-because I feel that if we're going to
-demo this package plus an agent that it
-should be an agent that actually has
-capabilities of exploring the
-environment instead of knowing all the
-environment Dynamics and just while
-basically doing model predictive
-control right okay that makes it a bit
-clearer okay I I have a follow up maybe
-let somebody else um something just for
-now thank you very
-much so to give a very short answer to
-your question we can we can sit together
-if we uh on if want to Define an agent a
-generative model I know how to hoop the
-two up I just don't have a working
-example
-yet right okay I have I don't want to
-use this I don't want to use this agent
-from from the arxs and F documentation
-because indeed I feel that it's a bit
-cheating but it's my personal opinion
-right yeah yeah okay that that actually
-clears a lot of things off for me
-because I was kind of unclear like oh do
-I do I kind of plug that one in is that
-is that what I do yeah okay but that's
-not that functionality exactly CLE yeah
-we can um however there is a a subtlety
-there and that is something that I find
-very interesting in my research is if
-you open up this space or you open up
-your environment to be reactive then you
-want your environment to be able to um
-receive an action at any point in time
-so what we see in reinforcement learning
-is that you have a specific transition
-function the environment Waits until you
-send an action it will move the
-environment forward a pre-specified
-amount of time and it will emit to you
-an observation and a reward however if
-you make this entire thing reactive then
-well our agent would be able to emit at
-any point in time and also it would be
-able to get an observation at any point
-in time now that is a very
-interesting um setting to work with
-because now our agents should kind of be
-robust to getting an observation at any
-point in time specifically what if uh
-our agent that lives on some embedded
-device on some drone whatsoever it has
-less compute to do to do inference
-however well at some point we're going
-to have to send an observ or an agent an
-action back to the environment we're
-going to have to do something so this
-reactivity opens
-up uh a research Avenue for well right
-now for me because I find find this very
-interesting on how reactive truly
-reactive agents would look like if you
-see what I mean yeah yeah I do that's
-that's exceptionally exciting stuff it's
-it's awesome um okay but but okay just
-just to wrap up my my yes question there
-is no at the moment you kind of manually
-you know yes you put in the force limit
-and you say okay I'm going to kind of
-manually you know play around with
-letters and I have I have working
-examples with like ban therat or very
-very easy um which I probably I don't
-know if I have them on my machine right
-now or if they live somewhere like it
-works but the the thing that I got to
-work is model predictive control and not
-active inference yet so that's
-why awesome all right thank
-you you're welcome
-um is my yeah can you hear me a bit
-better now yes okay but um I'm uh
-interested in the relationship between
-orx environments and orex in fur um for
-example to put it simply is it possible
-to use only orx environments or is it
-supposed to be always be used in
-collaboration with RX and
-fur
-us yes the relation is that uh I wrote
-ARX environment
-specifically um as a complimentary
-package to ARX and fur so if you just
-want to do basian inference you use ARX
-and fur but I think if you want to build
-agents that you're better off using the
-the two together so RX environments
-is um a package that uses the same
-reactive backend as RX and fur so it's
-made to be compatible with ARX and fur
-however if you write um agents just with
-an algorithm you can use ARX
-environments by itself it's not
-mandatory to use ARX and fur they are
-separate packages there's not a
-dependency on ARX Ander however since um
-they share the same reactive back endend
-so the same package for reactivity under
-the hood which is also from bias laab
-which is rocket um if you want to build
-agents I would advise to to use RX INF
-fur so there they're disjoined but
-they're designed with each other in mind
-or ARX environments is designed with ARX
-Ander in
-mind so um if we um use this high level
-of a
-of abstraction given to us by ARX Vons
-uh do we lose
-anything uh or can we at any time dive
-into the lower levels by means of orex
-INF fur
-itself
-so um I would say yes because the
-inference process that happens in ARX
-and fur is disjointed from what's going
-on in ARX environment similarly to well
-what happens in in in real life so you
-can you can see ARX environments as a
-package in which you can make
-um like a digital twin of the
-environment but then whatever happens in
-the inference process in your agents
-well that's still RX andur like all RX
-andur um diagnostic tools or debuging
-tools should be available
-there um and a more practical question I
-know from based on the large papers um
-and uh Professor def as well they like
-to divide the um what's going on into
-these six methods the ACT future execute
-observe compute and slide so do you see
-that as kind of Superfluous in the orx
-orx environment setting
-or um is it is it fine to use that
-apprach
-let me Google the definition for
-Superfluous uh ah um that is a I'm going
-to spread very carefully in answering
-that questions uh I don't think it is
-Superfluous um because in a sense that
-it's if you want to design your agent
-such that it goes through those steps um
-then you're more than welcome to uh my
-personal opinion is that I'm I will I'm
-going to try and see if I can make an
-active inference agent that does
-inference in one step instead of having
-to act
-observe uh plan slide uh and so forth
-however for AR environment so for your
-environment it doesn't really matter how
-you will get to your uh to your action
-as long as well or not right you can you
-can send an action at any point in time
-and if you don't send an action the
-world will just continue that and arcs
-environments will just continue running
-there's no real constraints on that so
-that the design is to be as less
-constraining on on users as possible
-while opening up this reactivity uh
-um the reactivity aspect and also for
-um if you start with the package you
-could make what I call discreet
-environments they're they're a bit
-feeding I would say because they're
-basically just the arc environment's
-equivalent of a of a classical
-reinforcement learning environment where
-you have a prespecify time step every
-time but I wanted to make that to make
-the transition easier because if you go
-full reactive right off the bat I would
-say it's a very ambitious thing to
-do so I don't think I don't think it's a
-Superfluous
-algorithm
-um but I I also don't think it's a
-um
-well our environment doesn't constrain
-you to use it so I would
-say nice now let's say uh one has a need
-to write one's own node in the
-factory um put ARX environments support
-that kind of thing or is it kind of an
-irrelevant
-question it's it's in that sense I would
-say irrelevant because uh the um a
-custom node is something that lives in
-ARX and fur um and ARX environments
-really uh is concerned with everything
-that goes on outside of your inference
-process um then another quick question
-while playing with the um I think it was
-a thermostat problem in oric
-environments I wanted to see the time
-behavior of some variables like
-observations States controls um free
-energy and things like that but it
-wasn't straightforward to me how to plot
-those um in the arment settings uh is
-there uh an example that you can point
-as to or a fragment of code that shows
-us how to do
-that um I can make it because I I know
-how I can access so free energy is uh
-something that lives inside your agent
-so it's part of the inference process
-it's the you know it's the uh cost
-function if you will of of of the
-inference process so for free energy you
-would have to look at your uh would have
-to look into ARX and fur however
-everything that goes on in our
-environments we can extract it and we
-can plot it so both uh environment
-States as well as emitted controls uh or
-observations uh we can extract all those
-things um I can show a code
-fragment that does this because it's
-well one line um however I also
-understand that that is not something
-that
-uh well you probably remember after this
-meeting so I'll I'll make sure that uh
-we can design a
-uh uh an example that showcases this but
-in uh in a nutshell we can uh create a
-keep actor so this is a well uh an
-entity that will keep all everything
-that it gets
-uh we'll keep it inside memory and then
-we subscribe to the observations of the
-agent so we say well subscribe to
-observations and with this Ops keep
-actor uh we do
-this and if I then call OBS
-values this will contain all kinds of
-well ARS environment
-observations which is basically a
-wrapper struct for uh let
-me call data on this entire
-array and you'll get your individual
-observation so we can basically tap
-anywhere in this process uh anywhere in
-this communication we can we can tap
-whatever is being emitted so if I run
-this again now it will contain 400
-elements because well this environment
-is reactively running while we speak so
-the the the agent is getting more and
-more observations so you see this thing
-reactively growing every time I call
-uh or extract its uh its contents so
-there is definitely functionality in
-which you can sort of inspect this
-process um but yeah I I I have to stress
-that it's really distinct from the
-inference process so if you make an
-agent in ARX infer and you hook it up to
-ARX envir ments then you have to set up
-a similar procedure to extract free
-energy and stuff like that um from ARX
-and fur um and because I'm not the
-author of ARX and fur I I don't know how
-easy that is um but for AR environments
-I yeah this is one of the first things
-that I wanted to do see what my agent
-was sending see what my agent was
-observing so I made sure to build
-it yeah I'm not sure if what you just
-showed was uh recorded by us so if you
-could uh just make sure that that is
-included in your examples as well that
-would yes that that's my idea that we
-can uh or I I just wanted to Showcase uh
-for now such that you can so that you
-know that it exists but it wasn't meant
-to be well a big tutorial or anything I
-can just put it in the examples and uh
-uh yeah then then we can plot it that's
-that's not a problem
-okay thanks a
-lot you're
-welcome okay anyone else can go for a
-question or we have some other written
-ones or I can ask a
-question um I have a quick question I
-would just wonder once I don't know if
-you guys can hear me I hope so yes um
-fantastic um a lot of the examples that
-uh you have there and kind of the way
-I'm I'm probably naive in how I'm
-thinking about this um the ARX
-environment is modeling something in the
-real world um or at least that's the
-example that we're thinking of right now
-um is the is arc's environments capable
-of essentially
-modeling um more metaphysical spaces so
-if you think
-of your question in a way that you have
-a Time series or a space that you're
-trying to
-occupy but it's not a physical space
-it's a more theoretical space uh you
-know dimensionality that you're trying
-to have an agent
-navigate um is that something that this
-that you see that this
-is you know usable for or is this
-something that we need to kind of gear
-back towards the arent for um package
-itself to kind of build the more
-metaphysical concept of the environment
-that you're putting together does that
-make sense so yeah if I understand your
-question
-correctly um yeah I my answer to that
-would be that there's no a physics
-simulator or whatever in arcs
-environments it's purely the boiler
-plate to make whatever you write act
-reactively uh and expose reactive
-streams that you can then use in arcs
-and
-so um for example one of our colleagues
-has made a an
-environment that Returns the um the
-result of a stochastic differential
-equation so an agent could query with an
-action I want the realization at time T
-and the environment would respond with
-the actual value um and with this
-interplay of query in a stochastic
-differential equation and uh and getting
-a result you can cast solving a
-differential stochastic differential
-equation sort of a uh aasan stat based
-model uh I'm not an expert on this topic
-I just know that one of our colleagues
-uh did this so if I understand your
-question correctly that would be the
-sort of environments you were after or
-you were you were questioning about um
-so I would say yes you can so there's no
-there's no physics simulator or anything
-in there because that's a whole
-different uh a whole different topic um
-my main thing was just to make whatever
-code you guys write to make it
-reactive fantastic thank you now that
-makes a lot of sense I just wanted to
-clarify that since no it's
-perfect not thinking so much in robotics
-or querying like physical environments
-and thinking more along the lines of
-data environment so that's why I was
-trying
-to understand how we could utilize
-this yes yeah you can yeah and uh you
-can push it further right you can make a
-uh a combination of the two you can make
-a uh an environment that flies a drone
-uh your agent has to control the Drone
-but it can also query the environment
-for hey what is going to be my position
-in 5 seconds so kind of this this well
-abstract action that's basically
-querying the environment well since we
-have this uh this mechanism that we can
-depending on what action you send
-correspond or match this with an
-observation now you can do stuff like
-that there's nobody stopping you doing
-it whether or not it's useful for your
-agent well that's up to you I I was just
-yeah I'm I'm trying to make your
-environments as expressive as can or
-your the framework as expressive as I
-can and yeah you you can you can go wild
-with it right you can go
-crazy that's perfect because the agent
-that I'm kind of that I'm wanting to put
-together would need to actually walk
-through time in a certain way um and
-optimize its activities in a Time series
-um yeah and I was I was already
-expecting you that's why I brought up
-this this uh that's very cool I be very
-excited to see uh well whether or not
-you uh you can build your environment
-and ARS environment would be yeah very
-cool
-Absolutely I'll keep you updated then
-nice
-thanks the observable and actor roles in
-orx
-environments can any entity take on
-either of these roles or are there
-certain constraints for example
-let's say the agent must always have the
-actor role or
-something no they're completely
-unconstrained um there is no real
-distinction under the hood
-between uh entities or between something
-that represents an environment as
-something that represents an agent uh
-they are both entities in arcs
-environments um the only thing is that
-you can make uh something which I call
-an active or a passive entity by the way
-all this terminology it's all up for
-discussion I've thought about this and
-most of the terms that I come up with
-they they don't really fit what I what
-I'm trying to say um but an active
-entity is something that whenever it
-gets an observation or whenever it
-receives an action it emits or it at
-least considers emitting to uh
-subscribers for example the mountain car
-uh environment itself would be an active
-entity whenever the the agent sends an
-action to move the car it will
-correspond or it will match this uh this
-this action with well moving the car um
-whereas the agent whenever it gets an
-observation from the environment well it
-doesn't really have to do anything we
-have to in the later stage attach an
-inance process but that is something
-that's not ARX environments that is ARX
-and first so we we make this entity um
-passive in a sense that it it's it's an
-observer uh that can also send actions
-but those are not triggered by an actual
-algorithm that we write ourselves uh in
-arxs environments but it's a result of
-some inference process it's the triggers
-are external to the the reactive
-ecosystem that we've built in ARX
-environments
-itself so that's the only distinction
-that I make but you can yeah something
-that represents an environment or
-something that represents an an agent
-they're they're under the hood
-completely the same things they are just
-uh entities that that that can
-communicate with with with external
-entities do you think you could um in
-addition add a a discrete control space
-example for us as well because Mountain
-car and the evasion thermostat are both
-um continuous
-examples even if it's just a simple uh
-discrete control space or categorical in
-particular categorical control
-space maybe a simple maze example or a
-grid example you know like the windy
-grid that's often used in reinforcement
-learning even if it's just a simple
-windy
-grid windy grid yeah okay I'll I'll
-Google
-that just uh even if it's just a simple
-categorical control space because that's
-what our problems currently uh center
-around not so much continuous control
-spaces but uh categorical control
-spaces okay that's uh yeah I can do that
-okay I
-windy G world yeah okay I I can do
-that be
-excellent I ask sort of a very quick
-broad question about the whole
-ontology my when I first learned about
-this my own Na and and just sort of
-looking through the docs I thought oh
-okay this is this is a rapper around RX
-and thir for standardizing the creation
-of an Environ enironment that you will
-then use for for whatever purposes but
-it sounds to me it's it's not at all
-that it's it's really this is this is
-not even really a way of talking about
-an environment per se this is no it's
-more of a it's a communication protocol
-for active inference agents I would say
-yeah yeah it's like well you this this
-is a way to sort of standardize the the
-dietic interaction between you know two
-abstract entities U and that could be
-between environment and an agent you
-know or it could be something else
-entirely okay that's much much broader
-than what I was conceptualizing ex so I
-I when I when I started this indeed I I
-started as okay I want to standardize
-environment Creation in in our ecosystem
-in our fer and I had discussion with
-Magnus kudal who's also uh in in this
-Discord I saw and well we had some very
-interesting talks and he said well
-actually an environment and and an agent
-they're not so different right they
-just they just hand or they just receive
-data from each other and and handle them
-accordingly so yeah there is a certain
-uh symmetry there and then I thought
-well if there's a symmetry there then I
-can make an
-overarching uh programming concept and
-just kind of implement it that way and
-that's what I did and then it turns from
-just a way in which you can make an
-agent and an environment communicate to
-a in which you can communicate this
-whole network
-of uh of subscriptions and
-Communications um because there's yeah
-there's no constraints anymore so for
-example we run an environment in in uh
-in our lab with MCO actually that um has
-well a
-non-trivial uh entity interaction where
-we have a hearing aid that uh gets data
-from both the external world because it
-can well it has a microphone and it
-should register the external world but
-it can also get data from the user of
-the hearing aid saying hey I'm happy
-with the hearing aid settings yes or no
-so now we have a three entity
-environment we have the user we have the
-hearing aid and we have the uh the
-external world that just emits noise
-then we have a fourth entity which is
-our agent that should learn the
-preferences of the user that should get
-data from the hearing aid and should uh
-tweak the parameters inside of the
-hearing a so now we have four entities
-that are communicating in this
-non-trivial way and well we built this
-in arcs environments and it all holds up
-like it all just yeah it runs just
-because whenever we get data the hearing
-aid knows ah I get new data I get new
-noise I have to transform this noise and
-send it to the user and I have to do a
-f8 transform and send it to the agent
-for analysis uh and just because it does
-this reactively it's all tractable and
-all works nicely so yeah uh it it it
-turned out to be a bit of a uh a
-bigger well scope than I would have
-imagined but I'm yeah I I'm I'm not
-making any claims on on how large it
-actually is that's uh yeah
-cool this this is also very cool I'm
-very very thankful that you're you're
-working on this because I I I had the
-thought like oh what what what then is
-you know sort of predicated of the
-environment it's kind of like what we
-have the environment and the Asian
-they're kind of both being equally
-treated
-you it's a very interesting question
-right so so what the what is the actual
-actual
-difference um some people say well an
-agent has some sort of inferential
-process uh on how it comes up with an
-action but in a sense well we are all
-all just with our eyes and ears and
-muscles we have an interface to to the
-environment um but yeah in in in that
-sense we we are just all Mark of
-blankets with internal states that that
-that navigate this world uh and this
-well communication that we have with our
-outside world I yeah I try to replicate
-fastic
-thanks anyone else want to ask any
-questions yeah Kristoff or yeah yeah I
-have a question um I I didn't quite get
-what you um what you said about the
-difference between the typical
-reinforcement learning setting and the
-RX environments Could you um could you
-could you explain that again please that
-was very interesting sure sure if if you
-want or if you make an environment in JY
-in gymnasium we can we can look at
-the um at their documentation right so
-let's see
-gymnasium
-package so I go to gymnasium and I want
-to make my own custom
-environment I saw it here make your own
-custom environment i' I've visited this
-page before so we can make our
-environment blah blah blah and then you
-have this function step the step method
-usually contains most of the logic for
-your environment it accepts an action
-computes the state of the environment
-after applying that action and returns a
-five Tuple observation reward terminated
-truncated
-info so we write a function step that
-takes only an action so this is the main
-design Paradigm of JY and most
-reinforcement
-learning packages actually where I emit
-an
-action this action is incorporated into
-the world um but the time that uh the
-environment is uh simulated forward is
-constant so there's no notion of
-different time intervals whereas if I'm
-I'm a very big uh football effici out
-for the Americans that's soccer um but
-it's actually football but if I kick a
-ball I kick the ball the ball starts
-rolling
-well whether or not I do something the
-ball will just continue rolling like
-this this environment around me it
-doesn't wait for me to emit additional
-actions or I'm not consciously saying
-okay for the next second I do nothing
-and then the ball rolls okay for the
-next second I do nothing again and the
-ball rolls further no there is a in the
-real world there is a difference right
-we do something and then the world just
-continues
-so we can do something at any point in
-time and the world around us will just
-well the world keeps on turn um and
-that's what I was trying to do with with
-ARX environments is to um alleviate
-ourselves of
-this um communication protocol because
-this specifies I get one
-observation I can do one action per
-observation and that's it and in between
-uh different observations I have no
-power to do anything whatsoever also if
-I have an environment that instead of
-modeling one second forward I now do
-half a second well everything breaks
-down because now I have to emit actions
-at twice a speed or my observations
-don't correspond anymore with my
-internal model or there's all kinds of
-stuff that if you do it like this it
-turns kind of awkward and that's what I
-was trying to
-alleviate
-uh with with ARX environments is that
-I'm trying to make this communication
-between agent and environment as free as
-possible so if you have a hearing aid
-environment yeah that you can yeah
-that's that that's it if if I'm not yeah
-I'm rambling sorry good interrup that's
-a good that's a good explanation and U I
-think you also mentioned something about
-um some difficulty there because uh the
-the question then becomes like if you
-have multiple agents in with the
-environment then what exactly is the
-state of the world
-right um what exactly is the state of
-the world is not uh because you can just
-uh sort
-of you can have like a god entity that
-takes care of of of this stuff that that
-that kind of resolves all conflicts in
-that sense um the main question for me
-would be
-well we just took away your one moment
-to conduct an action in reinforcement
-learning you have one moment you can do
-an action and you'll get one observation
-we just took away this one moment and
-gave you the opportunity to act at any
-point in time well when are you going to
-do it right so you know the reason I'm
-asking about this is that it it
-immediately got me thinking about um
-stepen wolfram's work on Observer Theory
-so he's trying to formalize uh the
-notion of an observer right and um there
-is this um whole field that he basically
-invented uh for the physics project
-related to uh which calls multi multi
-computation I'm not really deep into um
-that yet but it seems some it seems
-somehow relevant you know as an agents
-interacting with the environment we
-effectively sample it precisely because
-it keeps rolling as we um do the
-internal computation required to um
-update our um our generative model in
-order to to act so I I think you
-stumbled onto something quite quite
-profound there um and the question the
-question is about this this God God mode
-view right like that's a that's an old
-question in physics whether there exists
-the absolute reference frame or whether
-everything is
-relative um and yeah just won't say that
-you know foot for fault there's there's
-some there's some interesting problems
-there maybe we can we can talk about it
-some sometime I would love to hear your
-thoughts about this yeah sure like I'm
-I'm very interested in this stuff so as
-a as a software developer like I would
-advise you in your environments if
-you're not dealing with you know
-existential stuff that just make a god
-state that takes care of this but uh you
-make a very good point right so if we
-really want to make an accurate
-representation of of the world do we
-need this God state or because we now
-allow our environments
-to to alleviate this right we can have
-multiple entities that together compose
-the environment and that there is some
-internal communication between them so
-um it does it does open up this like it
-doesn't slam it wide open but at least
-you know there's a in Dutch you would
-say open key yeah so
-so I I think there is a there's a that
-that's that's a potential um incursion
-into effectively resolving some of the
-most interesting problems in the
-fundamental theories of physics that
-understanding precisely which one is the
-case whether is this um absolute
-reference frame or whether you can just
-simply explain everything through these
-relative reference frames and agent
-sampling the environments and if if you
-can effectively recover something that
-looks like physics from um this
-interaction which is what wall from is
-essentially working on that would be
-that would be a complete computation of
-fundamental Theory of physics and it's a
-bit big undertaking but it's worth uh
-worth considering not just merely from
-you know um software engineering
-perspective but from from that angle if
-if you're interested in that kind of
-stuff I mean yeah it it's very
-interesting it's something that I you
-you know it's a very big deviation from
-what my supervisor wants me to work on
-so it's probably not something that I'm
-going to undertake but yeah if if anyone
-wants to pick it up right who am I to
-stop
-them thanks it's great work
-cool yeah anyone else want to ask any
-questions
-how would you deal with the setting of
-multiple ant nestmates moving around and
-modifying the pheromones on the ground
-so in these kinds of simulations it's
-common enough to have the pherone
-phermone state on the ground and then
-Nest mates that are reading and writing
-how do you deal with the spatial
-proximity and the collisions and
-interactions
-so that is something very very very
-difficult I'm working on a project right
-now where once again we're modeling
-football uh which is why I brought up
-this example just now um and like
-resoling collisions is something
-extremely difficult it's something that
-I don't have a standardized uh advised
-way of doing an arcs environments just
-because game studios uh they they spend
-God knows how many developer hours on
-resolving collisions efficiently so
-that's not something that I think well
-we we can figure out in an afternoon
-right
-um it's it's it's something that would
-be in the internal dynamics of your
-environment but not something that is
-part of your communication protocol per
-se just influences the the the type of
-observations that your agent would get
-um so it's not something that I can give
-that I feel qualified to give advice
-on but it is like making this
-environment with ants running around
-the floor that is something that's just
-a multi-agent environment that's fully
-covered the problem is these these uh
-the collisions that is a difficult thing
-it's not uh difficult in an arcs
-environment uh perspective it's
-difficult in a computational geometry
-perspective that you want to resolve
-collisions that's yeah like in in tripa
-a games you can still clip into walls
-somewhere
-that's that's a great and funny response
-yeah I would just highlight the the real
-structural difference when you pointed
-to the step function in the
-gymnasium that yes is why in so often
-for these control problems there's like
-a null action or like a weight action so
-you kind of get this um bodal action
-Vector policy Vector where there's like
-a do nothing option and then all the
-options because out of requirement
-something must be emitted at every click
-of the simulation and all of a sudden
-it's like we mve from walking on a
-staircase to like ice skating or flying
-with RX and fur because it has totally
-opened up a dimension of the control
-question when to act not just which with
-according to a metronome and that's
-that's an entirely different approach
-that um the communication protocols
-enable and then those communication
-protocols can have all these other
-functionalities like they can have a
-subontology or they can have compliance
-features as well so it's super powerful
-and we're very excited to learn
-it that's yeah that's the main point uh
-the yeah it's a two sides of the same
-coin like it it opens up this
-communication protocol but then yeah you
-have to question
-when when it's something something that
-I'm going to spend time on in my next
-project like can we make an iterative
-procedure maybe with iterations and ARs
-and third we can send intermediate
-posteriors and we have we always have
-like a an action that we Supply I I
-don't know yet I have no idea or I have
-ideas but I don't have anything working
-yet I think to me the underlying
-principle of the RX in first Suite
-versus
-traditional yes this um
-um instead of having synchronized
-Communications we now have asynchronized
-communications between everything
-between everything
-yes I'm I'm glad I got that point across
-that's that's the point I wanted to
-make great well um if anyone else has a
-question otherwise we will continue
-learning and watching the GitHub updates
-and just building out examples CU in the
-coming months we know a lot of fun
-things will
-happen all right yeah um you guys can
-always reach out to me on I don't know
-GitHub Twitter I don't know how often
-I'll check Discord I'll try you know
-I'll try um but you can always reach out
-to me on uh on LinkedIn Twitter whatever
-that's that's all fine
-excellent I I do have a a final question
-if that's all right um sure just just
-with respect to you know future
-directions and that kind of thing what's
-kind of biggest problem set of problems
-what are you kind of looking to do I
-know that's a massive thing but is there
-anything relatively summited in that
-direction that that we could have speak
-to for just a second so I'm very
-interested in this when to act uh
-problem so this to me opens up the door
-to a um an agent
-that um because we okay so we can now
-act at any point in time or at any point
-in time um yeah we can send something to
-the environment a logical consequence
-for me is that at any point in time we
-should have an action ready to send so
-when the next observation comes in we
-don't know when that's going to be we
-should be able to act so we have a
-certain computational budget between one
-observation and the next we don't know
-how much it's going to be but we do have
-a budget to spend so I want to design
-indeed an interative procedure that
-comes up with an action and then refines
-it and refines it and refines it until
-well the next observation comes in so we
-we have to send whatever we had and we
-get the the next observation this gives
-you if this all works right this gives
-you a very nice robust agent that if you
-give it a lot of computing power a lot
-of computational budget then in between
-observations well it's going to be able
-to come up with a pretty good um pretty
-good action and will solve the task
-accordingly like ideally however if you
-limit this uh uh this computational
-budget you put it on like a Raspberry Pi
-or on an edge device it will not have as
-much iterations to refine its actions so
-it will still solve the problem
-hopefully but it will be less efficient
-doing so it will be slightly Dum so this
-is a very to me is a very interesting
-problem to think about because then you
-have a sort of a a procedure for control
-that is robust to loss of computation or
-whatever and it's still adaptive and
-reactive and and and all those nice
-things we get from from Asian
-inference um so yeah that's something
-that I that I would want to work on if I
-you know at 48 hours in a
-day it's very interesting so it sounds
-to me like a number of iterations you
-just refer to as um the iteration field
-in the call of the infer function yes in
-infer yes if I can do something like
-that so I run an indefinite amount of
-iterations and I just stop the inference
-procedure whenever I have to do
-something and then I extract the latest
-posterior for the action and I I send
-that to the environment yeah that's
-something well that would be the first
-thing I would
-investigate yeah I I think it has the
-potential to make the behavior in
-general quite robust if you if you
-consider that
-approach it yeah it would be rob it
-would always have something to do do
-like it would always do something
-whether or not sort of the the the free
-energy would converge uh or yeah as as a
-measure of whether or not this action is
-good enough uh that is to be
-investigated but it would allow us to
-run the same models on edge devices as
-well and get slightly worse performance
-but
-still yeah yeah it would still do the
-job we and then you can investigate you
-know how many iterations do I actually
-need before I can solve the problem uh
-it's of course problem dependent but
-yeah it's a very yeah it's just
-something that that really interest me I
-really like this this way of thinking um
-and it's in part why I why I wrote this
-package because I I don't like this this
-this synchronized communication protocol
-from Jim I just I just don't like it
-yeah that's why I wrote wrote ARS
-environments I think the only
-alternative is to not be able to respond
-whenever it gets an ation other words to
-postpone your
-response it NES back into the um the the
-synchronicity approach again so it
-breaks away from the you know the
-reactiveness of
-the but then you you run into the
-robustness issue I would say if you have
-a self-driving car and it it's driving
-into a wall because it's thinks it's a
-green light because those things are not
-that that smart nowadays uh and ah it
-figures out it's a wall but it takes
-some time to adjust or it takes some
-time to come up with the idea okay now I
-have fully converged on the action that
-I have to steer away well by that time
-we might have already crashed into the
-wall um so this this queuing up of uh uh
-of observations and waiting until uh my
-computation is fully converged I think
-it takes away the robustness like if you
-if if you don't have enough
-computational budget to
-spend well yeah you you might do the
-wrong thing it's the same as when you
-and I are in a car right if we're in a
-very
-um a very busy situation so well I'm in
-the Netherlands so we have cyclist right
-so if we have cyclists we have other
-cars and there's a an ambulance coming
-what it's very busy you might feel
-overwhelmed but you still kind of know
-the basic things to do to to to steer
-your car it's basically the same where
-you have limited computational budget
-there's all this stuff around you so to
-come up with a really thought through
-response or action uh it's too much to
-ask because you don't have the
-computational budget but your brain kind
-of prioritizes and says well if we stay
-on the road and we let the ambulance
-pass and well we're fine for now we're
-this is the best we can do um so this
-feeling of being overwhelmed by what
-what goes on on around you inspired this
-idea of of robustness and uh uh of
-interruptibility
-basically yeah but then again how how
-how I'm going to do it well no idea yet
-or run run our iner iterations and see
-if I can uh can send intermediate
-posterior results or something or but
-it's just something yeah I I find this
-very very very
-interesting think it's a good thing that
-free energy in
-general decays uh predictably in a sense
-so I mean just fully using your budget
-your computational budget for that time
-that you're allow before the next
-observation
-arrives I think it's it's fairly safe to
-just uh yes use the current value of the
-posterior that's the best you can do the
-circumstances yes that that that would
-be the argument
-indeed hopefully hopefully this this
-this opens up the road to having actual
-you know robots driving around instead
-because
-well there's no self-driving cars where
-I live there's no robots or drones
-flying around and I think one of the
-reasons is because they're not robust or
-interruptible
-fly agreed
-yeah all right thank you all we'll look
-forward to staying updated
-asynchronously even asynchronously
-reactively see y all soon
-bye thanks
+SPEAKER_01:
+All right, hello.
+
+It is May 16th, 2024.
+
+We're in the RxInfer JL project with some guests from Bias Lab and participants.
+
+And Votzer will be sharing with us about the RxEnvironments.jl package.
+
+So thanks all for joining.
+
+Looking forward to this presentation and discussion.
+
+Go for it.
+
+
+SPEAKER_04:
+right thank you daniel uh so my name is wouter i am a second year phd student in bias lab uh you may know bias lab because we are the main authors of the rx infer package a package for reactive bayesian inference and last year when i was working with rx infer and doing well reactive bayesian inference i found that there was a
+
+lacking support for environments in the same reactive paradigm.
+
+And we were relying on reinforcement learning packages such as Gymnasium or Reinforcement Learning JL, and I didn't really like it.
+
+So I wrote rxenvironments.jl, a package for reactive environments, which aims to complement RxInfer in the reactive
+
+um agent development uh ecosystem so if we look at rx environments it's a very lightweight boilerplate package it contains all boilerplate code to make something that i call a reactive environment a reactive environment is uh
+
+an environment that consists of entities where an entity can be an agent but it can also be a component of an environment or the entire environment itself and what we have to describe is how entities
+
+communicate with each other so every entity has its own markup blanket with which it can communicate with other entities in the environment so in that sense it's very related to active inference because well we have a very specific notion of the interior of an entity and the exterior of the entity and its markup blanket and i try to replicate that in rx environments
+
+So to give a short demo, we can dive right into the code.
+
+I have prepared the mountain car example in the documentation of our environments, but just to showcase to you that this gives you more flexibility to work with.
+
+So we have on the left-hand side, I have my code because I'm going to manipulate this environment
+
+uh in real time and on the right hand side i have the environment so i have my landscape i hope you guys can see my cursor by the way i have the landscape and in the middle i have one agent one car a dot representing a car what's nice about rx environments is that i can send um
+
+actions to the environment so my landscape the environment is one entity the agent the car is a different entity and i can send a command that contains engine force on a scale from minus one to one so i can send minus one to the entity and you'll see that the car starts driving up the hill it doesn't have a lot of engine force and i can live send different commands and you'll see
+
+that the car responds accordingly.
+
+Now, what's nice about RX environments is that, as I said, you'll get native multi-agent environments out of the box.
+
+So if I just add a different mountain car agent with some hyperparameters to the environment, you'll see that there is now a second dot at the bottom of the valley, a second car.
+
+And similar to how this first car can be controlled
+
+we can control the second car too.
+
+Point one was maybe this.
+
+I should have maybe given this car a bit less engine power because it's clearly flying off the screen.
+
+But you get the gist that we can control both cars simultaneously.
+
+And RX Environments handles all this communication natively, reactively under the hood.
+
+So my idea is, or my next steps for this project are going to be to incorporate it better into the RxInfer ecosystem, because I think that building agents with RxEnvironments in this way, that both the Active Inference community as well as the RxInfer community can benefit from this.
+
+So this is a very short overview of the things that Rx environments can do.
+
+It can do a whole lot more.
+
+But I think that this is a very short demo that gives you the best idea of why it's nice that we're going to go reactive, because you get stuff like this.
+
+We can control in real time.
+
+We can control multi-agent environments.
+
+And it's very active inference-y in that sense.
+
+So on that note, I'll stop sharing my screen.
+
+Let's see.
+
+And yeah, if you guys have any questions about this, which I, which I heard you have, then I'll be very happy to take them.
+
+
+SPEAKER_01:
+Awesome.
+
+Thanks.
+
+Very informative and hilarious mountain car example.
+
+
+SPEAKER_04:
+Yeah, you can play with this engine force of this mountain car, and I probably should have prepared that it doesn't fly off the screen.
+
+But I mean, it gets the point across, right?
+
+
+SPEAKER_01:
+Yeah, okay.
+
+I'll share screen and just type.
+
+And so everyone else in the group, just go for asking any of the questions we'd already identified or any new questions arising.
+
+So go for it.
+
+
+SPEAKER_06:
+I don't understand you very well.
+
+Maybe there's, do you understand Cope as well?
+
+Okay.
+
+You're very, very faint.
+
+
+UNKNOWN:
+Thank you.
+
+
+SPEAKER_06:
+Yeah, okay.
+
+
+SPEAKER_03:
+I actually had a question, Valter, not on this particular page that Daniel's sharing right now.
+
+I tried my hand at, let's say, plugging in the mountain car, the existing mountain car agent in the RX and third documentation into your mountain car environment.
+
+I wasn't quite able to do that, but it appears that you have done that in that example just then.
+
+and then maybe i was missing something because in the in the documentation the rx environments documentation from mounting car i didn't see that there was a an agent that had you know a instantiated generative model uh much in the same way that the rx infer documentation had and i thought oh okay this this is a wrapper or you know a nice api for me to specify an environment i i now have to go away and specify my agent also
+
+
+SPEAKER_04:
+but it seems is that what you did for that example just then or or did you just no no no i just for this example just now i just used my uh you know custom commands that i just uh sent myself um so this is something that i'm actively working on on combining the two um the
+
+mountain active inference mountain car example on the arcs and fur website i believe is a bit um cheating in a sense because we give it all environment dynamics all functions of the environment dynamics and then we do some some approximation to the posterior of what we have to do but in a sense it doesn't really
+
+discovered that it has to do anything because it knows all the environment dynamics so that's why i haven't really spent time on incorporating this specific example because i feel that if we're going to demo this package plus
+
+an agent that it should be an agent that actually has capabilities of exploring the environment instead of knowing all the environment dynamics and just well basically doing model predictive control right okay that makes it a bit clearer okay i'll have a follow-up but i'll maybe let somebody else um thank you very much so to give a very short answer to your question we can we can sit together if we uh
+
+on if you want to define an agent a generative model i know how to hook the two up i just don't have a working example yet right okay i don't want to use this
+
+
+SPEAKER_03:
+i don't want to use this agent from from the arcs and third documentation because indeed i feel that it's a bit cheating but it's my personal opinion right yeah yeah okay that actually clears a lot of things off me because i was kind of unclear like oh do i do i kind of plug that one in is that is that what i do yeah okay but that's not that functionality is exactly clear yeah we can um however
+
+
+SPEAKER_04:
+There is a subtlety there, and that is something that I find very interesting in my research, is if you open up this space or you open up your environment to be reactive, then you want your environment to be able to receive an action at any point in time.
+
+so what we see in reinforcement learning is that you have a specific transition function the environment waits until you send an action it will move the environment forward a pre-specified amount of time and it will emit to you an observation and a reward however if you make this entire thing reactive then well our agent would be able to emit at any point in time and also it would be able to get an observation at any point in time now that is a very interesting
+
+setting to work with because now our agents should kind of be robust to getting an observation at any point in time specifically what if our agent that lives on some embedded device and some drone whatsoever it has less compute to do to do inference however well at some point we're going to have to send an observation or an agent an action back to the environment we're going to have to do something
+
+So this reactivity opens up a research avenue for, well, right now for me, because I find this very interesting, on how truly reactive agents would look like, if you see what I mean.
+
+
+SPEAKER_03:
+Yeah, I do.
+
+That's exceptionally exciting stuff.
+
+It's awesome.
+
+Okay, but okay, just to wrap up my question, there is no, at the moment you kind of manually, you know, you put in the force limit and you say, okay, I'm going to kind of manually, you know, play around with
+
+
+SPEAKER_04:
+I have working examples with like Bayesian thermostat or very, very easy, which I probably, I don't know if I have them on my machine right now or if they live somewhere, like it works.
+
+But the thing that I got to work is model predictive control and not active inference yet.
+
+
+SPEAKER_06:
+So that's why.
+
+Awesome.
+
+All right.
+
+Thank you.
+
+You're welcome.
+
+Can you hear me a bit better now?
+
+
+SPEAKER_05:
+Yes.
+
+Voter, I'm interested in the relationship between RxEnvironments and RxInfer.
+
+For example, to put it simply, is it possible to use only RxEnvironments or is it supposed to be always used in collaboration with RxInfer?
+
+
+SPEAKER_04:
+yes the relation is that i wrote arcs environment specifically um as a complementary package to arcs infer so if you just want to do bayesian inference you use arcs infer but i think if you want to build agents that you're better off using the the two together so arcs environments is
+
+a package that uses the same reactive backend as RxInfer.
+
+So it's made to be compatible with RxInfer.
+
+However, if you write agents just with an algorithm, you can use RxEnvironments by itself.
+
+It's not mandatory to use RxInfer.
+
+They are separate packages.
+
+There's not a dependency on RxInfer.
+
+However, since
+
+um they share the same reactive backend so the same package for reactivity under the hood which is also from bias lab which is rocket um if you want to build agents i would advise to to use rx infer so they're they're disjoined but they're designed with each other in mind or arcs environments is designed with arcs and fur in mind so um
+
+
+SPEAKER_05:
+If we use this high level of abstraction given to us by RxInfer, do we lose anything?
+
+Or can we at any time dive into the lower levels by means of RxInfer itself?
+
+
+SPEAKER_04:
+So I would say yes, because the inference process that happens in RxInfer
+
+is disjoint from what's going on in Rx environments, similarly to what happens in real life.
+
+So you can see Rx environments as a package in which you can make a digital twin of the environment, but then whatever happens in the inference process in your agents, well, that's still Rx Infer.
+
+All Rx Infer diagnostic tools or debugging tools should be available there.
+
+
+SPEAKER_05:
+And a more practical question.
+
+I know from the large papers and Professor De Vries as well, they like to divide what's going on into these six methods, the act, future, execute, observe, compute, and slide.
+
+So do you see that as kind of superfluous in the Rx environment setting?
+
+Is it fine to still use that approach?
+
+
+SPEAKER_04:
+Let me Google the definition for superfluous.
+
+I'm going to tread very carefully in answering that question.
+
+I don't think it is superfluous because in a sense that it's... If you want to design your agent such that it goes through those steps,
+
+um then you're more than welcome to uh my personal opinion is that i'm i will i'm going to try and see if i can make an active inference agent that does inference in one step instead of having to act observe uh plan slide uh and so forth however for arc's environment so for your environment
+
+it doesn't really matter how you will get to your uh to your action as long as well or not right you can you can send an action at any point in time and if you don't send an action the world will just continue that and arcs environments will just continue running there's no real constraints on that so that the design is to be as less constraining on users as possible while opening up this reactivity uh
+
+um the reactivity aspect and also for um if you start with the package you could make what i call discrete environments they're they're a bit beating i would say because they're basically just the arcs environments equivalent of uh of a classical reinforcement learning environment where you have a pre-specified time step every time but i wanted to make that to make the transition easier
+
+Because if you go full reactive right off the bat, I would say it's a very ambitious thing to do.
+
+So I don't think it's a superfluous algorithm.
+
+
+SPEAKER_06:
+But I also don't think it's, well, RxEnvironments doesn't constrain you to use it, so I would say.
+
+
+SPEAKER_05:
+Nice.
+
+Now, let's say one has a need to write one's own node in the factor graph.
+
+Would Arc's environments support that kind of thing, or is it kind of an irrelevant question?
+
+
+SPEAKER_04:
+It's, in that sense, I would say irrelevant, because a custom node is something that lives in Arc's infer.
+
+And Rx environments really is concerned with everything that goes on outside of your inference process.
+
+
+SPEAKER_05:
+And then another quick question.
+
+While playing with the, I think it was a thermostat problem in Rx environments, I wanted to see the time behavior of some variables like observations, states, controls, free energy, and things like that.
+
+It wasn't straightforward to me how to plot those in the RX environment settings.
+
+Is there an example that you can point us to or a fragment of code that shows us how to do that?
+
+
+SPEAKER_04:
+I can make it.
+
+because i i know how i can access so free energy is uh something that lives inside your agent so it's part of the inference process it's the it's the uh cost function if you will of of of the inference process so for free energy you would have to look at your uh would have to look into arcs and fur however everything that goes on in our environments we can extract it and we can plot it
+
+So both environment states as well as emitted controls or observations, we can extract all those things.
+
+I can show a code fragment that does this because it's one line.
+
+However, I also understand that that is not something that
+
+well, you probably remember after this meeting.
+
+So I'll make sure that we can design an example that showcases this.
+
+But in a nutshell, we can create a keep actor.
+
+So this is, well, an entity that will keep all, everything that it gets.
+
+uh we'll keep it inside memory and then we subscribe to the observations of the agent so we say subscribe to observations and with this ops keep actor we do this and if i then call ops values
+
+this will contain all kinds of well arts environment observations which is basically a wrapper struct for let me call data on this entire array and you'll get your individual observations so we can basically tap anywhere in this process
+
+Anywhere in this communication, we can tap whatever is being emitted.
+
+So if I run this again, now it will contain 400 elements because, well, this environment is reactively running while we speak.
+
+So the agent is getting more and more observations.
+
+So you see this thing reactively growing every time I call or extract its contents.
+
+So there is definitely functionality in which you can sort of inspect this process.
+
+But yeah, I have to stress that it's really distinct from the inference process.
+
+If you make an agent in RxInfer and you hook it up to RxEnvironments, then you have to set up a similar procedure to extract free energy and stuff like that from RxInfer.
+
+And because I'm not the author of RxInfer, I don't know how easy that is.
+
+But for RxEnvironments, yeah, this is one of the first things that I wanted to do, see what my agent was sending, see what my agent was observing.
+
+So I made sure to build it.
+
+
+SPEAKER_05:
+Yeah, I'm not sure if what you just showed was recorded by us.
+
+So if you could just make sure that that is included in your examples as well, that would be excellent.
+
+
+SPEAKER_04:
+Yes, that's my idea.
+
+I just wanted to showcase for now such that you know that it exists, but it wasn't meant to be a big tutorial or anything.
+
+I can just put it in the examples and then we can plot it.
+
+
+SPEAKER_06:
+That's not a problem.
+
+Okay, thanks a lot.
+
+You're welcome.
+
+Okay.
+
+Anyone else can go for a question or we have some other written ones or I can ask you a question.
+
+
+SPEAKER_02:
+I have a quick question.
+
+I would just wonder once I don't know if you guys can hear me.
+
+I hope so.
+
+Yes.
+
+Fantastic.
+
+A lot of the examples that you have there and kind of the way I'm I'm probably naive in how I'm thinking about this.
+
+The arts environment is modeling something in
+
+the real world, or at least that's the example that we're thinking of right now.
+
+Is art environments capable of essentially modeling more metaphysical spaces?
+
+So if you think of your question in a way that you have a time series or a space that you're trying to occupy,
+
+but it's not a physical space.
+
+It's a more theoretical space dimensionality that you're trying to have an agent navigate.
+
+Is that something that you see that this is usable for, or is this something that we need to kind of gear back towards the RxInfer package itself to kind of build the more metaphysical concept of the environment that you're putting together?
+
+Does that make sense?
+
+
+SPEAKER_04:
+Yeah, if I understand your question correctly, yeah, my answer to that would be that there's no physics simulator or whatever in ARCS environments.
+
+It's purely the boilerplate to make whatever you write act reactively and expose reactive streams that you can then use in ARCS.
+
+So, for example, one of our colleagues has made a
+
+an environment that returns the result of a stochastic differential equation.
+
+So an agent could query with an action, I want the realization at time t, and the environment would respond with the actual value.
+
+And with this interplay of querying a stochastic differential equation and
+
+and getting a result, you can cast stochastic differential equations sort of a Bayesian state-based model.
+
+I'm not an expert on this topic.
+
+I just know that one of our colleagues did this.
+
+So if I understand your question correctly, that would be the sort of environments you were after or you were questioning about.
+
+So I would say, yes, you can.
+
+So there's no, there's no physics simulator or anything in there because that's a whole different, a whole different topic.
+
+
+SPEAKER_06:
+My main thing was just to make whatever code you guys write to make it reactive.
+
+Fantastic.
+
+Thank you.
+
+
+SPEAKER_02:
+Now that makes a lot of sense.
+
+I just wanted to clarify that since perfect.
+
+not thinking so much in robotics or creating like physical environments and thinking more along the lines of data environments.
+
+So that's why I was trying to understand how we could utilize this.
+
+
+SPEAKER_04:
+Yes.
+
+Yeah, you can.
+
+Yeah.
+
+And, uh, you can push it further, right?
+
+You can make, uh, uh, a combination of the two.
+
+You can make a, uh, an environment that flies a drone,
+
+uh your agent has to control the drone but it can also query the environment for hey what is going to be my position in five seconds so kind of this this well abstract action that's basically querying the environment well since we have this uh
+
+this mechanism that we can depending on what action you send correspond or match this with an observation now you can do stuff like that there's nobody stopping you doing it whether or not it's useful for your agent well that's up to you i i was just yeah i'm trying to make your environments as expressive as you can or your the framework as expressive as i can and yeah you you can you can go wild with it right you can go crazy and that's perfect because the agent
+
+
+SPEAKER_02:
+that I'm wanting to put together would need to actually walk through time in a certain way and optimize its activities in a time series.
+
+
+SPEAKER_04:
+Yeah, I was already expecting you.
+
+That's why I brought up this.
+
+That's very cool.
+
+I would be very excited to see, well, whether or not you can build your environment and our environments would be very cool.
+
+Absolutely.
+
+
+SPEAKER_06:
+I'll keep you updated then.
+
+Nice.
+
+Thanks.
+
+
+SPEAKER_05:
+The observable and actor roles in Craig's experiments, can any entity take on either of these roles, or are there certain constraints?
+
+For example, let's say the agent must always have the actor role or something like that.
+
+
+SPEAKER_04:
+No, they're completely unconstrained.
+
+There is no real distinction under the hood between entities or between something that represents an environment or something that represents an agent.
+
+uh they are both entities in arcs environments um the only thing is that you can make uh something which i call an active or a passive entity by the way all this terminology it's all up for discussion i've thought about this and most of the terms that i come up with there they don't really fit what i what i'm trying to say um
+
+But an active entity is something that whenever it gets an observation or whenever it receives an action, it emits or at least considers emitting to its subscribers.
+
+For example, the mountain car environment itself would be an active entity.
+
+Whenever the agent sends an action to move the car, it will correspond or it will match this action with, well, moving the car.
+
+Whereas the agent, whenever it gets an observation from the environment, well, it doesn't really have to do anything.
+
+We have to, in a later stage, attach an inference process, but that is something that's not RxEnvironments, that is RxInfer.
+
+So we make this entity passive in a sense that it's an observer that can also send actions, but those are not triggered by an actual algorithm that we write ourselves
+
+uh in arcs environments but it's a result of some inference process it's the triggers are external to the the reactive ecosystem that we've built in arcs environments itself so that's the only distinction that i make but you can yeah something that represents an environment is something that represents an agent they're they're under the hood completely the same things they're just uh entities that that that can communicate with
+
+
+SPEAKER_05:
+with with external entities do you think you could um in addition add a discrete control space example for us as well because mountain car and the abrasion thermostat are both continuous examples
+
+Even if it's just a simple discrete control space or categorical in particular, categorical control space, maybe a simple maze example or a grid example, you know, like the windy grid that's often used in reinforcement learning.
+
+Even if it's just a simple grid.
+
+Windy grid.
+
+
+SPEAKER_06:
+Windy grid.
+
+
+SPEAKER_05:
+Yeah.
+
+
+SPEAKER_06:
+Okay, I'll Google that.
+
+
+SPEAKER_05:
+Even if it's just a simple categorical control space, because that's what our problems currently center around.
+
+Not so much continuous control spaces, but categorical control spaces.
+
+
+SPEAKER_06:
+Okay, that's, yeah, I can do that.
+
+Okay, I see.
+
+Windy crypt world.
+
+Okay, I can do that.
+
+Okay, excellent.
+
+Thanks a lot.
+
+Can I ask a sort of a very quick, broad question about the whole ontology bit?
+
+
+SPEAKER_03:
+When I first learned about this, my own naivete and just sort of looking through the docs, I thought, oh, okay, this is a wrapper around Rx and Fur for standardizing the creation of an environment that you will then use for whatever purposes.
+
+But it sounds to me it's not at all that.
+
+It's really, this is not even really a way of talking about an environment per se.
+
+
+SPEAKER_04:
+No, it's more of a...
+
+It's a communication protocol for active inference agents.
+
+
+SPEAKER_03:
+This is a way to standardize the dyadic interaction between two abstract entities.
+
+That could be between environment and an agent, or it could be something else entirely.
+
+That's much broader than what I was conceptualizing.
+
+
+SPEAKER_04:
+So when I started this, indeed, I started as, OK, I want to standardize environment creation in our ecosystem, in our .
+
+And I had a discussion with Magnus Koudal, who's also in this Discord I saw.
+
+And, well, we had some very interesting talks.
+
+And he said, well, actually, an environment and an agent, they're not so different, right?
+
+they just hand or they just receive data from each other and handle them accordingly so yeah there is a certain uh symmetry there and then i thought well if there's a symmetry there then i can make an overarching uh programming concept and just kind of implement it that way and that's what i did and then it turned from just a way in which you can make an agent and an environment communicate to a package in which you can communicate this whole network of
+
+uh of subscriptions and communications um because there's yeah there's no constraints anymore so for example we run an environment in in uh in our lab with marco actually that um has well in a non-trivial uh entity interaction where we have a hearing aid that uh
+
+gets data from both the external world because it can well it has a microphone and it should register the external world but it can also get data from the user of the hearing aid saying hey unhappy with the hearing aid settings yes or no so now we have a three entity environment we have the user we have the hearing aid and we have the uh the external world that just emits noise
+
+then we have a fourth entity which is our agent that should learn the preferences of the user that should get data from the hearing aid and should uh tweak the parameters inside of the hearing aid so now we have four entities that are communicating in this non-trivial way and well we built this in arcs environments and it all holds up like it all just
+
+yeah it runs just because whenever we get data the hearing aid knows ah i get new data i get new noise i have to transform this noise and send it to the user and i have to do a free transform and send it to the agent for analysis uh and just because it does this reactively it's all tractable and all works nicely so yeah uh it it turned out to be a bit of a uh a bigger
+
+
+SPEAKER_03:
+well scope than i would have imagined but i'm yeah i i'm not making any claims on on how large it actually is that's uh yeah cool this this is also very cool and i'm very very thankful that you're working on this because i i had the thought like oh well what what what then is you know sort of predicated off the environment it's kind of like well we have the environment and the asian they're kind of both being equally treated here so
+
+
+SPEAKER_04:
+That's a very interesting question, right?
+
+So what is the actual difference?
+
+Some people say, well, an agent has some sort of inferential process on how it comes up with an action.
+
+But in a sense, well, we are all just with our eyes and ears and muscles.
+
+We have an interface to the environment.
+
+yeah in in that sense we we are just all mark of blankets with internal states that that navigate this world uh and this well communication that we have with our outside world i i try to replicate that fantastic thanks
+
+
+SPEAKER_00:
+anyone else want to ask any questions yeah christoph or yeah question um i didn't quite get what you um what you said about the difference between the typical reinforcement learning setting and uh rx environments could you um could you could you explain that again please that was very interesting sure if if you want or if you make an environment in gym in gymnasium we can we can look at the
+
+
+SPEAKER_04:
+um at their documentation right so let's see gymnasium package so i go to gymnasium and i want to make my own custom environment i saw it here make your own custom environment i've visited this page before so we can make our environment blah blah and then you have this function step
+
+The step method usually contains most of the logic for your environment.
+
+It accepts an action, computes the state of the environment after applying that action, and returns a five-tuple observation reward terminated truncated info.
+
+So we write a function step that takes only an action.
+
+So this is the main design paradigm of GIM and most reinforcement learning packages, actually, where
+
+i emit an action this action is incorporated into the world but the time that the environment is stimulated forward is constant so there's no notion of different time intervals whereas if i'm i'm a very big uh football aficionado for the americans that's soccer but it's actually football
+
+but if i kick a ball i kick the ball the ball starts rolling well whether or not i do something the ball will just continue rolling like this this environment around me it doesn't wait for me to emit additional actions or i'm not consciously saying okay for the next second i do nothing and then the ball rolls okay for the next second i do nothing again and the ball rolls further no there is a
+
+in the real world there is a difference right we do something and then the world just continues so we can do something at any point in time and the world around us will just well the world keeps on turning um and that's what i was trying to do with with rx environments is to um alleviate ourselves of this
+
+um communication protocol because this specifies i get one observation i can do one action per observation
+
+and that's it and in between different observations i have no power to do anything whatsoever also if i have an environment that instead of modeling one second forward i now do half a second well everything breaks down because now i have to emit actions at twice the speed or my observations don't correspond anymore with my internal model or there's all kinds of stuff that if you do
+
+it's like this it turns kind of awkward and that's what i was trying to alleviate uh with with arc's environments is that i'm trying to make this communication between agent and environment as free as possible so if you have a hearing aid environment
+
+Yeah, that's it.
+
+Yeah, I'm rambling, sorry.
+
+
+SPEAKER_00:
+Good that you interrupted.
+
+That's a good explanation.
+
+And I think you also mentioned something about some difficulty there, because the question then becomes, if you have multiple agents interacting with the environment, then what exactly is the state of the world, right?
+
+
+SPEAKER_04:
+What exactly is the state of the world is not... Because you can just sort of...
+
+you can have like a god entity that takes care of of this stuff that that kind of resolved all conflicts in that sense um the main question for me would be well we just took away your one moment to conduct an action in reinforcement learning you have one moment you can do an action and you'll get one observation we just took away this one moment and gave you the opportunity to act at any point in time well when are you going to do it
+
+
+SPEAKER_00:
+Right.
+
+So, you know, the reason I'm asking about this is that it immediately got me thinking about Stephen Wolfram's work on observer theory.
+
+So he's trying to formalize the notion of an observer, right?
+
+And there is this whole field that he basically invented for the physics project related to what he calls multi-computation.
+
+I'm not really deep into that yet, but it seems somehow relevant.
+
+As an agent interacting with the environment, we effectively sample it precisely because it keeps rolling as we do the internal computation required to update our generative model in order to act.
+
+So I think you stumbled onto something quite profound there.
+
+And the question is about this God mode view, right?
+
+That's an old question in physics, whether there exists the absolute reference frame or whether everything is relative.
+
+And yeah, I just want to say that, you know, food for thought.
+
+There's some interesting problems there.
+
+Maybe we can talk about it sometime.
+
+I would love to hear your thoughts about this.
+
+
+SPEAKER_04:
+Yeah, sure.
+
+I'm very interested in this stuff.
+
+So as a software developer, I would advise you in your environments, if you're not dealing with, you know, existential stuff that just make a God state that takes care of this, but you make a very good point, right?
+
+So if we really want to make an accurate representation of the world, do we need this God state or because we now allow our environments to
+
+to alleviate this right we can have multiple entities that together compose the environment and then there is some internal communication between them so um it does it does open up this door like it doesn't slam it wide open but at least you know there's a
+
+In Dutch you would say open gear.
+
+
+SPEAKER_00:
+No Dutch people.
+
+I think that's a potential incursion into effectively resolving some of the most interesting problems in the fundamental theories of physics.
+
+Understanding precisely which one is the case, whether it is this absolute reference frame or whether you can just simply explain everything through these relative reference frames and agents sampling the environments.
+
+And if you can effectively recover something that looks like physics from this interaction, which is what Wolfram is essentially working on, that would be a complete computational fundamental theory of physics.
+
+And it's a big undertaking, but it's worth considering, not just merely from software engineering perspective, but from that angle, if you're interested in that kind of stuff.
+
+
+SPEAKER_04:
+I mean, yeah, it's very interesting.
+
+There's something that, uh, you know, it's a very big deviation from what my supervisor wants me to work on.
+
+So it's probably not something that I'm going to undertake, but if anyone wants to pick it up, right.
+
+
+SPEAKER_06:
+Who am I to stop them?
+
+Thanks.
+
+It's great work.
+
+
+SPEAKER_01:
+Cool.
+
+Yeah.
+
+Anyone else want to ask any questions?
+
+How would you deal with the setting of multiple ant nest mates moving around and modifying the pheromones on the ground?
+
+So in these kinds of simulations, it's common enough to have the pheromone pheromone state on the ground, and then nest mates that are reading and writing.
+
+How do you deal with the spatial proximity and the collisions and interactions
+
+
+SPEAKER_04:
+So that is something very, very, very difficult.
+
+I'm working on a project right now where, once again, we're modeling football, which is why I brought up this example just now.
+
+And resolving collisions is something extremely difficult.
+
+It's something that I don't have a standardized, advised way of doing in ARX environments just because game studios, they spend God knows how many developer hours on resolving collisions efficiently.
+
+So that's not something that I think
+
+well we we can figure out in an afternoon right um it's it's something that would be in the internal dynamics of your environment but not something that is part of your communication protocol per se just influences the the type of observations that your agent would get um so it's not something that i can give that i feel qualified to give advice on
+
+But it is like making this environment with ants running around the floor.
+
+That is something that's just a multi-agent environment that's fully covered.
+
+The problem is the collisions.
+
+That is a difficult thing.
+
+It's not difficult in an ARCS environment perspective.
+
+It's difficult in a computational geometry perspective that you want to resolve collisions.
+
+Like in AAA games, you can still clip into walls somewhere.
+
+
+SPEAKER_01:
+That's a great and funny response.
+
+Yeah, I would just highlight the real structural difference when you pointed to the step function in the gymnasium.
+
+That is why in so often for these control problems, there's like a null action or like a weight action.
+
+So you kind of get this...
+
+bimodal action vector policy vector where there's like a do nothing option and then all the options because out of requirement something must be emitted at every click of the simulation and all of a sudden it's like we moved from walking on a staircase to like ice skating or flying with rx and fur because it has totally opened up a dimension of the control question when to act not just which with according to a metronome
+
+And that's an entirely different approach that the communication protocols enable.
+
+And then those communication protocols can have all these other functionalities, like they can have a sub ontology or they can have compliance features as well.
+
+So it's super powerful and we're very excited to learn it.
+
+
+SPEAKER_04:
+That's yeah, that's the main point.
+
+Yeah, it's two sides of the same coin.
+
+It opens up this communication protocol, but then, yeah, you have to question when.
+
+When?
+
+It's something that I'm going to spend time on in my next project.
+
+Can we make an iterative procedure, maybe with iterations and arcs and thirds?
+
+We can send intermediate posteriors, and we always have an action that we supply.
+
+I don't know yet.
+
+I have no idea.
+
+
+SPEAKER_06:
+I have ideas, but I don't have anything working yet.
+
+
+SPEAKER_05:
+I think, to me, the underlying principle of the first suite versus traditional intercom is that instead of having synchronized communications, we now have asynchronous communications between everything.
+
+
+SPEAKER_06:
+Between everything, yes.
+
+
+SPEAKER_01:
+i'm glad i got that point across that's that's the point i wanted to make great well um if anyone else has a question otherwise we will continue learning and watching the github updates and just building out examples because in the coming months we know a lot of fun things will happen
+
+
+SPEAKER_04:
+All right.
+
+Yeah.
+
+You guys can always reach out to me on, I don't know, GitHub, Twitter.
+
+I don't know how often I'll check Discord.
+
+I'll try, you know, I'll try.
+
+But you can always reach out to me on LinkedIn, Twitter, whatever.
+
+That's all fine.
+
+
+SPEAKER_03:
+excellent i i do have a final question if that's all right um sure just just with respect to you know future directions and that kind of thing what's kind of the biggest problem set of problems what are you kind of looking to do i know that's a massive thing but is there anything relatively summative in that direction that you could perhaps speak to just for just a second so i'm very interested in this when to act uh problem so
+
+
+SPEAKER_04:
+This, to me, opens up the door to an agent that, because we, okay, so,
+
+We can now act at any point in time, or at any point in time, we can send something to the environment.
+
+A logical consequence for me is that at any point in time, we should have an action ready to send.
+
+So when the next observation comes in, we don't know when that's going to be.
+
+We should be able to act.
+
+So we have a certain computational budget between one observation and the next.
+
+We don't know how much it's going to be.
+
+but we do have a budget to spend.
+
+So I want to design indeed an iterative procedure that comes up with an action and then refined it and refined it and refined it until, well, the next observation comes in.
+
+So we have to send whatever we had and we get the next observation.
+
+this gives you if this all works right this gives you a very nice robust agent that if you give it a lot of computing power a lot of computational budget then in between observations well it's going to be able to come up with a pretty good um pretty good action that will solve the task accordingly like ideally however if you limit this uh this computational budget you put it on like a raspberry pi or an edge device
+
+it will not have as much iterations to refine its actions so it will still solve the problem hopefully but it will be less efficient doing so it will be slightly dumber so this is a very to me it's a very interesting problem to think about because then you have a sort of a procedure for control that is robust to loss of computation or whatever and it's still adaptive and reactive and and all those nice things we get from from asian inference
+
+um so yeah that's something that i that i would want to work on if i you know at 48 hours in the day it's very interesting so it sounds to me like the number of iterations you just referred to is the iteration field in the call of the infer function yes yes if i can do something like that so i run an indefinite amount of iterations and i just
+
+stop the inference procedure whenever i have to do something and then i extract the latest posterior for the action and i i send that to the environment yeah that's something well that would be the first thing i would investigate yeah i certainly think it has the potential to make the behavior in general uh quite robust if you if you consider that approach
+
+It would always have something to do, like it would always do something.
+
+Whether or not the free energy would converge as a measure of whether or not this action is good enough, that is to be investigated.
+
+But it would allow us to run the same models on edge devices as well and get slightly worse performance, but still
+
+yeah yeah it would still do the job we and then you can investigate you know how many iterations do i actually need before i can solve the problem uh it's of course problem dependent but yeah it's a very yeah it's just something that that really interests me i really like this this way of thinking um and it's in part why why i wrote this package because i i don't like this this this synchronized communication protocol from jim i just i just don't like it yeah that's why i wrote wrote arts environments
+
+
+SPEAKER_05:
+I think the only alternative is to not be able to respond whenever it gets an observation.
+
+In other words, to postpone your response.
+
+
+SPEAKER_06:
+Yes.
+
+
+SPEAKER_05:
+It nudges back into the synchronicity approach again.
+
+So it breaks away from the reactiveness of the whole thing.
+
+
+SPEAKER_04:
+But then you run into the robustness issue, I would say.
+
+If you have a self-driving car and it's driving into a wall because it thinks it's a green light, because those things are not that smart nowadays, and it figures out it's a wall, but it takes some time to adjust or it takes some time to come up with the idea, okay, now I have fully converged on the action that I have to steer away.
+
+Well, by that time, we might have already crashed into the wall.
+
+So...
+
+this this queuing up of uh of observations and waiting until uh my computation is fully converged i think it takes away the robustness like if you if if you don't have enough computational budget to spend well yeah you might do the wrong thing it's the same as when you and i are in a car right if we're in a very um
+
+a very busy situation so well i'm in the netherlands so we have cyclists right so if we have cyclists we have other cars there's a an ambulance coming whether it's very busy you might feel overwhelmed but you still kind of know the basic things to do to to to steer your car it's basically the same where you have limited computational budget there's all this stuff around you so to come up with a really thought through response or action
+
+uh it's too much to ask because you don't have the computational budget but your brain kind of prioritizes and says well if we stay on the road and we let the ambulance pass and well we're fine for now we're this is the best we can do um so this feeling of being overwhelmed by what what goes out on around you inspired this idea of of robustness and uh uh of interruptability basically
+
+yeah but then again how i'm going to do it well no idea yet or run rx infer iterations and see if i can uh can send intermediate posterior results or something or but it's just something yeah i find this very very very interesting awesome it's a good thing that free energy in general
+
+
+SPEAKER_05:
+decays predictably in a sense.
+
+So, I mean, just fully using your budget, your computational budget for the time that you're looking for the next observation over this, I think it's fairly safe to just use the current value of the posterior.
+
+That's the best you can do under the circumstances.
+
+
+SPEAKER_06:
+Yes, that would be the argument indeed.
+
+
+SPEAKER_04:
+Hopefully, this opens up the road to having actual robots driving around instead.
+
+Because, well, there's no self-driving cars where I live.
+
+There's no robots or drones flying around.
+
+And I think one of the reasons is because they're not robust or interruptible.
+
+
+SPEAKER_06:
+Well, we agree.
+
+Yeah.
+
+
+SPEAKER_01:
+All right.
+
+Thank you all.
+
+We'll look forward to staying updated, asynchronously even.
+
+
+SPEAKER_04:
+Asynchronously, reactantly.
+
+
+SPEAKER_01:
+See you all soon.
+
+Bye.
