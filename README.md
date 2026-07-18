@@ -16,10 +16,10 @@ alongside, e.g. `data/video/<other-channel>/…` or `data/<other-type>/<source>/
 
 ```
 data/video/activeinferenceinstitute/<Series>/<item>/
-  metadata.json     # canonical: series, item, parts[{video_id, url, title, duration, upload_date}]
-  transcript.txt    # clean text (part-tagged when multi-part)
-  transcript.json   # timestamped segments (where available)
-  captions/         # original-language .srt
+  metadata.json     # canonical: series, item, parts[{video_id, url, title, duration, upload_date, speakers}]
+  transcript.txt    # derived speaker-labeled text (part-tagged when multi-part)
+  transcript.json   # raw diarized segments — immutable, SPEAKER_NN labels (where available)
+  captions/         # original-language .srt (+ youtube_captions.txt where captions predate diarization)
   translations/     # translated .srt (per language)
   assets/           # images, html, prose, appendices, bibliography, …
   README.md         # human nav: titles, links, contents
@@ -42,6 +42,12 @@ is represented (uncategorized videos live under `Other/`).
 ## Provenance
 
 Transcripts and metadata are pulled completely and idempotently from the Institute
-YouTube channel (captions, or local Whisper where captions are absent) by
-[Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal-Utilities)
-(`scripts/refactor_journal.py`, `scripts/download_channel.py`). See [`docs/SCHEMA.md`](docs/SCHEMA.md).
+YouTube channel by
+[Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal-Utilities).
+Most transcripts are WhisperX-diarized: `transcript.json` holds the immutable raw
+segments (`SPEAKER_NN`), human speaker identifications are recorded in
+`metadata.json` `parts[].speakers`, and `transcript.txt` is regenerated from the
+two (`scripts/apply_speaker_names.py`). Items without diarization yet carry
+YouTube-caption text; original captions always remain under `captions/`.
+Private/unlisted videos are not transcribed. See [`docs/SCHEMA.md`](docs/SCHEMA.md)
+("Transcripts — raw vs derived").
