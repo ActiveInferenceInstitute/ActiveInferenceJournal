@@ -18,6 +18,10 @@ materials from the Active Inference Institute video library.
 - **Machine entry point:** [`../INDEX.json`](../INDEX.json) — every item, its videos, and paths.
 - **Human entry point:** [`../INDEX.md`](../INDEX.md) and the repo [`../README.md`](../README.md).
 - **Content root:** [`../data/video/activeinferenceinstitute/`](../data/video/activeinferenceinstitute/).
+- **Repo-level guides:** [`../CONTRIBUTING.md`](../CONTRIBUTING.md) (what to edit vs.
+  generated), [`../SECURITY.md`](../SECURITY.md) (credentials/audio rules),
+  [`../CITATION.cff`](../CITATION.cff) (Zenodo citation), [`../TO-DO.md`](../TO-DO.md)
+  (scoped improvement list).
 - **Tooling (separate repo):**
   [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal-Utilities)
   produces this layout; its `scripts/refactor_journal.py` and `scripts/download_channel.py`

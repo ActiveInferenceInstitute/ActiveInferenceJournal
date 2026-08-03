@@ -5,6 +5,7 @@ and curated materials from the [Active Inference Institute](https://www.youtube.
 video library.
 
 <a href="https://zenodo.org/badge/latestdoi/562916661"><img src="https://zenodo.org/badge/562916661.svg" alt="DOI"></a>
+[![Journal integrity](https://github.com/ActiveInferenceInstitute/ActiveInferenceJournal/actions/workflows/journal-integrity.yml/badge.svg)](https://github.com/ActiveInferenceInstitute/ActiveInferenceJournal/actions/workflows/journal-integrity.yml)
 
 Learn more: https://activeinference.institute/learning/ ·
 Tooling: https://github.com/ActiveInferenceInstitute/Journal-Utilities
