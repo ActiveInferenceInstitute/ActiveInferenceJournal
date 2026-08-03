@@ -6,7 +6,7 @@ video library.
 
 <a href="https://zenodo.org/badge/latestdoi/562916661"><img src="https://zenodo.org/badge/562916661.svg" alt="DOI"></a>
 
-Learn more: https://www.activeinference.org/research/journal ·
+Learn more: https://activeinference.institute/learning/ ·
 Tooling: https://github.com/ActiveInferenceInstitute/Journal-Utilities
 
 ## Layout
@@ -47,7 +47,7 @@ YouTube channel by
 Most transcripts are WhisperX-diarized: `transcript.json` holds the immutable raw
 segments (`SPEAKER_NN`), human speaker identifications are recorded in
 `metadata.json` `parts[].speakers`, and `transcript.txt` is regenerated from the
-two (`scripts/apply_speaker_names.py`). Items without diarization yet carry
+two (`Journal-Utilities/scripts/apply_speaker_names.py`). Items without diarization yet carry
 YouTube-caption text; original captions always remain under `captions/`.
 Private/unlisted videos are not transcribed. See [`docs/SCHEMA.md`](docs/SCHEMA.md)
 ("Transcripts — raw vs derived").
