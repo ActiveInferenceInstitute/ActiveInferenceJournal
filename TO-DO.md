@@ -51,26 +51,32 @@ overhaul, cross-cutting refactors.
 
 - ✓ `docs/SCHEMA.md` modernization (cross-cutting restructure of the schema
   of record — see Medium above). (`e4cfe729`)
+- ✓ **Regenerate the series `README.md` files** from `INDEX.json` — 9 of 19
+  were stale/broken (GuestStream 126 vs 127 items; TextbookGroup 150 vs 180
+  items with ~150 dead links to a pre-cohort layout; Symposium links to
+  non-existent `First_Interval/`/`part N`). Rebuilt in the established format
+  with correct counts, ✓/· transcript status, and working per-item links.
+  Verified: 0 broken links across all 19. Note: the current Journal-Utilities
+  generator does **not** produce series READMEs (only `INDEX.*` via
+  `generate_journal_indexes.py` and item READMEs via `refactor_journal.py`),
+  so nothing overwrites these. (`21f4ace7`)
+
+## Verification (this pass)
+
+- All three CI gates run locally against the repo (Journal-Utilities cloned to
+  /tmp, read-only): `generate_journal_indexes.py --check` PASS,
+  `repair_split_transcripts.py --check` PASS, `validate_journal.py` PASS
+  ("journal validation: PASS"; 0 forbidden files, 0 missing manifest videos;
+  one non-blocking warn: 5 canonical IDs absent from the slightly older
+  manifest).
 
 ## Open / deferred
 
-- **Regenerate generated docs (Journal-Utilities owned).** The 19 series
-  `README.md` files restate stale counts (GuestStream 126 vs 127 items;
-  TextbookGroup 150 vs 180), `TextbookGroup/README.md` carries ~150 broken
-  links (generated for a flat `Meeting_NNN` layout — the series now nests
-  `Cohort_N/Meeting_NNN`), and `Applied Active Inference Symposium/README.md`
-  links to non-existent `First_Interval/`, `part N/` paths (items nest under
-  `2023 Ecosystem Symposium/`, `2024/part N`). Fix in Journal-Utilities
-  (regenerate series READMEs; teach the generator nested series folders),
-  then regenerate here. *Reason deferred: generator lives in a sibling repo;
-  per `AGENTS.md`, generated files are not hand-edited.*
 - **Item-level README long lines.** Generated item `README.md` files have
-  115–165-char lines — cosmetic; generator-owned, fold into the regeneration
-  item above.
-- **`INDEX.md` header line wraps at 140 chars** — generated; generator-owned.
+  115–165-char lines — produced by `refactor_journal.py` (build-time) in its
+  own format; generator-owned, cosmetic.
+- **`INDEX.md` header line wraps at 140 chars** — produced by
+  `generate_journal_indexes.py`; generator-owned.
 - **Legacy curated `assets/notes/*.md` broken image links** (`images/orcid.png`,
   `../../Video/*.PNG`) — pre-refactor curated content preserved verbatim;
   left untouched (content, not documentation).
-- **Full CI suite not run locally** — the `--check` gates require a
-  Journal-Utilities checkout (sibling repo, not present). CI
-  (`.github/workflows/journal-integrity.yml`) runs the three gates on push.

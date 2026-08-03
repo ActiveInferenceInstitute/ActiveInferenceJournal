@@ -39,6 +39,13 @@ is represented (uncategorized videos live under `Other/`).
 - **`audio`** — `main` + `<item>/audio/<name>.64k.m4a` (audio re-encoded to 64 kbps).
   `git checkout audio` to get the media.
 
+## Documentation
+
+- Technical docs (schema, organization, pipeline): [`docs/`](docs/README.md).
+- Contribution guide: [`CONTRIBUTING.md`](CONTRIBUTING.md).
+- Citation (Zenodo DOI): [`CITATION.cff`](CITATION.cff).
+- Agent conventions: [`AGENTS.md`](AGENTS.md).
+
 ## Provenance
 
 Transcripts and metadata are pulled completely and idempotently from the Institute

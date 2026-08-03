@@ -101,11 +101,13 @@ open items listed at the end.
 | `4e208d58` | Channel README de-counting; wrap docs + 19 series AGENTS.md |
 | `1c6df86e` | CONTRIBUTING.md + CITATION.cff |
 | this commit | REVIEW_LOG_2026-08-02.md + TO-DO.md |
+| `6618f2cf` | REVIEW_LOG fence-marker wording |
+| `21f4ace7` | Regenerate 9 stale series READMEs (counts + links) |
+| (final) | README documentation section; TO-DO/REVIEW_LOG update |
 
-Skipped (documented, not run): full CI/validation suite — requires a
-Journal-Utilities checkout (`--check` gates) which does not exist locally and is a
-sibling repo; no Python component exists in this repo itself. Link/fence checks
-re-run locally after edits (see Phase 4).
+Skipped in the first pass, then **run locally**: the three CI gates
+(Journal-Utilities cloned read-only to `/tmp/ju-check`; scripts are stdlib-only,
+no install needed). All PASS — see Phase 4 follow-up below.
 
 ## Phase 4 — Verification & push
 
@@ -113,3 +115,27 @@ re-run locally after edits (see Phase 4).
 - `git status` contains only the intended files (5 commits); pre-existing dirty
   files (5 deletions, ~150 untracked translations) left untouched.
 - Pushed to `origin/main`; confirmed up to date.
+
+## Follow-up (same day) — deferred items
+
+- **CI gates run locally (all PASS):**
+  1. `generate_journal_indexes.py --check` → exit 0 (INDEX.json/INDEX.md current).
+  2. `repair_split_transcripts.py --check` → exit 0.
+  3. `validate_journal.py --manifest …/channel_videos.json` → "journal
+     validation: PASS" (metadata_items 573, parts 744, canonical ids 710,
+     forbidden_main_files 0, missing_manifest_videos 0; non-blocking warn: 5
+     canonical IDs absent from the slightly older manifest — same class of warn
+     CI tolerates without `--strict-manifest`).
+- **Series README regeneration** (`21f4ace7`): read the current
+  Journal-Utilities source first — `generate_journal_indexes.py` writes only
+  `INDEX.json`/`INDEX.md`; `refactor_journal.py` writes only item READMEs at
+  build time; nothing generates series READMEs. The 19 in-repo series READMEs
+  are therefore legacy artifacts that no pipeline overwrites; rebuilt them from
+  `INDEX.json` in the established format. 9 of 19 were stale/broken (worst:
+  TextbookGroup ~150 dead links, 150→180 items; Symposium dead `First_Interval/`
+  links; GuestStream 126→127 items). Verified: 0 broken links across all 19
+  (was ~150).
+- **Still deferred (genuinely generator-owned):** item README long lines
+  (`refactor_journal.py` format), `INDEX.md` 140-char header
+  (`generate_journal_indexes.py`), and legacy `assets/notes/*.md` broken image
+  links (curated content preserved verbatim).
