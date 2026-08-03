@@ -28,7 +28,8 @@ Journal-Utilities repo (GitHub API).
 1. `README.md` "Learn more" link → HTTP 404 (`activeinference.org/research/journal`).
 2. `README.md` referenced `scripts/apply_speaker_names.py` without the owning repo
    (no `scripts/` dir exists here; script lives in Journal-Utilities).
-3. `docs/SCHEMA.md` had an odd number of code fences (stray closing ``` at EOF).
+3. `docs/SCHEMA.md` had an odd number of code fences (a stray closing fence
+   marker at EOF).
 4. `docs/SCHEMA.md` enrichment command omitted the `--journal` flag (inconsistent
    with `PIPELINE.md` and CI); no note that it runs from the Journal-Utilities
    checkout and is dry-run by default.
