@@ -4,4 +4,4 @@ Series: **Roundtable**
 
 - [Active Inference Institute ~ 2025 Quarterly Roundtable #2](https://www.youtube.com/watch?v=-cKpXSZLvMQ) — `-cKpXSZLvMQ`
 
-Contents: —.
+Contents: captions.

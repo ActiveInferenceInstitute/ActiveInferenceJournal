@@ -2,8 +2,8 @@
 
 Series: **Applied Active Inference Symposium**
 
-- [Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education)](https://www.youtube.com/watch?v=INRaCBikpso) — `INRaCBikpso`
+- [Applied Active Inference Symposium — Karl Friston 2021 ~ 1st Applied Active Inference Symposium, part 2 (.comms)](https://www.youtube.com/watch?v=INRaCBikpso) — `INRaCBikpso`
 - [Prof. Karl Friston ~ Applied Active Inference Symposium pt. 2 (Communication)](https://www.youtube.com/watch?v=X2GwqUVLlcs) — `X2GwqUVLlcs`
-- [Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools)](https://www.youtube.com/watch?v=hW9IiOujS1E) — `hW9IiOujS1E`
+- [Applied Active Inference Symposium — Karl Friston 2021 ~ 1st Applied Active Inference Symposium, part 3 (.tools)](https://www.youtube.com/watch?v=hW9IiOujS1E) — `hW9IiOujS1E`
 
 Contents: assets, captions, translations.
