@@ -1,6 +1,6 @@
 # ActiveInferAntStream
 
-17 items · 23 videos. Active Inference Institute **ActiveInferAntStream** series.
+18 items · 24 videos. Active Inference Institute **ActiveInferAntStream** series.
 
 - ✓ [`ActiveInferAntStream_001`](ActiveInferAntStream_001/) — 2 video(s)
 - ✓ [`ActiveInferAntStream_003`](ActiveInferAntStream_003/) — 1 video(s)
@@ -19,5 +19,6 @@
 - ✓ [`ActiveInferAntStream_016`](ActiveInferAntStream_016/) — 2 video(s)
 - ✓ [`ActiveInferAntStream_017`](ActiveInferAntStream_017/) — 1 video(s)
 - ✓ [`ActiveInferAntStream_018`](ActiveInferAntStream_018/) — 1 video(s)
+- ✓ [`Active_Inference_in_Rust_For_Ants_4_4_2024_Active_InferAnts`](Active_Inference_in_Rust_For_Ants_4_4_2024_Active_InferAnts/) — 1 video(s)
 
 Schema: [`../../../../docs/SCHEMA.md`](../../../../docs/SCHEMA.md).

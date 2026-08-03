@@ -1,6 +1,6 @@
 # GuestStream
 
-126 items · 143 videos. Active Inference Institute **GuestStream** series.
+127 items · 143 videos. Active Inference Institute **GuestStream** series.
 
 - ✓ [`GuestStream_001`](GuestStream_001/) — 1 video(s)
 - ✓ [`GuestStream_002`](GuestStream_002/) — 1 video(s)
@@ -63,7 +63,7 @@
 - ✓ [`GuestStream_059`](GuestStream_059/) — 1 video(s)
 - ✓ [`GuestStream_060`](GuestStream_060/) — 1 video(s)
 - ✓ [`GuestStream_061`](GuestStream_061/) — 1 video(s)
-- ✓ [`GuestStream_062`](GuestStream_062/) — 2 video(s)
+- ✓ [`GuestStream_062`](GuestStream_062/) — 1 video(s)
 - ✓ [`GuestStream_063`](GuestStream_063/) — 1 video(s)
 - ✓ [`GuestStream_064`](GuestStream_064/) — 1 video(s)
 - ✓ [`GuestStream_065`](GuestStream_065/) — 1 video(s)
@@ -128,5 +128,6 @@
 - ✓ [`GuestStream_125`](GuestStream_125/) — 1 video(s)
 - ✓ [`GuestStream_126`](GuestStream_126/) — 1 video(s)
 - ✓ [`GuestStream_127`](GuestStream_127/) — 1 video(s)
+- ✓ [`GuestStream_128`](GuestStream_128/) — 1 video(s)
 
 Schema: [`../../../../docs/SCHEMA.md`](../../../../docs/SCHEMA.md).

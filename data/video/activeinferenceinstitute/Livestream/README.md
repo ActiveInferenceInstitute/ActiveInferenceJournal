@@ -55,6 +55,7 @@
 - ✓ [`LiveStream_051`](LiveStream_051/) — 3 video(s)
 - ✓ [`LiveStream_052`](LiveStream_052/) — 3 video(s)
 - ✓ [`LiveStream_053`](LiveStream_053/) — 3 video(s)
+- ✓ [`LiveStream_054`](LiveStream_054/) — 3 video(s)
 - ✓ [`LiveStream_055`](LiveStream_055/) — 3 video(s)
 - ✓ [`LiveStream_056`](LiveStream_056/) — 3 video(s)
 - ✓ [`LiveStream_057`](LiveStream_057/) — 3 video(s)
@@ -62,6 +63,5 @@
 - · [`LiveStream_059`](LiveStream_059/) — 0 video(s)
 - · [`LiveStream_060`](LiveStream_060/) — 0 video(s)
 - · [`LiveStream_061`](LiveStream_061/) — 0 video(s)
-- ✓ [`Livestream_054`](Livestream_054/) — 3 video(s)
 
 Schema: [`../../../../docs/SCHEMA.md`](../../../../docs/SCHEMA.md).
