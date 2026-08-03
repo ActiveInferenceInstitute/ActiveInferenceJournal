@@ -1,8 +1,9 @@
-# ActiveInferenceJournal — v2 Schema (agent- & program-navigable)
+# ActiveInferenceJournal — Schema (agent- & program-navigable)
 
-Target schema for the refactor of the `ActiveInferenceJournal` repo. Goal: uniform,
-flat, machine-readable item folders with a canonical `metadata.json`, no placeholder
-cruft, audio kept off `main`, and top-level indexes.
+Canonical schema of record for the `ActiveInferenceJournal` repository: uniform, flat,
+machine-readable item folders with a canonical `metadata.json`, no placeholder cruft,
+audio kept off `main`, and top-level indexes. The repository was migrated to this shape
+non-destructively by the Journal-Utilities refactor (see ["Layout history"](#layout-history)).
 
 ## Per-item folder
 
@@ -15,7 +16,8 @@ cruft, audio kept off `main`, and top-level indexes.
   captions/            # original-language *.srt
   translations/        # translated *.srt (one per language) — preserved verbatim
   assets/
-    images/   html/   prose/   appendices/   bibliography/   # curated content, by type
+    images/  html/  prose/  appendices/  bibliography/  csv/   # curated content, by type;
+                                                                # csv/ = legacy AssemblyAI sentence exports
   # audio/ is NOT on main (gitignored). The `audio` branch carries audio/<video_id>.64k.m4a
 ```
 
@@ -75,10 +77,12 @@ Provenance is encoded by file shape — no metadata flag:
 
 Items are enriched from the Institute's Coda table (now Superhuman Docs), the
 session split-files, and the channel manifest by
-`Journal-Utilities/scripts/enrich_metadata.py`. Regenerate with:
+`Journal-Utilities/scripts/enrich_metadata.py`. Regenerate with (run from the
+Journal-Utilities checkout; enrichment is dry-run unless `--apply` is passed):
 
 ```bash
-python scripts/enrich_metadata.py --apply   # from Journal-Utilities; dry-run without --apply
+python scripts/enrich_metadata.py --journal ../ActiveInferenceJournal
+python scripts/enrich_metadata.py --journal ../ActiveInferenceJournal --apply
 python scripts/generate_journal_indexes.py --journal ../ActiveInferenceJournal
 python scripts/validate_journal.py --journal ../ActiveInferenceJournal \
   --manifest data/output/channel_videos.json
@@ -133,11 +137,11 @@ corresponding display fields without losing the source text:
   `Journal-Utilities/scripts/apply_speaker_names.py` to regenerate
   transcript.txt with names (transcript.json keeps raw labels; idempotent;
   unmapped labels stay SPEAKER_NN). See "Transcripts — raw vs derived".
-- **`duplicate_of`** marks an `Other/<video_id>` item whose content is a
-  duplicate of a curated item (the two symposium full uploads). The duplicate
-  intentionally repeats the canonical video's ID; coverage reconciliation
-  excludes the secondary record and `INDEX.json` exposes both record and unique
-  video counts.
+- **`duplicate_of`** marks an `Other/<video_id>` item whose content duplicates a
+  curated item (currently 34 records: individual symposium talks whose canonical
+  home is the full-recording item). The duplicate intentionally repeats the
+  canonical video's ID; coverage reconciliation excludes the secondary record and
+  `INDEX.json` exposes both record and unique video counts.
 - **`data/video/activeinferenceinstitute/private_videos.json`** documents
   private/unlisted channel videos known to the Institute (from the legacy
   session database) that are deliberately absent from this public corpus.
@@ -148,24 +152,24 @@ corresponding display fields without losing the source text:
   counts part records, including deliberate duplicates; `unique_videos` counts
   distinct video IDs.
 - `INDEX.md` — human index grouped by series.
-- `SCHEMA.md` — this spec (mirrored into the journal repo).
-- `sources/` — registry of channels/sources (channel id → series rules) so other
-  open-source sources plug in (Institute-first, source-pluggable).
+- `SCHEMA.md` — this spec; mirror structural changes into Journal-Utilities
+  `docs/JOURNAL_SCHEMA.md`.
 
-## Refactor rules (non-destructive)
+## Layout history
 
-- Drop placeholders: `blank_document.txt`, `blank.txt`, empty `.gitkeep`-only dirs.
-- `Metadata/<item>.json` → `metadata.json` parts; `*.simple.txt` → `transcript.txt`;
-  timestamped json → `transcript.json`.
-- `Captions/`, `Transcripts/Captions/` `*.srt` → `captions/`.
-- `Translations/*.srt` → `translations/` (verbatim).
-- `Images/`→`assets/images/`, `HTML/`/`Transcripts/HTML/`→`assets/html/`,
-  `Transcripts/Prose/`/`Prose/`→`assets/prose/`, `Appendices/`→`assets/appendices/`,
-  `Bibliographic Information/`→`assets/bibliography/`. `pdf/odt/zip` → `assets/` by type.
-- `Audio/*.m4a` → moved to the `audio` branch as `audio/<video_id>.64k.m4a`; removed from `main`.
-- **Coverage invariant:** every non-duplicate channel video is a part in exactly
-  one canonical item. Records with `duplicate_of` are deliberate secondary
-  copies and are excluded from missing/duplicate coverage counts.
-- **File invariant:** every non-placeholder source file is accounted for (moved or
-  intentionally dropped). The converter's `--dry-run` reports any unmapped file.
-```
+The v2 layout above was produced from the legacy flat structure (per-item
+`Metadata/`, `Captions/`, `Translations/`, `Images/`, `Prose/`, `Appendices/`
+folders, `Audio/` on `main`) by the non-destructive Journal-Utilities refactor:
+placeholders were dropped, `Metadata/<item>.json` became `metadata.json` parts,
+`*.simple.txt` became `transcript.txt`, `Captions/`/`Translations/` became
+`captions/`/`translations/` (translations preserved verbatim), curated folders
+moved under `assets/` by type, and `Audio/*.m4a` moved to the `audio` branch as
+`audio/<video_id>.64k.m4a`. The converter's `--dry-run` reported every unmapped
+source file before any in-place apply. See
+[Journal-Utilities `docs/REFACTOR_READINESS.md`](https://github.com/ActiveInferenceInstitute/Journal-Utilities/blob/main/docs/REFACTOR_READINESS.md).
+
+- **Coverage invariant (still in force):** every non-duplicate channel video is a
+  part in exactly one canonical item. Records with `duplicate_of` are deliberate
+  secondary copies and are excluded from missing/duplicate coverage counts;
+  reconcile to `missing == 0` against the channel manifest (see
+  [`PIPELINE.md`](PIPELINE.md)).
