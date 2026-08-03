@@ -44,6 +44,6 @@ whose titles don't match a known series pattern live under `Other/<video_id>/`.
 1. Create `data/video/<channel-slug>/` (or `data/<type>/<source>/`).
 2. Produce items under it with the same per-item schema (`metadata.json` carries
    `source` + `channel`).
-3. Regenerate `INDEX.json` / `INDEX.md` (Journal-Utilities `scripts/refactor_journal.py`).
+3. Regenerate `INDEX.json` / `INDEX.md` (Journal-Utilities `scripts/generate_journal_indexes.py`).
 
 See [`PIPELINE.md`](PIPELINE.md) for how the Institute channel is pulled and kept complete.
