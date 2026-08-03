@@ -1,11 +1,11 @@
 ---
 title:  'Physics as Information Processing - Discussion 2, "Why Quantum Physics?"'
 author:
-- 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
-- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
-- 'Alexey Tolchinsky, Psy.D. (The George Washington University) [![Orcid](images/orcid.png)](https://orcid.org/0009-0009-4721-515X)'
-- 'Dean Rickles (Professional Initiatives Programming, Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0000-0003-2213-0773)'
-- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)'
+- 'Ander Aguirre (Ohio State University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0002-6337-8292)'
+- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+- 'Alexey Tolchinsky, Psy.D. (The George Washington University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0009-0009-4721-515X)'
+- 'Dean Rickles (Professional Initiatives Programming, Active Inference Institute) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0003-2213-0773)'
+- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0002-4812-0744)'
 
 date: "2023-07-01 Version 1.0"
 ...

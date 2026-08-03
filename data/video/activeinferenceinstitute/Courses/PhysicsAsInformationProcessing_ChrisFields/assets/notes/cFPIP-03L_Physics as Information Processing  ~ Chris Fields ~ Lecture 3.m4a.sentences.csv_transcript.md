@@ -1,15 +1,15 @@
 ---
 title:  'Physics as Information Processing - Lecture 3, "Quantum Reference Frames"'
 author:
-- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)'
-- 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
-- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0002-4812-0744)'
+- 'Ander Aguirre (Ohio State University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0002-6337-8292)'
+- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0001-6232-9096)'
 date: "2023-07-13 Version 1.0"
 ...
 
 # Lecture 3, "Quantum Reference Frames"
 
-![Quantum Reference Frames](../../Video/Video1.png)
+![Quantum Reference Frames](../images/Lecture_3_Video__Video1.png)
 
 00:06 _Daniel:_
 [[start:6930][end:8462]] Hello and welcome everyone.
@@ -24,7 +24,7 @@ date: "2023-07-13 Version 1.0"
 
 ## Introduction
 
-![Quantum Information Theory](../../Video/Video2.png)
+![Quantum Information Theory](../images/Lecture_3_Video__Video2.png)
 
 [[start:45470][end:67490]] So in this course, we've talked about quantum information theory, which we characterized as a general theory that describes the exchange of information, exchange of finite information between two finite agents that are separated by some boundary.
 [[start:67830][end:77330]] And we emphasize that this is a topological theory, not a geometric theory, so it makes no assumptions about an embedding spacetime.

@@ -1,13 +1,13 @@
 ---
 title:  'Physics as Information Processing - Discussion 5, "Spacetime"'
 author:
-- 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
-- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
-- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)'
-- 'Ian Tennant (Anglia Ruskin University) [![Orcid](images/orcid.png)](https://orcid.org/0009-0003-2185-8620)'
-- 'Haris Neophytou (Interfusion Services / UpCycleClub) [![Orcid](images/orcid.png)](https://orcid.org/0009-0003-0921-737X)'
-- 'Ana Magdelena Hurtado (Arizona State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0003-4064-1876)'
-- 'Dean Rickles (Professional Initiatives Programming, Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0000-0003-2213-0773)'
+- 'Ander Aguirre (Ohio State University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0002-6337-8292)'
+- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0002-4812-0744)'
+- 'Ian Tennant (Anglia Ruskin University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0009-0003-2185-8620)'
+- 'Haris Neophytou (Interfusion Services / UpCycleClub) [![Orcid](../images/images__orcid.png)](https://orcid.org/0009-0003-0921-737X)'
+- 'Ana Magdelena Hurtado (Arizona State University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0003-4064-1876)'
+- 'Dean Rickles (Professional Initiatives Programming, Active Inference Institute) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0003-2213-0773)'
 - 'Kate Koles'
 date: "2023-09-30 Version 1.0"
 ...

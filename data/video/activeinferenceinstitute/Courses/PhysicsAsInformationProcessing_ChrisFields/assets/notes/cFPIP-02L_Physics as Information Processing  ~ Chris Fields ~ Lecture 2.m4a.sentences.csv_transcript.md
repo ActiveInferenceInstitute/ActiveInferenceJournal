@@ -1,15 +1,15 @@
 ---
 title:  'Physics as Information Processing - Lecture 2, "Why Quantum Physics?"'
 author:
-- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)'
-- 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
-- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0002-4812-0744)'
+- 'Ander Aguirre (Ohio State University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0002-6337-8292)'
+- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0001-6232-9096)'
 date: "2023-06-15 Version 1.0"
 ...
 
 # Lecture 2, "Why Quantum Physics?"
 
-![Why Quantum Physics](../../Video/Video1.png)
+![Why Quantum Physics](../images/Video1.png)
 
 ## Introduction
 
@@ -26,14 +26,14 @@ date: "2023-06-15 Version 1.0"
 [[start:25240][end:26660]] Thank you, Daniel.
 [[start:27160][end:29380]] And, yes, welcome to this session.
 
-![Quantum Theory Development Timeline](../../Video/Video2.png)
+![Quantum Theory Development Timeline](../images/Video2.png)
 
 00:30 [[start:30626][end:34300]] This section is titled "Why Quantum Physics?".
 [[start:35440][end:54560]] And, if you will recall, from the first session, we reviewed the History of Physics and some of the History of Mathematics and Computer Science, from the end of the 19th century through to the beginning of the 21st century.
 
 ## Quantum Information Theory
 
-![Quantum Information Theory](../../Video/Video3.png)
+![Quantum Information Theory](../images/Video3.png)
 
 [[start:55400][end:90808]] And, we discussed the slow development from classical thermodynamics of **Quantum Information Theory** and specifically we characterized Quantum Information Theory as a new kind of physics that describes systems that are exchanging finite amounts of discretely encoded information across some intervening **boundary**.
 
@@ -49,12 +49,12 @@ date: "2023-06-15 Version 1.0"
 
 02:44 [[start:164666][end:173880]] And, in particular, it's not a boundary or a channel that's embedded in a three-dimensional space that separates Alice from Bob.
 
-![Where We Are Going](../../Video/Video4.png)
+![Where We Are Going](../images/Video4.png)
 
 [[start:175500][end:194770]] So, that's what we talked about last time. And today, what I want to discuss is how **Quantum Theory** in particular makes this idea of physics as a theory of communication simple and obvious.
 [[start:196260][end:211590]] And, Quantum Theory, of course, has a terrible reputation of being abstruse and mathematically incredibly complicated and counterintuitive and difficult to understand.
 
-![Richard Feynman Quote (1996)](../../Video/Video5.png)
+![Richard Feynman Quote (1996)](../images/Video5.png)
 
 [[start:212520][end:224490]] And, this is one quotation among many from leading physicists pointing out that quantum mechanics is just difficult.
 
@@ -63,7 +63,7 @@ date: "2023-06-15 Version 1.0"
 04:02 [[start:242900][end:248720]] And so, what I don't want to do today is try to introduce quantum mechanics.
 [[start:250340][end:253730]] We're not doing any of this.
 
-![What We're Not Doing...](../../Video/Video6.png)
+![What We're Not Doing...](../images/Video6.png)
 
 [[start:254740][end:264660]] Some of you will recognize this as the table of contents, the first part of the table of contents of the famous textbook by Landau and Lifshitz.
 [[start:266042][end:275930]] If you've studied Quantum Theory in undergraduate or graduate school, you've probably dealt with a textbook structured much like this one.
@@ -73,7 +73,7 @@ date: "2023-06-15 Version 1.0"
 04:54 [[start:294980][end:297264]] So, we're not going to try to do that
 [[start:297382][end:318810]] (this). What we're going to do instead is take a completely information theoretical approach, and we're going to characterize information transfer in a quantum theoretical way without any assumptions about mechanics or spacetime or any of that.
 
-![Instead, let's ask a simple question...](../../Video/Video7.png)
+![Instead, let's ask a simple question...](../images/Video7.png)
 
 [[start:319500][end:323770]] So, instead of this, we're going to ask a simple question.
 
@@ -105,7 +105,7 @@ date: "2023-06-15 Version 1.0"
 
 ## First, Action
  
-![First, Action](../../Video/Video8.png)
+![First, Action](../images/Video8.png)
 
 07:45 [[start:465240][end:472104]] So, let's go about this. And, talk first about the action of asking you a question.
 [[start:472222][end:488030]] And, so, the first thing I want you to do is actually say out loud "up or down?". Actually, ask a question, and then note two things about what just happened.
@@ -141,7 +141,7 @@ date: "2023-06-15 Version 1.0"
 
 ### Vision
 
-![Vision](../../Video/Video9.png)
+![Vision](../images/Video9.png)
 
 [[start:667500][end:669976]] And, here's an example that may be familiar.
 [[start:670088][end:673310]] It's the example of your own visual system.
@@ -178,7 +178,7 @@ date: "2023-06-15 Version 1.0"
 
 ## Second, The Thing to Ask
 
-![Second, The Thing To Ask](../../Video/Video10.png)
+![Second, The Thing To Ask](../images/Video10.png)
 
 14:49 [[start:889860][end:897380]] So, let's think about the second component of this project of asking a question.
 [[start:897450][end:899830]] And, that's the thing to be asked.
@@ -215,7 +215,7 @@ date: "2023-06-15 Version 1.0"
 
 ## Third, the Shared Language
 
-![Shared Language](../../Video/Video11.png)
+![Shared Language](../images/Video11.png)
 
 17:30 [[start:1050680][end:1058360]] So, the third thing that we have to build into this picture and into the theory is the shared language.
 [[start:1059740][end:1068810]] So, we have to know what we mean by "up" or "down" if we're going to ask the question "up or down?".
@@ -245,7 +245,7 @@ date: "2023-06-15 Version 1.0"
 
 ## Putting it all Together
 
-![Putting it all Together](../../Video/Video12.png)
+![Putting it all Together](../images/Video12.png)
 
 20:29 [[start:1229840][end:1231950]] So, let's put all this stuff together.
 
@@ -265,7 +265,7 @@ date: "2023-06-15 Version 1.0"
 
 ### How Does *H* Work?
 
-![How Does H Work](../../Video/Video13.png)
+![How Does H Work](../images/Video13.png)
 
 22:28 [[start:1348920][end:1351110]] So how does this *H* work?
 
@@ -291,7 +291,7 @@ date: "2023-06-15 Version 1.0"
 
 ### What is the Operator *M*?
 
-![What is the Operator M](../../Video/Video14.png)
+![What is the Operator M](../images/Video14.png)
 
 25:06 [[start:1506200][end:1512490]] Well, what *M* does is just encode a bit or decode a bit.
 [[start:1513740][end:1520760]] So, we can use this operator M to say: I want *Q* to have the value 1.
@@ -403,7 +403,7 @@ date: "2023-06-15 Version 1.0"
 
 ### Describing Alice and Bob
 
-![Describing Alice and Bob](../../Video/Video15.png)
+![Describing Alice and Bob](../images/Video15.png)
 
 34:17 _Chris:_
 [[start:2057420][end:2064360]] Okay, so let's now use this theory that we've developed to describe the interaction between Alice and Bob.
@@ -436,7 +436,7 @@ date: "2023-06-15 Version 1.0"
 
 ### Generalizing to an *N*-qubit Channel
 
-![Generalizing to an N-qubit Channel](../../Video/Video16.png)
+![Generalizing to an N-qubit Channel](../images/Video16.png)
 
 [[start:2223760][end:2236240]] So, here's a picture of an ***N*-qubit channe**l that Alice and Bob, which here I've labeled A and B, (because I took this figure from a paper) are sharing.
 [[start:2236900][end:2245330]] And, Alice and Bob both have N operators, one for each of the N-qubits that they share.
@@ -454,7 +454,7 @@ date: "2023-06-15 Version 1.0"
 
 ### Recalling the Holographic Principle
 
-![Recalling the Holographic Principle](../../Video/Video17.png)
+![Recalling the Holographic Principle](../images/Video17.png)
 
 38:27 [[start:2307900][end:2313000]] Recall from Session 1 this slide illustrating the Holographic principle.
 
@@ -484,7 +484,7 @@ date: "2023-06-15 Version 1.0"
 
 ### Recalling Feynman's Theory of Scattering
 
-![Recalling Feynman's Theory of Scattering](../../Video/Video18.png)
+![Recalling Feynman's Theory of Scattering](../images/Video18.png)
 
 42:02 [[start:2522480][end:2528270]] Okay, so now let's recall another picture from Session 1.
 
@@ -525,7 +525,7 @@ date: "2023-06-15 Version 1.0"
 
 ### Asking Questions -> Quantum Theory
 
-![Asking Questions -> Quantum Theory](../../Video/Video19.png)
+![Asking Questions -> Quantum Theory](../images/Video19.png)
 
 46:40 [[start:2800680][end:2807030]] So, what we've done here is started with this simple idea of asking questions.
 [[start:2808060][end:2812164]] And, we've actually constructed a fair amount of Quantum Theory.
@@ -548,7 +548,7 @@ date: "2023-06-15 Version 1.0"
 
 ## Preview: Quantum Reference Frames
 
-![Preview: Quantum Reference Frames](../../Video/Video20.png)
+![Preview: Quantum Reference Frames](../images/Video20.png)
 
 48:30 [[start:2910238][end:2914680]] And, it turns out these things that we've left out are very, very closely related.
 
@@ -568,7 +568,7 @@ date: "2023-06-15 Version 1.0"
 
 ### Misalignment produces superpositions of outcomes
 
-![Misalignment produces superpositions of outcomes](../../Video/Video21.png)
+![Misalignment produces superpositions of outcomes](../images/Video21.png)
 
 49:44 [[start:2984420][end:2991120]] Now, the misalignment of reference frames is what produces superpositions of outcomes.
 [[start:2991940][end:3014776]] So, if Alice makes her measurements with her up-down arrow arranged vertically, for example, but Bob prepares his qubit with his up-down arrow arranged at 90 degrees to Alice's, Alice is not going to have any idea what Bob did.
@@ -602,7 +602,7 @@ date: "2023-06-15 Version 1.0"
 
 ## Free Energy Principle, Quantum Formulation
 
-![Free Energy Principle, Quantum Formulation](../../Video/Video21.png)
+![Free Energy Principle, Quantum Formulation](../images/Video21.png)
 
 52:52 [[start:3172480][end:3189330]] So, if we go back to the Free Energy Principle, which is what this whole active inference class is about, and we formulate it in Quantum Theory, we get a very simple idea of what the Free Energy Principle is.
 

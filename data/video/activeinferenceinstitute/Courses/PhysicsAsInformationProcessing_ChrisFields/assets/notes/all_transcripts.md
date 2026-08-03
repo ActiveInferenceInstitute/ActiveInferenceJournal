@@ -1,31 +1,31 @@
 ---
 title:  'Physics as Information Processing'
 author: 
-  - name: Chris Fields[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0002-4812-0744)
+  - name: Chris Fields[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0002-4812-0744)
     institute: [allen]
-  - name: Ander Aguirre[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0002-6337-8292)
+  - name: Ander Aguirre[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0002-6337-8292)
     institute: [ohio]
-  - name: Daniel Friedman[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0001-6232-9096)
+  - name: Daniel Friedman[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0001-6232-9096)
     institute: [aii, ucdavis]
   - name: Francesco Balzan
   - name: Ross Berger
-  - name: David Draguta[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0009-0005-3179-9286)
+  - name: David Draguta[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0009-0005-3179-9286)
     institute: [independent]
-  - name: Avel Guénin-Carlut[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0001-8239-7264)
+  - name: Avel Guénin-Carlut[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0001-8239-7264)
     institute: [sussex, kairos, aii]
-  - name: Ana Magdelena Hurtado[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0003-4064-1876)
+  - name: Ana Magdelena Hurtado[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0003-4064-1876)
     institute: [asu]
-  - name: V. Bleu Knight[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0002-9894-1989)
+  - name: V. Bleu Knight[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0002-9894-1989)
     institute: [aii]
   - name: Kate Koles
-  - name: Haris Neophytou[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0009-0003-0921-737X)
+  - name: Haris Neophytou[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0009-0003-0921-737X)
     institute: [interfusion, upcycle]
   - name: Corby Prior
-  - name: Dean Rickles[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0003-2213-0773)
+  - name: Dean Rickles[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0003-2213-0773)
     institute: [professional, aii]
-  - name: Ian Tennant[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0009-0003-2185-8620)
+  - name: Ian Tennant[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0009-0003-2185-8620)
     institute: [anglia]
-  - name: Alexey Tolchinsky, Psy.D.[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0009-0009-4721-515X)
+  - name: Alexey Tolchinsky, Psy.D.[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0009-0009-4721-515X)
     institute: [gwu]
 institute:
   - allen: Allen Discovery Center at Tufts University
@@ -73,7 +73,7 @@ header-includes:
 
 # Lecture 1, "Historical Perspective"
 
-![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/cFPIP-01L_00001.png)
+![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../images/cFPIP-01L_00001.png)
 
 ## Introduction
 
@@ -112,7 +112,7 @@ _Chris:_
 
  This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
 
-![Wittgenstein, Landaur, Wheeler](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide2.PNG)
+![Wittgenstein, Landaur, Wheeler](../images/Slide2.PNG)
 
  And I'll just start with a few quotations that span the middle of the 20th century - from **[Ludwig] Wittgenstein** in the 1920s saying "The world is all that is the case,"
  so, defining the world in terms of facts, not objects;
@@ -123,7 +123,7 @@ _Chris:_
  so things come from information, i.e. bitstrings.
  And if nothing else, this shows that formulations of this idea get pithier as the 20th century rolls on!
 
-![Physics, Clausius to Friston](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide3.PNG)
+![Physics, Clausius to Friston](../images/Slide3.PNG)
 
  But the history goes back farther clearly than the 20th century.
  But I'm only going to really talk about a piece of it and the timeline that I'll actually discuss today,
@@ -146,7 +146,7 @@ _Chris:_
 
  And in consequence of that mid-20th Century development, we're beginning to see a new idea about physics which is roughly encapsulated in quantum information theory.
 
-![Physics is about information transfer across boundaries](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide4.PNG)
+![Physics is about information transfer across boundaries](../images/Slide4.PNG)
 
  And the new idea is this.
  It's that what physics is actually about is information transfer across **boundaries** and the information... We can represent
@@ -164,7 +164,7 @@ _Chris:_
 
 ## Course Outline
 
-![Where we are going in this course](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide5.PNG)
+![Where we are going in this course](../images/Slide5.PNG)
 
  And where we're going in this course today is really "how did this all happen?"
  It's the origin story.
@@ -192,7 +192,7 @@ _Chris:_
 
 ## Back to the Physics
 
-![Our story begins...](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide6.PNG)
+![Our story begins...](../images/Slide6.PNG)
 
  So let's start! Our story, as I said, begins in the 19th Century.
 
@@ -222,7 +222,7 @@ _Chris:_
  What is this entropy?
  What does this concept _mean?_"
 
-![But what _is_ entropy?](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide7.PNG)
+![But what _is_ entropy?](../images/Slide7.PNG)
 
 ### Boltzmann
 
@@ -251,7 +251,7 @@ _Chris:_
  And that's what you have to do to get information.
  So here's Boltzmann, basically inventing quantum theory.
 
-![fast forward to 1900](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide8.PNG)
+![fast forward to 1900](../images/Slide8.PNG)
 
 ### Planck
 
@@ -296,7 +296,7 @@ _Chris:_
  So it shouldn't have really been a _mystery_ why energy was quantized. But it was a mystery, and it stayed a mystery, and it's still a mystery!
  People still debate the meaning of quantum theory.
 
-![But already in 1900...](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide9.PNG)
+![But already in 1900...](../images/Slide9.PNG)
 
  But another thing we _could_ have known in 1900 was something _very_ important, and it's that this quantum of action, Planck's constant, which has units of action, which is energy times time, is intimately related to Boltzmann's constant.
 
@@ -364,7 +364,7 @@ _Chris:_
 
 ## Mathematics
 
-![Meanwhile, across the hall...](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide10.PNG)
+![Meanwhile, across the hall...](../images/Slide10.PNG)
 
 ### Gödel
 
@@ -390,7 +390,7 @@ _Chris:_
 
  So an immediate consequence of Gödel's theorem was an intense investigation of what computation actually _is,_ what it _meant_ to talk about finite discrete operations.
 
-![What is computation?](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide11.PNG)
+![What is computation?](../images/Slide11.PNG)
 
 ### Computation
 
@@ -417,7 +417,7 @@ _Chris:_
  That cannot be done by any finite process.
  So this was another body blow to the goal of understanding everything with finite discrete processes.
 
-![The stage is now set...](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide12.PNG)
+![The stage is now set...](../images/Slide12.PNG)
 
  But it also set the stage for something *new.*
  It set the stage for thinking about an agent who interacts with a computational process by giving it an input, and then looking at its output some time later.
@@ -428,7 +428,7 @@ _Chris:_
  i.e.
  receiving some finite number of outputs from the system that she's acting on.
 
-![A flurry of negative answers](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide13.PNG)
+![A flurry of negative answers](../images/Slide13.PNG)
 
  And the first 20 years of this produced a _large_ number of answers, all of them negative.
  So to go back to Turing, he proved that Alice can't tell what's _implementing_ the function that she sees being implemented.
@@ -447,7 +447,7 @@ _Chris:_
 
  So Alice can do science even though she can't answer any of these fundamental questions.
 
-![A major technological consequence](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide14.PNG)
+![A major technological consequence](../images/Slide14.PNG)
 
  Now, this, of course, has a huge technological consequence. Since this theory of computation tells us that processes are effectively virtual,
  we don't know what they are and we can't _determine_ what they are except in theory,
@@ -462,7 +462,7 @@ _Chris:_
 
 ## Physics Again
 
-![Feynman expressed these same ideas](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide15.PNG)
+![Feynman expressed these same ideas](../images/Slide15.PNG)
 
 ### Feynman
 
@@ -489,7 +489,7 @@ _Chris:_
  And this is called the **totalitarian principle**, since it's what's written in T. H. White's section in the book "The Once and Future King" on the kingdom of the ants, for which "everything not explicitly forbidden is mandatory."
  So let's think about a real example that's {a bit actually it's...} the same as scattering.
 
-![The ultimate scattering experiment is a black hole](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide16.PNG)
+![The ultimate scattering experiment is a black hole](../images/Slide16.PNG)
 
  The ultimate scattering experiment in physics is a black hole.
  Stuff goes into the horizon, stars, whole galaxies, whatever.
@@ -514,7 +514,7 @@ _Chris:_
  But Beckenstein didn't just tell us that.
  He told us something about the _structure_ of the interface, the horizon of a black hole.
 
-![Recall that S = lnΩ](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide17.PNG)
+![Recall that S = lnΩ](../images/Slide17.PNG)
 
  And this is what he told us.
 
@@ -531,7 +531,7 @@ _Chris:_
  But what gets really interesting is what happens when you _generalize_ it.
  And of course, physicists are prone to generalization, and that's what happened _next._
 
-![We just have to generalize](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide18.PNG)
+![We just have to generalize](../images/Slide18.PNG)
 
 ### The Holographic Principle
 
@@ -566,7 +566,7 @@ _Chris:_
  And what I'll go through next time is seeing that the information that's encoded on the boundary is a specification of the energy that's being exchanged by the interaction, which, of course, is linear in the number of bits.
  It's just counting the number of bits.
 
-![Quantum information theory](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide19.PNG)
+![Quantum information theory](../images/Slide19.PNG)
 
  Okay!
  So with the Holographic Principle, we now have a complete new science about systems that are exchanging finite discrete information across a boundary by encoding that information _on_ the boundary and then reading the information _off_ the boundary.
@@ -593,7 +593,7 @@ _Chris:_
  it's because it's entirely changed the _thinking_ about what physics _is_ and what it's _about,_ and replaced this idea of forces and balls banging into each other and all of that with the idea of communication between agents.
  And of course that's familiar from an Active Inference perspective.
 
-![Four NOs...](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide20.PNG)
+![Four NOs...](../images/Slide20.PNG)
 
  So we can now back up a little bit to see what they were doing in _classical_ physics during this period.
  {Well, let me go on a little bit.
@@ -626,7 +626,7 @@ _Chris:_
  So the agents here are all "observer-participants" in Wheeler's language.
  But what that just means is _agents_ that want to communicate. And it's their communication that gives rise to physics.
 
-![Meanwhile, back in classical physics...](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide21.PNG)
+![Meanwhile, back in classical physics...](../images/Slide21.PNG)
 
 ### Markov Blankets
 
@@ -644,7 +644,7 @@ _Chris:_
 
 ## Active Inference
 
-![An MB defines a persistent thing](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide22.PNG)
+![An MB defines a persistent thing](../images/Slide22.PNG)
 
  And it was from this classical physics background that **Karl Friston** came up with the idea that a Markov blanket defines a persistent 
 [**** inaudible ****] [**thing**, a system that persists through time], 
@@ -665,7 +665,7 @@ _Chris:_
 
 ## Conclusion
 
-![1st discussion session: Sat. 3 June 2023](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Video/Slide23.PNG)
+![1st discussion session: Sat. 3 June 2023](../images/Slide23.PNG)
 
  So that's it for this session.
 
@@ -1546,7 +1546,7 @@ _Ander:_
 
 # Lecture 2, "Why Quantum Physics?"
 
-![Why Quantum Physics](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video1.png)
+![Why Quantum Physics](../images/Video1.png)
 
 ## Introduction
 
@@ -1563,14 +1563,14 @@ _Chris:_
  Thank you, Daniel.
  And, yes, welcome to this session.
 
-![Quantum Theory Development Timeline](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video2.png)
+![Quantum Theory Development Timeline](../images/Video2.png)
 
  This section is titled "Why Quantum Physics?".
  And, if you will recall, from the first session, we reviewed the History of Physics and some of the History of Mathematics and Computer Science, from the end of the 19th century through to the beginning of the 21st century.
 
 ## Quantum Information Theory
 
-![Quantum Information Theory](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video3.png)
+![Quantum Information Theory](../images/Video3.png)
 
  And, we discussed the slow development from classical thermodynamics of **Quantum Information Theory** and specifically we characterized Quantum Information Theory as a new kind of physics that describes systems that are exchanging finite amounts of discretely encoded information across some intervening **boundary**.
 
@@ -1586,12 +1586,12 @@ _Chris:_
 
  And, in particular, it's not a boundary or a channel that's embedded in a three-dimensional space that separates Alice from Bob.
 
-![Where We Are Going](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video4.png)
+![Where We Are Going](../images/Video4.png)
 
  So, that's what we talked about last time. And today, what I want to discuss is how **Quantum Theory** in particular makes this idea of physics as a theory of communication simple and obvious.
  And, Quantum Theory, of course, has a terrible reputation of being abstruse and mathematically incredibly complicated and counterintuitive and difficult to understand.
 
-![Richard Feynman Quote (1996)](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video5.png)
+![Richard Feynman Quote (1996)](../images/Video5.png)
 
  And, this is one quotation among many from leading physicists pointing out that quantum mechanics is just difficult.
 
@@ -1600,7 +1600,7 @@ _Chris:_
  And so, what I don't want to do today is try to introduce quantum mechanics.
  We're not doing any of this.
 
-![What We're Not Doing...](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video6.png)
+![What We're Not Doing...](../images/Video6.png)
 
  Some of you will recognize this as the table of contents, the first part of the table of contents of the famous textbook by Landau and Lifshitz.
  If you've studied Quantum Theory in undergraduate or graduate school, you've probably dealt with a textbook structured much like this one.
@@ -1610,7 +1610,7 @@ _Chris:_
  So, we're not going to try to do that
  (this). What we're going to do instead is take a completely information theoretical approach, and we're going to characterize information transfer in a quantum theoretical way without any assumptions about mechanics or spacetime or any of that.
 
-![Instead, let's ask a simple question...](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video7.png)
+![Instead, let's ask a simple question...](../images/Video7.png)
 
  So, instead of this, we're going to ask a simple question.
 
@@ -1642,7 +1642,7 @@ _Chris:_
 
  ## First, Action
  
-![First, Action](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video8.png)
+![First, Action](../images/Video8.png)
 
  So, let's go about this. And, talk first about the action of asking you a question.
  And, so, the first thing I want you to do is actually say out loud "up or down?". Actually, ask a question, and then note two things about what just happened.
@@ -1678,7 +1678,7 @@ _Chris:_
 
 ### Vision
 
-![Vision](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video9.png)
+![Vision](../images/Video9.png)
 
  And, here's an example that may be familiar.
  It's the example of your own visual system.
@@ -1715,7 +1715,7 @@ _Chris:_
 
 ## Second, The Thing to Ask
 
-![Second, The Thing To Ask](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video10.png)
+![Second, The Thing To Ask](../images/Video10.png)
 
  So, let's think about the second component of this project of asking a question.
  And, that's the thing to be asked.
@@ -1752,7 +1752,7 @@ _Chris:_
 
 ## Third, the Shared Language
 
-![Shared Language](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video11.png)
+![Shared Language](../images/Video11.png)
 
  So, the third thing that we have to build into this picture and into the theory is the shared language.
  So, we have to know what we mean by "up" or "down" if we're going to ask the question "up or down?".
@@ -1782,7 +1782,7 @@ _Chris:_
 
 ## Putting it all Together
 
-![Putting it all Together](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video12.png)
+![Putting it all Together](../images/Video12.png)
 
  So, let's put all this stuff together.
 
@@ -1802,7 +1802,7 @@ _Chris:_
 
 ### How Does *H* Work?
 
-![How Does H Work](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video13.png)
+![How Does H Work](../images/Video13.png)
 
  So how does this *H* work?
 
@@ -1828,7 +1828,7 @@ _Chris:_
 
 ### What is the Operator *M*?
 
-![What is the Operator M](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video14.png)
+![What is the Operator M](../images/Video14.png)
 
  Well, what *M* does is just encode a bit or decode a bit.
  So, we can use this operator M to say: I want *Q* to have the value 1.
@@ -1940,7 +1940,7 @@ _Ander:_
 
 ### Describing Alice and Bob
 
-![Describing Alice and Bob](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video15.png)
+![Describing Alice and Bob](../images/Video15.png)
 
 _Chris:_
  Okay, so let's now use this theory that we've developed to describe the interaction between Alice and Bob.
@@ -1973,7 +1973,7 @@ _Chris:_
 
 ### Generalizing to an *N*-qubit Channel
 
-![Generalizing to an N-qubit Channel](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video16.png)
+![Generalizing to an N-qubit Channel](../images/Video16.png)
 
  So, here's a picture of an ***N*-qubit channe**l that Alice and Bob, which here I've labeled A and B, (because I took this figure from a paper) are sharing.
  And, Alice and Bob both have N operators, one for each of the N-qubits that they share.
@@ -1991,7 +1991,7 @@ _Chris:_
 
 ### Recalling the Holographic Principle
 
-![Recalling the Holographic Principle](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video17.png)
+![Recalling the Holographic Principle](../images/Video17.png)
 
  Recall from Session 1 this slide illustrating the Holographic principle.
 
@@ -2021,7 +2021,7 @@ _Chris:_
 
 ### Recalling Feynman's Theory of Scattering
 
-![Recalling Feynman's Theory of Scattering](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video18.png)
+![Recalling Feynman's Theory of Scattering](../images/Video18.png)
 
  Okay, so now let's recall another picture from Session 1.
 
@@ -2062,7 +2062,7 @@ _Chris:_
 
 ### Asking Questions -> Quantum Theory
 
-![Asking Questions -> Quantum Theory](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video19.png)
+![Asking Questions -> Quantum Theory](../images/Video19.png)
 
  So, what we've done here is started with this simple idea of asking questions.
  And, we've actually constructed a fair amount of Quantum Theory.
@@ -2085,7 +2085,7 @@ _Chris:_
 
 ## Preview: Quantum Reference Frames
 
-![Preview: Quantum Reference Frames](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video20.png)
+![Preview: Quantum Reference Frames](../images/Video20.png)
 
  And, it turns out these things that we've left out are very, very closely related.
 
@@ -2105,7 +2105,7 @@ _Chris:_
 
 ### Misalignment produces superpositions of outcomes
 
-![Misalignment produces superpositions of outcomes](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video21.png)
+![Misalignment produces superpositions of outcomes](../images/Video21.png)
 
  Now, the misalignment of reference frames is what produces superpositions of outcomes.
  So, if Alice makes her measurements with her up-down arrow arranged vertically, for example, but Bob prepares his qubit with his up-down arrow arranged at 90 degrees to Alice's, Alice is not going to have any idea what Bob did.
@@ -2139,7 +2139,7 @@ _Chris:_
 
 ## Free Energy Principle, Quantum Formulation
 
-![Free Energy Principle, Quantum Formulation](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_2/Video/Video21.png)
+![Free Energy Principle, Quantum Formulation](../images/Video21.png)
 
  So, if we go back to the Free Energy Principle, which is what this whole active inference class is about, and we formulate it in Quantum Theory, we get a very simple idea of what the Free Energy Principle is.
 
@@ -7006,7 +7006,7 @@ _Chris:_
 
 # Lecture 6, "Biology"
 
-![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide1.png)
+![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../images/Lecture_6_Video__Slide1.png)
 
 ## Introduction
 
@@ -7026,7 +7026,7 @@ _Chris:_
 
 ## Generic Quantum Systems
 
-![Generic quantum systems - topological, not gemoetric approach](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide2.png)
+![Generic quantum systems - topological, not gemoetric approach](../images/Lecture_6_Video__Slide2.png)
 
  {So} It's really awesome.
  As usual, we've focused in this course on generic quantum systems, by which I mean just any quantum system that has some number of degrees of freedom.
@@ -7038,7 +7038,7 @@ _Chris:_
  So we haven't assumed anything about embedding in space.
  And as we've characterized these systems, we focused really on two things.
 
-![Boundaries](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide3.png)
+![Boundaries](../images/Lecture_6_Video__Slide3.png)
 
  One, the amount of information that the two systems can exchange.
 
@@ -7055,7 +7055,7 @@ _Chris:_
 
 ## Free Energy Principle (FEP)
 
-![Free Energy Principle (FEP)](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide4.png)
+![Free Energy Principle (FEP)](../images/Lecture_6_Video__Slide4.png)
 
  And this characterization allowed us to reformulate the **free energy principle (FEP)** in quantum information theoretic terms, as the principle that interacting systems behave in a way that will asymptotically align their reference frames.
 
@@ -7065,7 +7065,7 @@ _Chris:_
  They may start out separable, but if they interact long enough, they'll become entangled.
  So we've had a discussion that is really very generic.
 
-![Free energy constraints induce compartmentalization](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide5.png)
+![Free energy constraints induce compartmentalization](../images/Lecture_6_Video__Slide5.png)
 
  Now, we showed a couple of sessions ago that under these very generic assumptions, we got some interesting outcomes.
  And one is that if systems have sufficient degrees of freedom under the action of the FEP, they will be driven toward making a diverse set of measurements of their environment, because they're trying to get information about it so that they can predict what it's going to do.
@@ -7080,7 +7080,7 @@ _Chris:_
 
 ## Spacetime
 
-![Approaches to emergent spacetime](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide6.png)
+![Approaches to emergent spacetime](../images/Lecture_6_Video__Slide6.png)
 
  We then talked last time about space and time and the computational requirements on any system that is able to perceive an external clock or perceive an external spatial layout.
  And we discussed this from a very kind of developmental psychology point of view.
@@ -7092,7 +7092,7 @@ _Chris:_
 
  And we'll get back to this later.
 
-![Organisms \(at least\) manage acontinuous loop of bject persistence, error correction, spacetime, and memory](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide7.png)
+![Organisms \(at least\) manage acontinuous loop of bject persistence, error correction, spacetime, and memory](../images/Lecture_6_Video__Slide7.png)
 
  So, organisms and maybe other complex systems, seem to manage a collection of capabilities that are all mutually dependent.
  So memory depends on having layouts of persistent things that can be distinguished.
@@ -7109,14 +7109,14 @@ _Chris:_
  You'll recognize these four functions that are mutually interdependent as underlying complex cognition across the board.
  And you can't really do complex cognition unless you have these capabilities.
 
-![Where we are going: the course schedule](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide8.png)
+![Where we are going: the course schedule](../images/Lecture_6_Video__Slide8.png)
 
 ## Life as Computation
 
  So today, we're going to put some of these things together in a discussion of biology and end by looking forward to future directions, not just in biology, but in all of **quantum information theory (QIT)**.
  So, let's talk about biological systems, living systems, which, of course, includes us, but also includes all other organisms and communities of organisms and so forth, at multiple scales.
 
-![Hypothesis](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide9.png)
+![Hypothesis](../images/Lecture_6_Video__Slide9.png)
 
  And I want to put forward a fairly radical hypothesis that living systems are just generic quantum systems that the FEP has driven to a high level of computational complexity.
  So what does this really say?
@@ -7134,7 +7134,7 @@ _Chris:_
  And so this is, in a sense, a definitional kind of hypothesis.
  And we test such kinds of hypothesis by seeing if they're useful conceptually to help us understand what living systems are doing.
 
-![Are living systems really quantum systems? Quantum biology is still a nascent field](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide10.png)
+![Are living systems really quantum systems? Quantum biology is still a nascent field](../images/Lecture_6_Video__Slide10.png)
 
  Now, as soon as we put forward something like this, inevitably the question comes up, are living systems really quantum systems, or are they classical in some intrinsic sense?
 
@@ -7174,7 +7174,7 @@ _Chris:_
  And I think again, a generation from now, quantum biology is going to be regarded as a very mainstream endeavor, even though it's something of a small emerging field now.
  And I'll just show you one picture in support of this third point.
 
-![Cells process classical information at kHz to GHz rates](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide11.png)
+![Cells process classical information at kHz to GHz rates](../images/Lecture_6_Video__Slide11.png)
 
  This is a plot of measured free energy usage converted to numbers of bits processed at one kHz for a number of prokaryotic and eukaryotic cells.
 
@@ -7187,7 +7187,7 @@ _Chris:_
 
  So let's now talk a little bit about life and living systems and what they look like.
 
-![Living systems: The view from genome diversity](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide12.png)
+![Living systems: The view from genome diversity](../images/Lecture_6_Video__Slide12.png)
 
  Here's a view of living systems from the point of view of genome diversity.
  This is a few years old, so it's out of date by now, but it tells us a lot qualitatively.
@@ -7205,7 +7205,7 @@ _Chris:_
  Most genome diversity is buried down there in the microbial world.
  This isn't the only way we can look at life as a diverse set of organisms.
 
-![From the view of cell lineage, all life is one ur-organism!](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide13.png)
+![From the view of cell lineage, all life is one ur-organism!](../images/Lecture_6_Video__Slide13.png)
 
 ## Common Ancestry
 
@@ -7232,7 +7232,7 @@ _Chris:_
  And there's certainly groups working on artificial organisms that aren't part of this lineage, that are constructed from parts derived from this lineage, but aren't members of this lineage themselves.
  And that may tell us something new about life.
 
-![As life grows, its boundary expands](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide14.png)
+![As life grows, its boundary expands](../images/Lecture_6_Video__Slide14.png)
 
 #Life Boundary
 
@@ -7256,7 +7256,7 @@ _Chris:_
  And as the informational environment gets bigger, you have more information with which to predict the behavior of the physical environment.
  So this all hangs together very nicely with the free energy principle.
 
-![Expanding boundary, shrinking physical environment](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide15.png)
+![Expanding boundary, shrinking physical environment](../images/Lecture_6_Video__Slide15.png)
 
  Here's another picture of this same thing.
  If we start with some boundary here on the left labeled B, around some system labeled S, and it's embedded in an environment, E.
@@ -7273,7 +7273,7 @@ _Chris:_
 
  And the answer to that question, at least one answer to that question, is the free energy principle drives it to do this.
 
-![Neighbors/progeny confer protection](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide16.png)
+![Neighbors/progeny confer protection](../images/Lecture_6_Video__Slide16.png)
 
  And I'll just show you some simulations from several years ago of a cell population.
  In this upper left panel, the green cells are stem cells that divide, and they've been embedded in an environment that's safe on the left side and 100% lethal on the right side.
@@ -7297,7 +7297,7 @@ _Chris:_
 
 ## Scale Transition Mechanism
 
-![The question of the mechanism of biological scane transitions](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide17.png)
+![The question of the mechanism of biological scane transitions](../images/Lecture_6_Video__Slide17.png)
 
  So that lets us go back to this question that was raised last time about the mechanism of these **scale transitions** that we see ubiquitously in life.
  Life gets bigger and bigger as time goes on phytogenetically, and as time goes on developmentally, we start with some molecular pathways that somehow get assembled into a cell.
@@ -7334,7 +7334,7 @@ _Chris:_
 
 ## Universal Darwinism
 
-![Universal Darwinism](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide18.png)
+![Universal Darwinism](../images/Lecture_6_Video__Slide18.png)
 
  But universal Darwinism is incredibly simple and very obvious.
  It says if you have systems and they can copy each other, they can copy themselves, and the copies can diversify.
@@ -7349,7 +7349,7 @@ _Chris:_
  But there's no real process of selection in evolution by natural selection.
  It's just copying and diversifying.
 
-![Universal Darwinism: An outline of a theory](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide19.png)
+![Universal Darwinism: An outline of a theory](../images/Lecture_6_Video__Slide19.png)
 
  But this clearly is just the outline of what a real mechanistic theory would be, because we need to have a story about what copying is and what diversifying is and what efficiently means.
 
@@ -7359,7 +7359,7 @@ _Chris:_
 
 ## Copying
 
-![What does copy mean?](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide20.png)
+![What does copy mean?](../images/Lecture_6_Video__Slide20.png)
 
  Let's start with copying.
 
@@ -7388,7 +7388,7 @@ _Chris:_
 
 ## Diversification
 
-![Diversification: Biological and Sociological](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide21.png)
+![Diversification: Biological and Sociological](../images/Lecture_6_Video__Slide21.png)
 
  Now, with diversification, we see much the same thing in the early days of the modern synthesis and still in the work of people like Richard Dawkins.
 
@@ -7429,7 +7429,7 @@ _Chris:_
 
 ## FEP: Efficiency due to Intelligence
 
-![FEP: Efficiency is due to intelligence](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide22.png)
+![FEP: Efficiency is due to intelligence](../images/Lecture_6_Video__Slide22.png)
 
  And the FEP tells us that efficiency is actually about intelligence, because the FEP drives systems to build good models of their environments or the behavior of their environments.
  And what a good model lets a system do is reach a single goal by many different means, because it allows, in a sense, planning, and it allows flexibility and adaptability.
@@ -7470,7 +7470,7 @@ _Chris:_
  But this intelligence is necessary when it's viewed in this FEP sort of way.
  Intelligence is what lets you build models that enable you to predict the environment.
 
-![Key Predictions](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide23.png)
+![Key Predictions](../images/Lecture_6_Video__Slide23.png)
 
  So where does this leave us?
 
@@ -7501,7 +7501,7 @@ _Chris:_
 
 ## Challenge to Evolve QIT 
 
-![Evolving Quantum Information Theory](/mnt/md0/projects/ActiveInferenceJournal/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_6/Video/Slide24.png)
+![Evolving Quantum Information Theory](../images/Lecture_6_Video__Slide24.png)
 
  So where does that leave us?
  I think it leaves us here with a challenge not just to thinking about the FEP, which is what this course has been about, but to quantum information theory in general.
@@ -8419,12 +8419,12 @@ _David:_
 
 We extend gratitude to the following contributors whose expertise enhanced the quality of this transcription:
 
-- Ana Magdalena Hurtado (Arizona State University) [![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0003-4064-1876)
-- Maria Luiza Iennaco (University of São Paulo, Brazil) [![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0002-5407-4852)
-- Jeffrey Samuel Schulman Jr (Penn State University) [![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0009-0004-9806-4113)
-- David S. Douglass (Active Inference Institute) [![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0001-7894-8019)
-- Alexander Vyatkin (Active Inference Institute) [![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0003-1306-4620)
-- Holly Grimm (Active Inference Institute) [![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0009-0001-6181-2569)
+- Ana Magdalena Hurtado (Arizona State University) [![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0003-4064-1876)
+- Maria Luiza Iennaco (University of São Paulo, Brazil) [![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0002-5407-4852)
+- Jeffrey Samuel Schulman Jr (Penn State University) [![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0009-0004-9806-4113)
+- David S. Douglass (Active Inference Institute) [![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0001-7894-8019)
+- Alexander Vyatkin (Active Inference Institute) [![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0003-1306-4620)
+- Holly Grimm (Active Inference Institute) [![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0009-0001-6181-2569)
 
 # Appendix: Terminology
 
@@ -8601,4 +8601,4 @@ Variational Free Energy
 :   Measure that performs e.g. Inference on Sensory Data given a Generative Model, F. The two sources that compose Variational Free Energy  are Model overfitting and Model accuracy
 
 
-![Act. Infer. Serve](images/logo.png){ width=5% } Act to connect with The Institute by [web](https://activeinference.org), [email](mailto:Blanket@ActiveInference.Institute), [YouTube](https://www.youtube.com/c/ActiveInference/videos), [Discord](https://discord.gg/8VNKNp4jtx), or [LinkedIn](https://www.linkedin.com/company/active-inference/).
+![Act. Infer. Serve](../images/images__logo.png){ width=5% } Act to connect with The Institute by [web](https://activeinference.org), [email](mailto:Blanket@ActiveInference.Institute), [YouTube](https://www.youtube.com/c/ActiveInference/videos), [Discord](https://discord.gg/8VNKNp4jtx), or [LinkedIn](https://www.linkedin.com/company/active-inference/).

@@ -1,14 +1,14 @@
 ---
 title:  'Physics as Information Processing - Lecture 6, "Biology"'
 author:
-- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)'
-- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0002-4812-0744)'
+- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0001-6232-9096)'
 date: "2023-10-12 Version 1.0"
 ...
 
 # Lecture 6, "Biology"
 
-![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/Slide1.png)
+![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../images/Lecture_6_Video__Slide1.png)
 
 ## Introduction
 
@@ -28,7 +28,7 @@ _Chris:_
 
 ## Generic Quantum Systems
 
-![Generic quantum systems - topological, not gemoetric approach](../../Video/Slide2.png)
+![Generic quantum systems - topological, not gemoetric approach](../images/Lecture_6_Video__Slide2.png)
 
  {So} It's really awesome.
  As usual, we've focused in this course on generic quantum systems, by which I mean just any quantum system that has some number of degrees of freedom.
@@ -40,7 +40,7 @@ _Chris:_
  So we haven't assumed anything about embedding in space.
  And as we've characterized these systems, we focused really on two things.
 
-![Boundaries](../../Video/Slide3.png)
+![Boundaries](../images/Lecture_6_Video__Slide3.png)
 
  One, the amount of information that the two systems can exchange.
 
@@ -57,7 +57,7 @@ _Chris:_
 
 ## Free Energy Principle (FEP)
 
-![Free Energy Principle (FEP)](../../Video/Slide4.png)
+![Free Energy Principle (FEP)](../images/Lecture_6_Video__Slide4.png)
 
  And this characterization allowed us to reformulate the **free energy principle (FEP)** in quantum information theoretic terms, as the principle that interacting systems behave in a way that will asymptotically align their reference frames.
 
@@ -67,7 +67,7 @@ _Chris:_
  They may start out separable, but if they interact long enough, they'll become entangled.
  So we've had a discussion that is really very generic.
 
-![Free energy constraints induce compartmentalization](../../Video/Slide5.png)
+![Free energy constraints induce compartmentalization](../images/Lecture_6_Video__Slide5.png)
 
  Now, we showed a couple of sessions ago that under these very generic assumptions, we got some interesting outcomes.
  And one is that if systems have sufficient degrees of freedom under the action of the FEP, they will be driven toward making a diverse set of measurements of their environment, because they're trying to get information about it so that they can predict what it's going to do.
@@ -82,7 +82,7 @@ _Chris:_
 
 ## Spacetime
 
-![Approaches to emergent spacetime](../../Video/Slide6.png)
+![Approaches to emergent spacetime](../images/Lecture_6_Video__Slide6.png)
 
  We then talked last time about space and time and the computational requirements on any system that is able to perceive an external clock or perceive an external spatial layout.
  And we discussed this from a very kind of developmental psychology point of view.
@@ -94,7 +94,7 @@ _Chris:_
 
  And we'll get back to this later.
 
-![Organisms \(at least\) manage acontinuous loop of bject persistence, error correction, spacetime, and memory](../../Video/Slide7.png)
+![Organisms \(at least\) manage acontinuous loop of bject persistence, error correction, spacetime, and memory](../images/Lecture_6_Video__Slide7.png)
 
  So, organisms and maybe other complex systems, seem to manage a collection of capabilities that are all mutually dependent.
  So memory depends on having layouts of persistent things that can be distinguished.
@@ -111,14 +111,14 @@ _Chris:_
  You'll recognize these four functions that are mutually interdependent as underlying complex cognition across the board.
  And you can't really do complex cognition unless you have these capabilities.
 
-![Where we are going: the course schedule](../../Video/Slide8.png)
+![Where we are going: the course schedule](../images/Lecture_6_Video__Slide8.png)
 
 ## Life as Computation
 
  So today, we're going to put some of these things together in a discussion of biology and end by looking forward to future directions, not just in biology, but in all of **quantum information theory (QIT)**.
  So, let's talk about biological systems, living systems, which, of course, includes us, but also includes all other organisms and communities of organisms and so forth, at multiple scales.
 
-![Hypothesis](../../Video/Slide9.png)
+![Hypothesis](../images/Lecture_6_Video__Slide9.png)
 
  And I want to put forward a fairly radical hypothesis that living systems are just generic quantum systems that the FEP has driven to a high level of computational complexity.
  So what does this really say?
@@ -136,7 +136,7 @@ _Chris:_
  And so this is, in a sense, a definitional kind of hypothesis.
  And we test such kinds of hypothesis by seeing if they're useful conceptually to help us understand what living systems are doing.
 
-![Are living systems really quantum systems? Quantum biology is still a nascent field](../../Video/Slide10.png)
+![Are living systems really quantum systems? Quantum biology is still a nascent field](../images/Lecture_6_Video__Slide10.png)
 
  Now, as soon as we put forward something like this, inevitably the question comes up, are living systems really quantum systems, or are they classical in some intrinsic sense?
 
@@ -176,7 +176,7 @@ _Chris:_
  And I think again, a generation from now, quantum biology is going to be regarded as a very mainstream endeavor, even though it's something of a small emerging field now.
  And I'll just show you one picture in support of this third point.
 
-![Cells process classical information at kHz to GHz rates](../../Video/Slide11.png)
+![Cells process classical information at kHz to GHz rates](../images/Lecture_6_Video__Slide11.png)
 
  This is a plot of measured free energy usage converted to numbers of bits processed at one kHz for a number of prokaryotic and eukaryotic cells.
 
@@ -189,7 +189,7 @@ _Chris:_
 
  So let's now talk a little bit about life and living systems and what they look like.
 
-![Living systems: The view from genome diversity](../../Video/Slide12.png)
+![Living systems: The view from genome diversity](../images/Lecture_6_Video__Slide12.png)
 
  Here's a view of living systems from the point of view of genome diversity.
  This is a few years old, so it's out of date by now, but it tells us a lot qualitatively.
@@ -207,7 +207,7 @@ _Chris:_
  Most genome diversity is buried down there in the microbial world.
  This isn't the only way we can look at life as a diverse set of organisms.
 
-![From the view of cell lineage, all life is one ur-organism!](../../Video/Slide13.png)
+![From the view of cell lineage, all life is one ur-organism!](../images/Lecture_6_Video__Slide13.png)
 
 ## Common Ancestry
 
@@ -234,7 +234,7 @@ _Chris:_
  And there's certainly groups working on artificial organisms that aren't part of this lineage, that are constructed from parts derived from this lineage, but aren't members of this lineage themselves.
  And that may tell us something new about life.
 
-![As life grows, its boundary expands](../../Video/Slide14.png)
+![As life grows, its boundary expands](../images/Lecture_6_Video__Slide14.png)
 
 #Life Boundary
 
@@ -258,7 +258,7 @@ _Chris:_
  And as the informational environment gets bigger, you have more information with which to predict the behavior of the physical environment.
  So this all hangs together very nicely with the free energy principle.
 
-![Expanding boundary, shrinking physical environment](../../Video/Slide15.png)
+![Expanding boundary, shrinking physical environment](../images/Lecture_6_Video__Slide15.png)
 
  Here's another picture of this same thing.
  If we start with some boundary here on the left labeled B, around some system labeled S, and it's embedded in an environment, E.
@@ -275,7 +275,7 @@ _Chris:_
 
  And the answer to that question, at least one answer to that question, is the free energy principle drives it to do this.
 
-![Neighbors/progeny confer protection](../../Video/Slide16.png)
+![Neighbors/progeny confer protection](../images/Lecture_6_Video__Slide16.png)
 
  And I'll just show you some simulations from several years ago of a cell population.
  In this upper left panel, the green cells are stem cells that divide, and they've been embedded in an environment that's safe on the left side and 100% lethal on the right side.
@@ -299,7 +299,7 @@ _Chris:_
 
 ## Scale Transition Mechanism
 
-![The question of the mechanism of biological scane transitions](../../Video/Slide17.png)
+![The question of the mechanism of biological scane transitions](../images/Lecture_6_Video__Slide17.png)
 
  So that lets us go back to this question that was raised last time about the mechanism of these **scale transitions** that we see ubiquitously in life.
  Life gets bigger and bigger as time goes on phytogenetically, and as time goes on developmentally, we start with some molecular pathways that somehow get assembled into a cell.
@@ -336,7 +336,7 @@ _Chris:_
 
 ## Universal Darwinism
 
-![Universal Darwinism](../../Video/Slide18.png)
+![Universal Darwinism](../images/Lecture_6_Video__Slide18.png)
 
  But universal Darwinism is incredibly simple and very obvious.
  It says if you have systems and they can copy each other, they can copy themselves, and the copies can diversify.
@@ -351,7 +351,7 @@ _Chris:_
  But there's no real process of selection in evolution by natural selection.
  It's just copying and diversifying.
 
-![Universal Darwinism: An outline of a theory](../../Video/Slide19.png)
+![Universal Darwinism: An outline of a theory](../images/Lecture_6_Video__Slide19.png)
 
  But this clearly is just the outline of what a real mechanistic theory would be, because we need to have a story about what copying is and what diversifying is and what efficiently means.
 
@@ -361,7 +361,7 @@ _Chris:_
 
 ## Copying
 
-![What does copy mean?](../../Video/Slide20.png)
+![What does copy mean?](../images/Lecture_6_Video__Slide20.png)
 
  Let's start with copying.
 
@@ -390,7 +390,7 @@ _Chris:_
 
 ## Diversification
 
-![Diversification: Biological and Sociological](../../Video/Slide21.png)
+![Diversification: Biological and Sociological](../images/Lecture_6_Video__Slide21.png)
 
  Now, with diversification, we see much the same thing in the early days of the modern synthesis and still in the work of people like Richard Dawkins.
 
@@ -431,7 +431,7 @@ _Chris:_
 
 ## FEP: Efficiency due to Intelligence
 
-![FEP: Efficiency is due to intelligence](../../Video/Slide22.png)
+![FEP: Efficiency is due to intelligence](../images/Lecture_6_Video__Slide22.png)
 
  And the FEP tells us that efficiency is actually about intelligence, because the FEP drives systems to build good models of their environments or the behavior of their environments.
  And what a good model lets a system do is reach a single goal by many different means, because it allows, in a sense, planning, and it allows flexibility and adaptability.
@@ -472,7 +472,7 @@ _Chris:_
  But this intelligence is necessary when it's viewed in this FEP sort of way.
  Intelligence is what lets you build models that enable you to predict the environment.
 
-![Key Predictions](../../Video/Slide23.png)
+![Key Predictions](../images/Lecture_6_Video__Slide23.png)
 
  So where does this leave us?
 
@@ -503,7 +503,7 @@ _Chris:_
 
 ## Challenge to Evolve QIT 
 
-![Evolving Quantum Information Theory](../../Video/Slide24.png)
+![Evolving Quantum Information Theory](../images/Lecture_6_Video__Slide24.png)
 
  So where does that leave us?
  I think it leaves us here with a challenge not just to thinking about the FEP, which is what this course has been about, but to quantum information theory in general.

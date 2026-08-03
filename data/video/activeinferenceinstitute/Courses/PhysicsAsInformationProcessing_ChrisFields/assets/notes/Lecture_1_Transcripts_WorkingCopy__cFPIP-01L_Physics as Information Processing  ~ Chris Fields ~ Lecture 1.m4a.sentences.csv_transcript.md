@@ -1,15 +1,15 @@
 ---
 title:  'Physics as Information Processing - Lecture 1, "Historical Perspective"'
 author:
-- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-4812-0744)'
-- 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
-- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+- 'Chris Fields (Allen Discovery Center at Tufts University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0002-4812-0744)'
+- 'Ander Aguirre (Ohio State University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0002-6337-8292)'
+- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0001-6232-9096)'
 date: "2023-05-18 Version 1.0"
 ...
 
 # Lecture 1, "Historical Perspective"
 
-![Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023](../../Video/cFPIP-01L_00001.png)
+*(Chris Fields presents "Physics as Information Processing" at Active Inference Institute, 2023)*
 
 ## Introduction
 
@@ -48,7 +48,7 @@ date: "2023-05-18 Version 1.0"
 
 01:49 [[start:109210][end:126810]] This is a course on "Physics as Information Processing," and this first session will be a historical perspective on the idea that physics is, or is about, information processing.
 
-![Wittgenstein, Landaur, Wheeler](../../Video/Slide2.PNG)
+*(Wittgenstein, Landaur, Wheeler)*
 
 [[start:127310][end:138478]] And I'll just start with a few quotations that span the middle of the 20th century - from **[Ludwig] Wittgenstein** in the 1920s saying "The world is all that is the case,"
 [[start:138564][end:143490]] so, defining the world in terms of facts, not objects;
@@ -59,7 +59,7 @@ date: "2023-05-18 Version 1.0"
 02:42 [[start:162236][end:167850]] so things come from information, i.e. bitstrings.
 [[start:168910][end:177180]] And if nothing else, this shows that formulations of this idea get pithier as the 20th century rolls on!
 
-![Physics, Clausius to Friston](../../Video/Slide3.PNG)
+*(Physics, Clausius to Friston)*
 
 [[start:178510][end:185390]] But the history goes back farther clearly than the 20th century.
 [[start:185730][end:196354]] But I'm only going to really talk about a piece of it and the timeline that I'll actually discuss today,
@@ -82,7 +82,7 @@ date: "2023-05-18 Version 1.0"
 
 04:48 [[start:288050][end:303010]] And in consequence of that mid-20th Century development, we're beginning to see a new idea about physics which is roughly encapsulated in quantum information theory.
 
-![Physics is about information transfer across boundaries](../../Video/Slide4.PNG)
+*(Physics is about information transfer across boundaries)*
 
 [[start:303350][end:305494]] And the new idea is this.
 [[start:305692][end:317686]] It's that what physics is actually about is information transfer across **boundaries** and the information... We can represent
@@ -100,7 +100,7 @@ date: "2023-05-18 Version 1.0"
 
 ## Course Outline
 
-![Where we are going in this course](../../Video/Slide5.PNG)
+*(Where we are going in this course)*
 
 06:43 [[start:403670][end:411702]] And where we're going in this course today is really "how did this all happen?"
 [[start:411756][end:413400]] It's the origin story.
@@ -128,7 +128,7 @@ date: "2023-05-18 Version 1.0"
 
 ## Back to the Physics
 
-![Our story begins...](../../Video/Slide6.PNG)
+*(Our story begins...)*
 
 [[start:581188][end:586990]] So let's start! Our story, as I said, begins in the 19th Century.
 
@@ -158,7 +158,7 @@ date: "2023-05-18 Version 1.0"
 [[start:732090][end:733498]] What is this entropy?
 [[start:733594][end:735440]] What does this concept _mean?_"
 
-![But what _is_ entropy?](../../Video/Slide7.PNG)
+*(But what _is_ entropy?)*
 
 ### Boltzmann
 
@@ -187,7 +187,7 @@ date: "2023-05-18 Version 1.0"
 14:38 [[start:878032][end:880400]] And that's what you have to do to get information.
 [[start:881330][end:885710]] So here's Boltzmann, basically inventing quantum theory.
 
-![fast forward to 1900](../../Video/Slide8.PNG)
+*(fast forward to 1900)*
 
 ### Planck
 
@@ -232,7 +232,7 @@ date: "2023-05-18 Version 1.0"
 [[start:1058410][end:1067446]] So it shouldn't have really been a _mystery_ why energy was quantized. But it was a mystery, and it stayed a mystery, and it's still a mystery!
 [[start:1067478][end:1070170]] People still debate the meaning of quantum theory.
 
-![But already in 1900...](../../Video/Slide9.PNG)
+*(But already in 1900...)*
 
 17:52 [[start:1072110][end:1091870]] But another thing we _could_ have known in 1900 was something _very_ important, and it's that this quantum of action, Planck's constant, which has units of action, which is energy times time, is intimately related to Boltzmann's constant.
 
@@ -300,7 +300,7 @@ date: "2023-05-18 Version 1.0"
 
 ## Mathematics
 
-![Meanwhile, across the hall...](../../Video/Slide10.PNG)
+*(Meanwhile, across the hall...)*
 
 ### Gödel
 
@@ -326,7 +326,7 @@ date: "2023-05-18 Version 1.0"
 
 25:33 [[start:1533410][end:1544190]] So an immediate consequence of Gödel's theorem was an intense investigation of what computation actually _is,_ what it _meant_ to talk about finite discrete operations.
 
-![What is computation?](../../Video/Slide11.PNG)
+*(What is computation?)*
 
 ### Computation
 
@@ -353,7 +353,7 @@ date: "2023-05-18 Version 1.0"
 [[start:1643646][end:1647620]] That cannot be done by any finite process.
 [[start:1649270][end:1659990]] So this was another body blow to the goal of understanding everything with finite discrete processes.
 
-![The stage is now set...](../../Video/Slide12.PNG)
+*(The stage is now set...)*
 
 27:40 [[start:1660330][end:1663366]] But it also set the stage for something *new.*
 [[start:1663548][end:1676380]] It set the stage for thinking about an agent who interacts with a computational process by giving it an input, and then looking at its output some time later.
@@ -364,7 +364,7 @@ date: "2023-05-18 Version 1.0"
 28:27 [[start:1707612][end:1708200]] i.e.
 [[start:1708650][end:1713880]] receiving some finite number of outputs from the system that she's acting on.
 
-![A flurry of negative answers](../../Video/Slide13.PNG)
+*(A flurry of negative answers)*
 
 [[start:1715850][end:1722326]] And the first 20 years of this produced a _large_ number of answers, all of them negative.
 [[start:1722518][end:1731070]] So to go back to Turing, he proved that Alice can't tell what's _implementing_ the function that she sees being implemented.
@@ -383,7 +383,7 @@ date: "2023-05-18 Version 1.0"
 
 30:01 [[start:1801430][end:1807080]] So Alice can do science even though she can't answer any of these fundamental questions.
 
-![A major technological consequence](../../Video/Slide14.PNG)
+*(A major technological consequence)*
 
 30:10 [[start:1810010][end:1824730]] Now, this, of course, has a huge technological consequence. Since this theory of computation tells us that processes are effectively virtual,
 [[start:1826430][end:1831306]] we don't know what they are and we can't _determine_ what they are except in theory,
@@ -398,7 +398,7 @@ date: "2023-05-18 Version 1.0"
 
 ## Physics Again
 
-![Feynman expressed these same ideas](../../Video/Slide15.PNG)
+*(Feynman expressed these same ideas)*
 
 ### Feynman
 
@@ -425,7 +425,7 @@ date: "2023-05-18 Version 1.0"
 [[start:2060090][end:2072490]] And this is called the **totalitarian principle**, since it's what's written in T. H. White's section in the book "The Once and Future King" on the kingdom of the ants, for which "everything not explicitly forbidden is mandatory."
 [[start:2073550][end:2080026]] So let's think about a real example that's {a bit actually it's...} the same as scattering.
 
-![The ultimate scattering experiment is a black hole](../../Video/Slide16.PNG)
+*(The ultimate scattering experiment is a black hole)*
 
 34:40 [[start:2080058][end:2085470]] The ultimate scattering experiment in physics is a black hole.
 [[start:2086610][end:2091840]] Stuff goes into the horizon, stars, whole galaxies, whatever.
@@ -450,7 +450,7 @@ date: "2023-05-18 Version 1.0"
 37:10 [[start:2230930][end:2233998]] But Beckenstein didn't just tell us that.
 [[start:2234084][end:2240830]] He told us something about the _structure_ of the interface, the horizon of a black hole.
 
-![Recall that S = lnΩ](../../Video/Slide17.PNG)
+*(Recall that S = lnΩ)*
 
 [[start:2241510][end:2243700]] And this is what he told us.
 
@@ -467,7 +467,7 @@ date: "2023-05-18 Version 1.0"
 [[start:2317062][end:2321498]] But what gets really interesting is what happens when you _generalize_ it.
 [[start:2321584][end:2327260]] And of course, physicists are prone to generalization, and that's what happened _next._
 
-![We just have to generalize](../../Video/Slide18.PNG)
+*(We just have to generalize)*
 
 ### The Holographic Principle
 
@@ -502,7 +502,7 @@ date: "2023-05-18 Version 1.0"
 [[start:2496790][end:2513106]] And what I'll go through next time is seeing that the information that's encoded on the boundary is a specification of the energy that's being exchanged by the interaction, which, of course, is linear in the number of bits.
 [[start:2513138][end:2515830]] It's just counting the number of bits.
 
-![Quantum information theory](../../Video/Slide19.PNG)
+*(Quantum information theory)*
 
 41:57 [[start:2517230][end:2517980]] Okay!
 [[start:2518350][end:2539630]] So with the Holographic Principle, we now have a complete new science about systems that are exchanging finite discrete information across a boundary by encoding that information _on_ the boundary and then reading the information _off_ the boundary.
@@ -529,7 +529,7 @@ date: "2023-05-18 Version 1.0"
 [[start:2665026][end:2681840]] it's because it's entirely changed the _thinking_ about what physics _is_ and what it's _about,_ and replaced this idea of forces and balls banging into each other and all of that with the idea of communication between agents.
 [[start:2682530][end:2687310]] And of course that's familiar from an Active Inference perspective.
 
-![Four NOs...](../../Video/Slide20.PNG)
+*(Four NOs...)*
 
 44:48 [[start:2687890][end:2695710]] So we can now back up a little bit to see what they were doing in _classical_ physics during this period.
 44:55 [[start:2695790][end:2697682]] {Well, let me go on a little bit.
@@ -562,7 +562,7 @@ date: "2023-05-18 Version 1.0"
 46:28 [[start:2788850][end:2796142]] So the agents here are all "observer-participants" in Wheeler's language.
 [[start:2796206][end:2804450]] But what that just means is _agents_ that want to communicate. And it's their communication that gives rise to physics.
 
-![Meanwhile, back in classical physics...](../../Video/Slide21.PNG)
+*(Meanwhile, back in classical physics...)*
 
 ### Markov Blankets
 
@@ -580,7 +580,7 @@ date: "2023-05-18 Version 1.0"
 
 ## Active Inference
 
-![An MB defines a persistent thing](../../Video/Slide22.PNG)
+*(An MB defines a persistent thing)*
 
 48:19 [[start:2898950][end:2909730]] And it was from this classical physics background that **Karl Friston** came up with the idea that a Markov blanket defines a persistent 
 [[start:2909720][end:2913550]][**** inaudible ****] [**thing**, a system that persists through time], 
@@ -601,7 +601,7 @@ date: "2023-05-18 Version 1.0"
 
 ## Conclusion
 
-![1st discussion session: Sat. 3 June 2023](../../Video/Slide23.PNG)
+*(1st discussion session: Sat. 3 June 2023)*
 
 51:21 [[start:3081360][end:3085260]] So that's it for this session.
 

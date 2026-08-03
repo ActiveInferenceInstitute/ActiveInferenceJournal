@@ -2,9 +2,9 @@
 title:  'Physics as Information Processing - Discussion 3, "Quantum Reference Frames"'
 
 author:
-- 'Ander Aguirre (Ohio State University) [![Orcid](images/orcid.png)](https://orcid.org/0000-0002-6337-8292)'
-- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](images/orcid.png)](https://orcid.org/0000-0001-6232-9096)'
-- 'Dean Tickles (Professional Initiatives Programming, Active Inference Institute) [![Orcid](images/orcid.png)](https://orcid.org/0000-0003-2213-0773)'
+- 'Ander Aguirre (Ohio State University) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0002-6337-8292)'
+- 'Daniel Friedman (Active Inference Institute; University of California, Davis) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0001-6232-9096)'
+- 'Dean Tickles (Professional Initiatives Programming, Active Inference Institute) [![Orcid](../images/images__orcid.png)](https://orcid.org/0000-0003-2213-0773)'
 
 date: "2023-07-29 Version 1.0"
 ...
@@ -300,13 +300,13 @@ date: "2023-07-29 Version 1.0"
 
 26:39 [[start:1599416][end:1605388]] {Like} It could be multi-input, multi-output; or multi-input, single output, vice versa; and so on.
 [[start:1605554][end:1611760]] But they come through this eye of the needle with C-prime, _here._ 
-![Formal interlude: Classifiers and CCCDs](../../../Lecture_3/Video/Slide13.PNG)
+![Formal interlude: Classifiers and CCCDs](../images/Lecture_3_Video__Slide13.PNG)
 
 [[start:1611910][end:1623350]] Now, contrast that kind of architecture represented here abstractly, with what we see in the bacterial process and in the cell division process. 
-![Example: Chemotaxis](../../../Lecture_3/Video/Slide11.PNG)
+![Example: Chemotaxis](../images/Lecture_3_Video__Slide11.PNG)
 
 27:03 [[start:1623720][end:1636680]] These have that kind of a bow-tie perception, cognition, action architecture; or measurement, cognitive integration, preparation architecture.
-![Example: Cell division control](../../../Lecture_3/Video/Slide12.PNG)
+![Example: Cell division control](../images/Lecture_3_Video__Slide12.PNG)
 
 [[start:1637580][end:1661516]] In contrast, we see, for example, an artificial neural network where the input and the output layers are usually lower dimensional, maybe an image coming in with several hundred pixels and a single output like a classifier coming out the other end; but a dimensional _explosion_ in those internal cognitive layers.
 
@@ -317,16 +317,16 @@ date: "2023-07-29 Version 1.0"
 28:35 _Ander:_
 [[start:1715620][end:1733624]] And if I may make a tangential comment here also: I think the good thing about these two examples is that they also showcase the fact of how the deep implications of scale-free biology, if you want to call it this way,
 [[start:1733662][end:1746596]] we tend to think of these sorts of processes, such as "here,_ 
-![Formal interlude: Classifiers and CCCDs](../../../Lecture_3/Video/Slide13.PNG)
+![Formal interlude: Classifiers and CCCDs](../images/Lecture_3_Video__Slide13.PNG)
 only happening at the level of the nervous system in animals, or as you said, neural networks,
 [[start:1746628][end:1746872]] right?
 [[start:1746926][end:1749420]] We tend to associate this with neural networks.
 [[start:1749920][end:1756988]] And perhaps evolution has tiered us in a way that's endowed us with nervous systems to make these things...
 [[start:1757074][end:1764720]] Maybe these are higher up in the layers. But really that's a bit of an arbitrary distinction that we make.
 
-![Example: Cell division control](../../../Lecture_3/Video/Slide12.PNG)
+![Example: Cell division control](../images/Lecture_3_Video__Slide12.PNG)
 29:24 [[start:1764870][end:1771350]] The processes going on at the cellular level, even if they don't appear to have anything to do with the nervous system, 
-![Example: Chemotaxis](../../../Lecture_3/Video/Slide11.PNG)
+![Example: Chemotaxis](../images/Lecture_3_Video__Slide11.PNG)
 my understanding is that there are some generic properties that are the same. And everything that has to do with information processing, it manifests maybe slightly different when it comes to explicit nerves, but at the end of the day, it's the same generic process going on.
 
 29:52 [[start:1792430][end:1792936]] Would you say
@@ -340,7 +340,7 @@ my understanding is that there are some generic properties that are the same. An
 [[start:1812182][end:1814128]] Okay, so we can continue,
 [[start:1814214][end:1814850]] right?
 [[start:1816500][end:1824004]] I don't have a whole lot to say. Daniel said quite a bit. 
-![Formal interlude: Classifiers and CCCDs](../../../Lecture_3/Video/Slide13.PNG)
+![Formal interlude: Classifiers and CCCDs](../images/Lecture_3_Video__Slide13.PNG)
 At the end of the day, QRF, you can visualize it as this diagram. And you can think of it, if you are more familiar with the picture of a neural network, and weights [ways?] on a neural network, and so on.
 
 30:40 [[start:1840910][end:1843210]] That's the way to think about it.

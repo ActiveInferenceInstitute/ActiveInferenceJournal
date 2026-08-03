@@ -1,31 +1,31 @@
 ---
 title:  'Physics as Information Processing'
 author: 
-  - name: Chris Fields[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0002-4812-0744)
+  - name: Chris Fields[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0002-4812-0744)
     institute: [allen]
-  - name: Ander Aguirre[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0002-6337-8292)
+  - name: Ander Aguirre[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0002-6337-8292)
     institute: [ohio]
-  - name: Daniel Friedman[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0001-6232-9096)
+  - name: Daniel Friedman[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0001-6232-9096)
     institute: [aii, ucdavis]
   - name: Francesco Balzan
   - name: Ross Berger
-  - name: David Draguta[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0009-0005-3179-9286)
+  - name: David Draguta[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0009-0005-3179-9286)
     institute: [independent]
-  - name: Avel Guénin-Carlut[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0001-8239-7264)
+  - name: Avel Guénin-Carlut[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0001-8239-7264)
     institute: [sussex, kairos, aii]
-  - name: Ana Magdelena Hurtado[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0003-4064-1876)
+  - name: Ana Magdelena Hurtado[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0003-4064-1876)
     institute: [asu]
-  - name: V. Bleu Knight[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0002-9894-1989)
+  - name: V. Bleu Knight[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0002-9894-1989)
     institute: [aii]
   - name: Kate Koles
-  - name: Haris Neophytou[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0009-0003-0921-737X)
+  - name: Haris Neophytou[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0009-0003-0921-737X)
     institute: [interfusion, upcycle]
   - name: Corby Prior
-  - name: Dean Rickles[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0000-0003-2213-0773)
+  - name: Dean Rickles[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0000-0003-2213-0773)
     institute: [professional, aii]
-  - name: Ian Tennant[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0009-0003-2185-8620)
+  - name: Ian Tennant[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0009-0003-2185-8620)
     institute: [anglia]
-  - name: Alexey Tolchinsky, Psy.D.[![Orcid](images/orcid.png){ width=12px }](https://orcid.org/0009-0009-4721-515X)
+  - name: Alexey Tolchinsky, Psy.D.[![Orcid](../images/images__orcid.png){ width=12px }](https://orcid.org/0009-0009-4721-515X)
     institute: [gwu]
 institute:
   - allen: Allen Discovery Center at Tufts University
