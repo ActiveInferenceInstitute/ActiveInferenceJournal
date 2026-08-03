@@ -139,3 +139,29 @@ no install needed). All PASS — see Phase 4 follow-up below.
   (`refactor_journal.py` format), `INDEX.md` 140-char header
   (`generate_journal_indexes.py`), and legacy `assets/notes/*.md` broken image
   links (curated content preserved verbatim).
+
+## Follow-up 2 (same day) — comprehensive completion
+
+- **Item README regeneration** (`7a87b54c`): 573 item READMEs rewritten from
+  canonical `metadata.json` in `refactor_journal.py`'s exact format. 250 part
+  titles / 38 part URLs / `Contents:` lines had drifted (409 rewritten, 164
+  already current). Item READMEs are written only by the one-time refactor
+  build — nothing in the routine pipeline overwrites them.
+- **Curated-asset image repair** (`dc1ba164`): the
+  PhysicsAsInformationProcessing_ChrisFields notes/prose carried 345 broken
+  image refs and 69 absolute machine paths (`/mnt/md0/projects/...` — a
+  privacy leak in a public repo). Ground truth = the pre-refactor tree at
+  `cf7e3458~1`: every ref resolved to its legacy target; legacy image → current
+  `assets/images/` file via a verified 233↔233 bijection (name =
+  `<legacy dir>__<basename>` or bare basename). 322 refs repaired, 23 refs to
+  images absent from the corpus replaced with italic alt-text placeholders,
+  CRLF line endings preserved. Repo-wide grep: no `/mnt/`, `/Users/`, or
+  Windows-path leaks remain in any tracked `.md`.
+- **`docs/ORGANIZATION.md` fix**: "Adding another source" named
+  `refactor_journal.py` as the INDEX regenerator; the correct script is
+  `generate_journal_indexes.py` (confirmed in generator source + CI).
+- **`SECURITY.md` added**: credentials rule (per PIPELINE security note),
+  no-audio-on-main, no machine-internal paths, private reporting guidance.
+- **Still generator-owned (unchanged):** `INDEX.md` 140-char header —
+  `generate_journal_indexes.py --check` compares byte-for-byte, so it is the
+  only file that cannot be touched from this repo.

@@ -30,6 +30,13 @@ overhaul, cross-cutting refactors.
 - ✓ `docs/AGENTS.md`, `docs/README.md` — wrap long lines. (`4e208d58`)
 - ✓ 19 series `AGENTS.md` guides — wrap 285–314-char template lines to ≤100
   chars. (`4e208d58`)
+- ✓ `docs/ORGANIZATION.md` — fix wrong generator script in "Adding another
+  source": `refactor_journal.py` → `generate_journal_indexes.py` (the
+  refactor is a migration tool; only the indexes script writes `INDEX.*`).
+  (`9b9990c5`)
+- ✓ `SECURITY.md` — new: credentials rule (per PIPELINE security note), no
+  audio on `main`, no machine-internal paths, private reporting guidance.
+  (`9b9990c5`)
 
 ## Medium
 
@@ -60,6 +67,19 @@ overhaul, cross-cutting refactors.
   generator does **not** produce series READMEs (only `INDEX.*` via
   `generate_journal_indexes.py` and item READMEs via `refactor_journal.py`),
   so nothing overwrites these. (`21f4ace7`)
+- ✓ **Regenerate the 573 item `README.md` files** from canonical
+  `metadata.json` in `refactor_journal.py`'s own format — 250 part titles,
+  38 part URLs, and `Contents:` lines had drifted since migration (titles
+  enriched from Coda; translations/captions added later). 409 rewritten,
+  164 already current. (`7a87b54c`)
+- ✓ **Repair broken image references in curated assets** — the
+  PhysicsAsInformationProcessing_ChrisFields notes/prose referenced images
+  via pre-refactor paths and 69 absolute machine paths (`/mnt/md0/...`,
+  a privacy leak). Resolved every ref against the pre-refactor tree
+  (cf7e3458~1): 322 refs rewritten to `assets/images/` (233-file bijection
+  verified), 23 refs to absent images replaced with italic alt-text
+  placeholders, line endings preserved. Verified 0 broken refs remain.
+  (`dc1ba164`)
 
 ## Verification (this pass)
 
@@ -72,11 +92,13 @@ overhaul, cross-cutting refactors.
 
 ## Open / deferred
 
-- **Item-level README long lines.** Generated item `README.md` files have
-  115–165-char lines — produced by `refactor_journal.py` (build-time) in its
-  own format; generator-owned, cosmetic.
 - **`INDEX.md` header line wraps at 140 chars** — produced by
-  `generate_journal_indexes.py`; generator-owned.
-- **Legacy curated `assets/notes/*.md` broken image links** (`images/orcid.png`,
-  `../../Video/*.PNG`) — pre-refactor curated content preserved verbatim;
-  left untouched (content, not documentation).
+  `generate_journal_indexes.py`; the `--check` gate compares the file
+  byte-for-byte against generator output, so it cannot be hand-edited;
+  generator-owned.
+- **Item README long lines** — inherent to `refactor_journal.py`'s format
+  (URL-bearing title lines, `Contents:` line); regenerated in that format,
+  not a defect to fix here.
+- **Curated assets elsewhere** — after the image-repair pass, no `.md` under
+  `assets/` has broken relative refs and no machine paths remain anywhere in
+  the repo (verified by grep).
