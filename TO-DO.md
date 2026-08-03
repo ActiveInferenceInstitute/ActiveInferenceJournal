@@ -37,6 +37,11 @@ overhaul, cross-cutting refactors.
 - ✓ `SECURITY.md` — new: credentials rule (per PIPELINE security note), no
   audio on `main`, no machine-internal paths, private reporting guidance.
   (`9b9990c5`)
+- ✓ `README.md` — add Journal integrity CI badge (URL verified 200);
+  `docs/README.md` — cross-link root-level guides (CONTRIBUTING, SECURITY,
+  CITATION, TO-DO) from Quick orientation; `AGENTS.md` — add TO-DO.md to
+  entry points; channel `AGENTS.md` — wrap the 474-char description line.
+  (`7e559057`)
 
 ## Medium
 
