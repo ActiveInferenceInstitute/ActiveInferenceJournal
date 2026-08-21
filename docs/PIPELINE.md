@@ -18,6 +18,8 @@ YouTube (@ActiveInference)
                                    → INDEX.json/INDEX.md derived from metadata.json
   └─ scripts/repair_split_transcripts.py
                                    → session IDs/headings in merged transcript artifacts
+  └─ scripts/translate_subtitles.py / translate_subtitles_openrouter.py
+                                   → 11-language subtitle translation under translations/
   └─ scripts/validate_journal.py   → read-only release/integrity gate
 ```
 
