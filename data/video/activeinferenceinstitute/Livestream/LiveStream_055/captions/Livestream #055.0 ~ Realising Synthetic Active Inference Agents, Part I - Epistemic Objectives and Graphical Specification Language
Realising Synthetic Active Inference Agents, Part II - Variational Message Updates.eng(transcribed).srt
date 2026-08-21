@@ -1,0 +1,2783 @@
+1
+00:00:10,529 --> 00:00:35,915
+all right hello and welcome everyone it is october 24th 2023 and we're an active live stream number 55.0 on realizing synthetic active inference agents okay welcome to the active inference institute we're a participatory online institute that is communicating learning and practicing applied active inference you can find us at some of the links on this page
+
+2
+00:00:36,857 --> 00:00:42,062
+This is a recorded and an archived livestream, so please provide feedback so we can improve our work.
+
+3
+00:00:43,003 --> 00:00:47,848
+All backgrounds and perspectives are welcome, and we'll be following video etiquette for livestreams.
+
+4
+00:00:49,890 --> 00:00:57,058
+Head over to ActiveInference.org if you want to learn more about participating in livestreams or other activities.
+
+5
+00:00:58,473 --> 00:01:17,860
+All right, well, we're in Livestream 55 series with a goal to learn and discuss these two very interesting papers on realizing synthetic active inference agents, part one on epistemic objectives and graphical specification, part two on the variational message updates.
+
+6
+00:01:18,981 --> 00:01:24,263
+As with all videos, it's an introduction for some of the ideas, not a review or a final word.
+
+7
+00:01:25,336 --> 00:01:42,502
+We're going to introduce ourselves, then jump into a fairly lengthy background section that will prepare us to ask the questions and get to a place where the paper's contributions can be figured out.
+
+8
+00:01:43,513 --> 00:01:54,719
+So let us begin with introducing ourselves and saying hi and saying maybe something that was exciting to us or made us want to participate in this series.
+
+9
+00:01:55,219 --> 00:01:55,799
+So I'm Daniel.
+
+10
+00:01:55,979 --> 00:02:03,763
+I'm a researcher in California, and I was interested to go a little deeper on message passing.
+
+11
+00:02:03,983 --> 00:02:11,387
+It's something that's brought up a lot in the textbook and implicitly in other papers, but this was an opportunity to tackle it head on.
+
+12
+00:02:11,727 --> 00:02:13,188
+And I'll pass to Bert.
+
+13
+00:02:15,140 --> 00:02:27,184
+So I'm Bert, I study civil engineering in the Netherlands and I struggle with the math of active inference, but recently I picked up reinforcement learning and together with this paper, I think it really helps.
+
+14
+00:02:29,425 --> 00:02:32,386
+Hi, I'm Jakob.
+
+15
+00:02:32,506 --> 00:02:36,467
+I'm also a researcher in California and I'm
+
+16
+00:02:37,182 --> 00:02:41,543
+really excited about this paper from a number of different angles.
+
+17
+00:02:41,683 --> 00:02:58,487
+I guess the graphical notation and the notation that the paper introduces, I think, can have really profound impact on the field from both a computational and a theoretical viewpoint.
+
+18
+00:02:59,347 --> 00:03:05,369
+And I'm interested to learn more about the implications of
+
+19
+00:03:07,942 --> 00:03:22,470
+the new notation for further research yep new notation just dropped okay there's a pair of papers as mentioned and the information is here so
+
+20
+00:03:24,011 --> 00:03:48,431
+of us can phrase the big question that brought us to the paper but i wrote it this way which is right there in the title there's at least a triple play a triple pun tendre and there's a dyad of papers so what is this realizing in the context of the title well in one sense we're realizing something
+
+21
+00:03:49,864 --> 00:04:09,924
+terms of implementing it or manifesting it they're deploying something that is being realized so there's a accomplishment sense of realizing also the work calls attention to our own realizing process our relevance realization how we come to appreciate and interact with synthetic intelligence ours
+
+22
+00:04:11,198 --> 00:04:20,240
+And then we're also talking about building agents that do some kind of realizing in themselves, like realizing agents in that sense.
+
+23
+00:04:20,780 --> 00:04:24,021
+So what kind of ending starts off with a triple play?
+
+24
+00:04:25,661 --> 00:04:26,062
+I don't know.
+
+25
+00:04:27,862 --> 00:04:34,503
+Bert or Jakob, what big questions brought you to the paper?
+
+26
+00:04:34,604 --> 00:04:36,424
+What do you think the paper takes on?
+
+27
+00:04:40,674 --> 00:04:56,302
+I think in terms of creating scalable active inference models that are reproducible across a variety of settings is quite exciting.
+
+28
+00:04:56,362 --> 00:05:06,408
+So maybe realizing in that sense across a number of different domains is part of the meaning here.
+
+29
+00:05:08,607 --> 00:05:34,285
+And of course, the triple play that we were exploring with our own work from going from just a simple graphical representation to a mathematical description of the generative model and the algorithm for message passing and updating the generative model through time to then a code implementation that can be deployed in various dynamic setting.
+
+30
+00:05:37,856 --> 00:05:47,923
+That is also what I think is an important part of this paper.
+
+31
+00:05:47,943 --> 00:05:53,106
+Oh, yeah.
+
+32
+00:05:53,607 --> 00:06:05,995
+And for me, especially as not an expert on active inference, but someone who is more interested in applying it, their work on working towards a PyTorch of active inference is really valuable.
+
+33
+00:06:06,972 --> 00:06:31,313
+and i think their way of deconstructing the mechanisms of expected and variational energy and to combine them into one function makes it simplifies it a lot i think cool so we're gonna look deeper at the papers of course soon but just a few of the aims of the paper
+
+34
+00:06:33,137 --> 00:06:42,343
+Part one, they construct a purely synthetic approach to the active inference framework, motivated from the point of view of engineering rather than neurobiology.
+
+35
+00:06:42,363 --> 00:06:44,585
+And we're going to talk about what synthetic is.
+
+36
+00:06:45,405 --> 00:07:00,095
+And in part two, they use a variety of technical phenomena, variational calculus, message passing, and reactive programming to simulate a perception action cycle on the teammates.
+
+37
+00:07:01,916 --> 00:07:02,056
+Okay.
+
+38
+00:07:02,076 --> 00:07:02,156
+Okay.
+
+39
+00:07:04,289 --> 00:07:30,688
+one of you would you like to read the first abstract and then the other can read the other abstract whoever wants to go first um I can read the the first one so the free energy principle FEP is a theoretical framework for describing how intelligent systems self-organize into coherent stable structures by minimizing a free energy functional
+
+40
+00:07:31,423 --> 00:07:38,062
+Active inference is a corollary of the FEP that specifically details how systems that are able to plan for the future
+
+41
+00:07:39,517 --> 00:07:44,219
+function by minimizing particular free energy functionals that incorporate information seeking components.
+
+42
+00:07:45,099 --> 00:07:52,242
+This paper is the first in a series of two where we derive a synthetic version of active inference on free form factor graphs.
+
+43
+00:07:53,002 --> 00:07:58,424
+The present paper focuses on deriving a local version of the free energy functionals used for active inference.
+
+44
+00:07:59,204 --> 00:08:07,247
+This enables us to construct a version of active inference which applies to arbitrary graphical models and interfaces with prior work on message passing algorithms.
+
+45
+00:08:08,168 --> 00:08:10,671
+The resulting messages are derived in our companion paper.
+
+46
+00:08:11,211 --> 00:08:15,115
+We also identify a gap in the graphical notation used for factor graphs.
+
+47
+00:08:15,836 --> 00:08:23,503
+While factor graphs are great at expressing a generative model, they have so far been unable to specify the full optimization problem, including constraints.
+
+48
+00:08:24,184 --> 00:08:27,507
+To solve this problem, we developed constrained Forney-style factor graph.
+
+49
+00:08:28,507 --> 00:08:57,503
+cffg notation which permits a fully graphical description of variational inference objectives we then proceed to show how cffgs can be used to reconstruct prior algorithms for active inference as well as derive new ones the latter is demonstrated by deriving an algorithm that permits direct policy inference for active inference agents circumventing a long-standing scaling issue that has so far hindered the application of active inference in industrial setting
+
+50
+00:08:58,359 --> 00:09:06,291
+We demonstrate our algorithm on the classic team-based task, ensure that it reproduces the information-seeking behavior that is a hallmark feature of active inference.
+
+51
+00:09:08,694 --> 00:09:09,055
+Thank you.
+
+52
+00:09:09,836 --> 00:09:10,597
+And the second paper.
+
+53
+00:09:13,331 --> 00:09:14,512
+Yes.
+
+54
+00:09:14,552 --> 00:09:22,216
+The free energy principle describes biological agents as minimizing variation of free energy with respect to a generative model of the environment.
+
+55
+00:09:23,336 --> 00:09:32,241
+Active inference is a corollary of the FEP that describes how agents explore and exploit the environment by minimizing an expected free energy objective.
+
+56
+00:09:33,194 --> 00:09:38,538
+In two related papers, we describe a scalable epistemic approach to synthetic active inference agents.
+
+57
+00:09:39,179 --> 00:09:52,329
+By message passing on free-form Forney-style factor graphs, FFGs, a companion paper, part 1, introduces a constrained FFG notation that visually represents free energy objectives for active inference.
+
+58
+00:09:52,830 --> 00:10:01,757
+The current paper derives message passing algorithms that minimize generalized free energy objectives on a constrained Forney factor graph by variational calculus.
+
+59
+00:10:03,248 --> 00:10:14,137
+A comparison between simulated BAT and generalized free energy agents illustrates that synthetic active inference influences the behavior on a team-based navigation task.
+
+60
+00:10:15,598 --> 00:10:26,466
+With full message-passing accounts of synthetic active inference agents, it becomes possible to derive and reuse message updates across models and move closer to industrial applications of synthetic active inference.
+
+61
+00:10:28,828 --> 00:10:29,589
+Great, thank you.
+
+62
+00:10:30,916 --> 00:10:35,898
+Here's the roadmap section titles of the first paper.
+
+63
+00:10:39,160 --> 00:10:43,301
+Here are the section headers of the second paper.
+
+64
+00:10:45,462 --> 00:10:49,044
+So before we jump into the background and then the papers,
+
+65
+00:10:50,256 --> 00:11:16,265
+let's just have one last train stop what is synthetic and what's synthetic about active inference so as it being 2023 we went to the language model and we asked for some adjectives that are in the semantic neighborhood of synthetic and you can see them here artificial lab created synthetic counterfeit phony deceptive inauthentic unnatural
+
+66
+00:11:17,662 --> 00:11:22,109
+A lot of these are somewhat negative associations semantically.
+
+67
+00:11:22,871 --> 00:11:30,163
+So how does synthetic come to be meaning something negative or deceitful?
+
+68
+00:11:31,368 --> 00:11:42,955
+And then in what ways is that a similar or a different sense of synthetic than referring to the unified compositionality of something that's blended?
+
+69
+00:11:43,796 --> 00:11:46,858
+And similarly, we could talk about artificial, like artificial intelligence.
+
+70
+00:11:46,938 --> 00:11:49,099
+Is that artifice, like crafted?
+
+71
+00:11:49,800 --> 00:11:53,242
+Or is it artificial, like phony, bogus, false?
+
+72
+00:11:54,343 --> 00:11:54,443
+So...
+
+73
+00:11:55,393 --> 00:12:20,764
+the context of the paper there's probably a bunch of different ways that we can draw with the authors and a little bit here too what is being synthesized if you have any thoughts on this but what else might be synthetic it might refer to something that's not just a hypothetical like a real synthesis a realized synthesis it might refer to information risk and synthetic intelligence
+
+74
+00:12:22,458 --> 00:12:35,937
+might refer to synthetic judgments those whose predicates are wholly distinct from their subjects and then recently at the topos institute there was a great talk by jonathan sterling synthetic domains in the 21st century
+
+75
+00:12:37,312 --> 00:12:43,218
+So there's a lot of very interesting references and ways that synthetic is used.
+
+76
+00:12:44,479 --> 00:12:49,684
+Do you have any preliminary thoughts on what you think about these papers?
+
+77
+00:12:50,065 --> 00:12:50,946
+I think
+
+78
+00:13:02,014 --> 00:13:23,404
+I guess building on what you already said, part of the synthesis could be decreasing the gap between the mathematical description of a model and its graphical representation and its subsequent code implementation.
+
+79
+00:13:23,964 --> 00:13:29,046
+So the focus on graphical models, on constrained Forney style factor graphs,
+
+80
+00:13:32,904 --> 00:13:48,181
+combines the aspects of generalized free energy or betty free energy which is motivated by a forney style graph structure with the actual implementation
+
+81
+00:13:49,261 --> 00:14:04,368
+of a synthetic agent or an artificial agent in code or in synthetic settings, which themselves are trying to model some part of reality.
+
+82
+00:14:09,005 --> 00:14:33,139
+cool we'll explore okay so to Bert for background part one and thank you for all the work leading up to this dot zero Bert so take it away with the background just let me know when to switch slides yeah all right uh so for the background of part one uh it will delve into what are base crafts and how do you do an inference over these crafts
+
+83
+00:14:34,586 --> 00:14:52,736
+and then the authors use make extensive use of arcangeln to optimize over the graph at a foreign factor graph and then some miscellaneous stuff that will be relevant to the play smaller parts in the paper all right next slide
+
+84
+00:14:55,669 --> 00:15:04,813
+So first off, base graphs, working up eventually to 4D graphs, but starting with the simplest one, which is just a Bayesian network.
+
+85
+00:15:05,654 --> 00:15:11,676
+And then the classical example is the earthquake network.
+
+86
+00:15:12,977 --> 00:15:20,080
+So each circle is a random variable, and they represent a particular state.
+
+87
+00:15:20,300 --> 00:15:23,762
+So whether, for example, the alarm goes off, yes or no.
+
+88
+00:15:26,631 --> 00:15:55,176
+and these variables can be continuous or discrete and so the total generative model is the joint probability of all these random variables and you can factorize them so they only relate to one or two or several others at least a limited set of other variables and then moving on from that is the hidden Markov model where you add time so you have multiple time steps so in this case x1
+
+89
+00:15:56,503 --> 00:15:57,584
+X0, X1, X2.
+
+90
+00:15:58,665 --> 00:16:04,610
+And this works under the Markov assumption, which is that all the relevant information of the past is in the current time step.
+
+91
+00:16:05,351 --> 00:16:07,152
+So you only need to consider the current.
+
+92
+00:16:08,553 --> 00:16:15,519
+And on top of that, you cannot observe hidden states directly, so you need an observation error.
+
+93
+00:16:16,059 --> 00:16:16,760
+So that's the E.
+
+94
+00:16:18,911 --> 00:16:25,837
+And then the next step, building on top of the hidden Markov model, is the partially observable Markov decision process, which is a lot of words.
+
+95
+00:16:27,498 --> 00:16:34,344
+But really it's the same, where you have a hidden state, S, with an observable state, and you transition from states.
+
+96
+00:16:36,125 --> 00:16:45,193
+But now you add an action, and the action acts the policy, and that acts on the B, the transition.
+
+97
+00:16:46,937 --> 00:16:54,562
+So an example would be I expect S1 to have a certain value given my action, and this observation O2 should be in line with that.
+
+98
+00:16:56,883 --> 00:16:59,585
+And the policy is selected using the expected free energy.
+
+99
+00:17:01,566 --> 00:17:02,526
+All right, next slide.
+
+100
+00:17:06,849 --> 00:17:10,811
+And then how do you actually figure out the values of a base graph?
+
+101
+00:17:11,071 --> 00:17:12,192
+And that requires inference.
+
+102
+00:17:13,775 --> 00:17:14,695
+And there are multiple ways.
+
+103
+00:17:14,775 --> 00:17:26,978
+So the first one is exact inference, which is what you would do if you calculated by pen and paper, which is really only practical for small discrete models, like the example model on the last slide.
+
+104
+00:17:28,318 --> 00:17:32,759
+And if you want to go to bigger models, more complex models, you need approximate inference.
+
+105
+00:17:34,319 --> 00:17:39,940
+And within that Monte Carlo sampling is a key pillar, and there are a bunch of algorithms that apply it, that use it.
+
+106
+00:17:42,265 --> 00:18:04,357
+but the core idea is the same you sample many times from an idealist distribution to approximate another distribution of interest another method is method which you may be familiar with this variation of the energy which yeah active inference uses a lot and then you indirectly minimize the difference between two distributions using the KL divergent
+
+107
+00:18:05,853 --> 00:18:09,616
+You try to minimize the KL divergence, but you cannot do that directly.
+
+108
+00:18:10,237 --> 00:18:13,539
+So instead, you maximize the elbow.
+
+109
+00:18:18,063 --> 00:18:20,204
+And this works with a family of distributions.
+
+110
+00:18:21,005 --> 00:18:24,968
+And a family is, for example, gaussians or exponentials, but you have to pick one.
+
+111
+00:18:26,983 --> 00:18:30,107
+An embedded free energy works on this.
+
+112
+00:18:30,167 --> 00:18:35,174
+It's also a free energy, but it has the assumption that only local interactions matter.
+
+113
+00:18:35,834 --> 00:18:42,403
+So instead of going over the entire generative model, you only look at one factorized part at a time.
+
+114
+00:18:45,140 --> 00:18:49,941
+And optimization, which is also used in the paper to find some parameters.
+
+115
+00:18:50,862 --> 00:18:56,523
+And it's Newton's method, but you have a function and you want to know where this function goes through the x-axis.
+
+116
+00:18:57,343 --> 00:19:07,666
+So you can take the slope and iteratively take more slopes until you get at approximately the point where it goes through the x-axis.
+
+117
+00:19:09,927 --> 00:19:10,267
+Next slide.
+
+118
+00:19:14,631 --> 00:19:17,033
+And then I'll just use a paper.
+
+119
+00:19:17,393 --> 00:19:23,379
+And so to quickly introduce this, it is a method to describe an objective function with constraints.
+
+120
+00:19:25,400 --> 00:19:31,445
+So in the first derivative of the Lagrangian, if you set it equal to zero, those are the optimal points.
+
+121
+00:19:32,927 --> 00:19:36,930
+So that would be where the blue and red curve intersect in this picture.
+
+122
+00:19:39,565 --> 00:19:46,388
+And the Lagrangian multiplier lambda is the rate of change the objective function will change if you relax a constraint.
+
+123
+00:19:47,968 --> 00:19:54,651
+So in this example, it will be the same as changing the constant b of the red function.
+
+124
+00:19:57,773 --> 00:20:01,134
+So concretely, if the lambda was positive here,
+
+125
+00:20:02,105 --> 00:20:06,088
+then increasing B would result in objective function also increasing.
+
+126
+00:20:06,588 --> 00:20:09,571
+So you have some leeway to work to improve the function even further.
+
+127
+00:20:10,531 --> 00:20:11,572
+So you can optimize more.
+
+128
+00:20:11,712 --> 00:20:12,293
+That's what it's saying.
+
+129
+00:20:14,294 --> 00:20:15,195
+Alrighty, next slide.
+
+130
+00:20:17,617 --> 00:20:18,758
+And that's some miscellaneous stuff.
+
+131
+00:20:20,679 --> 00:20:25,182
+So the term entropy is used a lot, especially in terms of epistemic foraging.
+
+132
+00:20:26,363 --> 00:20:29,926
+But for now, it's just a measure of how uncertain a distribution is.
+
+133
+00:20:32,088 --> 00:20:37,049
+And in general, sampling an uncertain distribution gives you more information than sampling a certain one.
+
+134
+00:20:37,790 --> 00:20:42,851
+For example, if it rains every day, seeing rain again doesn't tell you much because it rains every day anyway.
+
+135
+00:20:45,192 --> 00:20:50,813
+A direct delta function is a probability distribution that is one for a single point and zero elsewhere.
+
+136
+00:20:53,414 --> 00:20:54,935
+And then a statistical moment
+
+137
+00:20:59,920 --> 00:21:05,824
+In mathematics, the moments of a function are certain quantitative measures related to the shape of a function's graph.
+
+138
+00:21:07,145 --> 00:21:19,695
+If a function is a probability distribution, then the first moment is the expected value, so the average, the second is the central moment of variance, the standard deviation, the third is the skewness, and the fourth is the kurtosis.
+
+139
+00:21:21,914 --> 00:21:37,839
+And finally, the Kullback-Leibnag control, which is a term from control theory, which basically attempts to make a system converge to a set prior and adjust it by minimizing the KL divergence.
+
+140
+00:21:39,839 --> 00:21:40,019
+Yes.
+
+141
+00:21:42,620 --> 00:21:43,040
+Thank you.
+
+142
+00:21:43,380 --> 00:21:44,801
+Great background.
+
+143
+00:21:45,781 --> 00:21:51,043
+So that kind of speed runs Bayesian stats first layer.
+
+144
+00:21:52,168 --> 00:22:00,012
+Now we're going to head into a second layer of background that's going to bring us into the Forney graph space.
+
+145
+00:22:00,633 --> 00:22:06,976
+And after the second background part, we'll be in a position to understand two papers a little better.
+
+146
+00:22:08,097 --> 00:22:11,799
+So here's the big picture on background part two.
+
+147
+00:22:13,334 --> 00:22:24,406
+Even with all of background part one in hand, there's also some more modern, important act-inf as well as non-act-inf related advances that are going to get us up to speed.
+
+148
+00:22:25,487 --> 00:22:31,813
+So for a lot of the concepts here, we're just overviewing it first, and then we'll be talking more to the authors about them.
+
+149
+00:22:32,850 --> 00:22:39,217
+And so I'll take a more narrative overview of recent updates and then we'll steer towards the technical.
+
+150
+00:22:40,338 --> 00:22:44,743
+So first, graphical models, active inference, and belief propagation.
+
+151
+00:22:45,700 --> 00:22:48,742
+Over the last years, Carl Friston et al.
+
+152
+00:22:49,002 --> 00:22:52,585
+have been collaborating with the lab and collaborators of Bert de Vrij.
+
+153
+00:22:53,385 --> 00:22:58,429
+And around 2017, they released several very important papers.
+
+154
+00:22:58,889 --> 00:23:05,613
+One was a factor graph description of deep temporal active inference, and another was the graphical brain belief propagation and active inference.
+
+155
+00:23:06,474 --> 00:23:22,863
+So as Bert alluded to earlier, many of the operations or formalisms of active inference can be understood as manipulations of parameters or variables that might reflect data, observations, priors, precisions, different kinds of variables.
+
+156
+00:23:23,603 --> 00:23:29,707
+And that is given exact form in the graphical model, specifically the Bayesian graph.
+
+157
+00:23:30,347 --> 00:23:36,509
+And here we see the familiar figure 4.3 from the 2022 textbook.
+
+158
+00:23:37,410 --> 00:23:44,672
+Now, the nodes on that graphical model are variables, and edges are their causal or their informational relationship.
+
+159
+00:23:45,332 --> 00:23:47,633
+And so especially after Pearl et al.
+
+160
+00:23:48,033 --> 00:23:50,894
+and the causal modeling developments in the 1980s and 90s,
+
+161
+00:23:53,024 --> 00:24:04,087
+This was adapted into a probabilistic or cybernetic setting where certain nodes on this graph were associated with action, with perception, with cognitive phenomena.
+
+162
+00:24:04,468 --> 00:24:08,289
+And so this is a causal model, a Bayesian graphical model.
+
+163
+00:24:08,349 --> 00:24:11,770
+It's the kind of thing that we see in very many active inference papers.
+
+164
+00:24:13,168 --> 00:24:14,951
+Now, the Bayesian graph is awesome.
+
+165
+00:24:15,091 --> 00:24:21,520
+It allows us to tackle some really challenging compute problems, get a lot of semantic interpretability, and so on.
+
+166
+00:24:22,161 --> 00:24:25,847
+However, there's also a few limitations or challenges in execution.
+
+167
+00:24:26,528 --> 00:24:28,310
+So first, just epistemically.
+
+168
+00:24:28,891 --> 00:24:36,735
+there's some side information that is needed to provide in order to get to a fully reproducible Bayesian graphical simulation.
+
+169
+00:24:37,315 --> 00:24:43,398
+And Livestream 54 shows how that information is provided formally by category theory.
+
+170
+00:24:44,039 --> 00:24:58,266
+But more to the pragmatic point for this discussion, in actual computational execution, whether you're running that Bayes graph on a single core, single thread, or whether you're using multiple computing elements,
+
+171
+00:24:59,560 --> 00:25:06,003
+a given or a particular generative model must be implemented in a certain way or order.
+
+172
+00:25:06,584 --> 00:25:14,748
+If we were doing a single agent or a multi-agent simulation, we might wonder, so should we update the perception of everybody and then let everybody make action?
+
+173
+00:25:14,808 --> 00:25:18,269
+Or should we do action and perception of number one, then number two, then number three?
+
+174
+00:25:18,289 --> 00:25:19,990
+But then isn't that unfair?
+
+175
+00:25:20,551 --> 00:25:24,112
+Because then isn't one of them always getting to see and act first and so on.
+
+176
+00:25:24,573 --> 00:25:26,914
+So just drawing the graph
+
+177
+00:25:27,932 --> 00:25:33,278
+doesn't give you the actual order of operations to carry it out reproducibly.
+
+178
+00:25:33,799 --> 00:25:42,268
+So that underspecification of the Bayesian graphical logistics or scheduling leads to a lot of degrees and freedom in model deployment.
+
+179
+00:25:42,829 --> 00:25:46,132
+Now this might be an issue or not be an issue for any given task.
+
+180
+00:25:47,125 --> 00:25:59,472
+However, whether you use an off-the-shelf or a custom solution to address this challenge, these different approaches might take time, they might not transfer, they might not be general, and so on.
+
+181
+00:26:00,720 --> 00:26:10,707
+Also, there might be different simulation outcomes or different computational costs that happen when you implement the same graphical model differently.
+
+182
+00:26:11,227 --> 00:26:14,529
+So that limits high reliability use and also transfer.
+
+183
+00:26:15,070 --> 00:26:22,715
+And then lastly, kind of related to computational complexity, estimations are difficult to understand just by looking at the base graph.
+
+184
+00:26:22,735 --> 00:26:29,879
+It'd be really nice if there was a way to have the model and then know how much it's going to cost or take to run.
+
+185
+00:26:31,540 --> 00:26:53,889
+so enter the forney factor graphs in 2001 forney wrote a technical paper called codes on graphs normal realizations just like normal 2001 stuff and this introduced some fundamental components let's ask the authors and find out what exactly those fundamental moves were
+
+186
+00:26:55,049 --> 00:27:02,931
+But what was introduced led to the development of what is now called a Forney factor graph, FFG, or a normal graph.
+
+187
+00:27:03,571 --> 00:27:04,911
+Again, another interesting question.
+
+188
+00:27:04,951 --> 00:27:06,012
+How is normal being used here?
+
+189
+00:27:07,752 --> 00:27:14,794
+The Forney factor graph representation is dual or informationally equivalent to any given Bayesian graph.
+
+190
+00:27:15,629 --> 00:27:18,531
+Importantly, though, FFGs enable message passing.
+
+191
+00:27:19,291 --> 00:27:28,537
+Message passing provides node, local, and whole graph scheduling logistics for messages in a way that allows for more tractability in execution.
+
+192
+00:27:29,838 --> 00:27:34,621
+Importantly, these messages are being passed amongst variables at a very granular level.
+
+193
+00:27:35,482 --> 00:27:41,646
+This is not referring to two bounded agents sending each other a postcard simply.
+
+194
+00:27:44,502 --> 00:27:48,224
+The network or the graph, it's a very general data structure.
+
+195
+00:27:48,985 --> 00:27:57,250
+So it's not surprising that we're going to be encountering multiple kinds of graphs, but it is relevant to know which kinds of graphs we're talking about.
+
+196
+00:27:58,180 --> 00:28:18,829
+And because this FFG representation can be applied to anywhere a Bayesian graph is used, people have applied both Bayesian graphs and, to a lesser or more recent extent, 40-factor graphs to a bunch of different statistical problems like filtering, smoothing, prediction, MDP, POMDP, and so on.
+
+197
+00:28:19,889 --> 00:28:22,831
+So to kind of lock this in...
+
+198
+00:28:23,991 --> 00:28:49,521
+here we see on the right figure 7.3 from par pazulo and friston's textbook so this is the standard discrete time partially observable markov decision process and on the left here is a figure from the graphical brain paper of 2017. so across the top these two bayesian graphs are actually identical they're the same exact type of graph and they're both the same base graph
+
+199
+00:28:50,418 --> 00:29:00,903
+And then the 2017 figure shows that that base graph has this one-to-one relationship with a Forney factor graph.
+
+200
+00:29:02,884 --> 00:29:05,566
+What is the difference with a Forney factor graph?
+
+201
+00:29:05,646 --> 00:29:13,870
+Why do we need to have a different format to describe what might at first glance appear to be the same information?
+
+202
+00:29:15,291 --> 00:29:16,851
+Let's go to Graphical Brain 2017.
+
+203
+00:29:19,912 --> 00:29:24,954
+We use graphical representations to characterize message passing under deep generative models that might be used by the brain.
+
+204
+00:29:25,895 --> 00:29:29,476
+We use three sorts of graphs to emphasize the form of generative models.
+
+205
+00:29:30,917 --> 00:29:33,078
+One, the nature of Bayesian belief updating.
+
+206
+00:29:33,278 --> 00:29:36,059
+Two, and how this might be accomplished in neuronal circuits.
+
+207
+00:29:36,579 --> 00:29:36,779
+Three.
+
+208
+00:29:37,579 --> 00:29:40,901
+So here's the three sorts of graphs that they're going to talk about.
+
+209
+00:29:42,962 --> 00:29:45,563
+First, Bayesian networks or dependency graphs.
+
+210
+00:29:46,786 --> 00:29:48,387
+That's the one that we see the most commonly.
+
+211
+00:29:49,147 --> 00:29:51,188
+Nodes correspond to unknown variables.
+
+212
+00:29:52,108 --> 00:29:54,609
+Edges denote dependencies amongst variables.
+
+213
+00:29:54,629 --> 00:30:10,515
+40-factor graphs have nodes that represent local functions or factors of a probability distribution over random variables, while edges come to represent variables per se, or more exactly, a probability distribution over those variables.
+
+214
+00:30:11,462 --> 00:30:26,846
+And finally, neural networks have nodes that are constituted by the sufficient statistics of unknown variables and other auxiliary variables like prediction errors, while the edges in those graphs denote an exchange of the functions of sufficient statistics.
+
+215
+00:30:27,906 --> 00:30:39,649
+Crucially, these graphical representations are formally equivalent in the sense that any Bayesian network can be expressed as a factor graph, and any message passing on a factor graph can be depicted as a neural network.
+
+216
+00:30:41,069 --> 00:30:47,814
+However, as we will see later, the various graphical formulations offer different perspectives on belief updating or propagation.
+
+217
+00:30:48,955 --> 00:30:52,158
+So this is a very rich topic.
+
+218
+00:30:54,280 --> 00:31:03,687
+This background section was to say that Forney graphs have a different style or format than Bayesian graphs.
+
+219
+00:31:04,639 --> 00:31:08,280
+However, they exist in this dual relationship.
+
+220
+00:31:08,480 --> 00:31:22,183
+So there's things like algorithms and procedures that you can do on FFG that you can't do on Bayes graphs, but it's all good because you can go from the Bayes graph to the FFG representation and then implement some procedure on the FFG.
+
+221
+00:31:23,223 --> 00:31:25,744
+So let's get to the papers.
+
+222
+00:31:27,523 --> 00:31:53,615
+The background one and background two sections have got us to perhaps the point where we're very excited to see how the authors implemented fully synthetic active inference agents using message passing, logistical and operational scheduling algorithms on 40-factor graphs representing Bayesian graphical models crafted to calculate a constrained beta-free energy
+
+223
+00:31:54,762 --> 00:32:06,347
+as a generalized or unified free energy imperative, unifying the variational and the expected free energy, for sense-making and decision-making in active inference agents.
+
+224
+00:32:07,588 --> 00:32:12,009
+So now we're heading into another double movement of the coming two papers.
+
+225
+00:32:13,150 --> 00:32:22,094
+The first paper is itself going to be like a background and a notational paper, but also one that adds to the literature.
+
+226
+00:32:23,294 --> 00:32:29,038
+And then the second paper will make the addition on top of the advance of the first paper.
+
+227
+00:32:30,159 --> 00:32:32,381
+So a lot of material.
+
+228
+00:32:33,021 --> 00:32:35,623
+Let's go into the first paper, Bert.
+
+229
+00:32:38,425 --> 00:32:42,868
+Yes, so for the first paper, we'll be going over it chapter by chapter.
+
+230
+00:32:43,849 --> 00:32:48,932
+To start with, setting up the Lagrangian, then defining
+
+231
+00:32:51,130 --> 00:32:55,191
+the epistemic objective and how to include it in a synthetic agent.
+
+232
+00:32:56,151 --> 00:33:01,453
+Then in chapter 4 they lay out what Lagrangian active inference means.
+
+233
+00:33:02,753 --> 00:33:09,175
+In chapter 5 they describe the notation for the constraint for an effector graph.
+
+234
+00:33:11,112 --> 00:33:28,678
+In six, they highlight why the original generalized classical active inference and the original generalized free energy algorithm are special cases of the Lagrangian active inference, so of that definition of the four-unit factor graph.
+
+235
+00:33:30,079 --> 00:33:33,560
+And then in seven, they do an experiment for policy inference.
+
+236
+00:33:38,106 --> 00:33:39,647
+Yeah.
+
+237
+00:33:39,927 --> 00:33:42,788
+And for chapter two, the Lagrangian approach to message passing.
+
+238
+00:33:44,388 --> 00:33:52,031
+So as Daniel described, phony vector graphs represent a factorized function over variables, which you can see in equation one and figure one.
+
+239
+00:33:54,812 --> 00:34:00,354
+So on the left, you see equation one that shows per node where V is.
+
+240
+00:34:02,395 --> 00:34:04,956
+So A is a node in the set of all nodes V.
+
+241
+00:34:07,446 --> 00:34:15,660
+And so on the height, you can see the image which says that each node is a factor of all the variables and the variables are on edges.
+
+242
+00:34:16,060 --> 00:34:16,962
+And that's really important.
+
+243
+00:34:18,888 --> 00:34:23,412
+And as mentioned in the background, approximate inference is used, in this case variational inference.
+
+244
+00:34:24,233 --> 00:34:32,762
+And so we start with a free energy function, an equation 3 on the left, which is used to approximate variational distribution Q star.
+
+245
+00:34:32,922 --> 00:34:36,805
+And Q star is the optimal distribution that we want to get to.
+
+246
+00:34:37,226 --> 00:34:39,348
+And we achieved it by minimizing it.
+
+247
+00:34:42,909 --> 00:34:48,853
+And so Beth free energy is distinct from variation of free energy by factorizing the calculation of free energy.
+
+248
+00:34:49,674 --> 00:34:59,220
+So instead of computing it all at once, you compute it per node and edge, and then aggregate the results, which you can see on the right.
+
+249
+00:35:02,863 --> 00:35:06,305
+Each local free energy will include entropy terms from all connected edges.
+
+250
+00:35:08,317 --> 00:35:13,204
+And since edges can be connected to two nodes, the entropy of these variables would be counted twice.
+
+251
+00:35:13,845 --> 00:35:18,592
+So one edge is a variable, and if you connect it to two nodes, you would be counting the same variable twice.
+
+252
+00:35:19,433 --> 00:35:24,200
+And so to cancel that out, they add the one minus degree of the edge.
+
+253
+00:35:26,198 --> 00:35:34,441
+And at the bottom, I've added that normally an edge has always a degree of two, which might sound weird because how can an edge have a degree?
+
+254
+00:35:34,842 --> 00:35:36,202
+Because normally nodes have degrees.
+
+255
+00:35:38,163 --> 00:35:45,706
+But in chapter five, we will show that it's possible to have dangling edges that are not connected, that are not factorized on one end.
+
+256
+00:35:46,386 --> 00:35:48,407
+So it is possible to have edges with degree one.
+
+257
+00:35:50,313 --> 00:35:58,116
+And last, three constraints ensure that the sum of probabilities for each node and edge equals one, and it's normalization.
+
+258
+00:35:59,737 --> 00:36:08,861
+And also that it is possible to retrieve edge and node probabilities from the joint distribution, so that the edge says something about the nodes, and the nodes say something about the edges.
+
+259
+00:36:12,922 --> 00:36:13,523
+Yes, next slide.
+
+260
+00:36:13,543 --> 00:36:13,743
+Cool.
+
+261
+00:36:14,723 --> 00:36:15,964
+Yeah, I've just got something to say.
+
+262
+00:36:16,857 --> 00:36:45,954
+Yeah, just that we have the variables on the edges of this graph, and the Fs are like functions or operations or little factories where variables can come in, potentially multiple variables can come in and some activity happens, but we're putting the variable that would be in the node of the base graph, and we're having it on an edge connecting functions.
+
+263
+00:36:47,148 --> 00:37:03,782
+So again, the information is identical or congruent, but everything that we're going to see now is flipped into this space where the edges are the variables, and that's what is going to enable the node local computations.
+
+264
+00:37:09,045 --> 00:37:18,890
+And then in chapter 3, defining epistemic objectives, the authors write that ages interact with the world they inhabit and entail a generative model of the environment.
+
+265
+00:37:19,911 --> 00:37:22,933
+Achieving future goals can be cast as free energy minimization.
+
+266
+00:37:24,253 --> 00:37:28,556
+And then they ask the question, what should this free energy functional look like and why?
+
+267
+00:37:30,417 --> 00:37:32,798
+And that sets up the rest of the paper, basically.
+
+268
+00:37:35,164 --> 00:37:44,992
+Only optimizing bad free energy or variation of free energy does not lead to exploration, but KL control, which means that only prior values are satisfied.
+
+269
+00:37:46,513 --> 00:37:56,400
+A hallmark of active inference is alternative functionals specifically made for inferring policies like expected free energy, which includes information collection.
+
+270
+00:37:57,281 --> 00:38:03,185
+And so epistemics arise from the optimization of approximate mutual information.
+
+271
+00:38:05,029 --> 00:38:19,801
+mutual information uh on the bottom height is a metric like the r squared if you make a linear and that it tells you it tells you how much one variable relates to another one
+
+272
+00:38:22,478 --> 00:38:27,482
+And to go back, mutual information between X and Z in equation 10 on the left.
+
+273
+00:38:29,263 --> 00:38:40,411
+To work on it, the uncertainty entropy of X. Yeah, that's in the height equation.
+
+274
+00:38:41,191 --> 00:38:44,353
+So it's how much you know about the one given that you know the other.
+
+275
+00:38:46,375 --> 00:38:49,257
+And so say X is an observation and Z is an eternal state.
+
+276
+00:38:50,748 --> 00:39:02,394
+then an agent can choose X to see information about set.
+
+277
+00:39:02,474 --> 00:39:03,374
+are related to each other.
+
+278
+00:39:06,916 --> 00:39:11,318
+And then how do you, how to define a functional that combines battery energy and .
+
+279
+00:39:11,738 --> 00:39:12,139
+So to have .
+
+280
+00:39:19,618 --> 00:39:35,969
+the energy and add negative mutual information and minimizing the free energy functional the elbow with a negative mutual information means maximizing the mutual information so you're trying to get as much information about internal and observation states
+
+281
+00:39:39,591 --> 00:39:42,592
+Yeah, just one comment there, Bert, and then Jakob, feel free to add anything.
+
+282
+00:39:43,072 --> 00:39:47,153
+That's a great comparison you made with the r-squared for linear regression.
+
+283
+00:39:47,753 --> 00:39:57,076
+So in a linear regression, r-squared summarizes how much the two axes, the x and the y-axis, resemble each other.
+
+284
+00:39:57,096 --> 00:40:00,977
+r-squared of 1 means they're exactly collinear.
+
+285
+00:40:01,357 --> 00:40:02,037
+They're on a manifold.
+
+286
+00:40:02,995 --> 00:40:09,502
+r-squared of 0 is there's no linear relationship, and r-squared of negative 1 would be a negative association.
+
+287
+00:40:09,522 --> 00:40:14,228
+Mutual information is kind of like that, but two characteristics that are importantly different.
+
+288
+00:40:14,348 --> 00:40:18,813
+First off, you can't have information on something.
+
+289
+00:40:19,400 --> 00:40:24,421
+The worst thing that two things could be, or the least that they could be, is just noise to each other.
+
+290
+00:40:24,441 --> 00:40:31,223
+So you can take the negative of the mutual information, but you can't have negative information on something.
+
+291
+00:40:31,863 --> 00:40:34,804
+And then secondly, it's not a linear relationship.
+
+292
+00:40:35,504 --> 00:40:47,628
+You could have something that is an inverted U, and the linear regression might find that that had a low R squared because the best regression line might go through the middle of the U.
+
+293
+00:40:48,530 --> 00:40:54,651
+But then if you just think about that a little bit more generally, of course one of those variables has information on the other variable.
+
+294
+00:40:55,631 --> 00:41:08,974
+And so it's kind of like moving a lot of our intuition and also some of the epistemic status of linear regressions into more of a pure information geometric space.
+
+295
+00:41:09,834 --> 00:41:13,055
+And it's a really important point too that the VFE doesn't
+
+296
+00:41:14,284 --> 00:41:17,866
+endogenously have an epistemic drive.
+
+297
+00:41:18,866 --> 00:41:23,449
+It's just about the real-time surprise level of beliefs and incoming data.
+
+298
+00:41:24,529 --> 00:41:34,434
+And so a hallmark of active inference is the construction of these functionals such as expected free energy or free energy of the expected future or generalized free energy.
+
+299
+00:41:38,276 --> 00:41:38,456
+Okay.
+
+300
+00:41:41,909 --> 00:41:49,798
+And so expected free energy only works for future time steps, whereas variational and bad free energy work for past and the current time step.
+
+301
+00:41:51,100 --> 00:42:00,170
+And instead, the authors posted generalized free energy works for both at the same time, and it includes a part that tracks
+
+302
+00:42:01,104 --> 00:42:03,005
+time in equation 14.
+
+303
+00:42:03,105 --> 00:42:08,707
+But that's on the end, you have P with a curvy stripe, xk.
+
+304
+00:42:09,487 --> 00:42:13,628
+And that basically keeps count of which time step we have at this moment.
+
+305
+00:42:14,769 --> 00:42:20,371
+And also note that the policy or control is fixed.
+
+306
+00:42:20,591 --> 00:42:22,251
+So that's you with a roof on it.
+
+307
+00:42:24,792 --> 00:42:29,234
+So past time steps have observed data and are locked using the direct delta function.
+
+308
+00:42:30,097 --> 00:42:39,931
+which was the function with a probability of 1 at a specific value and 0 at the rest, whereas future timesteps are still open to be optimized using generalized free energy.
+
+309
+00:42:43,045 --> 00:42:53,153
+And so below that, you can see this free energy, how you lock some values and keep them open at other moments.
+
+310
+00:42:54,034 --> 00:43:05,023
+And so for a sneak peek on the figure in the right from paper two, you can see that as time goes on and time steps are observed, data constraints are added.
+
+311
+00:43:05,884 --> 00:43:10,728
+And that's the little black circle with a delta in it.
+
+312
+00:43:13,857 --> 00:43:25,081
+And committing to a full mode of specification up your limits what a generalize that you think you can do instead of making it fully local is synthetic active inference as the artist right.
+
+313
+00:43:30,323 --> 00:43:30,523
+Okay.
+
+314
+00:43:34,602 --> 00:43:40,884
+And then in chapter four, they discussed the Lagrangian active inference, which is the key of the paper.
+
+315
+00:43:41,904 --> 00:43:47,905
+And so with node-local generalized free energy, we can construct a Lagrangian for active inference.
+
+316
+00:43:48,485 --> 00:43:57,028
+And the goal is to have a distributed inference procedure solving for each node individually and constraining the solution as shown in equation 13.
+
+317
+00:43:58,288 --> 00:43:58,768
+So on the right.
+
+318
+00:44:00,475 --> 00:44:04,537
+And we need to assume that actual and approximate probabilities are about equal to each other.
+
+319
+00:44:06,979 --> 00:44:07,979
+We had to make that assumption.
+
+320
+00:44:08,260 --> 00:44:09,781
+So I guess we can ask that next week.
+
+321
+00:44:10,721 --> 00:44:16,945
+And now with this, messages can be derived as done in part two, which is the next paper.
+
+322
+00:44:17,985 --> 00:44:23,909
+However, in this paper, they attempt another way to arrive at the node-local generalized free energy.
+
+323
+00:44:24,149 --> 00:44:25,210
+And this is done in two steps.
+
+324
+00:44:26,350 --> 00:44:29,192
+So first, they apply a mean field factorization.
+
+325
+00:44:32,136 --> 00:44:45,582
+that ensures edges are independent for each node, which you can see on the right, where you have the factor of the node, sr, has a product for all edges, so they are independent.
+
+326
+00:44:46,322 --> 00:44:55,447
+And then the second move they make is that you can partition the connecting variables edges into two sets, one that is adjusted and the other that is left alone.
+
+327
+00:44:56,327 --> 00:45:00,929
+And to the adjusted set, they apply p substitution, which is very important.
+
+328
+00:45:02,774 --> 00:45:07,657
+And this basically replaces a local free energy with a local generalized free energy.
+
+329
+00:45:09,378 --> 00:45:17,663
+And on the bottom is the formula for applying p-substitution, which I also don't fully understand.
+
+330
+00:45:18,384 --> 00:45:20,165
+So maybe you guys know a little more about that.
+
+331
+00:45:24,229 --> 00:45:25,771
+Definitely will ask.
+
+332
+00:45:26,672 --> 00:45:32,619
+I'll just note here that the slash is used to mean except for.
+
+333
+00:45:32,639 --> 00:45:34,922
+I hope this is correct.
+
+334
+00:45:35,783 --> 00:45:44,453
+So here we're able to take something that contains all and we're able to kind of pull out one.
+
+335
+00:45:46,627 --> 00:45:58,358
+with this more intractable integral and then still do the simpler log but we'll ask
+
+336
+00:46:04,916 --> 00:46:16,298
+The second paper will show how p-substituted nodes are gradually removed from the Forney factor graph over time, as these nodes are now in the past and do not need to consider the future anymore.
+
+337
+00:46:17,098 --> 00:46:24,980
+Again, for a sneak peek, see on the right, everywhere you add the delta in the black circle, you remove the square.
+
+338
+00:46:26,380 --> 00:46:29,781
+And the square is the notation for p-substitutions.
+
+339
+00:46:33,365 --> 00:46:41,852
+And then to construct the active inference Lagrangian, it is important that p-substituted nodes work with different messages, generalized free energy instead of path-free energy.
+
+340
+00:46:42,753 --> 00:46:44,054
+And in this way, add epistemics.
+
+341
+00:46:45,215 --> 00:46:56,004
+The optimal points of the Lagrangian, where the first derivative is 0, are the stationary point of the message passing process, which means that nodes do not change anymore if you keep updating.
+
+342
+00:46:57,225 --> 00:46:59,387
+And so there's a very long formula for the Lagrangian.
+
+343
+00:47:01,986 --> 00:47:08,549
+And as I said, you split the nodes into two, one set that you p-substitute and the other that you don't.
+
+344
+00:47:10,470 --> 00:47:15,192
+And on top of that, you add three constraints, which have a lambda in front of them.
+
+345
+00:47:15,872 --> 00:47:20,534
+And that is the marginalization, the normalization of both nodes and edges.
+
+346
+00:47:23,956 --> 00:47:30,725
+That's very important about the stationary point of message passing being kind of, like, settled.
+
+347
+00:47:31,766 --> 00:47:35,351
+Where everybody can pass all the messages they want and nothing is changing.
+
+348
+00:47:36,592 --> 00:47:39,095
+And that's gonna be, um...
+
+349
+00:47:40,390 --> 00:48:02,547
+probably leveraged in the reactive message passing programming environment, where rather than needing to send all messages once to the calculate and send all messages again, it opens up the ability for different regions of the graph to be sending and receiving messages at different frequencies.
+
+350
+00:48:03,107 --> 00:48:07,551
+So if one sensor was sampling a thousand times a second, one was sampling one time per second,
+
+351
+00:48:08,271 --> 00:48:19,216
+No longer do you have to decide, should we coarse-grain to one second, or should we waste 999 cycles on the slower cycle sensor?
+
+352
+00:48:19,876 --> 00:48:29,640
+Now, with reactive message passing, because there's no local descriptions, it's possible to open up that implementational space.
+
+353
+00:48:35,649 --> 00:48:40,154
+And now we'll get into defining the notation for the constrained Forney factor graphs.
+
+354
+00:48:41,014 --> 00:48:48,642
+And so Forney factor graphs are useful for describing generative models, but it is important to know the exact functional to be minimized.
+
+355
+00:48:49,483 --> 00:48:55,429
+And the authors develop a new notation for writing constraints directly as part of the Forney factor graph.
+
+356
+00:48:57,125 --> 00:48:59,767
+because normal phony vector graphs do not show that.
+
+357
+00:49:01,748 --> 00:49:08,653
+Figure 4 on the right builds upon representing vectors with squares, nodes, and edges as variables that can be vectorized.
+
+358
+00:49:09,793 --> 00:49:17,739
+They add circular beads, which indicate constraints that define our family Q. That has to do with the variation of distribution.
+
+359
+00:49:18,679 --> 00:49:25,824
+A bead on an edge denotes that of the edge QSI, while a bead in the center of a node is QSA.
+
+360
+00:49:28,346 --> 00:49:35,392
+And then they build, they introduce four constraints that are needed as notation for the Forney factor graph.
+
+361
+00:49:37,293 --> 00:49:43,818
+So the first one is a factorization constraint, and it can either be a naive mean field or a structured mean field.
+
+362
+00:49:44,539 --> 00:49:54,467
+When a naive mean field is a stronger constraint, which means that every factor is independent, which is figure five, it's in the middle on the right.
+
+363
+00:49:56,537 --> 00:50:10,608
+and structured is less strong because you can factorize multiple variables together and i added some example formats many edges like needed for
+
+364
+00:50:12,311 --> 00:50:19,519
+If you want to have many edges, many variables into a factor, they introduce the notation with dots in between.
+
+365
+00:50:20,240 --> 00:50:26,547
+And this is useful when you have, for example, a Gaussian mixture model, which has a bunch of components.
+
+366
+00:50:30,975 --> 00:50:42,638
+We'll see if this is accurate, but let's imagine these four variables are coming in and meeting in the factory, four prerequisite components of the car assembly process.
+
+367
+00:50:43,778 --> 00:50:50,780
+The fully factorized way to represent that is shown here.
+
+368
+00:50:52,008 --> 00:50:56,250
+That's the mean field assumption that we can just treat those components separately.
+
+369
+00:50:56,871 --> 00:51:03,574
+Like if what we were doing was just multiplying, or I mean, adding the numbers together, maybe we could treat them separately.
+
+370
+00:51:04,454 --> 00:51:14,079
+But then also there are these intermediate structural factorizations where you can take four joint coming in
+
+371
+00:51:15,240 --> 00:51:40,287
+and then you could separate it into these two are separate and these two are connected or two pairs so it gives you the expressivity to do the continuum from fully joint to fully factorized mean field and everything between all the combinations in between in a per node fashion
+
+372
+00:51:41,425 --> 00:51:47,649
+rather than at the whole graph level, whereas that is often how it's discussed elsewhere.
+
+373
+00:51:48,269 --> 00:51:53,753
+Somebody constructs a big generative model and says, and then we took a mean field approach to the graph.
+
+374
+00:51:54,553 --> 00:51:58,896
+So here we have that kind of expressivity in a given node.
+
+375
+00:52:10,876 --> 00:52:14,237
+unmute, then continue, Bert.
+
+376
+00:52:14,257 --> 00:52:14,617
+Good call.
+
+377
+00:52:15,397 --> 00:52:24,699
+So the second is a form constraint, which enforces a particular function or distribution, really, on a local marginal of an edge or a node.
+
+378
+00:52:26,140 --> 00:52:30,441
+Figure 8 shows what enforcing a Gaussian constraint on an edge looks like.
+
+379
+00:52:31,801 --> 00:52:35,744
+And figure nine shows two different constraints on the nodes.
+
+380
+00:52:36,765 --> 00:52:44,170
+And the authors explicitly note that a constraint on an edge is independent of the nodes and that it factorizes into and vice versa.
+
+381
+00:52:44,971 --> 00:52:47,492
+So the messages pass.
+
+382
+00:52:47,893 --> 00:52:52,656
+And then after everything is done, it's like squeezing clay into a box.
+
+383
+00:52:53,256 --> 00:52:53,937
+It just has to fit.
+
+384
+00:52:54,357 --> 00:52:55,438
+But it's only after the fact.
+
+385
+00:52:59,048 --> 00:53:03,471
+And then they note dangling edges, which do not terminate on a node on one side.
+
+386
+00:53:06,033 --> 00:53:10,696
+So they wouldn't require a bead, but you need it to be able to do a form constraint.
+
+387
+00:53:11,337 --> 00:53:12,318
+So they still hide them in.
+
+388
+00:53:15,140 --> 00:53:20,423
+And that's why they add a sort of dummy factor node on one end.
+
+389
+00:53:23,105 --> 00:53:25,247
+And then the third constraint is a delta constraint.
+
+390
+00:53:28,507 --> 00:53:32,530
+The delta constraints and data points allow us to incorporate measurements into a model.
+
+391
+00:53:34,132 --> 00:53:36,714
+Equation 30 and figure 10 show this for data constraints.
+
+392
+00:53:36,874 --> 00:53:40,297
+These are special since they denote observations and block the flow of messages.
+
+393
+00:53:40,617 --> 00:53:42,579
+So these points are now fixed.
+
+394
+00:53:43,039 --> 00:53:45,101
+Nothing goes through it because it is already set.
+
+395
+00:53:46,642 --> 00:53:52,767
+And then another option is that when you don't know which value to fix it to, so the S I had,
+
+396
+00:53:54,423 --> 00:53:58,366
+Then you can optimize the value, and then it is called a delta constraint.
+
+397
+00:53:59,146 --> 00:54:02,888
+And the optimization of this is don't use an expectation maximization.
+
+398
+00:54:05,790 --> 00:54:11,674
+What I saw in this section was, let's just say that we were drawing height observations from
+
+399
+00:54:13,456 --> 00:54:42,527
+forest so one way to think about that is the the gaussian distribution that we're drawing from okay but now you get the data point and you could think about that data point as just an entry and a value you could also think of it as a dirac delta distribution parameterized exactly by the value of the data point and so thinking about data as being a dirac constrained
+
+400
+00:54:46,027 --> 00:55:03,147
+variable where here the variables are on edges brings unification between empirical uh data coming in from the outside or passed around internally and broader distributional perspectives
+
+401
+00:55:09,366 --> 00:55:17,453
+And then the fourth constraint is moment matching, which replaces the hard marginalization constraint used to include the entropy of edges.
+
+402
+00:55:18,574 --> 00:55:22,237
+And so this loosens the marginalization as now only the moments need to align.
+
+403
+00:55:23,958 --> 00:55:29,703
+And equation eight contains both node and edge terms since the moment matching constraint applies to both at the same time.
+
+404
+00:55:31,545 --> 00:55:35,048
+And they apply to both at the same time because of the top formula.
+
+405
+00:55:37,899 --> 00:55:52,452
+And the middle one, the middle formula shows the sufficient statistics described by T, capital T. And so basically what this means is that you pick a distribution and you only pick the moments.
+
+406
+00:55:52,772 --> 00:55:58,257
+So the first one would be the mean of the distribution and the second would be the standard deviation.
+
+407
+00:55:59,098 --> 00:56:00,359
+And so only those need to fit.
+
+408
+00:56:00,519 --> 00:56:02,121
+You don't care about the rest.
+
+409
+00:56:07,734 --> 00:56:13,502
+And P-substitution is the final piece needed to represent the active inference Lagrangian on a C-constraint for any vector graph.
+
+410
+00:56:14,463 --> 00:56:25,378
+Constructing the local generalized free energy using mean field vectorization and P-substitution was only done to represent the Lagrangian active inference on a constraint for any vector graph.
+
+411
+00:56:27,256 --> 00:56:33,038
+and recall that p-substitution involves substituting part of the model p for q in the expectation only.
+
+412
+00:56:33,919 --> 00:56:36,019
+And that is the formula on the bottom.
+
+413
+00:56:36,740 --> 00:56:39,501
+And it's represented with a square in the Forney factor graph.
+
+414
+00:56:42,842 --> 00:56:50,145
+And it shows the substitution on figure 13, replacing the local variation of free energy with a local generalized free energy.
+
+415
+00:56:54,707 --> 00:57:13,462
+rule replacing Q on the data or on Y with P that conditions on X and Z. This red piece is being called attention to, and we'll unpack that more with the authors.
+
+416
+00:57:18,086 --> 00:57:24,231
+And on top of that, lastly, the authors compressed the constraint for an effect to make it easier to read.
+
+417
+00:57:25,063 --> 00:57:28,905
+And only deviations relative to the default bed-free energy are shown.
+
+418
+00:57:29,705 --> 00:57:36,508
+And the bead chain is introduced as a series of beads connected by edges and is summarized if it contains no extra information.
+
+419
+00:57:37,548 --> 00:57:44,491
+And the others go really into depth, but I will just keep it to this, where they go from the left image to the right.
+
+420
+00:57:45,032 --> 00:57:47,233
+So the right is the cleaned up phony factor graph.
+
+421
+00:57:48,273 --> 00:57:52,815
+And then you can more easily compress it and make it smaller for very large diagrams.
+
+422
+00:57:55,714 --> 00:58:07,721
+Yeah, allow us to kind of compress or skip through the uninformative parts and just call attention to the new information that's being intersected.
+
+423
+00:58:12,756 --> 00:58:21,921
+And then in chapter six, they highlight how classical active inference and original generalized free energy algorithm are special cases of the developed Lagrangian active inference.
+
+424
+00:58:23,261 --> 00:58:34,147
+So an integral part of message-passing algorithms is the choice of a schedule, which Daniel already explained, which is the order of messages in which they are passed.
+
+425
+00:58:34,887 --> 00:58:42,451
+Iterative methods are sensitive to the order, and Lagrangian active inference is an iterative method and might be sensitive to the choice of schedule.
+
+426
+00:58:43,451 --> 00:58:49,056
+Choosing the schedule carefully allows us to recover classical active inference planning algorithms as a special case.
+
+427
+00:58:51,358 --> 00:59:03,348
+Figure 20 on the left shows the constraint for an effect graph of a composite node for Lagrangian active inference on discrete state spaces.
+
+428
+00:59:04,509 --> 00:59:08,392
+The equations on the right show the corresponding factors.
+
+429
+00:59:09,275 --> 00:59:15,577
+where HA is defined as a function of the transition matrix required for the order equation.
+
+430
+00:59:15,637 --> 00:59:17,518
+Figure 21 shows the message updates.
+
+431
+00:59:19,839 --> 00:59:31,623
+Some cannot be solved in closed form and instead require multi-color estimates.
+
+432
+00:59:31,763 --> 00:59:38,905
+U is the average free energy of the composite node and corresponds exactly to expected free energy issues in standard active inference.
+
+433
+00:59:41,312 --> 00:59:46,255
+where the composite notes the block with a striped block around it.
+
+434
+00:59:47,516 --> 00:59:50,417
+M of Z and M of A are solved differently than the rest.
+
+435
+00:59:51,358 --> 00:59:57,121
+They require Z-bar results using Newton's method, as it tends to fluctuate between multiple extremes.
+
+436
+00:59:58,201 --> 01:00:00,303
+And M of A is estimated using a sampling procedure.
+
+437
+01:00:01,283 --> 01:00:08,147
+And so below shows the generative model of a discrete prompt, and the equations
+
+438
+01:00:10,215 --> 01:00:12,357
+to below that show the factors.
+
+439
+01:00:13,217 --> 01:00:15,639
+And note again the hat on U, so the x's are fixed.
+
+440
+01:00:21,884 --> 01:00:35,434
+And calculating the generalized free energy is done using a forward sweep, which you can see with the arrows on the bottom right going from left to right, and summing the free energy terms over all the substituted composite nodes.
+
+441
+01:00:37,159 --> 01:00:40,661
+And these should then be equal to the result from the shown equation.
+
+442
+01:00:46,986 --> 01:00:47,346
+Cool.
+
+443
+01:00:47,646 --> 01:00:52,189
+These images are just so interesting, even without knowing what they are.
+
+444
+01:00:57,705 --> 01:01:03,008
+And reconstructing original generalized free energy method is then a matter of including past observations.
+
+445
+01:01:03,829 --> 01:01:05,990
+For past time steps, adding data constraints.
+
+446
+01:01:07,071 --> 01:01:09,833
+While for future time steps, adding piece substitution.
+
+447
+01:01:11,093 --> 01:01:13,435
+And a naive min field is applied to all the nodes.
+
+448
+01:01:14,115 --> 01:01:16,457
+The schedule, the order of messages is shown below.
+
+449
+01:01:17,817 --> 01:01:23,461
+The update equations of the generalized free energy using this model are the same as of the expected free energy.
+
+450
+01:01:32,028 --> 01:01:37,450
+And then the authors work on an example, which is the classic T-Maze task.
+
+451
+01:01:40,491 --> 01:01:43,392
+So the tools in this paper are not limited to restating prior work.
+
+452
+01:01:44,472 --> 01:01:58,097
+It offers more advantages, one of which is the ability to directly infer a policy instead of relying on post hoc selection, choosing actions which have the best energy terms.
+
+453
+01:01:59,921 --> 01:02:01,081
+Instead, you can do it immediately.
+
+454
+01:02:01,922 --> 01:02:15,447
+So the optimal action to take is therefore to visit... Well, the optimal action that he makes is to first visit 4 because you can get information about 2 and 3, rather than immediately try to go to 2 and 3.
+
+455
+01:02:16,367 --> 01:02:19,448
+And that is the hallmark of an active inference agent.
+
+456
+01:02:21,778 --> 01:02:24,220
+Yeah, a lot to explore here.
+
+457
+01:02:24,800 --> 01:02:45,314
+But instead of relying on the post-hoc comparison of energy terms, this is in reference to the way that usually expected free energy is used by taking in habit, the policy prior, and then iterating over every element in pi, the policy prior, and sharpening or updating them
+
+458
+01:02:46,315 --> 01:02:51,037
+according to the expected free energy with a pragmatic value in the epistemic value component.
+
+459
+01:02:51,057 --> 01:03:02,280
+So you get some policy posterior, and then you might select simply the best one, or you might take some temperature-guided sampling across the policy posterior.
+
+460
+01:03:02,821 --> 01:03:07,902
+So that's a post hoc comparison of expected free energy terms.
+
+461
+01:03:08,883 --> 01:03:09,843
+And with the...
+
+462
+01:03:15,526 --> 01:03:37,926
+that the generative models now have the ability to directly infer policy potentially without explicit consideration of counterfactuals or at the very least without this kind of a post hoc comparison.
+
+463
+01:03:46,042 --> 01:03:53,046
+And so they build on that and create another full model.
+
+464
+01:03:54,607 --> 01:04:04,332
+And note that in equation 47, they use a mixture model of candidate transition matrices indexed by UK.
+
+465
+01:04:05,132 --> 01:04:07,714
+So each action has a different transition matrix.
+
+466
+01:04:11,096 --> 01:04:13,317
+And yeah, a bunch of illustrations.
+
+467
+01:04:17,580 --> 01:04:33,273
+And figure 28 shows an agent that initially prefers the epistemic action, and so moves down to state 4, and subsequently exhibits a preference for either of the potentially rewarding arms, so of course left or right.
+
+468
+01:04:33,973 --> 01:04:41,800
+And this shows that the Lagrangian active inference is able to infer the optimal policy, and that approach can reproduce prior results of the teammates.
+
+469
+01:04:46,977 --> 01:04:52,281
+And then the authors do it again, but now by adding a data constraint.
+
+470
+01:04:53,081 --> 01:05:02,488
+And this is similar to using a maximum a posteriori estimate, which basically means that the action is yes or no.
+
+471
+01:05:02,868 --> 01:05:03,428
+So it's 100% or not.
+
+472
+01:05:10,222 --> 01:05:24,116
+Yeah, by pushing through the point mass constraint, kind of like that Dirac delta constraint, all that can be shared is the first moment, which is just the data points value.
+
+473
+01:05:24,176 --> 01:05:29,682
+So here it's like, you might have a 70% chance of doing thing 1, 20%, 2%, 1%, but then...
+
+474
+01:05:33,806 --> 01:05:54,803
+the action selected is decisive and so you have this decisive passing of action and the the decisive realization of location even if also there's like a location distribution that includes support over the entire maze or a policy distribution that includes support overall policies
+
+475
+01:05:59,076 --> 01:06:07,606
+And then to conclude, in this paper, we have proposed a novel approach to active inference based on Lagrangian optimization, which we have named Lagrangian active inference.
+
+476
+01:06:08,487 --> 01:06:16,597
+We demonstrated Lagrangian active inference on a classic benchmark problem for the literature and found that it enhanced epistemic drive to this hallmark feature.
+
+477
+01:06:17,958 --> 01:06:20,940
+It presents three main advantages over previous algorithms.
+
+478
+01:06:21,841 --> 01:06:34,869
+First, an advantage is the computational efficiency afforded by being able to pass backwards messages instead of needing to perform forward rollouts for every policy, like a tree search, so it scales linearly over time.
+
+479
+01:06:36,863 --> 01:06:45,486
+A second advantage is that it allows for directly inferring posteriors over control signals instead of relying on model comparison, like Daniel just explained.
+
+480
+01:06:46,647 --> 01:06:57,551
+And thirdly, it is inherently modular and consequently works for freely definable constraints for any factor crash, while prior work has focused mostly on specific generative models.
+
+481
+01:06:58,857 --> 01:07:04,263
+And they have also introduced a notation for hiding down constraints and piece substitutions on a Forney graph.
+
+482
+01:07:05,344 --> 01:07:11,030
+The constraint factor Forney graphs are useful not only for active inference, but for specifying free energy functionals in general.
+
+483
+01:07:12,171 --> 01:07:21,461
+And the authors hope that this can become a standard tool similar to Forney factor graphs when it is desirable not just to write the model, but also a family of distributions.
+
+484
+01:07:22,853 --> 01:07:31,640
+In the future, we plan to extend the work to more node constructions to further open the scope that can be attacked with active inference.
+
+485
+01:07:34,562 --> 01:07:35,462
+Awesome work, Bert.
+
+486
+01:07:35,662 --> 01:07:36,883
+Great job preparing it.
+
+487
+01:07:38,104 --> 01:07:39,966
+Jakob, anything you want to add on part one?
+
+488
+01:07:44,509 --> 01:07:44,969
+No, at the moment.
+
+489
+01:07:46,090 --> 01:07:46,390
+Okay.
+
+490
+01:07:47,151 --> 01:07:50,894
+Scaling linearly in time is really fascinating.
+
+491
+01:07:52,168 --> 01:07:59,910
+Like, if you planned 10 time steps, should the 11th step be a 10% bump in difficulty?
+
+492
+01:08:00,030 --> 01:08:07,552
+Or should it be another combinatoric explosion every little kilometer deeper into the future?
+
+493
+01:08:09,373 --> 01:08:10,773
+So, second paper.
+
+494
+01:08:12,222 --> 01:08:18,992
+Okay, first just going in deeply to the first sentences before accelerating across.
+
+495
+01:08:19,853 --> 01:08:28,065
+So they begin the paper saying, free energy principle postulates that the behavior of biological agents can be modeled as minimizing a variational free energy.
+
+496
+01:08:28,991 --> 01:08:37,900
+And this is commonly brought up, that we can model biological agents as or through or with minimizing variational free energy.
+
+497
+01:08:38,560 --> 01:08:46,728
+Just like saying we can model this regression by fitting an L2 norm, we can model this biological agent by fitting the ELBO or the VFE.
+
+498
+01:08:47,822 --> 01:09:05,054
+Active inference, which is AIF in this paper, is a corollary of the FEP that describes how agents propose effective agents by minimizing an expected free energy objective that internalizes a generative model, GM, of the agent's environment and prior beliefs about desired outcomes.
+
+499
+01:09:05,934 --> 01:09:06,035
+So,
+
+500
+01:09:06,894 --> 01:09:11,275
+VFE is the real-time behavior minimization.
+
+501
+01:09:11,915 --> 01:09:21,417
+EFE brings it into the prospective setting by introducing epistemic imperative and also talking about observations that haven't happened yet.
+
+502
+01:09:22,818 --> 01:09:28,939
+Variational objectives for active inference can be minimized by message passing on a Forney style factor graph representation.
+
+503
+01:09:29,946 --> 01:09:35,550
+So everything we know about Bayesian graphical models transposes into the FFG space.
+
+504
+01:09:36,491 --> 01:09:38,292
+The FFG is not a kind of Bayes graph.
+
+505
+01:09:38,892 --> 01:09:46,998
+It is a dual, a different kind of graph conveying the same information in a restructured format that we can then optimize or implement differently.
+
+506
+01:09:48,919 --> 01:09:52,502
+Several authors have attempted to scale active inference under message passing framework.
+
+507
+01:09:53,002 --> 01:09:56,645
+However, agents based on these approaches lack crucial epistemic characteristics.
+
+508
+01:09:57,796 --> 01:10:00,137
+So, one question, why was that?
+
+509
+01:10:00,817 --> 01:10:04,479
+Was it that previous authors only modeled VFE but not EFE?
+
+510
+01:10:05,459 --> 01:10:09,681
+Or was there some failure of the EFE loading on epistemic value?
+
+511
+01:10:10,261 --> 01:10:11,462
+I think the answer is the first one.
+
+512
+01:10:14,423 --> 01:10:24,047
+In part one, they identified this hiatus in the specification space, and they introduced the CFFG, and then...
+
+513
+01:10:25,242 --> 01:10:39,534
+In part two, which is the current paper, we use the CFFG notation as introduced in part one to define locally constrained variational objectives and derive variational message updates for GFE, generalized free energy, base control using variational calculus.
+
+514
+01:10:40,995 --> 01:10:45,479
+The resulting control algorithms introduce epistemic behavior in synthetic active inference agents.
+
+515
+01:10:46,800 --> 01:10:52,084
+We reason purely from an engineering point of view and do not concern ourselves with biological plausibility.
+
+516
+01:10:53,459 --> 01:10:54,199
+What a sentence.
+
+517
+01:10:55,640 --> 01:10:57,721
+In this paper, our contributions are threefold.
+
+518
+01:10:58,701 --> 01:11:04,043
+They use variational calculus to derive message update expressions for GFE control.
+
+519
+01:11:04,923 --> 01:11:09,085
+They derive specialized messages for discrete variable model.
+
+520
+01:11:10,385 --> 01:11:16,308
+And they implement the results in a reactive programming framework simulating a perception action cycle on the T maze.
+
+521
+01:11:17,571 --> 01:11:35,222
+With a full message passing account and reactive implementation of GFE optimization, it becomes possible to derive and reuse custom message updates across models and get a step closer to realizing scalable synthetic active inference agents for industrial applications.
+
+522
+01:11:36,022 --> 01:11:47,129
+So what is it about their contributions that makes the industrial and the engineering work more transferable or scalable?
+
+523
+01:11:48,993 --> 01:11:50,756
+Then they summarize the coming sections.
+
+524
+01:11:51,637 --> 01:11:53,640
+Section 2 reviews variational base.
+
+525
+01:11:54,522 --> 01:12:00,551
+Section 3 reviews active inference, perception, learning, and control in terms of message passing on the CFFG.
+
+526
+01:12:02,256 --> 01:12:13,899
+Section 4 focuses on the constraint definitions around a submodel of two facing nodes, hashtag Alice and Bob, and derives stationary solutions and messages for GFE-based control.
+
+527
+01:12:14,900 --> 01:12:23,102
+Section 5 applies the results to a specific discrete variable goal observation submodel that is often used in AIF practice.
+
+528
+01:12:24,531 --> 01:12:31,334
+They then work towards implementation in a simulated setting and describe a perception action cycle in terms of time-dependent constraints, section six.
+
+529
+01:12:32,254 --> 01:12:37,896
+The team A's task is described in section seven and simulated in a reactive programming framework in section eight.
+
+530
+01:12:38,877 --> 01:12:42,378
+Section nine has a summary of related work and the conclusions are in section 10.
+
+531
+01:12:43,638 --> 01:12:47,480
+It's also useful to put table one and table two up here.
+
+532
+01:12:48,560 --> 01:12:52,242
+Table one is an overview of notational conventions.
+
+533
+01:12:53,792 --> 01:12:58,277
+nice list of letters would be awesome to connect to the active inference ontology.
+
+534
+01:12:59,118 --> 01:13:02,081
+And then table two has a bunch of acronyms
+
+535
+01:13:05,979 --> 01:13:10,061
+Okay, section two, review of variational message passing.
+
+536
+01:13:10,781 --> 01:13:17,764
+So this section briefly reviews variational message passing as a distributed approach to minimizing variational free energy.
+
+537
+01:13:18,384 --> 01:13:22,325
+So first, they review variational base, 2.1.
+
+538
+01:13:23,026 --> 01:13:28,548
+Then 2.2, they review Forney-style factor graphs.
+
+539
+01:13:28,568 --> 01:13:31,609
+2.3, they move to the Beth-Lagrangian optimization.
+
+540
+01:13:33,439 --> 01:13:45,267
+Using Lagrange multipliers, we can convert the optimization on Q to a free-form optimization problem of the Lagrangian, where the Lagrangian multipliers enforce local constraints.
+
+541
+01:13:46,588 --> 01:13:50,591
+The fully local optimization then becomes this expression.
+
+542
+01:13:54,053 --> 01:14:00,558
+Again, more to say, they're using the Lagrangian constraint framework.
+
+543
+01:14:01,863 --> 01:14:15,348
+and the Bethe flavor of free energy, which is already node-local, to provide a very constrained, which is to say, possibly more solvable and tractable node-local computation.
+
+544
+01:14:16,809 --> 01:14:20,830
+And now they get to the constrained Forney-style factor graphs.
+
+545
+01:14:22,111 --> 01:14:28,273
+As we heard in part one, an FFG alone does not unambiguously define a constrained VFE objective.
+
+546
+01:14:30,100 --> 01:14:30,820
+Interesting question.
+
+547
+01:14:31,201 --> 01:14:35,303
+What is needed for that unambiguous identification of the VFE?
+
+548
+01:14:36,163 --> 01:14:39,905
+And so here they review their CFFG notation.
+
+549
+01:14:40,785 --> 01:14:42,286
+Here's figure one.
+
+550
+01:14:43,267 --> 01:14:57,394
+And we can again see that they go from the initial factor graph on the top left with an explicit CFFG on the top right,
+
+551
+01:14:58,817 --> 01:15:02,398
+Then they compress it down to the bottom left.
+
+552
+01:15:04,959 --> 01:15:13,182
+And then that uniquely identifies a logistical or an operational schedule.
+
+553
+01:15:17,239 --> 01:15:20,262
+Section 3, review of active inference by variational message passing.
+
+554
+01:15:20,802 --> 01:15:24,425
+In this section, we work towards a message passing formulation of synthetic active inference.
+
+555
+01:15:25,166 --> 01:15:31,411
+We start by reviewing active inference and the CFFG representation for a GFE objective for control.
+
+556
+01:15:32,092 --> 01:15:35,054
+So 3.1, they define active inference.
+
+557
+01:15:35,074 --> 01:15:39,638
+3.2, they define generative model.
+
+558
+01:15:42,640 --> 01:15:44,242
+Now they go to message passing.
+
+559
+01:15:45,839 --> 01:15:52,781
+In this section, we formulate a synthetic active inference as a message passing procedure on a model of past and future states.
+
+560
+01:15:53,081 --> 01:16:00,823
+Inference on a model of past states relates to perception and learning, while inference on a model of future states relates to control.
+
+561
+01:16:03,104 --> 01:16:06,885
+What is control, if not just perception and learning we haven't had yet?
+
+562
+01:16:08,680 --> 01:16:09,140
+Figure 3.
+
+563
+01:16:09,821 --> 01:16:18,808
+Constraint 40 style factor graph representations for variational objectives on models for past, left, and future states right.
+
+564
+01:16:21,530 --> 01:16:27,855
+I don't know if one has to cross their eyes or do some other magic visual experience here.
+
+565
+01:16:28,556 --> 01:16:33,480
+There are some small differences, like here there's a dashed box that's not here.
+
+566
+01:16:34,040 --> 01:16:37,944
+There's a data constraint clamp dangling edge here.
+
+567
+01:16:39,161 --> 01:16:42,742
+whereas that constraint is open here.
+
+568
+01:16:44,403 --> 01:17:05,452
+However, the rest of the figure looks pretty similar, and that tantalizingly points to some similarities between learning and memory in the past where we can clamp down part of the model to be data
+
+569
+01:17:07,009 --> 01:17:24,220
+and consideration of the future which is to say action and control where the observations are distributional beyond the dirac and they haven't happened yet and we have agency over them happening any thoughts on that either of you
+
+570
+01:17:30,325 --> 01:17:37,569
+It's kind of cool, and it's kind of forsaged in some of the other graphical models, but we'll ask the authors.
+
+571
+01:17:37,809 --> 01:17:44,453
+331 talks about past states, and then 332 goes into the model of future states.
+
+572
+01:17:45,634 --> 01:17:50,057
+So, a lot to read in the paper, but that key idea.
+
+573
+01:17:50,477 --> 01:17:57,321
+Because future outcomes are by definition unobserved, we include goal priors on the future observation variables.
+
+574
+01:17:57,961 --> 01:17:58,942
+Those are preferences.
+
+575
+01:17:59,977 --> 01:18:16,240
+We expect there to be observations, and we know that they will become constraints to a Dirac-like form, but in anticipation, we take a distributional approach to observations that haven't happened.
+
+576
+01:18:16,880 --> 01:18:26,982
+Now, what if we had uncertainties about the past, and we were doing kind of a policy-like search in our fuzzy memory?
+
+577
+01:18:28,843 --> 01:18:29,823
+Then where would time be?
+
+578
+01:18:33,522 --> 01:18:59,555
+section four they get to general gfe based message updates in the model for future states the goal prior and observation model impose simultaneous constraints on the observation variable in the corresponding cffg this configuration is modeled by two facing nodes so i i believe those nodes might be the two in the dash box tier
+
+579
+01:19:02,352 --> 01:19:05,994
+In this section, we derive the general GFE-based message updates for pair-facing notes.
+
+580
+01:19:06,414 --> 01:19:09,215
+We express the local optimization problem as Lagrangian.
+
+581
+01:19:10,076 --> 01:19:18,520
+Using variational calculus, we then derive local stationary solutions from which we obtain general update expressions for GFE-based messages.
+
+582
+01:19:20,101 --> 01:19:24,043
+So they describe the goal and the observation model.
+
+583
+01:19:27,584 --> 01:19:28,825
+4.2, local Lagrangian.
+
+584
+01:19:30,367 --> 01:19:40,035
+after the substitution of the factorization and applying P substitution to the local variational free energy objective, they get the local GFE.
+
+585
+01:19:41,576 --> 01:19:51,765
+The GFE is all set up to construct this Lagrangian and to do a variational optimization on that Lagrangian to get Q star.
+
+586
+01:19:56,028 --> 01:19:57,790
+4.3, local stationary solutions.
+
+587
+01:19:58,663 --> 01:20:02,085
+We are now prepared to derive the stationary points of the node-local Lagrangian.
+
+588
+01:20:02,825 --> 01:20:09,408
+We start by considering the node-local Lagrangian as a functional of the variational factor q sub x. Lemma 1.
+
+589
+01:20:11,629 --> 01:20:18,492
+Stationary points of L as a functional of q. What does lemma 1 do or show?
+
+590
+01:20:20,733 --> 01:20:21,253
+Lemma 2.
+
+591
+01:20:23,174 --> 01:20:26,716
+We derive stationary points of equation 4 as a functional of q sub z.
+
+592
+01:20:28,410 --> 01:20:31,192
+Note that by symmetry, a similar result applies to Q sub theta.
+
+593
+01:20:32,253 --> 01:20:33,854
+What does lemma 2 do or show?
+
+594
+01:20:39,758 --> 01:20:47,463
+In this section, we show that the stationary solutions of section 4.3 correspond to the fixed points of a fixed point iteration scheme.
+
+595
+01:20:48,543 --> 01:20:49,884
+Theorem 1, theorem 2.
+
+596
+01:20:50,725 --> 01:20:52,626
+What do these theorems do and show?
+
+597
+01:20:56,289 --> 01:20:58,070
+4.5, convergence considerations.
+
+598
+01:21:00,191 --> 01:21:27,823
+some further considerations and a corollary one what does it do or show now we get to five application to a discrete variable model in this section we apply the general message update rules of section 4-4 to a specific discrete variable model that is often used in aif practice using the general results we derive messages on this specific model and so here we see figure five with
+
+599
+01:21:29,798 --> 01:21:36,601
+It's been taken all the way to the point of the logistics of the messages for those two facing nodes.
+
+600
+01:21:38,721 --> 01:21:41,202
+Five three, data-constrained message updates.
+
+601
+01:21:41,862 --> 01:21:57,888
+The message updates for a data-constrained VFE objective, figure six on the left, reduced to standard variational message passing updates as derived by citation 28 and appendix A. So here we have those two nodes with a DROC
+
+602
+01:21:59,608 --> 01:22:00,148
+intervening.
+
+603
+01:22:01,329 --> 01:22:04,450
+Here we had X intervening in figure five.
+
+604
+01:22:05,691 --> 01:22:08,332
+So we had a distributional bandwidth.
+
+605
+01:22:09,733 --> 01:22:18,657
+Now we're dealing with a Dirac distributional bandwidth or channel, which is to say a data point being passed.
+
+606
+01:22:22,419 --> 01:22:24,340
+Now we get to section six, perception action cycle.
+
+607
+01:22:24,540 --> 01:22:28,602
+In this section, we formulate a perception action cycle that extends upon the GFE formulation.
+
+608
+01:22:29,864 --> 01:22:34,306
+Specifically, we illustrate how CFFG notation allows us to be explicit about local constraints.
+
+609
+01:22:34,966 --> 01:22:40,649
+As a result, the perception action cycle can now be visualized as a process that modifies constraints over time.
+
+610
+01:22:41,309 --> 01:22:41,829
+Pretty cool.
+
+611
+01:22:43,710 --> 01:22:51,313
+At the initial time, t equals one, no observations are available, and we initialize the perception action cycle with the CFFG of figure seven on the top.
+
+612
+01:22:52,114 --> 01:22:53,334
+We got a sneak peek earlier.
+
+613
+01:22:53,735 --> 01:22:54,695
+Now it's real figure seven.
+
+614
+01:22:56,514 --> 01:23:04,479
+As actions are executed and observations become available, data constraints replace the P substitution on the observation variables.
+
+615
+01:23:05,600 --> 01:23:13,344
+So it's almost like the P substitution prepared us to flip it out with data in some way.
+
+616
+01:23:14,385 --> 01:23:24,331
+Like data constraints are a secondary or a further constraint that is enabled through the P substitution.
+
+617
+01:23:25,711 --> 01:23:35,594
+When the time horizon is reached and all observations are available on the bottom, data constraints replace the p-substitution on the observation variables.
+
+618
+01:23:36,574 --> 01:23:42,736
+So it's kind of like we'll know when we'll know, and then it'll all be inferenced like memory.
+
+619
+01:23:43,597 --> 01:23:48,598
+But before we know what we later found out, it's more like control.
+
+620
+01:23:49,899 --> 01:23:53,160
+So whether we're in a retrospective memory setting,
+
+621
+01:23:54,119 --> 01:24:12,069
+a real-time sense-making setting or a prospective control-theoretic setting, it would be pretty cool to have like a mega-unified imperative and a tractable local procedure to do it, which in a sense is what they do.
+
+622
+01:24:13,170 --> 01:24:22,716
+So the perception action cycle with time-dependent constraints thus unifies the tasks of perception, control, and learning under a single generative model
+
+623
+01:24:23,986 --> 01:24:25,006
+and schedule.
+
+624
+01:24:25,906 --> 01:24:27,587
+This is the huge piece.
+
+625
+01:24:28,267 --> 01:24:46,811
+It's only through the FFG and then the constrained FFG can we get to not just making a base graph of perception, cognition, and action, cool enough, but bringing in an explicit node-local scheduling and logistics approach.
+
+626
+01:24:49,491 --> 01:24:49,731
+Wow.
+
+627
+01:24:51,051 --> 01:24:53,492
+The experimental protocol is summarized in algorithm one.
+
+628
+01:24:55,339 --> 01:25:00,348
+All it requires is a generative model and a variational distribution with associated constraints.
+
+629
+01:25:02,611 --> 01:25:03,773
+And then it's kind of like a dance.
+
+630
+01:25:04,134 --> 01:25:07,039
+Do, infer, act, execute, observe, slide.
+
+631
+01:25:09,912 --> 01:25:12,734
+We then get to section 7 with the experimental setting.
+
+632
+01:25:13,494 --> 01:25:19,298
+In this section, we describe a team-based task that serves as a classical setting for investigating epistemic behavior, citation 10.
+
+633
+01:25:20,178 --> 01:25:22,039
+The setup closely follows the definition in 30.
+
+634
+01:25:22,900 --> 01:25:28,323
+Citation 10 is Friston et al., 2015, Active Inference and Epistemic Value.
+
+635
+01:25:29,203 --> 01:25:34,607
+And citation 30 is from Fis Vandelaar et al., same authors.
+
+636
+01:25:35,586 --> 01:25:39,147
+in 2022, active inference and epistemic value in graphical models.
+
+637
+01:25:39,947 --> 01:25:46,009
+So here we have the T maze that was shown earlier with a smiley face.
+
+638
+01:25:46,669 --> 01:25:47,569
+No smiley face here.
+
+639
+01:25:48,629 --> 01:25:54,891
+And it's laid out and labeled starting position O, Q, C. That's where the epistemic value is.
+
+640
+01:25:55,351 --> 01:25:57,231
+And then L and R, the two reward arms.
+
+641
+01:25:57,812 --> 01:26:01,873
+And just for those seeking continuity, here's figure 7.4.
+
+642
+01:26:04,130 --> 01:26:04,671
+from the 2022 textbook.
+
+643
+01:26:04,711 --> 01:26:08,298
+Here we have the 2022 active inference mouse in a TMAs.
+
+644
+01:26:13,681 --> 01:26:24,830
+And, from 2021, here's our active InferAnts simulation, where it's actually appropriate, the nestmate is, like, much smaller.
+
+645
+01:26:25,130 --> 01:26:35,398
+So, for the nestmate, they can wander around a lot inside the teammates that, for the mouse, it only has one location it can be in.
+
+646
+01:26:35,998 --> 01:26:36,118
+So...
+
+647
+01:26:37,119 --> 01:26:46,546
+It's not as closely allied as 7.4 is with figure 8 here, but it's like the same... You could do it in the same lap.
+
+648
+01:26:49,928 --> 01:26:57,013
+They further specify the teammates and the probabilities of different things happening.
+
+649
+01:26:59,015 --> 01:27:06,180
+They further specify the teammates and the probabilities of things happening, and then
+
+650
+01:27:07,208 --> 01:27:13,470
+In Figure 9, they get to a CFFG describing the TMAs.
+
+651
+01:27:15,031 --> 01:27:18,432
+Let's go through it with the authors and annotate what it means.
+
+652
+01:27:21,974 --> 01:27:29,317
+We execute the same experimental protocol as before and plot the minimal free energies in Figure 10, top right.
+
+653
+01:27:30,817 --> 01:27:35,099
+The BFE-based reference agent fails to identify epistemic modes of behavior.
+
+654
+01:27:37,011 --> 01:27:44,514
+The specific choice of prior for the observation matrix prevents any extrinsic information, at least initially, from influencing policy selection.
+
+655
+01:27:45,975 --> 01:27:55,559
+By the lack of an epistemic drive, the BFE-based agent sticks to policies that confirm its prior belief without exploring possibilities to exploit available information in the TMA's environment.
+
+656
+01:27:58,740 --> 01:28:04,843
+A histogram of the number of wins per run is plotted in Figure 11 on the left.
+
+657
+01:28:08,459 --> 01:28:13,488
+The histogram suggests a bimodal distribution with a large mass group to the right and a smaller mass in the middle.
+
+658
+01:28:14,409 --> 01:28:19,658
+For reference, dashed curves indicate ideal performance for agents that already know A from the start.
+
+659
+01:28:20,475 --> 01:28:25,277
+For agents that first must learn A, deviations from ideal performance are expected.
+
+660
+01:28:25,777 --> 01:28:33,660
+The smaller middle mass then indicates that GFE optimization offers no silver bullet for simulating fully successful epistemic agents.
+
+661
+01:28:34,321 --> 01:28:39,783
+Namely, for some choices of initialization, the GFE agent may still become stuck in local optima.
+
+662
+01:28:44,716 --> 01:28:45,316
+Section 9.
+
+663
+01:28:45,836 --> 01:28:46,917
+I won't read it.
+
+664
+01:28:47,397 --> 01:29:00,522
+They describe a wide swath of related work, ranging from early work on the introduction of fornigraphs on through expected free energy and active inference.
+
+665
+01:29:03,163 --> 01:29:26,282
+and in section 10 they conclude they took a constraint-centric approach to synthetic active inference they simulated a perception action cycle through message passing derived from a single generalized free energy objective and dot dot in this paper we have adopted a purely engineering point of view and we have not concerned ourselves with biological plausibility
+
+666
+01:29:27,256 --> 01:29:32,077
+Specifically, the derived message updates come with considerations about stability and non-standard expressions.
+
+667
+01:29:32,917 --> 01:29:40,939
+Although we have engineered solutions to overcome these complications, it seems unlikely to us that the brain resorts to such strategies.
+
+668
+01:29:42,980 --> 01:29:47,141
+Interesting mic drop, but very humble.
+
+669
+01:29:50,722 --> 01:29:55,343
+And so now, as we give our last thoughts...
+
+670
+01:29:57,512 --> 01:30:02,333
+We've always held up the side-by-side at the Institute with a minimum of two.
+
+671
+01:30:02,353 --> 01:30:09,595
+And we've talked about that before in the textbook figure 4.3 setting with continuous and discrete time.
+
+672
+01:30:10,355 --> 01:30:15,417
+But there have been many other Min 2 experiences that we've all shared together.
+
+673
+01:30:16,437 --> 01:30:22,639
+And not just with this dyad of papers, but with this new intelligibility
+
+674
+01:30:23,692 --> 01:30:34,759
+of the relationship between Bayes graphs and different styles and constrained forms of Forney graphs were in yet another min-2 setting.
+
+675
+01:30:35,479 --> 01:30:41,943
+So that's what I would like to say in closing as we conclude the .0.
+
+676
+01:30:53,150 --> 01:30:56,592
+Yeah, I look forward to the point one and point two.
+
+677
+01:30:57,732 --> 01:31:19,983
+I have a bunch of questions about, for example, what piece substitution really means and for example, the time window, how many time steps you need to give your model already or whether it can unfold automatically and just in general to hear what they have to say because it is a very interesting topic.
+
+678
+01:31:25,259 --> 01:31:43,126
+yeah um same here also interested to um hear what the authors have just have to say and um i think yeah whenever there's um um
+
+679
+01:31:45,071 --> 01:32:06,786
+Whenever there's a generalization that, at least in the semantic space, affords a wider connection to different methods, and especially in the context of models represented on the graph, I'd be interested to
+
+680
+01:32:09,676 --> 01:32:25,181
+learn more about how we can represent agents in different kinds of graphs or how these constrained Forney style factor graphs afford different types of optimization methods to be performed on them.
+
+681
+01:32:28,135 --> 01:32:42,547
+and how this work can help Active Inference to interface with other domains which try to solve similar problems or perhaps different problems from a different angle.
+
+682
+01:32:46,110 --> 01:32:46,450
+Awesome.
+
+683
+01:32:47,051 --> 01:32:51,895
+My last thought is like, we planned to learn
+
+684
+01:32:53,317 --> 01:32:54,878
+at least to try here.
+
+685
+01:32:55,638 --> 01:32:59,079
+So I commend you both for that policy selection.
+
+686
+01:32:59,979 --> 01:33:04,721
+And now looking back, it's like data or a memory.
+
+687
+01:33:04,981 --> 01:33:08,402
+And then in science, it's like, oh, it's 1994.
+
+688
+01:33:09,143 --> 01:33:13,564
+This new genome is available, or like this new thing is exciting.
+
+689
+01:33:13,604 --> 01:33:14,725
+And here's the next step.
+
+690
+01:33:14,885 --> 01:33:15,505
+And it's like,
+
+691
+01:33:18,374 --> 01:33:27,570
+one must be as excited as can be in making the right measured decision then which later becomes an observation
+
+692
+01:33:28,809 --> 01:33:31,451
+at a different time point, yeah, and a different perspective.
+
+693
+01:33:32,451 --> 01:33:51,183
+So there are probably many exciting and important syntheses that this work is going to build our skills and our expressivity around, and the computational element is just excellent.
+
+694
+01:33:52,644 --> 01:33:55,566
+So thank you again, Bert and Jakob.
+
+695
+01:33:56,326 --> 01:33:57,727
+See you fellows in the dot one.
+
+696
+01:34:01,730 --> 01:34:02,085
+All right.

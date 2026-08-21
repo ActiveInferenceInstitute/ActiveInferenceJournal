@@ -1,0 +1,1935 @@
+1
+00:00:08,536 --> 00:00:10,099
+Hello, welcome back.
+
+2
+00:00:11,141 --> 00:00:18,335
+It's the 4th Applied Active Inference Symposium, Day 2, Part 2, on November 14th, 2024.
+
+3
+00:00:18,415 --> 00:00:28,114
+We're kicking off this session in the darkness of the pre-dawn on the West Coast, appropriately, with...
+
+4
+00:00:28,094 --> 00:00:38,796
+Mehran Hossein Zadeh Bazzagherani, ML Don, Brain in the Dark, Design Principles for the Neuromimetic Inference under the Free Energy Principle.
+
+5
+00:00:39,156 --> 00:00:41,140
+So thank you Mehran for joining.
+
+6
+00:00:41,561 --> 00:00:44,227
+Looking forward to your presentation.
+
+7
+00:00:44,247 --> 00:00:45,609
+Mehran Hossein Zadeh Bazzagherani Thank you very much.
+
+8
+00:00:45,689 --> 00:00:47,453
+It's a pleasure to be here.
+
+9
+00:00:48,952 --> 00:01:01,586
+So today I'm going to be talking about the design principles for neuromimetic inference under the free energy principle, namely the methods that are inspired by the brain in order to model human perception.
+
+10
+00:01:02,827 --> 00:01:12,698
+I just want to preface this by saying that this is a collaboration with my colleague Simon Orbaz from Maynooth University and Professor Friston,
+
+11
+00:01:12,678 --> 00:01:19,336
+from UCL, and this work has recently been accepted at the NeuroAI workshop at NeurIPS 2024.
+
+12
+00:01:20,780 --> 00:01:22,485
+So let's just get started.
+
+13
+00:01:23,984 --> 00:01:25,906
+The content is going to be as follows.
+
+14
+00:01:26,086 --> 00:01:35,497
+We're going to be talking about first the motivation behind this work, why we got started with this idea anyway to introduce the design principles, particularly for these models.
+
+15
+00:01:36,038 --> 00:01:53,417
+And then I'm going to do a quick refresher on the math side, just so we all get comfortable with the upcoming derivations that I'm going to be expanding on, which covers the math behind the free energy principle, particularly variational free energy.
+
+16
+00:01:54,578 --> 00:01:58,565
+Then I'll do a brief discussion on what free energy principle is.
+
+17
+00:01:58,685 --> 00:02:07,720
+I presume everybody knows by now because we've had so many talks since the beginning of the symposium, but I'm going to do a quick run at that.
+
+18
+00:02:08,481 --> 00:02:21,362
+Then we'll be talking about the Bayesian brain hypothesis that furnishes the foundation for the idea of modeling human perception as a kind of inference, namely Bayesian inference.
+
+19
+00:02:21,342 --> 00:02:41,967
+next we dive into the juxtaposition between the generative model and a generative process what do we mean by each one of them knowing the distinction is crucial for understanding the free energy principle because fep lies on this um notion that
+
+20
+00:02:41,947 --> 00:02:55,267
+there is a boundary that separates an entity from the environment and separating basically my internal state from the external state beyond my Markov blanket.
+
+21
+00:02:56,109 --> 00:03:02,318
+Next, we'll talk about variational free energy and how it's driven, how it's derived basically.
+
+22
+00:03:02,298 --> 00:03:16,864
+Then we jump into the design principles in terms of the experiments, the things that you need to consider, the things that you need to define, and how you should go about doing that in order to model human perception as a kind of online inference problem.
+
+23
+00:03:18,211 --> 00:03:32,656
+We'll go through some final thoughts, some lessons learned, and then I'll introduce some of the resources for those of you who are interested in pursuing free energy principle more seriously and delving into the theory and the practical side of it.
+
+24
+00:03:32,957 --> 00:03:43,375
+And then we're going to wrap it up with a demonstration using the GitHub repository that is publicly available, by the way.
+
+25
+00:03:45,869 --> 00:03:47,031
+The motivation is this.
+
+26
+00:03:47,211 --> 00:03:56,123
+Deep learning has revolutionized artificial intelligence because it has automated the process of feature extraction from raw data.
+
+27
+00:03:56,644 --> 00:03:59,468
+However, it actually faces a lot of problems.
+
+28
+00:03:59,608 --> 00:04:08,521
+For example, lack of out-of-distribution generalizability, catastrophic forgetting, and poor interpretability.
+
+29
+00:04:08,961 --> 00:04:10,864
+It is known as a black box problem.
+
+30
+00:04:10,844 --> 00:04:31,485
+basically and the catastrophic forgetting is basically when the new knowledge overwrites the previous knowledge the weights are getting overwritten so while the network learns the concept of a cat it might momentarily forget the concept of a dog because the paths are shared between different concepts that are to be learned
+
+31
+00:04:33,575 --> 00:04:40,602
+You see, in contrast to deep learning, biological neural networks in your brain and in my brain, they do not suffer from these issues.
+
+32
+00:04:41,443 --> 00:05:03,025
+And this inspires the AI researchers to actually explore this interesting and intriguing area called the neuromimetic deep learning that is all about replicating the brain mechanisms, namely the neuronal message passing and belief updating within the AI models, purely inspired by our best knowledge about how the brain works.
+
+33
+00:05:03,646 --> 00:05:22,887
+A foundational theory for this approach is the free energy principle, FEP, which unfortunately, despite its potential, is often considered too complex to understand and to implement in AI, simply because one would need a myriad of
+
+34
+00:05:22,867 --> 00:05:50,562
+disciplines um under their belt knowledge about disciplines under their belt to be able to understand the 300 principle namely you need to know things for example about dynamical systems random processes you need to know about asian mechanics some neuroscience some maybe computational neuroscience and so on and so forth so as as a result it's not it's an intimidating topic let's say for anybody who wants to just get started with it
+
+35
+00:05:51,402 --> 00:06:05,833
+So we seek to demystify FEP and basically provide a comprehensive framework for designing neuromimetic models where we are actually trying to mimic human-like perception capabilities.
+
+36
+00:06:06,826 --> 00:06:11,833
+So here we present a roadmap for implementing these models.
+
+37
+00:06:12,514 --> 00:06:20,385
+And by the way, a PyTorch code repository for applying FVP in a predictive coding network is going to be introduced here.
+
+38
+00:06:20,445 --> 00:06:23,049
+The link is here that that's the code.
+
+39
+00:06:23,109 --> 00:06:24,330
+It's publicly available.
+
+40
+00:06:24,350 --> 00:06:31,521
+Also, as I said, the paper will soon be available by the NeuroAI workshop.
+
+41
+00:06:31,841 --> 00:06:35,466
+And so hopefully you guys will have a chance to take a look at that as well.
+
+42
+00:06:36,762 --> 00:06:39,908
+Now let's get started with the refresher of the math.
+
+43
+00:06:39,928 --> 00:06:42,954
+So first and foremost, the idea of a PDF.
+
+44
+00:06:43,014 --> 00:06:54,096
+So it's an acronym for a probability density function, which is a function that describes the likelihood of a continuous random variable taking on a particular value.
+
+45
+00:06:54,076 --> 00:06:55,177
+It has two conditions.
+
+46
+00:06:55,457 --> 00:06:56,398
+It has to be positive.
+
+47
+00:06:56,458 --> 00:07:04,366
+So for a given parameter theta zero, for example, the mean of a Gaussian, let's say, for any input x, it's always positive.
+
+48
+00:07:05,007 --> 00:07:21,783
+And second, we have this normalizer sort of condition that if you integrate a PDF across the support space of the input, name the all possible values of x, you will inevitably must get to the actual value of one.
+
+49
+00:07:22,224 --> 00:07:23,745
+What this means is
+
+50
+00:07:23,725 --> 00:07:39,197
+The probability of x, the input, getting any value in any range within its support is always 1, which means that x will always fall in a range in its own accepted range of value.
+
+51
+00:07:39,257 --> 00:07:40,219
+So that's 100%.
+
+52
+00:07:40,400 --> 00:07:43,827
+So you need these two if you want to have a PDF.
+
+53
+00:07:45,275 --> 00:07:47,218
+Next is the idea of an expectation.
+
+54
+00:07:47,639 --> 00:08:00,120
+I just want to remind you that the reason I'm going through this math is because later on when I introduce the steps of deriving variational free energy, these concepts are absolutely crucial.
+
+55
+00:08:00,661 --> 00:08:06,410
+So hopefully I'm not going too fast, but yeah, just bear that in mind that these are very important.
+
+56
+00:08:06,690 --> 00:08:11,839
+And for those of you who are math savvy, and these are two basics, my apologies,
+
+57
+00:08:11,819 --> 00:08:21,589
+Now the idea of expectation is actually the weighted average of all the possible values that the variable consume, weighted by their probability.
+
+58
+00:08:22,109 --> 00:08:30,978
+So you have in the first line the expected value of x over the probability distribution, the PDF, p .
+
+59
+00:08:31,538 --> 00:08:41,168
+So as you notice, we are integrating all possible values of x multiplied by, or weighted by, their corresponding probability.
+
+60
+00:08:41,873 --> 00:08:53,129
+And it's important to note that you're not limited to calculating the expected value with respect to a variable, but you can also do exactly the same thing with a function.
+
+61
+00:08:53,549 --> 00:09:07,729
+So the expected value of function is, again, the same thing, but you're basically calculating a weighted average of a function where the weights are the probability of the input to that function, which is x.
+
+62
+00:09:10,055 --> 00:09:13,281
+Now, some key probability components here.
+
+63
+00:09:13,622 --> 00:09:15,846
+Now, we have this idea of a joint probability.
+
+64
+00:09:17,429 --> 00:09:31,776
+So a joint distribution between two variables, x and y, you can divide it up between some conditional term, which is the probability of x given y multiplied by the probability of y in the first place.
+
+65
+00:09:31,756 --> 00:09:58,405
+Or you can go the other way around, the probability of y given x times the probability of x. You notice that if x and y are independent, this conditional term reduces to probability of x, or this conditional term would reduce to probability of y. So either way, on both sides, you're going to have the probability of x given y if x and y are indeed independent.
+
+66
+00:09:58,385 --> 00:10:17,980
+next if you want to move from a joint distribution to a marginalized distribution where you're actually marginalizing one of the variables out this is how you can do it so in this case if you integrate p of x y across all possible possible values of x
+
+67
+00:10:17,960 --> 00:10:39,040
+In other words, if you literally break this down and basically write it down in its constituent terms, if you do this integration, you're inevitably, basically what you're doing is you're getting rid of x, and then you end up with a term with a probability distribution that is only a function of y.
+
+68
+00:10:39,020 --> 00:10:57,670
+and that's what you call a marginalized probability distribution or pdf again this is key where will this come in handy it's going to come in handy when when i'm going to be talking about the bayesian brain hypothesis and bayes rule and so on and so forth so keep these two equations in mind please
+
+69
+00:10:58,865 --> 00:11:00,929
+Now, some properties of logarithms.
+
+70
+00:11:01,710 --> 00:11:04,716
+So this is basically just the definition of a log.
+
+71
+00:11:04,836 --> 00:11:18,882
+So log of A with base B equals C. The definition says that it just means A equals B to the power of C. So for example, the log of 8 base 2 equals 3, because 2 to the power of 3 is 8.
+
+72
+00:11:19,199 --> 00:11:22,803
+So the log of a multiplication is sum of the logs of individual terms.
+
+73
+00:11:23,304 --> 00:11:26,988
+The log of a division is the subtraction of individual log terms.
+
+74
+00:11:27,108 --> 00:11:30,933
+That's the log of the nominator minus the log of the denominator.
+
+75
+00:11:31,894 --> 00:11:37,100
+The log of a fraction is literally minus the log of the swapped fraction.
+
+76
+00:11:37,421 --> 00:11:38,962
+Literally swap B and A together.
+
+77
+00:11:39,022 --> 00:11:43,688
+You end up with just a negative of the new log term.
+
+78
+00:11:44,967 --> 00:12:11,582
+The power law, the log of b to the power of c, so basically c drops down as a coefficient, so you end up with this term, c times log of b with base a. Log of a with base a, if the value and the base are both the same, you end up with value 1, and by extension, if you have this term, c drops down as a coefficient, and this term equals 1, so you end up with c.
+
+79
+00:12:12,473 --> 00:12:14,979
+log of 1 with any base is always equal to 0.
+
+80
+00:12:15,079 --> 00:12:15,360
+Why?
+
+81
+00:12:15,420 --> 00:12:19,069
+Because a, whatever it is, to the power 0, is 1.
+
+82
+00:12:19,089 --> 00:12:26,787
+And last but not least, this one is again very important, ln of a is basically just
+
+83
+00:12:27,627 --> 00:12:49,939
+logarithm a logarithm with you know where the base is natural number e or it's called the natural log and e is basically the euler euler's number so you got log of a with base e it's called just the natural log so when in python you say numpy dot log is basically the natural log now the free energy principle
+
+84
+00:12:53,648 --> 00:13:15,623
+it is a theoretical framework in neuroscience it's been developed by carl friston so basically things that persist over time especially living systems look as if they are minimizing a certain quantity it's called free energy it is as if they're sort of maintaining this boundary
+
+85
+00:13:15,603 --> 00:13:22,874
+that is called a Markov blanket, to persist in the face of random fluctuations in the environment.
+
+86
+00:13:25,998 --> 00:13:32,768
+This really connects well with the Bayesian brain hypothesis, as you will see shortly.
+
+87
+00:13:33,862 --> 00:13:44,054
+The brain, from the perspective of Bayesian brain hypothesis, it's actually in the game of inferring the hidden causes behind its sensations.
+
+88
+00:13:44,114 --> 00:13:52,064
+So namely, if you have, let's say, y to denote the sensations and x as the hidden state.
+
+89
+00:13:52,805 --> 00:14:02,316
+And then this inference basically means that given my observation y, I want to estimate the probability distribution over x.
+
+90
+00:14:03,376 --> 00:14:16,828
+It's basically called a posterior probability, which means that after having seen an observation, what is causing in the world beyond my Markov blanket this particular sensation or observation?
+
+91
+00:14:18,496 --> 00:14:23,767
+Inevitably, this requires having a generative model, GM, of the world.
+
+92
+00:14:24,989 --> 00:14:31,302
+And this actually connects really well with Helmholtz's concept of unconscious inference.
+
+93
+00:14:32,123 --> 00:14:40,420
+And it is defined like that perception is kind of unconscious inference, which means that we are in the game of
+
+94
+00:14:40,400 --> 00:14:55,978
+you know inferring the hidden cause behind our our sensations for example right now you're looking at the monitor and the photons but the light is hitting the your sensory epithelia on your eyes those excitations those those hits those are your sensation
+
+95
+00:14:55,958 --> 00:15:08,152
+And when you realize that I'm watching this presentation at Active Inference Institute, and this guy is talking, his name is Mehran, this is the slide of a face, Helmholtz's picture is here.
+
+96
+00:15:08,532 --> 00:15:17,843
+These are the inferences that your brain is making given that particular sensation that is hitting the neurons on the surface of your eyes, right?
+
+97
+00:15:17,903 --> 00:15:23,569
+So it's estimating this probability distribution about what's happening beyond your Markov blanket.
+
+98
+00:15:25,355 --> 00:15:29,020
+Now, let's talk about the idea of a generative model versus a generative process.
+
+99
+00:15:29,040 --> 00:15:31,262
+This is actually very, very important.
+
+100
+00:15:31,803 --> 00:15:37,971
+On the right-hand side, you see this generative model as a box, and it has some internal states.
+
+101
+00:15:38,432 --> 00:15:39,753
+Let's call them hidden states.
+
+102
+00:15:41,596 --> 00:15:54,552
+This represents the neuronal activities in your brain, the excitability, the voltage level, let's say, of your neurons that keep changing all the time, they fluctuate all the time.
+
+103
+00:15:56,101 --> 00:16:04,180
+And these guys are basically holding information about what's happening beyond your Markov blanket, right?
+
+104
+00:16:04,460 --> 00:16:08,169
+Remember, what's happening beyond your Markov blanket is out of your reach.
+
+105
+00:16:08,209 --> 00:16:12,439
+You have absolutely no way of observing exactly what's happening, right?
+
+106
+00:16:14,174 --> 00:16:35,085
+and here we have the generative process where x star denotes the actual things that are happening in the world which are completely out of reach to you now if you imagine here you have the face of a person let's say steve jobs standing in front of me but this is no like i'm not going to see the truth
+
+107
+00:16:35,065 --> 00:16:53,884
+what i'm going to see is some sort of a map some sort of a noisy transformation of the truth x star right let's call it y this is what i'm gonna be experiencing this is what's gonna hit and induce excitation at my sensory epithelia on my eyes
+
+108
+00:16:53,864 --> 00:17:20,074
+and then if you want to look at like basically dig deeper into the idea of perception as um unconscious inference the game the game is this your brain the generative model in your brain predicts a sensation like i'm expecting this sensation to be felt or received at my sensory epithelia and my markov blanket and then the actual sensation y is received
+
+109
+00:17:20,240 --> 00:17:45,100
+the difference between the actual sensation and my prediction is called the prediction error so using that prediction error i will update my generative model about the world namely i will update my belief about what's happening in the world so this is where my internal states will change to reflect the better image of the unknown world beyond my markov blanket or the parameters of my generative model are going to change
+
+110
+00:17:45,637 --> 00:17:55,718
+to, again, do a better estimate of what's happening in the world so that I will have a better prediction about the sensations that that world is going to cause.
+
+111
+00:17:57,842 --> 00:18:01,570
+So, the generative process, again, is not directly observable.
+
+112
+00:18:02,343 --> 00:18:11,685
+And the internal states X, this is very important, carry information about the invisible external states X star beyond my Markov blanket.
+
+113
+00:18:11,705 --> 00:18:16,516
+This is where this connects to the discipline of information theory.
+
+114
+00:18:16,937 --> 00:18:19,002
+This is a very important link, by the way.
+
+115
+00:18:20,872 --> 00:18:24,516
+So the generative model, what do we mean by that, mathematically speaking?
+
+116
+00:18:24,997 --> 00:18:31,585
+Now, in a dynamical world, a generative model has a belief about the dynamics of the world.
+
+117
+00:18:31,685 --> 00:18:36,991
+What it means is, how fast is the world changing, for example, or how is it changing?
+
+118
+00:18:38,633 --> 00:18:41,817
+Now, if the world is at a given state x,
+
+119
+00:18:41,948 --> 00:18:45,258
+What does its dynamics look like?
+
+120
+00:18:45,519 --> 00:18:52,279
+For example, its velocity or acceleration or even higher temporal derivatives are like jerk.
+
+121
+00:18:52,681 --> 00:18:57,007
+basically all sorts of rates of changes, the rates of change about the world.
+
+122
+00:18:57,508 --> 00:18:59,571
+That's what I mean by dynamics.
+
+123
+00:18:59,591 --> 00:19:07,862
+So in a generative model, your generative model will have an understanding, it has to have a belief about how the world is changing beyond a smart cop blanket.
+
+124
+00:19:08,242 --> 00:19:15,793
+So in other words, if I'm in the game of estimating the dynamics of the world, it means I'm chasing a moving target.
+
+125
+00:19:16,233 --> 00:19:17,355
+What it means is,
+
+126
+00:19:17,977 --> 00:19:25,708
+At any given time when I want to infer what's happening in the world, by the time I've made that inference, the world has already moved.
+
+127
+00:19:26,089 --> 00:19:34,541
+So that basically makes inference a tricky task, especially if I'm in a highly dynamical world.
+
+128
+00:19:35,001 --> 00:19:36,964
+It makes it more challenging.
+
+129
+00:19:38,362 --> 00:19:48,085
+The second thing that in a generative model we should have is the generative model has a belief about how the world causes its sensations.
+
+130
+00:19:48,520 --> 00:19:59,572
+Namely, if the world is at any given state, by my estimation, beyond my Markov blanket, what is the most likely sensation y that I will be experiencing?
+
+131
+00:20:01,274 --> 00:20:03,677
+So these two are the key components of a generative model.
+
+132
+00:20:03,697 --> 00:20:06,280
+So mathematically, this is how you show it.
+
+133
+00:20:06,500 --> 00:20:10,945
+x dot is literally the velocity of the world, how fast it's changing.
+
+134
+00:20:11,285 --> 00:20:13,988
+Mathematically, it's just dx over dt.
+
+135
+00:20:13,968 --> 00:20:30,053
+And then you have some function of the states, x, and causes, nu, and theta, the parameters of my generative model, plus some random fluctuation, omega x. So that equation is called the state dynamics equation.
+
+136
+00:20:31,062 --> 00:20:46,371
+what it basically is telling you is that the dynamics of the world is driven by x by the position of the world basically and these are all my belief about how the world is changing dx over dt the velocity of the world
+
+137
+00:20:47,245 --> 00:20:51,516
+And technically speaking, F is called the flow of the state dynamics.
+
+138
+00:20:51,536 --> 00:20:54,243
+It's the deterministic part of the state dynamics.
+
+139
+00:20:54,263 --> 00:21:04,309
+Omega X, random fluctuation, is what encodes your uncertainty about your belief about how the world is changing.
+
+140
+00:21:04,492 --> 00:21:10,242
+The second equation basically connects to the second concept that I introduced here.
+
+141
+00:21:10,663 --> 00:21:23,445
+It's basically telling you that my belief about my sensation, about what's the most likely sensation that I'm going to be receiving, is encoded in this equation, where my observation
+
+142
+00:21:23,780 --> 00:21:38,779
+is equal to the g of the function of, again, hidden states, the causes new, and the parameters, some parameters, plus some random fluctuation omega y. It's called the observation model.
+
+143
+00:21:38,900 --> 00:21:48,572
+Again, omega y encodes your uncertainty about your belief about the most likely sensation that you will be experiencing.
+
+144
+00:21:48,552 --> 00:22:16,956
+sensation that is caused by the world you notice that we have this these again your hidden state here x and then uh the cause is new now if you're wondering so you you know what the thetas are these are just the parameters of the functional form of fng but if you're wondering what causes are this is something that i'm not going to be focusing on this particular talk but just imagine that if you have a hierarchical generative model these causes are just
+
+145
+00:22:16,936 --> 00:22:28,090
+a subset of the hidden states, like the hidden states that do not have dynamics, but they are the tools that different levels in the hierarchy use to be able to talk to each other.
+
+146
+00:22:28,150 --> 00:22:32,776
+So interlayer communication is done using these news or the causes.
+
+147
+00:22:34,058 --> 00:22:37,342
+These are the ones that basically drive the dynamics.
+
+148
+00:22:37,983 --> 00:22:41,087
+You notice that that's why we have x dot equals f of x and nu.
+
+149
+00:22:42,288 --> 00:22:44,631
+They drive the dynamics.
+
+150
+00:22:45,404 --> 00:22:48,158
+Without them, the layers cannot talk to each other, basically.
+
+151
+00:22:49,252 --> 00:23:13,942
+Now, if you want to turn this into a belief-based system where you have probabilities in play, you just need to assume a Gaussian distribution over your random fluctuation, namely with mean 0 and some precision over your random variable x and your observation y. Open brackets, precision is just inverse uncertainty.
+
+152
+00:23:14,663 --> 00:23:18,347
+And close brackets, that's just a notion in statistics.
+
+153
+00:23:19,289 --> 00:23:41,297
+Now, using this, if you literally replace this notion of Gaussian distribution into your original equation, you end up with this probabilistic notion that the probability of x dot, given all of these three elements,
+
+154
+00:23:41,277 --> 00:24:09,360
+is distributed according to our normal distribution where again the precision is the same as the precision of your random fluctuation but you notice that because we're summing up f with this guy over here the the mean of that gaussian distribution becomes this f term same story for the your belief about your y your observations and that is why i'm saying that f of x and nu and theta is the expected your expected
+
+155
+00:24:09,340 --> 00:24:14,932
+dynamics about x dot, because it's literally the expected value of the Gaussian distribution.
+
+156
+00:24:15,373 --> 00:24:16,074
+Same story here.
+
+157
+00:24:16,415 --> 00:24:21,526
+g of x, nu, and theta is your expectation about your observation, your sensation.
+
+158
+00:24:21,586 --> 00:24:28,581
+Again, it is the sort of expected value of this Gaussian distribution, the value that is most likely to occur.
+
+159
+00:24:29,793 --> 00:24:31,175
+So that's generative model.
+
+160
+00:24:31,556 --> 00:24:32,036
+Two things.
+
+161
+00:24:32,597 --> 00:24:33,859
+We know the dynamics of the world.
+
+162
+00:24:33,879 --> 00:24:34,600
+We have belief.
+
+163
+00:24:34,881 --> 00:24:35,922
+Let's say we don't know it.
+
+164
+00:24:36,343 --> 00:24:49,302
+We have beliefs about the dynamics of the world, and we have belief about basically the most likely sensation that we will be experiencing if such and such was the state of affair of the world.
+
+165
+00:24:49,783 --> 00:24:52,527
+Let's say X was the state of affairs in the world.
+
+166
+00:24:53,553 --> 00:25:17,805
+now we talked about inference let's talk about bayes rule really quickly now here this is bayes rule and the components of bayes rule are as follows we have the likelihood term which is the probability of my observation given the state of the world we have a prior belief which means that before observing why this is my belief about what the world looks like
+
+167
+00:25:18,697 --> 00:25:26,985
+We have the model evidence, which is probability of data, and these two together is called basically the generative model.
+
+168
+00:25:27,926 --> 00:25:30,249
+Again, this is in line with what we discussed here.
+
+169
+00:25:30,289 --> 00:25:37,556
+This is basically your prior belief about the dynamics, and this is literally the mapping between X and Y, which is your likelihood term.
+
+170
+00:25:37,997 --> 00:25:39,438
+So I'm not saying anything new here.
+
+171
+00:25:39,478 --> 00:25:44,383
+These two together are your generative model, and this is your model evidence.
+
+172
+00:25:44,363 --> 00:25:45,845
+This is a devil, right?
+
+173
+00:25:46,166 --> 00:25:47,287
+This is intractable.
+
+174
+00:25:47,327 --> 00:25:50,933
+You notice that in a real-life scenario, we will not be able to calculate this.
+
+175
+00:25:51,494 --> 00:25:55,139
+And this term on the left-hand side is called the posterior probability.
+
+176
+00:25:55,219 --> 00:26:01,208
+It's your belief about the distribution over hidden state of the world, x.
+
+177
+00:26:01,745 --> 00:26:09,871
+And when you map your genital model using basal to this posterior distribution, we call this model inversion.
+
+178
+00:26:10,613 --> 00:26:15,147
+So whenever you hear model inversion in the context of FEP, that's what we mean by that.
+
+179
+00:26:16,527 --> 00:26:32,764
+So this evidence, again, going back to our idea of marginalizing a variable out, if you, again, just remind yourself that this is how you marginalize the hidden state or x out, you just end up with the probability of, let's say, sensation y, you notice that
+
+180
+00:26:32,744 --> 00:26:48,188
+this integration could get really nasty really fast which means that if you have you could have basically any number of hidden states x and for each x you would have a range of possible values so this thing could turn into
+
+181
+00:26:48,168 --> 00:27:08,033
+a potentially like potentially infinite number of nested integrals basically it can it can become intractable really really quickly so what this means is we will not be able to calculate this posterior probability exactly so what should we do the answer is variational inference
+
+182
+00:27:09,565 --> 00:27:22,107
+So because you see probability of data, your model evidence is intractable, but at the same time, ironically, it's the true measure of how good your generative model is.
+
+183
+00:27:22,525 --> 00:27:26,231
+which means that we call this also marginal likelihood, right?
+
+184
+00:27:26,251 --> 00:27:39,915
+So if it is high, it means whatever sensation you're experiencing right now under your model of the world, under your generative model of the world, the probability of that particular sensation is very high.
+
+185
+00:27:40,055 --> 00:27:46,727
+It means under your model of the world, everything that you're sensing, you already expected to sense it.
+
+186
+00:27:46,707 --> 00:28:02,388
+So it means you have such a strong and precise belief about the dynamics of the world and how the sensations are generated from those dynamics that whatever you're receiving is not surprising.
+
+187
+00:28:02,829 --> 00:28:09,498
+But that's why model evidence is such a strong metric for evaluating how good a generative model is.
+
+188
+00:28:09,799 --> 00:28:11,681
+But unfortunately, it's intractable.
+
+189
+00:28:11,761 --> 00:28:15,246
+So can we find a bound to this?
+
+190
+00:28:15,378 --> 00:28:16,880
+namely a lower bound?
+
+191
+00:28:17,800 --> 00:28:18,801
+And the answer is yes.
+
+192
+00:28:19,302 --> 00:28:22,906
+I'm going to introduce the idea of an evidence lower bound in the next slide.
+
+193
+00:28:23,366 --> 00:28:26,309
+So by doing this, I'm turning the problem on its head.
+
+194
+00:28:26,709 --> 00:28:44,187
+So I'm converting, let's say, an intractable exact calculation of the posterior, and I'm replacing that with a tractable approximation, well, basically a tractable approximate estimation.
+
+195
+00:28:44,403 --> 00:29:13,195
+the posterior and that's called variational inference and i'll tell you what why we call this variational by the way because the objective function that we're going to be minimizing to do that is variation of free energy is actually a function of a function it's a functional so wherever you're dealing with functionals and optimizing functionals uh that's where the calculus of variation comes into play that's what what it means by variational inference
+
+196
+00:29:14,592 --> 00:29:44,278
+on the right hand side i'm just going to put some reminders the expected value and the this particular particular law of logarithms and in the middle this is called jensen's inequality just keep keep keep an eye on this one it just says that the expected value of a log of something is always a lower bound to the log of the expected value of that thing right so this is going to come in handy so let's
+
+197
+00:29:44,258 --> 00:29:48,094
+study this amazing concept of evidence lower bound.
+
+198
+00:29:48,194 --> 00:29:51,889
+Remember, P is intractable, we want to find the bound to it.
+
+199
+00:29:53,354 --> 00:29:55,939
+So this is log of probability of data.
+
+200
+00:29:57,261 --> 00:29:59,184
+This is how we marginalize x out.
+
+201
+00:30:00,166 --> 00:30:04,534
+And you can multiply and divide by something, whatever it is.
+
+202
+00:30:04,594 --> 00:30:10,945
+So here qx is, we call this surrogate, the surrogate posterior over the hidden state.
+
+203
+00:30:10,985 --> 00:30:18,298
+This is going to be a representative or your approximation to the true unknown posterior belief.
+
+204
+00:30:19,240 --> 00:30:20,504
+So let's call it qx.
+
+205
+00:30:20,644 --> 00:30:25,820
+And it's, by the way, it's really a key factor in variational inference and FEP.
+
+206
+00:30:25,900 --> 00:30:31,377
+So keep that in mind, this q variable, this q function.
+
+207
+00:30:32,335 --> 00:30:36,703
+So moving on, you do a little bit of play here.
+
+208
+00:30:36,843 --> 00:30:39,568
+So this sort of Q moves to the denominator.
+
+209
+00:30:39,688 --> 00:30:45,960
+And you notice that this is the definition of expectation with respect to this particular distribution Q, right?
+
+210
+00:30:46,701 --> 00:30:49,787
+Just getting the definition from here.
+
+211
+00:30:52,113 --> 00:30:59,847
+And according to Jensen's inequality, this term has a lower bound, and this is the lower bound to it.
+
+212
+00:30:59,907 --> 00:31:05,817
+So the expected of this term, the expected value of this term over this probability distribution.
+
+213
+00:31:05,837 --> 00:31:09,023
+You have the joint here and you have the surrogate distribution here.
+
+214
+00:31:09,865 --> 00:31:10,105
+And
+
+215
+00:31:11,384 --> 00:31:20,575
+You see that this right-hand side, again, remind yourself, this is your log model evidence, and we found the lower bound to it using Jensen's inequality, right?
+
+216
+00:31:20,635 --> 00:31:22,017
+So the lower bound is found.
+
+217
+00:31:22,397 --> 00:31:24,960
+This guy is your evidence lower bound.
+
+218
+00:31:27,002 --> 00:31:30,086
+And that's a key finding.
+
+219
+00:31:30,106 --> 00:31:39,417
+By maximizing this evidence lower bound, you're actually maximizing your log model evidence, and you're getting closer and closer to the true posterior.
+
+220
+00:31:40,409 --> 00:31:44,235
+Now, elbow and VFE, just want to make sure that we're clear on this.
+
+221
+00:31:44,255 --> 00:31:50,183
+We have elbow here, but VFE or variational inference is just negative of your elbow.
+
+222
+00:31:50,203 --> 00:31:58,315
+So if you multiply minus one by both sides of this, you end up with this term, always bigger than minus log probability of data.
+
+223
+00:31:58,375 --> 00:32:00,358
+This is called surprisal.
+
+224
+00:32:00,338 --> 00:32:24,068
+and this is called variational free energy that's why we say vfe is always an upper bound to surprise so maximizing elbow or minimizing vfe they both mean the same thing and um this is basically called variational free energy and that's why we call it the functional because this thing is a function of a of another function and it's called surprisal or surprise
+
+225
+00:32:24,773 --> 00:32:42,208
+and just shows you in a plot that here you've got variation of free energy that's always an upper bound to the true unknown surprisal or by extension you've got your elbow here that's always a lower bound to the true log model evidence
+
+226
+00:32:42,188 --> 00:33:06,441
+so vfe has multiple incarnations it comes in different forms by playing with the math so if this is your this is your vfe just expand you can just expand the joint and the denominator and then literally use the log rule of the you know the division turned into the subtraction and then you can distribute the expectation across the two different terms and this
+
+227
+00:33:06,421 --> 00:33:34,403
+um this basically results into like just basically swapping these two terms uh by each other you end up with this equation right and these terms have names so this one actually this expected value between your belief about the hidden state and the true unknown posterior this expectation is called a a kl divergence it measures how different your belief about x qx
+
+228
+00:33:34,383 --> 00:33:43,195
+is from the true unknown posterior that's why it's called an approximate error approximation error and the second term is your surprise right
+
+229
+00:33:44,626 --> 00:34:09,553
+um so um if i want to like show you like what this actually means visually this is really interesting so this is your surprisal right and on top of surpriser you're adding this approximation error this is this sort of length over here and then this constitutes your free energy what this means is like free energy is always an upper bound on surprisal and the error that that
+
+230
+00:34:09,533 --> 00:34:26,057
+gap is your approximation error is how far your belief about x is from the true posterior so by tuning your generative model your variational free energy goes down and when it goes down this gap is reducing so it which means that your q
+
+231
+00:34:26,037 --> 00:34:47,151
+gets closer and closer to the true posterior which means a better and better perception about the world and this doesn't end here your free energy will get closer and closer to the surprisal um basically by extension to the model evidence which is the metric that we're going to be used using for you know comparing different models with one another
+
+232
+00:34:47,992 --> 00:34:54,100
+A second incarnation of VFE is, again, we're going to expand the denominator again into this joint.
+
+233
+00:34:54,120 --> 00:35:09,679
+So previously it was p of x given y times probability of y. Now we go probability of y given x times p of x. And again, distributing the log, and then we distribute the expectation.
+
+234
+00:35:09,659 --> 00:35:30,300
+and then just you know swapping the terms again you have the scale divergence over here and you have this negative this negative expectation now this thing over here is called accuracy it means how accurate am i under my belief of the world the expect the expected value of
+
+235
+00:35:30,280 --> 00:36:00,135
+observing y under my estimation of where the world is x so the higher this is it means the more accurate your belief about the world is that that is basically causing your observations but at the same time this term over here is called complexity it means that if you have some prior belief about the world you you will not be able to just move your cue wherever you want it is it has to stay close to your prior belief over here so this is basically a regularizer if you will
+
+236
+00:36:00,672 --> 00:36:09,289
+And the third incarnation is basically again here, this is the definition of VFE again, you know, the log rule.
+
+237
+00:36:10,772 --> 00:36:12,857
+So we end up with these two terms.
+
+238
+00:36:12,877 --> 00:36:16,043
+So this guy over here is called expected.
+
+239
+00:36:16,063 --> 00:36:16,504
+Sorry.
+
+240
+00:36:18,458 --> 00:36:20,502
+It's called expected internal energy.
+
+241
+00:36:21,023 --> 00:36:22,606
+And this guy is your entropy.
+
+242
+00:36:22,626 --> 00:36:26,394
+So that's the expected value of log of Qx.
+
+243
+00:36:26,474 --> 00:36:27,596
+We call this entropy.
+
+244
+00:36:29,400 --> 00:36:31,123
+How do we minimize variational free energy?
+
+245
+00:36:31,143 --> 00:36:35,472
+We have to maximize our entropy and we have to maximize our internal energy.
+
+246
+00:36:35,452 --> 00:36:38,096
+Now, this term makes sense that we need to maximize it.
+
+247
+00:36:38,377 --> 00:36:39,779
+But what does this one mean?
+
+248
+00:36:40,240 --> 00:36:46,950
+It means that your queue will stay as smooth as possible, as simple as possible.
+
+249
+00:36:47,031 --> 00:36:59,130
+This connects really well with Occam's Razor, if you're from machine learning background, that the best model is the one that provides the most accurate account of the data
+
+250
+00:36:59,110 --> 00:37:05,883
+But at the same time, the simplest explanation for that data, this simplicity is enforced by this entropy term.
+
+251
+00:37:06,104 --> 00:37:07,652
+It stays smooth.
+
+252
+00:37:08,982 --> 00:37:10,183
+So this is very interesting.
+
+253
+00:37:10,203 --> 00:37:13,406
+So these were just three incarnations of variational free energy.
+
+254
+00:37:13,906 --> 00:37:21,313
+And the goal of inverting degenerative models, basically, the GM strives to minimize its VFE.
+
+255
+00:37:22,334 --> 00:37:23,595
+This achieves two things.
+
+256
+00:37:23,775 --> 00:37:33,724
+I hinted this just a little bit previously, but it means that the actual value of VFE will approach the intractable minus log probability of data.
+
+257
+00:37:34,265 --> 00:37:36,106
+This is going to be used for model comparison.
+
+258
+00:37:36,467 --> 00:37:38,989
+And the surrogate distribution will approach
+
+259
+00:37:38,969 --> 00:37:41,252
+the unknown posterior belief.
+
+260
+00:37:41,272 --> 00:37:45,236
+Remember, that was the goal of perception in the first place.
+
+261
+00:37:45,576 --> 00:38:01,094
+And once you reach to that, basically minimize your variational free energy, you can use the actual value of free energy as the metric, as a proxy for the unknown model evidence to compare different generative models together, right?
+
+262
+00:38:01,334 --> 00:38:05,239
+So the model with the lowest variational free energy is going to be the best model.
+
+263
+00:38:06,340 --> 00:38:08,082
+Yeah, I think I've explained that one.
+
+264
+00:38:09,040 --> 00:38:09,551
+Now,
+
+265
+00:38:10,424 --> 00:38:14,408
+Just to let you know that the true form of the posterior is unknown.
+
+266
+00:38:14,488 --> 00:38:27,942
+And you see that the terms like the probability distribution, the joint distribution here is not guaranteed that they're analytically simple to derive and work with.
+
+267
+00:38:28,363 --> 00:38:39,975
+Because of that, there is this idea that we can actually use Laplace approximation to break down each one of the distributions and basically approximate them using a Taylor expansion.
+
+268
+00:38:39,955 --> 00:38:57,475
+um particularly up to the third term which means that i'm providing a quadratic approximation using taylor expansion for each one of the components um within variational free energy um unfortunately i don't have the time to go over the detailed derivation but
+
+269
+00:38:57,455 --> 00:39:04,767
+Suffice it to say that the result of approximating all the components is that the variational free energy simplifies to this equation.
+
+270
+00:39:04,867 --> 00:39:14,442
+For those of you who are interested to know the details, I encourage you to look at the primer on variational Laplace paper, which is an amazing paper.
+
+271
+00:39:15,163 --> 00:39:18,008
+It goes through all the details of derivation.
+
+272
+00:39:18,068 --> 00:39:24,238
+So basically, free energy reduces to log of the joint distribution
+
+273
+00:39:24,792 --> 00:39:33,132
+and you have the posterior covariance, and then n is basically the number of parameters and the states that you have, and so on and so forth.
+
+274
+00:39:34,951 --> 00:39:39,818
+Now, predictive coding, this is basically where it gets even more interesting.
+
+275
+00:39:40,058 --> 00:39:45,626
+It is basically a hierarchical generative model that we're going to be using to model human perception.
+
+276
+00:39:45,726 --> 00:39:49,512
+And the goal is to invert this hierarchical model.
+
+277
+00:39:50,072 --> 00:39:56,942
+So it's a powerful framework to describe how the cortex accumulates evidence from noisy stimuli
+
+278
+00:39:56,922 --> 00:39:59,705
+It's an application of the free energy principle.
+
+279
+00:40:00,145 --> 00:40:09,673
+It focuses on how this literally fantastic organ can perform probabilistic inference about the most likely hidden cause that has caused the sensory signal.
+
+280
+00:40:10,534 --> 00:40:22,305
+It assumes that the brain has a generative model of the world through which it constantly infers the hidden states of the world, and it can also learn the parameters while inferring the hidden states of the world.
+
+281
+00:40:22,965 --> 00:40:26,929
+So model inversion happens by minimizing variational free energy.
+
+282
+00:40:26,909 --> 00:40:33,595
+Again, even though it's hierarchical, but the concept stays the same.
+
+283
+00:40:33,828 --> 00:40:58,317
+predictive coding we have this concept of top-down predictions where predictions go from inside out about your sensations right and then the prediction error is calculated like what i described before and then this these errors if i want to be more precise the precision weighted prediction errors are sent back from outside in or they call it bottom up
+
+284
+00:40:58,297 --> 00:41:06,877
+sort of direction, so that the estimations of the world, the estimation of the posterior beliefs about the world, are corrected, basically.
+
+285
+00:41:06,937 --> 00:41:13,372
+That's when model inversion happens, when the posterior estimates get adjusted.
+
+286
+00:41:13,833 --> 00:41:16,980
+And it looks like something like this, we have this hierarchical
+
+287
+00:41:16,960 --> 00:41:42,563
+model that we have the same story of state dynamics and observation model but here we have this happening at each level and then you notice that these news these causes are the ones that link layer i to i minus one that's the important part that without these news without these causes the layers cannot talk to each other you notice that it is a hierarchical dynamical system uh basically um
+
+288
+00:41:44,534 --> 00:42:10,221
+now how do we design an experiment um for you know for for this kind of perception neuromimetic modeling using the free energy principle i just want to give you the sort of ingredients here you the designer you first have to define your genital process that's x that's the true uh hidden states i should have maybe said x star yeah x star would have been a better notion
+
+289
+00:42:10,201 --> 00:42:29,053
+then you will generate the observations this is some sort of some transformation of the axis you can add noise to it you can transform it the way you want but that's going to be the observations that's going to hit the markov blanket this these are what this uh this is basically where the sensory state observes and receives those sensations
+
+290
+00:42:30,569 --> 00:42:31,992
+You have to define your generative model.
+
+291
+00:42:32,113 --> 00:42:34,278
+This part is the tricky part, right?
+
+292
+00:42:34,318 --> 00:42:39,832
+The Fs and Gs in your dynamical system, that's where everything gets really tricky.
+
+293
+00:42:40,112 --> 00:42:41,235
+How would you define them?
+
+294
+00:42:41,696 --> 00:42:44,403
+If it's hierarchical, how many layers should it have, basically?
+
+295
+00:42:44,423 --> 00:42:46,047
+These are the big questions.
+
+296
+00:42:47,427 --> 00:42:53,316
+You have to define the evaluation metric, that how would you define different generative models with each other.
+
+297
+00:42:53,777 --> 00:42:57,503
+And then you have to design the online state inference loop.
+
+298
+00:42:57,623 --> 00:43:02,611
+Now this is, by the way, just for this case, for this presentation, it's just about state inference.
+
+299
+00:43:03,453 --> 00:43:05,636
+And then you have to compare different generative models.
+
+300
+00:43:05,676 --> 00:43:08,541
+This is where Bayesian model comparison comes into play.
+
+301
+00:43:08,842 --> 00:43:13,206
+Now here, you basically use a dynamical system.
+
+302
+00:43:13,286 --> 00:43:21,854
+Here I'm just using a Lotka-Volterra process that captures the dynamics between a hunter and the prey together.
+
+303
+00:43:21,894 --> 00:43:25,577
+It's a two-dimensional sort of world, if you will.
+
+304
+00:43:26,057 --> 00:43:31,222
+So by solving the trajectories, by solving the differential equations, you get to this sort of trajectory.
+
+305
+00:43:31,242 --> 00:43:34,665
+So you have 1,000 data points here, each of which is two-dimensional.
+
+306
+00:43:34,925 --> 00:43:37,768
+So this is the unknown states of the world.
+
+307
+00:43:37,748 --> 00:43:46,122
+right this is the unknown dynamics of the world regenerative process again it's unknown it's beyond the markov blanket
+
+308
+00:43:46,321 --> 00:43:48,544
+Again, so this is the figure that we saw before.
+
+309
+00:43:48,564 --> 00:43:54,854
+Now you can assume that you've got the brain here and you've got degenerative process X star on the left-hand side.
+
+310
+00:43:55,174 --> 00:44:03,586
+The observations Y are basically a noisy version of the same hidden states that you notice that this is really noisy here, right?
+
+311
+00:44:03,606 --> 00:44:08,734
+So the brain has to receive that and then infer the true states here, right?
+
+312
+00:44:10,435 --> 00:44:18,030
+So for a one-layer predictive coding network for these particular experiments, you have just a simple sort of generative model, just one layer.
+
+313
+00:44:18,651 --> 00:44:25,445
+And then I'm sort of comparing two generative models here, where the flow of the state dynamics are different.
+
+314
+00:44:25,826 --> 00:44:30,435
+On the left-hand side, you have something that we call just a pullback attractor.
+
+315
+00:44:30,415 --> 00:44:37,965
+We have this 2x2 matrix here, and we have this sort of point of attraction, which assumes that everything collapses into this world.
+
+316
+00:44:38,326 --> 00:44:48,259
+Just to be clear, it means that my generative model of the world assumes that the world beyond the Markov blanket is attracted to a particular center called psi.
+
+317
+00:44:48,680 --> 00:44:51,083
+That's what I mean by believing something about the world.
+
+318
+00:44:51,384 --> 00:44:55,309
+Whereas the second flow, the second generative model,
+
+319
+00:44:55,289 --> 00:45:14,293
+it's a sinusoidal sort of belief it means that i believe there is something periodic about the world beyond my markov blanket and the g's i just kept them as identity which means that whatever new is is going to be my prediction about my sensation right so i kept the g's identical now the evaluation metric this is very important
+
+320
+00:45:15,556 --> 00:45:40,568
+as the inference is happening online for every observation you have to make an inference and then predict the sensation and then calculate the prediction error and then eventually calculate your variational free energy because it's happening online you can actually literally accumulate your free energy variation free energy across the entire inference period so at the end you will end up with one scalar value
+
+321
+00:45:40,548 --> 00:45:43,974
+It's called the time integral of your variational free energy.
+
+322
+00:45:43,994 --> 00:45:46,599
+They call it free action, right?
+
+323
+00:45:46,659 --> 00:45:51,928
+It's just a fancy way of summing up variational free energy across the entire inference period.
+
+324
+00:45:52,970 --> 00:45:54,793
+Basically, it's time integral.
+
+325
+00:45:55,297 --> 00:46:14,487
+and it is interestingly it's an upper bound to the accumulated surprise so variational free energy is an upper bound to surprise and um free action is an is an upper bound to the accumulated surprise because free action is in and out itself an accumulation of variational free energy
+
+326
+00:46:14,467 --> 00:46:41,098
+and this is you have to also then define the online state inference loop uh i don't want to go into too much detail here but um basically for each observation you will make predictions and you calculate prediction errors you calculate your free energy you calculate the gradient of free energy with respect to your estimations of the posterior that's the key part and then this is where you have to update your beliefs about the world
+
+327
+00:46:41,078 --> 00:47:06,057
+and it's you notice you notice that it's a differential equation because the way you're going to update your um your belief about the world it's continuous it happens in continuous time it means between each two observations y i and y i plus one i have to integrate over this update rule to move from my previous belief about the world mu x to a new mu x at the next time step
+
+328
+00:47:06,037 --> 00:47:31,875
+and that's why the integration happens here and just so you know this equation is basically saying that the amount by which i'm gonna change my belief about the world mu x is first of all the gradient of free energy with respect to mu x right that's typical gradient descent but the second term it serves as a momentum it means that if i'm gonna update my belief about where the world is i'm gonna
+
+329
+00:47:31,855 --> 00:47:53,560
+consider the velocity of the world as well right if i'm going to estimate the velocity of the world i'm going to consider the acceleration of the world as well it's similar to the idea of momentum in optimization algorithms this is the bit that helps you you know catch up with the chasing target that is the world that i talked about in the beginning
+
+330
+00:47:53,540 --> 00:48:13,000
+and then by you integrate this differential equation to update your belief about the world and then the next observation happens so this continues for all the observations and you're accumulating your free energy as time goes by and the result will be your your free action so the result is this so this is the first genitive model with the pullback attractor
+
+331
+00:48:14,701 --> 00:48:17,829
+So this is the inferred state, right?
+
+332
+00:48:18,230 --> 00:48:19,734
+And this is interesting.
+
+333
+00:48:19,754 --> 00:48:22,421
+This is the accumulated free action, right?
+
+334
+00:48:23,825 --> 00:48:24,647
+Very, very interesting.
+
+335
+00:48:24,667 --> 00:48:29,179
+You notice that free action is having these regular jumps.
+
+336
+00:48:29,340 --> 00:48:30,162
+It means...
+
+337
+00:48:30,142 --> 00:48:33,125
+periodically, I'm getting surprised about my sensations.
+
+338
+00:48:33,185 --> 00:48:38,370
+Remember that if you note here, this is where these nonlinearities happen.
+
+339
+00:48:38,750 --> 00:48:44,115
+It means that my simple pullback attractor fails to capture those dynamics, so it gets surprised.
+
+340
+00:48:44,436 --> 00:48:49,721
+But interestingly, where things are linear and simple, I'm not getting much surprise.
+
+341
+00:48:49,781 --> 00:48:51,522
+So it's almost constant here.
+
+342
+00:48:51,582 --> 00:48:59,710
+So I'm good at capturing simple dynamics, but not the ones that are highly nonlinear, whereas the sinusoidal one,
+
+343
+00:48:59,690 --> 00:49:03,255
+you notice that we are capturing the magnitudes much better.
+
+344
+00:49:03,295 --> 00:49:06,319
+We have a steady increase in free action.
+
+345
+00:49:06,399 --> 00:49:10,945
+We don't get surprised for some dynamics and less surprised for other dynamics.
+
+346
+00:49:10,985 --> 00:49:18,475
+We are always equally surprised for everything, which is interesting that here we are getting surprised consistently for everything.
+
+347
+00:49:18,455 --> 00:49:41,458
+but here we are not getting much surprise for these particular dynamics so one is good catch a good and capturing non-linear dynamics periodic dynamics the other one is better in capturing simpler linear dynamics which is interesting and notice that the reaction here is much lower than the free action here so basically this means that this model is much better
+
+348
+00:49:41,624 --> 00:50:09,100
+looking at the gen the generative power of these uh gm's so this is the g function if you remember g of x and mu that's the prediction of your one layer predictive coding network about the sensation that's the bit that gets compared with the true sensation and the prediction error is calculated remember that observations just like hidden states are two-dimensional so this is the first dimension of why the true sensation and why had the
+
+349
+00:50:09,080 --> 00:50:12,605
+predicted sensation, you notice that they're almost close.
+
+350
+00:50:12,785 --> 00:50:17,753
+And also with the second dimension, it's not doing a bad job, right?
+
+351
+00:50:18,234 --> 00:50:25,124
+But for the second generative model, again, it's doing a much better job in capturing the magnitudes of the system.
+
+352
+00:50:25,204 --> 00:50:36,741
+Again, you'll notice that it's not so good in generating these bits, whereas the first model is better in generating more accurate predictions of the first type.
+
+353
+00:50:38,003 --> 00:51:00,282
+these are the results the pullback attractor and trigonometric the sinusoidal sort of flow you notice that the free action of the second model is lower it's better and mse loss which basically compare compares the estimated x and the true x the inferred x and true x together is also slightly lower so free action shows that
+
+354
+00:51:00,262 --> 00:51:01,444
+The second model is good.
+
+355
+00:51:01,905 --> 00:51:07,213
+And this is where Bayesian model comparison comes into play, where we use Bayes factor for comparison.
+
+356
+00:51:07,233 --> 00:51:13,643
+It basically says that we take the model evidence for each one of the models and we divide them.
+
+357
+00:51:14,004 --> 00:51:18,090
+Now, because these are intractable, we are using free action as a proxy.
+
+358
+00:51:18,791 --> 00:51:22,557
+And when you put the values of free action, you get to this value.
+
+359
+00:51:22,537 --> 00:51:39,297
+because it's higher than one it basically means that you have to pick the second model because it has a lower free action it doesn't get as surprised as the first one and at some point of caution free action versus mse mse as a measure of accuracy should never
+
+360
+00:51:39,277 --> 00:51:44,404
+and I repeat, never be consulted on its own because it ignores complexity.
+
+361
+00:51:44,805 --> 00:51:57,223
+So, for example, what if the free action of Model 1 and Model 2, the Model 1 had a lower free action, but what if the MSE of the first model was actually higher than the second model?
+
+362
+00:51:57,283 --> 00:51:58,244
+Which one would you choose?
+
+363
+00:51:58,705 --> 00:52:05,655
+Again, you have to choose Model 1 because this has higher power of generalizability to the unseen data.
+
+364
+00:52:06,192 --> 00:52:09,058
+so it has less chances of overfitting to the data.
+
+365
+00:52:09,580 --> 00:52:13,228
+We call that free action again as complexity minus accuracy.
+
+366
+00:52:13,989 --> 00:52:15,773
+So what if we remove complexity?
+
+367
+00:52:15,874 --> 00:52:17,417
+Again, we will overfit.
+
+368
+00:52:18,359 --> 00:52:19,180
+So that was important.
+
+369
+00:52:19,220 --> 00:52:20,121
+Some final thoughts.
+
+370
+00:52:20,842 --> 00:52:25,867
+You can definitely learn the parameters and also estimate uncertainty about the world.
+
+371
+00:52:25,947 --> 00:52:29,611
+So these are the things that are not covered in this presentation, but you can do that.
+
+372
+00:52:30,031 --> 00:52:34,456
+This is where the separation of time scales will come into play.
+
+373
+00:52:34,796 --> 00:52:37,679
+The DEM algorithm does exactly that.
+
+374
+00:52:37,699 --> 00:52:40,342
+This is dynamic expectation maximization.
+
+375
+00:52:40,442 --> 00:52:42,785
+I encourage you guys to take a look at that algorithm.
+
+376
+00:52:43,686 --> 00:52:46,729
+Using that, you can solve the triple estimation problem.
+
+377
+00:52:47,924 --> 00:52:49,687
+Now, can I go beyond x dot?
+
+378
+00:52:49,867 --> 00:52:50,629
+Yes, you can.
+
+379
+00:52:50,669 --> 00:53:02,509
+That's where you jump into the world of the generalized coordinates of motion, where you're not only estimating x dot, but you're also estimating higher temporal derivatives of the world.
+
+380
+00:53:02,910 --> 00:53:11,805
+You have a system of coupled differential equations rather than having just two equations, which is very, very interesting, actually.
+
+381
+00:53:12,848 --> 00:53:18,395
+Also, remember that active inference is not the same as predictive coding.
+
+382
+00:53:20,258 --> 00:53:28,428
+Particularly in the philosophy communities, I've heard that people use active inference when they're talking about predictive coding.
+
+383
+00:53:28,689 --> 00:53:33,255
+Remember that in predictive coding, we are simply making sense of the world.
+
+384
+00:53:33,575 --> 00:53:37,320
+There is no concept of planning or action in play.
+
+385
+00:53:37,503 --> 00:53:46,595
+The ML community, unfortunately, does not work with the dynamics of the world and AI basically is going to the opposite direction.
+
+386
+00:53:46,695 --> 00:53:51,020
+Instead of using smart data, we are just going bigger and bigger data.
+
+387
+00:53:51,040 --> 00:54:00,152
+So we would like a world that ChatGPT would also ask you a question and becomes curious about you to receive information that it selects, basically.
+
+388
+00:54:00,132 --> 00:54:03,638
+So where should you start with, uh, with the free energy principle?
+
+389
+00:54:03,718 --> 00:54:07,806
+These are the resources that I strongly recommend you some videos on YouTube.
+
+390
+00:54:07,826 --> 00:54:13,876
+Hopefully you can later on, pause this video and go through these links, some papers that I'm recommending here.
+
+391
+00:54:14,337 --> 00:54:20,087
+And the last one, the two books that I believe the red one, the predictive minus for philosophy community.
+
+392
+00:54:20,107 --> 00:54:23,213
+And the first one goes through the math extensively.
+
+393
+00:54:23,233 --> 00:54:24,435
+It's a beautiful book.
+
+394
+00:54:25,580 --> 00:54:30,447
+And the videos, I recommend that you guys start with the videos in the first place.
+
+395
+00:54:31,269 --> 00:54:48,955
+And I would like to just acknowledge our funding from the Marie Curie and also my colleagues Simon Urbas and Professor Friston, and also acknowledge the folks at UCL, UCD, and Monash University who have always supported our work.
+
+396
+00:54:48,935 --> 00:54:53,679
+And here's the link to the code that everybody can just take a look and run.
+
+397
+00:54:53,859 --> 00:54:56,201
+The README file is self-explanatory.
+
+398
+00:54:56,582 --> 00:54:59,984
+Unfortunately, I ran out of time, and I won't be able to show a demo.
+
+399
+00:55:00,405 --> 00:55:01,386
+But yeah, that's it.
+
+400
+00:55:02,567 --> 00:55:03,387
+Thank you, Mehran.
+
+401
+00:55:04,028 --> 00:55:04,648
+That was great.
+
+402
+00:55:04,849 --> 00:55:11,114
+And we have 10 minutes if you want to show anything, or I can ask some questions.
+
+403
+00:55:11,174 --> 00:55:18,300
+But we have till five minutes after if you want to show anything, or even just scanning the repo could be cool.
+
+404
+00:55:19,090 --> 00:55:33,454
+okay sure sure sure that's great thank you for that but just wanted to comment your your educational materials and the youtube channel are great and and they are they're an excellent supplement to the textbook and to the math learning
+
+405
+00:55:34,531 --> 00:55:35,353
+I appreciate that.
+
+406
+00:55:35,373 --> 00:55:37,016
+Yes, absolutely.
+
+407
+00:55:37,677 --> 00:55:41,445
+So yeah, I also have a YouTube channel, ML Don.
+
+408
+00:55:41,625 --> 00:55:42,547
+Feel free to take a look.
+
+409
+00:55:42,567 --> 00:55:47,958
+I'm actually reading the active inference book on that channel, so hopefully it would be of interest to you guys.
+
+410
+00:55:48,439 --> 00:55:51,966
+And this is the repository that is publicly available.
+
+411
+00:55:51,946 --> 00:55:55,111
+The README file is pretty self-explanatory.
+
+412
+00:55:55,252 --> 00:56:02,343
+And this is just a one-layer predictive coding network for the task of inference and modeling human perception as a task of inference.
+
+413
+00:56:02,624 --> 00:56:04,086
+These are the same plots that you've seen.
+
+414
+00:56:05,469 --> 00:56:07,432
+So basically, all the functions are here.
+
+415
+00:56:07,452 --> 00:56:09,575
+Everything you need is here.
+
+416
+00:56:09,635 --> 00:56:12,200
+So the main function is the one that you're going to be dealing with.
+
+417
+00:56:12,320 --> 00:56:16,587
+And this YAML file is where you actually choose the parameters.
+
+418
+00:56:16,567 --> 00:56:17,928
+of your experiment.
+
+419
+00:56:18,449 --> 00:56:20,530
+Just to show you in action what it looks like.
+
+420
+00:56:20,570 --> 00:56:28,597
+So if you actually clone this repository on your machine, you just have to go to the YAML file and just do a quick scan of the README file.
+
+421
+00:56:28,617 --> 00:56:33,561
+But basically, this is where you define your generative process.
+
+422
+00:56:33,681 --> 00:56:37,004
+For example, you can say I want it to be a Lotka-Volterra process.
+
+423
+00:56:37,585 --> 00:56:46,472
+And this is how I'm going to be picking the DT and the total time to actually solve the trajectories of my generative process.
+
+424
+00:56:46,452 --> 00:56:48,495
+You can define your generative model here.
+
+425
+00:56:48,836 --> 00:56:53,402
+You can define the dynamics to be like a pullback attractor or a trigonometric one.
+
+426
+00:56:53,743 --> 00:56:56,026
+The likelihood, for example, is identity here.
+
+427
+00:56:56,507 --> 00:56:59,992
+These are the dimensions of your x and y, 2 and 1.
+
+428
+00:57:00,473 --> 00:57:08,204
+You might wonder why it's 2 for x. It's because you have x and x dot together, where the world is and how fast the world is changing.
+
+429
+00:57:08,745 --> 00:57:11,970
+And this is just y in your generative model.
+
+430
+00:57:11,950 --> 00:57:41,367
+you can increase them that's where you jump into the world of generalized coordinates of motion but this is beyond the scope of my talk today again this these bits are beyond the scope of our talk today this is where you basically talk about the correlation between the noise process across different levels of the generalized coordinates so the noise on the velocity how does it correlate with the noise process on the acceleration your belief about the acceleration of the world
+
+431
+00:57:41,347 --> 00:57:43,370
+So how do they interact with one another?
+
+432
+00:57:43,390 --> 00:57:46,795
+That's where these values come into play.
+
+433
+00:57:47,336 --> 00:57:55,427
+And then this is the kind of noise that you will use to alter the true states of the world and generate your observations.
+
+434
+00:57:55,728 --> 00:57:57,991
+For example, you can use a colored noise here.
+
+435
+00:57:58,432 --> 00:58:02,097
+You define the mean and basically the standard deviation of noise.
+
+436
+00:58:02,177 --> 00:58:09,548
+And we're using the sort of kernel here that convolves with the white noise to actually generate a more smooth
+
+437
+00:58:09,528 --> 00:58:10,069
+noise.
+
+438
+00:58:10,129 --> 00:58:25,489
+The reason being that all the signals that you work with in biological and organic systems are believed to have been generated by some sort of dynamics.
+
+439
+00:58:26,050 --> 00:58:32,498
+That's why we keep them as smooth noises, infinitely differentiable noises rather than just white noise.
+
+440
+00:58:33,608 --> 00:58:38,394
+And if you actually run this, so this is basically a pullback attractive.
+
+441
+00:58:38,414 --> 00:58:41,838
+This is the first sort of generative model that we worked in.
+
+442
+00:58:41,858 --> 00:58:44,302
+So you just run this main function.
+
+443
+00:58:44,362 --> 00:58:56,477
+So we have 1000 observations, noisy observations, right?
+
+444
+00:58:56,879 --> 00:58:58,703
+And immediately this happens.
+
+445
+00:58:58,723 --> 00:59:02,552
+So for every 10 observations, we are accumulating free action.
+
+446
+00:59:02,853 --> 00:59:07,583
+You notice that free action is ever increasing because it just accumulates free energy.
+
+447
+00:59:08,445 --> 00:59:12,795
+And on the right hand side, you have VFE or variational free energy.
+
+448
+00:59:12,775 --> 00:59:29,400
+Again, if you look at the definitions inside the functions folder of how we calculate or compute the variation of free energy, you notice that it's a far more simplified version of what you would see about free energies because everything is under Laplace approximation.
+
+449
+00:59:29,380 --> 00:59:32,164
+And you end up with far more simpler terms.
+
+450
+00:59:32,544 --> 00:59:35,408
+And the final result is reaction is this much.
+
+451
+00:59:35,688 --> 00:59:40,735
+And basically your final MSE loss is 0.53.
+
+452
+00:59:41,276 --> 00:59:47,024
+And if you want to see the final output, you just have to go into the results folder.
+
+453
+00:59:47,524 --> 00:59:50,308
+And these are the folders that are generated.
+
+454
+00:59:50,288 --> 01:00:15,790
+that you have two dimensions in x one dimension and y lotka volterra is a general process for example degenerative model follows a pullback attractor scheme and then your g is just identity this is your free action and then that is your mse loss and if you open it all the plots that i showed you in the presentation are saved as pdf here just to give you an idea like this is your x this is your true invisible
+
+455
+01:00:16,951 --> 01:00:18,793
+states of the world, right?
+
+456
+01:00:19,554 --> 01:00:24,679
+And if you want to look at X hat, this is the inferred states of the world.
+
+457
+01:00:25,359 --> 01:00:29,764
+And these are, for example, the noisy observations of the world.
+
+458
+01:00:31,045 --> 01:00:31,145
+Yeah.
+
+459
+01:00:31,165 --> 01:00:36,410
+So I hope that the repository would be of help and of interest to all of you.
+
+460
+01:00:36,851 --> 01:00:37,491
+Thank you very much.
+
+461
+01:00:39,173 --> 01:00:39,473
+Great.
+
+462
+01:00:39,934 --> 01:00:46,080
+What kinds of problems or settings do you feel that this could be adapted to or useful for?
+
+463
+01:00:47,984 --> 01:00:57,996
+I would say, first and foremost, this could be used for... Basically, it's all about any kind of problem that's about inference.
+
+464
+01:00:58,677 --> 01:01:09,589
+You have some noisy observations that you want to infer the hidden state, but in terms of adaptability, you can build on that by introducing parameter learning as well as uncertainty estimation.
+
+465
+01:01:09,990 --> 01:01:11,832
+So our goal is to
+
+466
+01:01:11,812 --> 01:01:35,406
+develop this into a triple estimation sort of package predictive coding network and add more layers to it so to have a hierarchical predictive coding capable of solving the triple estimation problem yeah that's the ultimate thing that you can actually adapt this to cool um
+
+467
+01:01:38,187 --> 01:01:46,290
+What are you excited about for ML Dawn or for your learning or research in next year?
+
+468
+01:01:48,278 --> 01:02:01,219
+I'm very much excited in embedding these kinds of calculations into the world of AI, because as I said, AI is moving, in my opinion, and my humble opinion is moving towards the wrong direction.
+
+469
+01:02:01,259 --> 01:02:08,131
+Instead of bombarding models with all sorts of data, the model should be able to choose its data.
+
+470
+01:02:08,692 --> 01:02:15,062
+So I'm very excited in developing this framework into a hierarchical predictive coding network, and then
+
+471
+01:02:15,042 --> 01:02:27,056
+sort of compare the performance of such a model with other traditional AI-based generative models and basically show its superiority that I believe it has in different scenarios.
+
+472
+01:02:27,697 --> 01:02:41,033
+And ultimately, this model is going to be used for, in my grand proposal, in the project I'm working on, it's going to be used for modeling hallucinations as a kind of false inference about the world.
+
+473
+01:02:41,013 --> 01:02:50,846
+And it's going to be used as a proxy for us to understand what happens in neuropsychiatric disorders when people actually suffer from hallucinations in the brain.
+
+474
+01:02:50,886 --> 01:03:04,744
+So this predictive coding network is going to be a brain-inspired AI model for us to understand what goes wrong in the skull of a human being when they suffer from hallucinations about the world.
+
+475
+01:03:05,045 --> 01:03:09,130
+So that's what I'm really, really excited about and really hoping to achieve.
+
+476
+01:03:09,110 --> 01:03:09,691
+Cool.
+
+477
+01:03:09,872 --> 01:03:12,618
+It's like inspired by the brain for the brain.
+
+478
+01:03:12,678 --> 01:03:14,743
+Absolutely.
+
+479
+01:03:15,204 --> 01:03:15,905
+Thank you, Mehran.
+
+480
+01:03:16,407 --> 01:03:20,195
+Great presentation and good luck with the continuation of the work.
+
+481
+01:03:21,258 --> 01:03:21,879
+Appreciate it.
+
+482
+01:03:21,939 --> 01:03:22,701
+Thank you for having me.
+
+483
+01:03:23,142 --> 01:03:23,523
+Okay.
+
+484
+01:03:23,543 --> 01:03:24,064
+Till next time.

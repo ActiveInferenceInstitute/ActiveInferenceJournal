@@ -1,0 +1,2239 @@
+1
+00:00:07,473 --> 00:00:29,177
+hello and welcome it's november 11 2024 we're in active inference guest stream number 92.1 with max eifer we're going to be discussing a variety of thermodynamic and bayesian topics it should be very exciting if you're watching live feel free to write any questions in the live chat
+
+2
+00:00:29,157 --> 00:00:35,146
+Max will go through some sections of several papers and I will read questions and ask questions.
+
+3
+00:00:35,186 --> 00:00:37,449
+So thank you, Max, for joining.
+
+4
+00:00:37,990 --> 00:00:40,173
+Looking forward to hearing about this.
+
+5
+00:00:40,534 --> 00:00:40,975
+Take it away.
+
+6
+00:00:42,036 --> 00:00:42,297
+Great.
+
+7
+00:00:42,637 --> 00:00:44,840
+Yeah, thank you for the introduction and thanks for having me on.
+
+8
+00:00:45,141 --> 00:00:47,084
+Really excited to talk about this stuff.
+
+9
+00:00:47,945 --> 00:00:49,708
+So there are a few papers I want to talk about.
+
+10
+00:00:49,728 --> 00:00:56,458
+One called Thermodynamic Linear Algebra about kind of a novel hardware approach to solving linear algebra problems.
+
+11
+00:00:56,898 --> 00:00:58,641
+Another one called Thermodynamic
+
+12
+00:00:58,621 --> 00:01:06,558
+Bayesian inference, which is similarly about using these new thermodynamic hardware devices for Bayesian inference problems.
+
+13
+00:01:08,742 --> 00:01:15,837
+But before I get into that, I just wanted to make a note on kind of like the story of this work and how it evolved, because I think it's pretty interesting.
+
+14
+00:01:15,817 --> 00:01:39,748
+um so i'm working at a company a startup called normal computing and where we started off was just thinking about what's kind of the best hardware paradigm for for ai and especially probabilistic machine learning because these are some of the most challenging tasks computationally and seen as some of the most necessary to be able to do kind of robust um ai without you know hallucinations
+
+15
+00:01:39,728 --> 00:01:42,798
+And a big approach to that is probabilistic machine learning.
+
+16
+00:01:43,259 --> 00:01:52,810
+And a lot of our approach was inspired by this report that came out of a workshop in 2019 called Thermodynamic Computing.
+
+17
+00:01:53,583 --> 00:02:18,274
+and i'm sharing it uh can you see my my screen here what i'm sharing okay yeah so there's this one quote here in the introduction that i think really summarized the point it says somewhat paradoxically while avoiding stochasticity and hardware we are generating it in software for various machine learning techniques at substantial computational and energetic cost so one of the big kind of takeaways from the work they did in this um this workshop
+
+18
+00:02:18,254 --> 00:02:26,948
+was there was kind of a consensus that emerged that we're working so hard to suppress the randomness that comes up naturally in our hardware.
+
+19
+00:02:27,308 --> 00:02:34,680
+And then we need randomness actually to run various randomized algorithms, especially in probabilistic machine learning.
+
+20
+00:02:35,141 --> 00:02:39,047
+And so if there were some way to just use the randomness that's naturally there,
+
+21
+00:02:39,027 --> 00:02:45,681
+that we know about due to thermodynamics to achieve those algorithmic goals, maybe we would save a lot of energy, basically.
+
+22
+00:02:45,701 --> 00:02:49,710
+So that was kind of one of the ideas we were inspired by.
+
+23
+00:02:51,374 --> 00:02:54,741
+But the first step along this journey was,
+
+24
+00:02:55,666 --> 00:03:02,935
+So there was an earlier paper where we basically proposed circuits that are capable of sampling from a normal distribution.
+
+25
+00:03:03,496 --> 00:03:06,540
+And I'll get more into the math of why that happens.
+
+26
+00:03:06,821 --> 00:03:11,366
+Why do circuits that look like this allow you to sample from a multivariate Gaussian?
+
+27
+00:03:12,508 --> 00:03:19,237
+So this was kind of the first work that was published at Normal, actually before I started working there, called Thermodynamic AI and the Fluctuation Frontier.
+
+28
+00:03:19,757 --> 00:03:25,605
+But how you can think of this is this is the electronic analog of a system of coupled harmonic oscillators.
+
+29
+00:03:25,585 --> 00:03:38,282
+So if you can just think about a bunch of masses that are coupled together by springs and that are also damped, so they have friction acting on them, and there's also noise acting on them.
+
+30
+00:03:38,682 --> 00:03:43,569
+So kind of damped system of harmonic oscillators driven by noise.
+
+31
+00:03:43,829 --> 00:03:46,753
+That's the kind of system that we're talking about in these works.
+
+32
+00:03:47,374 --> 00:03:51,880
+And we're just kind of looking at this electronic analog, which is completely
+
+33
+00:03:51,860 --> 00:04:19,369
+uh analogous completely isomorphic to that that picture uh in terms of masses on springs um so one of the first problems we were interested in solving was solving the linear system of equations so you can think of this as if i have a few planes in an n-dimensional space here i have three planes in a three-dimensional space um and in general i'll have n planes in an n-dimensional space and i want to find the one point where they all intersect
+
+34
+00:04:19,349 --> 00:04:21,372
+assuming that there is such a point.
+
+35
+00:04:21,913 --> 00:04:45,508
+And you can think of that mathematically as I'm giving a matrix A and a vector B, and I want to find the point X that satisfies this equation, AX equals B. So solving this kind of problem has tons of applications in economics, engineering, but also in AI for training neural networks more efficiently.
+
+36
+00:04:45,488 --> 00:04:49,693
+you know, if you can solve linear systems quickly, then there's benefits to training, et cetera.
+
+37
+00:04:50,174 --> 00:04:53,358
+So that's one of the first problems that we decided to look at.
+
+38
+00:04:54,759 --> 00:05:07,395
+And well, so I think that it's interesting to compare our approach with earlier approaches to analog computing, basically, because it's something that people have actually tried to do for quite a while is build analog computers.
+
+39
+00:05:07,435 --> 00:05:12,441
+In other words, where the signals are not stored as binary numbers, ones and zeros,
+
+40
+00:05:12,421 --> 00:05:41,618
+but can take values in between and so you're kind of using the capacity of the hardware to represent more precise numbers than just a one and zero and in theory that seems to make sense but the big problem that analog computing ran into is is basically that there's a lot of noise that's present and noise and imprecision kind of prevents you from answering from solving these problems like like linear systems of equations uh with the accuracy that you that is needed uh by the application
+
+41
+00:05:41,598 --> 00:06:04,409
+So I guess the big insight of this work in this thermodynamic linear algebra paper is that if you model the noise, if you understand the noise in your system well enough and you model that noise, then you can actually predict the behavior of the system on the distribution level, even if the system is unpredictable on the trajectory level.
+
+42
+00:06:05,010 --> 00:06:11,318
+And the way we describe that, modeling the noise, is using what's called a stochastic differential equation.
+
+43
+00:06:11,298 --> 00:06:28,120
+So equation 2 here I've written is a stochastic differential equation where I'm saying that dx, the change in the state of the system, which is really a collection of voltages on capacitors in the circuit, the way it changes in time has two components.
+
+44
+00:06:28,160 --> 00:06:31,925
+The first is this term, which is called the drift term.
+
+45
+00:06:31,945 --> 00:06:35,509
+And you can think of that as the predictable part of the change in the state.
+
+46
+00:06:35,950 --> 00:06:39,094
+And it's the gradient of this quadratic function.
+
+47
+00:06:39,074 --> 00:06:42,077
+And then the second term is the noise term.
+
+48
+00:06:42,397 --> 00:06:45,621
+So that's the result of kind of the random forces from the environment.
+
+49
+00:06:46,261 --> 00:07:07,663
+And what this actual potential energy function here corresponds to is exactly that system of coupled masses on springs or harmonic oscillators, which we've kind of drawn here, illustrated in a way that like you can basically think of the system as being a bunch of little balls coupled together by springs that are all being jostled around by noise.
+
+50
+00:07:07,947 --> 00:07:17,702
+And so the problem we wanted to solve, right, is that we had this matrix A and a vector B, and we wanted to find the point X such that AX equals B, right?
+
+51
+00:07:18,423 --> 00:07:26,074
+And the way we're going to do that using this physical system is by allowing it to come to equilibrium.
+
+52
+00:07:26,054 --> 00:07:41,286
+meaning that after it's kind of run for enough time under these dynamics, eventually the state will be uncertain, but the state will be described by a probability distribution that is the Boltzmann distribution, the exponential of the negative potential energy.
+
+53
+00:07:41,908 --> 00:07:45,936
+And so because the potential energy here is a quadratic function,
+
+54
+00:07:45,916 --> 00:07:52,609
+the distribution of this form where you have E to the minus V of X, where V of X is this quadratic, is just a Gaussian.
+
+55
+00:07:53,250 --> 00:08:01,005
+And it turns out that the mean of that Gaussian is A inverse B, which is exactly the solution to that system of linear equations.
+
+56
+00:08:01,807 --> 00:08:04,532
+And the covariance matrix is actually A inverse.
+
+57
+00:08:04,512 --> 00:08:07,096
+So there's there's I guess two things to notice here.
+
+58
+00:08:07,116 --> 00:08:19,973
+The first is that if we want the mean of the linear system, if we want the answer to the linear system of equations, we can just allow this system of coupled harmonic oscillators to come to equilibrium and then estimate the mean of its state.
+
+59
+00:08:20,534 --> 00:08:27,263
+And if we actually if we wanted something else, we wanted the inverse of the matrix A, then what we could do.
+
+60
+00:08:27,243 --> 00:08:38,248
+is we could allow the system to come to equilibrium and then estimate all of the second moments of its state, or in other words, estimate its covariance matrix, which turns out to be this A inverse here.
+
+61
+00:08:38,515 --> 00:08:52,437
+So I also, I want to expand a little bit on this idea of like, what do I mean when I say that we could model the system and we can predict its behavior at the distribution level, even though it's unpredictable at the trajectory level, right?
+
+62
+00:08:52,858 --> 00:08:58,667
+So when I wrote that, when I showed that equation, this equation two on earlier slide,
+
+63
+00:08:58,647 --> 00:09:11,705
+What I mean by when I say it's unpredictable at the trajectory level is that if I know x of t, I can't predict x of t plus 1 with certainty because there's this noise that acts as a force on the state.
+
+64
+00:09:12,186 --> 00:09:17,213
+And so you would need to know what the values of those random numbers
+
+65
+00:09:17,193 --> 00:09:34,813
+are going to determine what the state is at time t plus one um but if i know like initially if i have some probability distribution for the state at time t1 and i want to know what's the probability distribution of the state of time t2 that is a question i can answer using this equation um
+
+66
+00:09:34,793 --> 00:09:46,391
+And just for an illustration of this, on the left-hand side here, this kind of blue twisting path is a trajectory of the system where I've initialized it at this point over here.
+
+67
+00:09:46,911 --> 00:09:48,774
+And then I've run it for a long amount of time.
+
+68
+00:09:49,475 --> 00:09:57,207
+And the state of the system here, there's only two variables, x1 and x2, kind of orbits around in this ellipse.
+
+69
+00:09:57,187 --> 00:10:12,259
+But if I instead of just running one of these simulations running this one trajectory, if I ran many of these simulations and sample the initial state from kind of a from a normal distribution centered on this point,
+
+70
+00:10:12,239 --> 00:10:37,757
+and then I look at the distribution over time for that collection of you know many thousands of trajectories I would get this plot here on the right and so what you see that the big there's a big difference between these two pictures in that the left one we have this trajectory which is behaving in kind of an unpredictable and random way but the distribution itself is behaving in a very predictable and in nice kind of smooth way and in one another way to think about this is
+
+71
+00:10:37,737 --> 00:10:43,784
+is that the equation I showed earlier is a stochastic differential equation called a Langevin equation.
+
+72
+00:10:44,124 --> 00:10:50,031
+And it describes the dynamics in terms of the left picture, in terms of the trajectory or at the trajectory level.
+
+73
+00:10:50,451 --> 00:10:59,642
+But if I want an equation that describes what is happening in the right picture, that would be the Fokker-Planck equation, which describes the dynamics at the distribution level.
+
+74
+00:11:00,002 --> 00:11:03,726
+And so it's basically it's nice to be able to have these two pictures in mind at the same time.
+
+75
+00:11:03,907 --> 00:11:05,989
+On the one hand, we're thinking about the trajectory level.
+
+76
+00:11:05,969 --> 00:11:31,015
+and on the other hand we're thinking about the the distribution level picture of the dynamics um and so when we go up to higher dimensions it's not as easy to make you know to make this plot i can't make uh i have no way to easily draw you know a 10 dimensional hyper ellipsoid the way i can do it in two dimensions but there is still a way we can visualize it and the way we can visualize it is by looking at the covariance matrices um so
+
+77
+00:11:30,995 --> 00:11:56,530
+it's i guess just to go back here like what really are these ellipses well these ellipses really each of these ellipses really represents a whole distribution a normal distribution um and this ellipse is kind of the typical place where you would expect to find points that are drawn from that distribution but another way of describing the properties of that distribution is by its covariance matrix which describes all of the kind of parallel pairwise correlations between all the different variables
+
+78
+00:11:56,510 --> 00:11:59,179
+For here, we only have two variables, so it would be 2 by 2.
+
+79
+00:11:59,600 --> 00:12:02,048
+But if we had 10 variables, it would be 10 by 10.
+
+80
+00:12:02,570 --> 00:12:06,121
+Here, we have it for eight variables, so it's 8 by 8.
+
+81
+00:12:06,763 --> 00:12:09,793
+And what we're looking at here is really
+
+82
+00:12:10,904 --> 00:12:23,881
+over time as we go from kind of this black circle on the left side to this red ellipse on the right side, you can think of that process in higher dimensions in this eight dimensional case as how this matrix here is changing over time.
+
+83
+00:12:24,341 --> 00:12:35,275
+So it's kind of the same thing, but now we're just watching a video of how the covariance matrix changes over time instead of plotting many ellipses at different moments in time.
+
+84
+00:12:35,255 --> 00:12:39,139
+Now, another interesting thing about this video here is that this isn't a simulation.
+
+85
+00:12:39,820 --> 00:12:50,751
+This is actually an experimental demonstration that we did on the hardware that we created at Normal Computing on circuits that look essentially like this.
+
+86
+00:12:51,231 --> 00:13:04,705
+So these are just, as I mentioned earlier, these are just electronic implementations or realizations of coupled harmonic oscillators that happen to come to this equilibrium state, which is a multivariate normal distribution.
+
+87
+00:13:04,685 --> 00:13:11,038
+and which has these properties that you can use it to solve linear systems of equations and get the inverse of matrix.
+
+88
+00:13:11,559 --> 00:13:13,683
+I guess, yeah, just one more word of detail here.
+
+89
+00:13:14,024 --> 00:13:22,560
+So this input matrix here is the matrix A. And then target inverse, this is the actual inverse of A that you can do just numerically.
+
+90
+00:13:22,581 --> 00:13:24,364
+You can compute the inverse.
+
+91
+00:13:24,344 --> 00:13:38,921
+And then what these hopefully and in fact do kind of arrive to are the estimates, close estimates of the inverse of the matrix A, because that's the covariance matrix is supposed to be proportional to the inverse.
+
+92
+00:13:39,141 --> 00:13:50,875
+So you may be wondering at this point, this seems interesting, but why is it that we would go to all this effort to actually try to solve linear systems or invert matrices in a completely new way, right?
+
+93
+00:13:51,816 --> 00:13:54,199
+What about this approach is promising?
+
+94
+00:13:54,179 --> 00:14:14,280
+So one thing that's promising about it is that we have kind of theoretical results that show that we get better asymptotic scaling as the problem size increases with this thermodynamic architecture than the state of the art digital algorithms do to solve the same problem.
+
+95
+00:14:14,260 --> 00:14:43,103
+So without, yeah, I can talk more about like the difference between the overdamped and the underdamped at some point, but just the headline here, if we look at this one row linear system, what this is saying is that basically on the digital state of the art methods take like order of D squared, you know, the amount of timescales with the square of dimension to solve a linear system using something like the conjugate gradient method, for example, whereas with our kind of thermodynamic approach,
+
+96
+00:14:43,437 --> 00:14:49,083
+you get an amount of time scaling with d, so order of n instead of order of n squared.
+
+97
+00:14:49,503 --> 00:14:52,146
+So you have some kind of polynomial speed up there.
+
+98
+00:14:52,607 --> 00:14:55,490
+And we proposed a number of other algorithms in that paper too.
+
+99
+00:14:56,070 --> 00:15:00,515
+So the one for inverting a matrix, I basically explained how that one works.
+
+100
+00:15:00,575 --> 00:15:07,082
+It's just you end up estimating the second moments instead of estimating the mean of the state.
+
+101
+00:15:07,062 --> 00:15:15,412
+And there, you also get a polynomial advantage because instead of taking order of n cubed, you get order of n squared.
+
+102
+00:15:15,432 --> 00:15:27,467
+And we also have algorithms for getting the determinants of a matrix or solving something called the Lyapunov equation, which is a matrix equation that kind of generalizes the idea of the inverse.
+
+103
+00:15:27,920 --> 00:15:36,652
+So one other thing I wanted to show actually is just kind of an animation or maybe a more vivid illustration of what's going on here.
+
+104
+00:15:37,333 --> 00:15:47,127
+So what you're seeing here is just like a simulation of a two-dimensional coupled harmonic oscillator system.
+
+105
+00:15:47,107 --> 00:15:56,401
+where right now the matrix A is just the identity matrix, and so in other words, there's no coupling between the two harmonic oscillators.
+
+106
+00:15:56,421 --> 00:16:04,573
+We have two separate harmonic oscillators that aren't coupled together, and the coordinate of one is plotted as the x-axis, and the coordinate of the other is plotted as the y-axis.
+
+107
+00:16:05,154 --> 00:16:10,262
+So because they're not coupled, we wouldn't expect to see any correlation between them, and we don't in fact.
+
+108
+00:16:10,630 --> 00:16:12,753
+And there's also noise being added.
+
+109
+00:16:12,793 --> 00:16:17,661
+So I can kind of change the amount of noise here by increasing the temperature.
+
+110
+00:16:17,681 --> 00:16:30,020
+And I can change the resistance to change the amount of damping and change the inductance, which is essentially like changing the mass of the mass on a spring.
+
+111
+00:16:30,520 --> 00:16:38,713
+And by kind of tuning these parameters, I can get something that looks more or less like I'm getting a bunch of samples from this multivariate normal distribution.
+
+112
+00:16:38,693 --> 00:16:40,155
+And in fact, I am.
+
+113
+00:16:40,175 --> 00:16:46,985
+And I can look here at the marginals and see these are samples from these, you know, these are the histogram basically looks like a normal distribution.
+
+114
+00:16:47,666 --> 00:16:54,616
+Although just because all the samples seem to be to have the right distribution, that doesn't mean that the samples are independent from each other.
+
+115
+00:16:54,636 --> 00:16:57,040
+They could all be, you know, highly correlated.
+
+116
+00:16:57,391 --> 00:17:06,513
+And so we can also look at kind of the autocorrelation function here, where basically the more you crank up the noise, the faster the correlation decays.
+
+117
+00:17:06,573 --> 00:17:13,830
+In other words, if you want to predict where will the next sample be based on the current sample, if there's very little noise, that's kind of easy to do.
+
+118
+00:17:13,810 --> 00:17:16,293
+But if there's a lot of noise, that's really hard to do.
+
+119
+00:17:16,834 --> 00:17:20,659
+And I can also just take samples less frequently if I don't want as much correlation.
+
+120
+00:17:20,679 --> 00:17:24,704
+So that's what I'm doing here is I'm kind of cranking up the amount of the interval between samples.
+
+121
+00:17:25,144 --> 00:17:29,230
+And now that will suppress correlation between samples quite a bit.
+
+122
+00:17:30,151 --> 00:17:36,679
+But at this point, there's something a little bit trivial about this example because they're just two harmonic oscillators that aren't coupled to each other at all.
+
+123
+00:17:36,659 --> 00:17:54,128
+so really what we're interested in is is when we couple them together um so i think yeah we would change this kind of term and so what this ellipse now is the ellipse has changed this predicting you know where we expect to see the samples now that there's a coupling between these these two masses on springs
+
+124
+00:17:54,108 --> 00:17:57,812
+And I think it's nice just to think intuitively about why does it happen?
+
+125
+00:17:57,832 --> 00:18:02,477
+Why do we expect to see the distribution look like this when we turn on a coupling between the springs?
+
+126
+00:18:02,877 --> 00:18:11,706
+Well, it's basically just that like we, instead of having two separate masses on springs that are oscillating by themselves, now there's another spring that's pulling them together.
+
+127
+00:18:11,846 --> 00:18:13,488
+And so they want to be close together, right?
+
+128
+00:18:13,869 --> 00:18:23,018
+And so that means that we're likely to see points where the position of X1 is similar to the position of X2, whether they're both positive or both negative.
+
+129
+00:18:22,998 --> 00:18:28,030
+And that's kind of exactly what we're seeing as we see samples kind of filling in this ellipse.
+
+130
+00:18:28,852 --> 00:18:31,078
+So, yeah, I just wanted to show that kind of animation.
+
+131
+00:18:31,098 --> 00:18:40,180
+This is just a kind of some JavaScript code I wrote a while ago as kind of a visualization tool for that.
+
+132
+00:18:40,345 --> 00:18:47,695
+I also, yeah, I have the paper pulled up here and I can talk more about like, how, how do we, um, there are a few things I can talk more about.
+
+133
+00:18:47,815 --> 00:18:54,624
+So for example, like how do we derive these complexity results of the asymptotic scaling or how do these other algorithms work?
+
+134
+00:18:54,844 --> 00:18:57,027
+Like, um, the determined estimation.
+
+135
+00:18:57,368 --> 00:19:04,157
+Um, but yeah, I wanted to maybe at this point, pause and see if there were any questions either from the audience or Daniel or anything.
+
+136
+00:19:04,177 --> 00:19:04,277
+Yeah.
+
+137
+00:19:07,244 --> 00:19:28,257
+awesome okay anyone can write questions in the chat yeah hearing more though about how do you pull out different analytically useful values from heat what does that mean
+
+138
+00:19:28,523 --> 00:19:39,972
+Taking a stab at it now, but revisiting it, I mean, how is it that there are these tractable, useful quantities arising out of physical objects like this?
+
+139
+00:19:42,619 --> 00:19:43,140
+Right.
+
+140
+00:19:43,846 --> 00:19:45,289
+Yeah, I think that's a good question.
+
+141
+00:19:45,609 --> 00:19:59,695
+I mean, to go back to the history of like, so first off, the first thing people tried to do was just pure analog computing, where they didn't really consider the noise or assumed you could suppress the noise enough.
+
+142
+00:19:59,675 --> 00:20:05,684
+And that analog computing approach is based on a system that physically solves a differential equation.
+
+143
+00:20:06,406 --> 00:20:15,540
+So whereas our approach is a system that physically solves a stochastic differential equation, but it's still useful to think about the analog case where there's no noise.
+
+144
+00:20:15,520 --> 00:20:18,362
+and where you're just trying to solve a differential equation.
+
+145
+00:20:19,243 --> 00:20:31,794
+Because one thing you might think to do is if you want to solve a differential equation, instead of just solving it numerically on a computer, you could actually just try to build a system that actually evolves according to the differential equation you want.
+
+146
+00:20:32,715 --> 00:20:45,426
+So that's one perspective on why do these physical objects do useful computations, because it's kind of like saying we're going to build the physical system that behaves in that way instead of trying to simulate it.
+
+147
+00:20:45,406 --> 00:20:57,802
+And I guess, yeah, another perspective is that, well, so with the linear systems, right, like you can, in theory, you can solve linear systems on an analog computing device as well that doesn't have any noise.
+
+148
+00:20:58,422 --> 00:21:05,271
+And what's kind of going on there is that you're basically doing very...
+
+149
+00:21:05,251 --> 00:21:28,170
+efficient multiply and accumulate operations in a sense in that if you want to add together like n things um digitally that's going to basically take order of n steps but if you want to add together n things kind of using some analog device there are ways to do it that are more more like constant time so for example if i have n wires that all converge at one point
+
+150
+00:21:28,150 --> 00:21:33,697
+and I send a current into each one of those end wires, then the current that comes out is the sum of those currents.
+
+151
+00:21:34,097 --> 00:21:38,222
+So it's kind of a way of adding together all of those end things in constant time.
+
+152
+00:21:38,523 --> 00:21:50,918
+So I think those two perspectives are kind of useful, that one, we get very efficient analog multiply and accumulate operations, and the other is that we're kind of building the system instead of simulating it in some sense.
+
+153
+00:21:52,315 --> 00:21:57,506
+What is the transferability of these shapes?
+
+154
+00:21:57,606 --> 00:22:04,079
+Like, do you have it work really well on this five by five matrix, but then you need to go back to square zero for six by six?
+
+155
+00:22:04,781 --> 00:22:10,813
+Or how do you deal with making on the fly changes or adapting to specific problems?
+
+156
+00:22:12,076 --> 00:22:13,679
+Right, yeah, so that's a very good question, right?
+
+157
+00:22:13,719 --> 00:22:25,703
+Like how, you know, how does it, how do these things work in particular when we go up to like the limit of like much larger matrices, which is relevant for, you know, the big kind of AI and industrial applications.
+
+158
+00:22:26,104 --> 00:22:29,410
+What we found is that
+
+159
+00:22:29,727 --> 00:22:36,494
+Generally, these algorithms behave pretty well as we increase dimension over a large range of different dimensions.
+
+160
+00:22:36,514 --> 00:22:40,158
+We can go up to thousands of dimensions and still get the answer very accurately.
+
+161
+00:22:40,839 --> 00:22:45,764
+But there are other properties of the matrix that are relevant too that can make it hard to solve the problem.
+
+162
+00:22:46,205 --> 00:22:49,388
+One that's very important, for example, is the condition number of the matrix.
+
+163
+00:22:50,590 --> 00:22:56,376
+So if you think about those ellipses, well, I guess I can just go, yeah, scroll down here.
+
+164
+00:22:56,710 --> 00:23:25,283
+if for a matrix that well the condition number is the ratio of like the largest singular value to the smallest singular value of a matrix and what the singular values are is they're the length of like this kind of this long axis here and this short axis here uh and so an ellipse that's very long and skinny has a very large condition number basically the condition number basically describes how long and skinny the ellipse is or if it's in high dimensions it's like some kind of n-dimensional pancake
+
+165
+00:23:25,263 --> 00:23:55,270
+if it has and it has a large condition number and basically yeah um matrices with harder with larger condition numbers end up being harder to invert or to solve a linear system for if matrix a has a large condition number um but you know there's still uh there's still ways to do it but it's that's i would say one of the bigger challenges to generalization is that like as you go up to higher dimensions it's kind of easier to get matrices that end up having very large condition numbers so more can go wrong i guess
+
+166
+00:23:55,250 --> 00:24:13,654
+And you, to what extent, rely on repeated, de-correlated, long-term sampling of single objects versus parallelized or replicated sampling across objects?
+
+167
+00:24:13,774 --> 00:24:16,077
+And then what does that have to do with ergodicity?
+
+168
+00:24:17,103 --> 00:24:25,373
+Yeah, so I think I'll first answer the question about ergodicity, actually, because, yeah, I think that that's a very good question.
+
+169
+00:24:25,393 --> 00:24:36,225
+That's a very good way to phrase the question, actually, because if I look at this plot on the left, this is just a single trajectory, right, that I've run for a very long amount of time.
+
+170
+00:24:37,046 --> 00:24:46,637
+And it turns out that if I just take enough samples of this single trajectory, that even if those samples are kind of correlated with each other,
+
+171
+00:24:47,090 --> 00:25:06,010
+um it still you know will work but if if i have n samples it's better to have an uncorrelated samples and correlated samples but i don't need to actually run many trajectories in parallel i can just run one and it turns out that that one trajectory has the same statistics the same mean covariance as if i had run
+
+172
+00:25:05,990 --> 00:25:32,233
+a thousand you know or a thousand or a million separate trajectories and that doesn't happen for every you know for every stochastic differential equation but it does happen for this one and that property is called ergodicity right the property of ergodicity is that the ensemble averages and the time averages are you know are the same they're the same statistics um so on the right hand side here this is kind of looking at the ensemble picture which would be more like if i had used parallelization and built many
+
+173
+00:25:32,213 --> 00:25:34,057
+of the devices and kind of random and parallel.
+
+174
+00:25:34,798 --> 00:25:40,690
+So I guess the answer to the question of like, which one do we do or which one in practice is more useful?
+
+175
+00:25:41,011 --> 00:25:42,073
+You can do either one.
+
+176
+00:25:42,113 --> 00:25:50,610
+I think that it's it's a it's kind of a knob or a lever you have to turn if you if you have more, if you can pay more for more hardware.
+
+177
+00:25:50,928 --> 00:26:17,070
+uh and you can pay more energy then you can solve the problem faster by running many trajectories in parallel whereas if you only want you know one device that that only runs one of these trajectories you can just take samples at different points in time and because of ergodicity it's the same as the ensemble statistics basically cool carry on
+
+178
+00:26:17,337 --> 00:26:17,637
+Cool.
+
+179
+00:26:17,657 --> 00:26:17,898
+Okay.
+
+180
+00:26:17,918 --> 00:26:19,440
+Yeah, I thought those were all great questions.
+
+181
+00:26:19,460 --> 00:26:20,321
+So thanks.
+
+182
+00:26:21,382 --> 00:26:28,712
+Yeah, I guess there was one other thing I wanted to say just at a kind of a high level about like, how do we go about getting these complexity results?
+
+183
+00:26:29,634 --> 00:26:41,510
+Because you can imagine there might be something subtle about it just because this algorithm, for example, is never actually guaranteed to give you the right answer because it's based on randomness.
+
+184
+00:26:42,391 --> 00:26:47,057
+You know, the state is not, the mean is not guaranteed to converge to,
+
+185
+00:26:47,037 --> 00:27:06,750
+the you know to the solution to the linear system it's just very likely to do that um and so you need basically i think of it as it's um yeah it was this term that was coined by uh i forgot his name a computer scientist um leslie i think uh or what was the name uh yeah i forgot his name but um
+
+186
+00:27:08,131 --> 00:27:22,181
+It's called probably approximately correct is the idea that you have a computation that with a high probability will be within a certain radius, you know, within a certain error tolerance of the correct solution.
+
+187
+00:27:22,582 --> 00:27:25,448
+And so that's kind of the approach we take to
+
+188
+00:27:26,255 --> 00:27:30,159
+quantifying the runtime analysis for these algorithms.
+
+189
+00:27:30,460 --> 00:27:39,149
+And I guess an example of that is down here in the appendix, where you can kind of find we have bounds on, let's see, where is this?
+
+190
+00:27:43,594 --> 00:27:44,675
+Yeah, so it'll be down here.
+
+191
+00:27:44,715 --> 00:27:52,363
+Right.
+
+192
+00:27:54,858 --> 00:28:03,113
+Yeah, so we basically have a bound on how long do you need the time to be in order to have the
+
+193
+00:28:03,278 --> 00:28:27,531
+state close small closer than epsilon to the solution with probably with probability at least p basically and so all of our results are formulated in that framework of you choose the success probability you choose the relative error tolerance and then you get out a time basically that you need to run your system for you need to average for and those kind of results are quoted up here in these
+
+194
+00:28:27,730 --> 00:28:28,632
+these tables basically.
+
+195
+00:28:29,133 --> 00:28:35,228
+But yeah, so I think that's really what I had to say on the thermo linear algebra paper, unless there are any other questions about that.
+
+196
+00:28:35,669 --> 00:28:40,922
+And I think otherwise I'll move on to talking about this thermodynamic Bayesian inference paper, I guess.
+
+197
+00:28:41,322 --> 00:28:44,490
+Let me ask one question about that last bound.
+
+198
+00:28:45,061 --> 00:28:48,488
+Um, how do you get there?
+
+199
+00:28:48,788 --> 00:29:01,213
+Did you build different objects and then backcast the formal relationships, or do you play around with the formalisms and then ask if or how a physical object could realize it?
+
+200
+00:29:02,864 --> 00:29:13,303
+Right, so yeah, so all of these mathematical results are derived within a pretty abstract framework, which is the abstract framework is just the stochastic differential equation.
+
+201
+00:29:13,924 --> 00:29:23,421
+So in other words, in order to derive these complexity results, we just start by assuming that the system evolves according to this stochastic differential equation.
+
+202
+00:29:23,401 --> 00:29:27,245
+And once we've made that assumption, we can completely forget about the physical implementation.
+
+203
+00:29:27,605 --> 00:29:34,693
+Whether it's actual masses on springs or capacitors and inductors or whatever, those details become irrelevant.
+
+204
+00:29:34,713 --> 00:29:45,745
+And so we're just talking about the kind of mathematical properties of how quickly the distribution converges under these dynamics to the stationary distribution of this equation, basically.
+
+205
+00:29:50,610 --> 00:29:50,910
+OK, cool.
+
+206
+00:29:51,818 --> 00:30:09,285
+So yeah, so one thing that we noticed basically when we were doing that, when we were writing that thermo-linear algebra paper, is that we noticed that while we'd gotten these very nice and satisfying polynomial speedups that we predicted, it seemed like we somehow should be able to get even better speedups.
+
+207
+00:30:09,785 --> 00:30:20,762
+And the reason for that was that much of the runtime of running those thermo-linear algebra algorithms was actually dominated by just taking averages of the state of the system.
+
+208
+00:30:20,742 --> 00:30:24,846
+In other words, if we go back to this picture,
+
+209
+00:30:26,176 --> 00:30:30,542
+here, it turned out that we initialize the system out of equilibrium.
+
+210
+00:30:30,883 --> 00:30:33,867
+It very rapidly comes to its equilibrium distribution.
+
+211
+00:30:34,228 --> 00:30:42,100
+And then we have to spend a long time drawing samples from this equilibrium distribution and averaging those samples in order to get the estimate of the mean.
+
+212
+00:30:42,500 --> 00:30:50,652
+And so we started to think about, well, what if there are applications where we don't need to take averages, where we just want to draw samples from the equilibrium distribution?
+
+213
+00:30:51,053 --> 00:30:52,555
+Because if that were the case,
+
+214
+00:30:52,535 --> 00:31:02,192
+then we would probably we might be able to get a much better speed up because we wouldn't even have to do this this long, you know, the longest or the hardest part of our algorithm, which is moment estimation.
+
+215
+00:31:02,693 --> 00:31:14,273
+And so that was basically the genesis of this thermal Bayesian inference paper, because we started thinking, like, what kind of problems is the output sample from a distribution?
+
+216
+00:31:14,354 --> 00:31:35,164
+what kind of problem you're you don't want something that's a deterministic function of the input but you want to sample and one thing that came that came up is sampling from the bayesian posterior of some model so uh so that's kind of a pretty common task that that you know people want to do is they have some parameter data say and then some data observed
+
+217
+00:31:35,684 --> 00:31:40,513
+data, y, like different samples, y1, y2, so on.
+
+218
+00:31:41,194 --> 00:31:53,676
+And you want to condition your, you have some prior distribution for your hidden variable, or yeah, you have some prior distribution for your parameter theta, and then you have a likelihood, which is like a theory of how the
+
+219
+00:31:53,858 --> 00:32:05,850
+parameter theta determines the observed data y. And given those two things, given your data and your prior and your likelihood, you want to condition the parameter theta on the data.
+
+220
+00:32:06,931 --> 00:32:14,960
+And then often you want to sample from that posterior distribution, the distribution that's kind of been revised by the presence of your data.
+
+221
+00:32:15,660 --> 00:32:18,263
+And so we basically started thinking about whether there's a way
+
+222
+00:32:18,243 --> 00:32:27,422
+We could use a similar approach based on a physical realization of like noisy management dynamics in order to do Bayesian inference.
+
+223
+00:32:27,562 --> 00:32:30,388
+And then we wouldn't have to do moment estimation or averaging.
+
+224
+00:32:30,408 --> 00:32:32,211
+And so we might get much better speed ups.
+
+225
+00:32:33,133 --> 00:32:35,217
+And so that's basically what we did in this paper.
+
+226
+00:32:35,257 --> 00:32:38,985
+And I guess at a higher level,
+
+227
+00:32:38,965 --> 00:33:01,075
+there's kind of a nice formalism for how you can think about yeah just what what is going on at a higher level and how we're doing bayesian inference using a physical system here um and so what it is it's it's it's related to the idea of an energy-based model that one way of parameterizing a probability distribution p is to write that probability distribution p is the exponential
+
+228
+00:33:01,055 --> 00:33:11,776
+of some energy function, or e to the minus v. So this is just a way of writing any distribution you can write in this form.
+
+229
+00:33:12,117 --> 00:33:22,337
+But also importantly, this is the form a distribution will take in statistical mechanics when you allow a system to come to equilibrium that has some energy v.
+
+230
+00:33:22,317 --> 00:33:41,777
+form of its kind of equilibrium distribution um and so this when you talk about uh probability distributions in those terms it's often called like an energy-based model approach um and there's something convenient about using energy-based models for bayesian inference basically which is that when you take the log of your
+
+231
+00:33:41,757 --> 00:34:04,744
+probability density function instead of like multiplying together probability density functions you end up adding together energy functions because we're now talking about the logs of the probabilities instead of the probabilities and so that's what's going on with this equation here it says u1 of theta equals minus ln of p theta minus ln of py given theta so here um
+
+232
+00:34:04,724 --> 00:34:07,068
+P theta is the prior.
+
+233
+00:34:07,228 --> 00:34:12,637
+That's our assumption of the distribution for the parameters theta before we've gotten any measurements.
+
+234
+00:34:13,278 --> 00:34:21,252
+PY given theta is our theory or model of how Y depends on theta.
+
+235
+00:34:21,312 --> 00:34:23,155
+In other words, how does the data that we can observe
+
+236
+00:34:23,135 --> 00:34:25,999
+depend on the parameter that we can't observe.
+
+237
+00:34:27,061 --> 00:34:39,819
+And so what you would do in Bayes' theorem is you multiply together, or not even Bayes' theorem, just the definition of the joint distribution is p of theta and y is p of theta times p of y given theta.
+
+238
+00:34:40,219 --> 00:34:45,767
+But now instead of multiplying these things together, we're going to be adding them together because we're talking about the energy.
+
+239
+00:34:45,747 --> 00:34:54,390
+So this energy kind of represents the joint distribution somehow because it includes the contributions from the prior and the likelihood.
+
+240
+00:34:55,366 --> 00:35:13,532
+And so what you do in these thermobase and inference problems is you start out with one energy, one potential energy, which can be thought of as like kind of a box that, you know, you can think of the system as some, well, like in thermodynamics, we might think of it as like a gas inside of a box.
+
+241
+00:35:13,552 --> 00:35:17,998
+And then you can change the potential energy by moving a piston in or out or something like that.
+
+242
+00:35:17,978 --> 00:35:33,827
+or sometimes we think of it as like a marble in a bowl and then you can reshape the bowl changing the potential energy which is maybe closer to like this picture here where when we change the potential energy we're like changing the shape of this bowl basically um so
+
+243
+00:35:34,634 --> 00:35:52,643
+back here what's plotted in this panel a is what happens when we vary when we change the potential energy function over time so between time zero and time one we're going to change the potential energy from a potential energy that's associated with the prior uh
+
+244
+00:35:52,842 --> 00:35:54,885
+which is U zero.
+
+245
+00:35:54,905 --> 00:35:57,328
+So U zero equals minus log of P theta.
+
+246
+00:35:57,788 --> 00:36:03,475
+And that's like this blue curve is the probability density when we're in that prior distribution.
+
+247
+00:36:03,876 --> 00:36:14,709
+And then we slowly change the potential or slowly or quickly, we change the potential energy to U one, which is the distribution that corresponds to the posterior basically for theta.
+
+248
+00:36:15,570 --> 00:36:22,579
+In other words, it's the distribution where you've conditioned theta on all of your observed data basically.
+
+249
+00:36:22,559 --> 00:36:44,753
+uh and so what we're seeing in this plot is that as we as we change the potential over time the distribution of the system changes and it goes from this gaussian distribution to this kind of asymmetric distribution which in this case is the posterior for like bayesian logistic regression um and another view of that is in panel b where we're looking at
+
+250
+00:36:44,733 --> 00:36:47,176
+how the thermodynamic quantities change over time.
+
+251
+00:36:47,636 --> 00:36:54,284
+So whenever you're changing the potential energy of a system, the potential energy function of a system, you can be doing work on the system.
+
+252
+00:36:54,965 --> 00:37:00,612
+And so this orange curve here is beta times work, where beta is 1 over kT.
+
+253
+00:37:01,233 --> 00:37:05,197
+And we see that the potential energy changes between time 0 and time 1.
+
+254
+00:37:05,638 --> 00:37:07,500
+And during that window of time, we're doing work.
+
+255
+00:37:07,921 --> 00:37:10,524
+But then at time 1, the potential energy stops changing.
+
+256
+00:37:10,924 --> 00:37:13,187
+And so no work is being done there.
+
+257
+00:37:13,167 --> 00:37:18,476
+And so we can see how much work is being done on the system.
+
+258
+00:37:18,637 --> 00:37:32,020
+And then there's also heat, which is the change in energy that's not associated with the work being done, which you can compute just kind of using the first law that DE equals DW minus DQ.
+
+259
+00:37:32,152 --> 00:37:56,134
+um so we have work and heat which are kind of the two most fundamental uh thermodynamic quantities i guess um and then we also have uh the free energy uh we also you know a quantity of great importance and there's there's kind of two different versions of free energy that are that are plotted here so one is this dashed line which is the equilibrium free energy and what that means is that at each instant in time
+
+260
+00:37:56,603 --> 00:38:02,289
+The potential energy is changing, but we could imagine a system that was in equilibrium at that instant in time.
+
+261
+00:38:02,990 --> 00:38:11,840
+And if we did have a system that was in equilibrium at that instant in time, its free energy would be the equilibrium free energy.
+
+262
+00:38:12,200 --> 00:38:19,388
+So that's kind of the definition of the equilibrium free energy is the free energy of a system at equilibrium with the instantaneous potential.
+
+263
+00:38:19,705 --> 00:38:26,721
+Then there's the non-equilibrium free energy, which can basically be larger than that.
+
+264
+00:38:28,165 --> 00:38:37,647
+The reason it can be larger than that is that the system is not in equilibrium at all times, that if you're quickly changing the potential energy, the system is driven out of equilibrium,
+
+265
+00:38:37,627 --> 00:39:02,048
+and so you can kind of look at the gap between these like the gap between the dotted black line and the solid black line as the extent to which the system is out of equilibrium at each moment in time and what happens is when when we quickly change the potential from time zero to time one the system is coming out of equilibrium these these two lines are getting farther apart and then at time one we stop changing the potential and the system starts to come back into equilibrium basically
+
+266
+00:39:02,028 --> 00:39:19,125
+And just another note on this is a nice interpretation of the difference between these F minus F equilibrium is that it's actually the KL divergence or the callback callback library divergence of between.
+
+267
+00:39:19,105 --> 00:39:23,793
+the distribution of the system at any time and the equilibrium distribution.
+
+268
+00:39:24,694 --> 00:39:36,253
+So that's just another way of saying that it characterizes to what extent the system is out of equilibrium, because this KL divergence is basically a way of quantifying the
+
+269
+00:39:36,233 --> 00:39:42,290
+So it's not technically a distance measure, but a kind of distance between probability distributions.
+
+270
+00:39:42,872 --> 00:39:51,576
+And so it turns out that this like F minus F equilibrium is equal to the KL divergence between the distribution and the equilibrium distribution.
+
+271
+00:39:52,012 --> 00:40:01,885
+Um, so that's kind of the general framework of like what we're doing in the thermal Bayesian inference is that we're, we're setting up a system so that we can change this potential energy.
+
+272
+00:40:02,446 --> 00:40:10,757
+And we turn on, we, we have a potential energy term that represents the prior, and we have another kind of coupling term that represents the likelihood.
+
+273
+00:40:10,797 --> 00:40:16,104
+And then we have like physical degrees of freedom that represent the observed data that we have.
+
+274
+00:40:16,725 --> 00:40:19,909
+And when we turn on this interaction between data.
+
+275
+00:40:20,345 --> 00:40:28,756
+and all of these observational degrees of freedom, then the equilibrium distribution becomes the Bayesian posterior.
+
+276
+00:40:29,116 --> 00:40:35,405
+And if we wait for a long enough time, then we can measure the state data and get samples from the Bayesian posterior.
+
+277
+00:40:36,105 --> 00:40:37,207
+So let's see.
+
+278
+00:40:37,307 --> 00:40:41,112
+I say a little bit more about that just in theory and how that plays out.
+
+279
+00:40:41,713 --> 00:40:48,141
+But you might notice here that this kind of is the key to the algorithm is this stochastic differential equation here.
+
+280
+00:40:48,121 --> 00:41:13,588
+which is you know similar to the form of the stochastic differential equation i showed on this slide equation two um and in that it has kind of this drift term which is like the predictable change in the state of the system and then this um this noise term which is like the unpredictable change in the state um and so let's see
+
+281
+00:41:16,100 --> 00:41:17,922
+Yeah, I think that, oh yeah, okay.
+
+282
+00:41:17,942 --> 00:41:21,205
+So I guess what I'll, yeah, I'll talk a little bit about the examples we did in this paper.
+
+283
+00:41:21,246 --> 00:41:30,415
+So what we did was we tried this out for two kinds of Bayesian inference, like two examples of Bayesian inference, one of which is a Gaussian-Gaussian model.
+
+284
+00:41:31,476 --> 00:41:37,203
+So where you have a Gaussian prior and a Gaussian posterior, and the other is Bayesian logistic regression.
+
+285
+00:41:37,223 --> 00:41:41,647
+So where you have like a Gaussian prior and a logistic likelihood.
+
+286
+00:41:42,028 --> 00:41:45,972
+So this plot here is for the Gaussian-Gaussian model.
+
+287
+00:41:45,952 --> 00:41:53,081
+And we see basically the prior is one of these green ellipses.
+
+288
+00:41:53,722 --> 00:41:59,550
+And then the likelihood is the red ellipse or might be the other way around.
+
+289
+00:41:59,810 --> 00:42:03,455
+But then you get the posterior, which is kind of in the middle somehow.
+
+290
+00:42:04,056 --> 00:42:07,200
+And it turns out that you can use this circuit over here.
+
+291
+00:42:07,180 --> 00:42:19,681
+in order to sample from that blue ellipse, that blue distribution, which we've actually simulated this circuit in SPICE, which is a popular library, popular software package for simulating circuits.
+
+292
+00:42:20,282 --> 00:42:28,716
+And so what you do is you have one set of resistors that's used to input the prior covariance matrix,
+
+293
+00:42:29,118 --> 00:42:35,004
+and another set of resistors that's used to put in the likelihood covariance matrix.
+
+294
+00:42:35,405 --> 00:42:39,709
+And then once you do that, you can measure the currents through these inductors.
+
+295
+00:42:40,170 --> 00:42:45,536
+And measuring those currents gives you a sample from the desired posterior distribution.
+
+296
+00:42:46,256 --> 00:42:51,922
+So yeah, I guess that's at a high level what I wanted to say about this Gaussian-Gaussian model case.
+
+297
+00:42:52,303 --> 00:42:58,129
+Were there any questions about either the overview, like the general picture of thermobasian inference,
+
+298
+00:42:58,379 --> 00:43:22,142
+or about like this Gaussian Gaussian model yeah a few questions how do you know that you aren't too confident or not confident enough with respect to the posterior like your precision or your attention what makes you not just how do you get confidence in your confidence level
+
+299
+00:43:23,472 --> 00:43:31,650
+such that you can draw a useful Bayesian credible interval rather than, for example, making it much wider or much tighter.
+
+300
+00:43:31,710 --> 00:43:32,833
+I see.
+
+301
+00:43:33,294 --> 00:43:33,535
+Right.
+
+302
+00:43:33,635 --> 00:43:38,646
+In other words, how do we test that we're actually drawing from the right posterior kind of
+
+303
+00:43:39,098 --> 00:43:44,327
+Yeah, if you can compare it with the exact compute, then you've already done that computation.
+
+304
+00:43:44,367 --> 00:43:54,424
+So then when do you feel like it's okay to get out without the guide rails and take the thermodynamic estimate as it is without doing secondary calibrations?
+
+305
+00:43:55,332 --> 00:43:56,514
+Yeah, so that's a good question, right?
+
+306
+00:43:56,794 --> 00:44:04,125
+So one of the nice things about the Gaussian Gaussian model is it is one of these very few cases where there is an analytical solution.
+
+307
+00:44:04,225 --> 00:44:15,321
+So you can compute exactly what the posterior, like the posterior is a Gaussian again, and you can compute exactly what the mean and covariance matrix of that Gaussian are.
+
+308
+00:44:15,702 --> 00:44:17,104
+And so we can compare them.
+
+309
+00:44:17,084 --> 00:44:30,551
+But I think you're also alluding to the fact that eventually we aren't going to have that guardrail and we're just going to say, we're now confident enough that this system can sample from the true posterior and we're kind of done with testing it.
+
+310
+00:44:31,153 --> 00:44:35,802
+And yeah, I think the question of like, when exactly do we become confident enough?
+
+311
+00:44:35,782 --> 00:44:40,909
+that it gets the right posterior is maybe not completely solved yet.
+
+312
+00:44:41,670 --> 00:44:54,906
+But I would say that because in the Gaussian-Gaussian case, there's an analytical solution, I feel pretty confident that we can do enough testing even at pretty high dimensions that we'll be able to assure ourselves basically that it works.
+
+313
+00:44:55,247 --> 00:44:56,929
+But where that becomes more difficult,
+
+314
+00:44:56,909 --> 00:45:05,962
+is for cases where there is no analytical solution to compare to, like in the case of the Bayesian logistic regression, which we also do here.
+
+315
+00:45:06,002 --> 00:45:18,360
+And in that case, the best thing you can do is just kind of run a Monte Carlo simulation digitally and compare that to the results that we would predict with SPICE or compared to experimental results.
+
+316
+00:45:18,340 --> 00:45:22,746
+which also works, it's just much, much more expensive computationally.
+
+317
+00:45:24,008 --> 00:45:30,578
+But on the other hand, the fact that it's much more expensive computationally means that we're solving a really hard problem, which is good.
+
+318
+00:45:30,958 --> 00:45:47,802
+But yeah, I guess, yeah, to make a long story short, that's still kind of something we're going to have to figure out, you know, in complete detail is like, how do we do enough tests and what tests we have to do to assure ourselves that it gets to the right posterior?
+
+319
+00:45:48,163 --> 00:45:48,263
+Yeah.
+
+320
+00:45:48,952 --> 00:45:59,670
+Another interesting piece was that changing differential between the equilibrium free energy and the non-equilibrium
+
+321
+00:46:00,140 --> 00:46:27,514
+so do you experiment with like different speeds and find a trade-off between moving it too fast but taking you too far out of equilibrium but then is there any downside to just moving it super fast or do you uh get better accuracy or performance in the kind of infinitesimal movement case keeping it close to equilibrium all along the way
+
+322
+00:46:28,405 --> 00:46:28,745
+Right.
+
+323
+00:46:28,785 --> 00:46:30,167
+So that's a that's a really good question.
+
+324
+00:46:30,227 --> 00:46:43,141
+And actually something that we're probably that that's a focus like a current kind of research focus is like, what is the given that we have this freedom of like how quickly we want to turn on the potential, how quickly we want to turn on the interactions?
+
+325
+00:46:44,022 --> 00:46:45,624
+What should we do with that freedom, basically?
+
+326
+00:46:46,205 --> 00:46:51,290
+And there's like this really interesting literature on like energy time tradeoffs in stochastic thermo.
+
+327
+00:46:51,691 --> 00:46:53,653
+So let me see if real quick I can.
+
+328
+00:46:53,633 --> 00:47:19,692
+pull up this paper um wasterstein uh statistical um well just while you're looking for it you mentioned probably approximately correct that's leslie valiant that's right leslie valiant that's right exactly yeah um thanks um yeah so
+
+329
+00:47:19,823 --> 00:47:32,981
+Okay, so I can't find exactly the reference I'm looking for, but basically what it says is that, so I talked about the KL divergence, which is one way of quantifying the difference between two probability distributions.
+
+330
+00:47:33,481 --> 00:47:38,608
+Another way of quantifying the difference between two distributions is the Wasserstein distance.
+
+331
+00:47:38,588 --> 00:47:45,943
+which kind of has this very deep and elegant theory in kind of optimal transport theory.
+
+332
+00:47:46,243 --> 00:47:58,909
+And where Wasserstein distance came from originally was optimal transport problems, and in particular, how do I transform one configuration of some material, say, into another configuration?
+
+333
+00:47:58,889 --> 00:48:25,318
+or if i have like a mound of dirt and i want to move the amount of dirt and also reshape it uh how how many shovels full of dirt am i going to have to take basically and that's kind of the classical um kantorovich problem uh or there's there's another guy who well i think it's the other guy the problem i'm thinking of but there are these two dual optimal transport problems that are basically the same thing that are that problem of transforming one mound of dirt into another
+
+334
+00:48:25,298 --> 00:48:32,410
+And the Wasserstein distance is the amount of shovels of dirt you need basically to carry to transform one distribution into another.
+
+335
+00:48:33,211 --> 00:48:41,265
+So you can think of it as like accounting for, it accounts for like not just assigning low probability to high probability events,
+
+336
+00:48:41,245 --> 00:49:01,752
+with one distribution versus the other but also like if the mean of one distribution is very different than the other then you can think of it as like having to move a lot of mass from one place to another and the kind of cool result that there is in statistical mechanics and in particular like stochastic thermo around this washerstein distance is that if you want to
+
+337
+00:49:01,732 --> 00:49:19,032
+change a system state um over time then there's like this trade-off you need to pay between the amount of work that you dissipate and the amount of time that you take and it ends up the form of that trade-off is that the product of the dissipated work and the time duration of your protocol
+
+338
+00:49:19,282 --> 00:49:24,531
+is lower bounded by something times the Wasserstein distance.
+
+339
+00:49:24,551 --> 00:49:38,353
+So I guess you can think of that as like, given that I have two distributions that are a certain distance away from each other, I can either transform from one to the other really quickly, but dissipating a lot of work, in other words, paying a lot of energy, or I can do it really slowly,
+
+340
+00:49:38,333 --> 00:49:40,796
+without paying really any work at all.
+
+341
+00:49:41,157 --> 00:49:47,866
+Or I can take some trade-off, do something in between where I slowly change from one to the other and spend a medium amount of work.
+
+342
+00:49:48,467 --> 00:49:59,802
+What we're interested in doing is applying this formulation, this theory of Wasserstein distance and trade-off between energy and time to solving problems like this one, like doing Bayesian inference.
+
+343
+00:49:59,782 --> 00:50:25,620
+and kind of saying there's like this optimal frontier of there's not just one optimal solution because you might be in a situation where you care more about speed than you care about energy or you might be in a situation where you care more about energy than about speed but there is a set of solutions that are optimal with respect to kind of your disposition towards and how you value energy and time and i think it's basically related to these like energy time trade-offs
+
+344
+00:50:26,377 --> 00:50:43,322
+that's kind of a classic pure slash meta bayesian approach anytime you have a free parameter treat that as another kind of variable to do inference on um what is the work reservoir as we're not exactly picking up weights and
+
+345
+00:50:43,673 --> 00:51:03,994
+lifting them to a higher elevation or anything so the heat reservoir makes sense in terms of standard thermodynamics heat bath and all that but what's happening with the work reservoir and what is it touching or doing with the device yeah yeah that's a great great question too so if i go back to um
+
+346
+00:51:04,565 --> 00:51:12,755
+to this picture for a second here, you can visualize these systems, again, as a collection of masses coupled together on springs.
+
+347
+00:51:13,136 --> 00:51:18,763
+And then what we're doing when we're changing the potential energy is we're changing the spring constants of some of these springs.
+
+348
+00:51:19,164 --> 00:51:26,473
+So maybe each of these springs has a little screw on it that you can turn with a screwdriver to make it more or less stretchy, basically.
+
+349
+00:51:27,274 --> 00:51:31,519
+But you need to draw a boundary between the system and what's outside the system somewhere.
+
+350
+00:51:31,900 --> 00:51:34,403
+And where we draw that boundary is that,
+
+351
+00:51:34,383 --> 00:51:41,015
+whatever is turning that screw that's tightening, that's changing the spring constant is not part of our system.
+
+352
+00:51:41,416 --> 00:51:48,269
+And so if you need to do work, if it costs energy in order to turn the screw, then that needs to come from somewhere.
+
+353
+00:51:48,729 --> 00:51:50,653
+And we're calling that a work reservoir.
+
+354
+00:51:50,633 --> 00:51:59,727
+And so we might actually be lifting weights up and down if that's where the energy comes from in order to change the parameters of the potential energy function.
+
+355
+00:52:00,127 --> 00:52:08,700
+We're just kind of saying that wherever that energy comes from, if we have some battery or some flywheel or whatever, that's kind of outside of our system.
+
+356
+00:52:08,720 --> 00:52:16,692
+And we're not really going to worry about it beyond just quantifying how much energy
+
+357
+00:52:16,975 --> 00:52:45,885
+interchanges with the system basically yeah it's interesting that the device almost has these dual reservoirs it's like one of those toothpastes with a dividing line in the middle and squirting out both kinds because on one hand it's interfacing with heat defined as that which does not do work just the thermal dissipative and then on the other hand it's connected into the work reservoir which is sort of
+
+358
+00:52:46,085 --> 00:53:02,963
+the complement of heat and then the device is is interfacing with both of them and as you described seeking to find a path or a trajectory for itself
+
+359
+00:53:03,365 --> 00:53:23,787
+that isn't leave that's not either dissipating extra heat unnecessarily or leaving work convertible work on the table either because it's sort of able to interface or or mediate between the work and the heat here
+
+360
+00:53:24,408 --> 00:53:24,789
+Right.
+
+361
+00:53:25,029 --> 00:53:25,190
+Yeah.
+
+362
+00:53:25,230 --> 00:53:25,370
+Yeah.
+
+363
+00:53:25,390 --> 00:53:27,414
+And there's a really a nice interpretation of that, too.
+
+364
+00:53:27,454 --> 00:53:35,430
+I think I the way you put it as like a toothpaste tube where you can come in one in and out the other or something like that.
+
+365
+00:53:36,833 --> 00:53:43,125
+And it is it's it's we see a lot of diagrams like this where you have a heat, you know, you have your interchanging both heat and work.
+
+366
+00:53:43,105 --> 00:53:46,390
+with an environment in the context of like heat engines, right?
+
+367
+00:53:46,670 --> 00:53:51,438
+Because you have a heat engine that, well, often there'll be three reservoirs in that case.
+
+368
+00:53:51,558 --> 00:53:56,906
+Like you'll take in heat from a hot reservoir, dump out heat to a cold reservoir and then do work or something.
+
+369
+00:53:57,167 --> 00:53:58,228
+But here we have two things.
+
+370
+00:53:58,268 --> 00:54:00,672
+We just have a heat reservoir and a work reservoir.
+
+371
+00:54:00,952 --> 00:54:07,703
+But there is a way of thinking about this as a kind of heat engine like thing, but it's more of a refrigerator than a heat engine, I guess.
+
+372
+00:54:08,023 --> 00:54:11,188
+Because the goal of a heat engine is to take heat
+
+373
+00:54:11,168 --> 00:54:12,831
+and then output work.
+
+374
+00:54:12,851 --> 00:54:14,495
+Of course, you also have to output heat somewhere.
+
+375
+00:54:14,876 --> 00:54:18,223
+But that's that's the goal is to use heat as a resource in order to output work.
+
+376
+00:54:18,583 --> 00:54:22,712
+But what we want to do here is we're actually going to input work and then we're going to output heat.
+
+377
+00:54:23,133 --> 00:54:25,919
+And as a result, the entropy of our system decreases.
+
+378
+00:54:26,540 --> 00:54:31,911
+And this is just kind of a general thing that happens when you condition one random variable on another.
+
+379
+00:54:32,330 --> 00:54:39,788
+the entropy, on average, of the variable you conditioned decreases because the mutual information has to be positive.
+
+380
+00:54:40,169 --> 00:54:42,736
+So this is just one of these fundamental information theory things.
+
+381
+00:54:43,116 --> 00:54:48,229
+Because of the positivity of the mutual information, conditioning on a random variable decreases the entropy.
+
+382
+00:54:48,209 --> 00:55:00,624
+And you can think of in some sense, like decreasing the entropy of your system as as the operation of a refrigerator, even though it's not necessarily decreasing the temperature, per se, but it is decreasing the entropy.
+
+383
+00:55:00,764 --> 00:55:10,335
+And so there's kind of this nice way of looking at this as like a heat engine, but really a refrigerator where you have this flow of work in and heat out and decreasing the entropy basically.
+
+384
+00:55:11,075 --> 00:55:12,840
+But just one quick note on that.
+
+385
+00:55:12,900 --> 00:55:15,127
+Of course, you can't decrease the entropy of the whole universe.
+
+386
+00:55:15,548 --> 00:55:19,098
+So the entropy has to be increased somewhere to compensate for that.
+
+387
+00:55:19,399 --> 00:55:22,789
+And that's what's happening where we have heat flowing out into the heat reservoir.
+
+388
+00:55:23,130 --> 00:55:25,978
+So the entropy of the heat reservoir is increasing to compensate.
+
+389
+00:55:30,143 --> 00:55:40,443
+Could you maybe give a little detail, how do real empirical measures, Y1, Y2, etc., come in?
+
+390
+00:55:40,764 --> 00:55:49,261
+Like in active inference, we're often thinking about perception as inference or action selection as inference, but just on the perception side.
+
+391
+00:55:49,762 --> 00:55:51,325
+So some...
+
+392
+00:55:51,305 --> 00:56:13,178
+perceptual prior new observation comes in new photon hits the retina or whatever it may be new thermometer reading comes in for the IoT and how does that feed into this and how do you schedule or bring that empirical measurement in
+
+393
+00:56:14,120 --> 00:56:14,421
+Right.
+
+394
+00:56:14,842 --> 00:56:15,122
+Yeah.
+
+395
+00:56:15,182 --> 00:56:24,803
+So we think of the measured data, these observations, Y1, Y2, Yn, as representing constraints on the system somehow.
+
+396
+00:56:25,264 --> 00:56:31,538
+And so when you get new data, you introduce kind of another one of these constraints by
+
+397
+00:56:31,518 --> 00:56:42,632
+writing down your observation and then coupling those physical degrees of freedom that store the observation then get coupled to your subsystem theta.
+
+398
+00:56:42,992 --> 00:56:46,136
+But just to make it kind of concrete of like, yeah, how does that actually happen?
+
+399
+00:56:46,496 --> 00:56:55,247
+So in this circuit here, the degrees of freedom that represent theta are the currents going through these inductors L1 and L2.
+
+400
+00:56:55,362 --> 00:57:06,278
+And the degrees of freedom that represent an observed data point Y are the currents that are provided by these current sources, I1 prime and I2 prime.
+
+401
+00:57:06,679 --> 00:57:18,636
+And so what you do when you get data is you turn on these current sources and set the current that they're programmed to output as equal to the components of the data that you got.
+
+402
+00:57:18,616 --> 00:57:28,470
+But you could also maybe, something you said actually I thought was really interesting, which was in terms of like thinking about observation as like perception or learning from perception.
+
+403
+00:57:29,291 --> 00:57:40,928
+And you maybe could even think of these, maybe if we got rid of these current sources and just had the environment kind of coupled to these wires, and somehow it's like taking a measurement of the environment directly more or less.
+
+404
+00:57:40,908 --> 00:57:57,465
+and then conditioning on those i think that that's also like kind of a valid interpretation which hadn't really i hadn't really thought of before but i think that's an interesting way to think about this as being kind of having these perception inputs here that are coupled to the environment and then conditioning its internal state based on those somehow
+
+405
+00:57:58,846 --> 00:57:59,206
+Cool.
+
+406
+00:57:59,346 --> 00:58:20,266
+Yeah, I mean, a neurological analogy to these circuits are like there's some neural manifold and spiking patterns or neural electrical fields are traversing and they're itinerating around this manifold describing the pre-observation state.
+
+407
+00:58:20,766 --> 00:58:22,288
+Then a new observation comes in.
+
+408
+00:58:22,708 --> 00:58:26,912
+If it's not attended to, it's like an uncoupled oscillator, like
+
+409
+00:58:26,892 --> 00:58:56,460
+the observation that isn't attended to it's as if it didn't happen tree falling in the forest and all that whereas if the observation is strongly attended to and there's a strong coupling between the observation and the resonating state of the the prior then it moves more to be influenced by that observation more strongly and then hierarchical systems just have series of layers
+
+410
+00:58:56,558 --> 00:59:08,374
+with possibly different attentions to layers with resonating information coming from the environment in
+
+411
+00:59:08,438 --> 00:59:31,645
+towards the deeper priors like of the organism and then and then more on the outbound action selection is when it opens up to well maybe the uh prior from the higher levels cascades out and gets reflected as action modifying the environment to be more like the priors of the organism that's the change the world direction of active inference
+
+412
+00:59:32,553 --> 00:59:39,019
+ongoing with the change your mind direction, updating the priors to be more aligned with what the environment is giving.
+
+413
+00:59:41,075 --> 00:59:41,475
+I see.
+
+414
+00:59:41,495 --> 00:59:44,038
+Yeah, I think that's a really cool way of looking at this.
+
+415
+00:59:44,359 --> 01:00:00,877
+Exactly as you said, if there's no coupling between the degrees of freedom representing the parameters you're estimating, if those are coupled to some source of information in the environment, then yeah, it's like you're paying attention to it in some way.
+
+416
+01:00:01,317 --> 01:00:09,546
+Whereas if there's no coupling, it's for the purpose of your Bayesian inference, it didn't happen or the information just isn't there.
+
+417
+01:00:09,526 --> 01:00:25,611
+And so somehow the conditioning on a piece of information is embodied physically as a physical coupling between your description of the latent variable and the actual physical encoding of the observed data, I think.
+
+418
+01:00:25,591 --> 01:00:38,228
+And then the other thing, yeah, the other piece you mentioned about like, what about kind of some feedback effect where like you, as a result of your knowledge of this variable, you come up with some policy for like how to behave or something like that.
+
+419
+01:00:38,669 --> 01:00:43,836
+And then that will actually change, maybe that will have an influence on the next observations you get.
+
+420
+01:00:44,176 --> 01:00:45,838
+And that's a really interesting direction as well.
+
+421
+01:00:46,119 --> 01:00:50,805
+I think like for the purpose of this paper, we've just assumed like all the observations are independent of each other.
+
+422
+01:00:50,785 --> 01:01:12,068
+And that would kind of break down if you assume that like if you are using some kind of decision, you know, decision strategy or policy to make decisions based on the data you get and your estimate of the state, your estimate of the parameters data to inform your future decisions in like maybe like a reinforcement learning setup.
+
+423
+01:01:12,048 --> 01:01:20,641
+But definitely like figuring out how to use this hardware in that context is something of interest, current interest for us now.
+
+424
+01:01:20,681 --> 01:01:25,308
+So I'll definitely keep people posted as that progresses for sure.
+
+425
+01:01:31,959 --> 01:01:39,270
+Cool, feel free to keep going if there's any other pieces you wanna explore and then people watching live can write any questions in the chat.
+
+426
+01:01:39,993 --> 01:01:40,554
+Cool.
+
+427
+01:01:40,574 --> 01:01:41,477
+Okay.
+
+428
+01:01:41,858 --> 01:01:55,572
+So I think that, yeah, so one thing I haven't talked about yet with this paper is our results on complexity, which is, of course, is a really important part of it, because that's what motivates us in the end is like why we go to this effort of
+
+429
+01:01:55,552 --> 01:02:19,787
+building this totally new kind of device in order to solve problems we already have a way to solve them um but it's just really hard it's you know intractable a lot of the time the sample from bayesian posteriors if you have to run some very long uh you know markov processor or you know some monte carlo simulation uh so we have some results um oh yeah and i also kind of hinted at this earlier that we expected that we might get better speed ups in this case
+
+430
+01:02:19,767 --> 01:02:25,778
+than in the case of the TLA, the thermo in your algebra algorithms, because in this case, we don't have to do moment estimation.
+
+431
+01:02:25,838 --> 01:02:27,160
+We just want to output samples.
+
+432
+01:02:27,922 --> 01:02:32,650
+And so that did kind of turn out to be true that we got pretty significant, like predicted speed ups.
+
+433
+01:02:33,151 --> 01:02:34,654
+So
+
+434
+01:02:35,815 --> 01:02:53,841
+for this case of the gaussian gaussian model where we're given like a gaussian prior and a gaussian likelihood and some data and then we want a sample from the gaussian posterior we found that the amount of time that it takes that the amount of time you have to wait between when you inc when you input your
+
+435
+01:02:53,821 --> 01:03:19,693
+uh when you input the problem and when you output the samples scales logarithmically with the size of the matrices involved basically um which is pretty good time scaling because if you think about like what you would have to do digitally to accomplish this you would have to like get the inverse of a matrix you have to get the inverses of two matrices and like add those together and take an inverse again that's essentially the process you need to do when you want to do
+
+436
+01:03:19,673 --> 01:03:21,556
+conditioning for Gaussians.
+
+437
+01:03:21,596 --> 01:03:29,448
+And so that's something that would basically be n cubed time, maybe somewhere between n squared and n cubed using state-of-the-art algorithms.
+
+438
+01:03:29,849 --> 01:03:33,414
+And so if we can do that in the amount of time that scales with log n, that sounds really good.
+
+439
+01:03:33,875 --> 01:03:39,644
+It almost sounds too good to be true in a way, because how is it that we went from polynomial to logarithmic?
+
+440
+01:03:39,664 --> 01:03:41,246
+It almost sounds like an exponential speedup.
+
+441
+01:03:41,727 --> 01:03:47,115
+And while I think that this result is really cool, it's not quite that cool.
+
+442
+01:03:47,095 --> 01:03:53,100
+in that it's not fundamentally changing a polynomial operation to a logarithmic.
+
+443
+01:03:53,441 --> 01:03:56,343
+And the reason is because we also have to look at the energy cost.
+
+444
+01:03:56,503 --> 01:04:04,451
+And when you look at the amount of energy, the energy consumed by the algorithm basically scales linearly with the size of the problem.
+
+445
+01:04:04,751 --> 01:04:15,921
+So we got this scaling where we have logarithmic time in dimension and linear energy in dimension, which is still a pretty significant improvement.
+
+446
+01:04:15,901 --> 01:04:25,932
+And then we also did some analysis of the time complexity for the Bayesian logistic regression scenario.
+
+447
+01:04:26,272 --> 01:04:43,191
+And we found there we were able to show that you also get logarithmic scaling with dimension, but we haven't yet figured out the energy scaling analysis for the logistic regression, because that circuit ended up being a bit more complicated, and it uses these
+
+448
+01:04:43,171 --> 01:04:47,158
+differential pairs of transistors to get logistic functions.
+
+449
+01:04:47,839 --> 01:04:51,285
+And it's a little bit involved to try to estimate all the energy.
+
+450
+01:04:51,846 --> 01:05:01,263
+But those were the two circuits we gave in the paper was this one for doing the Gaussian-Gaussian model and this one for doing the Bayesian logistic regression.
+
+451
+01:05:01,283 --> 01:05:07,474
+And we have some promising results on the time and energy complexity of those operations.
+
+452
+01:05:07,454 --> 01:05:26,155
+So I guess one other just kind of interesting note about the interpretation and that also informs like how we derive these scale results is that there's kind of this interesting literature on like Wasserstein gradient flows, which is basically.
+
+453
+01:05:26,708 --> 01:05:37,129
+You can think of when the probability distribution is changing over time here, you can think of that probability distribution as a vector in a very high dimensional space, or really an infinite dimensional space.
+
+454
+01:05:37,831 --> 01:05:44,464
+And the dynamics of that vector can be thought of as actually a gradient descent on some objective function.
+
+455
+01:05:44,444 --> 01:06:12,493
+uh and it turns out that what that objective function is is actually that callback library divergence or the difference in free energy between you know f and feq and then it's and then the distance that um kind of the step size of that gradient descent is measured in terms of the washerstein distance which is that distance between distributions i talked about earlier so you can think of this as um like the dynamics of the probability distribution
+
+456
+01:06:12,473 --> 01:06:24,208
+as like an ordinary differential equation in an infinite dimensional space where it's like going in the line of gradient of steepest descent in KL divergence with respect to changes in Wasserstein distance.
+
+457
+01:06:25,250 --> 01:06:28,634
+But yeah, so those are the main things I wanted to talk about in this paper, I guess.
+
+458
+01:06:28,954 --> 01:06:32,920
+And maybe at this point, we can see if there's any questions from the audience or something.
+
+459
+01:06:34,261 --> 01:06:34,802
+Cool.
+
+460
+01:06:35,575 --> 01:07:03,102
+yeah i think people will definitely be interested in that connection with free energy where the kl divergence comes up in both the variational free energy bounding the bayesian surprise and expected free energy which is when considering policy inference as a computation as a cognitive process and looking over expected observations asking what
+
+461
+01:07:03,436 --> 01:07:33,409
+see what policy dependent sequence of expected observations would have what epistemic and pragmatic value so these circuits aren't planning they're in the variational free energy kind of mode but it's interesting that again we see kl divergence popping up in both and and different divergences and distances between distributions being basically the crux of the question and which measurements
+
+462
+01:07:33,659 --> 01:07:56,072
+about which distributional distances and which properties of distributional distances and divergences can be enacted or how costly is it to emulate them when those are the calculations that it's important to know and the most classic of all being basically prior going to posterior how much should you update
+
+463
+01:07:57,284 --> 01:07:57,604
+Right.
+
+464
+01:07:58,385 --> 01:08:02,731
+Yeah, yeah, I really like what you were just saying because I think, yeah, I'm kind of aware of these.
+
+465
+01:08:02,992 --> 01:08:24,000
+I've read, I heard a little bit about like kind of these interpretations of KL divergence as like in terms of games and like how much do you expect to kind of lose or win if you have some assumption about the distribution of a parameter that if kind of your distribution for a parameter isn't the actual distribution or something like that and how
+
+466
+01:08:23,980 --> 01:08:28,185
+well or badly do you do in this game based on your kind of estimate of a distribution?
+
+467
+01:08:28,766 --> 01:08:35,595
+And I think that I really like that characterization of it because it gets it kind of a more like end to end measure of quality.
+
+468
+01:08:36,195 --> 01:08:52,536
+Because if you yeah, if you if you use some system to accelerate the computations you need to power an agent and then you want to estimate like quantify how good is your system really doing, then what people will care more about at the end of the day isn't necessarily like what's the like
+
+469
+01:08:52,516 --> 01:09:03,038
+What's the relative error between these two matrices or vectors, but more like how often will I make the right decision or something like that, basically?
+
+470
+01:09:03,078 --> 01:09:05,563
+Or what's my expected reward based on decisions I make?
+
+471
+01:09:05,864 --> 01:09:13,680
+And so I think that, yeah, if we can somehow introduce the KL divergence on that end as well, that'll be a really nice way to kind of formulate things.
+
+472
+01:09:15,533 --> 01:09:21,806
+How do you see these elements playing a role in systems engineering and design?
+
+473
+01:09:22,508 --> 01:09:29,783
+Like is it something that gets brought in like another kind of GPU or CPU?
+
+474
+01:09:29,864 --> 01:09:35,736
+We've talked about processing, but not really about memory or storage.
+
+475
+01:09:35,716 --> 01:09:46,536
+So how do you see this playing a role in whether specialized inference pipelines or consumer hardware or what?
+
+476
+01:09:47,292 --> 01:09:47,612
+Right.
+
+477
+01:09:48,153 --> 01:09:49,255
+Yeah, that's a great question.
+
+478
+01:09:49,295 --> 01:09:51,138
+I think there's really two ways to look at it.
+
+479
+01:09:51,318 --> 01:09:57,468
+One is like, how do the theoretical results matter in terms of the future of computing hardware?
+
+480
+01:09:57,948 --> 01:10:01,153
+And I think that these theoretical results can be pretty influential.
+
+481
+01:10:01,233 --> 01:10:14,093
+I think like scaling laws, like Moore's law and stuff like that, or like how Landauer's principle informs how people think about what's the minimum amount of energy that you can achieve with the computation
+
+482
+01:10:14,073 --> 01:10:23,248
+And I think that there's one like impact of, you know, these theoretical results is that it kind of gives you a bar to aim for.
+
+483
+01:10:23,308 --> 01:10:39,253
+And that if we can say like, this is the energy time trade off for Bayesian inference, you can, you can do it this fast, if you pay this much energy, but if you go a little bit slower, then you can save some energy, then that kind of sets the benchmark for like what people should hope to achieve with new hardware, whether or not they're using our
+
+484
+01:10:39,233 --> 01:10:46,155
+but then there's the other kind of way of looking at it, which is just a more kind of literal level is like,
+
+485
+01:10:46,844 --> 01:10:55,156
+What's the path from these designs we presented in this paper to actually building hardware and where would that hardware go and what will it do?
+
+486
+01:10:55,476 --> 01:11:04,690
+So I guess the exciting news kind of on that front is that, yeah, we talked a little bit about on Twitter recently how we got funding from an agency in the UK called Aria.
+
+487
+01:11:05,030 --> 01:11:10,438
+That's like their new more or less their version of DARPA kind of that they recently created.
+
+488
+01:11:10,722 --> 01:11:21,813
+and is really interested in bringing down the costs of AI, like in terms of the hardware production costs and also like the energy and time costs of training and even in inference as well.
+
+489
+01:11:22,314 --> 01:11:26,706
+And so they've kind of funded our project on a timeline of, you know, let's say like,
+
+490
+01:11:26,686 --> 01:11:39,884
+where we're aiming to have hardware in the next, you know, three, four or five years, basically at kind of varying level of kind of increasing the dimension that it'll increase in the size of the problems it'll be able to solve.
+
+491
+01:11:41,266 --> 01:11:49,497
+But in terms of, yeah, like where exactly that hardware will go or who will end up using it, I think that there's still like, there's still some open questions around that.
+
+492
+01:11:50,198 --> 01:11:55,545
+And more like I'm more working on, yeah, the side of like designing the algorithms and trying to figure out
+
+493
+01:11:55,525 --> 01:12:02,082
+you know, what error mitigation or error correction techniques we can come up with to make it work better and make it more robust.
+
+494
+01:12:02,103 --> 01:12:07,958
+But yeah, hopefully, you know, yeah, maybe next time, you know, I'll have more detailed answer on that.
+
+495
+01:12:07,998 --> 01:12:11,307
+But I think, yeah, at the moment, it's not totally set in stone.
+
+496
+01:12:12,822 --> 01:12:16,869
+What else do you think is out there in terms of Landauer?
+
+497
+01:12:16,929 --> 01:12:35,320
+What bounds are you scraping up against or what big patterns of information and work and heat do you think might be out there and touched upon by this line of inquiry?
+
+498
+01:12:35,823 --> 01:12:36,824
+Mm-hmm.
+
+499
+01:12:36,844 --> 01:12:37,024
+Right.
+
+500
+01:12:37,305 --> 01:12:47,517
+So I guess one kind of historical note is that for a long time, people have focused a lot on just Landauer's principle as the fundamental bound for computing.
+
+501
+01:12:48,118 --> 01:13:01,915
+And just for the audience and people who aren't necessarily familiar, what Landauer's principle says is that to erase a bit of information, you need to dissipate an amount of heat, which is log 2 times kT.
+
+502
+01:13:01,895 --> 01:13:27,447
+so in other words if you can run your computer at a very low temperature then you don't have to display as much information but there's still you know amount of of work that i'm sorry did dissipate heat there's still amount of energy that you have to pay that's proportional to the amount of erasure that you have to do now the issue with land hours principle one issue is that it's something that we haven't really been able to achieve um there's a nice kind of plot on one of these slides about it like showing how
+
+503
+01:13:28,017 --> 01:13:37,687
+while we are still getting more and more efficiency, we're still well above this thermodynamic limit, which is Landauer's bound in terms of how much energy we pay.
+
+504
+01:13:38,187 --> 01:13:45,594
+And so I think the trend more recently is to say, well, we need to also account for time because Landauer's principle doesn't really account for time.
+
+505
+01:13:46,055 --> 01:13:49,118
+It assumes you can do what you're doing infinitely slow.
+
+506
+01:13:49,698 --> 01:13:52,741
+And in reality, we don't want to do computations infinitely slowly.
+
+507
+01:13:53,062 --> 01:13:55,324
+And so that's kind of the angle I'm thinking
+
+508
+01:13:55,304 --> 01:14:06,460
+about what I'm saying, like, let's try using these results from stochastic thermo that bound the product of energy and time using the Wasserstein distance.
+
+509
+01:14:06,941 --> 01:14:18,898
+But I think that I've just kind of dipped a finger into that literature, and there's a lot of work on that stuff in terms of speed limits, especially in quantum systems, quantum speed limits and classical speed limits.
+
+510
+01:14:18,878 --> 01:14:29,861
+And so, yeah, that's like, I guess the line, the pattern I'm most excited about is using these bounds on like the product of energy and time in terms of, you know, distance measures between distributions.
+
+511
+01:14:30,483 --> 01:14:32,427
+But there may be, you know, maybe other patterns as well.
+
+512
+01:14:32,547 --> 01:14:36,576
+So definitely curious to hear if any other ideas I think come to mind.
+
+513
+01:14:36,977 --> 01:14:37,157
+But yeah.
+
+514
+01:14:39,500 --> 01:14:52,868
+yeah that's exciting to bring time into the equation literally and and for for real embodied systems that have existence in space and time
+
+515
+01:14:53,742 --> 01:15:18,872
+that their material properties and the propagation maybe even coming down to speed of sound, speed of light, deformation, velocities and these sorts of things could become dominant in terms of whether the bulldozer moves a few large
+
+516
+01:15:19,460 --> 01:15:35,798
+amounts of earth with great cost or whether it's very fine grains of sand which might be very efficient but then it might take so long that for for a practical situation it doesn't really have utility
+
+517
+01:15:36,200 --> 01:16:01,245
+yeah yeah absolutely and i think like one the one reason i'm i'm really excited about yeah as you put it like bringing time into the equation is kind of at a higher level like big picture i think that where things are going in terms of the theory is like some kind of unification between like computational complexity theory and stochastic thermo because like we've we've been approaching some of the same problems of like yeah how fundamentally
+
+518
+01:16:01,225 --> 01:16:08,644
+Does your resource costs of energy and time scale with the size of a system as it scales?
+
+519
+01:16:09,487 --> 01:16:14,720
+But so far, we haven't, I think, fully broken through to see the shape that connection takes.
+
+520
+01:16:15,302 --> 01:16:16,585
+And yeah, the approach that I'm
+
+521
+01:16:16,565 --> 01:16:20,675
+that I kind of take to that is like, first go for the low hanging fruit.
+
+522
+01:16:20,815 --> 01:16:24,805
+Like not, you know, we're not necessarily going to see it all at once.
+
+523
+01:16:24,865 --> 01:16:28,815
+Like what is this relationship between stochastic thermo and complexity theory?
+
+524
+01:16:29,236 --> 01:16:34,168
+But the more we can like build up these little results of like, well, you can,
+
+525
+01:16:34,570 --> 01:16:48,384
+by building, constructing kind of a thermodynamic system that you're going to change the parameters, do work on and see it as this kind of heat engine or refrigerator, you can achieve a certain computational complexity of this operation.
+
+526
+01:16:48,724 --> 01:16:55,411
+I think these smaller results are helping to bring those two fields a little closer together, maybe.
+
+527
+01:16:55,891 --> 01:16:56,031
+Yeah.
+
+528
+01:16:57,293 --> 01:16:57,953
+Interesting.
+
+529
+01:16:58,113 --> 01:17:00,696
+Also with time, it's almost like
+
+530
+01:17:01,553 --> 01:17:30,261
+it's like with a body there's a baseline a basal metabolic rate and then exercise is doing extra activity on top of that so it's like if you have to pay the upkeep on the energy of the circuit even if it only is using a little bit of extra activity to do the target computation you're still paying for a large block of time the baseline level
+
+531
+01:17:31,017 --> 01:17:46,479
+And so when we get to the thermal limit, then the baseline is free because it's happening at an ambient temperature.
+
+532
+01:17:46,499 --> 01:17:53,228
+So it's not needing to be powered to give some of the sampling dynamics in the same way.
+
+533
+01:17:53,815 --> 01:18:16,600
+the the the informative sampling and that's the part that that I think there's still so much learning and and interest in how how do these higher moments arise with with no extra work that seems like good information and yet it's falling out of what seems to be powered just from thermal vibration
+
+534
+01:18:18,672 --> 01:18:23,441
+Yeah, no, I definitely think about it in those terms as in like, what are the sources?
+
+535
+01:18:23,461 --> 01:18:31,918
+Like fundamentally, the sources of energy we have, energy takes the form of work or heat and heat is like cheap and work is expensive, right?
+
+536
+01:18:31,938 --> 01:18:36,307
+Because heat just kind of comes from a reservoir, come from anywhere and it's not organized.
+
+537
+01:18:36,387 --> 01:18:38,892
+And yeah, in work, you have to you have to
+
+538
+01:18:38,872 --> 01:18:50,097
+go to some trouble to actually get a source of work so yeah i definitely think about like that like how can we optimize the computation so that more of the energy comes from heat as opposed to work basically but yeah
+
+539
+01:18:52,051 --> 01:19:17,856
+yes i think that's that's exactly it having having something rather than needing to add energy from the wall so that the energy gets pushed through a system does some computation and dissipates the extras heat it's almost like there's another avenue where the heat in the room
+
+540
+01:19:17,836 --> 01:19:46,358
+vibrates the system to functionally implement that computation or cognitive process it's it's all about arbitraging he and work in new ways and seeing bayesian updating and equilibrium and far from equilibrium processes as happening as sort of a first principle of intelligent matter
+
+541
+01:19:46,405 --> 01:20:09,139
+yeah yeah yeah i think it's really cool really cool way to see it actually yeah absolutely um yeah and i guess yeah one one other thing i'll say i guess that i was thinking is um in terms of yeah like like how where where do we look for kind of fundamental constraints on computation in terms of the resource costs i think that a lot of people some some people have taken the view that like
+
+542
+01:20:09,119 --> 01:20:14,584
+really the Landauer's Principle is kind of what is the most fundamental thing.
+
+543
+01:20:14,624 --> 01:20:18,828
+And then the reason we aren't achieving it is just kind of practical considerations on some level.
+
+544
+01:20:19,168 --> 01:20:20,549
+It's just that it's hard to engineer.
+
+545
+01:20:20,969 --> 01:20:27,015
+But yeah, my outlook is more that like, well, maybe there's a fundamental reason that it is hard to engineer something.
+
+546
+01:20:27,395 --> 01:20:38,485
+Maybe there's a fundamental trade-off that we just haven't discovered yet that if we knew about would actually very well explain why we're still a thousand or three or four orders of magnitude above Landauer's Principle.
+
+547
+01:20:38,465 --> 01:20:42,051
+So yeah, I'm hoping that maybe just considering time will get us there.
+
+548
+01:20:42,412 --> 01:20:44,936
+If not, then yeah, there's more to think about.
+
+549
+01:20:45,097 --> 01:20:47,902
+But yeah, who knows, I guess, at this point.
+
+550
+01:20:49,745 --> 01:20:50,085
+Cool.
+
+551
+01:20:50,586 --> 01:20:56,136
+Do you have any final riddles or thoughts or comments?
+
+552
+01:20:57,314 --> 01:21:23,760
+um yeah i can't think of anything else yeah i think this is i think i really covered everything that yeah i was hoping to get across i think so far it's been really good uh it's been really great um but uh yeah if there's any any questions from the audience we of course be happy to take those yeah okay no specific questions this was very informative max i think it's it's uh been a topic coming up again and again with these
+
+553
+01:21:23,858 --> 01:21:46,845
+not just similarities and differences and analogies but implementations of information geometries and information processes on embodiments on physical embodiments biological designed and all of this and so
+
+554
+01:21:47,197 --> 01:21:55,134
+It certainly feels like there's a lot of threads swimming around and exciting opportunities for synthesis.
+
+555
+01:21:55,235 --> 01:22:01,408
+So thank you for this exciting research and the empirical connections and everything.
+
+556
+01:22:01,912 --> 01:22:02,493
+Absolutely.
+
+557
+01:22:02,553 --> 01:22:03,254
+Thanks for having me.
+
+558
+01:22:03,855 --> 01:22:19,217
+And yeah, as I mentioned earlier, when we first started out on this research, we definitely had no idea or didn't anticipate at all that it would lead us to these things that can be interpreted in terms of active inference and connections to that and free energy.
+
+559
+01:22:19,317 --> 01:22:31,395
+But yeah, it's just been really exciting for me to be working on something that I think is both a practical approach to improving our landscape of hardware for AI, but also has these interesting and deep thermodynamic
+
+560
+01:22:31,375 --> 01:22:50,430
+interpretations so yeah definitely i'm happy to come back anytime and chat more i thought this was really really fun cool let's check back in a couple months in a couple in a couple trillion oscillations of the cesium as they say all right thank you max farewell yeah bye have a good one

@@ -1,0 +1,1767 @@
+1
+00:00:03,220 --> 00:00:29,329
+okay welcome back cohort six we're in our first discussion of chapter four so andrew however you'd like to begin and for everyone else any questions in the chat or raise your hand or however and let's jump into four perfect um yeah welcome everyone we're
+
+2
+00:00:29,917 --> 00:00:35,995
+going over chapter four for the first time with cohort six.
+
+3
+00:00:37,139 --> 00:00:45,050
+For warning, for anyone new to active inference, this chapter is a bit more mathematically involved than the preceding chapters.
+
+4
+00:00:46,012 --> 00:00:54,103
+But this is where we actually start to relate a lot of the concepts and kind of overview ideas that we've already been introduced to.
+
+5
+00:00:54,123 --> 00:01:00,312
+We begin to kind of map these more mathematically to understand the computations involved.
+
+6
+00:01:00,292 --> 00:01:01,895
+in active inference models.
+
+7
+00:01:03,978 --> 00:01:17,001
+So more specifically, this chapter goes through the typical forms of active inference generative models we'll see, both in discrete and continuous time.
+
+8
+00:01:16,981 --> 00:01:43,090
+um the relationship between those models and uh the dynamics of minimizing their free energy um at the very end we're also briefly introduced to other things that we'll see in later chapters including inferential message passing so um i would like to i i think this chapter does well at highlighting the importance of approximate inference
+
+9
+00:01:43,475 --> 00:01:53,923
+We've seen before that a lot of the underlying assumptions in active inference involves the minimization of free energy.
+
+10
+00:01:53,943 --> 00:01:55,527
+Now really,
+
+11
+00:01:55,591 --> 00:02:02,482
+The idea is that agents would want to, quote unquote, want to minimize surprise.
+
+12
+00:02:03,243 --> 00:02:12,739
+But because we need to actually render the computation tractable, we instead are minimizing a quantity known as free energy.
+
+13
+00:02:15,443 --> 00:02:18,628
+Quick note that the mathematics involved here
+
+14
+00:02:19,047 --> 00:02:31,220
+draw from different mathematical fields, primarily linear algebra, differentiation and multivariate calculus, and the use of Taylor series expansions and some others.
+
+15
+00:02:32,061 --> 00:02:48,379
+There are some nice appendices in the back of the textbook for anyone who's either new to those areas of maths or need some kind of refresher and would like to get a closer look on their relationships specifically with the computations involved here.
+
+16
+00:02:49,118 --> 00:02:54,663
+And so sort of the core here is that we're introduced with the equation 4.1.
+
+17
+00:02:55,744 --> 00:03:03,732
+We already know from previous chapters, a generative model in a certain way can be reduced to a prior and a likelihood.
+
+18
+00:03:03,752 --> 00:03:07,896
+Those fit right into Bayes' theorem.
+
+19
+00:03:08,196 --> 00:03:09,037
+That's equation 4.1.
+
+20
+00:03:10,278 --> 00:03:16,324
+And so it relates the prior and the likelihood on the left-hand side, which you could just replace with, you know,
+
+21
+00:03:16,304 --> 00:03:21,432
+oftentimes there's a notation, the letter M to denote a model.
+
+22
+00:03:21,852 --> 00:03:39,019
+And then on the right side, those end up equaling a posterior distribution, which is your hidden states conditioned on your observations times Y or your observations, so your evidence.
+
+23
+00:03:39,479 --> 00:03:43,746
+And so you can imagine whenever the agent basically
+
+24
+00:03:44,249 --> 00:03:48,579
+takes in new observations, all these quantities can be updated.
+
+25
+00:03:49,361 --> 00:03:55,094
+And that's the kind of nice, easier kind of introductory view of how this works.
+
+26
+00:03:55,896 --> 00:04:00,908
+As far as rendering everything tractable,
+
+27
+00:04:00,888 --> 00:04:15,490
+Um, we also exploit something called Jensen's inequality, um, put in simple terms, Jensen's inequality says the log of an average is always greater than or equal to the average of a log.
+
+28
+00:04:16,492 --> 00:04:17,293
+Um, so.
+
+29
+00:04:17,695 --> 00:04:22,523
+We can exploit that and rewrite Bayes' theorem using logs.
+
+30
+00:04:24,065 --> 00:04:32,359
+And we use a different notation rather than a capital P that might be used to denote an exact distribution.
+
+31
+00:04:32,419 --> 00:04:38,809
+We can use a Q, which is used to denote an approximate distribution.
+
+32
+00:04:39,380 --> 00:04:41,121
+and replace that in there.
+
+33
+00:04:41,222 --> 00:04:58,236
+And so the whole idea is by minimizing free energy as a kind of proxy that is always greater than or equal to surprise, the agent, again, quote unquote, wants to minimize free energy in order to minimize its surprise.
+
+34
+00:04:58,396 --> 00:05:08,745
+If you can get those two quantities to be virtually zero and virtually equal to one another, that would be kind of the general overall goal
+
+35
+00:05:08,995 --> 00:05:25,047
+um and to kind of zoom through a bit more of the rest of what happens in this chapter we get a further breakdown of what comprises free energy um it involves um
+
+36
+00:05:25,651 --> 00:05:43,643
+using Colbeck-Liebler divergence between that approximate distribution, the Q I mentioned earlier, and an exact inference P, and then subtracting log model evidence from that.
+
+37
+00:05:44,348 --> 00:05:56,350
+Michael Prast- figure 4.3 or excuse me 4.2 were introduced to the kind of factor graph notation that's often used in act building active inference models.
+
+38
+00:05:56,802 --> 00:05:59,686
+Um, these are not yet active inference models.
+
+39
+00:05:59,826 --> 00:06:07,375
+There's simpler static perception models, but they give a nice kind of quick view of here are the kinds of things we'll be getting into.
+
+40
+00:06:07,536 --> 00:06:16,887
+We have variables, uh, every single one of these involves something we're already familiar with, which is, uh, for a generative model, we have a prior, we have a likelihood.
+
+41
+00:06:17,168 --> 00:06:23,175
+So all of those models involve the core components of a, of a generative model or agent.
+
+42
+00:06:23,656 --> 00:06:23,896
+Right.
+
+43
+00:06:24,137 --> 00:06:24,497
+So.
+
+44
+00:06:25,237 --> 00:06:47,751
+Um, from there, we, it, it shifts into figure 4.3, um, which will have very similar components, but we're now introduced to active inference in that, uh, we now have actions that the agent takes, which then impact, uh, state transitions, right?
+
+45
+00:06:48,136 --> 00:06:56,044
+So we've moved from figure 4.2 of just none of the models in 4.2 have action involved.
+
+46
+00:06:56,224 --> 00:07:03,411
+None of them have like necessarily show some kind of temporal sequence of things playing out over time.
+
+47
+00:07:03,971 --> 00:07:14,802
+You know, it's simply just these more static perceptual models that there's a nice example there where the one in the top left can be modeled as like, um, um,
+
+48
+00:07:15,102 --> 00:07:38,477
+a disease and uh taking a diagnostic test that then computes like the the result of you know if if you uh administer a test on a person who has a hit we're trying to derive a hidden state here marked as x do they have disease like what is it or do they have it or not
+
+49
+00:07:38,643 --> 00:07:42,767
+why is the result of the test, right?
+
+50
+00:07:42,788 --> 00:07:47,653
+So that's kind of a way of looking at how these things are linked together.
+
+51
+00:07:48,213 --> 00:07:50,896
+We have a prior, which is the prevalence of the disease.
+
+52
+00:07:51,037 --> 00:07:56,482
+We have a likelihood, which is, you know, what is the result of the test given the disease?
+
+53
+00:07:56,943 --> 00:08:07,114
+We can use Bayes' theorem and what could be called model inversion to switch around, see, okay, what is the,
+
+54
+00:08:07,094 --> 00:08:10,621
+is there a disease given the particular result of the test?
+
+55
+00:08:11,924 --> 00:08:22,605
+Strongly recommend just kind of reading through those couple of paragraphs to get a better sense of what's going on there, because it's much more descriptively clear than probably how I'm describing it here.
+
+56
+00:08:22,906 --> 00:08:28,056
+But in any case, yeah, it's a good resource for getting started on these things.
+
+57
+00:08:28,525 --> 00:08:40,758
+And then figure 4.3, the difference where we now have active inference models is that we actually have a temporal dimension, which is we're now including state transitions over time.
+
+58
+00:08:41,559 --> 00:08:55,815
+So you can read those graphs in figure 4.3 from left to right, t minus 1 to t, the current time step, to t plus 1, which is the next time step.
+
+59
+00:08:55,795 --> 00:09:04,187
+So the agent is basically taking in those observations at the bottom of that particular graph that Daniel has zoomed in on.
+
+60
+00:09:06,110 --> 00:09:13,180
+We have these linkages with the hidden states as we saw before, but now we have policies impacting the state transition.
+
+61
+00:09:13,160 --> 00:09:27,783
+as the agent engages in actions or sequences of actions, which is another way of saying what a policy is, in order to try and the agent tries to impact the changes in the states.
+
+62
+00:09:28,284 --> 00:09:33,632
+So that is kind of the active part of active inference.
+
+63
+00:09:35,283 --> 00:09:40,553
+And then from there, section 4.4, it's a little bit more involved.
+
+64
+00:09:41,454 --> 00:09:48,627
+We can take all of these ideas that we've been introduced to, likelihoods, transitions, and so on.
+
+65
+00:09:49,028 --> 00:09:53,456
+We can map those out to different components of our models.
+
+66
+00:09:53,556 --> 00:09:55,620
+So now a likelihood model.
+
+67
+00:09:55,685 --> 00:09:59,898
+is now called an A matrix or A tensor.
+
+68
+00:10:01,282 --> 00:10:06,538
+The transitions model is now the B matrix or B tensor.
+
+69
+00:10:06,856 --> 00:10:32,408
+The priors over states are now a vector called D. We also now have preferences that the model has, which are in a C vector, super important for the agent actually realizing its preferences or expected observations, which is an idea we were already introduced to in previous chapters.
+
+70
+00:10:32,742 --> 00:10:50,953
+So the idea here is that we're able to just kind of map a lot of the more verbally described ideas that we've already seen in preceding chapters to these different components of a model, and then seeing how computationally we can minimize free energy over time.
+
+71
+00:10:52,115 --> 00:11:08,700
+A couple other ideas that are brought up, but I won't go into too strongly right now because I want to allow time for questions and discussion are expected free energy or otherwise known as G that's related to planning.
+
+72
+00:11:09,261 --> 00:11:17,093
+This is where the agent doesn't just look at past observations or current observations to minimize its free energy.
+
+73
+00:11:17,073 --> 00:11:20,617
+but it also wants to realize its preferences.
+
+74
+00:11:20,938 --> 00:11:30,269
+And so it has to kind of plan what it will do in order to realize those preferences or goals that it already has, right?
+
+75
+00:11:30,750 --> 00:11:37,278
+So G plays in that the agent actually wants to kind of plan ahead of time.
+
+76
+00:11:37,458 --> 00:11:38,479
+What should it do?
+
+77
+00:11:39,781 --> 00:11:43,806
+So the C vector of preferences plays into that.
+
+78
+00:11:43,904 --> 00:11:56,901
+You can look at the way that the agent chooses different actions or policies to take as it's actually computing expected free energy for each policy.
+
+79
+00:11:57,286 --> 00:11:59,589
+And then it scores the policy.
+
+80
+00:11:59,669 --> 00:12:00,270
+Should I do X?
+
+81
+00:12:01,352 --> 00:12:02,253
+Should I do Y?
+
+82
+00:12:02,273 --> 00:12:07,520
+Or let me revise that because the notation, I don't want it to get mixed up.
+
+83
+00:12:07,540 --> 00:12:11,326
+Should I do policy number one, policy number two, policy number three?
+
+84
+00:12:11,786 --> 00:12:17,134
+Well, let's score the expected free energy for each of those policies.
+
+85
+00:12:17,114 --> 00:12:45,653
+And whichever one has the lowest expected free energy at the end, you go with that policy and you go with the actions that that policy entails in order to impact the environment, in order to impact the state transitions based on your transitions model, which basically is how do you think your actions are going to impact the environment around you?
+
+86
+00:12:45,633 --> 00:12:51,386
+Even more quickly, some other top line topics that were introduced to Markov blankets.
+
+87
+00:12:51,707 --> 00:12:55,857
+We've already seen some references to those in previous chapters.
+
+88
+00:12:56,679 --> 00:13:04,637
+There's a nice box that describes more on Markov blankets and not just how Markov blankets are kind of conceptual.
+
+89
+00:13:04,617 --> 00:13:18,272
+concept that separates an agent from its environment, but furthermore, kind of the maths underlying what a Markov blanket is about statistical independencies and dependencies between variables and so on.
+
+90
+00:13:18,590 --> 00:13:23,979
+We get more on continuous time models, which are frankly much more mathematically involved, I would say.
+
+91
+00:13:24,019 --> 00:13:33,335
+Involves more in the way of differentiation and looking at temporal derivatives and applying Taylor series expansions.
+
+92
+00:13:34,417 --> 00:13:40,648
+A concept called generalized coordinates of motion that's involved, as well as Laplace approximation.
+
+93
+00:13:41,017 --> 00:13:59,907
+And finally, at the very end of the chapter, we're briefly introduced to what's called Bayesian message passing, just kind of how, if we think about these models as graphs, as we've already seen, messages are being passed around between nodes via edges.
+
+94
+00:14:00,768 --> 00:14:06,197
+And that has a significant amount of neurobiological
+
+95
+00:14:06,532 --> 00:14:11,440
+plausibility behind it theoretically and through continued empirical study.
+
+96
+00:14:11,941 --> 00:14:21,636
+And so that's the kind of neuroscientific or neurobiological backing to being able to say how a lot of this works.
+
+97
+00:14:21,916 --> 00:14:29,869
+And for anyone's especially interested in message passing, we'll see a lot more of that in chapter five.
+
+98
+00:14:31,632 --> 00:14:33,855
+I would also recommend to anyone
+
+99
+00:14:34,223 --> 00:14:44,180
+more interested in planning in these discrete time models with the A and B and C and D components and so on.
+
+100
+00:14:44,580 --> 00:14:52,333
+If you want to skip ahead to chapter seven, that chapter is entirely centered on discrete time models.
+
+101
+00:14:52,313 --> 00:15:02,177
+It'll have more breakdowns of these different terms that are involved in computing G like we see terms like expected ambiguity and risk in this chapter.
+
+102
+00:15:02,217 --> 00:15:06,728
+There are other ways that you can break down how we compute G.
+
+103
+00:15:07,028 --> 00:15:23,637
+And it's nice to have these kind of words like risk or expected ambiguity that maybe gives a better intuitive sense of the maths involved and how it's useful, how it plays into the explore, exploit, trade off model behavior.
+
+104
+00:15:24,106 --> 00:15:31,720
+Anyway, I feel like I've already covered the gist of what's going on in this chapter and maybe even overspoken.
+
+105
+00:15:31,740 --> 00:15:47,008
+So if anyone has any questions, thoughts on any of this or any other particular topic they want to get into, please feel free to raise your hand or just unmute yourself and go for it.
+
+106
+00:15:54,498 --> 00:15:58,025
+Yeah, I have a couple of questions related to the statistical side.
+
+107
+00:15:58,085 --> 00:16:07,984
+How would this relate to calculating something like the R0, like we look at in epidemiology, where you're looking at a predictive state with an n value of 0?
+
+108
+00:16:10,816 --> 00:16:11,757
+I'll give a short answer.
+
+109
+00:16:11,798 --> 00:16:13,640
+There's probably multiple ways you could do it.
+
+110
+00:16:14,141 --> 00:16:20,591
+But I mean, one way to handle it would be treat the true R0 as a hidden state.
+
+111
+00:16:21,332 --> 00:16:23,315
+And then you make observations.
+
+112
+00:16:23,936 --> 00:16:29,806
+So you have an epidemiological inference trying to estimate an underlying parameter.
+
+113
+00:16:30,306 --> 00:16:32,770
+That could be the temperature in the room with a thermometer.
+
+114
+00:16:32,790 --> 00:16:35,895
+It could be the R0 with a sampling from the noisy tests.
+
+115
+00:16:37,124 --> 00:16:39,207
+That's kind of the general approach.
+
+116
+00:16:39,547 --> 00:16:40,829
+It's what SPM does.
+
+117
+00:16:41,189 --> 00:16:53,044
+You have the underlying neural activity unobserved, and then you have neuroimaging data, which is being caused by very nonlinear relationship with neural activity, like with the blood flow.
+
+118
+00:16:53,845 --> 00:17:04,718
+That's the general process of perceptual inference is pretty much separate out what you're really, the underlying variable hidden state that you're trying to estimate.
+
+119
+00:17:05,002 --> 00:17:07,606
+and then separate that out from the observations you're getting.
+
+120
+00:17:07,626 --> 00:17:14,976
+And then you load up onto the A, how the hidden state is related to the observation synchronously.
+
+121
+00:17:14,996 --> 00:17:19,823
+Then you load up onto the B, how that hidden state changes through time.
+
+122
+00:17:19,863 --> 00:17:23,428
+And then you can layer in the policy.
+
+123
+00:17:24,430 --> 00:17:24,750
+Okay.
+
+124
+00:17:25,331 --> 00:17:27,474
+Can you do that recursively with elliptic curve then?
+
+125
+00:17:28,616 --> 00:17:30,418
+So would you step back over?
+
+126
+00:17:30,579 --> 00:17:33,743
+So you would have to do linear step function back over through, right?
+
+127
+00:17:36,693 --> 00:17:39,696
+Again, not sure how the curve, you mean like.
+
+128
+00:17:42,859 --> 00:17:46,242
+So I'm just thinking of it in terms of the math with like the heavy side step function.
+
+129
+00:17:46,282 --> 00:18:06,582
+So if you're going down from a three state to a two state, see how you have, like, you're almost jumping that zero state, but really what you're doing is sinusoidally passing through it with an elliptic curve in a way, but you're passing through a negative with a positive direction.
+
+130
+00:18:10,460 --> 00:18:18,358
+sketch out an agent that's doing that or having it done to them and then try to make it look like figure 4.3 and then you'll probably be close to an answer.
+
+131
+00:18:19,182 --> 00:18:19,423
+Okay.
+
+132
+00:18:40,615 --> 00:18:42,137
+Thanks for the summary, Andrew.
+
+133
+00:18:43,099 --> 00:18:45,442
+This is a dense chapter.
+
+134
+00:18:49,408 --> 00:18:52,372
+Yeah.
+
+135
+00:18:52,513 --> 00:18:52,633
+Yeah.
+
+136
+00:18:54,495 --> 00:18:54,836
+Yeah.
+
+137
+00:18:55,717 --> 00:18:56,859
+Chapter one, introduction.
+
+138
+00:18:57,280 --> 00:19:00,725
+Two and three, low road and high road, getting to active inference.
+
+139
+00:19:00,865 --> 00:19:02,648
+Chapter four, it's active inference.
+
+140
+00:19:03,268 --> 00:19:07,755
+Chapter five, neurobiology case studies of active inference.
+
+141
+00:19:08,516 --> 00:19:09,778
+That's the first half of the book.
+
+142
+00:19:12,998 --> 00:19:17,324
+And then chapter six, recipe for making it yourself.
+
+143
+00:19:17,484 --> 00:19:19,247
+Chapter seven and eight, revisit.
+
+144
+00:19:19,868 --> 00:19:21,630
+Sections 4.4 and 4.5.
+
+145
+00:19:21,650 --> 00:19:24,794
+Nine, bringing in data.
+
+146
+00:19:25,195 --> 00:19:26,397
+Chapter 10, summary.
+
+147
+00:19:32,565 --> 00:19:40,356
+So we get a significant amount of kind of back and forth between kind of more verbal descriptions of the ideas and concepts.
+
+148
+00:19:41,197 --> 00:19:43,381
+But we have to come back to the maths, right?
+
+149
+00:19:43,401 --> 00:19:45,624
+That's essential.
+
+150
+00:19:45,705 --> 00:19:58,446
+And I think that's what chapter four does, is just quickly give you a broad stroke of here are the maths underlying a lot of these ideas and how the dynamics play out.
+
+151
+00:20:06,172 --> 00:20:10,416
+JR made a really nice comment in the Discord a few days ago.
+
+152
+00:20:10,456 --> 00:20:14,159
+This is a new paper, Active Data Selection Information Seeking.
+
+153
+00:20:15,960 --> 00:20:19,744
+And here there's a slightly new and different notation.
+
+154
+00:20:22,186 --> 00:20:29,312
+Lambda operator introduced to indicate either summation or integration, depending on whether we're dealing with continuous or discrete variables.
+
+155
+00:20:30,393 --> 00:20:34,997
+So here we're approaching that in the time setting, but it's kind of like,
+
+156
+00:20:36,277 --> 00:20:43,048
+This comes up a lot, like whether the variable is continuous or discrete, and then whether time is being treated continuously or discreetly.
+
+157
+00:20:43,068 --> 00:20:48,857
+Those are options under the umbrella of active inference models.
+
+158
+00:20:51,280 --> 00:20:57,310
+So the actual kind of pseudocode is not predicated on the variables being continuous or discrete.
+
+159
+00:21:01,376 --> 00:21:04,461
+That, to me, intuitively just seems...
+
+160
+00:21:05,285 --> 00:21:12,140
+really nice and allows for a more direct relationship between the continuous and discrete variables.
+
+161
+00:21:12,241 --> 00:21:19,497
+Because you have this chapter four here, as well as comparing chapter seven and chapter eight,
+
+162
+00:21:19,763 --> 00:21:24,190
+It's like the textbook kind of presents discrete and continuous.
+
+163
+00:21:24,210 --> 00:21:31,901
+I mean, of course, free energy minimization and a lot of other concepts are shared between the two.
+
+164
+00:21:31,981 --> 00:21:39,072
+But I mean, we get a kind of sharp distinction between using discrete and continuous variables all the way down to
+
+165
+00:21:39,372 --> 00:21:47,693
+the very notation being different, your S's and O's for discrete versus X's and Y's for continuous and so on.
+
+166
+00:21:47,713 --> 00:21:53,888
+So it's nice to see an equation that can kind of relate or compound the two
+
+167
+00:21:54,239 --> 00:22:12,320
+to where you just need to kind of know if it's discrete or continuous, and then similar process for each while knowing, of course, that discrete variables you're working with point masses and summations as opposed to integrations and so on with continuous.
+
+168
+00:22:16,324 --> 00:22:20,289
+That's another point to be taken for the ontology.
+
+169
+00:22:20,910 --> 00:22:21,310
+Sure.
+
+170
+00:22:29,677 --> 00:22:32,565
+Um, Peter or, or anyone?
+
+171
+00:22:33,018 --> 00:22:35,160
+Thank you, Daniel.
+
+172
+00:22:35,680 --> 00:22:38,283
+So I loved this chapter.
+
+173
+00:22:38,303 --> 00:22:39,624
+I thought it was really cool.
+
+174
+00:22:40,084 --> 00:22:44,088
+I'm pretty excited by the lambda notation that was just described.
+
+175
+00:22:44,128 --> 00:22:47,691
+I was unaware of that, and there's a lot to think about there.
+
+176
+00:22:48,492 --> 00:22:56,719
+In some ways, this was the chapter that I was personally least comfortable with in terms of my ability to sort of grok everything that I needed to get.
+
+177
+00:22:57,640 --> 00:23:03,025
+My personal background is mostly on the neurobio side, and I have much less in the way of mathematics.
+
+178
+00:23:03,005 --> 00:23:26,686
+I was wondering, so I haven't checked out the references at the back yet, so maybe that's actually gonna answer my question, but I was wondering, does the active infants group have any kind of like a learning path for the supporting mathematics that you would need to really be able to be really kind of fluent with this chapter and like, for example, be able to plug in values and do things with the model?
+
+179
+00:23:26,766 --> 00:23:31,290
+Like, do we have any kind of a guide of like, hey, if you wanna learn, you know,
+
+180
+00:23:31,540 --> 00:23:40,275
+Taylor series expansion here's where to get it, if you want to learn linear algebra like here's a particularly good text because i'd be interested to sort of take that stuff on over time.
+
+181
+00:23:42,660 --> 00:23:53,599
+Thanks yeah i'm in the math learning kind of subsection, this is, you know quiescence till or when people.
+
+182
+00:23:54,946 --> 00:24:00,194
+don't want to do it, but then as people want to do it, like anyone's welcome to just say, this time UTC, I'm going to do this.
+
+183
+00:24:01,436 --> 00:24:05,402
+Like in Discord or however, or just make the edits directly here.
+
+184
+00:24:05,462 --> 00:24:12,873
+This math learning and resources has at least many.
+
+185
+00:24:12,893 --> 00:24:20,445
+I think the language models are really good at this right now.
+
+186
+00:24:20,505 --> 00:24:22,067
+This kind of like
+
+187
+00:24:22,402 --> 00:24:25,946
+like undergraduate level math, which is hard.
+
+188
+00:24:27,067 --> 00:24:29,810
+That is a good specialty of them.
+
+189
+00:24:30,611 --> 00:24:36,357
+And then another possibility with the learning is from the equations.
+
+190
+00:24:38,138 --> 00:24:40,521
+Here, all the equations have been put into LaTeX.
+
+191
+00:24:42,963 --> 00:24:49,270
+Then this can just be, so even if you're working with a language model that doesn't have the ability to put in a screenshot,
+
+192
+00:24:49,672 --> 00:25:11,292
+can just put in this or look at what we have here and then look at the explanation why would a high schooler be interested what's the pseudocode where is it important what are the variables these are just tentative but they do um even where they contain like some like i guess factual you know omissions or or errors
+
+193
+00:25:11,272 --> 00:25:17,402
+they give it the style of what information is in the equation.
+
+194
+00:25:17,442 --> 00:25:25,695
+And just like one plus one equals two, one plus one equals question mark, like you could spend the rest of your life truly pondering it.
+
+195
+00:25:26,376 --> 00:25:30,362
+So there's never going to be a moment, okay, I'm done with Bayes' equation.
+
+196
+00:25:30,382 --> 00:25:33,086
+I finally, you know, don't need to wonder about it anymore.
+
+197
+00:25:33,126 --> 00:25:38,595
+But then knowing that it will never be fully resolved
+
+198
+00:25:38,744 --> 00:25:44,317
+getting to kind of just like a stopping point with feeling like you don't know at all what it does.
+
+199
+00:25:45,620 --> 00:25:50,712
+And then just seeing a bunch of related natural language descriptions.
+
+200
+00:25:51,534 --> 00:25:57,107
+And then also our handwritten natural language descriptions.
+
+201
+00:25:57,425 --> 00:25:59,187
+which anyone can also add to.
+
+202
+00:25:59,247 --> 00:26:11,261
+Sometimes just seeing it written out linguistically instead of only symbolically can help, especially because then you can replace X with hidden state and Y with observation.
+
+203
+00:26:13,023 --> 00:26:20,412
+And then from there, that can translate to other languages, but also you could replace, okay, hidden state with temperature, observation with thermometer.
+
+204
+00:26:21,493 --> 00:26:27,060
+And then this starts to look more like the probability of the temperature times the temperature
+
+205
+00:26:27,125 --> 00:26:56,845
+thermometer given the temperature and so then it's like easier to jump between a tangible example and all these other like kind of aspects of the holistic math understanding and like Jonathan Schock and Ali Blue others have like also thought about how to what kind of math is important to lead up to the textbook group
+
+206
+00:26:57,095 --> 00:27:03,270
+And in the appendices, they do mention what they see as the important background areas.
+
+207
+00:27:04,613 --> 00:27:07,740
+I think it's A, linear algebra.
+
+208
+00:27:08,622 --> 00:27:11,830
+So doing operations on matrices.
+
+209
+00:27:12,755 --> 00:27:16,080
+adding and multiplying products on matrices.
+
+210
+00:27:16,881 --> 00:27:20,927
+Taylor series approximations, this is important for the continuous time.
+
+211
+00:27:21,608 --> 00:27:25,914
+This is where you take a point and then you try to extrapolate a continuation around that point.
+
+212
+00:27:26,716 --> 00:27:29,700
+Variational calculus and stochastic dynamics.
+
+213
+00:27:30,338 --> 00:27:50,305
+This appendix may still not be the perfect resource to learn those four topics, but the fact that they listed them out as the four topics, then going to any like highly rated online course or like popular videos on these topics is probably pretty helpful.
+
+214
+00:27:51,078 --> 00:28:20,140
+linear algebra very much is and stochastic dynamics or just statistics i think also is critically important it's fantastic thank you it's uh beyond helpful really appreciate it peter i'm in the process of learning all of this myself so i'd be willing to work with you if you wanted to do something as well within discord or something through coda
+
+215
+00:28:21,385 --> 00:28:22,426
+Sure, that'd be great.
+
+216
+00:28:26,750 --> 00:28:27,872
+Thanks.
+
+217
+00:28:28,512 --> 00:28:31,135
+Are you on the Discord?
+
+218
+00:28:31,155 --> 00:28:33,617
+Yeah, I just joined a couple days ago.
+
+219
+00:28:34,739 --> 00:28:35,299
+Okay, great.
+
+220
+00:28:38,122 --> 00:28:40,324
+There is a textbook group channel.
+
+221
+00:28:41,946 --> 00:28:47,832
+You can try to join in or just post somewhere if you can't find it or anything, but then we can just kind of
+
+222
+00:28:49,364 --> 00:28:58,673
+keep that discussion alive and, um, like, yeah, knowing, knowing what this symbolizes helps.
+
+223
+00:28:59,634 --> 00:29:07,783
+There probably is a point of diminishing return with learning any of the background maths, but also they're their own reward.
+
+224
+00:29:08,223 --> 00:29:09,084
+So they're fun to learn.
+
+225
+00:29:14,269 --> 00:29:16,131
+I might throw this into the, um,
+
+226
+00:29:17,225 --> 00:29:24,327
+CODA as well, but just sharing if anyone is familiar with Coursera courses.
+
+227
+00:29:24,467 --> 00:29:29,462
+For me, I've had to do a lot of learning asynchronously from the
+
+228
+00:29:29,847 --> 00:29:52,210
+institute and i really like this one um just because um you know it has a couple courses there it's very intuitive and especially for anyone who wants to move in the direction of like implementing and learning with um python it mainly focuses on that but yeah the first course is linear algebra but in the context of like we're learning matrices we're learning
+
+229
+00:29:52,190 --> 00:30:18,501
+how to multiply them and so on um and then by time we get to the second course it's multivariate calculus and so all of a sudden you're learning about like gradient descent uh with multiple variables involved so just the first two courses of of that link i shared um i find immensely helpful for at least as a starting point it just walks you through everything so yeah
+
+230
+00:30:19,713 --> 00:30:45,889
+depending on where someone's at with their programming or engineering or anything it can help just to think of these as variables like s can be kind of treated with one handle as like a mathematical variable and if you want to go into the um like the abstraction and the analysis and the category theory then it is going to be helpful to just pick up s of t with one handle and
+
+231
+00:30:45,869 --> 00:30:52,978
+But then at the same time, when you actually write the PyMDP code, S is going to be like a matrix of a defined shape.
+
+232
+00:30:53,899 --> 00:30:59,666
+So then going to the PyMDP documentation and examples and just seeing like, okay, what shape is A, B, C, D?
+
+233
+00:31:00,087 --> 00:31:00,347
+Okay.
+
+234
+00:31:01,128 --> 00:31:01,969
+That's the whole agent.
+
+235
+00:31:02,370 --> 00:31:03,611
+That's the active inference agent.
+
+236
+00:31:04,652 --> 00:31:05,994
+That can help ground it.
+
+237
+00:31:06,855 --> 00:31:13,243
+That's not the general case, but seeing how minimal...
+
+238
+00:31:14,287 --> 00:31:27,401
+a small case can be is helpful to know like what a complete generative model is and kind of calibrate how challenging different kinds of phenomena might be to model.
+
+239
+00:31:35,249 --> 00:31:35,349
+Yeah.
+
+240
+00:31:35,369 --> 00:31:41,475
+PyMDP, open source package, discrete time, but this is a good...
+
+241
+00:31:41,607 --> 00:31:50,055
+package that's really focused to like getting as fast as possible to the discrete time agents.
+
+242
+00:31:51,457 --> 00:31:59,805
+Whereas RxInfer as we're exploring week after week is general and continuous and all these other things.
+
+243
+00:32:00,406 --> 00:32:04,130
+POMDP gets you really fast to the POMDP like chapter seven model.
+
+244
+00:32:05,731 --> 00:32:06,552
+There are great
+
+245
+00:32:08,877 --> 00:32:29,299
+demos including that you can just open it up in a notebook you can copy the notebook or use this version and just like run it right here and see the full active inference model you can also clone it locally into like cursor.sh
+
+246
+00:32:30,562 --> 00:32:33,330
+with a code enabled development environment.
+
+247
+00:32:33,391 --> 00:32:39,649
+And then you can chat with the code base and ask questions about like PyMDP or any other package.
+
+248
+00:32:41,214 --> 00:32:44,183
+So this can be extremely helpful.
+
+249
+00:33:02,337 --> 00:33:25,847
+yeah i think that's great um i would say for for people who are just getting into this and thinking about how to set up a model as well some things uh if you want to start with py mdp or otherwise um and again if you want to jump to modeling i would strongly recommend having uh and you have the time for it have a look at chapters seven and eight that'll definitely go over more like
+
+250
+00:33:25,827 --> 00:33:28,250
+more specifically how to construct models.
+
+251
+00:33:28,931 --> 00:33:36,319
+For anyone who's thinking like, okay, I have a particular project, how do I map the variables to these different components of a POMDP?
+
+252
+00:33:36,339 --> 00:33:38,361
+For example, you can have a look at chapter seven.
+
+253
+00:33:38,942 --> 00:33:47,412
+It'll get into things like, okay, we have states, we have observations, like two crucial parts of a model.
+
+254
+00:33:48,473 --> 00:33:51,496
+Well, maybe I have different forms of data that I'm bringing in.
+
+255
+00:33:51,556 --> 00:33:52,898
+Like for example, someone,
+
+256
+00:33:52,878 --> 00:33:59,793
+doing something more physiological and clinically based in a lab or something.
+
+257
+00:33:59,813 --> 00:34:06,527
+Maybe you're collecting neuroimaging data in addition to heart monitor data.
+
+258
+00:34:06,948 --> 00:34:11,578
+So suddenly you have two different data streams coming in.
+
+259
+00:34:11,558 --> 00:34:17,327
+you can map those as different like observation modalities is what they'd be called.
+
+260
+00:34:17,367 --> 00:34:29,567
+And basically you'll just be constructing your matrices, the A and the B and so on that account for like these different data streams that account for different hidden states that you're trying to inferring.
+
+261
+00:34:29,547 --> 00:34:31,792
+Trying to infer so on.
+
+262
+00:34:33,215 --> 00:34:35,279
+PyMDP is great for that too.
+
+263
+00:34:35,419 --> 00:34:44,759
+If you are wanting to use Python or at least using it as a learning tool, because all of these examples, there's the teammates one that Daniel scrolling through.
+
+264
+00:34:44,799 --> 00:34:48,467
+There's another one that sets up a two armed tool.
+
+265
+00:34:48,447 --> 00:35:00,246
+bandit model just like uh an agent who um you know picks from one of two like kind of slot conceptually what are like slot machines and um
+
+266
+00:35:00,563 --> 00:35:08,231
+So you have, it shows you how to like, oh, you have multiple forms of data or observations that are coming in.
+
+267
+00:35:08,271 --> 00:35:11,174
+You have multiple hidden states that the agent is trying to infer.
+
+268
+00:35:11,694 --> 00:35:15,038
+You will set those up as like matrices or tensors.
+
+269
+00:35:15,759 --> 00:35:23,947
+And that's kind of where the linear algebra plays in and being familiar with matrix operations becomes really important.
+
+270
+00:35:24,087 --> 00:35:25,689
+But it's really nice.
+
+271
+00:35:25,709 --> 00:35:27,010
+Yeah, David, you have your hand up.
+
+272
+00:35:27,648 --> 00:35:36,162
+Yeah, in regards to the choice function there, would that apply to what we covered earlier in terms of the lambda function or the lambda operator rather?
+
+273
+00:35:36,202 --> 00:35:41,370
+Let's see.
+
+274
+00:35:41,811 --> 00:35:49,342
+Okay, we can look back at the lambda, but about like the behavioral selection itself.
+
+275
+00:35:50,084 --> 00:35:52,828
+Let's find kind of exactly where it comes into play.
+
+276
+00:36:00,402 --> 00:36:02,486
+Okay.
+
+277
+00:36:02,506 --> 00:36:03,668
+Okay.
+
+278
+00:36:03,688 --> 00:36:07,615
+So in this, this is the tutorial one.
+
+279
+00:36:09,698 --> 00:36:16,029
+There's going to be, they first have a simpler version with no planning.
+
+280
+00:36:17,191 --> 00:36:19,595
+So here's an active inference loop with no planning.
+
+281
+00:36:21,899 --> 00:36:23,963
+Then planning comes into play.
+
+282
+00:36:24,567 --> 00:36:32,530
+So a big, big question arising when doing the modeling is like, are we working with something that plants?
+
+283
+00:36:34,315 --> 00:36:36,602
+And even behavior that kind of like,
+
+284
+00:36:37,696 --> 00:36:43,984
+seems plan-like might be underpinned by simply heuristics.
+
+285
+00:36:44,004 --> 00:36:50,914
+Like a flock of birds, you might not need to appeal to it doing a long-term planning for its coordinated movement.
+
+286
+00:36:51,755 --> 00:36:56,481
+You might just be able to explain that with single time step behavior of the birds.
+
+287
+00:36:56,461 --> 00:37:04,855
+So just because something is acting adaptively through multiple timescales doesn't mean that it needs to be planned.
+
+288
+00:37:05,737 --> 00:37:12,428
+But you may still model something from the outside as if it's doing planning
+
+289
+00:37:12,408 --> 00:37:26,637
+um whether or not it is map and territory and all that okay now given that here's here's where when you're in um the planning setting here's where the the choice comes into play
+
+290
+00:37:30,312 --> 00:37:32,839
+Calculate expected free energy of actions.
+
+291
+00:37:33,300 --> 00:37:45,874
+So here we actually are using expected free energy G, and it is calculating the expected free energy based upon essentially all the variables that come into play.
+
+292
+00:37:46,985 --> 00:37:59,157
+And then they, so it takes in the policy prior, which is like E or habit, which is just your before thinking about planning, what is your habit?
+
+293
+00:37:59,837 --> 00:38:02,880
+So if you're doing like a fair teammates rat, it might just be 50-50.
+
+294
+00:38:03,561 --> 00:38:08,566
+Or if it's a teammates rat, but it has like an 80-20 bias for one direction.
+
+295
+00:38:09,367 --> 00:38:16,013
+Then each of the policies get reweighted
+
+296
+00:38:16,752 --> 00:38:27,729
+The policy variable sums up to one, and then here they're reweighted to update to a policy posterior, and then here chosen action is sampled from the posterior.
+
+297
+00:38:28,330 --> 00:38:34,821
+Earlier, Andrew also said you could just pick the lowest one, or you can sample from this distribution, and there's other things you can do.
+
+298
+00:38:35,302 --> 00:38:40,009
+So expected free energy isn't a choice function itself.
+
+299
+00:38:39,989 --> 00:38:48,539
+It's a reweighting of the likelihood of policies that then enables you to take different kinds of choice functions secondarily.
+
+300
+00:38:49,160 --> 00:38:53,164
+So would policy Q be, in essence, the quiescent point of pi?
+
+301
+00:38:55,487 --> 00:38:56,688
+Which one?
+
+302
+00:38:56,809 --> 00:39:08,342
+So where you have Q underscore pi is the softmax at negative G. So would that be like a horizon point, essentially, where you're measuring at?
+
+303
+00:39:09,841 --> 00:39:14,266
+Or measure it to a distance at softmax?
+
+304
+00:39:14,947 --> 00:39:22,155
+The time horizon is big T. So here, this is a five-time step simulation.
+
+305
+00:39:22,956 --> 00:39:30,505
+And here, policy length is considering all combinations of policies of two affordances.
+
+306
+00:39:30,725 --> 00:39:36,231
+So if you can go up, down, left, right, four affordances, then there's 16 policies of length two.
+
+307
+00:39:36,772 --> 00:39:38,734
+And you have a range of four values.
+
+308
+00:39:39,085 --> 00:40:03,017
+with the actions as the okay yeah the actions at each moment are the affordances policies are sequences of affordances for a given time um and then playing around with these variables is sweeping across them and making like summary diagnostic statistics about
+
+309
+00:40:03,385 --> 00:40:32,363
+portfolios of simulations is when you start to see interesting things okay great yeah i've been kind of modeling similar to this and i've been seeing similar things so i'll start working with this a bit more to solidify things perfect thank you cool and yeah it's uh
+
+310
+00:40:33,068 --> 00:40:38,758
+As Daniel mentioned earlier, for anyone who's more directly interested in modeling,
+
+311
+00:40:39,532 --> 00:40:45,201
+Again, I'm personally trying to learn both PyMDP as well as RxInfer at the same time.
+
+312
+00:40:45,241 --> 00:40:49,688
+Two different programming languages because RxInfer is based in Julia.
+
+313
+00:40:50,169 --> 00:40:53,554
+But we do have an ongoing institute project Thursday mornings.
+
+314
+00:40:54,676 --> 00:40:56,458
+It's the RxInfer project.
+
+315
+00:40:56,919 --> 00:41:04,611
+And what's great is that one of the folks from BIAS Labs who's developing the RxInfer package
+
+316
+00:41:04,591 --> 00:41:07,635
+um, is actually directly involved with that group.
+
+317
+00:41:07,755 --> 00:41:13,022
+So we, we have some, some nice, uh, communication with one of the developers basically.
+
+318
+00:41:13,443 --> 00:41:26,440
+Um, and there we are, um, going through different examples right now that RxInfer, like those folks have directly made available, just like we were going through an example for PyMDP.
+
+319
+00:41:26,520 --> 00:41:28,843
+So they've done the same for RxInfer.
+
+320
+00:41:28,903 --> 00:41:30,345
+Um,
+
+321
+00:41:30,325 --> 00:41:46,245
+There's a nice kind of reciprocal relationship going on because we have the opportunity to tell the representative from BIAS Labs like, hey, we think you should, you know, maybe update your documentation to make it clearer on this particular point or something like that.
+
+322
+00:41:46,265 --> 00:41:48,427
+And then they help us with the learning.
+
+323
+00:41:48,868 --> 00:41:52,873
+But yeah, anyone who wants to kind of get more involved with that.
+
+324
+00:41:52,853 --> 00:42:15,283
+not to mention the the rx infer package seems to offer some capabilities beyond uh maybe what other methods allow for so um we were able to look more at like continuous time models which are certainly uh in certain ways more mathematically involved with all the integrations and so on so yeah this is a nice um example here like
+
+325
+00:42:15,263 --> 00:42:37,828
+This is trying to model a car that needs to take the right actions to exploit its velocity and acceleration in order to move up a hill landscape to reach a goal that it otherwise couldn't if it just put the pedal to the floor, so to speak.
+
+326
+00:42:37,808 --> 00:42:43,018
+And so the agent like learns what what it should do in order to reach that goal.
+
+327
+00:42:43,819 --> 00:42:45,903
+But yeah, so they're just like toy examples.
+
+328
+00:42:46,043 --> 00:42:48,968
+But yeah, super cool.
+
+329
+00:42:49,389 --> 00:42:49,750
+Yeah.
+
+330
+00:42:50,090 --> 00:42:56,282
+And I think useful for you if you have your own project that you under want to undertake using this is kind of like a foundation for that.
+
+331
+00:42:56,602 --> 00:42:57,684
+Daniel, you're going to say.
+
+332
+00:42:57,945 --> 00:42:58,045
+Yeah.
+
+333
+00:42:58,025 --> 00:43:04,956
+Yeah, this is a different syntax, different language, Julia, than Python, but with many similarities.
+
+334
+00:43:05,738 --> 00:43:11,908
+And again, like even with limited code familiarity, it helps calibrate like where someone is at.
+
+335
+00:43:12,248 --> 00:43:13,731
+Like this is just a coin toss.
+
+336
+00:43:14,071 --> 00:43:16,836
+This isn't even like, it's not a coin tossing quantum agent.
+
+337
+00:43:16,876 --> 00:43:20,261
+This is just like literally a coin being tossed.
+
+338
+00:43:20,281 --> 00:43:24,488
+But this can help calibrate learning in terms of like,
+
+339
+00:43:25,902 --> 00:43:27,143
+what does it take to make a coin toss?
+
+340
+00:43:27,824 --> 00:43:33,289
+And then, okay, here's a slightly more involved example with a hidden Markov model.
+
+341
+00:43:34,391 --> 00:43:50,847
+And then we're also gonna bring this back into the textbook group by looking to replicate PyMDP and textbook examples in Rx and Fur.
+
+342
+00:43:52,379 --> 00:44:08,717
+Because although it can feel, and it is true on one hand, that it's more flavors or more material or more variants, it's actually a very important decision that they took in the textbook to have figure 4.3
+
+343
+00:44:08,697 --> 00:44:24,799
+like they're not in they don't introduce just the discrete time and then later go to continuous time they introduce them jointly to emphasize that there isn't only one way to treat time in active inference so then that's how i've been approaching it too so that's awesome
+
+344
+00:44:24,779 --> 00:44:48,711
+cool yeah i mean it's like there's base i don't know if there's any um any one-way streets like if there's one there's another one and so having there be multiple languages it's like not about one person being able to generate all the scripts for all the languages for all the cases you know in a moment
+
+345
+00:44:48,910 --> 00:44:51,794
+but basically code models can already do that first off.
+
+346
+00:44:52,555 --> 00:45:08,698
+And then, so we're just able to look at that and then try to connect the dots and think what's this deeper space that's able to have multiple Julia and multiple Python scripts corresponding to a T maze.
+
+347
+00:45:09,880 --> 00:45:18,833
+And then how do we make sure that that kind of like broader latent or dark space that we're thinking about is active inference.
+
+348
+00:45:19,302 --> 00:45:32,702
+And what makes something actually an active inference model as opposed to just like any other kind of broader input output cybernetics or control or reinforcement model, which might be totally valid and adequate for a setting.
+
+349
+00:45:33,183 --> 00:45:35,847
+So there's nothing wrong with like not making an active inference model.
+
+350
+00:45:36,829 --> 00:45:42,357
+It's just that there is a difference between it being an active inference model versus being like a reward learning model.
+
+351
+00:45:44,294 --> 00:45:46,177
+Gareth J. And right, so.
+
+352
+00:45:46,198 --> 00:46:04,952
+Gareth J. Sorry, no good, so I kind of see that also is like being a parameter of the time frame or the frame that that constraint is saying, so if you're using the language in that sense as a filter, it would be applicable to that model, for example, in that discrete time range.
+
+353
+00:46:07,109 --> 00:46:15,498
+where it may not fit to another model with the same kind of parameters due to other separate constraints, for example.
+
+354
+00:46:20,303 --> 00:46:31,294
+You mean like kind of using the validity of the active inference ontology to kind of check whether the script is an active inference model?
+
+355
+00:46:31,595 --> 00:46:39,850
+Yeah, but in a way by being able to apply it as a filtering model without energy, it kind of reduces the friction on the surface, doesn't it?
+
+356
+00:46:41,814 --> 00:46:46,903
+So if the language that you're using within that frame works with the frame,
+
+357
+00:46:47,930 --> 00:46:57,863
+without it adding too much context because of the parameterization versus dragging and dropping that filter into another model where the language doesn't fit.
+
+358
+00:46:59,386 --> 00:47:03,992
+You would have to use a different model, but that doesn't make the first model not valid.
+
+359
+00:47:04,833 --> 00:47:07,096
+Would that be a correct statement in that context?
+
+360
+00:47:09,159 --> 00:47:10,060
+I think so.
+
+361
+00:47:10,200 --> 00:47:17,430
+I mean, I don't know if this is too broad, but making model two cannot make model one invalid, right?
+
+362
+00:47:17,579 --> 00:47:18,901
+model two can yes.
+
+363
+00:47:19,102 --> 00:47:26,875
+And it might be, yeah, it might be fewer parameters or more or more or less accurate, but, but it can't invalidate.
+
+364
+00:47:26,955 --> 00:47:30,301
+It's just merely another addition, like into the blockchain of everything.
+
+365
+00:47:31,042 --> 00:47:37,653
+And then in terms of the ontology and the variables, I mean, you can just look at the variables.
+
+366
+00:47:40,358 --> 00:47:40,498
+Oh,
+
+367
+00:47:42,217 --> 00:47:43,960
+added more comments here.
+
+368
+00:47:43,980 --> 00:47:57,444
+But if you've defined, if you've looked at figure 4.3, and this is the rough setup of your set, then you can ask, is there something that is here that I don't have?
+
+369
+00:47:59,006 --> 00:48:00,870
+And then is there something else that I have?
+
+370
+00:48:01,310 --> 00:48:06,840
+And either of those, if you make it simpler than this,
+
+371
+00:48:08,137 --> 00:48:12,144
+You might be dealing with a special reduced case.
+
+372
+00:48:13,767 --> 00:48:19,597
+If you add more things, I mean, that is pretty much all of the research advances in active inference.
+
+373
+00:48:19,617 --> 00:48:22,942
+It's like, well, what if we added a variance parameter here?
+
+374
+00:48:23,423 --> 00:48:24,826
+Or what if we added a nesting here?
+
+375
+00:48:24,886 --> 00:48:28,592
+So it's like more can be added here.
+
+376
+00:48:29,247 --> 00:48:39,758
+And hence the textbook just like tried to throw the fastball down the middle and show it in its like plain way.
+
+377
+00:48:40,939 --> 00:48:56,976
+And then to be able to map anything to the plain version, if you can bring it back and if it's a valid return to the kernel, you know, then it's like, oh, it's a heavily modified Linux kernel.
+
+378
+00:48:57,108 --> 00:48:59,391
+But not everything is a heavily modified Linux kernel.
+
+379
+00:48:59,912 --> 00:49:02,355
+Something else might just be a totally different construction.
+
+380
+00:49:02,975 --> 00:49:14,670
+So it might be better, might work well with in a computer system, but it wouldn't make sense to say that it was a modified Linux kernel unless you had started with either pruning down or adding to the Linux kernel.
+
+381
+00:49:15,992 --> 00:49:16,593
+Okay, perfect.
+
+382
+00:49:16,873 --> 00:49:19,477
+Yeah, you don't want to end up in Temple OS when you're looking at Linux.
+
+383
+00:49:20,518 --> 00:49:20,618
+Okay.
+
+384
+00:49:27,162 --> 00:49:31,198
+I would just also briefly add to that point if, like,
+
+385
+00:49:31,482 --> 00:49:33,764
+just for inspiration or otherwise.
+
+386
+00:49:33,864 --> 00:49:44,695
+But if you wanted to kind of just literally just flip through, not even necessarily read, but for the time being, flip through chapters seven and eight and just look at the other figures going on in there.
+
+387
+00:49:44,715 --> 00:49:54,184
+They give many more ideas of like how you could construct this from the standpoint of like looking directly at these, this kind of like graphical notation.
+
+388
+00:49:54,264 --> 00:50:00,270
+We've been talking in the RX and for how it seems great to be able to use graphical notation in the first place.
+
+389
+00:50:00,490 --> 00:50:01,371
+One, just for,
+
+390
+00:50:01,351 --> 00:50:25,283
+being able to track all the different variables and how you're setting up the model but then also too just like scheming on like what what do you need how does the model need to be changed or or otherwise um like in seven chapters seven and eight we get more into discrete and continuous time models we also are introduced to hierarchical models where you can add a second level
+
+391
+00:50:25,263 --> 00:50:35,577
+Probably one of the most involved graphs is, yeah, these, like Daniel has pulled up, I would say especially figure 8.6.
+
+392
+00:50:35,708 --> 00:50:36,889
+is pretty great.
+
+393
+00:50:37,089 --> 00:50:40,713
+What it does is that you have a hierarchical model at the top level.
+
+394
+00:50:40,773 --> 00:50:46,860
+You have the POMDP, like discrete time model setup.
+
+395
+00:50:47,380 --> 00:50:53,207
+And then the bottom half of that graph is actually using continuous variables.
+
+396
+00:50:53,467 --> 00:50:56,250
+So it's not just hierarchical, it's also like a hybrid model.
+
+397
+00:50:56,290 --> 00:50:58,592
+So you're including both types of variables in there.
+
+398
+00:50:59,333 --> 00:51:04,939
+You could almost think of this as like at the lower level, that bottom half, you could have something like
+
+399
+00:51:04,919 --> 00:51:08,382
+um, uh, continuous time neuroimaging data.
+
+400
+00:51:08,883 --> 00:51:32,146
+And then at the higher level, there's some kind of discreet, uh, hidden state that you're using that, that real time observational data to then, uh, infer like, you know, so it's, uh, yeah, it's just steaming, modeling, doing the mapping from, uh, you know, reality to variables on a graph.
+
+401
+00:51:32,166 --> 00:51:32,226
+Um,
+
+402
+00:51:32,206 --> 00:51:57,572
+awesome yeah this all uh all fits together so yeah i might have to uh join you guys on thursday so it'll be interesting thank you yeah or or um or the the rx infer code is in the chat also on the math background so the spm statistical parametric mapping this is what carl friston at all we're working on in the neuroimaging group
+
+403
+00:51:57,974 --> 00:52:03,125
+at UCL in the pre-ACT-INF and FEP days and continuing.
+
+404
+00:52:04,328 --> 00:52:05,430
+It's a MATLAB toolkit.
+
+405
+00:52:05,911 --> 00:52:10,401
+It continues to be developed and the documentation is all online.
+
+406
+00:52:11,303 --> 00:52:14,650
+That being said, this 2007 textbook
+
+407
+00:52:14,630 --> 00:52:15,973
+is very informative.
+
+408
+00:52:16,594 --> 00:52:34,748
+It has like 40 or 50 chapters, but they're standalone short chapters that don't really reference each other because they're focused on like the neuroimaging setting of taking in multi-sensor data, doing the sensor fusion, doing the dynamic causal modeling.
+
+409
+00:52:34,981 --> 00:52:47,856
+I find it really informative because it quickly reviews and uses parametric statistics, non-parametric statistics, and Bayesian statistics.
+
+410
+00:52:49,077 --> 00:53:04,195
+So it's very, very strong for learning about this setting, which is where you have a prior on a hidden variable, and then you're getting observations, and then the hidden variable is changing through time, like neural activity.
+
+411
+00:53:05,305 --> 00:53:12,315
+Control theory then injects into, selects out a slice of B to control how the system evolves.
+
+412
+00:53:13,237 --> 00:53:21,089
+And so that's why that was brought into play because if you're only observing the neural system, then you only need this.
+
+413
+00:53:21,689 --> 00:53:26,757
+But then if you're gonna be selecting behavioral stimuli,
+
+414
+00:53:26,737 --> 00:53:33,485
+or you're going to be doing transcranial stimulation or something like that, you need to have a bidirectional interface.
+
+415
+00:53:34,226 --> 00:53:43,938
+But in terms of the basic statistics and weaving together parametric, non-parametric Bayesian, this is one of the best textbooks.
+
+416
+00:53:44,779 --> 00:53:45,520
+Okay, awesome.
+
+417
+00:53:45,540 --> 00:53:49,825
+I think I've read some selections from it, but I definitely need to pick up a copy of it.
+
+418
+00:53:50,615 --> 00:53:57,773
+I don't know how much the physical version costs, but I'm sure that there's a PDF of this one.
+
+419
+00:53:57,833 --> 00:53:58,996
+We probably have it.
+
+420
+00:53:59,657 --> 00:54:03,286
+And also the online documentation is more updated.
+
+421
+00:54:03,326 --> 00:54:07,797
+And there's also tutorials for SPM.
+
+422
+00:54:08,688 --> 00:54:24,477
+So, even if you don't do neuroimaging, I've never been on an MRI slash analyze the data, but still just reading through this, because these machines are creating a lot of data, and it's a very transferable setting.
+
+423
+00:54:26,561 --> 00:54:27,082
+Okay, great.
+
+424
+00:54:27,122 --> 00:54:29,667
+Yeah, I'm interested in the noise parameters on that, too.
+
+425
+00:54:30,642 --> 00:54:45,816
+Yeah, and comparisons, the kinds of statistics that you need to account for, like within and among participants in a clinical study, and statistical power calculations, like...
+
+426
+00:54:46,370 --> 00:54:47,832
+That's really where it comes down to it.
+
+427
+00:54:47,912 --> 00:55:04,758
+Like trying to understand the statistical formalisms in their N equals one setting is almost like, I don't know if ironic is the right word, but the whole point is we're using distributions so that we can take in multiple data points.
+
+428
+00:55:05,859 --> 00:55:09,525
+So it's not meant to just be like kind of looked at on the shelf.
+
+429
+00:55:10,585 --> 00:55:15,955
+It's meant to be like played around with different priors and testing how different observation sequences lead to different updates.
+
+430
+00:55:16,857 --> 00:55:25,915
+So that's kind of how I've been approaching it as well as testing as n equals zero is equivalent to one, which is why I asked the question in regards to the lambda.
+
+431
+00:55:25,935 --> 00:55:28,780
+It's a choice function of zero or one.
+
+432
+00:55:28,760 --> 00:55:50,025
+Um, but that would, so I've kind of been approaching in terms of like at T zero and zero at T one and one, and you have expansion from that set back to, and it will always still be the N one plus or N minus two in that sense, back to just what we had started talking about earlier, but.
+
+433
+00:55:52,604 --> 00:56:16,452
+yeah there's a lot there that's kind of like when when the when the when the mouse is planning it's it's now it's t equals zero but also it's the next time step but also it's an arbitrary time step but to get lost in the fact that it could be an arbitrary time step it also has to be through other frames right well um
+
+434
+00:56:17,495 --> 00:56:31,593
+Next time later in the day, let's just begin with whatever questions people have or other added questions to the table and upvote the questions that you like.
+
+435
+00:56:31,793 --> 00:56:33,295
+And we'll start from the top next week.
+
+436
+00:56:35,999 --> 00:56:36,259
+Okay.
+
+437
+00:56:37,901 --> 00:56:38,442
+Thank you all.
+
+438
+00:56:39,063 --> 00:56:39,263
+Awesome.
+
+439
+00:56:39,343 --> 00:56:39,824
+Thanks everybody.
+
+440
+00:56:40,565 --> 00:56:41,626
+Thank you.
+
+441
+00:56:41,646 --> 00:56:41,967
+Thanks folks.
+
+442
+00:56:41,987 --> 00:56:42,287
+Take care.

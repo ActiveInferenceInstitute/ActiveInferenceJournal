@@ -1,0 +1,2423 @@
+1
+00:00:06,646 --> 00:00:24,739
+hello and welcome this is active model stream 15.0 with andrew peshea from abm to active inference inference based action selection so andrew thank you for joining looking forward to this presentation and overview so go for it
+
+2
+00:00:26,390 --> 00:00:27,031
+Awesome.
+
+3
+00:00:27,052 --> 00:00:28,034
+Thank you so much, Daniel.
+
+4
+00:00:28,976 --> 00:00:30,439
+Yeah, again, I'm Andrew Pesce.
+
+5
+00:00:30,499 --> 00:00:40,382
+And I, I am a full time data analyst slash scientist slash engineer, many roles to fill when working in the nonprofit world.
+
+6
+00:00:40,885 --> 00:01:00,008
+and so a couple months ago i gave a workshop like a full talk on constructing active inference agents using the pi mdp library as we'll be using here today and during that talk i described
+
+7
+00:01:00,410 --> 00:01:10,832
+how we might be able to employ active inference agents whenever putting together agent based models in the context of computational social science.
+
+8
+00:01:10,952 --> 00:01:18,688
+And so you'll see some links in the description referring back to that tutorial that I gave, including my GitHub, which has all
+
+9
+00:01:19,073 --> 00:01:29,888
+tutorial materials on that page, as well as some in-browser Google Colab scripts that run Python code, and so you can actually follow along.
+
+10
+00:01:30,750 --> 00:01:47,173
+A lot of these learning resources, including this talk I'm giving, are sort of part of a personal initiative I've taken to try and create and develop and then share open source learning resources for applying active inference.
+
+11
+00:01:47,153 --> 00:02:03,019
+I see so much potential as someone coming from more of a social sciences, economics-oriented background for applying active inference agents in areas where maybe they haven't been employed too much before.
+
+12
+00:02:02,999 --> 00:02:29,370
+And as active inference is beginning to be increasingly applied to social science research, such as, you know, attempting to study and simulate something like human behavior and decision making, I thought that that conference was a really ripe opportunity to try and make those kinds of connections for people and just kind of get those kinds of dialogues moving.
+
+13
+00:02:30,151 --> 00:02:31,673
+And so,
+
+14
+00:02:32,986 --> 00:02:49,341
+For me, as someone who came to active inference with that kind of background, but also a strong interest in cognition, I just really wanted to kind of do some from scratch sort of tutorials on how to construct agents.
+
+15
+00:02:49,321 --> 00:03:08,241
+As someone who's been interning with Active Inference Institute for nearly a year now, and I'll also be giving a talk at our upcoming symposium, which itself will be a kind of extension of that tutorial I gave a couple months ago, as well as the talk I'll be giving now.
+
+16
+00:03:08,221 --> 00:03:38,008
+yeah i would just like to uh really make it plain for people sort of the general mechanics that go into constructing an active inference agent i would also refer people back to the textbook that was published a couple of years ago by uh pazulo par and carl friston it's freely accessible you'll find links to it in my slides as well as in the collab scripts if you follow the github link a lot of material that i'm
+
+17
+00:03:37,988 --> 00:03:41,794
+using to construct these tutorials is actually coming from that textbook.
+
+18
+00:03:41,994 --> 00:03:52,591
+So anyone involved with the Institute reading group where we cover the textbook will kind of feel hopefully a little at home whenever they follow these tutorials.
+
+19
+00:03:54,474 --> 00:03:55,255
+So
+
+20
+00:03:55,707 --> 00:03:57,129
+We'll start off now.
+
+21
+00:03:58,070 --> 00:04:08,925
+We'll be constructing the longer span of the tutorial is one, make the connection between active inference and agent-based modeling.
+
+22
+00:04:09,506 --> 00:04:14,172
+Agent-based modeling is a very common paradigm in computational social science.
+
+23
+00:04:14,506 --> 00:04:28,301
+That said, and this is not doing it justice, but I'm saying this just to keep it brief, in some ways it's very traditional in the kinds of assumptions that it makes more often than not about human behavior.
+
+24
+00:04:29,442 --> 00:04:41,475
+Oftentimes people rely upon a kind of homo economicus or self-centered utility maximizer kind of description of what defines human decision making.
+
+25
+00:04:41,455 --> 00:04:53,233
+And I think that that loses a lot of the sort of richness that we find in cognitive science, neuroscience and behavioral studies of how people might actually make decisions.
+
+26
+00:04:53,853 --> 00:04:58,941
+And active inference supplies us with, you know, a rather, you know,
+
+27
+00:04:59,647 --> 00:05:24,692
+simple assumption it's a very complex assumption that being free energy minimization whenever you break it down but ultimately that's a core key assumption that we're making and we don't have to make a ton of additional assumptions beyond that whenever considering how to simulate uh a human behavior beyond how do we construct our model right or how do we construct our agent and so um
+
+28
+00:05:24,993 --> 00:05:30,167
+That's sort of the connection that I'm making here between agent-based modeling and active inference.
+
+29
+00:05:30,187 --> 00:05:35,340
+Then after that, I describe how what I did with that tutorial was I recreated
+
+30
+00:05:35,624 --> 00:05:44,879
+This kind of paradigmatic simulation published back in 2007 by doctors Laser and Friedman.
+
+31
+00:05:45,460 --> 00:05:51,650
+You'll see links to that paper as well at the GitHub site through the link.
+
+32
+00:05:51,670 --> 00:05:59,522
+And what they do is that they set up what I would deem to be a so-called traditional social science agent-based model.
+
+33
+00:06:00,059 --> 00:06:06,613
+where agents are basically pre-programmed to do particular things.
+
+34
+00:06:06,734 --> 00:06:07,960
+They don't exhibit
+
+35
+00:06:08,581 --> 00:06:14,770
+autonomous decision-making, which is the promise of a lot of generative AI today.
+
+36
+00:06:14,790 --> 00:06:24,584
+And I think that active inference especially emphasizes that autonomy in the sense that these are agents who are minimizing their own free energy.
+
+37
+00:06:24,664 --> 00:06:32,395
+And then from there, predicting what should be the next action that they should take or set of actions, meaning a policy that they should take,
+
+38
+00:06:32,375 --> 00:06:59,378
+And so they engage in all these kind of cognitive functions or mechanisms that we find humans to have related to planning and the idea of having habits that you build up over time and how those sort of compete with more deliberate decision making and the kind of executive functioning in the prefrontal cortex of the brain and finding those kinds of connections.
+
+39
+00:06:59,999 --> 00:07:04,666
+without further ado, what we'll do now is simply create one agent.
+
+40
+00:07:05,567 --> 00:07:09,594
+And we'll I'll go through the steps of how to do that.
+
+41
+00:07:10,415 --> 00:07:23,294
+And this is the agent that features in the laser Friedman model recreation that I do where I use active inference agents, as opposed to the kind of pre programmed agents that that they use.
+
+42
+00:07:24,656 --> 00:07:26,479
+So
+
+43
+00:07:27,202 --> 00:07:30,868
+We'll start with saying, again, this is PyMDP.
+
+44
+00:07:31,690 --> 00:07:32,451
+The link is there.
+
+45
+00:07:32,872 --> 00:07:34,234
+We import some libraries.
+
+46
+00:07:35,656 --> 00:07:39,022
+It's relatively not too many, and some of them are just for the plots.
+
+47
+00:07:40,685 --> 00:07:44,451
+The main thing is you can pip install PyMDP
+
+48
+00:07:44,583 --> 00:08:07,890
+uh there will be mentions later but there have been many updates to that library over the past couple of years uh and a little bit more context on py mdp as far as i understand it from a couple conversations with the developers is that this package is uh directly inspired by and in certain ways trying to emulate the mechanics of uh the spm
+
+49
+00:08:08,292 --> 00:08:18,524
+package developed by Friston et al in MATLAB for constructing active inference agents and environments and processes.
+
+50
+00:08:19,105 --> 00:08:29,457
+So it's sort of the exemplar Python library for doing active inference as far as I'm aware.
+
+51
+00:08:29,825 --> 00:08:39,348
+That said, there's so much complexity whenever these libraries are constructed and a lot of dependencies between different sub libraries and so on.
+
+52
+00:08:39,448 --> 00:08:47,547
+So it becomes really useful to find more focused sort of snapshots of how to construct, say, an agent.
+
+53
+00:08:47,527 --> 00:08:53,034
+and understanding how those mechanics work without necessarily having to scavenge through the code.
+
+54
+00:08:53,054 --> 00:09:00,983
+That said, there are some examples and example tutorials given at the PyMDP website that I've linked there on the screen.
+
+55
+00:09:01,784 --> 00:09:04,528
+So please feel free to peruse those.
+
+56
+00:09:05,188 --> 00:09:08,252
+And so moving on from there.
+
+57
+00:09:09,262 --> 00:09:15,909
+For anyone familiar with the textbook, it's very useful to refer to chapters six and seven.
+
+58
+00:09:16,670 --> 00:09:26,280
+Chapter six refers to kind of providing a general recipe for constructing agents and environments and running simulations.
+
+59
+00:09:27,101 --> 00:09:34,729
+And then from there, chapter seven kind of expands upon those ideas by specifically creating
+
+60
+00:09:34,709 --> 00:09:47,875
+partially observable markup decision making policies processes or pomdps after which pi mdp kind of cleverly takes its name and um those are the kind of discrete
+
+61
+00:09:48,226 --> 00:09:52,694
+time discrete state space models that we'll be working with.
+
+62
+00:09:52,754 --> 00:10:02,510
+That is, they play out in action perception loops, one time step at a time, as opposed to it being continuous time.
+
+63
+00:10:02,630 --> 00:10:10,183
+So you could say, you know, at time step one, or t equals one, and then at time step two, this happens, time step three, this happens.
+
+64
+00:10:10,163 --> 00:10:33,623
+and then discrete state spaces meaning that we're not looking at continuous variables from continuous distributions per se we're looking at uh probability mass functions and you know just more concrete like you know there's a hidden state uh factor called color and it has two levels red and blue you know these kind of definitive discrete uh factors and levels so
+
+65
+00:10:33,890 --> 00:10:36,275
+to construct an active inference agent.
+
+66
+00:10:37,076 --> 00:10:41,725
+Probably this is the general outline all smashed into one slide.
+
+67
+00:10:42,647 --> 00:10:54,430
+So the first three steps, defining states, defining observations, defining controls slash actions slash policies with the nuances for all three of those additional terms.
+
+68
+00:10:54,848 --> 00:10:58,636
+So states, what are our agents uncertain about?
+
+69
+00:10:59,318 --> 00:11:06,994
+What kind of sets of beliefs do they hold that they end up inferring and updating, potentially learning over time?
+
+70
+00:11:07,636 --> 00:11:13,228
+And then defining observations, what do our agents observe from their environment?
+
+71
+00:11:13,208 --> 00:11:24,969
+It's not enough to claim that you have an active inference agent and throw it into some ethereal space where it has no sensory receptors, no sensorium.
+
+72
+00:11:25,069 --> 00:11:32,342
+You need to be able to define what are the senses, so to speak, that the agent has available.
+
+73
+00:11:32,923 --> 00:11:36,229
+The technical phrasing being observation modalities.
+
+74
+00:11:36,209 --> 00:11:53,728
+For example, an agent might have a visual observation modality where it can take in discrete levels, rain or no rain, meaning at any given moment it's observing if there's rain or no rain.
+
+75
+00:11:53,708 --> 00:11:59,156
+through its visual observation modality or visual sensory receptor.
+
+76
+00:11:59,636 --> 00:12:06,346
+Being able to clearly define those kinds of connections almost as if we could view them on a graph, which we will do momentarily.
+
+77
+00:12:07,107 --> 00:12:10,672
+And then defining controls slash actions slash policies.
+
+78
+00:12:11,112 --> 00:12:15,438
+For all intents and purposes going forward, I'm going to be relying upon the word actions.
+
+79
+00:12:16,420 --> 00:12:23,209
+That's because actions are simply, in this case, discrete actions an agent can take at a given time step.
+
+80
+00:12:23,189 --> 00:12:25,633
+There's nothing more to it than that.
+
+81
+00:12:26,294 --> 00:12:30,081
+You can walk or you can run or you can sit.
+
+82
+00:12:30,141 --> 00:12:35,951
+Those would be three actions that an agent could do at any given time step.
+
+83
+00:12:36,032 --> 00:12:43,645
+They're not doing multiple of those in the same time step, and they're not doing them in any kind of deterministic way, so to speak.
+
+84
+00:12:43,625 --> 00:12:56,637
+So with controls, that's a term that comes up very frequently in the literature, and it also relates to other ways of doing, say, reinforcement learning related to engineering problems or otherwise.
+
+85
+00:12:57,137 --> 00:13:13,632
+But the idea of a control is that it's just an action with kind of an additional nuance to it that it relates to the idea of this is an action that can actually change or control something, that something being a hidden state or a hidden state factor.
+
+86
+00:13:13,612 --> 00:13:34,371
+So it's, you know, whenever kind of putting together the matrices involved in constructing POMDP agents, there are times where you'll need, let's say, and I'll clarify what some of these words mean for anyone who's still new to modeling here, but
+
+87
+00:13:34,705 --> 00:14:02,822
+so with controls like there might be it might be the case that you need some kind of sub array like a b matrix or sub matrix that um you know doesn't really do anything like it might be a in state for a rat in the teammates uh who you know they they know that they can control which location of the teammates they go to they could go to the left arm they could go to the right arm but they don't necessarily think that they can change
+
+88
+00:14:02,802 --> 00:14:28,000
+the location of the reward it's always either on the left or it's on the right and you don't know until you see it right so it's it's like the control there would be choosing the left or right arm and the left or right arm is the correct option being like a uh or rather the left or right arm in state where the rat infers if it's gone left or gone right like that is something it can
+
+89
+00:14:28,300 --> 00:14:28,762
+control.
+
+90
+00:14:29,183 --> 00:14:33,036
+Moving on with policies, policies are sequences of actions.
+
+91
+00:14:33,117 --> 00:14:39,880
+In this case, you could have, you know, in the teammates, you have a rat who can choose to go left,
+
+92
+00:14:40,585 --> 00:14:41,506
+and then stay there.
+
+93
+00:14:41,526 --> 00:14:44,210
+It can choose to go right and stay there.
+
+94
+00:14:44,430 --> 00:14:48,876
+It could choose to go to the queue and then go left or otherwise.
+
+95
+00:14:48,896 --> 00:14:51,539
+But the idea is it's just a sequence of actions.
+
+96
+00:14:51,960 --> 00:14:58,528
+And so agents can have their own sort of hypotheses, so to speak, about individual policies.
+
+97
+00:14:59,009 --> 00:15:07,420
+And that's very interesting to think about whenever considering active inference agents who you need to engage in kind of longer term planning horizons and
+
+98
+00:15:07,400 --> 00:15:33,238
+and who might be used for imagine for people who are into engineering or otherwise might be looking at like scheduling problems or inferring situations where you know that you're going to need to do a series of actions in a sequence that maybe need to have some kind of coherency with one another such that it's useful to refer to that specific set of actions that has a policy.
+
+99
+00:15:33,893 --> 00:15:37,679
+Define states, define observations, define your actions.
+
+100
+00:15:37,699 --> 00:15:51,459
+After that, we relate those three components of a model via a series of categorical probability distributions, which are in the A, B, C, D, and E matrices.
+
+101
+00:15:52,120 --> 00:15:54,384
+Again, all of these feature in the textbook.
+
+102
+00:15:55,125 --> 00:15:59,952
+And then those will comprise the beliefs of the agents.
+
+103
+00:16:01,855 --> 00:16:13,173
+Then we define our environment, which here, we're not going to, for the sake of today, for this shorter talk, we're not going to get too far into defining an environment.
+
+104
+00:16:14,074 --> 00:16:24,150
+I will say that common ways of defining environments, especially whenever you're just beginning the modeling process, is that oftentimes people will actually construct another
+
+105
+00:16:24,130 --> 00:16:46,678
+POMDP, which itself represents the environment, because in that way it can take in its own observations, those being the actions of the agent, and then it can output its own actions, those actions being the observations for the agent that's forming, kind of squaring the circle on our action perception loop.
+
+106
+00:16:46,895 --> 00:16:55,728
+But for the sake of today, we'll just be looking at a fully deterministic environment where I manually have it take certain inputs, send out certain outputs.
+
+107
+00:16:55,989 --> 00:16:57,010
+It's still an environment.
+
+108
+00:16:57,231 --> 00:16:59,855
+It's just not a very complex one.
+
+109
+00:16:59,875 --> 00:17:12,514
+And then after that, we just define the active inference loop, run it as a simulation, runs the full loop, agent receives observations in first states, it learns, there's policies, it commits an action.
+
+110
+00:17:12,916 --> 00:17:25,916
+Then after that, a good modeling practice, if you're actually trying to do something with what you're modeling and trying to model some real phenomena, is that you would look at the results of your simulation.
+
+111
+00:17:25,956 --> 00:17:28,640
+You would look at what makes sense to you, what doesn't.
+
+112
+00:17:29,080 --> 00:17:33,527
+Maybe there are some parameters that don't quite make sense that you've set up for the agent.
+
+113
+00:17:33,607 --> 00:17:37,573
+Maybe it's missing an observation modality.
+
+114
+00:17:37,553 --> 00:17:38,635
+or otherwise.
+
+115
+00:17:38,996 --> 00:17:52,339
+Or if you're using these simulations in a more productive way to derive insights, then the idea is that you could tune things and you could modify the environment as if you're
+
+116
+00:17:52,657 --> 00:17:56,823
+you know, introducing some kind of intervention.
+
+117
+00:17:57,043 --> 00:17:58,906
+And then you could see how things play out differently.
+
+118
+00:17:59,287 --> 00:17:59,747
+Right.
+
+119
+00:17:59,767 --> 00:18:08,940
+In the case of people who are maybe concerned with the policy design or we're kind of analyzing agent behavior under various kinds of conditions.
+
+120
+00:18:11,424 --> 00:18:20,537
+The agent we'll be constructing today is an agent whose task is to find a good solution to a complex task or problem.
+
+121
+00:18:20,872 --> 00:18:40,138
+The idea is that the fuller idea is that they're trying to navigate what's called an NK landscape, which is, you know, you could visualize this as a broad set of solutions, and each of them has its own fitness values.
+
+122
+00:18:40,238 --> 00:18:42,962
+So we're looking now at a fitness landscape.
+
+123
+00:18:42,982 --> 00:18:48,229
+At any given point in time in the fuller simulation, which I'll cover in maybe future talks,
+
+124
+00:18:48,597 --> 00:19:17,727
+is that at any given time an agent has a solution currently it can for the sake of this talk i'll say it as simply as this the agent can either at each discrete time step during the action perception loop they can either explore meaning they try to find a new solution that's better than the one they currently have or they can exploit their neighbor which means they steal their neighbor's answer
+
+125
+00:19:18,483 --> 00:19:32,660
+For more context, this is useful for understanding if you wanted to put agents into a network where they interact with one another, which is precisely what my multi-agent simulation from the tutorial does.
+
+126
+00:19:33,240 --> 00:19:35,403
+Again, review the GitHub.
+
+127
+00:19:35,643 --> 00:19:37,445
+All of the code is there for doing so.
+
+128
+00:19:38,226 --> 00:19:44,794
+The rest of the slides in this particular slide deck also get into that, but we're only focusing on these.
+
+129
+00:19:45,415 --> 00:19:48,414
+so that the agent can explore or exploit.
+
+130
+00:19:48,656 --> 00:19:50,447
+And a quick note as well,
+
+131
+00:19:50,630 --> 00:20:00,665
+Let's be cautious not to confuse the use of the words explore and exploit here with how they appear in a lot of the literature on the exploration versus exploitation problem.
+
+132
+00:20:01,707 --> 00:20:05,873
+Here, we're just going to say those are the names of the agent's actions.
+
+133
+00:20:05,953 --> 00:20:09,819
+They could be replaced with study or cheat, right?
+
+134
+00:20:10,380 --> 00:20:13,645
+But I'm just, I recreated the laser Freeman model.
+
+135
+00:20:13,745 --> 00:20:15,128
+They use explore, exploit.
+
+136
+00:20:15,588 --> 00:20:16,990
+It makes sense in a particular way.
+
+137
+00:20:17,151 --> 00:20:18,713
+And so we're going to stay with that.
+
+138
+00:20:18,693 --> 00:20:25,221
+After that, the agent will infer an intention hidden state.
+
+139
+00:20:26,583 --> 00:20:32,530
+That is, they'll receive observations from their environment.
+
+140
+00:20:32,690 --> 00:20:34,612
+They chose to explore or exploit.
+
+141
+00:20:35,233 --> 00:20:38,117
+They receive observations as a response from their environment.
+
+142
+00:20:38,917 --> 00:20:45,966
+They'll infer a hidden state and then they'll learn, meaning they'll update the parameter values of
+
+143
+00:20:48,342 --> 00:20:51,751
+Let me move to this.
+
+144
+00:20:51,931 --> 00:20:54,137
+This is much more representative of the process.
+
+145
+00:20:54,798 --> 00:20:58,688
+So we can start at the top, the agent explore or exploits.
+
+146
+00:20:59,450 --> 00:21:01,896
+Environment takes in those actions.
+
+147
+00:21:02,315 --> 00:21:13,992
+And then based upon whatever rules you set for it to have, or again, you could construct some kind of generative model that will kind of do it on its own.
+
+148
+00:21:15,174 --> 00:21:22,685
+You could add stochasticity or some kind of error term or something so that it's not entirely deterministic, however you like.
+
+149
+00:21:24,007 --> 00:21:30,837
+But it will generate observations at any time step the agent, after committing an action,
+
+150
+00:21:34,310 --> 00:21:56,908
+the environment will send back two observations to the agent um these upper two improvement or no improvement showing that oh the agent explored for example and then saw an improvement in its solution to the problem and then or no improvement you know and then uh
+
+151
+00:21:57,192 --> 00:22:03,105
+The other observation is self or neighbor, which is a one-to-one mapping.
+
+152
+00:22:03,205 --> 00:22:06,633
+That is, if you explore, it's going to return self.
+
+153
+00:22:07,174 --> 00:22:09,700
+If you exploit, it's going to return neighbor.
+
+154
+00:22:10,102 --> 00:22:15,169
+The idea is this agent has two observation modalities.
+
+155
+00:22:15,189 --> 00:22:21,878
+One of the first one relates to the quality of their solution and the outcome of their action.
+
+156
+00:22:22,819 --> 00:22:33,173
+And then the second observation modality simply is a kind of self-reflective observation, which is who did I attend to after that?
+
+157
+00:22:33,794 --> 00:22:37,518
+The agent will take those observations to infer hidden state.
+
+158
+00:22:38,119 --> 00:22:45,907
+It only has one hidden state factor that contains two levels, self and neighbor.
+
+159
+00:22:46,848 --> 00:22:50,712
+There will be, again, a one-to-one mapping between self and neighbor.
+
+160
+00:22:51,193 --> 00:22:58,941
+If you see the outcome you attended to yourself, then you're going to infer that you attended to yourself and vice versa for neighbor.
+
+161
+00:22:59,596 --> 00:23:24,878
+Um, and then in addition to that inference learning occurs, uh, which, uh, modifies the, uh, categorical probability distribution describing, uh, the, the probability of those outcomes given state beliefs and the agent from there and, and for actions or policies you should take and carry them out and we proceed.
+
+162
+00:23:27,524 --> 00:23:35,879
+So this slide, and there will be times that I might zoom through particular slides, but in this case, this is one that's good to reflect on.
+
+163
+00:23:36,921 --> 00:23:50,885
+Something that I think a lot of people miss or maybe struggle with, having been involved with the Institute, the reading group for some time and having my own trials and errors in learning how these things work, is that there's a lot of nestedness.
+
+164
+00:23:51,106 --> 00:23:52,468
+We're working with a lot of
+
+165
+00:23:52,448 --> 00:24:14,153
+uh matrices uh anyone who not only works with imdp but also matlab and spm is very familiar that it's crucial to be able to understand how to construct matrices how to construct matrices that represent categorical probability distributions i.e for the agent their beliefs um
+
+166
+00:24:14,133 --> 00:24:18,480
+And so it's really important to wrap your head around that.
+
+167
+00:24:18,600 --> 00:24:21,004
+And so I just really wanted to spell things out.
+
+168
+00:24:21,024 --> 00:24:29,678
+And there's an additional collab script that I'm currently writing that already has now a bunch of markdown cells so that you can not only run the code,
+
+169
+00:24:29,658 --> 00:24:35,204
+but you can see full descriptions on how these things work.
+
+170
+00:24:35,244 --> 00:24:44,874
+I'm basically adding more things to that script that weren't available to me, or I just didn't have time to include whenever I devised this initial tutorial.
+
+171
+00:24:46,656 --> 00:24:57,167
+But now that we've defined our hidden states, observations, and controls, we'll link them together through the A, B, C, D, and E.
+
+172
+00:24:57,451 --> 00:24:58,152
+matrices.
+
+173
+00:24:58,973 --> 00:25:06,681
+And so hidden states, a clarification on terminology, agents will have hidden state factors.
+
+174
+00:25:07,562 --> 00:25:13,588
+They're called hidden state factors, they'll have, you know, say, in hidden state factors.
+
+175
+00:25:13,969 --> 00:25:24,640
+And, and so our agent has only one is the attention hidden state factor containing two discrete levels, self and neighbor.
+
+176
+00:25:24,822 --> 00:25:34,217
+You see the same exact kind of nestedness with observations and observation or sometimes referred to as outcome modalities.
+
+177
+00:25:34,778 --> 00:25:37,923
+So you'll have M observation modalities.
+
+178
+00:25:38,064 --> 00:25:39,406
+Our agent has two of them.
+
+179
+00:25:39,506 --> 00:25:48,180
+One of them is for outcomes, which the discrete levels of which are improvement and no improvement, as I showed before.
+
+180
+00:25:48,278 --> 00:26:16,598
+um this code actually includes a third one called unobserved uh it never comes up in any of the simulations that are run i thought it would be interesting though to include it if only because it shows that you know you can include uh additional dimensions in your model even if you don't know if they're going to come into play at any point the simulation uh it can potentially change things depending on how you set those initial values in the uh belief distributions but uh
+
+181
+00:26:16,679 --> 00:26:20,662
+You know, for the time being, I just wanted to show that it's possible to do that.
+
+182
+00:26:21,923 --> 00:26:24,686
+And finally, controls and control factors.
+
+183
+00:26:25,406 --> 00:26:31,331
+So actions, you know, again, as I mentioned earlier, an action is just a discrete thing an agent can do.
+
+184
+00:26:31,832 --> 00:26:39,138
+You could have similarly with nestedness, you could have a whole control factor of different actions an agent could take for the total control factors.
+
+185
+00:26:39,198 --> 00:26:46,264
+Our agent will only have one, and it will contain two discrete levels or discrete actions, explore and exploit.
+
+186
+00:26:51,070 --> 00:27:02,021
+As far as defining hidden state factors in states, observation modalities, observations, and then controls or actions, this is it.
+
+187
+00:27:02,461 --> 00:27:04,443
+This is all the code you need.
+
+188
+00:27:04,743 --> 00:27:13,932
+That's part of the, and I'm following a certain kind of nomenclature that PyMDP, the developers use in their tutorial website.
+
+189
+00:27:14,253 --> 00:27:16,975
+It's a very clever way of keeping track of things.
+
+190
+00:27:18,257 --> 00:27:19,778
+None of these,
+
+191
+00:27:19,758 --> 00:27:45,428
+string values like cell it's uh improvement none of them matter so to speak um they're just a good point of reference by uh including them in a list so this first list attention state names represents the hidden state factor uh for attention and it just it the list contains two discrete levels self or neighbor
+
+192
+00:27:45,408 --> 00:28:07,213
+i included one in this simulation to denote you have one neighbor so neighbor one uh and then from there you just store uh the number of states uh for each in state factor uh this appears a little redundant because we only have one but i'm just you know this if you were to add like say multiple hidden state factors this would be more interesting um
+
+193
+00:28:07,852 --> 00:28:11,518
+And then tracking the number of in state factors that you have.
+
+194
+00:28:12,660 --> 00:28:23,919
+For anyone unfamiliar with Python programming, the lane alien method allows you to just see what is the length of the object that you're inputting.
+
+195
+00:28:24,580 --> 00:28:30,750
+So we only have one in state factor, which leads us to one.
+
+196
+00:28:32,373 --> 00:28:32,914
+The next
+
+197
+00:28:33,417 --> 00:28:35,945
+Small code snippet, very similarly.
+
+198
+00:28:36,226 --> 00:28:38,754
+Now we define each observation modality.
+
+199
+00:28:38,775 --> 00:28:42,527
+The outcome observation modality has three discrete levels.
+
+200
+00:28:42,707 --> 00:28:44,152
+Improvement, no improvement.
+
+201
+00:28:44,674 --> 00:28:46,279
+As I mentioned earlier, unobserved.
+
+202
+00:28:47,626 --> 00:28:53,392
+the attention observation modality contains two discrete observations, self or neighbor one.
+
+203
+00:28:53,852 --> 00:28:59,759
+So recall that in given time step, an agent is going to receive one of each of these.
+
+204
+00:29:00,039 --> 00:29:11,691
+So at time step four, the agent could receive improvement and neighbor one, or could receive no improvement and self or unobserved and self.
+
+205
+00:29:12,111 --> 00:29:15,675
+The point is that it will receive one of each, right?
+
+206
+00:29:16,043 --> 00:29:22,509
+Um, again, we track those using, uh, the length or LEN, uh, function.
+
+207
+00:29:23,010 --> 00:29:28,975
+And then once again, actions, uh, we put them, we only have two actions.
+
+208
+00:29:29,015 --> 00:29:35,281
+So I just referred to it as the action, uh, control factor, and we included our two actions.
+
+209
+00:29:35,341 --> 00:29:37,723
+You can explore, or you can exploit neighbor one.
+
+210
+00:29:38,604 --> 00:29:41,447
+And we track that and the number of controls available to the agent.
+
+211
+00:29:42,448 --> 00:29:42,608
+Um,
+
+212
+00:29:43,010 --> 00:29:44,172
+Again, that's it.
+
+213
+00:29:44,512 --> 00:30:08,933
+And if you can determine this kind of design for your agent early on and then begin programming, as the authors of the textbook acknowledge, it's quite an iterative process whenever it comes to computational modeling of just about anything that includes active inference agents and running simulations.
+
+214
+00:30:08,913 --> 00:30:09,734
+and so on.
+
+215
+00:30:09,754 --> 00:30:27,782
+So this is a very crucial first step because it will inform a lot of what you do next, as well as what you might end up changing during that process of iteratively changing your model of your model.
+
+216
+00:30:28,319 --> 00:30:32,384
+The A matrix is the first step of linking these things.
+
+217
+00:30:32,484 --> 00:30:40,775
+The A matrix will link together the observation modalities and hidden state factors that we defined earlier.
+
+218
+00:30:41,276 --> 00:30:46,222
+We need one subarray for each outcome modality.
+
+219
+00:30:46,643 --> 00:30:50,648
+So I want to just draw attention to this upper right equation.
+
+220
+00:30:51,235 --> 00:31:03,290
+Again, matrix operations are perhaps the main hurdle in learning how to construct PIMDP agents or any POMDP agents, including MATLAB.
+
+221
+00:31:04,511 --> 00:31:15,505
+So a useful rule of thumb is just remembering that whenever you construct a matrix to represent, say, the A matrix, the likelihood matrix,
+
+222
+00:31:15,485 --> 00:31:36,160
+uh you know that the probability of whatever outcome you're looking at whatever observation modality you're looking at we'll start with the outcome one which again uh includes improvement no improvement none observed the probability of any of those observations conditioned on
+
+223
+00:31:37,557 --> 00:31:46,149
+every single one of your state factors, which nicely for us is as simple as the way it looks to the far left.
+
+224
+00:31:46,630 --> 00:31:55,903
+Probability, observation, modality, outcome conditioned on the hidden state factor for attention.
+
+225
+00:31:56,221 --> 00:32:11,682
+right so we're really just uh working with these these two dimensions um it would become three dimensional matrices if say we had two hidden state factors this would get expanded um so uh
+
+226
+00:32:12,067 --> 00:32:21,440
+The typical way of doing this in PyMDP, PyMDP contains a sub library utils containing just different utility functions.
+
+227
+00:32:22,101 --> 00:32:35,340
+And the sort of framework for constructing these kinds of beliefs in PyMDP is by using what are called object arrays, which are already available in the NumPy library.
+
+228
+00:32:35,320 --> 00:32:58,560
+uh it's effectively a numpy array that allows for uh data types aside from float values so it's kind of a more flexible version of a numpy array and that allows you to do things like say create an a matrix that's your representative of your overall
+
+229
+00:32:59,317 --> 00:33:04,356
+likelihood matrix for everything, all observation modalities and state factors.
+
+230
+00:33:04,376 --> 00:33:10,980
+And then you can construct within it individual sub arrays, one for each observation modality.
+
+231
+00:33:11,602 --> 00:33:17,049
+And those subarrays can be of different dimensionalities from one another.
+
+232
+00:33:17,089 --> 00:33:21,655
+And so it's just, again, wrapping your head around kind of the nestedness here.
+
+233
+00:33:22,456 --> 00:33:27,662
+And a lot of these things are better represented in the code I've written.
+
+234
+00:33:27,682 --> 00:33:29,144
+So I might touch on that if there's time.
+
+235
+00:33:29,945 --> 00:33:39,297
+Of course, this is code I wrote too, but the Colab script, which contains code that you can run, and it has different ways of expressing these different matrices.
+
+236
+00:33:39,614 --> 00:33:50,849
+But you can see the point is that now that we've defined our hidden states, our observations, our actions, we're going to start linking them to represent our agent's beliefs.
+
+237
+00:33:51,550 --> 00:33:56,957
+So for this situation, I print the outputs.
+
+238
+00:34:00,161 --> 00:34:07,090
+All code that you've seen so far with the gray shading that is, you know, at the beginning we imported libraries,
+
+239
+00:34:07,407 --> 00:34:16,658
+And then two slides ago, we looked at defining hidden state factors, observation modalities, actions.
+
+240
+00:34:17,259 --> 00:34:18,941
+Now this is our A matrix.
+
+241
+00:34:20,382 --> 00:34:26,410
+I'm not getting into the maths on this A matrix because it's easier to just look at the outcomes.
+
+242
+00:34:27,371 --> 00:34:35,020
+This is how we construct, like all this code that I've shown so far can just be run, like in the order that I've shown it thus far.
+
+243
+00:34:35,340 --> 00:34:36,942
+You'll see that in the Colab script.
+
+244
+00:34:37,377 --> 00:34:53,327
+Here, the first subarray, again, which is for the outcome observation modality, we'll notice for those who are familiar with probability theory, probability distribution sum to one.
+
+245
+00:34:54,286 --> 00:35:05,937
+What's helpful is that the utils sub-library has an isNormalize function where you can put any object array into it, and it'll tell you if it's normalized or not.
+
+246
+00:35:05,957 --> 00:35:10,441
+It's a helpful rule of thumb to ensure that you've done everything right before you proceed further.
+
+247
+00:35:11,302 --> 00:35:22,572
+And so what this does is that it lets us see that if we sum these values, each outcome per hidden state level,
+
+248
+00:35:23,024 --> 00:35:25,507
+we can see that it's entirely uniform.
+
+249
+00:35:25,748 --> 00:35:27,130
+It's totally uncertain.
+
+250
+00:35:27,650 --> 00:35:29,413
+It's not useful to the agent.
+
+251
+00:35:29,453 --> 00:35:34,760
+There's a third probability that they'll see an improvement if they attended themselves.
+
+252
+00:35:34,780 --> 00:35:39,767
+Third probability of there being no improvement if they attended themselves.
+
+253
+00:35:39,787 --> 00:35:45,174
+There's a third probability of seeing an unobserved outcome if they attended themselves.
+
+254
+00:35:45,274 --> 00:35:51,563
+It's very common practice if you're attempting to model a more realistic phenomena
+
+255
+00:35:51,745 --> 00:35:56,055
+or organism or human, and you have no idea what they would do.
+
+256
+00:35:56,697 --> 00:35:59,383
+It's common practice to initialize them with uniform priors.
+
+257
+00:35:59,443 --> 00:36:04,134
+Here, I'm just doing it for the sake of simplicity in a tutorial, right?
+
+258
+00:36:04,414 --> 00:36:07,662
+And so, meanwhile,
+
+259
+00:36:08,080 --> 00:36:19,551
+With the next subarray, as I said earlier, there's one-to-one mappings between the attention observation modality and the attention hidden state factor.
+
+260
+00:36:19,912 --> 00:36:31,844
+So it's as if the agent has completely certain beliefs, like the polar opposite about who it's attending to.
+
+261
+00:36:32,585 --> 00:36:35,067
+So if it sees that it's attending to someone
+
+262
+00:36:35,587 --> 00:37:02,792
+um attending to itself then it will refer it's into the attending to itself and vice versa for neighbor and that's it uh that's the a matrix and then we have the b matrix which i would say is equally complex and then things become immensely simpler from there the b matrix again equation top right um uh
+
+263
+00:37:03,194 --> 00:37:07,802
+We need one subarray B matrix for each hidden state factor.
+
+264
+00:37:08,323 --> 00:37:09,204
+This is very simple.
+
+265
+00:37:09,284 --> 00:37:11,087
+We only have one hidden state factor.
+
+266
+00:37:11,308 --> 00:37:13,191
+It's the attention hidden state factor.
+
+267
+00:37:14,012 --> 00:37:25,472
+And so our agent wants to be able to track if I'm currently attending to, let's say, myself, and I choose to explore,
+
+268
+00:37:25,874 --> 00:37:55,662
+what will the hidden state be at the next time step thus s tau plus one conditioned on s tau the hidden statement uh present uh combined with pi which is representative of the action or policy undertaken in the present um this is also going to be incredibly simple it's really going to be one to one so at any given point in time um
+
+269
+00:37:56,047 --> 00:38:09,804
+the agent will believe that regardless of what state it is in currently, it will transition to self if it chooses explore, probability one.
+
+270
+00:38:10,244 --> 00:38:16,912
+If the current state is neighbor, it'll transition to self with probability one if it chooses explore.
+
+271
+00:38:17,974 --> 00:38:24,822
+And similarly, it always believes that it'll transition to the neighbor in state if
+
+272
+00:38:25,780 --> 00:38:29,204
+regardless of whatever state it currently believes it is in.
+
+273
+00:38:29,905 --> 00:38:43,040
+So a comment that might come up for anyone who is familiar with these things, this is not terribly different from just a standard Markov decision making process, right?
+
+274
+00:38:43,180 --> 00:38:50,168
+It's kind of like, well, if the agent has all these fully certain beliefs, why create a partially observable environment?
+
+275
+00:38:50,148 --> 00:38:53,512
+There's a certain reason for that.
+
+276
+00:38:53,953 --> 00:38:56,856
+And then there's another just more direct reason for that.
+
+277
+00:38:56,896 --> 00:39:01,141
+The direct one is that this is how PMDP works.
+
+278
+00:39:01,642 --> 00:39:09,451
+And then also the other reason is I think that partially observable environments are more representative of our reality.
+
+279
+00:39:09,932 --> 00:39:15,919
+I think it aligns with the idea that we do often have noisy sensory receptors
+
+280
+00:39:16,253 --> 00:39:22,450
+know whether you have 20 20 vision or not uh it doesn't mean that you can uh you know see every
+
+281
+00:39:22,767 --> 00:39:25,631
+color that's every, uh, ever existed.
+
+282
+00:39:26,171 --> 00:39:29,015
+And it doesn't mean that, you know, you can see perfectly anything.
+
+283
+00:39:29,235 --> 00:39:43,394
+Uh, and, and so the, the idea of just, just noise being there and the idea that you have to infer, you have to rely upon observations to infer beliefs and having those kinds of loops, you know, it all, um, kind of makes sense.
+
+284
+00:39:43,854 --> 00:39:48,420
+And then there's another aspect, uh, that will come up soon whenever we discuss learning.
+
+285
+00:39:50,932 --> 00:40:07,716
+For the C matrix, which is representative of preferences or priors over observations, this is basically denoting, it's as if we're saying, what are the outcomes the agent actually wants to see or observe?
+
+286
+00:40:07,776 --> 00:40:15,066
+What are the observations it wants to see happen as opposed to those that it doesn't?
+
+287
+00:40:15,417 --> 00:40:27,790
+right and so this is immensely uh easier to construct uh versus the the a matrix or the b matrix in that we're really just effectively creating these vectors
+
+288
+00:40:28,462 --> 00:40:34,972
+So we need one subarray for each outcome modality or observation modality.
+
+289
+00:40:34,992 --> 00:40:41,963
+For the first one, the outcome modality, the way that we've defined this is take a list.
+
+290
+00:40:43,225 --> 00:40:51,398
+Each one of these values is indexed to the observation in the outcome
+
+291
+00:40:51,378 --> 00:41:19,360
+observation modality as we saw before so recall in order the first one is improvement the second one is no improvement and the third one is unobserved these line up exactly in the same way and reiterating again the matrix operations and being able to grasp like how indexing goes here as long as everything lines up
+
+292
+00:41:19,981 --> 00:41:28,381
+it'll be solvable, right, the free energy calculation will be able to be carried out as long as everything kind of is in its place.
+
+293
+00:41:29,023 --> 00:41:29,163
+Right.
+
+294
+00:41:29,183 --> 00:41:36,681
+So so it's do your best to never confuse, you know, which position each of these represents.
+
+295
+00:41:37,403 --> 00:41:37,804
+So
+
+296
+00:41:38,577 --> 00:42:00,172
+The reason why these values don't sum to one common practice that I've seen a lot in previous MATLAB scripts and so on is people will actually use these like whole integers and even negative values because it's just kind of a more human friendly, human interpretable way of experimenting with an agent's preferences.
+
+297
+00:42:01,394 --> 00:42:05,260
+Whenever you run this through the softmax function,
+
+298
+00:42:05,240 --> 00:42:08,005
+which is also applied here.
+
+299
+00:42:08,506 --> 00:42:19,888
+This basically strongly amplifies the final probability distribution that arises and also turns it into a probability distribution that does sum to one.
+
+300
+00:42:21,050 --> 00:42:22,573
+And then
+
+301
+00:42:22,942 --> 00:42:45,996
+uh before we move on to see what that looks like for the second observation modality uh the attention observation modality we're going to make that entirely uniform as well what each of these really is saying is that the agent strongly prefers to see improvements in its solution it dis prefers seeing no improvement in its current solution
+
+302
+00:42:45,976 --> 00:42:52,668
+And it is indifferent to the unobserved observation.
+
+303
+00:42:53,129 --> 00:42:58,840
+It's not exactly how the math would play out because of the softmax function, but it's effectively something like that.
+
+304
+00:42:59,000 --> 00:43:03,428
+And in any case, in this simulation, we won't be seeing the unobserved observation.
+
+305
+00:43:03,408 --> 00:43:27,559
+um observation come up at all anyway uh and then for the second one uh fully uniform preferences uh that simply means that the agent has no particular preference towards um whether it's attending to itself or to its neighbor right so you could experiment with this you could see like what what happens whenever an agent actually prefers to
+
+306
+00:43:29,007 --> 00:43:35,857
+its due diligence and primarily just explore and come up with its own answers to the solution.
+
+307
+00:43:35,977 --> 00:43:42,306
+Or what if you come up with an agent who more so prefers to steal or exploit their neighbor's answer.
+
+308
+00:43:42,326 --> 00:43:50,618
+In any case, here we'll stay totally agnostic to that and just say that the agent has uniform preferences.
+
+309
+00:43:51,119 --> 00:43:52,521
+So those end up looking like this.
+
+310
+00:43:54,464 --> 00:43:58,710
+Whenever we print them out, again, these are normalized.
+
+311
+00:43:58,994 --> 00:44:04,650
+We see how the softmax function strongly amplified
+
+312
+00:44:04,799 --> 00:44:14,730
+where the preference for improvement was a five, it's now become a 0.9908 continuing probability.
+
+313
+00:44:15,131 --> 00:44:18,394
+And so this relates back to the idea that agents are self-evidencing.
+
+314
+00:44:19,636 --> 00:44:34,452
+Based on how particularly expected free energy is computed, where it includes C within the pragmatic value term, this is what will guide the agent towards, you know,
+
+315
+00:44:35,191 --> 00:44:55,438
+towards observations that it prefers as opposed to others, making this move beyond just, you know, an agent who's hyper reactive to what's going on in the present, instead of an agent who might prefer to see certain things and therefore act in a way to kind of realize what it prefers.
+
+316
+00:44:55,999 --> 00:45:01,607
+Again, here, preference really just meaning it being what you expect.
+
+317
+00:45:02,428 --> 00:45:04,050
+And then
+
+318
+00:45:04,250 --> 00:45:10,464
+Again, uniform distribution for the second modality.
+
+319
+00:45:10,604 --> 00:45:18,061
+It has no particular preference towards observing itself or observing its neighbor as who it's attending to.
+
+320
+00:45:18,081 --> 00:45:20,065
+Then D.
+
+321
+00:45:20,551 --> 00:45:22,834
+Fortunately for us, we only have one hidden state factor.
+
+322
+00:45:23,135 --> 00:45:25,158
+So this is the shortest description.
+
+323
+00:45:25,698 --> 00:45:34,291
+It's similarly to how C results in a probability distribution that describes the priors over observations.
+
+324
+00:45:34,871 --> 00:45:37,275
+The D matrix does the same thing, but for states.
+
+325
+00:45:37,816 --> 00:45:38,877
+And we only have one hidden state.
+
+326
+00:45:38,897 --> 00:45:45,066
+So we just have one subarray for the attention hidden state factor.
+
+327
+00:45:45,787 --> 00:45:49,292
+And so again, we just...
+
+328
+00:45:49,812 --> 00:46:01,031
+And I didn't mention this earlier, the NP dot ones is just generating a vector equivalent to the number of hidden state levels that you have.
+
+329
+00:46:01,251 --> 00:46:06,841
+So a vector of two ones, and then you're normalizing it using the utils library, right?
+
+330
+00:46:06,861 --> 00:46:10,487
+So take two ones, normalize them, you're going to end up with point 5.5.
+
+331
+00:46:12,560 --> 00:46:14,524
+The E-matrix are your habits.
+
+332
+00:46:15,305 --> 00:46:21,778
+You don't actually necessarily have to define these whenever you're constructing a PyMDP agent.
+
+333
+00:46:22,480 --> 00:46:34,804
+I find it to be very useful if either one, you actually want to run some kind of experiment where you think that the agent will actually have more of a sort of
+
+334
+00:46:34,784 --> 00:47:04,335
+uh habit of doing one particular action over the other um it's also useful if say you're trying to set up a different kind of simulation that's more focused on uh policies in which case you know it might be the case that you know you only want uh the agent to have a strong prior belief for entire particular policy versus another uh and and use that as a way to to define the agent as having beliefs that you know a particular policy
+
+335
+00:47:04,636 --> 00:47:15,088
+won't at all work versus one that will such as, you know, dry off and then jump in the pool as a kind of an odd thing to do.
+
+336
+00:47:15,108 --> 00:47:21,475
+Or, you know, it could come up with some better example on the fly, but I think the point comes across right.
+
+337
+00:47:21,836 --> 00:47:28,163
+So in any case, this is just basically your priors over your actions that get incorporated.
+
+338
+00:47:28,328 --> 00:47:30,491
+So what did we do?
+
+339
+00:47:31,413 --> 00:47:34,157
+We related states and observations in the A matrix.
+
+340
+00:47:34,337 --> 00:47:39,205
+We related states and actions in the B matrix.
+
+341
+00:47:39,225 --> 00:47:48,379
+And then C, D, and E are just the priors on states, excuse me, observations, states, and actions, respectively.
+
+342
+00:47:48,359 --> 00:48:18,079
+also recall uh from the from the textbook and elsewhere that the agent has a separation from its environment uh recall the notion of a markov blanket and so uh for the for the agent uh themselves like despite certain things occurring during three minute energy minimization to where uh observations and actions do in fact end up influencing one another vicariously uh we have not expressed a probability distribution
+
+343
+00:48:18,059 --> 00:48:21,885
+that actually directly links observations and actions.
+
+344
+00:48:21,965 --> 00:48:28,276
+So it's kind of maintaining the blanket states of your active states and sensory states.
+
+345
+00:48:28,496 --> 00:48:33,644
+And you'll see that in the textbook reading the section about Markov blankets.
+
+346
+00:48:33,705 --> 00:48:36,709
+So it's just maintaining that kind of separation.
+
+347
+00:48:39,474 --> 00:48:40,776
+Then
+
+348
+00:48:41,178 --> 00:48:43,581
+I will go just a little bit longer than what I expected.
+
+349
+00:48:45,062 --> 00:48:56,595
+So now that we have our A, B, C, D and E, one additional thing that our agent will do is that it will learn the idea of learning and active inference.
+
+350
+00:48:57,396 --> 00:49:10,830
+There's plenty of literature on this, but it can relate to the idea of for the sake of a model, what we're doing is that we're assigning sort of these hyper parameters or priors to
+
+351
+00:49:11,063 --> 00:49:15,268
+to the matrices that we just defined themselves.
+
+352
+00:49:16,250 --> 00:49:34,894
+So more specifically, what our agent will do is it will learn its A matrix, the likelihood matrix that we defined first out of those five things, A, B, C, D, and E. And it will just update it based on the new observations it receives and the state that it infers.
+
+353
+00:49:35,650 --> 00:49:43,884
+And it will also answer a question as to why did we set up hidden states and observations and actions in that way?
+
+354
+00:49:44,445 --> 00:49:48,933
+Why are we doing these identity mappings between particular things?
+
+355
+00:49:50,375 --> 00:49:55,684
+By learning the A matrix, that will allow our agent to learn
+
+356
+00:49:56,120 --> 00:50:06,558
+If it's the case that when it explores, it'll be more likely to see an improvement or no improvement, right?
+
+357
+00:50:06,578 --> 00:50:13,150
+This will allow our agent to, by accumulating observations over time in the action perception loop,
+
+358
+00:50:13,130 --> 00:50:18,961
+it will begin to better update its beliefs about which thing it should do.
+
+359
+00:50:19,322 --> 00:50:31,105
+And so even though previously we defined E as being uniform over those two actions to where the agent initially has no particular bias towards
+
+360
+00:50:31,287 --> 00:50:55,776
+exploring or exploiting it will actually probably start to bias the agent towards one of those directions because it prefers to see improvements and that can only occur through learning without learning and modifying internal parameters of your model you're effectively you know sort of like a pre-programmed
+
+361
+00:50:55,756 --> 00:51:03,386
+a thermos thermostat or something, right, you're not adaptive, you just act in the same way as you always do.
+
+362
+00:51:03,546 --> 00:51:18,085
+And so an agent who doesn't learn as the one if we define an agent like we just did, but it never learns and what it will do is more than likely just with 5050 chance to explore exploit, just keep going from
+
+363
+00:51:18,352 --> 00:51:27,417
+there so um the way that we update the a matrix for the imdp agent here um
+
+364
+00:51:27,582 --> 00:51:51,733
+is that we it is quite simple and this is it you don't even need all of this code you only need the code in the upper right but it's basically uh this uh small p capital a is the prior that we're creating uh what we're doing is that we're using that utils sub library this dearestly like function which basically you construct your a send it through the dearestly like function
+
+365
+00:51:51,713 --> 00:52:03,151
+It'll convert it into what is a kind of exemplar conjugate distribution of a categorical probability distribution, that being a Dirichlet distribution.
+
+366
+00:52:03,812 --> 00:52:07,999
+Whenever you print it out, you see that we set scale to one.
+
+367
+00:52:08,620 --> 00:52:11,865
+It looks exactly like our A matrix.
+
+368
+00:52:12,487 --> 00:52:15,835
+What that scale argument does is that it scales the values.
+
+369
+00:52:16,256 --> 00:52:29,466
+That's the special thing about the matrix Dirichlet distribution is that it's something like an accumulation of pseudo counts that will then weigh particular
+
+370
+00:52:30,037 --> 00:52:32,800
+parts of the competition of free energy minimization.
+
+371
+00:52:33,541 --> 00:52:38,486
+For example, the agent might start to see more instances of improvement.
+
+372
+00:52:39,186 --> 00:52:48,035
+And so it might start to upweight the likelihood of improvement, given the association that it saw it with.
+
+373
+00:52:49,116 --> 00:52:51,619
+And so these don't actually have to sum to one.
+
+374
+00:52:51,979 --> 00:52:54,402
+They're just kind of like weighting our A matrix.
+
+375
+00:52:54,542 --> 00:52:57,765
+And they're very relatable to the notion of precision.
+
+376
+00:52:58,032 --> 00:53:27,060
+right like if the agent hardly has any previous experience uh with anything and it's and it's it's it's uh uh prior over a is highly scaled down meaning it has very few pseudo counts of any prior experience uh it's the agent is going to be less certain in its ability to make connections between uh exactly what the a matrix tries to model which is the relationship between observations and states so
+
+377
+00:53:27,631 --> 00:53:44,475
+so these values and themselves you know be set differently and and you can set the precision differently and then they can impact the agent uh differently that way i have all of that this is it for constructing the agent
+
+378
+00:53:45,046 --> 00:53:47,512
+It's basically just an agent class.
+
+379
+00:53:47,853 --> 00:53:50,278
+And so you just feed in the arguments.
+
+380
+00:53:50,318 --> 00:53:54,989
+There are actually many, many arguments that can go into the agent constructor.
+
+381
+00:53:55,029 --> 00:53:58,016
+It might seem like a lot.
+
+382
+00:53:58,117 --> 00:54:01,705
+There are actually, I think, literally a couple dozen more.
+
+383
+00:54:01,685 --> 00:54:08,814
+but it very much mirrors the construction of the MATLAB SPM package for anyone familiar with that.
+
+384
+00:54:09,575 --> 00:54:21,410
+There's a whole script, you know, that will run through and try and construct your Markov decision-making process, your agent, and it'll check to make sure that all of these, you know, boxes are correct.
+
+385
+00:54:21,430 --> 00:54:23,372
+Like, is the A normalized?
+
+386
+00:54:23,953 --> 00:54:27,137
+You know, how did you set gamma or some other such thing?
+
+387
+00:54:27,157 --> 00:54:31,202
+And so it's, you know, in spirit, this is very similar to that.
+
+388
+00:54:31,570 --> 00:54:48,994
+What's nice is that the PyMDP package, it has different inference algorithms, not many, but as opposed to choosing sort of the standard one, I've chosen MNP, which is marginal message passing.
+
+389
+00:54:49,554 --> 00:54:54,922
+There's a nice paper on it that can be found in the speaker notes of the tutorial slides.
+
+390
+00:54:55,442 --> 00:54:58,827
+I make a brief reference to it here, par at all 2019.
+
+391
+00:54:58,807 --> 00:55:17,772
+And so marginal message passing basically being a kind of, in a certain way, it's a kind of compromise between overcoming intractability and achieving something like computational efficiency and approximation that you get with variational message passing.
+
+392
+00:55:18,332 --> 00:55:26,603
+But at the same time, it overcomes some of the issues of not having certain precision terms involved.
+
+393
+00:55:26,583 --> 00:55:37,519
+that leads to issues with variational message passing that it can lead to overconfident posteriors in the computation.
+
+394
+00:55:38,059 --> 00:55:46,531
+Meanwhile, belief propagation is much more holistic, but more computationally expensive, sometimes tractable depending on the situation.
+
+395
+00:55:46,591 --> 00:55:56,185
+So MMP is a nice way of striking the balance, trying to find that balance between complexity and accuracy as we are always trying to do.
+
+396
+00:55:56,857 --> 00:56:16,587
+So you'll notice that we plugged in everything that we defined so far, A, B, C, D, E, and then the priors over A, which was M and P. There's a little bit more explanation of what some of these other arguments are, but given the time and also simply the fact that, I mean,
+
+397
+00:56:16,904 --> 00:56:19,952
+We would have to go into a lot more to look at the other options available.
+
+398
+00:56:19,972 --> 00:56:21,236
+I would say this suffices.
+
+399
+00:56:22,098 --> 00:56:26,210
+If you want to play around with any of these, certainly go for it.
+
+400
+00:56:26,230 --> 00:56:30,762
+And I'd especially recommend looking at Inference Horizon and the policy link.
+
+401
+00:56:31,332 --> 00:57:01,221
+uh arguments um this agent is very simple in the sense that it makes no future planning steps for for constructing policies that go beyond just should i explore now or should i exploit now um it can make inferences uh one additional time step into the future though so it does in a certain way allow it to have this kind of forward-lookingness where it'll not just try to anticipate what will happen next but it'll try to
+
+402
+00:57:01,201 --> 00:57:22,399
+anticipate what will happen next next so you know the next time step and the one following that um and uh yeah i also chose stochastic action selection you could choose deterministic instead there's a note on how that works um basically you know if uh if your posteriors over policies or that uh
+
+403
+00:57:23,172 --> 00:57:46,125
+you know uh explorer has a value of 0.1 you'll choose that with probability 0.1 right so there's still stochasticity involved um but you're just going to be more likely to choose the option with the highest probability deterministic means you would automatically go for the the action that has the highest probability assigned in the posterior
+
+404
+00:57:49,565 --> 00:57:59,999
+So all those things in mind, this is the general process that will be carried out during an active inference loop for our agent.
+
+405
+00:58:00,179 --> 00:58:11,835
+It'll infer states, which once we've constructed our agent, the agent, and this is common for other reinforcement learning paradigms as well.
+
+406
+00:58:13,196 --> 00:58:18,964
+You have an agent, and then that agent will have a series of attributes that you can access at any given time.
+
+407
+00:58:19,433 --> 00:58:27,022
+Our agents have an infer states method, which can then take in the observation.
+
+408
+00:58:28,103 --> 00:58:39,497
+And then after that, whenever it comes to learning, the pip install version of PIMDP has update A, B, and D matrices available.
+
+409
+00:58:41,119 --> 00:58:48,968
+To briefly harken back to this, there have been many updates to the PIMDP library over the past couple of years.
+
+410
+00:58:49,623 --> 00:58:59,873
+It's very exciting, but I didn't want to give anything too definitive because I think many things are still in progress, but right now they're actively developing means of doing model fitting, which are already there.
+
+411
+00:59:00,714 --> 00:59:04,037
+It's just, I can see that they're kind of cleaning some things up.
+
+412
+00:59:04,337 --> 00:59:12,145
+They've also, you know, there will be means of using the JAX backend to speed up a lot of the processes, which is very exciting.
+
+413
+00:59:12,205 --> 00:59:18,111
+And also they've implemented a sophisticated inference, which is another way of doing policy inference.
+
+414
+00:59:18,850 --> 00:59:21,533
+using a kind of optimizing a tree search.
+
+415
+00:59:22,875 --> 00:59:36,072
+But in addition to those updates, they'll also be updating the ability such that the agent could learn its preferences or its habits or other aspects.
+
+416
+00:59:36,112 --> 00:59:40,718
+These are just the pip install versions currently available methods.
+
+417
+00:59:41,399 --> 00:59:48,047
+Then agent will infer its policies and then it will sample its action.
+
+418
+00:59:50,525 --> 00:59:55,185
+So in state inference, again, we're using marginal message passing.
+
+419
+00:59:55,537 --> 01:00:14,327
+The interesting thing about PyMDP is that the only time that F, variational free energy, really comes up as far as the code goes is that F gets scored across policies rather than being the more general free energy of the overall system per se.
+
+420
+01:00:14,567 --> 01:00:22,540
+But in certain ways from looking at the raw code that carries that out, it appears that there are other aspects involved.
+
+421
+01:00:22,520 --> 01:00:32,804
+But for the sake of the tutorial, we'll just say what's interesting is that free energy is the same for both actions at any given point in time.
+
+422
+01:00:33,245 --> 01:00:38,537
+And I think that in part is due to the fact that the complexity term
+
+423
+01:00:39,007 --> 01:01:02,331
+uh and uh very defining variational free energy for each um action or policy um it's dependent on this uh the posteriors over states versus uh your your prior which starts to look like your b matrix regarding uh state transitions and the agent has a fully uh
+
+424
+01:01:02,311 --> 01:01:24,471
+predictable fully uh you know identity mapping one-to-one mapping and it's B transition matrices and I think that's what actually brings this complexity term uh down to uh virtually zero right uh it's like the the posteriors are basically matching what it it it knows what state it'll transition to
+
+425
+01:01:24,856 --> 01:01:36,829
+And if it doesn't ever learn its B matrix and never has any opportunity otherwise to see something different from what it already believes, then it's as if the agent fully believes like, okay, you know, complexity is gone.
+
+426
+01:01:37,289 --> 01:01:38,811
+All it's left with is accuracy.
+
+427
+01:01:39,231 --> 01:01:48,381
+And so it's accuracy, actually the difference between observations and states, that's what's going to lead to the fluctuations in the variational free energies.
+
+428
+01:01:48,662 --> 01:01:50,003
+But this is all the code you need.
+
+429
+01:01:50,607 --> 01:01:57,114
+A really important part is the way that this OBS variable or object is defined.
+
+430
+01:01:57,675 --> 01:02:00,518
+Again, it's very important to keep track of your indices.
+
+431
+01:02:01,238 --> 01:02:09,027
+At any point in time, you could define an OBS object like this, which is a list.
+
+432
+01:02:09,427 --> 01:02:16,615
+The first element of OBS corresponds to the first observation modality, which for us was outcome.
+
+433
+01:02:17,168 --> 01:02:22,777
+And then the value itself refers to the index of the particular observation in question.
+
+434
+01:02:23,438 --> 01:02:37,120
+So what we're saying here is the first value representing the observation modality, outcome modality, that first value zero is index to improvement.
+
+435
+01:02:37,140 --> 01:02:38,923
+And you can see that same logic
+
+436
+01:02:39,477 --> 01:02:45,046
+plays out for the second element in the ops list.
+
+437
+01:02:45,606 --> 01:02:52,136
+This is for the attention observation modality and zero representing self as what it's indexed to.
+
+438
+01:02:52,497 --> 01:02:58,706
+And so it's as if the agent just observed that it was attending to itself and it saw an improvement.
+
+439
+01:03:00,109 --> 01:03:06,919
+We simply run that through the agent.infirstStates method and plug into ops.
+
+440
+01:03:07,287 --> 01:03:09,510
+And then the agent will update.
+
+441
+01:03:10,171 --> 01:03:14,016
+It'll find QS, meaning its posteriors over in states.
+
+442
+01:03:14,717 --> 01:03:19,204
+And those will actually get stored in the agent as an attribute as well.
+
+443
+01:03:19,684 --> 01:03:23,169
+But the method returns the object.
+
+444
+01:03:23,470 --> 01:03:26,794
+And so we're keeping it here, QS.
+
+445
+01:03:27,295 --> 01:03:29,918
+And then you can look.
+
+446
+01:03:30,419 --> 01:03:36,788
+We didn't have to explicitly say anything about computing F. It's just this infer states.
+
+447
+01:03:37,207 --> 01:03:48,718
+run then led to an internal computation of F in the agent that we can now access print.
+
+448
+01:03:49,171 --> 01:03:57,325
+This starts getting into let's be through this a little bit, but because I already touched on various things, but this is another breakdown.
+
+449
+01:03:57,345 --> 01:04:03,094
+You know, it's very useful to look at the different breakdowns of variational free energy and expected free energy and so on.
+
+450
+01:04:04,216 --> 01:04:10,707
+But I'm going to move through this slide and come because we'll get back to policy inference shortly.
+
+451
+01:04:13,319 --> 01:04:26,311
+This is to show that Qs, the posteriors over hidden states, is rather complex whenever you use the marginal message passing algorithm.
+
+452
+01:04:27,733 --> 01:04:39,664
+But it's also very interesting in that the way it gets broken down, itself being a rather complex three-dimensional matrix, is that the first dimension refers to policy.
+
+453
+01:04:40,015 --> 01:04:42,841
+if we if we kind of open it up, as it were.
+
+454
+01:04:44,344 --> 01:04:47,471
+The second one where is the time step.
+
+455
+01:04:47,491 --> 01:04:49,034
+And the third is the hidden state factor.
+
+456
+01:04:49,395 --> 01:04:59,897
+So what this is saying is that for the first entry, which relates to explore, and then the time step
+
+457
+01:05:00,350 --> 01:05:07,620
+If you make the first entry of that now and then in state factor, we only have one of them.
+
+458
+01:05:07,800 --> 01:05:11,585
+So the first entry is the only entry of the attention in state factor.
+
+459
+01:05:11,886 --> 01:05:28,028
+That effectively means if you print QS zero, zero, zero, it'll print out this first value representing this is what the agent believes to be the hidden state given the policy.
+
+460
+01:05:28,008 --> 01:05:50,742
+you know given the explorer policy and so we can actually extract that out whenever i have these slightly out of line we can extract that out and then the excuse me this line here agent.qs we can we can
+
+461
+01:05:51,211 --> 01:05:56,036
+extracted out via QS action sampled ID zero.
+
+462
+01:05:56,056 --> 01:06:05,166
+All that means is we're grabbing the agent's posterior beliefs given the actual hidden state that it chose.
+
+463
+01:06:06,368 --> 01:06:13,356
+There's a little bit of complexity and it's much clearer in the Google Colab script that I've included.
+
+464
+01:06:13,416 --> 01:06:15,598
+So I advise having a look at that.
+
+465
+01:06:16,051 --> 01:06:21,757
+But this is the code that allows the agent to update its A matrix.
+
+466
+01:06:22,618 --> 01:06:36,153
+The only reason why we need a couple extra lines of code is because of the complex structure of the QS that comes out of a marginal message passing agent.
+
+467
+01:06:39,677 --> 01:06:44,742
+And then we'll look at
+
+468
+01:06:49,227 --> 01:07:17,884
+um policy inference you saw that there are more slides than what i really need to explain it but um this is the final step of the action perception loop so for policy inference your posterior beliefs over your policies uh in this case are um your negative expected free energy times uh gamma which uh i have a better slide to represent that
+
+469
+01:07:20,463 --> 01:07:21,885
+Here we are.
+
+470
+01:07:22,906 --> 01:07:24,928
+Gamma, which is your action precision.
+
+471
+01:07:25,389 --> 01:07:42,189
+So just as I mentioned, we can put these hyper priors or parameters on our A matrix to learn the A matrix and that scale argument kind of down tunes or up tunes the precision on the A matrix.
+
+472
+01:07:42,590 --> 01:07:43,551
+Similarly here,
+
+473
+01:07:43,987 --> 01:07:51,159
+we can down tune or up tune the precision over G, expected free energy.
+
+474
+01:07:51,640 --> 01:08:01,877
+And since expected free energy is what is directly involved in realizing one's preferences that I mentioned earlier with the C matrix, it's kind of like, whenever we look at this equation,
+
+475
+01:08:02,701 --> 01:08:13,556
+is that we're seeing a sort of balancing act between expected free energy related to sort of deliberate decision making to realize goals.
+
+476
+01:08:13,836 --> 01:08:20,866
+These are very contextual kind of beliefs and ways of computing free energy.
+
+477
+01:08:21,246 --> 01:08:27,775
+And then you have variational free energy, which is sort of like the free energy of the present.
+
+478
+01:08:27,795 --> 01:08:29,738
+And it doesn't necessarily take
+
+479
+01:08:29,718 --> 01:08:38,378
+into account anything regarding preferences, the C matrix and what you say you want to see.
+
+480
+01:08:39,180 --> 01:08:42,147
+It's more about just kind of optimizing your model in the moment.
+
+481
+01:08:42,668 --> 01:08:46,377
+And then habits, which we already touched on earlier.
+
+482
+01:08:46,357 --> 01:08:56,875
+And then those we take the actually take the natural log of those so that they kind of fit similarly on the same scale with expected free energy and variational free energy.
+
+483
+01:08:57,235 --> 01:09:01,783
+So it's kind of like you have these three different, you know, you have your habits built up from the past.
+
+484
+01:09:01,763 --> 01:09:26,303
+you have your variational free energy of the present and then you have your expected free energy of the future all sort of contending with one another and then being run through this soft max function which as we saw earlier when we used it for the c matrix that converts it into something that sums to one and then acts as our categorical probability distribution
+
+485
+01:09:26,283 --> 01:09:32,891
+And the number of entries will be equivalent to the number of actions you have available.
+
+486
+01:09:33,412 --> 01:09:41,041
+And so that will look like in the case of G alone, it'll look like this.
+
+487
+01:09:41,321 --> 01:09:50,453
+You'll have your free energy for the explore action and your free energy for the exploit action.
+
+488
+01:09:51,234 --> 01:09:52,375
+And recall that
+
+489
+01:09:53,148 --> 01:10:11,528
+that we want to minimize this quantity so it's actually the the quantity with a smaller number that's uh better so to speak um and then these values will get plugged into the policy inference equation up top in addition to what we already saw earlier the variational free energy values we saw
+
+490
+01:10:11,913 --> 01:10:16,382
+And then the habits which we programmed even earlier than that.
+
+491
+01:10:16,582 --> 01:10:27,745
+So we have now all components for constructing an active inference agent, we have all the components needed for doing hidden state
+
+492
+01:10:27,725 --> 01:10:39,198
+inference of having our agent receive observations that it uses to receive to infer hidden states and then to infer policies and to select an action.
+
+493
+01:10:40,279 --> 01:10:44,784
+That's what this slide represents is the ability to infer policies.
+
+494
+01:10:46,466 --> 01:10:48,768
+You can print out G and have a look at it.
+
+495
+01:10:49,689 --> 01:10:57,698
+And then with sample action, this just basically has the agent sample from its posteriors over policies.
+
+496
+01:10:57,998 --> 01:11:08,277
+And then this extra code here is simply because whenever you have the agent sample an action, it returns it within a list.
+
+497
+01:11:08,918 --> 01:11:11,664
+And so we need to extract that out of there.
+
+498
+01:11:13,106 --> 01:11:13,527
+And then
+
+499
+01:11:14,722 --> 01:11:31,296
+these last two slides were to represent uh two example simulations that i ran um they're i'm sure they look rather busy as many of these other slides have it was just so much to kind of look at and
+
+500
+01:11:31,276 --> 01:11:31,977
+and get into.
+
+501
+01:11:33,018 --> 01:11:42,770
+What this figure attempts to do is that you can read it from left to right, like over time steps, from the start of the simulation to the end.
+
+502
+01:11:43,130 --> 01:11:45,333
+In this case, it was 30 time steps long.
+
+503
+01:11:46,534 --> 01:11:59,950
+And then you can also read it from top to bottom, where the agent receives an observation, it computes variational free energy, it learns its A matrix,
+
+504
+01:12:01,111 --> 01:12:07,864
+It infers policies and the expected free energy of each action.
+
+505
+01:12:08,080 --> 01:12:32,569
+uh along with that that g then gets included along with f and habits to compute um posterior beliefs about policies and then uh finally the agent chooses an action that gets sent in so it's kind of like from left to right we're looking at each time step where a whole uh action perception loop is happening and then vertically we're looking at
+
+506
+01:12:32,549 --> 01:13:02,218
+an entire uh action perception loop or you could flip that say perception action loop given the agent is getting an observation first right and so uh in this simulation i'll just stick with this one uh but uh you know in the in this simulation uh the agent um receives an initial observation uh it just forced it to say like self
+
+507
+01:13:02,738 --> 01:13:05,661
+and improvement, which seems good.
+
+508
+01:13:06,282 --> 01:13:11,228
+Or excuse me, it gets initialized with improvement and neighbor.
+
+509
+01:13:11,829 --> 01:13:22,301
+And then for the first half of the simulation, we're in what I'll call the neighbor context, where in that case, the simulation is, it's programmed in a loop.
+
+510
+01:13:22,742 --> 01:13:31,412
+So the agent will receive, it will always receive an improvement if they exploit.
+
+511
+01:13:31,932 --> 01:13:35,837
+and they'll always receive a no improvement if they explore.
+
+512
+01:13:36,098 --> 01:13:47,273
+So you can see this is a very deterministic and very extreme environment where choosing to explore always leads to a bad outcome for the agent.
+
+513
+01:13:47,354 --> 01:13:51,499
+Choosing to exploit always leads to a good outcome for the agent.
+
+514
+01:13:52,020 --> 01:13:58,429
+And so during the first couple steps, recall that our agent starts off with
+
+515
+01:13:58,628 --> 01:14:05,135
+Um, you know, these uniform beliefs, uh, as far as its habits go of whether it should explore exploit.
+
+516
+01:14:06,257 --> 01:14:15,027
+Uh, and so that's where these red and blue lines and this probability, uh, sub graph here, subplot, uh, they line up with one another.
+
+517
+01:14:15,047 --> 01:14:16,228
+They're 0.5 0.5.
+
+518
+01:14:16,288 --> 01:14:20,092
+So effectively the agent is just kind of randomly choosing one of these two options.
+
+519
+01:14:20,152 --> 01:14:27,741
+And it just happened to choose to explore both times whenever it shows to explore both times.
+
+520
+01:14:28,210 --> 01:14:33,515
+for the next two time steps, it saw that there were no improvement like bad outcomes.
+
+521
+01:14:35,097 --> 01:14:48,070
+You know, given that, and the agents free variational free energy of the present kind of kind of got jerked the downward in a good way.
+
+522
+01:14:48,090 --> 01:14:57,660
+It's meaning that it's informative to the agent during those time steps to see that it's accumulating evidence that it's saying that it might be learning something in the meantime,
+
+523
+01:14:58,062 --> 01:15:03,490
+during the second time step, the agent learned it's a matrix, right?
+
+524
+01:15:03,510 --> 01:15:12,743
+So, um, that also means that there was a lot of updating in its internal model, uh, that has led to changes in its free energy as well.
+
+525
+01:15:12,763 --> 01:15:17,229
+And then over time, uh, things start to diverge.
+
+526
+01:15:17,790 --> 01:15:22,416
+The agent quickly realizes, oh, if I exploit, I
+
+527
+01:15:22,700 --> 01:15:26,865
+receive this green improvement observation again and again.
+
+528
+01:15:27,425 --> 01:15:32,110
+So the agent proceeds to exploit, and it actually does it all the time.
+
+529
+01:15:32,611 --> 01:15:38,397
+As it's doing it, it's seeing that there's less and less expected free energy to just exploit.
+
+530
+01:15:39,058 --> 01:15:52,453
+And then similarly, in the final policy inference, it actually reaches a 1.0 probability that the agent should exploit to where the agent is effectively doing this deterministically.
+
+531
+01:15:52,433 --> 01:15:55,697
+practically, given that it keeps inferring that.
+
+532
+01:15:56,858 --> 01:15:59,841
+And also this yellow line is especially interesting.
+
+533
+01:16:00,222 --> 01:16:16,781
+And part of why I wanted to do all this in the first place, what this yellow line is doing is that this is me extracting out from it the probability of the agent seeing an improvement given that it attended to its neighbor, which links up with exploiting.
+
+534
+01:16:17,301 --> 01:16:22,187
+So this is teaching the agent that it should
+
+535
+01:16:22,758 --> 01:16:23,579
+Keep exploiting.
+
+536
+01:16:24,681 --> 01:16:25,984
+It'll see improvements.
+
+537
+01:16:26,064 --> 01:16:26,965
+It'll get what it wants.
+
+538
+01:16:27,426 --> 01:16:29,069
+It'll keep going that way.
+
+539
+01:16:29,430 --> 01:16:36,482
+His agent is adapting to an environment where that's exactly how this world works.
+
+540
+01:16:36,883 --> 01:16:43,013
+And then halfway through the simulation, everything is reversed.
+
+541
+01:16:43,755 --> 01:16:47,922
+So now we went from one environmental extreme to another.
+
+542
+01:16:48,188 --> 01:16:52,752
+In the first case, the agent saw improvements from attending to its neighbor.
+
+543
+01:16:53,333 --> 01:17:00,720
+Now the agent will only see improvements from attending to itself and only see no improvements when attending to its neighbor.
+
+544
+01:17:01,480 --> 01:17:15,934
+And because there have been so many instances in its past experience of seeing beneficial outcomes when it exploits its neighbor, the agent now actually has to unlearn
+
+545
+01:17:16,117 --> 01:17:18,601
+what it is learned, right.
+
+546
+01:17:19,382 --> 01:17:22,586
+And by the end of the simulation still hasn't fully done that.
+
+547
+01:17:23,327 --> 01:17:41,454
+And we can see this reflected in the expected free energy, the it starts to rise again for exploit as the agent no longer sees any more improvements, even though it's continuing to exploit because that's what it expects.
+
+548
+01:17:42,215 --> 01:17:42,495
+So
+
+549
+01:17:43,184 --> 01:17:49,312
+This is a toy simulation in that you might not have learning happen after every two time steps.
+
+550
+01:17:49,473 --> 01:17:52,156
+That's a very arbitrary thing that I've chosen to do.
+
+551
+01:17:52,176 --> 01:17:56,582
+And it's actually a rather rapid learning rate, all things considered.
+
+552
+01:17:57,343 --> 01:18:11,082
+More often than not, whenever setting up a simulation, you'll have an agent who might say, learn at the end of a trial where you run 10 trials of three time steps each or something along those lines, right?
+
+553
+01:18:11,433 --> 01:18:16,422
+It's less common to run trials over 30 time steps.
+
+554
+01:18:16,903 --> 01:18:28,885
+However, in more traditional agent-based modeling paradigms, because of their simplicity, you often do run a simulation over many, many time steps, right?
+
+555
+01:18:28,865 --> 01:18:45,726
+And so I wanted to make sure that this code is set up in a way that you could run this as long as you prefer to without too much complexity, because I wanted to show the value to computational social scientists as to what they might be able to do.
+
+556
+01:18:45,706 --> 01:18:47,728
+with active inference stages.
+
+557
+01:18:48,289 --> 01:19:13,654
+But now that we're significantly beyond, you know, where I wanted to wrap up, I'll just take one more minute to say, you know, there, again, there is, you can land at the GitHub website that I made, it's very short, to the point, and all the links here are available for
+
+558
+01:19:14,022 --> 01:19:18,007
+The slides that I was just showing, there are many more slides.
+
+559
+01:19:18,608 --> 01:19:25,617
+I tried to be rather comprehensive, given how much material I'm trying to show.
+
+560
+01:19:25,758 --> 01:19:36,672
+And then the two Colab scripts, with this second one being a further development of the original code, but now I'm adding more explanatory Markov.
+
+561
+01:19:37,327 --> 01:19:50,904
+Markdown cells that kind of better describe things, including giving examples of how the A matrix works and the B matrix works.
+
+562
+01:19:51,325 --> 01:19:52,348
+And furthermore,
+
+563
+01:19:52,328 --> 01:19:59,177
+Again, I repeatedly emphasized being able to get your matrix construction and structuration down.
+
+564
+01:19:59,578 --> 01:20:09,090
+I actually provided code on here's how you create an A matrix and you can manually define the values.
+
+565
+01:20:09,411 --> 01:20:11,974
+It's a good idea to learn how to manually
+
+566
+01:20:12,443 --> 01:20:18,198
+define the values of the A matrix or of the B matrix.
+
+567
+01:20:19,220 --> 01:20:25,035
+It looks rather tedious than it is, but to be able to do them one by one is a great sort of
+
+568
+01:20:25,606 --> 01:20:54,128
+didactic means of like learning how to construct these including whenever we get into these more complex like ways of um you know representing probability distributions where you have three or more dimensions but once you're able to do that you might just at some point realize oh there's a loop i could write that could do this for me um but you don't quite know what that loop looks like until you kind of get a sense of what value should be there right so um
+
+569
+01:20:54,682 --> 01:21:01,728
+Anyway, so the point is that there are just some additional tools and information that can be used here.
+
+570
+01:21:01,849 --> 01:21:12,318
+And then all the code is available for, say, printing out, like running the example simulations and then looking at the plots at the end.
+
+571
+01:21:12,959 --> 01:21:17,683
+Feel free to modify and adapt those as pleases you.
+
+572
+01:21:17,703 --> 01:21:22,367
+So that's all I have for today.
+
+573
+01:21:22,527 --> 01:21:24,469
+And I would love in future
+
+574
+01:21:24,787 --> 01:21:40,197
+to give another talk and or prerecord something that goes into a lot of the other material and probably give some more kind of cursory overview of the rest, especially for people who would be interested in
+
+575
+01:21:40,598 --> 01:22:08,091
+multi-agent simulations and um and especially kind of using leveraging packages like network x which will allow you to kind of connect agents and graphs and define like sort of like the relationships with one another and it gives clever ways of of giving them actions that are specific to only the agents in their network or other things like that so um yeah that uh concludes thanks
+
+576
+01:22:10,501 --> 01:22:35,057
+nice great work um why or how would somebody use it other than to get a good handle on the pomdp how would you see it being used or adopted for research cool yeah yeah um so i think uh in scenario like this kind of provides a general agent who can like
+
+577
+01:22:35,560 --> 01:22:43,545
+do things that are defined as exploring or exploiting and so um
+
+578
+01:22:44,133 --> 01:22:55,328
+What you could do is use it to create the NK landscape laser Friedman model that I mentioned earlier, and then tweak things from there.
+
+579
+01:22:55,348 --> 01:23:07,946
+Or you could use this as a more general template, like take out the idea that these are intention and outcome modalities and stuff, swap them out for whatever you want.
+
+580
+01:23:08,266 --> 01:23:12,452
+The template is here for including as many
+
+581
+01:23:12,432 --> 01:23:23,956
+observation modalities and state factors as you want, for example, just change the names and make sure you define the ABCDs, you know, to your liking.
+
+582
+01:23:24,297 --> 01:23:27,203
+And so that, that's really what I wanted to do.
+
+583
+01:23:27,544 --> 01:23:31,572
+Just like, here's, here's an example agent.
+
+584
+01:23:31,923 --> 01:23:34,246
+because we need to know what the final picture should look like.
+
+585
+01:23:34,587 --> 01:23:44,440
+But you know, from there, just just tear it apart and like, you know, to your heart's content and make it into to what you want to see.
+
+586
+01:23:45,541 --> 01:24:01,643
+These agents can be used to, you know, the idea of autonomous decision making that if there are any discrete number of things that you'd want to set up some kind of agent to do, and you know, what kind of data you want it to read,
+
+587
+01:24:02,062 --> 01:24:26,888
+um you know and what what should be the impact of each of those discrete actions it has like you have this as a kind of like agent that you can plug into uh that that sort of design diagram right stuff big answer it's pretty abstract too sorry but yeah cool what will be coming up for the next several weeks
+
+588
+01:24:29,737 --> 01:24:57,432
+yeah um so with the symposium i'm looking forward to giving a talk that's a little bit more uh to the script uh and less focused on coding and more on how these kinds of things might be applied in social science research uh including looking at uh you know some other research that has also been done uh just to try and give a sense that there is in fact a sort of subfield forming here and
+
+589
+01:24:57,850 --> 01:25:03,297
+Of course, we have the course on social science done with the institute itself last year.
+
+590
+01:25:03,317 --> 01:25:06,922
+You know, different people making headway in that area.
+
+591
+01:25:07,002 --> 01:25:09,966
+So looking forward to that.
+
+592
+01:25:10,867 --> 01:25:15,714
+And who knows what else?
+
+593
+01:25:15,734 --> 01:25:27,790
+I very much look forward to maybe presenting some other research where I'm using agents like this and having them interact in kind of interesting ways with, let's say, LLMs.
+
+594
+01:25:28,040 --> 01:25:37,352
+And you know, these become a kind of fun way of trying to imagine autonomous decision making whenever it comes to things like prompting.
+
+595
+01:25:37,632 --> 01:25:38,914
+So yeah.
+
+596
+01:25:42,018 --> 01:25:42,358
+Cool.
+
+597
+01:25:43,500 --> 01:25:50,168
+Well, the video description has the links and where things will be versions.
+
+598
+01:25:51,630 --> 01:25:55,335
+And it's a great demo.
+
+599
+01:25:55,355 --> 01:25:55,936
+So thank you.
+
+600
+01:25:56,056 --> 01:25:57,878
+Any other comments?
+
+601
+01:25:59,748 --> 01:26:19,172
+Uh, not, not currently aside from, you know, uh, thanks to everyone who, uh, joined the textbook group and, uh, you know, over the recent reading, uh, we're currently talking through, uh, other ways that we might go about the textbook group going forward, but we had a really nice wrap up conversation yesterday.
+
+602
+01:26:19,552 --> 01:26:21,795
+So looking forward to future talks.
+
+603
+01:26:23,037 --> 01:26:23,297
+Cool.
+
+604
+01:26:23,878 --> 01:26:24,158
+Okay.
+
+605
+01:26:24,679 --> 01:26:27,342
+Thank you again, Andrew, looking forward to the next.
+
+606
+01:26:28,942 --> 01:26:34,125
+episodes in the series yeah fantastic thanks daniel thank you

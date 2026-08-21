@@ -1,0 +1,1511 @@
+1
+00:00:03,102 --> 00:00:28,165
+all right welcome back cohort five we're in our second discussion on chapter seven so is there anything anybody wants to begin with we can look at the text we can look at any question we can add a new question we could look at pi mdp anything um
+
+2
+00:00:30,760 --> 00:00:33,765
+Anyone can write in the chat or raise their hand or just go for it.
+
+3
+00:00:48,371 --> 00:00:51,015
+Yeah, so I have a sort of more more open ended question.
+
+4
+00:00:51,055 --> 00:00:52,718
+I've been sort of
+
+5
+00:00:54,267 --> 00:00:57,714
+thinking about doing a little modeling project.
+
+6
+00:00:58,094 --> 00:01:11,280
+And what I'm thinking about is that I'm just wondering how I can use this active inference machinery to model some kind of recognition task.
+
+7
+00:01:11,260 --> 00:01:18,470
+How would you approach doing something like an MNIST classification with active inference?
+
+8
+00:01:18,971 --> 00:01:35,614
+But what I am interested in is bringing this one key difference from the active inference-like approach to the problem that's basically completely solved using artificial neural networks.
+
+9
+00:01:35,594 --> 00:01:45,090
+But in a way that, you know, if you feed MNIST to like a transformer-based classifier, you patchify it.
+
+10
+00:01:45,130 --> 00:01:53,805
+So it turned into small little chunks of image and you feed that into a transformer and the transformer kind of like sees the whole sequence and then finally learns how to classify an image.
+
+11
+00:01:53,785 --> 00:02:12,181
+I'm just sort of wondering, thinking about how to find some sort of connection between doing something like that, except getting the neural network or some other kind of system to choose where to look, to sort of model the behavior to be almost like a saccade.
+
+12
+00:02:12,241 --> 00:02:22,830
+I'm seeing a part of an image, and then I have to make a decision where to look next to
+
+13
+00:02:22,810 --> 00:02:27,136
+resolve as much uncertainty as I can about what am I seeing.
+
+14
+00:02:27,656 --> 00:02:29,158
+And it doesn't have to be something like an MNIST.
+
+15
+00:02:29,218 --> 00:02:37,248
+It could be like some really, really simple images to start with, you know, like 8x8 pixels, some generated, I don't know, knots and crosses or whatever.
+
+16
+00:02:37,849 --> 00:02:39,992
+But I don't really even know where to start with that.
+
+17
+00:02:40,893 --> 00:02:42,876
+It's a very open-ended, big, big thing.
+
+18
+00:02:42,896 --> 00:02:47,181
+But if you have any suggestions where to look, I would love some pointers.
+
+19
+00:02:47,161 --> 00:03:06,908
+yeah great great questions well certainly what I'll show now is not the end of the story but I think it'll provide some motifs that you can pick up on here's a 2021 paper with Axel constant so in this setting it was an eye Cicade visual
+
+20
+00:03:07,630 --> 00:03:18,642
+And one of their novelties was that they made a bounding box that was kind of like the zone that was visible in the Cicade.
+
+21
+00:03:19,263 --> 00:03:23,027
+So the cross focus is the center of vision.
+
+22
+00:03:23,688 --> 00:03:27,832
+And then the affordance of the I Cicade is to move to another cross.
+
+23
+00:03:27,852 --> 00:03:30,755
+And then that would move the bounding box.
+
+24
+00:03:30,775 --> 00:03:36,962
+And it's a cultural pattern recognition task.
+
+25
+00:03:37,685 --> 00:03:47,273
+like based upon identifying these higher order patterns of pottery.
+
+26
+00:03:47,422 --> 00:03:50,045
+So that's one visual way.
+
+27
+00:03:50,106 --> 00:04:03,323
+I think this is a super fascinating thing because in almost all visual recognition tasks, either the whole image is passed through if it's sufficiently small, like MNIST, or it's tokenized or chunked or however.
+
+28
+00:04:04,965 --> 00:04:13,537
+But here we bring the action into vision with actual guided cognitive vision moving to uncertainty.
+
+29
+00:04:13,597 --> 00:04:15,319
+So that might be...
+
+30
+00:04:16,463 --> 00:04:45,863
+way more efficient in certain settings um for example recognizing a person like first there's like the movement just empirically like there's like movement to the body and then there's a movement to the face and then identifiable parts of the face that's the saccade model and then on the MNIST the recent uh structure learning paper actually specifically they do MNIST um and they um
+
+31
+00:04:48,762 --> 00:04:53,767
+So the labeled data in MNIST are the true identity of the digit.
+
+32
+00:04:54,568 --> 00:05:09,164
+And then they use their structure learning technique to develop the styles, handwriting styles of the digit.
+
+33
+00:05:10,305 --> 00:05:17,773
+So they're not doing structure learning on how many digits there are as far as my reading.
+
+34
+00:05:17,973 --> 00:05:20,476
+but they do look at different styles.
+
+35
+00:05:22,078 --> 00:05:26,243
+Like these are different styles of the digits.
+
+36
+00:05:27,825 --> 00:05:32,650
+So then it is learning, it's doing, it's saying how many styles of one are there?
+
+37
+00:05:34,432 --> 00:05:47,828
+And then it's finding through structure learning, which is the proposal of a additional latent factor, and then Bayesian model reduction, pruning the model back down for redundancy.
+
+38
+00:05:49,192 --> 00:05:52,757
+they find strong performance on the MNIST.
+
+39
+00:05:55,100 --> 00:05:57,283
+The code is in MATLAB, and I've looked into it.
+
+40
+00:06:00,286 --> 00:06:06,134
+With some language models, you might be able to bring it into something out of MATLAB or just isolate it into pseudocode.
+
+41
+00:06:07,296 --> 00:06:19,131
+But the MATLAB code itself, it's a little bit of a... It integrates a lot with the broader SPM package.
+
+42
+00:06:19,229 --> 00:06:23,494
+So it's not just like you can just pop out the MATLAB script and run it.
+
+43
+00:06:24,455 --> 00:06:33,705
+Because if you follow the rabbit's trail, it goes into a few other SPM scripts that I don't think have been brought over into PyMDP yet.
+
+44
+00:06:35,027 --> 00:06:40,073
+But from a pseudocode perspective, it's very informative.
+
+45
+00:06:40,093 --> 00:06:40,333
+Awesome.
+
+46
+00:06:40,353 --> 00:06:41,274
+That looks super relevant.
+
+47
+00:06:42,255 --> 00:06:42,595
+Thank you.
+
+48
+00:06:42,636 --> 00:06:44,237
+Yeah, but this one does not have CICADE.
+
+49
+00:06:44,878 --> 00:06:47,481
+This one, the MNIST digit is coming in
+
+50
+00:06:48,963 --> 00:07:07,292
+One interesting thing also on the cultural one, this generative model was actually, this is before PyMDP.
+
+51
+00:07:08,251 --> 00:07:12,635
+this generative model is the one that we utilized for active inference.
+
+52
+00:07:13,436 --> 00:07:23,645
+We just said, well, what if instead of it was an eye saccade in a bounding box without leaving a trace, what if it was an estimate moving in a zone leaving a trace?
+
+53
+00:07:25,547 --> 00:07:37,718
+So that kind of opened up the like observing from afar, moving your eyes, but not leaving a trace versus skin in the game where the movement from here to here is interpreted as a physical movement.
+
+54
+00:07:43,317 --> 00:07:43,537
+Cool.
+
+55
+00:07:43,557 --> 00:07:43,978
+Great stuff.
+
+56
+00:07:43,998 --> 00:07:44,318
+Thank you.
+
+57
+00:07:48,864 --> 00:08:00,319
+This, this paper all, I mean, has other benchmarks like the, the recognition, um, Sprites dataset, maybe even a third one.
+
+58
+00:08:03,043 --> 00:08:07,148
+Towers of Hanoi, classic TI 83 game.
+
+59
+00:08:14,958 --> 00:08:20,812
+with some very interesting shapes.
+
+60
+00:08:25,944 --> 00:08:26,225
+Cool.
+
+61
+00:08:29,553 --> 00:08:32,460
+Any other thought or part on seven?
+
+62
+00:08:44,270 --> 00:09:12,808
+why mdp right now is only in discrete time so pretty much everything that you encounter in time dp today will be in the chapter seven spirit um sanjeev's python work as well as
+
+63
+00:09:13,447 --> 00:09:17,853
+Rx and for Julia have continuous time models.
+
+64
+00:09:19,955 --> 00:09:28,306
+Okay, can we go through the matrices other than a to D so you're talking about in here because or in which figure to do.
+
+65
+00:09:29,468 --> 00:09:31,611
+Maybe yeah this this seems good sure.
+
+66
+00:09:32,812 --> 00:09:34,695
+Okay.
+
+67
+00:09:34,715 --> 00:09:34,915
+Okay.
+
+68
+00:09:42,758 --> 00:09:47,647
+Okay, so here's the progression of how they introduced the matrices in 7.
+
+69
+00:09:47,667 --> 00:09:53,017
+O is the observation vector at each time point.
+
+70
+00:09:53,418 --> 00:09:56,824
+So if you just had one binary sensor, O would be a 0 or 1.
+
+71
+00:09:57,245 --> 00:10:01,813
+If you had eight float sensors, it would be eight float numbers.
+
+72
+00:10:02,249 --> 00:10:08,403
+S is a vector carried through time, each time point, of the latent states.
+
+73
+00:10:08,904 --> 00:10:18,807
+So let's say we're talking about temperature in the room, thermometer, observations, latent temperature, hidden state S, agent's estimate of hidden state S.
+
+74
+00:10:18,787 --> 00:10:45,587
+a is a matrix that has um rows and columns corresponding to o and s a is a mapping between o and s and so it can be used to start with s and then emit a distribution of expected observations or it could be taking in an observation conditioning upon an observation like base theorem does and then updating um a hidden state belief
+
+75
+00:10:46,546 --> 00:10:52,056
+D has the same dimensionality as S being carried through time.
+
+76
+00:10:52,517 --> 00:10:54,080
+So D is just like a vector.
+
+77
+00:10:54,140 --> 00:10:55,904
+It's kind of like T zero.
+
+78
+00:10:55,964 --> 00:11:03,137
+It just starts the chain going and it gives you S at the first time point.
+
+79
+00:11:03,218 --> 00:11:20,896
+And then B is a transition matrix that has edges and rows and columns, edges, of the dimensionality of S. Because it maps S at t minus 1 to S at t. So this is a standard hidden Markov model.
+
+80
+00:11:21,596 --> 00:11:24,900
+Ambiguity matrix A between hidden states and observations.
+
+81
+00:11:25,400 --> 00:11:30,065
+Transition matrix B between states at times.
+
+82
+00:11:31,086 --> 00:11:33,208
+There's no action in this model yet.
+
+83
+00:11:34,167 --> 00:11:41,355
+Um, the next thing that they do is they take that exact downstairs model E coming down.
+
+84
+00:11:42,736 --> 00:11:55,149
+And then this is where the action answers the picture, which is PI, which is, uh, the policy space expressed as a probability distribution over actions.
+
+85
+00:11:55,850 --> 00:11:57,571
+So PI sums up to one.
+
+86
+00:11:57,632 --> 00:12:01,896
+It could be sampled from, or it could be just pick the highest number.
+
+87
+00:12:02,078 --> 00:12:08,447
+Or it could be pick the second highest or all these different things that you can do regarding how to pick a policy from pi.
+
+88
+00:12:09,068 --> 00:12:28,356
+But pi intervenes with a policy in B. And so while previously B was just a single matrix going from S of T minus 1 to S of T, now B is going to be having a matrix slice for every single affordance that we have.
+
+89
+00:12:28,707 --> 00:12:37,841
+So each slice of B is like an index card that describes the world transition model conditioned upon action selection.
+
+90
+00:12:39,544 --> 00:12:53,145
+G is expected free energy, and G is a distribution that essentially updates the policy prior habit with respect to epistemic and pragmatic value equation 2.6.
+
+91
+00:12:54,087 --> 00:13:00,935
+So that gets us to this kind of figure 4.3 or figure 7.3 discrete time classic model.
+
+92
+00:13:00,955 --> 00:13:18,677
+We have a downstairs hidden Markov model with no action, and then actions select which B matrix is gonna be applied as S unrolls through time.
+
+93
+00:13:19,277 --> 00:13:23,082
+And then in figure 7.10,
+
+94
+00:13:23,703 --> 00:13:28,771
+we see a lowercase letter above each of these other letters that we have talked about.
+
+95
+00:13:30,053 --> 00:13:39,948
+That represents a hyperprior or however you want to think about it, but it's a distribution which that uppercase variable is drawn from.
+
+96
+00:13:40,969 --> 00:13:47,439
+So instead of just saying, well, there's four states in the world, so our D vector could be 0.25, 0.25, 0.25, 0.25.
+
+97
+00:13:47,479 --> 00:13:51,786
+That'd be like a uniform prior across initial location.
+
+98
+00:13:51,867 --> 00:13:57,595
+Or it could be 1, 0, 0, 0, just unambiguously starting in the first distribution.
+
+99
+00:13:58,396 --> 00:14:11,655
+Or you could parameterize little d, which would be a distribution which big D is sampled from, for example, across individuals or across nest mates or across trials.
+
+100
+00:14:12,697 --> 00:14:16,322
+So then learning could happen on little d.
+
+101
+00:14:17,062 --> 00:14:18,004
+across trials.
+
+102
+00:14:18,485 --> 00:14:21,791
+So you could begin with like a uniform prior of where I begin.
+
+103
+00:14:21,812 --> 00:14:37,062
+And then with learning by counting, you can just say, okay, I'm going to, with the conjugate prior, the Dirichlet distribution, I'm going to add one count to little d every time I observe myself starting at a certain location.
+
+104
+00:14:37,244 --> 00:14:48,239
+And then trial after trial, you'll end up drawing big D from a prior distribution that does resemble the experienced history.
+
+105
+00:14:49,220 --> 00:14:50,502
+That's the learning by counting part.
+
+106
+00:14:51,724 --> 00:15:02,138
+And then the end of the chapter, they just kind of present one more motif, which is now that exact 7.3 or figure 4.3 exact motif.
+
+107
+00:15:02,658 --> 00:15:29,627
+just demonstrating a little bit of the composability of the base graph by showing that like the observation being emitted from a top level model here level two that observation could be understood as for example a prior on a lower level model but figure 4.3 or figure 7.3 is kind of where in the discrete time
+
+108
+00:15:30,417 --> 00:15:43,512
+we get the downstairs sense-making from observations, transition world model, and then finally to the action-dependent world transition model.
+
+109
+00:15:47,397 --> 00:15:48,078
+Thank you.
+
+110
+00:15:48,238 --> 00:15:52,543
+I think it's a very good overview, and I'll refer it back again.
+
+111
+00:15:52,642 --> 00:15:54,724
+I just have one question.
+
+112
+00:15:54,844 --> 00:15:58,247
+When you use the word motif all the time, what does it exactly mean?
+
+113
+00:15:58,327 --> 00:16:00,149
+I just don't understand that word, actually.
+
+114
+00:16:00,169 --> 00:16:00,529
+Sorry.
+
+115
+00:16:01,610 --> 00:16:02,591
+Motif?
+
+116
+00:16:02,891 --> 00:16:04,212
+What do you mean by motif?
+
+117
+00:16:04,232 --> 00:16:04,612
+Sorry.
+
+118
+00:16:05,413 --> 00:16:11,018
+I use it like a pattern, like a pattern language, or like an identifiable theme.
+
+119
+00:16:11,839 --> 00:16:16,583
+So let's just say we were looking at cars as generative models.
+
+120
+00:16:16,723 --> 00:16:17,764
+One of them is red.
+
+121
+00:16:18,104 --> 00:16:19,826
+Another one has a convertible top.
+
+122
+00:16:20,366 --> 00:16:22,328
+Another one has six wheels.
+
+123
+00:16:22,510 --> 00:16:50,053
+another one has a trailer like those are just kind of like motifs some motifs might be mutually incompatible but other motifs it might just be like well like um here we're looking at the motif of having a hyper prior here we're looking at the motif of nesting now the lower the lowercase letters are not shown but of course you could have lowercase letters
+
+124
+00:16:50,860 --> 00:17:19,112
+so there's nothing contradictory about those two motifs it just and this is definitely not like the only or formal way to think about it it just like here in figure 7.3 we kind of have like the kernel nucleus um there isn't much you could remove here if you wanted to remove something you could remove like this part so it was just focused on the transition of two time steps
+
+125
+00:17:20,510 --> 00:17:50,365
+but that's very minor um this kind of shows the basic initialization and then the step from the previous moment and then the step to the next moment of action as reweighted by expected free energy so here we have kind of an essential kernel and then there's all these motifs or there's other ways probably to say it but there's all these other strategies that we could start to see or use
+
+126
+00:17:54,158 --> 00:17:55,140
+All right, thank you.
+
+127
+00:17:58,304 --> 00:18:16,993
+And yeah, I mean, I don't know how far the Linux kernel metaphor will go, but like this model doesn't have just as written various of the more sophisticated cognitive phenomena.
+
+128
+00:18:18,087 --> 00:18:26,718
+So it's not that advanced cognitive phenomena or higher order human type thinking is already in this image.
+
+129
+00:18:28,220 --> 00:18:37,232
+It's like, this is the canvas that is a starting point for like learning and novelty.
+
+130
+00:18:38,633 --> 00:18:47,605
+So it's not that all these different diverse cognitive phenomena are like intrinsically, essentially within the active inference formalism percept.
+
+131
+00:18:48,580 --> 00:19:13,727
+it's that we have something that's general and modular enough to accept and even entertain multiple different renditions of a given phenomena like there's not just learning a narrow definition of learning would be like each parameter being updated and then if somebody wanted to engage with a higher order like kind of conversationally what we might talk of as learning
+
+132
+00:19:14,787 --> 00:19:39,732
+like chapter six is there for us we could go through it and we would find like a room of 10 people could come up with a thousand ways to implement learning at a higher level in active inference hence a lot of emphasis on like what's the core and then what are some of those like decorators and modifications augmentations and so on
+
+133
+00:19:42,091 --> 00:20:04,065
+because chapter six plus the core essence plus the confidence to play with motifs gets very far um would people be up for maybe a little if we take a look at figure 7.10
+
+134
+00:20:05,564 --> 00:20:14,212
+Adrian Holovaty, What people may be up for trying to walk through it perhaps like and I don't know if this is applicable it's a long way from the teammates but.
+
+135
+00:20:14,993 --> 00:20:25,522
+Adrian Holovaty, Like walking through it like with like a real life kind of decision idea like what i'm thinking is and try to map that process on to the model.
+
+136
+00:20:25,542 --> 00:20:34,170
+Adrian Holovaty, So, like what I was thinking is like i'm sitting in my room and i'm looking outside of my window and i'm trying to decide.
+
+137
+00:20:35,197 --> 00:20:36,840
+whether I'm gonna go outside or not.
+
+138
+00:20:37,861 --> 00:20:40,966
+And looking at, okay, what are the parameters of that decision?
+
+139
+00:20:41,046 --> 00:20:52,765
+What are the different observable states or hidden states that are gonna influence that policy?
+
+140
+00:20:54,748 --> 00:20:58,555
+You think that's an appropriate exercise, Daniel, or something along those lines?
+
+141
+00:20:58,915 --> 00:21:00,057
+Would people be into that?
+
+142
+00:21:01,167 --> 00:21:02,709
+I mean, it definitely is.
+
+143
+00:21:02,870 --> 00:21:06,455
+I'm just finding a table that I'll copy in.
+
+144
+00:21:08,618 --> 00:21:11,342
+Okay.
+
+145
+00:21:11,362 --> 00:21:13,105
+I'll make this under chapter seven.
+
+146
+00:21:25,242 --> 00:21:27,165
+Okay.
+
+147
+00:21:27,185 --> 00:21:29,689
+This is just one little template.
+
+148
+00:21:32,622 --> 00:22:01,785
+so here we have the a b c d e and pi and o and s so we um have we don't have the the lowercase letters yet but we could add them and um each of those discrete time variables is linked up to an ontology term most of which are all of which have been used um
+
+149
+00:22:02,170 --> 00:22:29,781
+and then here is an example like for an ant colony nestmate how those got mapped um but i mean let's hide these and then let's just go for it okay what's the setting what is the agents
+
+150
+00:22:30,959 --> 00:22:33,362
+Living room in New Mexico.
+
+151
+00:22:33,382 --> 00:22:36,906
+Okay.
+
+152
+00:22:36,926 --> 00:22:39,569
+If that makes sense, yeah.
+
+153
+00:22:39,589 --> 00:22:40,050
+Aren't we all?
+
+154
+00:22:40,530 --> 00:22:41,432
+Okay, observing.
+
+155
+00:22:43,794 --> 00:22:44,235
+The window.
+
+156
+00:22:44,295 --> 00:22:46,658
+Outside through the window.
+
+157
+00:22:46,698 --> 00:22:50,903
+So I guess outdoors through the window.
+
+158
+00:22:51,123 --> 00:22:52,685
+Okay, pixels coming from outside.
+
+159
+00:22:53,046 --> 00:22:55,609
+Sure.
+
+160
+00:22:55,629 --> 00:22:58,452
+And then what's truly out there?
+
+161
+00:23:01,368 --> 00:23:22,515
+could be is it raining or not yeah the weather I guess you know is it is it that's the decision I'm trying to make yeah okay well and and this just goes to show like first off how open it is like what actions are but um I mean we'll get there but can we control the rain
+
+162
+00:23:23,710 --> 00:23:34,665
+So then there's already such differences between a model where there's a hidden state that you can't control, but you still could make a policy decision to take an umbrella or not.
+
+163
+00:23:35,867 --> 00:23:49,465
+But then there would be another level of interactivity of a model when the policy can also control the hidden state, like an air conditioner with a temperature.
+
+164
+00:23:49,732 --> 00:23:50,473
+Bruce Sutherland, Ph.D.
+
+165
+00:23:50,453 --> 00:23:57,505
+: versus just sort of like a put on a jacket if it's raining okay so now, given that we already said s&o.
+
+166
+00:23:57,805 --> 00:23:58,286
+Bruce Sutherland, Ph.D.
+
+167
+00:23:58,266 --> 00:24:04,737
+: What is the dimensionality of a and what is the semantics of a.
+
+168
+00:24:22,672 --> 00:24:32,769
+Let's just say, just to be clear, that the visual stimuli that we're getting is 10 pixels, and then they have a continuous level of brightness.
+
+169
+00:24:33,831 --> 00:24:37,397
+Like we could go into the RGB and all this other stuff, but there's 10 pixels.
+
+170
+00:24:38,419 --> 00:24:40,202
+And then raining or not is a binary state.
+
+171
+00:24:40,963 --> 00:24:46,553
+So what is the dimensionality of A, or what does A map?
+
+172
+00:24:51,595 --> 00:24:56,059
+I mean, the site of raindrops or not, right?
+
+173
+00:24:56,079 --> 00:25:12,615
+So it's like... Yes, it maps, but... So that's a two-dimensional, yeah?
+
+174
+00:25:12,635 --> 00:25:14,477
+Maps between the observations in the hidden state.
+
+175
+00:25:15,238 --> 00:25:20,122
+So its shape is 2 by 10 matrix.
+
+176
+00:25:20,142 --> 00:25:20,843
+Okay, I see, yeah.
+
+177
+00:25:24,518 --> 00:25:46,003
+there there's other we're just going with just the first sketch pass okay so this is mapping these pixels from the pixels down to beliefs about the rain or vice versa so if we said condition upon i know it's raining we could emit a profile of pixels that's the likeliest thing
+
+178
+00:25:46,844 --> 00:25:57,800
+Or we could take in an empirical pixel distribution and then ask what is our conditional probability of it being raining.
+
+179
+00:25:57,820 --> 00:26:03,268
+So that was, this is then last piece of the downstairs sensemaking part.
+
+180
+00:26:03,368 --> 00:26:05,050
+What is the B matrix shape?
+
+181
+00:26:10,058 --> 00:26:11,620
+Given it's a transition matrix.
+
+182
+00:26:17,692 --> 00:26:41,404
+should be two by two i guess yes these are just the transition probabilities of staying raining staying not raining or switching the the on the identity matrix the diagonal on b is like stay
+
+183
+00:26:42,093 --> 00:26:45,740
+Because you're mapping for, let's just say that the first row is raining.
+
+184
+00:26:45,780 --> 00:26:46,662
+The second one is not raining.
+
+185
+00:26:47,303 --> 00:26:50,349
+The upper left corner on B is rain to rain.
+
+186
+00:26:50,649 --> 00:26:54,116
+And then the lower right corner on B is not rain to not rain.
+
+187
+00:26:54,677 --> 00:26:56,540
+And then the off diagonals are switching.
+
+188
+00:26:56,581 --> 00:26:58,524
+Okay.
+
+189
+00:26:59,747 --> 00:27:01,570
+This is the downstairs map.
+
+190
+00:27:02,765 --> 00:27:05,167
+This is a partially observable Markov decision.
+
+191
+00:27:05,588 --> 00:27:08,111
+Sorry, this is just a partially observable Markov model.
+
+192
+00:27:08,591 --> 00:27:10,053
+No decision has come yet.
+
+193
+00:27:10,713 --> 00:27:10,833
+Right.
+
+194
+00:27:11,294 --> 00:27:12,875
+Now we're going to come into the decision.
+
+195
+00:27:12,936 --> 00:27:15,358
+Okay, so what is the action space?
+
+196
+00:27:19,162 --> 00:27:19,983
+Go outside or not.
+
+197
+00:27:21,925 --> 00:27:22,225
+Okay.
+
+198
+00:27:22,886 --> 00:27:27,411
+Now if we go outside, then we're going to get different observations, but we'll just say yes, go outside or not.
+
+199
+00:27:29,132 --> 00:27:29,413
+Okay.
+
+200
+00:27:31,235 --> 00:27:31,675
+Okay.
+
+201
+00:27:32,313 --> 00:28:01,999
+what is what are the affordances basically not raining it's an affordance for us to go outside yeah um almost here the affordances are the same as the policy space because there's no planning okay so affordances are what you can do in a moment like up down left right and then the policy space is the affordance space exponentiated to the time Horizon of planning
+
+202
+00:28:02,587 --> 00:28:07,812
+So if it's a non-planning model, then affordances equals the policy space.
+
+203
+00:28:08,633 --> 00:28:16,181
+But if it was a two-step model, then you could plan, I'm going to not go outside and then I'm going to go outside.
+
+204
+00:28:16,861 --> 00:28:19,184
+Or I'm like, I'm going to go outside and then I'm going to come back.
+
+205
+00:28:20,285 --> 00:28:22,687
+So then that is considering over multiple time steps.
+
+206
+00:28:22,828 --> 00:28:28,273
+But here, single time step, no blame.
+
+207
+00:28:29,738 --> 00:28:34,844
+Okay, we need D as part of our downstairs.
+
+208
+00:28:35,264 --> 00:28:39,690
+D is prior on it raining.
+
+209
+00:28:40,871 --> 00:28:54,767
+And so this is just, this has the same shape as S. So this basically is just gonna, this could be like one, zero, which is like, we start, sure, it is raining.
+
+210
+00:28:55,945 --> 00:29:20,367
+or it could be 0.5 0.5 we start unsure if it's raining okay and then um actions are selected different ways obviously that's what we're interested in so what are some different ways you could select actions well you could just draw from your habit distribution that's one approach in um
+
+211
+00:29:24,278 --> 00:29:24,598
+Okay.
+
+212
+00:29:24,618 --> 00:29:32,328
+Now we're going into the, the, the New Mexico dopamine brain on the left side.
+
+213
+00:29:32,368 --> 00:29:38,295
+This is where we have actions being drawn from the habit distribution.
+
+214
+00:29:39,536 --> 00:29:44,122
+So that's a totally, totally, um, viable decision-making strategy.
+
+215
+00:29:44,182 --> 00:29:48,607
+That's kind of like thinking fast, like type one is drawing from habit.
+
+216
+00:29:49,949 --> 00:29:50,269
+Um,
+
+217
+00:29:52,156 --> 00:30:21,927
+another approach is to use expected free energy to reweight the policy prior into a policy posterior according to equation 2.6 which is to say reweighting policies according to their epistemic plus pragmatic value so in this setting the epistemic value um right now like everything's pretty much fixed
+
+218
+00:30:23,105 --> 00:30:27,889
+So there really isn't much epistemic value to gain yet.
+
+219
+00:30:29,351 --> 00:30:34,415
+Pragmatic value though, is gonna be about preference satisfaction.
+
+220
+00:30:35,516 --> 00:30:37,318
+So what would the preference be?
+
+221
+00:30:40,841 --> 00:30:42,502
+Preferences over observations.
+
+222
+00:30:51,270 --> 00:30:53,112
+I'll just note like,
+
+223
+00:30:53,159 --> 00:30:56,002
+This recent one on intentional behavior.
+
+224
+00:30:58,626 --> 00:31:05,514
+They do explore like essentially preferences over whether it's raining or not.
+
+225
+00:31:06,876 --> 00:31:13,664
+But suffice to say in the textbook and in this kind of primary version, the preferences are over observations.
+
+226
+00:31:15,746 --> 00:31:21,293
+So let's just say that let's just say that it's darker when raining.
+
+227
+00:31:23,045 --> 00:31:52,427
+lighter when not so if our kind of if our conversational preference is like i prefer it to rain our c preference variable because it's over observations would say i i prefer i expect and prefer it to be darker because the preferences are grounded in sensory observations that haven't come in yet
+
+228
+00:31:54,348 --> 00:32:16,234
+I mean, uploading the textbook to a language model or not, copying in this table and then saying, write active inference Python code, given that this is my POMDP, you will get a script with just this much information.
+
+229
+00:32:18,137 --> 00:32:20,980
+Because you've given all of the information needed.
+
+230
+00:32:24,453 --> 00:32:30,803
+There's no other, there's no, there's way more complex models to make.
+
+231
+00:32:31,824 --> 00:32:35,770
+But in terms of describing all of this, I mean, G is not really a variable.
+
+232
+00:32:36,611 --> 00:32:51,574
+It's a functional that gets applied to pi conditioned upon C and E. So by defining A, B, C, D, E, S, O, and then the generative process,
+
+233
+00:33:01,190 --> 00:33:30,302
+the true rain but that doesn't have to be active inference that could be um a random number that could be an API to a weather station that that it could just be anything else that plugs in and outputs observations and then intakes actions but here it's kind of a null action intake because your choice to go outside does not affect
+
+234
+00:33:32,155 --> 00:33:34,538
+Yeah, that makes sense.
+
+235
+00:33:57,724 --> 00:33:57,964
+All right.
+
+236
+00:33:58,064 --> 00:33:58,625
+Thank you for that.
+
+237
+00:33:58,965 --> 00:33:59,246
+Cool.
+
+238
+00:33:59,486 --> 00:34:00,407
+Yeah, I mean,
+
+239
+00:34:00,792 --> 00:34:04,576
+David Price- plug it in and see where it goes or look at a pie mdp.
+
+240
+00:34:05,817 --> 00:34:11,944
+David Price- documentation and see which one it looks most like.
+
+241
+00:34:16,729 --> 00:34:21,935
+David Price- I think we looked at it a previous time, but this one is a moving grid world agent in one.
+
+242
+00:34:24,518 --> 00:34:25,359
+David Price- And then to.
+
+243
+00:34:27,081 --> 00:34:27,441
+David Price- um.
+
+244
+00:34:29,598 --> 00:34:39,335
+Prakash, this is under chapter seven.
+
+245
+00:34:44,143 --> 00:34:44,303
+Yeah.
+
+246
+00:34:44,323 --> 00:34:50,193
+And then chapter two here is, again, similar.
+
+247
+00:34:50,253 --> 00:34:54,340
+And then the, I mean,
+
+248
+00:34:55,906 --> 00:35:20,715
+make some kind of fusion variants like there's a T maze it's like your living room is the starting position in the maze and then like you know you could check the weather that's the epistemic Q or you could choose to bring an umbrella or not and then it would already have almost isomorphic relationship with it with a tutorial
+
+249
+00:35:32,525 --> 00:35:41,620
+And especially when starting, this is like why the iterating on having a model is so informative.
+
+250
+00:35:41,800 --> 00:35:47,810
+Like ironically or appropriately, depending on how you see it, it's like it's epistemic chaining.
+
+251
+00:35:48,350 --> 00:35:53,479
+The modeler is in an epistemic chain with their own modeling.
+
+252
+00:35:54,741 --> 00:35:57,906
+It's super easy to wait on the sideline until what?
+
+253
+00:35:58,387 --> 00:35:59,308
+I really don't know.
+
+254
+00:35:59,930 --> 00:36:05,198
+But by putting something down, then there's all these other things that open up.
+
+255
+00:36:06,200 --> 00:36:08,303
+So that's the epistemic chaining as a process.
+
+256
+00:36:12,129 --> 00:36:17,517
+Okay, Francis, let me just see what you wrote.
+
+257
+00:36:20,078 --> 00:36:26,428
+Is it straightforward to download either the PMD, the PMD notebook is the chapter seven document also.
+
+258
+00:36:26,508 --> 00:36:27,409
+Okay.
+
+259
+00:36:27,429 --> 00:36:28,771
+Um, about PMD.
+
+260
+00:36:29,753 --> 00:36:30,093
+Yes.
+
+261
+00:36:30,534 --> 00:36:33,899
+At the top of each page, like I'll just put it in the chat.
+
+262
+00:36:35,602 --> 00:36:39,187
+You can open it in Colab super easy and then just make a copy.
+
+263
+00:36:40,309 --> 00:36:44,415
+So those are very nice notebooks to pull.
+
+264
+00:36:45,497 --> 00:36:48,702
+Um, is the chapter seven document also a Jupiter notebook?
+
+265
+00:36:49,677 --> 00:37:12,090
+no um that would probably require going to appendix c and uh going to the matlab code or um this the team is foraging
+
+266
+00:37:15,108 --> 00:37:19,353
+and bringing this MATLAB code into something like a notebook.
+
+267
+00:37:19,373 --> 00:37:21,715
+I'm not actually sure if MATLAB even has notebook.
+
+268
+00:37:22,776 --> 00:37:34,769
+Or realistically, since it's the T-Maze, like this PyMDP T-Maze demo, it's the same exact thing.
+
+269
+00:37:36,931 --> 00:37:38,973
+So this notebook is probably a good one to go with.
+
+270
+00:37:41,256 --> 00:37:42,297
+I don't have MATLAB.
+
+271
+00:37:42,462 --> 00:38:03,863
+uh as a non-academic is uh expensive uh or used to be expensive sorry you said you don't have coda or matlab colab it's free you just click on the link and then just duplicate it okay yeah okay
+
+272
+00:38:04,653 --> 00:38:12,105
+Matt lab does have a costly license, except there's the octave like variant that's open source.
+
+273
+00:38:12,125 --> 00:38:24,604
+But like, rather than get into this whole like octave mat lab situation, like the, the Python and Julia are the way to go and rust when the time is right.
+
+274
+00:38:29,512 --> 00:38:30,694
+This is interesting.
+
+275
+00:38:34,336 --> 00:38:38,503
+recommend breaking the demo to change the generative model.
+
+276
+00:38:39,184 --> 00:38:46,255
+Only by doing this will an intuitive sense of mechanics of active inference develop.
+
+277
+00:38:46,275 --> 00:38:47,617
+Pretty interesting.
+
+278
+00:38:47,637 --> 00:38:50,522
+That's exactly what I was planning to do.
+
+279
+00:38:50,941 --> 00:39:19,497
+thank you okay yeah i mean it's it's super fun and then also like again seeing the kernel execute like just seeing a decision be made that helps open up like oh there's some there's like all these levels of diagnostics or analytics about the trace of the model that you might be interested in now is that active inference well it's about an active inference model
+
+280
+00:39:19,763 --> 00:39:32,237
+But then a next step might be like to do a parameter sweep across parameter combinations and then summarize the outcomes of those swept parameters with another heat map.
+
+281
+00:39:34,039 --> 00:39:35,200
+And then what do you do from there?
+
+282
+00:39:35,480 --> 00:39:43,189
+Then you could fold that back into the base model, or maybe you make another active inference agent that looks at the heat map and then does something from there.
+
+283
+00:39:46,038 --> 00:39:55,769
+Hence it being more like lines or journeys of inquiry rather than like developing an artifact that just kind of slams the door.
+
+284
+00:39:57,491 --> 00:40:01,816
+Especially with these kind of more intuition pump examples.
+
+285
+00:40:05,279 --> 00:40:14,830
+Without wishing to derail things, I have an interest in doing test automation for code.
+
+286
+00:40:15,316 --> 00:40:32,412
+And I was looking in chapter seven at the way that the agent explores the little maze quite efficiently because it's seeking novelty.
+
+287
+00:40:33,173 --> 00:40:43,062
+And I was wondering whether I could do something like that to do exploratory testing of, say, an API.
+
+288
+00:40:47,581 --> 00:40:49,563
+That, that sounds very interesting.
+
+289
+00:40:49,683 --> 00:40:56,209
+I've never specifically seen it, but something like adaptive fuzzing or testing.
+
+290
+00:40:56,269 --> 00:41:03,977
+And then that's where the epistemic value comes into play is like, let's just say pragmatic value is I prefer the program to work.
+
+291
+00:41:04,858 --> 00:41:10,203
+So, and then epistemic value is I'm going to find out about where and how it does or doesn't work.
+
+292
+00:41:11,064 --> 00:41:17,470
+So if you only, um, made the breaking changes that you knew were going to break it.
+
+293
+00:41:18,192 --> 00:41:32,775
+it would be very confirmatory, but it wouldn't be epistemic because you would only have been confirming, which might be a valid exercise, but you'd only be confirming the consequences of the actions that you already suspected.
+
+294
+00:41:33,456 --> 00:41:34,497
+But maybe that's important.
+
+295
+00:41:35,118 --> 00:41:40,707
+And then another setting would be like with a kind of uniform prior or with an informed prior,
+
+296
+00:41:41,328 --> 00:41:48,080
+what kinds of changes would actually reveal more learning about the structure of the program or the API.
+
+297
+00:41:48,902 --> 00:41:57,879
+And then it's like, but once we figured out that that's a breaking change, like we've kind of mapped that part of the maze, there's probably a lot of cool ways to go there.
+
+298
+00:41:59,341 --> 00:41:59,742
+Christoph?
+
+299
+00:42:01,662 --> 00:42:06,212
+So I think it's an interesting problem what to do with something like, you know, exploring the API.
+
+300
+00:42:06,854 --> 00:42:14,170
+There's this paper, first of all, there's planning and, no, certainly not planning and navigation.
+
+301
+00:42:15,365 --> 00:42:35,533
+active interest in intentional behavior and they have this notion of sort of like inductive planning where there is a certain goal that the agent wants to reach and it works backwards to figure out what are the steps
+
+302
+00:42:35,513 --> 00:42:36,134
+to get there.
+
+303
+00:42:36,955 --> 00:42:57,206
+For something like exploring an API, and I think for a lot of applications though, I think what's going to be eventually necessary somehow is to have a hybrid model that you will have to be able to attach almost like an LLM to it to basically at some point say like, well, I would like to actually, I decided on my course of action, I want to write some code that actually invokes the API.
+
+304
+00:42:58,047 --> 00:43:01,993
+And here with this decision, the structure of decision-making, we're
+
+305
+00:43:01,973 --> 00:43:04,716
+looking at assembly level of intelligence.
+
+306
+00:43:04,916 --> 00:43:19,653
+At some point, just like we are attached to an LLM that continuously pumps out words, and I'm just choosing over the distribution of those words, they're being pumped out, but I'm not actually generating them.
+
+307
+00:43:19,713 --> 00:43:21,095
+I'm not aware of how that's happening.
+
+308
+00:43:21,935 --> 00:43:30,445
+In the same way, you would have to attach an LLM to almost like an active inference agent that does some goal-oriented exploration of the API.
+
+309
+00:43:30,425 --> 00:43:33,231
+So that would be very interesting if you could achieve something like that.
+
+310
+00:43:33,291 --> 00:43:44,072
+It's probably, you know, quite a lot of money to be made on this sort of intelligent exploration of APIs given how much trouble bugs are causing.
+
+311
+00:43:48,862 --> 00:43:49,202
+Cool.
+
+312
+00:43:49,623 --> 00:43:49,944
+Thanks.
+
+313
+00:43:50,645 --> 00:43:51,066
+Yeah.
+
+314
+00:43:51,468 --> 00:44:05,306
+Like, and then it kind of like in, in that, um, like we were talking about right before we began with like the feedback and the training examples, like you can have a data set of correct API calls and incorrect API calls or something like that.
+
+315
+00:44:06,508 --> 00:44:13,277
+Um, and then it's like plan to make it work.
+
+316
+00:44:13,297 --> 00:44:18,083
+And those are kind of the semantics of perception and action that.
+
+317
+00:44:19,092 --> 00:44:47,631
+like ecosystems of shared intelligence, synthetic intelligence, if we can construct a formalism that has the semantics that are how we think about it and or co-evolve that with updating how we think about it, then we would have kind of a high bandwidth or a low loss or some other good property of the edge between
+
+318
+00:44:49,045 --> 00:44:49,994
+artifacts.
+
+319
+00:44:51,914 --> 00:45:14,638
+Yeah, I think this is where LLM's really kind of suck at, that you can sort of ask it to do something like this, but it will not really have any kind of notion of thinking about the problem deeply, about how would you go about breaking something for an API, because that requires a sophisticated model of what the API might be doing under the hood, for instance, like some kind of buffer overflow and something like that.
+
+320
+00:45:15,139 --> 00:45:20,925
+But if you could come up with a minimal example that would model something like
+
+321
+00:45:20,905 --> 00:45:30,655
+you know, assume there is a possibility of a buffer overflow in an API, how would you go about making some kind of inference about our planning to exploit that?
+
+322
+00:45:31,015 --> 00:45:42,127
+That'd be super interesting, as a minimum as a kind of a minimum example, even for just a simple, you know, very simple API that takes like a car star and a size or something, something like this?
+
+323
+00:45:43,208 --> 00:45:48,313
+How would you go about, you know, inferring whether it's possible to do the buffer overflow in this?
+
+324
+00:45:49,238 --> 00:46:06,167
+One funny piece there would be, check out the PyMDP API, and then what would be appropriate, the appropriate, the latitude within that API is active inference.
+
+325
+00:46:06,805 --> 00:46:09,308
+That's kind of one, that would be a plot twist.
+
+326
+00:46:09,608 --> 00:46:15,374
+And then also on the interpretability, here's a paper with Mao and others from last year.
+
+327
+00:46:16,936 --> 00:46:20,560
+Like largely there aren't technical advances in this paper.
+
+328
+00:46:21,040 --> 00:46:26,086
+The images are drawn from Sanfed Smith's Livestream 28 paper.
+
+329
+00:46:26,666 --> 00:46:36,677
+So it's not like this is breaking the theoretical ground, but the whole point is when you ask a neural network or LLM, et cetera, how sure are you about that?
+
+330
+00:46:37,349 --> 00:46:48,991
+it can come up with a sequence of tokens, but that sequence of tokens is only going to be coincidentally related to anything like an uncertainty evaluation.
+
+331
+00:46:50,414 --> 00:46:59,070
+Whereas if uncertainty parameters are explicitly encoded, then self-access introspection
+
+332
+00:47:01,160 --> 00:47:23,961
+is just like a parameter look up it's not like some second it's like part of the real-time function of the system is um uncertainty estimates of different kinds at different levels so then to ask about how certain it is about a certain thing at a certain level you just ask that question and then return that variable
+
+333
+00:47:24,211 --> 00:47:30,280
+You know, maybe even that's on some kind of special chip or something like with verified access or something.
+
+334
+00:47:30,641 --> 00:47:42,740
+So it opens up to all these different architectures rather than like, well, let's train like another adversarial neural network to like, you know, try to infer this about this one.
+
+335
+00:47:42,800 --> 00:47:49,651
+And then that gets into this whole like deception game versus having these introspectable architectures.
+
+336
+00:47:49,931 --> 00:47:50,472
+Joris?
+
+337
+00:47:52,493 --> 00:47:56,308
+To what extent does this differ from Bayesian reinforcement learning?
+
+338
+00:47:58,497 --> 00:48:00,023
+Great question.
+
+339
+00:48:01,724 --> 00:48:08,514
+What what what what about that, or what what do you mean overall house activity inference different than reinforcement learning.
+
+340
+00:48:09,236 --> 00:48:25,200
+yeah maybe indeed even overall but yeah if you want this kind of uncertainty measure with whatever you infer, then I guess both frameworks will allow this or is there yeah.
+
+341
+00:48:26,648 --> 00:48:53,280
+uh it's probably a very unclear question but yeah okay there's there's there's a few a few works and a few approaches there so um models that aren't active inference still do deal in uncertainty so there still is an uncertainty parameterization in even a linear regression however a neural network or reinforcement learner that's trained to generate language
+
+342
+00:48:53,699 --> 00:48:59,558
+its outputs of languages don't necessarily represent a veridical introspection.
+
+343
+00:49:01,006 --> 00:49:10,537
+Maybe there's a way to train it so that the output is a veridical representation, but that would be a secondary kind of welding together.
+
+344
+00:49:11,017 --> 00:49:18,846
+Whereas this architecture that we just looked at, like it's it's a part of that's kind of on the uncertainty as part of the architecture part.
+
+345
+00:49:19,667 --> 00:49:26,895
+The key the key difference between active inference and the reinforcement learning is in reinforcement learning.
+
+346
+00:49:26,875 --> 00:49:48,293
+a reward distribution is proposed a secondary or auxiliary or corollary corollary distribution is proposed that's like layered over the observations so in the homeostatic environment we'd say we're getting observations about temperature and we are rewarded by 37c and we seek out high reward
+
+347
+00:49:49,015 --> 00:50:13,032
+In active inference, we do away with this secondary auxiliary function, and we directly work on the observation distribution by calling our preferences not a preference for higher score on this proposed distribution, but rather we have an expectation and a preference that connects directly to the observations themselves.
+
+348
+00:50:15,395 --> 00:50:17,959
+Yes, I understand that, but I
+
+349
+00:50:18,597 --> 00:50:29,610
+have been vaguely looking at things that Benjamin van Rooij and his lab are doing.
+
+350
+00:50:30,171 --> 00:50:31,833
+But I don't really understand it yet.
+
+351
+00:50:31,873 --> 00:50:39,542
+But there is some kind of thing like Bayesian reinforcement learning.
+
+352
+00:50:39,522 --> 00:51:06,897
+I wonder if they have I I would expect it to have uh um a measure of uncertainty that comes with with any prediction there but I might have uh yeah it might just be too fake concept in my mind no you're right there it is there I mean this work on um demystified and compared and there's several other
+
+353
+00:51:07,771 --> 00:51:10,534
+works that do directly tackle it.
+
+354
+00:51:12,676 --> 00:51:19,222
+It's not out of the picture that, I mean, architectures can include arbitrary components.
+
+355
+00:51:19,262 --> 00:51:23,766
+So it is possible to be like, well, let's have an epistemic module.
+
+356
+00:51:24,546 --> 00:51:36,057
+Well, yes, but then epistemic and pragmatic value at the end of the day in the RL learner or the deep Q learner or whatever epistemic and pragmatic value are going to get blended back together.
+
+357
+00:51:37,319 --> 00:52:07,174
+into the reward function right you have this like artificial curiosity and and other uh intrinsic motivations that you could add add on to a classic canonical reinforcement learner and i see quite a lot of of research on that but then it seems that from an active inference framework it kind of emerges from the from from the the system but
+
+358
+00:52:07,238 --> 00:52:10,061
+Absolutely.
+
+359
+00:52:10,101 --> 00:52:35,929
+That is the hope, that there's a variety of cognitive phenomena from planning to epistemic value, curiosity, intentionality, variety of phenomena that could be implemented in a range of architectures, but will pursuing a first principles approach lead to simpler, more interpretable
+
+360
+00:52:36,652 --> 00:52:37,853
+more efficacious models?
+
+361
+00:52:38,514 --> 00:52:40,016
+Possibly, possibly.
+
+362
+00:52:41,318 --> 00:52:52,512
+If somebody needed, there might be a better model for a situation today because there are such incredible gyms and toolkits for reinforcement learning.
+
+363
+00:52:54,274 --> 00:53:01,022
+So, but yes, hence the moment of the epistemic,
+
+364
+00:53:01,913 --> 00:53:28,798
+excitement that we have and share here plus the accelerating pragmatic conversion and understanding like yeah where is this useful because it's it's all good for something to be insightful but then um i mean there could be a situation where active inference just gives us an intuition pump and then we use a neural network or there are hybrid architectures that that
+
+365
+00:53:29,707 --> 00:53:55,512
+do this or that and um but if utility is is what is desired or or some other property that another system already has then yeah definitely active inference has to work to to to be superior there one really interesting um moment from um this was a couple days ago
+
+366
+00:53:55,846 --> 00:54:18,529
+with uh Ryan Smith and two of his PhD students so the empirical status of predictive coding um what was super interesting about this paper was like in this textbook group if someone said like what's the status like of of FEP or status of acting people would often take it like in a metaphysical direction
+
+367
+00:54:19,167 --> 00:54:31,345
+However, they took it the other way and asked what's the empirical status of predictive coding and active inference in explaining neuroimaging and neurobiology.
+
+368
+00:54:31,385 --> 00:54:42,441
+So it's very interesting and these are the ongoing questions.
+
+369
+00:54:44,260 --> 00:55:08,665
+and curating the models and being able to compare them based upon how they do treat these phenomena that would be super informative and then if we can have a similar um syntax for the variable similar API use agent I mean this um the demystified and compared it uses the open AI gym so like
+
+370
+00:55:12,087 --> 00:55:15,932
+they presented some promising, interesting results, and that was several years ago.
+
+371
+00:55:16,753 --> 00:55:28,046
+And a lot of the work has probably not been published on the OpenAI ActiveInference side, but it is right there, like with Frozen Lake or with the other reinforcement learning settings.
+
+372
+00:55:31,029 --> 00:55:39,900
+And then look at where they're different, find out where does the super high-performance, large-scale RL model do well that this simple ActiveInf one doesn't.
+
+373
+00:55:40,488 --> 00:55:44,232
+And then what would we need to do to make it different?
+
+374
+00:55:47,336 --> 00:55:47,977
+Well, fun.
+
+375
+00:55:48,157 --> 00:55:52,322
+Yeah, Chapter 7 is pretty fun.
+
+376
+00:55:53,943 --> 00:55:59,410
+Next weeks, we'll head into Chapter 8 on the continuous time.
+
+377
+00:56:00,571 --> 00:56:06,698
+Maybe we'll look at some Rx and Fur examples because there aren't going to be PyMDP examples for Chapter 8.
+
+378
+00:56:07,336 --> 00:56:35,318
+um the continuous time models there's a lot to say there on the math and on the philosophy and so on chapter nine integrating with data and then chapter 10 just a long wrap up with no figures or equations so thank you all see you next time thank you daniel bye thank you thanks everybody

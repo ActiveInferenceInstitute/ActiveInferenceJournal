@@ -1,0 +1,3907 @@
+1
+00:00:08,407 --> 00:00:26,408
+hello and welcome it is november 1st 2023 and we're here in actin live stream 55.1 discussing realizing synthetic active inference agents really excited and honored to have magnus here for this first
+
+2
+00:00:27,669 --> 00:00:29,170
+discussion, session.
+
+3
+00:00:29,670 --> 00:00:40,357
+We're going to have an interactive presentation and then looking towards the .2, have a bit more open-endedness and maybe some code execution, maybe some message passing live.
+
+4
+00:00:41,418 --> 00:00:43,299
+So thank you for joining, Magnus.
+
+5
+00:00:43,979 --> 00:00:46,521
+Very excited for your presentation and for this discussion.
+
+6
+00:00:47,702 --> 00:00:47,922
+Thanks.
+
+7
+00:00:48,903 --> 00:00:49,863
+Very, very happy to be here.
+
+8
+00:00:50,764 --> 00:00:52,625
+Been looking forward to this for quite a while now.
+
+9
+00:00:54,833 --> 00:00:56,876
+So should I just get into it?
+
+10
+00:00:57,797 --> 00:00:57,997
+Yes.
+
+11
+00:00:58,878 --> 00:00:59,058
+Right.
+
+12
+00:00:59,118 --> 00:00:59,419
+Amazing.
+
+13
+00:00:59,699 --> 00:01:00,860
+So hi, everybody.
+
+14
+00:01:02,182 --> 00:01:02,622
+I'm Magnus.
+
+15
+00:01:03,103 --> 00:01:05,506
+I'm a machine learning research engineer at Versus.
+
+16
+00:01:06,066 --> 00:01:12,474
+And in a couple of months, also a PhD graduate from BIOS Lab in Eindhoven.
+
+17
+00:01:14,481 --> 00:01:30,468
+I'm here to talk about these two papers, Realizing Synthetic Active Inference Agents, parts one and two, that we did together with me and the ever-brilliant Thijs van der Laar and Bert de Vries.
+
+18
+00:01:31,048 --> 00:01:40,992
+One thing ahead of time, if you have questions in the chat or anything, I can't see them, but I encourage people to interrupt me as much as possible because it's more fun for everybody.
+
+19
+00:01:41,505 --> 00:01:44,508
+If we can sort of have a bit of a dialogue going, have our own action perception loop.
+
+20
+00:01:46,429 --> 00:01:46,609
+All right.
+
+21
+00:01:46,890 --> 00:01:49,892
+And with that out of the way, I clicked on my slides and they changed.
+
+22
+00:01:50,012 --> 00:01:51,233
+So I think that part is working.
+
+23
+00:01:53,095 --> 00:01:53,295
+Excellent.
+
+24
+00:01:53,315 --> 00:01:55,837
+So this is like the battle plan for what I want to go through today.
+
+25
+00:01:55,857 --> 00:02:02,323
+I want to start by covering the problem state and what are we trying to do with these two papers?
+
+26
+00:02:02,763 --> 00:02:09,249
+What is sort of the whole idea and sort of serve you up the point as it were right at the offset.
+
+27
+00:02:10,319 --> 00:02:17,484
+Then we're going to cover a bit of background material, and then we start to get into the meat of the actual papers, which are mainly two things.
+
+28
+00:02:17,824 --> 00:02:38,697
+It is what we call CFFG notation, so constrained foreign-style factor graph notation, and deriving messages based on local generalized free energy functional so that we can do this efficiently and scalably at all these nice things that we want.
+
+29
+00:02:39,841 --> 00:02:51,010
+And then at the end, we're going to look at some experiments that are in the two papers to see whether this is all just a nice theoretical exercise or whether we actually have something that works.
+
+30
+00:02:54,333 --> 00:02:56,354
+All right, let's get into it.
+
+31
+00:02:58,716 --> 00:03:06,002
+So the main thing that I want to do is we want to figure out, how do we put active inference on graphs?
+
+32
+00:03:06,963 --> 00:03:09,265
+It's sort of the big question that we're trying to get at with these two papers.
+
+33
+00:03:12,049 --> 00:03:14,030
+because active inference is awesome.
+
+34
+00:03:15,431 --> 00:03:16,792
+I think I can say that in this crowd.
+
+35
+00:03:18,313 --> 00:03:24,277
+And graphs are really, really nice and have some nice properties that we would like for active inference.
+
+36
+00:03:26,139 --> 00:03:31,022
+So let's go a little bit deeper into what this actually means.
+
+37
+00:03:34,945 --> 00:03:39,148
+So I sort of put up two things side by side here, one being the
+
+38
+00:03:41,172 --> 00:03:45,596
+The active inference book and the other being like a foreign style factor graph of a state space model.
+
+39
+00:03:46,816 --> 00:03:51,200
+we're going to try and compare sort of what we want out of each formalism.
+
+40
+00:03:52,421 --> 00:03:54,903
+So active inference great does a lot of things.
+
+41
+00:03:57,285 --> 00:04:04,991
+But one thing that it doesn't in the very, very classical 2015 original formulations what i'm mostly going to be referring to.
+
+42
+00:04:06,417 --> 00:04:11,419
+If we go really by the books, usually this is tied to a POMDP model structure.
+
+43
+00:04:13,519 --> 00:04:18,461
+So that means we have these discrete state space models, and we define them with A, B, C, D matrices.
+
+44
+00:04:20,162 --> 00:04:22,202
+And everything is sort of as we all know and love.
+
+45
+00:04:22,242 --> 00:04:22,843
+And this is great.
+
+46
+00:04:22,903 --> 00:04:24,023
+We can do a lot of stuff with it.
+
+47
+00:04:24,623 --> 00:04:28,084
+But it is still a choice that we make a priori most of the time.
+
+48
+00:04:29,845 --> 00:04:35,727
+The other thing is if we go strictly by the original planning algorithm
+
+49
+00:04:36,502 --> 00:04:42,445
+There's a scaling problem in the planning horizon that follows from us having to do these large search trees.
+
+50
+00:04:42,465 --> 00:04:55,172
+There's excellent work trying to address this, either branching time active inference, parts of the sophisticated inference program, and all these really, really interesting developments using Monte Carlo tree search.
+
+51
+00:04:56,613 --> 00:04:59,494
+But this isn't really a solved problem yet.
+
+52
+00:05:01,795 --> 00:05:04,697
+On the plus side, what we do get that we really, really want
+
+53
+00:05:06,359 --> 00:05:12,763
+is that if we design an active inference agent and we go by all the nice things that we know and love, we get agents that are curious.
+
+54
+00:05:13,943 --> 00:05:27,871
+We get agents that have this epistemic drive to go and explore their world, which is a really, really handy thing to have because if our agent can gather its own information, it'll learn efficiently, it'll sort of figure out how to navigate and do things.
+
+55
+00:05:28,131 --> 00:05:34,474
+And it's much easier to have the agent do that rather than have us as engineers, designers at the agent do that.
+
+56
+00:05:36,496 --> 00:05:49,539
+All right, so if we compare that to building an agent using box standards, rational free energy minimization on a graph, we end up with an agent that doesn't have exploration.
+
+57
+00:05:50,159 --> 00:05:59,441
+If I take this type of formalism and I minimize free energy and I use that to construct a controller, I end up with a KL control objective.
+
+58
+00:06:00,621 --> 00:06:03,782
+And this is something that doesn't give us this exploratory drive.
+
+59
+00:06:05,484 --> 00:06:12,949
+We can get all sorts of other nice things, but we don't get this information-seeking behavior that is like a hallmark of active inference that we really want.
+
+60
+00:06:15,191 --> 00:06:19,374
+The upside what we get is a lot more flexibility.
+
+61
+00:06:20,615 --> 00:06:29,722
+I can write factor graphs for free-form models, and by using message-passing tools, we can also do inference in these models really, really efficiently.
+
+62
+00:06:29,742 --> 00:06:32,304
+That means we scale better.
+
+63
+00:06:33,570 --> 00:06:34,871
+Again, we have more flexibility in our model.
+
+64
+00:06:34,891 --> 00:06:35,791
+We can do a lot of things.
+
+65
+00:06:36,592 --> 00:06:39,433
+But what we don't get is this epistemic drive.
+
+66
+00:06:41,294 --> 00:06:45,036
+So ideally, what we would like is we want to take the best of both worlds, right?
+
+67
+00:06:45,056 --> 00:07:02,204
+We want to take all the good parts of active inference and all the good parts of sort of factor graph, message passing-based, free-energy minimization, and squash them together to get one unified framework for doing all the stuff that we want so that we get to get all the thumbs up and none of the thumbs down.
+
+68
+00:07:05,622 --> 00:07:06,803
+Everybody still with me?
+
+69
+00:07:08,544 --> 00:07:08,844
+Excellent.
+
+70
+00:07:10,125 --> 00:07:17,850
+OK, so to set this up, because these papers can get a little bit heavy, I'm going to try to walk through all the different parts.
+
+71
+00:07:17,910 --> 00:07:25,655
+But to set up the whole thing of how this is going to work, I'm going to start by reviewing a little bit of background material.
+
+72
+00:07:26,816 --> 00:07:28,037
+It's not going to be too heavy, I promise.
+
+73
+00:07:30,339 --> 00:07:31,579
+And we're going to start with...
+
+74
+00:07:33,470 --> 00:07:35,370
+our favorite functional, the variational free energy.
+
+75
+00:07:37,491 --> 00:07:42,552
+Again, I think in this crowd, most of you will have seen something that looks like this before.
+
+76
+00:07:43,992 --> 00:07:45,393
+And this is a fine way of writing it.
+
+77
+00:07:45,413 --> 00:07:52,254
+We have some observations, x, and we have some latents, z. I'm going to use x for observations and z for latents throughout.
+
+78
+00:07:54,115 --> 00:07:56,635
+And we're interested in minimizing this type of divergence.
+
+79
+00:07:57,735 --> 00:07:58,276
+This is great.
+
+80
+00:07:59,876 --> 00:08:00,136
+However,
+
+81
+00:08:01,383 --> 00:08:16,853
+If we're in a position where we have, say, multiple latents combined in different ways and some parameters and maybe a couple of different states and things going on, this particular way of writing things doesn't really sort of intuitively capture all of that.
+
+82
+00:08:18,194 --> 00:08:22,537
+This doesn't represent the underlying graph structure of our model.
+
+83
+00:08:24,858 --> 00:08:28,941
+So if we go up a little bit and look at this guy here, for instance,
+
+84
+00:08:29,787 --> 00:08:32,249
+There's a lot of structure in this way of writing a generative model.
+
+85
+00:08:32,269 --> 00:08:37,372
+You see some things are not connected to each other, some things are.
+
+86
+00:08:37,392 --> 00:08:43,777
+There's a lot of things going on here that we can't really capture if we just stick with this way of writing our free energy.
+
+87
+00:08:45,838 --> 00:08:50,502
+The first thing we're going to do is we're going to try and figure out how do we write free energy in graphs?
+
+88
+00:08:54,022 --> 00:08:55,964
+And to do that, we're going to need to have some graphs.
+
+89
+00:08:58,426 --> 00:09:03,310
+And I like this particular way of writing my probabilistic graphical models.
+
+90
+00:09:03,571 --> 00:09:04,071
+There are others.
+
+91
+00:09:06,473 --> 00:09:08,375
+This particular way is called a Forney-style factor graph.
+
+92
+00:09:08,735 --> 00:09:10,457
+And basically, we have three building blocks.
+
+93
+00:09:12,198 --> 00:09:15,601
+We have squares, which can represent factors in a generative model.
+
+94
+00:09:15,982 --> 00:09:18,144
+So this is going to be, say, p of x given z.
+
+95
+00:09:20,031 --> 00:09:26,255
+We have edges that we stick between squares, and they're going to represent variables.
+
+96
+00:09:27,616 --> 00:09:35,460
+This is a bit different to what you would see if you do something like a Bayesian network, where a node would be a variable, and you connect it to all the variables that depend on it.
+
+97
+00:09:37,862 --> 00:09:41,884
+Here, the nodes are the factors, and the edges are the variables.
+
+98
+00:09:42,465 --> 00:09:47,588
+It's a little bit of mental gymnastics if you're not used to thinking in this way.
+
+99
+00:09:49,269 --> 00:09:58,895
+And then once we get into inference with message parsing, I'll use these little arrows to denote messages as they are flowing around on a graph.
+
+100
+00:10:00,716 --> 00:10:09,521
+And all of these three building blocks is really most of what I'm going to use until we get into the meat of the two papers.
+
+101
+00:10:13,184 --> 00:10:15,285
+So let's look at an example of what this could look like.
+
+102
+00:10:16,686 --> 00:10:18,487
+So I have a pretty simple model here.
+
+103
+00:10:20,165 --> 00:10:25,188
+This has three variables, x, y, and z. And they factorize like this.
+
+104
+00:10:26,809 --> 00:10:29,070
+So we have P of y gets its own factor.
+
+105
+00:10:30,371 --> 00:10:40,637
+Variable y, z given y, this factor, variable z. And x given z, this factor, variable x. So far, so good.
+
+106
+00:10:44,479 --> 00:10:45,500
+All right.
+
+107
+00:10:46,826 --> 00:10:48,107
+So again, this is just a simple graph.
+
+108
+00:10:48,147 --> 00:10:52,629
+Now we're going to try and see if we can figure out how to distribute our free energy in this graph.
+
+109
+00:10:52,709 --> 00:11:00,973
+How can we turn this general formulation that we had of just some latents and some correlations into something that we can put all over this graph?
+
+110
+00:11:03,234 --> 00:11:05,175
+And this is the hairiest slide, I promise.
+
+111
+00:11:06,856 --> 00:11:14,660
+We're going to do that by simply saying, well, I have my free energy, and I'm going to basically pick a term associated with each node.
+
+112
+00:11:15,646 --> 00:11:20,467
+So I'm going to have a q for each node, and I'm going to have this f for just a generic factor.
+
+113
+00:11:21,307 --> 00:11:25,628
+You can also think of it as like the p argument in a normal free energy.
+
+114
+00:11:25,668 --> 00:11:26,568
+And then we have this sum.
+
+115
+00:11:27,908 --> 00:11:30,749
+So this sum here sums over all the nodes in our model.
+
+116
+00:11:31,629 --> 00:11:33,769
+So if you look here, we have one, two, three nodes.
+
+117
+00:11:34,429 --> 00:11:36,670
+So that's going to be one term for each node.
+
+118
+00:11:39,330 --> 00:11:40,870
+And that's really all that's happening here.
+
+119
+00:11:40,890 --> 00:11:44,911
+OK, so far, so good.
+
+120
+00:11:46,343 --> 00:11:53,867
+This is not quite there yet, because we're going to need another term, which is going to be this guy.
+
+121
+00:11:55,028 --> 00:12:06,795
+And what this basically says is, subtract the entropy of each edge that is connected to more than two nodes back in.
+
+122
+00:12:07,996 --> 00:12:10,037
+So why would we do this?
+
+123
+00:12:10,777 --> 00:12:12,699
+I promise you there's a reason.
+
+124
+00:12:15,205 --> 00:12:24,351
+This term, if you haven't gone through the ideas, seems a little ad hoc, because now we have a free energy for each node, and we have this extra entropy term for each edge.
+
+125
+00:12:25,312 --> 00:12:26,032
+So what's going on there?
+
+126
+00:12:28,414 --> 00:12:36,359
+I want to sort of illustrate how that comes about, and we get to this form of the free energy, which is a Bethe approximation to the free energy.
+
+127
+00:12:37,960 --> 00:12:38,801
+We can look at this graph.
+
+128
+00:12:39,121 --> 00:12:42,183
+You say, well, look at this node here.
+
+129
+00:12:44,351 --> 00:12:47,074
+z given y, you can have a free energy term.
+
+130
+00:12:48,435 --> 00:12:51,157
+And that free energy term includes two variables.
+
+131
+00:12:52,918 --> 00:12:58,163
+This node is connected to two edges, so the free energy around this node will involve the variables that are connected to that node.
+
+132
+00:13:00,164 --> 00:13:12,715
+That means we get terms for y and get terms for z. But if we look at the other node here, this x given z, that's also connected to two variables.
+
+133
+00:13:13,302 --> 00:13:15,743
+It's connected to x on the one side and z on the other.
+
+134
+00:13:18,345 --> 00:13:26,029
+So if we do this summing up, do a free energy term for each node, this z is going to get counted twice.
+
+135
+00:13:27,690 --> 00:13:29,932
+It appears once in the blue circle and once in the red circle.
+
+136
+00:13:32,133 --> 00:13:34,614
+So how do we get around counting our variables twice?
+
+137
+00:13:35,915 --> 00:13:36,335
+That's easy.
+
+138
+00:13:36,735 --> 00:13:37,656
+We just subtract it again.
+
+139
+00:13:40,202 --> 00:13:44,125
+So that's why we get this extra entropy term coming in.
+
+140
+00:13:44,265 --> 00:13:46,266
+That's why we get this guy.
+
+141
+00:13:47,227 --> 00:13:54,552
+Because for each variable that is connected to two nodes, we're going to have this situation.
+
+142
+00:13:55,012 --> 00:13:55,993
+Z is connected to two nodes.
+
+143
+00:13:56,834 --> 00:13:57,854
+And therefore, it gets counted twice.
+
+144
+00:13:58,615 --> 00:13:59,696
+So we simply get rid of one of them.
+
+145
+00:14:01,997 --> 00:14:02,578
+Does this make sense?
+
+146
+00:14:04,819 --> 00:14:05,119
+Beautiful.
+
+147
+00:14:06,540 --> 00:14:08,682
+It's the same thing as saying that when we define
+
+148
+00:14:09,181 --> 00:14:32,357
+q in our free energy functional we have this q log q over p we have a q that looks like this we say q of x y and z is going to be equal to all these terms one for each node there's one here for x and z there's one here for y and z that's one here for y matching the three nodes over these terms for the edges
+
+149
+00:14:34,284 --> 00:14:41,947
+And one for z, because it's connected to two variables, and one for y, because it's connected to two factors, and one for y, because it's connected to two factors.
+
+150
+00:14:44,408 --> 00:14:45,888
+So that's really all that's going on here.
+
+151
+00:14:45,928 --> 00:14:52,431
+But if we do this and take this Bethe approximation to the free energy, now we can put the whole thing on a graph.
+
+152
+00:14:55,472 --> 00:15:00,494
+Because we have free energy terms for every node, and we have entropy terms for every edge.
+
+153
+00:15:02,862 --> 00:15:26,609
+that means now i can take my free energy functional and i can distribute it all over my graph and i can work with everything locally because if i'm interested in updating z here for instance check down here z appears here q of x and z it appears here q of y and z and then has its own marginal so basically like if the graph were longer i can
+
+154
+00:15:27,671 --> 00:15:28,771
+Throw away everything else.
+
+155
+00:15:29,431 --> 00:15:37,453
+Imagine we have an L variable here, for instance, connected to Y. That doesn't influence Z in the slightest.
+
+156
+00:15:39,993 --> 00:15:41,474
+They're completely separate on the graph.
+
+157
+00:15:41,494 --> 00:15:43,934
+They've got a Y in between, sort of Markov blanketing everything off.
+
+158
+00:15:45,774 --> 00:15:53,836
+So I can take what would be large, unwieldy problems involving lots of variables and just turn them into lots of small, little, local free-energy minimization problems.
+
+159
+00:15:55,213 --> 00:16:01,817
+It's really nice because we can solve them locally and we don't have to deal with the whole thing.
+
+160
+00:16:01,837 --> 00:16:14,144
+We can just worry about all our little problems and we can string them together and get back reasonably good solutions to the thing we started with.
+
+161
+00:16:15,164 --> 00:16:15,364
+Right.
+
+162
+00:16:15,865 --> 00:16:21,828
+So that is sort of the main procedure for how we would put free energy on graphs.
+
+163
+00:16:24,417 --> 00:16:31,220
+I take the free energy, split it into terms for each node and each edge, and then subtract whatever's double counted.
+
+164
+00:16:31,260 --> 00:16:34,682
+It gives a betty-free energy, really, really nice.
+
+165
+00:16:37,143 --> 00:16:53,731
+The other thing this allows us to do, which is something that we go into more in depth in part two of the papers, is that we can do some variational calculus tricks to derive algorithms that minimize this constrained betty-free energy.
+
+166
+00:16:56,923 --> 00:17:14,088
+And that allows us to say, set up the functional formal Lagrangian and get, excuse me, belief propagation or variational message parsing or large propagation, all these different algorithms that we know and love just as like from a general method.
+
+167
+00:17:15,529 --> 00:17:23,851
+And the spoiler is that when we get to part two and we start to derive messages based on local generalized free energy,
+
+168
+00:17:24,465 --> 00:17:34,349
+We're just going to use the same trick, because as an engineer, I'm kind of a lazy person.
+
+169
+00:17:34,930 --> 00:17:38,251
+I don't want to remember 80 different algorithms.
+
+170
+00:17:39,111 --> 00:17:40,552
+I want to have one trick.
+
+171
+00:17:40,932 --> 00:17:42,713
+I want to do free anti-minimization.
+
+172
+00:17:43,732 --> 00:17:45,113
+And I want to do it by message passing.
+
+173
+00:17:45,173 --> 00:17:53,957
+And I want to have this method on lockdown because then my task is just to set up the right generative model and make sure that the inference problems are right.
+
+174
+00:17:53,977 --> 00:18:01,961
+And then I can use that to do my smoothing or control my robots or do my regression or classification or whatever kind of thing that I'm interested in.
+
+175
+00:18:03,262 --> 00:18:07,684
+Again, I only have to learn one tool, which is really nice.
+
+176
+00:18:07,704 --> 00:18:10,005
+All right.
+
+177
+00:18:11,661 --> 00:18:19,644
+So you are the only person on this call, Daniel, so I'm going to be asking you, what's missing from this picture here of this graph?
+
+178
+00:18:19,664 --> 00:18:22,325
+If you think about your free energy functional, what's missing?
+
+179
+00:18:25,666 --> 00:18:32,528
+Art, hands, full, the list goes on and on, doesn't it?
+
+180
+00:18:32,548 --> 00:18:36,770
+There's not a lot of humanity in these graphs.
+
+181
+00:18:36,870 --> 00:18:37,790
+This is pure engineering.
+
+182
+00:18:41,879 --> 00:18:45,563
+The thing that this graph represents really well is the generative model.
+
+183
+00:18:47,444 --> 00:18:49,726
+You can write your p really, really well.
+
+184
+00:18:51,748 --> 00:18:55,371
+You can't really write your q. No q here.
+
+185
+00:18:55,391 --> 00:18:56,032
+This guy here.
+
+186
+00:18:56,692 --> 00:18:57,072
+Exactly.
+
+187
+00:18:57,593 --> 00:18:58,173
+This guy here.
+
+188
+00:18:58,939 --> 00:19:02,460
+which is the other sort of half of the picture.
+
+189
+00:19:03,400 --> 00:19:09,161
+Think about your free energy functional Q over P. You have a Q and you have a P, but we can only write one of them down.
+
+190
+00:19:09,241 --> 00:19:15,922
+The other half of the picture, the thing that actually specifies our inference problem, isn't really on this graph.
+
+191
+00:19:20,363 --> 00:19:27,144
+So if I want to write this on my graph, I want to make sure that my graph is accurate representation
+
+192
+00:19:27,549 --> 00:19:28,149
+inference problem.
+
+193
+00:19:28,169 --> 00:19:34,272
+I don't have to go and work out some equations or read through a paragraph of text to figure out what's going on.
+
+194
+00:19:35,372 --> 00:19:35,892
+How do I do that?
+
+195
+00:19:37,813 --> 00:19:39,834
+And this is where we start in part one of the two papers.
+
+196
+00:19:43,035 --> 00:19:52,679
+So one way you can think of defining your Q is that you can think of putting constraints on it.
+
+197
+00:19:54,251 --> 00:20:00,334
+It has to factorize in this way, and it has to have this functional form, and these things have to normalize.
+
+198
+00:20:02,175 --> 00:20:10,759
+There's a whole set of mechanics that we can get into, but I haven't planned to, for how these can work.
+
+199
+00:20:12,860 --> 00:20:21,504
+Adding this to your factor graph effectively allows you to specify the inference problem because
+
+200
+00:20:21,980 --> 00:20:27,902
+write out the full functional with all the constraints and everything, and minimizing that is going to give you the solution to the problem that you're interested in.
+
+201
+00:20:30,063 --> 00:20:36,886
+Okay, so have a generic graph, and we don't really have a way to put q on it.
+
+202
+00:20:38,666 --> 00:20:42,928
+Write p, write a model, everything's great, but I can't really write q.
+
+203
+00:20:45,774 --> 00:20:49,656
+I only have arrows, I have squares, and I have lines.
+
+204
+00:20:50,376 --> 00:20:51,956
+Those are the only things that I'm allowed to work with.
+
+205
+00:20:53,297 --> 00:20:58,479
+So to write Q, we need to introduce another piece of notation.
+
+206
+00:21:01,780 --> 00:21:05,621
+And the piece that we've chosen is this little guy, this little bead, a little circle.
+
+207
+00:21:07,202 --> 00:21:13,844
+And so I'll put variational marginal here in air quotes just to say this represents some entry in Q.
+
+208
+00:21:16,192 --> 00:21:23,534
+So there's going to be one of these for every node because we're using this best-thee approximation where everything gets distributed over the graph.
+
+209
+00:21:24,894 --> 00:21:26,834
+One for every node and one for every edge.
+
+210
+00:21:28,015 --> 00:21:31,035
+Because if you remember, we had terms that involved marginals around nodes.
+
+211
+00:21:32,475 --> 00:21:43,438
+In the model with x, y, and z, we had one for x and z and for y and z. And we're going to have little beads
+
+212
+00:21:45,014 --> 00:21:53,900
+for every edge marginal, one for x, one for y, and one for z, because these are the things that we need to compute these double counting terms.
+
+213
+00:21:56,322 --> 00:22:10,372
+So if we take this generic graph from here, and let's just add in beads that denote all the little parts of Q that we want, we're going to be left with something that looks like this.
+
+214
+00:22:13,513 --> 00:22:23,697
+So again, what this is saying is I have a marginal here around this node, this little guy, one on this edge, this little guy, and so on and so forth.
+
+215
+00:22:23,737 --> 00:22:27,599
+And this just repeats for every node and edge on my graph.
+
+216
+00:22:27,619 --> 00:22:29,860
+I want to be really explicit about it.
+
+217
+00:22:32,121 --> 00:22:37,944
+Towards the end of part two, we do a compression step because this gets unwieldy for large graphs.
+
+218
+00:22:37,964 --> 00:22:38,864
+But this is sort of the idea.
+
+219
+00:22:41,991 --> 00:22:43,532
+Clarifying question here, Magnus.
+
+220
+00:22:45,173 --> 00:22:49,915
+What values do the beads and or nodes and edges take on?
+
+221
+00:22:50,436 --> 00:23:04,344
+Like we see the structural topological layout and then is each bead going to be like taking on a number or is each bead taking on a variable that doesn't have to be simply a number?
+
+222
+00:23:05,784 --> 00:23:10,187
+So each bead here is going to represent a posterior belief.
+
+223
+00:23:11,007 --> 00:23:12,167
+So these are ways to think about it.
+
+224
+00:23:12,668 --> 00:23:23,612
+There's going to be an entry in Q. So if you go back to this model here, for instance, we would have a B that represents QZ that sits here.
+
+225
+00:23:23,632 --> 00:23:34,255
+So that would be this term, which could, for instance, be like a categorical or a Gaussian or a gamma or what have you, dependent on what falls out of inference procedure.
+
+226
+00:23:34,275 --> 00:23:36,216
+We have the same thing here.
+
+227
+00:23:36,576 --> 00:23:38,497
+We would have the same thing around here again.
+
+228
+00:23:39,426 --> 00:23:42,407
+joint of x and z, for instance, could be like a joint Gaussian.
+
+229
+00:23:44,427 --> 00:23:47,608
+But these are going to be probability distributions most of the time.
+
+230
+00:23:47,628 --> 00:23:49,408
+OK.
+
+231
+00:23:49,668 --> 00:23:54,529
+So beads take on the semantics of the node or the edge that they're overlaid on.
+
+232
+00:23:55,210 --> 00:24:05,312
+And the beads give us a little bit of a space between p and q, quite literally, because it allows us to have this parallel
+
+233
+00:24:06,687 --> 00:24:16,389
+Q bead construction that inherits the structure and the relationships of the generative model drawn as a factor graph.
+
+234
+00:24:17,249 --> 00:24:17,689
+Exactly.
+
+235
+00:24:17,729 --> 00:24:21,970
+And that's because we start by factorizing our Q over the graph.
+
+236
+00:24:22,390 --> 00:24:28,572
+We split it into these nodes and edge-specific posterior marginal beliefs.
+
+237
+00:24:31,432 --> 00:24:34,653
+That follows from the approximation, like the Betty thing we did initially.
+
+238
+00:24:36,744 --> 00:24:38,344
+So that's where the structure sort of follows from.
+
+239
+00:24:38,364 --> 00:24:45,286
+That's why we can put this across the graphs, because we started by saying, well, I'm going to distribute my free energy over my graph, and that's going to be my starting point.
+
+240
+00:24:46,587 --> 00:24:54,208
+So then once we get into actually writing out the free energy, it would only consist of terms that are local to bits and pieces on the graph.
+
+241
+00:24:58,169 --> 00:25:00,110
+I don't know who asked that question, but that's a good one.
+
+242
+00:25:05,416 --> 00:25:07,296
+And again, I encourage people to interrupt me.
+
+243
+00:25:07,336 --> 00:25:09,417
+If there are any more questions, let's just hit me now.
+
+244
+00:25:10,737 --> 00:25:12,798
+I'll be watching the live chat, but yeah, thank you.
+
+245
+00:25:13,759 --> 00:25:14,539
+All right, excellent.
+
+246
+00:25:15,699 --> 00:25:20,961
+Right, so the cool things about having these beads explicitly represented is that now we can start to do stuff to them.
+
+247
+00:25:24,448 --> 00:25:28,129
+Like, for instance, we can start to factorize things in different ways.
+
+248
+00:25:28,189 --> 00:25:33,332
+We can start to talk about, well, should Q be forced to have a particular form?
+
+249
+00:25:33,412 --> 00:25:35,473
+Like, should we force it to be a Gaussian, for instance?
+
+250
+00:25:38,734 --> 00:25:49,059
+And that's sort of a lot of the meat of the Part 1 paper is just showing different ways you can do this if you want to write out, again, Q as well in your graph.
+
+251
+00:25:49,119 --> 00:25:52,701
+Because if you have P and you have Q with the constraints,
+
+252
+00:25:53,200 --> 00:25:56,682
+That tells you everything you need to know about the inference problem that you're trying to solve.
+
+253
+00:25:57,663 --> 00:25:58,424
+That's the important part.
+
+254
+00:25:58,444 --> 00:26:05,308
+Because now, instead of having to write out stuff, text and equations, you can literally draw your inference problem as a picture.
+
+255
+00:26:08,311 --> 00:26:17,497
+And to me, one of the most intuitive and sort of most practical set of moves we do to queue is that we mean field factorize things.
+
+256
+00:26:19,498 --> 00:26:21,620
+That mean field just means we say, well, I have my,
+
+257
+00:26:22,031 --> 00:26:29,833
+joint Q, or we'll say here, X, Y, Z, and V. And I'm just going to set it to be equal to the product of all the individual margins.
+
+258
+00:26:30,753 --> 00:26:41,276
+So I turn this thing, joined to our four variables, into this thing, the product of four individual margins.
+
+259
+00:26:41,356 --> 00:26:42,376
+That's literally all it is.
+
+260
+00:26:44,056 --> 00:26:45,517
+And I want to represent that graphically.
+
+261
+00:26:46,877 --> 00:26:50,958
+That means I take one bead for one Q, just a single one here.
+
+262
+00:26:52,512 --> 00:26:55,094
+And I just split it into four bits, one for each queue.
+
+263
+00:26:55,114 --> 00:27:02,380
+Because now it's really, to me at least, it's really easy to see that I have four different things going on.
+
+264
+00:27:05,783 --> 00:27:07,544
+Otherwise, all the same rules apply.
+
+265
+00:27:08,725 --> 00:27:13,369
+We stay inside the node because this is the node marginal, four connected variables.
+
+266
+00:27:14,990 --> 00:27:16,111
+So these stay inside the node.
+
+267
+00:27:19,654 --> 00:27:22,355
+And yeah, that's one thing we could do.
+
+268
+00:27:24,076 --> 00:27:29,758
+But a full mean field in this way is also a bit aggressive sometimes.
+
+269
+00:27:32,279 --> 00:27:34,900
+Maybe you don't want to factorize everything independently.
+
+270
+00:27:34,920 --> 00:27:40,243
+Maybe you want to retain some joint structure in your marginals, which you can do.
+
+271
+00:27:40,263 --> 00:27:46,405
+If you do that, then you end up doing structured mean field, which I have two examples of here.
+
+272
+00:27:46,425 --> 00:27:48,466
+So this is the same node that we had earlier.
+
+273
+00:27:50,763 --> 00:27:56,185
+one giant Q joined over all the variables, then I can, for instance, split it into two sets of two.
+
+274
+00:27:58,406 --> 00:28:20,395
+I have a joint of X and Y, and I have a joint of Z and V. So that would be a joint of X and Y, and a joint over Z and V. The trick is that the edges that represent the variables, they protrude through the node border, and on that edge, we put the Q inside the node.
+
+275
+00:28:24,240 --> 00:28:24,881
+Does this make sense?
+
+276
+00:28:25,862 --> 00:28:31,772
+Yeah, I'll just restate it because I think it's one of the key contributions of the graphical notation.
+
+277
+00:28:32,413 --> 00:28:36,981
+So let's just say we were going to be drawing four variables, like rolling for die.
+
+278
+00:28:38,974 --> 00:29:06,686
+one way to analyze that statistically is treat all of them as being drawn like all at once from a four-dimensional distribution that's unfactorized and another extreme approach aggressive approach would be treat them as statistically independent or fully factorized and so that was what was shown on the previous slide and now also there's nuance where you can say actually i think two of the die have a a loose
+
+279
+00:29:07,606 --> 00:29:15,664
+tether so i want to infer the joint distribution of these two but leave these two independent so now we can see
+
+280
+00:29:17,176 --> 00:29:42,588
+and clarify articulate all of the space between unfactorized and mean field factorized and then we can generate different graphs and asks like well which structural partitioning has what kind of computational or runtime complexity what kind of accuracy so then you can engage in model selection across these different partitionings
+
+281
+00:29:43,717 --> 00:30:03,692
+However, seeing them all visually, as opposed to analytically, usually people are forced to just represent either the unfactorized or the fully factorized, because if you try to represent things analytically with all these partial factorizations on a large graph, it gets very unwieldy.
+
+282
+00:30:05,773 --> 00:30:07,475
+Yeah, that's beautifully put.
+
+283
+00:30:07,655 --> 00:30:13,359
+The idea is that we can treat some things as being joint and some things as being independent.
+
+284
+00:30:14,028 --> 00:30:19,412
+in Q. So the underlying generative model here is going to be the same.
+
+285
+00:30:20,453 --> 00:30:23,896
+It's just how do we factorize our belief we want to do inference.
+
+286
+00:30:26,397 --> 00:30:27,939
+That was beautiful, Bud.
+
+287
+00:30:32,162 --> 00:30:32,382
+Right.
+
+288
+00:30:32,442 --> 00:30:41,789
+That is one thing we can do once we have an explicit representation for Q. We can draw the beads that correspond to the structure in our
+
+289
+00:30:45,500 --> 00:30:49,702
+But we can also put stuff inside the beads.
+
+290
+00:30:50,942 --> 00:30:52,143
+I have an empty circle.
+
+291
+00:30:52,183 --> 00:30:58,365
+Same way I can write something inside a node on my factor graph, I can write something inside my bead.
+
+292
+00:31:01,227 --> 00:31:10,571
+So what happens when we do that is that we enforce different form constraints on Q. Here, I just picked one.
+
+293
+00:31:12,479 --> 00:31:18,200
+where I'm saying, well, the Q on this edge has to be a delta distribution.
+
+294
+00:31:20,461 --> 00:31:26,242
+That basically means that when I do inference, I'm doing the map estimate, the arc max of the variable on this edge.
+
+295
+00:31:30,282 --> 00:31:35,423
+And again, if you go through a bunch of derivations, you'll find out that that's what falls out from here.
+
+296
+00:31:36,503 --> 00:31:38,884
+So that means that now if I want to say,
+
+297
+00:31:40,672 --> 00:31:46,498
+map estimate over my actions, if I have an agent, I can put that into my graph.
+
+298
+00:31:47,899 --> 00:31:54,645
+I don't have to write somewhere in my paragraph text, oh, and then we do this kind of thing, and we factor this way, and then we take the map estimate.
+
+299
+00:31:55,906 --> 00:32:06,596
+You'll know at a glance, just from looking at the graph, that this particular variable on this particular edge has this functional form, and therefore it has to be a map estimate.
+
+300
+00:32:12,938 --> 00:32:14,460
+You could do this with other things as well.
+
+301
+00:32:14,481 --> 00:32:17,925
+You could say for it to be Gaussian or Wishyard or something else if you wanted.
+
+302
+00:32:19,527 --> 00:32:24,294
+But this idea of using deltas is probably the most common that I know of.
+
+303
+00:32:25,748 --> 00:32:29,830
+Yeah, this is also very nice and very consolidating.
+
+304
+00:32:30,130 --> 00:32:33,171
+The delta distribution is just a spike at one location.
+
+305
+00:32:33,911 --> 00:32:37,213
+And so it's basically a single data point or a value.
+
+306
+00:32:37,253 --> 00:32:43,355
+So it's like a distribution that's kind of like a distribution as a handle on a data point.
+
+307
+00:32:43,415 --> 00:32:50,518
+So the delta constraint is basically passing one data point rather than a full distribution through.
+
+308
+00:32:50,538 --> 00:32:54,020
+It's actually a little, there's a little subtlety here.
+
+309
+00:32:56,101 --> 00:33:02,523
+Because you're completely right that if you have a delta distributed variable centered at some point, that's a way you can enter data.
+
+310
+00:33:02,543 --> 00:33:08,604
+But that also means you need to fix the position of the delta distributed variable, which we do by calling it black.
+
+311
+00:33:08,784 --> 00:33:10,025
+This is how we represent data.
+
+312
+00:33:11,065 --> 00:33:15,326
+Otherwise, the position of a delta spike becomes a thing you can optimize.
+
+313
+00:33:16,747 --> 00:33:25,389
+And that's why it becomes a map estimate, because it is still a point, but you can put the point in the best possible place, which ends up being the map.
+
+314
+00:33:28,601 --> 00:33:29,582
+So you're completely right.
+
+315
+00:33:30,222 --> 00:33:32,624
+The form of the data point will also be a delta.
+
+316
+00:33:33,325 --> 00:33:36,287
+But then you also have to fix where this delta is positioned.
+
+317
+00:33:37,528 --> 00:33:47,795
+To distinguish between the two, we do data points, data constraints as filled black nodes, and delta constraints, i.e.
+
+318
+00:33:47,855 --> 00:33:51,858
+map estimates, as these unfilled nodes.
+
+319
+00:33:56,582 --> 00:33:57,042
+Does that make sense?
+
+320
+00:33:58,666 --> 00:34:00,768
+Yeah.
+
+321
+00:34:00,928 --> 00:34:02,950
+Free delta versus a fixed delta.
+
+322
+00:34:04,152 --> 00:34:04,752
+Yeah, exactly.
+
+323
+00:34:04,772 --> 00:34:07,615
+It's like saying you have to be only here.
+
+324
+00:34:08,756 --> 00:34:11,159
+Or you have to be a point, but you can put the point wherever you want.
+
+325
+00:34:16,344 --> 00:34:16,625
+All right.
+
+326
+00:34:17,726 --> 00:34:17,946
+Sorry.
+
+327
+00:34:22,645 --> 00:34:23,025
+Sorry about that.
+
+328
+00:34:23,085 --> 00:34:26,046
+Okay, so question.
+
+329
+00:34:26,886 --> 00:34:29,067
+And once again, it's going to be on you, Daniel.
+
+330
+00:34:31,607 --> 00:34:40,809
+Now we can put free energy on graphs, and we can write out Q, we can write out the entire inference problem, including constraints.
+
+331
+00:34:41,890 --> 00:34:42,810
+So we're almost there.
+
+332
+00:34:44,690 --> 00:34:47,931
+What is the thing that we're still missing if we want to do active inference on graphs?
+
+333
+00:34:48,151 --> 00:34:50,872
+We want to go back to the original question, put the whole thing on a graph.
+
+334
+00:34:51,152 --> 00:34:51,712
+What are we missing?
+
+335
+00:34:53,530 --> 00:34:54,310
+The environment?
+
+336
+00:34:56,312 --> 00:34:57,032
+Yeah, that's one thing.
+
+337
+00:34:58,073 --> 00:35:02,656
+Usually we would blanket that off from our model, so that would live somewhere on the outside of our graph.
+
+338
+00:35:02,676 --> 00:35:08,499
+But you're right, there would be somewhere that we would have to interface with an environment.
+
+339
+00:35:10,320 --> 00:35:16,444
+But just in terms of the functionals that we want to optimize, there's still something missing.
+
+340
+00:35:17,785 --> 00:35:20,526
+Expected free energy or anything prospective.
+
+341
+00:35:21,587 --> 00:35:22,107
+Exactly.
+
+342
+00:35:22,488 --> 00:35:23,228
+That's the whole deal.
+
+343
+00:35:23,956 --> 00:35:27,999
+We've only been talking about variational free energy so far, and you can get really, really far with that.
+
+344
+00:35:29,020 --> 00:35:34,524
+But one of the core things that we want out of active inference is we want to do planning.
+
+345
+00:35:34,544 --> 00:35:41,330
+We want this information-seeking, all this good stuff that we started with, the curiosity and the interest in the world around you.
+
+346
+00:35:43,051 --> 00:35:44,612
+So how do we put that on a graph?
+
+347
+00:35:48,835 --> 00:35:49,536
+And that's the next thing.
+
+348
+00:35:50,848 --> 00:35:59,472
+Now we're going to look at how do we put this type of planning epistemic functional on a graph.
+
+349
+00:36:01,893 --> 00:36:07,455
+And to do that, we're going to look a little bit at how the EFE actually works.
+
+350
+00:36:10,016 --> 00:36:12,477
+So usually we denote an EFE by g, right?
+
+351
+00:36:14,998 --> 00:36:16,299
+That's like the common notation.
+
+352
+00:36:17,332 --> 00:36:19,353
+And we write that as a function of a policy.
+
+353
+00:36:19,373 --> 00:36:23,054
+So we write pi, or in this case, I use u for my control variables.
+
+354
+00:36:23,834 --> 00:36:39,140
+So I have u from some time step t up until some planning horizon capital T. So that means if I want to plan two steps in the future, capital T would be 2, and I would have actions at either time step.
+
+355
+00:36:42,881 --> 00:36:43,381
+Does that make sense?
+
+356
+00:36:45,662 --> 00:36:45,862
+Awesome.
+
+357
+00:36:47,090 --> 00:36:48,130
+All right.
+
+358
+00:36:48,150 --> 00:36:54,853
+So the first thing we're going to say is, well, we compute that by taking a sum of the free energy at every time step.
+
+359
+00:36:55,853 --> 00:36:56,914
+That's the standard way to do it.
+
+360
+00:36:59,135 --> 00:37:06,918
+If we expand that a little bit, we get a sum over risk term and an ambiguity term, just like we all know and love.
+
+361
+00:37:09,139 --> 00:37:14,661
+But the key part, the one that usually doesn't get as much attention,
+
+362
+00:37:15,934 --> 00:37:16,534
+this part here.
+
+363
+00:37:16,814 --> 00:37:17,715
+Usually we like to start here.
+
+364
+00:37:17,735 --> 00:37:19,136
+Again, the sum.
+
+365
+00:37:21,296 --> 00:37:25,338
+Because the sum tells us something important about the expected free energy.
+
+366
+00:37:27,579 --> 00:37:30,581
+It tells us that this is the sum of a bunch of independent terms.
+
+367
+00:37:31,421 --> 00:37:33,982
+So this function actually factorizes.
+
+368
+00:37:36,583 --> 00:37:39,625
+If you think about it, it means we have one term for each time step.
+
+369
+00:37:40,645 --> 00:37:44,547
+Or if you write out the full graph, it would be one, you know,
+
+370
+00:37:45,234 --> 00:37:46,035
+node on our graph.
+
+371
+00:37:49,637 --> 00:37:52,560
+And to compute the whole thing that we're interested in, we just sum them up.
+
+372
+00:37:55,242 --> 00:37:58,204
+So the actual objective factorizes over the graph.
+
+373
+00:37:59,885 --> 00:38:00,686
+And that's kind of neat.
+
+374
+00:38:01,867 --> 00:38:11,074
+Because it means that when we look at the way this is constructed, like from the get go, there's already sort of a hint of how we can go about putting it on a graph.
+
+375
+00:38:13,376 --> 00:38:14,737
+And what we would need to do
+
+376
+00:38:16,297 --> 00:38:22,778
+is figure out, well, if I want to do this around one node on my graph, how do I do it?
+
+377
+00:38:23,338 --> 00:38:29,499
+And do it in a way that everything is consistent and we recover all these nice objectives and everything that we have already seen before.
+
+378
+00:38:31,120 --> 00:38:31,660
+So how do we do that?
+
+379
+00:38:32,960 --> 00:38:44,422
+How do we make a functional that's local to a node that inherits all the nice properties that we want out of an expected or, spoiler alert, a generalized free energy?
+
+380
+00:38:47,541 --> 00:38:51,283
+And we're just going to go through and construct it.
+
+381
+00:38:51,303 --> 00:38:59,528
+So we're going to start, because we're working under the free energy principle, with a variation of free energy.
+
+382
+00:38:59,548 --> 00:39:00,988
+It's going to be our first term here.
+
+383
+00:39:02,609 --> 00:39:14,656
+And it's going to be for some node that's connected to two variables, x and z. And then we also know that a lot of the nice epistemic
+
+384
+00:39:15,670 --> 00:39:22,112
+drive that we see in active inference agents, it follows from some information gain term.
+
+385
+00:39:22,752 --> 00:39:27,913
+So we're simply going to bolt on an information gain term that's local to our node.
+
+386
+00:39:30,694 --> 00:39:34,215
+And if we do that, we can do something quite interesting then.
+
+387
+00:39:37,676 --> 00:39:40,337
+So are you up for going through the derivation?
+
+388
+00:39:41,717 --> 00:39:41,937
+Yeah.
+
+389
+00:39:43,318 --> 00:39:43,538
+Second.
+
+390
+00:39:44,398 --> 00:39:44,618
+All right.
+
+391
+00:39:45,054 --> 00:39:49,038
+So the first thing we're going to do is we're just going to pull everything into the same integral.
+
+392
+00:39:50,058 --> 00:39:56,124
+So both of these guys integrating over Q of X and Z, Q of X and Z. That means we can put them together.
+
+393
+00:39:56,364 --> 00:39:56,864
+Just do it once.
+
+394
+00:40:00,007 --> 00:40:02,389
+Then we look inside these brackets and go, wait a minute.
+
+395
+00:40:03,270 --> 00:40:04,011
+We've got two logs.
+
+396
+00:40:05,512 --> 00:40:06,873
+We can pull all this inside the log.
+
+397
+00:40:09,335 --> 00:40:10,236
+I think nothing fancy here.
+
+398
+00:40:12,551 --> 00:40:17,633
+But then we look at this guy and we go, wait, I have a Q either side of my line.
+
+399
+00:40:18,714 --> 00:40:19,734
+These two guys are going to cancel.
+
+400
+00:40:22,056 --> 00:40:27,098
+Divide something by itself doesn't really give you much.
+
+401
+00:40:28,519 --> 00:40:41,225
+And if we do that, then we're actually left with the generalized free energy local to a node similar to what Thomas Parr and Friston introduced in this 2019 paper.
+
+402
+00:40:44,704 --> 00:41:11,171
+So that means if we take our free energy around a node, which we can do because we've already gone through all the rationale for why that's a good idea, and we bolt on a negative information gain term, we actually end up with the same functional that was already proposed in this amazing paper like four years ago.
+
+403
+00:41:13,392 --> 00:41:13,952
+That's kind of nice.
+
+404
+00:41:15,930 --> 00:41:23,895
+Could you maybe express what is it about the negative information gain that's doing the epistemic work?
+
+405
+00:41:25,376 --> 00:41:25,576
+Right.
+
+406
+00:41:25,636 --> 00:41:31,079
+So the way I like to think of it, first of all, it's negative because we're minimizing.
+
+407
+00:41:32,060 --> 00:41:37,323
+We really want to maximize information gain, but we're minimizing our free energy or EFE or whatever.
+
+408
+00:41:38,183 --> 00:41:39,404
+So we flip the sign.
+
+409
+00:41:41,345 --> 00:41:45,548
+The other thing is you can rewrite this into, say,
+
+410
+00:41:46,238 --> 00:41:56,963
+a marginal entropy over your states, your z, minus a conditional entropy over z after you've seen x. So what does this mean?
+
+411
+00:41:57,924 --> 00:42:07,728
+It means one of these terms is going to encode how much uncertainty is in your latent variable, your latent state z, before you do anything.
+
+412
+00:42:08,128 --> 00:42:11,590
+How uncertain are you right now about something?
+
+413
+00:42:13,513 --> 00:42:18,177
+And what you subtract from that is the uncertainty after you've seen some observation peaks.
+
+414
+00:42:19,177 --> 00:42:26,943
+And the bigger that difference, the larger your uncertainty before getting an observation and the lower it is after, the higher the information gain.
+
+415
+00:42:29,305 --> 00:42:33,488
+So that's how I like to think of why information gain sort of gives us this exploration thing.
+
+416
+00:42:34,669 --> 00:42:40,714
+Because when we allow our agents to pick out observations, we allow them to pick what we should condition on when we calculate the information gain.
+
+417
+00:42:42,315 --> 00:42:44,357
+And we tell them this is what you're supposed to optimize.
+
+418
+00:42:44,377 --> 00:42:54,205
+They're going to go look for the places in the world where they are most uncertain about what's happening and where they predict that if they observe something, they're going to be the most certain.
+
+419
+00:42:57,928 --> 00:43:08,217
+And how would you contrast this expression with the decomposition of expected free energy as pragmatic value plus epistemic value?
+
+420
+00:43:09,318 --> 00:43:10,758
+So that's the beauty of it, right?
+
+421
+00:43:10,798 --> 00:43:28,263
+I don't actually have to, because what Par and Friston also showed in this paper is that if I do this functional on the same POMDP model that we use for everything else, it actually evaluates to the exact same thing as the expected free energy.
+
+422
+00:43:30,503 --> 00:43:34,024
+So for all intents and purposes, it is exactly the same.
+
+423
+00:43:36,305 --> 00:43:38,045
+So all the iterations about EFE are going to map.
+
+424
+00:43:39,380 --> 00:43:52,430
+Maybe this is looking a little ahead, but do you foresee that generalized free energy will come to rule them all and that we won't talk so much about VFE and EFE?
+
+425
+00:43:52,951 --> 00:43:57,654
+Or do you see those as still holding down important semantic space?
+
+426
+00:43:59,296 --> 00:44:00,957
+I think it's an open question.
+
+427
+00:44:01,838 --> 00:44:06,301
+I'm not confident enough in...
+
+428
+00:44:07,998 --> 00:44:13,021
+any of this, and especially not about the future, to know how things are going to turn out.
+
+429
+00:44:13,702 --> 00:44:30,472
+But I do know that if I take this maneuver, if I have a variational free energy, which I can use to recover something like KL control, and I bolt on an information gain term that gives me this exploration that I like, I can end up with a generalized free energy.
+
+430
+00:44:32,993 --> 00:44:35,375
+And if you go through the proofs in part two,
+
+431
+00:44:36,257 --> 00:44:45,423
+We also see that this makes it easier to derive messages compared to unexpected free energy, because we tried the expected free energy as well, and it didn't really work.
+
+432
+00:44:47,145 --> 00:44:52,008
+So for this particular application, the generalized free energy works better.
+
+433
+00:44:53,209 --> 00:44:57,772
+As for any sort of ontological status, I'm just going to be an engineer.
+
+434
+00:44:58,797 --> 00:45:23,338
+what about explicitly pragmatic aspects of future time steps so if we have the vfe embodying the real-time pragmatism and then we have an explicit future-oriented epistemic component where would we find that kind of classical efe flavor of pragmatic value of future states as well
+
+435
+00:45:24,977 --> 00:45:27,479
+Can I come back to that in a few slides?
+
+436
+00:45:27,599 --> 00:45:28,279
+Oh, of course.
+
+437
+00:45:29,100 --> 00:45:34,464
+Because I actually have an example of what this construction gives you if you want to add in, say, a goal prior.
+
+438
+00:45:34,484 --> 00:45:42,169
+So you want to add C vector in the standard nomenclature, or basically a prior over future desired observations.
+
+439
+00:45:43,910 --> 00:45:49,454
+And that's the thing that's going to power the whole goal-directed behavior in the experiments as well.
+
+440
+00:45:51,195 --> 00:45:53,637
+The spoiler version is that this ends up
+
+441
+00:45:54,704 --> 00:46:09,193
+If you work through it and you take this node construction that we came up with, and you work out the corresponding energy term that you would use to calculate, say, a battery-free energy, you end up with the exact expression that you usually get for expected free energy.
+
+442
+00:46:10,234 --> 00:46:23,042
+So you can actually recover one-to-one the standard 2015 algorithm by writing this in your graph and doing these manipulations, and then doing it in a particular way.
+
+443
+00:46:24,189 --> 00:46:25,610
+you will get the exact same thing back.
+
+444
+00:46:29,674 --> 00:46:34,558
+But yeah, hold on to that thought, because in a minute or two, we'll get back to it.
+
+445
+00:46:36,180 --> 00:46:37,541
+OK, yeah, this is another thing.
+
+446
+00:46:39,042 --> 00:46:40,643
+So there are a couple of ways to go through this.
+
+447
+00:46:42,325 --> 00:46:46,509
+And to make it exactly like the thing we find in
+
+448
+00:46:51,380 --> 00:46:58,862
+say, classical active inference papers, we need to do this kind of substitution here.
+
+449
+00:46:58,902 --> 00:47:05,223
+So here, I've basically gotten to the same results, but in a different way, where I mean field factorize.
+
+450
+00:47:05,323 --> 00:47:11,545
+And then we exchange this Q for this P. That's important.
+
+451
+00:47:11,765 --> 00:47:18,187
+Usually, if you read an active inference paper, you see this P of O and S and Q of S
+
+452
+00:47:20,646 --> 00:47:23,649
+this joint here denoted with something like Q with a tilde above it.
+
+453
+00:47:25,350 --> 00:47:30,194
+And it just means we substitute in this particular part of our generative model.
+
+454
+00:47:35,158 --> 00:47:42,064
+If you go through the standard tutorial type things, this would be substituting in your A matrix, for instance.
+
+455
+00:47:45,695 --> 00:48:04,539
+But we call this move a P substitution because we're literally substituting a P for a Q. And we do this not because we need to in order to derive all the messages that we need to be able to do this in a nice distributed way and get to our end goal of putting active inference on graphs.
+
+456
+00:48:07,700 --> 00:48:14,121
+So I just want to introduce this move here because it's the last bit of notation that we're going to need.
+
+457
+00:48:15,885 --> 00:48:18,206
+to cover basically everything that's in part one.
+
+458
+00:48:20,767 --> 00:48:30,952
+And the way we write this is literally, if q's are circles and p's are squares, we are going to swap a circle for a square.
+
+459
+00:48:32,072 --> 00:48:38,955
+So we take the little bead here that represents a q, and we swap it for a square.
+
+460
+00:48:38,995 --> 00:48:39,876
+And this square means
+
+461
+00:48:41,007 --> 00:48:51,996
+In the expectation of your node-local free energy, substitute p of this variable conditioned on everything else that's connected.
+
+462
+00:48:54,398 --> 00:49:07,468
+So you can see if we have a mean field factorization here, qx, qc, qx, qc, and then we do a p substitution, we are left with the same generalized free energy function, just a different way of getting there.
+
+463
+00:49:09,950 --> 00:49:10,511
+Does this make sense?
+
+464
+00:49:14,341 --> 00:49:17,924
+Awesome.
+
+465
+00:49:18,745 --> 00:49:23,108
+And that is the main meat of what we introduced in part one.
+
+466
+00:49:24,509 --> 00:49:33,956
+So to recap everything we've done so far, because we're moving at quite a high pace, we've taken our free energy and we put it on graphs.
+
+467
+00:49:34,417 --> 00:49:38,360
+We did that by using a Bethy approximation, so we have a Bethy free energy.
+
+468
+00:49:40,582 --> 00:49:43,384
+Then we realized that we can't write down everything that we need to.
+
+469
+00:49:43,789 --> 00:49:45,790
+in order to specify everything in our inference problem.
+
+470
+00:49:46,030 --> 00:49:59,317
+We can't write down Q, and we can't write down our constraints on Q. So we came up with CFFG constraint for any style factor graph notation to write down the entire inference problem graphically.
+
+471
+00:50:01,978 --> 00:50:10,062
+Then we figured out that the EFE factorizes, which is great, because that means we can also treat it as something that's local on our graph.
+
+472
+00:50:12,654 --> 00:50:37,653
+And if we take node-local free energy, the kind of thing that would give us KL control if we did it everywhere, and we bolt on an information gain term, we recover something that looks an awful lot like generalized free energy that Friston and Parr derived in 2019, which numerically ends up evaluating to the same thing as the expected free energy.
+
+473
+00:50:39,374 --> 00:50:41,576
+So we have a version of expect...
+
+474
+00:50:42,108 --> 00:50:43,489
+for these pump-DP models, I should say.
+
+475
+00:50:43,729 --> 00:50:48,451
+So we have a version of the expected free energy that is also distributed over our graph.
+
+476
+00:50:51,593 --> 00:50:57,596
+Is there anything that is relevant to mention about discrete versus continuous time models?
+
+477
+00:50:59,798 --> 00:51:00,058
+Yes.
+
+478
+00:51:00,078 --> 00:51:08,682
+So we haven't done any of this work on continuous time models, like these large generalized coordinate filters with Laplace approximations.
+
+479
+00:51:09,583 --> 00:51:10,944
+We haven't done that here.
+
+480
+00:51:11,840 --> 00:51:14,682
+because the base representation we're using is a graph.
+
+481
+00:51:15,983 --> 00:51:22,266
+So when we want to do planning, we literally have to write out explicit time steps for the future.
+
+482
+00:51:24,868 --> 00:51:31,272
+You could probably do something like this for the whole continuous time active inference as well.
+
+483
+00:51:32,273 --> 00:51:35,695
+But that's a whole other can of worms that we haven't dug into.
+
+484
+00:51:35,715 --> 00:51:35,795
+Yeah.
+
+485
+00:51:40,106 --> 00:51:44,931
+So far, this is only something that's been worked out for the discrete time case.
+
+486
+00:51:45,251 --> 00:51:46,933
+It doesn't have to be discrete state spaces.
+
+487
+00:51:46,973 --> 00:51:50,677
+You could work this out because we get the general form of all the messages.
+
+488
+00:51:50,697 --> 00:51:53,440
+You could work this out for continuous variables if you want.
+
+489
+00:51:56,483 --> 00:51:58,785
+But yeah, continuous time is not something we've done yet.
+
+490
+00:52:04,532 --> 00:52:10,478
+I mean, if there are any other questions, I think this is a good time to pause because we're going to get into the next sort of meaty section in a minute.
+
+491
+00:52:12,900 --> 00:52:14,381
+I'll ask one question from live chat.
+
+492
+00:52:15,182 --> 00:52:25,591
+Upcycle Club wrote, how can synthetic active inference agents be integrated with other intelligence paradigms, such as deep learning or evolutionary algorithms?
+
+493
+00:52:27,681 --> 00:52:34,803
+So beauty of how this ends up working is this becomes another message-passing algorithm.
+
+494
+00:52:35,303 --> 00:52:43,945
+Not even another message, but it becomes literally one local message out of the nodes that we do these operations to.
+
+495
+00:52:45,205 --> 00:52:56,108
+Everything else is going to function like box standard, VMP, or belief propagation, some product, sort of classical machine learning tools.
+
+496
+00:52:58,160 --> 00:53:05,085
+And so anyway, you can usually combine your probabilistic graphical model with a deep neural net.
+
+497
+00:53:05,146 --> 00:53:08,368
+You could have a deep neural net powering your transition dynamics, for instance, if you wanted.
+
+498
+00:53:09,209 --> 00:53:13,692
+And that wouldn't change anything here, because we're still only doing stuff locally on a graph.
+
+499
+00:53:16,755 --> 00:53:21,038
+So if we still actually have a graph here that shows something.
+
+500
+00:53:23,783 --> 00:53:27,364
+I'm just going to go back to one of the early graphs, because this is probably the easiest way to illustrate.
+
+501
+00:53:27,404 --> 00:53:28,324
+Yeah, this guy here.
+
+502
+00:53:29,565 --> 00:53:40,308
+Let's say that we wanted to do all these operations around this node here, where we have a latent z, and we connect to some outside world that we call x, where we get all observations.
+
+503
+00:53:42,129 --> 00:53:46,870
+All the operations are going to happen inside the blue circle.
+
+504
+00:53:49,311 --> 00:53:53,672
+Everything that we do is actually only going to affect the variables that are connected to this node and around this node.
+
+505
+00:53:54,468 --> 00:54:02,574
+So everything else, everything that's over here is going to work exactly the same way as with any other message passing algorithm.
+
+506
+00:54:03,455 --> 00:54:10,980
+So you could hook this up to, say, a deep neural network if you've trained it right and use that to, say, be a node function somewhere.
+
+507
+00:54:11,341 --> 00:54:16,484
+Or I suppose you could also use it with evolutionary optimizers.
+
+508
+00:54:17,665 --> 00:54:21,028
+It's not something I've seen done a lot, but it's a cool idea.
+
+509
+00:54:21,943 --> 00:54:25,525
+And I don't see any reason in principle why it shouldn't work.
+
+510
+00:54:25,545 --> 00:54:32,129
+Because what we're doing really is just changing the objective functional around one of our nodes a little bit.
+
+511
+00:54:36,152 --> 00:54:38,133
+Does that answer your question, Upcycle?
+
+512
+00:54:41,435 --> 00:54:41,755
+Cool.
+
+513
+00:54:41,795 --> 00:54:42,236
+Continue.
+
+514
+00:54:42,256 --> 00:54:44,277
+All right.
+
+515
+00:54:44,317 --> 00:54:45,678
+Let me get back to where we were.
+
+516
+00:54:45,698 --> 00:54:49,220
+Whoops.
+
+517
+00:54:50,261 --> 00:54:50,681
+Yeah, right.
+
+518
+00:54:50,801 --> 00:54:50,841
+OK.
+
+519
+00:54:52,139 --> 00:55:00,125
+So this is where we're going to look at how we add in something like a goal prior, because we had this a little while ago.
+
+520
+00:55:00,905 --> 00:55:11,272
+How do you get your goals and your constraints and your objectives, your desires and your agent's desires in life, as it were, into the model?
+
+521
+00:55:11,312 --> 00:55:11,813
+How do we do that?
+
+522
+00:55:13,854 --> 00:55:19,638
+And the way we came up with doing it is that we defined this composite node.
+
+523
+00:55:21,994 --> 00:55:24,355
+So this is going to be, again, hold onto your butts.
+
+524
+00:55:25,755 --> 00:55:27,876
+This looks nastier than it is.
+
+525
+00:55:29,417 --> 00:55:33,218
+Really what we're saying is we have a box on our factor graph.
+
+526
+00:55:33,538 --> 00:55:39,320
+Because again, all we're allowed to do are lines and boxes and arrows and beads.
+
+527
+00:55:39,800 --> 00:55:40,981
+But we have a box on our factor graph.
+
+528
+00:55:41,021 --> 00:55:43,042
+And inside this box, there's going to be two other boxes.
+
+529
+00:55:44,962 --> 00:55:49,604
+We're going to have this guy here called p, which could, for instance, represent a likelihood model.
+
+530
+00:55:50,748 --> 00:55:54,890
+And we're going to have this guy here called p tilde, which is going to represent our goal.
+
+531
+00:55:57,812 --> 00:56:15,761
+And that means when we go through the motions of defining Q around this composite node with all our modifications and everything, we end up with a model like a p that is not normalized.
+
+532
+00:56:15,781 --> 00:56:17,822
+It's going to be p of x and z.
+
+533
+00:56:21,757 --> 00:56:30,783
+p of x given z is going to be this node, times p tilde of x given w, in this case, if it has any parameters.
+
+534
+00:56:32,764 --> 00:56:38,488
+What it basically means is that we can add in a goal prior to our model at the cost of it being not normalized.
+
+535
+00:56:38,508 --> 00:56:41,930
+It turns out that this is not really a problem that's not normalized.
+
+536
+00:56:46,973 --> 00:56:49,635
+But the basic idea is that if we want to add in goals,
+
+537
+00:56:50,455 --> 00:57:00,361
+What we do is simply we wrap our goals and our likelihood into one box on our graph, and we just go through the motions.
+
+538
+00:57:02,342 --> 00:57:06,745
+You just sit down, you calculate, and you work through all the little bits and pieces, and you push all your symbols around.
+
+539
+00:57:07,405 --> 00:57:10,607
+And at the end, the result you're going to get is going to be something useful.
+
+540
+00:57:11,928 --> 00:57:14,089
+So this is the way to adding goals.
+
+541
+00:57:15,910 --> 00:57:20,173
+You simply just bolt on an extra factor to your model that encodes your goals.
+
+542
+00:57:21,878 --> 00:57:44,294
+i don't i don't know if this is helpful but but check me on this it's almost in like a racing game when the high score has the ghost that is leading the pack so we have like the goal prior it's kind of like the ghost in the midst and then there's all the actual p but then there's the shadow and perfect alignment
+
+543
+00:57:45,396 --> 00:57:52,622
+or perfect fulfillment is when the actual, there's no space between the actual and the preference.
+
+544
+00:57:52,662 --> 00:58:02,130
+So in the textbook analytical representation, that would be like P of O conditioned on C. Yeah.
+
+545
+00:58:02,970 --> 00:58:08,375
+So we have the same, it's just P of X conditioned on W. Yeah.
+
+546
+00:58:08,395 --> 00:58:09,836
+But it, it works exactly the same.
+
+547
+00:58:09,916 --> 00:58:12,558
+Like if you, I think that's also what we called in the experiments.
+
+548
+00:58:12,578 --> 00:58:14,960
+If you go through it, it ends up just being the normal C vector.
+
+549
+00:58:17,428 --> 00:58:17,749
+But you're right.
+
+550
+00:58:17,769 --> 00:58:18,429
+You're completely right.
+
+551
+00:58:19,130 --> 00:58:26,135
+If you're doing a racing game and you have, say, an idealized perfect run as your ghost, that would be going in here.
+
+552
+00:58:27,816 --> 00:58:31,879
+And you would sort of map out the whole trajectory of where the ghost is at all the time points that you want to plan over.
+
+553
+00:58:33,461 --> 00:58:40,326
+And then from here, from the top, from the Zs, is going to be your attempt to recreate the perfect run.
+
+554
+00:58:44,312 --> 00:58:46,153
+Yeah, which is actually an interesting idea.
+
+555
+00:58:46,173 --> 00:58:53,379
+You could have some kind of expert trajectory, define your goals, and then use that to learn the parameters of your model that do your planning from that.
+
+556
+00:58:53,399 --> 00:58:55,100
+That would actually be a cool thing to try and do.
+
+557
+00:58:58,823 --> 00:59:04,207
+But yeah, I think so far the intuitions are on point.
+
+558
+00:59:04,227 --> 00:59:11,913
+All right, so I'm just going to keep going, I think.
+
+559
+00:59:14,264 --> 00:59:22,812
+Because one of the questions that came up during the .zero live stream was pull up a lemma and be like, what does this mean?
+
+560
+00:59:23,693 --> 00:59:24,954
+Pull up a lemma and be like, what does this mean?
+
+561
+00:59:24,994 --> 00:59:25,814
+And so on and so forth.
+
+562
+00:59:26,875 --> 00:59:32,721
+So taking the liberty of just putting on this graph what all the lemmas mean, because then we can talk about what they mean.
+
+563
+00:59:33,421 --> 00:59:36,664
+And if you want to go through the nitty-gritty derivations, they're there in the paper.
+
+564
+00:59:39,588 --> 00:59:42,811
+Because, again, as I mentioned earlier, I'm a lazy engineer.
+
+565
+00:59:42,831 --> 00:59:44,453
+I really only have one trick.
+
+566
+00:59:46,174 --> 00:59:52,240
+That is, I can write out my free energy, and I can solve for stationary points, and that gives me message passing algorithms.
+
+567
+00:59:52,440 --> 00:59:53,281
+And that's all I do.
+
+568
+00:59:54,902 --> 01:00:00,147
+So if you look at this graph here, this node, there's basically three things that we need to solve for.
+
+569
+01:00:01,188 --> 01:00:01,969
+We need to solve for x.
+
+570
+01:00:03,763 --> 01:00:10,546
+What's the stationary point here, we need to solve for Z and by symmetry that also applies to Theta if this likelihood node has any parameters, for instance.
+
+571
+01:00:11,847 --> 01:00:17,830
+So you could think of this as being like a latent state and an A matrix with Dirichlet prior.
+
+572
+01:00:19,951 --> 01:00:28,555
+And we need to solve for W, which is the parameters of our expert run, like our C vector in the standard nomenclature.
+
+573
+01:00:29,645 --> 01:00:32,027
+And if this node has any parameters, like whatever they may be.
+
+574
+01:00:32,167 --> 01:00:34,029
+Usually, the standard form, it doesn't.
+
+575
+01:00:34,329 --> 01:00:35,130
+But you could.
+
+576
+01:00:37,692 --> 01:00:39,974
+So really, there's three things we need to solve for.
+
+577
+01:00:41,014 --> 01:00:45,158
+This guy in the middle, stuff going out of this node, and stuff going out of this node.
+
+578
+01:00:48,360 --> 01:00:51,263
+And it just so happens that there's three lemmas in the paper.
+
+579
+01:00:52,844 --> 01:00:55,146
+There's one that solves for this guy.
+
+580
+01:00:56,928 --> 01:00:58,589
+How do we update our predicted observation?
+
+581
+01:01:00,233 --> 01:01:07,238
+which ends up coinciding with how we would usually do it if we're computing EFE, which is nice.
+
+582
+01:01:08,479 --> 01:01:12,421
+There's another lemma that says, what should the backwards message towards our state be?
+
+583
+01:01:14,563 --> 01:01:16,244
+And this is going to be the important one.
+
+584
+01:01:16,404 --> 01:01:18,706
+This is what allows us to do a lot of the really cool stuff.
+
+585
+01:01:20,047 --> 01:01:27,872
+Because this basically says, if I'm optimizing GFE, EFE, and I want to reason backwards from the best possible
+
+586
+01:01:29,455 --> 01:01:32,997
+sort of outcome in terms of balancing all epistemics and everything.
+
+587
+01:01:34,637 --> 01:01:35,197
+What should that be?
+
+588
+01:01:35,798 --> 01:01:36,918
+That's basically what comes out here.
+
+589
+01:01:39,579 --> 01:01:43,861
+And we have a third lemma that deals with the stuff coming out the other way.
+
+590
+01:01:44,321 --> 01:01:45,682
+Let's say you want to update your goals.
+
+591
+01:01:46,162 --> 01:01:50,243
+Let's say when you drive your run, the ghost sort of reacts to what you do.
+
+592
+01:01:52,444 --> 01:01:53,865
+That's kind of the thing that would be coming out here.
+
+593
+01:01:55,950 --> 01:02:06,953
+And then we have two theorems that show that the messages coming out here and here, if you iterate them, the stationary points can actually be found by fixed point iteration schemes, i.e.
+
+594
+01:02:07,873 --> 01:02:09,293
+you can solve this by message parsing.
+
+595
+01:02:12,314 --> 01:02:16,195
+So to recap, the lemmas are what should these guys look like, and that's where you find the messages.
+
+596
+01:02:17,835 --> 01:02:20,056
+And the theorem states that if you do this,
+
+597
+01:02:21,132 --> 01:02:26,655
+you can actually solve your problem and find these stationary points by fixed point iterations.
+
+598
+01:02:28,415 --> 01:02:29,816
+And this is a little technical.
+
+599
+01:02:29,916 --> 01:02:32,357
+And if you want to get into it, I encourage you to go and read the paper.
+
+600
+01:02:36,219 --> 01:02:38,620
+But the point being, I'm still a laser engineer.
+
+601
+01:02:38,640 --> 01:02:39,861
+I still only have one tool.
+
+602
+01:02:40,061 --> 01:02:43,403
+I can only solve for stationary points of my free energy on my graph.
+
+603
+01:02:44,083 --> 01:02:47,164
+And if I do that, I have three things to solve for.
+
+604
+01:02:47,925 --> 01:02:50,566
+And I have to make sure that if I iterate it, I also get something sensible out.
+
+605
+01:02:51,553 --> 01:02:53,755
+And that's what the three lemmas and the two theorems are about.
+
+606
+01:02:57,357 --> 01:02:57,917
+Very nice.
+
+607
+01:02:57,998 --> 01:03:13,008
+So factor graph, not just as telecommunications, message passing, infrastructure, but as research agenda and conveyance heuristic.
+
+608
+01:03:14,585 --> 01:03:23,750
+Yeah, because once you're in the space in this way of writing things graphically, you can write your problem graphically, and it's easy to see how two things are different.
+
+609
+01:03:24,330 --> 01:03:27,372
+And you can also write something where you don't know the solution yet.
+
+610
+01:03:29,032 --> 01:03:31,094
+If you don't know the solution, that's a research problem.
+
+611
+01:03:33,715 --> 01:03:39,778
+Yeah, and the dashed lines, and then it's a great palette.
+
+612
+01:03:42,537 --> 01:03:42,837
+Thanks.
+
+613
+01:03:44,177 --> 01:03:46,719
+I hope it's also going to end up being useful.
+
+614
+01:03:46,739 --> 01:03:51,701
+Because again, what I'm doing really here is that we're presenting tools.
+
+615
+01:03:52,762 --> 01:03:55,643
+We're building stuff for other people to hopefully use.
+
+616
+01:03:57,124 --> 01:04:06,589
+And the litmus test as to whether this is going to be actually practical for people who are interested in building active inference systems and reasoning about active inference systems
+
+617
+01:04:07,475 --> 01:04:09,876
+is whether the people that are interested in this actually end up using it.
+
+618
+01:04:10,376 --> 01:04:14,117
+Otherwise, it's a neat idea that just ends up living in a drawer.
+
+619
+01:04:15,497 --> 01:04:17,737
+So I have an open invitation to everyone.
+
+620
+01:04:17,777 --> 01:04:28,760
+If you're interested in using this kind of notation, I'll be happy to help you with your graphs because I think it would be a benefit if we can all agree on a unified way of specifying our problem.
+
+621
+01:04:29,440 --> 01:04:36,082
+And it should be one that is not just geared towards experts.
+
+622
+01:04:37,505 --> 01:04:41,447
+I should be able to write out all the equations and everything.
+
+623
+01:04:41,487 --> 01:04:42,888
+That should also be something for us.
+
+624
+01:04:43,808 --> 01:04:54,012
+But if you are interested in applying active inference, you should also have an easy sort of intuitive syntax for how to write down exactly what it is you're doing.
+
+625
+01:04:54,032 --> 01:05:06,558
+Because if you do that, then everyone knows, and then communication becomes easy, and writing out your algorithm becomes easy, and sort of making sure that everyone knows at all times what's going on.
+
+626
+01:05:07,472 --> 01:05:11,019
+become straightforward because you can literally read it all from the picture.
+
+627
+01:05:11,721 --> 01:05:15,288
+So again, an open invitation to anyone who's interested in this, hit me up.
+
+628
+01:05:15,368 --> 01:05:18,435
+I'll be happy to take a look at your stuff.
+
+629
+01:05:19,653 --> 01:05:39,531
+that's awesome i think one more piece i'll add that's a very prospective very pragmatic point to make and also i believe that there's a great opportunity for meta-analysis of literature and re-derivation of these kinds of graphs for the figures that we've seen over the last 15 years
+
+630
+01:05:41,172 --> 01:06:10,302
+and then that will make a lot of continuity because we can then bring the factor graph motifs from models that are widely discussed and kind of bring those into the next generation that's that's the hope and it's funny that you say that out of all things because if you look at what goes on the next slide that's actually what we do okay so this is a way of drawing um a standard
+
+631
+01:06:11,479 --> 01:06:20,346
+you know, annual 2015 active inference EFE evaluation as a constraint for a style factor graph.
+
+632
+01:06:22,328 --> 01:06:24,750
+So let's break this down and see what it does.
+
+633
+01:06:24,770 --> 01:06:32,136
+Because I've been talking for like an hour already, and I've been talking about nothing.
+
+634
+01:06:33,397 --> 01:06:36,439
+Most of what I've been talking about is what all these boxes and little bits and pieces mean.
+
+635
+01:06:39,782 --> 01:06:41,043
+So if we start at
+
+636
+01:06:41,952 --> 01:06:44,374
+very end, and I hope I'm pointing in the right direction.
+
+637
+01:06:44,394 --> 01:06:47,457
+I don't know how I'm mirrored in the screen, but otherwise it's that end.
+
+638
+01:06:50,459 --> 01:06:55,983
+One of the things we would use to define is a prior over where our agent starts, which we denote by a D vector.
+
+639
+01:06:56,844 --> 01:06:58,385
+That's the standard way of doing it.
+
+640
+01:06:59,546 --> 01:07:01,027
+So we want to add in a D vector.
+
+641
+01:07:01,328 --> 01:07:06,732
+We put this little square because there's a variable that's clamped in P. There's a parameter that we don't mess with.
+
+642
+01:07:09,195 --> 01:07:11,215
+You could update it, and you could indicate that in the graph.
+
+643
+01:07:11,815 --> 01:07:12,676
+But here we don't.
+
+644
+01:07:12,696 --> 01:07:15,196
+And we have this little guy.
+
+645
+01:07:15,576 --> 01:07:20,257
+That's because these two are going to be different.
+
+646
+01:07:20,277 --> 01:07:26,858
+We don't have a joint of D and Z. We just have a Z. We move on.
+
+647
+01:07:27,658 --> 01:07:31,619
+Now we have this node, which I've labeled with T. And T is for transition.
+
+648
+01:07:32,319 --> 01:07:35,860
+This indicates a discrete state transition, i.e.
+
+649
+01:07:36,300 --> 01:07:37,740
+a multiplication by a B matrix.
+
+650
+01:07:39,278 --> 01:07:40,578
+B matrix is what we find here.
+
+651
+01:07:43,419 --> 01:07:58,963
+So what this is saying is we have fixed an action at time t in order to move from z at time t to z at t plus 1.
+
+652
+01:08:00,363 --> 01:08:03,144
+It's just like a multiplication by a transition matrix.
+
+653
+01:08:06,285 --> 01:08:06,885
+Then we have this thing.
+
+654
+01:08:09,138 --> 01:08:09,998
+This is an equality node.
+
+655
+01:08:10,518 --> 01:08:12,239
+Why do we have an equality in the middle of everything?
+
+656
+01:08:12,259 --> 01:08:14,979
+And that's because we're using edges to represent variables.
+
+657
+01:08:16,439 --> 01:08:17,299
+And an edge is a line.
+
+658
+01:08:17,339 --> 01:08:19,140
+I can only connect an edge to two things.
+
+659
+01:08:21,140 --> 01:08:25,861
+So if I need my variable to connect to more than two things, I need to create copies of my variable.
+
+660
+01:08:29,142 --> 01:08:33,342
+If I want to create copies, that's the same as saying I have two things, three things, and they're all going to be the same.
+
+661
+01:08:33,482 --> 01:08:34,402
+They're all going to be equal.
+
+662
+01:08:35,223 --> 01:08:37,303
+So this equality node says this edge here
+
+663
+01:08:38,533 --> 01:08:42,595
+And this edge here and this edge here are all going to be the same.
+
+664
+01:08:42,796 --> 01:08:43,336
+That's all it does.
+
+665
+01:08:46,078 --> 01:08:53,802
+And we can keep going here from z at t plus 1 with a new action, new transition, z at t plus 2, and so on and so forth.
+
+666
+01:08:54,643 --> 01:08:59,906
+That basically just applies these transition matrices.
+
+667
+01:09:01,407 --> 01:09:04,969
+But the really interesting part is happening down here around what would be a likelihood node.
+
+668
+01:09:06,385 --> 01:09:08,567
+Again, we have this multiplication by a matrix.
+
+669
+01:09:08,847 --> 01:09:10,869
+In this case, it's going to be a likelihood, our A matrix.
+
+670
+01:09:12,831 --> 01:09:20,958
+We have this composite node construction where we have a goal prior, which is categorical, parameterized by Z. And we have our observations here.
+
+671
+01:09:23,840 --> 01:09:29,525
+So this construction here is what, oh yeah, we have this P substitution.
+
+672
+01:09:29,665 --> 01:09:31,527
+We have these two guys factorizing separately.
+
+673
+01:09:32,772 --> 01:09:40,595
+So we have all the constructions necessary to do our local GFE, which in this case equals the EFE.
+
+674
+01:09:41,636 --> 01:09:42,456
+We have our goal prior.
+
+675
+01:09:42,496 --> 01:09:44,757
+We have all the little ingredients and bits and pieces.
+
+676
+01:09:47,118 --> 01:09:55,061
+So how do we write, given that we have all this, the exact same algorithm as people were using in 2015?
+
+677
+01:09:55,161 --> 01:09:57,962
+We do that by adding in arrows.
+
+678
+01:09:58,002 --> 01:10:01,143
+Remember, I had arrows as the last thing way back when we started.
+
+679
+01:10:03,686 --> 01:10:08,289
+And errors, in this case, describe the schedule, i.e., which messages do you pass.
+
+680
+01:10:10,350 --> 01:10:16,374
+And you can follow these along and see that you're rolling forwards through time.
+
+681
+01:10:20,837 --> 01:10:25,599
+So this is like creating a rollout and saying, well, what would happen if I did that at this time?
+
+682
+01:10:25,700 --> 01:10:26,640
+Well, go here.
+
+683
+01:10:27,000 --> 01:10:28,261
+Then what would happen if I did that?
+
+684
+01:10:28,521 --> 01:10:29,482
+Go here, and so on and so forth.
+
+685
+01:10:29,502 --> 01:10:30,442
+So you get this forward roll.
+
+686
+01:10:32,738 --> 01:10:35,499
+as a function of a policy, i.e.
+
+687
+01:10:36,680 --> 01:10:38,321
+the series of matrices you fix up here.
+
+688
+01:10:41,262 --> 01:10:57,830
+And this composite node, the energy term of that node, ends up being exactly equal to one term of the EFE, GFE, in this model that we already established factorizes over time.
+
+689
+01:10:58,666 --> 01:11:04,448
+So you roll this thing out, do your forge rollout, take all the energy terms of these composite nodes and sum them up.
+
+690
+01:11:05,368 --> 01:11:14,351
+And that gives you back the exact algorithm that's used to evaluate EFE in like the very original first types of peoples.
+
+691
+01:11:17,796 --> 01:11:44,890
+big so just to make a clarifying point and then a question so for comparison to the base graph and the 2022 textbook people might want to check out figure 4.3 or figure 7.3 so here we have already clamped b so here we're just evaluating one policy because we see b as a black square
+
+692
+01:11:46,081 --> 01:11:46,321
+Right.
+
+693
+01:11:47,182 --> 01:11:54,427
+Because if we go by the standard version, we need to evaluate the EFE as a function of a policy.
+
+694
+01:11:55,487 --> 01:11:59,070
+So we put in a policy, we do this rollout, and we read off our EFE number.
+
+695
+01:12:00,050 --> 01:12:07,115
+And then we take the softmax of all EFEs, and it gives us a distribution over policies that we can select from.
+
+696
+01:12:07,135 --> 01:12:14,840
+And it's this rollout thing that makes the scaling hard, because every time you add a new step, you have to go through all your
+
+697
+01:12:15,613 --> 01:12:23,456
+possible actions and the search tree branches and you get into all these things that people are trying to solve in a whole host of different interesting ways.
+
+698
+01:12:25,457 --> 01:12:25,797
+But you're right.
+
+699
+01:12:25,977 --> 01:12:31,499
+We're treating policy as something that's fixed because we're evaluating EFE as a function of a policy.
+
+700
+01:12:32,460 --> 01:12:32,660
+Yeah.
+
+701
+01:12:32,820 --> 01:12:43,264
+And then, of course, you iterate over your affordances or your policies to calculate EFE for each and then you get policy posterior and then you can do what you will with the posterior.
+
+702
+01:12:44,084 --> 01:12:44,184
+Yeah.
+
+703
+01:12:45,031 --> 01:12:47,113
+So then it basically becomes like a model comparison problem.
+
+704
+01:12:47,513 --> 01:12:53,577
+Given this policy, this rollout, and I get this energy terms, which one is the best?
+
+705
+01:12:53,597 --> 01:13:06,727
+But it's funny that you say that because one of the things that we also do now that we have backwards messages is that we don't have to fix the policy.
+
+706
+01:13:11,030 --> 01:13:11,550
+Think about it.
+
+707
+01:13:12,371 --> 01:13:14,152
+All the stuff we're doing happens down here.
+
+708
+01:13:14,912 --> 01:13:16,253
+in the little sort of dashed box.
+
+709
+01:13:18,114 --> 01:13:19,214
+But the policy lives up here.
+
+710
+01:13:21,195 --> 01:13:24,777
+We've already established that if everything is local in the graph, I can do whatever I want down here.
+
+711
+01:13:25,817 --> 01:13:27,198
+It's not really going to impact anything up here.
+
+712
+01:13:30,080 --> 01:13:38,344
+So if I now turn these black squares into random variables, I can still do inference.
+
+713
+01:13:40,565 --> 01:13:42,946
+And I can still do inference in a way that gives me back a policy.
+
+714
+01:13:44,551 --> 01:13:53,915
+However, now this policy is going to be one that optimizes GFE or EFE locally on these nodes.
+
+715
+01:13:54,095 --> 01:13:59,137
+Otherwise, everything is going to work as if you were doing a forwards-backwards KL control type thing.
+
+716
+01:14:02,918 --> 01:14:08,881
+And what we need to do then is we need to take all our candidate matrices and we need to put them into this mixture model.
+
+717
+01:14:10,881 --> 01:14:11,742
+And that basically says,
+
+718
+01:14:14,116 --> 01:14:19,339
+If I have my indicator variable, the indicator variable picks out one of the transitions.
+
+719
+01:14:22,161 --> 01:14:37,631
+And then you want to infer the posterior of your indicator variable such that it becomes a good approximation for the probability of selecting each particular matrix at this point in time.
+
+720
+01:14:41,031 --> 01:14:42,272
+That did not come out clear.
+
+721
+01:14:42,612 --> 01:14:43,373
+Did that make sense at all?
+
+722
+01:14:43,733 --> 01:14:47,055
+Yeah, maybe explain that in the context of why it's called TM.
+
+723
+01:14:48,637 --> 01:14:50,238
+It's TM for transition mixture.
+
+724
+01:14:52,559 --> 01:15:10,312
+So it's like you have, instead of saying I do either action one, action two, or action three, I sort of do a mixture of all of them, and then I weigh them according to where I should be going, which is going to be informed by these composite nodes down here.
+
+725
+01:15:11,906 --> 01:15:19,128
+The composite nodes tell you where should you be going if you're looking for the stationary points of your generalized free energy.
+
+726
+01:15:21,048 --> 01:15:26,929
+And these nodes are going to say, all right, if this is where I'm going, this is the transitions I should take with this and this and this probability.
+
+727
+01:15:30,270 --> 01:15:38,472
+Okay, maybe just to clarify and emphasize that, what is the policy selection mechanism in direct policy inference?
+
+728
+01:15:40,951 --> 01:15:44,972
+So that's actually one of the things that I really like about this way of doing it.
+
+729
+01:15:47,513 --> 01:15:48,933
+You can pick whatever you want.
+
+730
+01:15:49,513 --> 01:15:51,374
+So we do two here in the paper.
+
+731
+01:15:52,474 --> 01:15:59,956
+One, which is this one, the one that I have on screen here, where you just get a posterior out over your policy.
+
+732
+01:15:59,996 --> 01:16:03,017
+And you can read off the posterior reactions at every time step.
+
+733
+01:16:03,777 --> 01:16:07,898
+And then it's up to you whether you want to sample, what you want to do with it.
+
+734
+01:16:09,138 --> 01:16:21,147
+But what we also show is that you can add these Delta constraints on these edges here that are labeled U. And if you do, what you get back is a series of map estimates over your policy.
+
+735
+01:16:24,509 --> 01:16:27,692
+The trick being that is now something you write as part of your inference problem.
+
+736
+01:16:30,714 --> 01:16:38,680
+So as for the policy selection mechanism, what I'm going to say is we should, in my opinion, we should be patient about it.
+
+737
+01:16:39,403 --> 01:16:44,547
+So if we get a distribution over possible policies, that's the way it should be.
+
+738
+01:16:45,148 --> 01:16:48,730
+And then you can do what you think is right with your distribution.
+
+739
+01:16:50,832 --> 01:17:01,500
+Yeah, this is a very nice point that the outcome of the EFE iterated across policies is a distribution on policy.
+
+740
+01:17:02,942 --> 01:17:05,684
+And so then you can simply choose
+
+741
+01:17:06,707 --> 01:17:35,306
+the best one you could choose the worst one you could cut the deck in the middle you could do any number of then secondary policy selection policies and one that feels natural and makes sense is just to take the first order interpretation of the distribution and then sample directly from that distribution you could do that or i think a very common thing to do is just say the ocmax are you the best policy
+
+742
+01:17:36,567 --> 01:17:37,208
+at all time steps.
+
+743
+01:17:38,268 --> 01:17:39,649
+But yeah, either one works.
+
+744
+01:17:40,950 --> 01:17:52,419
+The point being really that, as you said, instead of doing this compute EFE and then construct a distribution over policies, you just infer the distribution over policies directly as part of your inference.
+
+745
+01:17:57,243 --> 01:17:57,443
+Cool.
+
+746
+01:17:59,315 --> 01:18:10,143
+Yeah, and this actually allows us to do something we don't really explore too much in the paper, but which I'm hoping to explore in the future, which is that we get rid of this combinatorial explosion.
+
+747
+01:18:11,744 --> 01:18:16,627
+Because if you look at the kind of things you would have to do, there's a lot of messages going on here.
+
+748
+01:18:16,647 --> 01:18:21,231
+But basically, what you should take away is that everything goes back and forth on every edge.
+
+749
+01:18:22,231 --> 01:18:28,736
+And when these two guys collide, they give you the posterior distribution over your policy.
+
+750
+01:18:29,935 --> 01:18:31,916
+Or over the action of that timestamp is what it's to say.
+
+751
+01:18:33,697 --> 01:18:43,764
+But because we're reasoning backwards and we don't have to do this for every policy, we scale linearly in time rather than getting this large explosion.
+
+752
+01:18:45,165 --> 01:18:53,070
+Like with the caveat that there's some iterations going on and there's some root finding to get these red messages flowing the right way.
+
+753
+01:18:53,090 --> 01:18:55,872
+There's some extra computation here and there, but
+
+754
+01:18:57,096 --> 01:19:10,659
+This whole procedure pretty much scales linearly in the planning horizon rather than this giant exponential explosion, which to me is really nice because it hints at us being able to do something that's quite a lot bigger than what we have done so far.
+
+755
+01:19:12,820 --> 01:19:24,123
+Right here on this slide, I'll ask a question from Ryan, who wrote, are we guaranteed convergence after a single forwards-backwards sweep of the messages?
+
+756
+01:19:25,343 --> 01:19:25,403
+No.
+
+757
+01:19:26,417 --> 01:19:28,419
+So this is an iterative procedure.
+
+758
+01:19:28,779 --> 01:19:33,783
+This function is closer to what you would get with a variational message parsing thing, where you have to iterate it a couple of times.
+
+759
+01:19:36,264 --> 01:19:38,926
+So no, we're not guaranteeing conversions after a single forward-backward pass.
+
+760
+01:19:39,147 --> 01:19:41,608
+Usually, that probably wouldn't be enough.
+
+761
+01:19:41,628 --> 01:19:42,929
+You would have to do two or three or something.
+
+762
+01:19:44,090 --> 01:19:50,615
+And those iterations, you use some other heuristic, like how much improvement you're getting?
+
+763
+01:19:50,755 --> 01:19:53,097
+And is that a monotonic iteration?
+
+764
+01:19:53,657 --> 01:19:54,098
+Or do you ever?
+
+765
+01:19:54,158 --> 01:19:54,318
+Yeah.
+
+766
+01:19:56,710 --> 01:19:59,271
+So there's some work still to be done on this.
+
+767
+01:19:59,732 --> 01:20:02,773
+So I can't claim 100% mathematical assurity.
+
+768
+01:20:03,614 --> 01:20:11,638
+But this seems to function a lot like a variational message passing algorithm, where things just nicely decrease as you do more iterations.
+
+769
+01:20:12,278 --> 01:20:13,919
+So therefore, more iterations is always better.
+
+770
+01:20:15,700 --> 01:20:22,303
+But it's going to hit a convergence thing at some point, where the gain of running more iterations is going to be marginal.
+
+771
+01:20:24,216 --> 01:20:27,517
+That's how I'm confident this actually works.
+
+772
+01:20:28,457 --> 01:20:31,958
+But because we changed the functional, I'm not sure whether all the convergence proofs applies.
+
+773
+01:20:32,638 --> 01:20:33,058
+I can't be 100%.
+
+774
+01:20:33,098 --> 01:20:34,839
+I'm going to put it at like 98.
+
+775
+01:20:36,359 --> 01:20:36,639
+Yeah.
+
+776
+01:20:37,179 --> 01:20:38,900
+You'll never iterate worse.
+
+777
+01:20:39,320 --> 01:20:41,420
+You ratchet and improve.
+
+778
+01:20:42,701 --> 01:20:51,523
+But I guess my question is, could there be drop-offs where you're monotonically improving and then you enter a new regime of another improvement phase?
+
+779
+01:20:53,886 --> 01:20:55,247
+Yeah, I don't see why not.
+
+780
+01:20:55,767 --> 01:21:00,229
+I haven't seen it, but the models we've tested this on have been variations of the T-Maze.
+
+781
+01:21:00,249 --> 01:21:01,089
+They've been quite small.
+
+782
+01:21:03,450 --> 01:21:09,132
+So there's still work to be doing, actually exploring exactly how this algorithm behaves.
+
+783
+01:21:12,314 --> 01:21:15,835
+Not from a theoretical, also from a theoretical standpoint, but also just from the practical.
+
+784
+01:21:16,035 --> 01:21:22,218
+What actually happens if you start running things and you build out models and getting a feel for how these things work.
+
+785
+01:21:22,591 --> 01:21:29,596
+Because doing it in this way is not something that has been done before, at least to my knowledge.
+
+786
+01:21:29,896 --> 01:21:31,418
+Again, I'm going to hedge my bets a little bit here.
+
+787
+01:21:37,902 --> 01:21:40,004
+All right.
+
+788
+01:21:40,224 --> 01:21:41,985
+Are there any more questions?
+
+789
+01:21:43,186 --> 01:21:43,387
+No.
+
+790
+01:21:43,647 --> 01:21:45,008
+Good to carry on.
+
+791
+01:21:46,389 --> 01:21:47,029
+Keep going, right?
+
+792
+01:21:47,049 --> 01:21:51,833
+Because this is what you actually get out if you run this for a couple of iterations on the T maze.
+
+793
+01:21:53,131 --> 01:22:01,374
+So the teammates environment is the classic one that we all know and love, where we have a mouse, our agent that starts in this position in the middle here.
+
+794
+01:22:03,335 --> 01:22:04,696
+And it's looking for a piece of cheese.
+
+795
+01:22:05,236 --> 01:22:08,798
+Piece of cheese is going to be either in this left arm or in this right arm.
+
+796
+01:22:11,379 --> 01:22:13,600
+However, at the back here is a queue.
+
+797
+01:22:15,260 --> 01:22:19,382
+And the queue tells the mouse whether the cheese is to the left or to the right.
+
+798
+01:22:20,502 --> 01:22:21,523
+So the optimal thing to do
+
+799
+01:22:22,679 --> 01:22:26,402
+is to go and visit the queue first and then go check out the correct arm.
+
+800
+01:22:28,724 --> 01:22:34,470
+And that's sort of the hello world of this epistemic drive that we like with active inference.
+
+801
+01:22:34,990 --> 01:22:40,175
+Because an active inference agent is going to go and collect information and then go either left or right.
+
+802
+01:22:40,435 --> 01:22:48,122
+Whereas if you just do some greedy, fully goal-directed agent, it's just kind of gambling going either left or right and hoping for the best.
+
+803
+01:22:51,345 --> 01:23:04,028
+So if we do this sort of direct policy inference with this form Lagrangian derived station in point Lagrangian active inference type thing, these are the posteriors we're going to get out.
+
+804
+01:23:04,508 --> 01:23:16,370
+And you see that the agent does actually, in planning only, replicate this nice policy that we want, where it first goes and samples the queue.
+
+805
+01:23:17,645 --> 01:23:22,949
+And afterwards, it's indifferent as to which side to go to, but it knows it's going to go to either of the two sides.
+
+806
+01:23:24,830 --> 01:23:28,053
+And this is something that's done only using planning.
+
+807
+01:23:28,073 --> 01:23:33,096
+So the agent doesn't actually get to execute anything and go and actually sample the queue and update its beliefs.
+
+808
+01:23:34,817 --> 01:23:42,363
+In the absence of all that, it can still figure out that, hey, maybe I should go and check the queue first before I go find my snack.
+
+809
+01:23:44,847 --> 01:23:52,311
+My Q is telling me to find the Q. Yeah, I mean, pretty much.
+
+810
+01:23:56,113 --> 01:24:11,501
+So again, when I saw these results, I was very, very happy because this shows that all the sort of heavy duty theoretical work actually paid off and yields something that replicates the standard experiments
+
+811
+01:24:13,343 --> 01:24:38,939
+sort of is the baseline that we should be able to do all right what are the next thing we got right yeah um so in part two we also extend this to do parameter learning um and what that means is we want to learn the the a matrix the likelihood matrix and we do that by replicating the standards uh sort of ev type um
+
+812
+01:24:39,372 --> 01:24:47,014
+algorithm where we inference all of this model, then we compare free energy of the model, which includes these EFE terms for each policy.
+
+813
+01:24:47,314 --> 01:24:55,096
+So we can sort of get the same type of thing with the policy evaluation and evaluating expected free energy and all the things that we like.
+
+814
+01:24:56,637 --> 01:25:05,699
+And the task is whether we can figure out, like we can solve the task and we can learn a matrix, what is the actual mapping, the likelihood mapping that we want.
+
+815
+01:25:07,910 --> 01:25:19,198
+And that's interesting because the first experiment relied mainly on this message, the one flowing out back towards the state, whereas this one also has a component of this message flowing towards a likelihood matrix.
+
+816
+01:25:20,699 --> 01:25:34,449
+Ideally, this should correspond to something like a novelty term in the classical or Schartenbeck formulation, which should drive our agent to go and explore its environment and figure out what's up.
+
+817
+01:25:35,269 --> 01:25:36,210
+And then as we iterate,
+
+818
+01:25:38,024 --> 01:25:45,427
+yeah, as we iterate this back and forth a couple of times, we should learn the mapping.
+
+819
+01:25:47,928 --> 01:25:54,431
+And we see very nicely that free energy decreases the minimum as we learn.
+
+820
+01:25:54,451 --> 01:26:00,333
+It gets lower and lower and lower, except for these spikes here.
+
+821
+01:26:00,793 --> 01:26:04,235
+This is when the agent actually gets its observation when it
+
+822
+01:26:06,226 --> 01:26:08,388
+get its rewards, its piece of cheese.
+
+823
+01:26:09,188 --> 01:26:12,911
+That's because there is some noise in the reward probabilities.
+
+824
+01:26:12,951 --> 01:26:13,171
+It's not 100%.
+
+825
+01:26:13,211 --> 01:26:23,980
+So you can see every time it predicts a win but it gets a loss, the free energy spikes, which is consistent.
+
+826
+01:26:24,840 --> 01:26:28,063
+If your model predicts something and you get something else, your free energy is going to be off.
+
+827
+01:26:31,598 --> 01:26:44,943
+And if we compare to an agent that does just box-standard bethe-free energy, a variational free energy under the bethe approximation, we can see that nothing really happens and it loses all the trials because it's greedy.
+
+828
+01:26:45,263 --> 01:26:48,064
+It doesn't go and gather the information at the queue.
+
+829
+01:26:50,465 --> 01:26:58,268
+Furthermore, if we look at the actual matrices that gets learned, these are the different
+
+830
+01:27:00,782 --> 01:27:04,205
+The location is the origin, the left arm, the right arm, and the Q location.
+
+831
+01:27:06,186 --> 01:27:12,531
+And this row here indicates whether the Q says go left, Q says go right.
+
+832
+01:27:13,772 --> 01:27:17,556
+And this is whether the reward is on the left or the right.
+
+833
+01:27:17,576 --> 01:27:21,359
+And this is whether you get a reward or whether you get no reward.
+
+834
+01:27:23,700 --> 01:27:30,506
+So basically what we can see is that if the Q is on the right, we also predict that we're going to get the reward on the right.
+
+835
+01:27:32,449 --> 01:27:39,054
+get a reward on the right, we predict the reward is on the right, and so on and so forth.
+
+836
+01:27:39,094 --> 01:27:42,077
+We get a reward on the left, it's on the left.
+
+837
+01:27:43,038 --> 01:28:01,433
+Basically, what this shows is that we are able to accurately learn the mapping in the environment, which is kind of nice because, again, this means that our agent will go and figure things out and actually learn how to navigate an environment that it doesn't know.
+
+838
+01:28:05,103 --> 01:28:08,604
+Okay, so this is the final slide that I have, and I've been talking forever now.
+
+839
+01:28:09,904 --> 01:28:18,566
+And the main sort of take-home message that I like to leave everyone with is we can put active inference on graphs.
+
+840
+01:28:20,846 --> 01:28:23,927
+We can do that, and that is awesome.
+
+841
+01:28:24,927 --> 01:28:32,749
+And once we do, we are left with sort of this Lego block approach to constructing our active inference agents.
+
+842
+01:28:34,261 --> 01:28:39,984
+Because everything is local on the graph, I can do my local manipulation to get my EFE and my GFE down here.
+
+843
+01:28:40,004 --> 01:28:44,446
+And then I can build out whatever graph I want in all other directions.
+
+844
+01:28:45,187 --> 01:28:46,287
+I can have hierarchies.
+
+845
+01:28:46,307 --> 01:28:47,608
+I can have temporal depth.
+
+846
+01:28:47,788 --> 01:28:50,209
+I can do smoothing, filtering.
+
+847
+01:28:50,249 --> 01:28:51,130
+I can do control.
+
+848
+01:28:51,150 --> 01:28:55,092
+I can do any combinations of variables that I like.
+
+849
+01:28:55,132 --> 01:28:58,974
+As long as I can figure out the inference, it all works.
+
+850
+01:29:00,310 --> 01:29:05,052
+And we can get the classical things that we all know and love as special cases.
+
+851
+01:29:07,153 --> 01:29:22,339
+And we can solve inference on these using standard tools from belief propagation or variational message parsing, combined with these new messages that flow out of Nosed Adoptionized GFE.
+
+852
+01:29:25,240 --> 01:29:27,141
+So this gives us, at least in my mind,
+
+853
+01:29:28,135 --> 01:29:40,806
+a flexible way to construct these large, sprawling, freeform models, which in the end gets us the best of both worlds as we started with.
+
+854
+01:29:41,546 --> 01:29:46,210
+Got the epistemics, we get freeform models, and we have a recipe for doing efficient inference.
+
+855
+01:29:48,752 --> 01:29:49,733
+And that is everything I got.
+
+856
+01:29:52,696 --> 01:29:53,136
+Excellent.
+
+857
+01:29:53,316 --> 01:29:54,878
+Well, let's
+
+858
+01:29:56,052 --> 01:30:02,896
+have a little bit more conversation and kind of ask a few questions as we land the plane on the dot one.
+
+859
+01:30:02,916 --> 01:30:13,122
+And then next time in the dot two, we'll return with maybe a little code, a little bit of drawing and some, hopefully some more people on the stream.
+
+860
+01:30:14,262 --> 01:30:14,542
+Okay.
+
+861
+01:30:14,803 --> 01:30:17,824
+So what does synthetic mean to you?
+
+862
+01:30:19,905 --> 01:30:24,528
+In this case, it was sort of to underline that this is from an engineering point of
+
+863
+01:30:25,794 --> 01:30:35,563
+They notice I didn't really talk anything about brains or Bayesian mechanics or individuation and niche construction, all these other really, really interesting things that people are doing with active inference.
+
+864
+01:30:36,624 --> 01:30:39,167
+This is purely like, how do you build a system that does this?
+
+865
+01:30:40,028 --> 01:30:47,615
+So the synthetic came out of trying to say, well, this is us trying to build engineering tools for active inference.
+
+866
+01:30:51,089 --> 01:31:20,145
+very fascinating just in how you framed it there it made me think about the engineer of a bridge and on one hand they have colleagues in physics and metallurgy and gravity and the basic physical phenomena and then on the other hand they have colleagues who have bodies may care about the ergonomics the cultural components of the architecture and so it's like engineering
+
+867
+01:31:21,511 --> 01:31:30,878
+actually intermediates between, in this case, the Bayesian mechanics, and on the other hand, biological systems of interest for active inference.
+
+868
+01:31:33,519 --> 01:31:35,121
+Yeah, you could say that, right?
+
+869
+01:31:35,601 --> 01:31:39,263
+Because this is just a way of doing active inference on graphs.
+
+870
+01:31:40,084 --> 01:31:49,951
+If you want to come along and be like, okay, I think I can use this to model something about the brain, or I think I can use this to model something about interpersonal relationships or whatever,
+
+871
+01:31:50,663 --> 01:31:51,403
+That's amazing.
+
+872
+01:31:52,704 --> 01:31:53,525
+That is awesome.
+
+873
+01:31:54,205 --> 01:31:55,066
+All the power to you.
+
+874
+01:31:55,886 --> 01:32:01,970
+But what you choose to do with the tools is different to the tools itself.
+
+875
+01:32:03,170 --> 01:32:06,092
+If you have a hammer, you can use it to carve out a beautiful sculpture.
+
+876
+01:32:06,152 --> 01:32:07,333
+You can use it to build a bridge.
+
+877
+01:32:08,113 --> 01:32:10,635
+But a good hammer is still going to be a good hammer.
+
+878
+01:32:12,136 --> 01:32:13,617
+And all we're doing here is building hammers.
+
+879
+01:32:16,718 --> 01:32:16,959
+Cool.
+
+880
+01:32:18,342 --> 01:32:19,383
+Okay, another question.
+
+881
+01:32:20,283 --> 01:32:22,665
+You mentioned these sprawling graphs.
+
+882
+01:32:23,626 --> 01:32:34,533
+So how could you connect what is enabled with this work to ecosystems of shared intelligence and maybe even like the Internet of Things like IoT?
+
+883
+01:32:36,194 --> 01:32:37,455
+So that's one of the things that...
+
+884
+01:32:39,955 --> 01:32:43,857
+that I would like to see happen at some point.
+
+885
+01:32:45,838 --> 01:32:58,084
+Because if you have the representation of the inference problem as being distributed over a graph, and you can do things asynchronously when you pass messages, you can run these nodes anywhere.
+
+886
+01:32:58,104 --> 01:32:59,265
+This is just an abstract thing.
+
+887
+01:33:00,525 --> 01:33:07,569
+So I can have, say, a drone flying around that runs its own generative model and sends messages back to some other thing.
+
+888
+01:33:09,194 --> 01:33:14,619
+that then sends messages back to some other thing that communicates with my phone and my fridge and my pacemaker.
+
+889
+01:33:16,860 --> 01:33:27,629
+But as long as all the messages are taken care of and all the local computations work, then effectively, it's going to be like just doing inference on a really, really big model.
+
+890
+01:33:28,710 --> 01:33:33,734
+So one of the things that we wanted to do with the designing ecosystems of intelligence paper
+
+891
+01:33:34,304 --> 01:33:39,228
+is also trying to push this idea that intelligence is something that does inference and reacts probably to its environment.
+
+892
+01:33:40,009 --> 01:33:41,570
+In nature, it's a distributed thing.
+
+893
+01:33:45,113 --> 01:33:48,035
+The whole of humanity is way more intelligent than I will ever be.
+
+894
+01:33:49,156 --> 01:33:50,057
+Many, many people are.
+
+895
+01:33:51,198 --> 01:33:55,702
+And we're trying to, as scientists, put stuff into this shared pool of knowledge.
+
+896
+01:33:56,493 --> 01:34:04,236
+But even the intelligence that I claim is inside my head is really made up of a network of neurons that are interacting and doing things together.
+
+897
+01:34:04,876 --> 01:34:13,180
+And each neuron is made up of a whole bunch of component parts and so on and so forth, or like ants doing interesting things when they swarm around to coordinate.
+
+898
+01:34:14,400 --> 01:34:19,262
+Most of the types of intelligence that we see in nature is actually distributed already.
+
+899
+01:34:21,468 --> 01:34:47,772
+And moving to this idea of distributed inference and distributed message passing on very, very large graphs that do things asynchronously is sort of our attempt at saying, well, if intelligence is inherently distributed and we can cast intelligence as this type of inference problem, we should build our architecture, we should build our intelligences in a way that matches this.
+
+900
+01:34:48,833 --> 01:34:50,733
+We should build them as big distributed systems.
+
+901
+01:34:51,513 --> 01:35:05,202
+And once they are big distributed systems, we should get all the, I mean, then we can use all these tools to figure out what all the local parts do and make sure that you don't have to write out a schematic for the whole system.
+
+902
+01:35:05,882 --> 01:35:08,904
+Just take care of everything locally around your little bit and all the communications.
+
+903
+01:35:08,945 --> 01:35:11,006
+And everybody does that, and we're good.
+
+904
+01:35:13,305 --> 01:35:18,210
+Well, I heartily concur with the distributed intelligence.
+
+905
+01:35:18,611 --> 01:35:21,574
+And when I see this kind of engineering work, it's like,
+
+906
+01:35:22,538 --> 01:35:46,005
+idea that all intelligence is distributed it's not the end point it's not a hot take it's not where the discussion ends it's like the first rays of light of the discussion beginning and so that's why there's so much to do on on the formal side but obviously on the application side okay next questions from the chat walter asks
+
+907
+01:35:47,588 --> 01:35:51,669
+How straightforward is it to develop algorithms along this perspective?
+
+908
+01:35:52,189 --> 01:35:54,190
+Can I build an agent within a day?
+
+909
+01:35:57,651 --> 01:36:02,333
+Yes, you can, because we put this in Rx and Fur so far.
+
+910
+01:36:02,353 --> 01:36:11,255
+It's not in the mainline branch, but the constructions, like the nodes that we used to do our experiments, are publicly available.
+
+911
+01:36:11,495 --> 01:36:16,717
+There's a repo at github.com slash bioslab slash live, L-A-I-F.
+
+912
+01:36:17,861 --> 01:36:18,081
+Jan Bogaert.
+
+913
+01:36:18,081 --> 01:36:23,605
+: Where you can find these things and the interface with rx infer the toolbox that's developed by his lab.
+
+914
+01:36:24,986 --> 01:36:26,147
+Jan Bogaert.
+
+915
+01:36:26,147 --> 01:36:37,735
+: And so yeah the tools are there, they need to be polished a little bit but they're there, you can build an agent in a day, if you know how to to work with rx infer otherwise it might take you to because it's been one work through the demos.
+
+916
+01:36:39,594 --> 01:36:39,914
+Yeah.
+
+917
+01:36:41,015 --> 01:36:50,642
+I mean, could you maybe go into a little more about what Bias Lab is doing with Julia and reactive message passing, Rx and Fur?
+
+918
+01:36:52,083 --> 01:36:52,643
+Yeah, of course.
+
+919
+01:36:53,284 --> 01:36:59,528
+So, caveat, there are people who are better at Rx and Fur than I am.
+
+920
+01:36:59,989 --> 01:37:05,593
+Dmitry Bagayev is the main architect behind it and is a beast of a programmer.
+
+921
+01:37:07,331 --> 01:37:15,837
+So the majority of the grunt work has been done by other really, really talented people in Bayer's lab.
+
+922
+01:37:16,818 --> 01:37:25,224
+So RxInfer is a toolbox for doing message passing-based inference, minimizing constraint, battery-free energy, and factor graphs.
+
+923
+01:37:27,906 --> 01:37:32,510
+And it does so by marrying message passing and reactive programming.
+
+924
+01:37:33,991 --> 01:37:36,193
+Reactive programming is the idea that instead of you
+
+925
+01:37:37,014 --> 01:37:38,476
+Actually, we can do this a little bit here.
+
+926
+01:37:39,917 --> 01:37:45,303
+So doing something like this, where I pre-specify a schedule, I write out all the messages that flow on my graph.
+
+927
+01:37:47,545 --> 01:37:52,690
+I can say, well, any node is just going to listen to all the incoming edges.
+
+928
+01:37:52,850 --> 01:37:54,952
+So if I can send a message, I will send a message.
+
+929
+01:37:55,713 --> 01:37:59,477
+If I can't send a message, I'll just wait for all the information to be available until I say something.
+
+930
+01:38:03,162 --> 01:38:19,348
+And if you do that, and you can do that in sort of a reactive way, that basically gives you a way to specify a problem as your inference problem with your constraints and your factor graph and everything, hook it up to a sensor in the ideal world, hook it up to a sensor.
+
+931
+01:38:19,388 --> 01:38:28,711
+And then whenever you get observations coming in, that will trigger your inference just when it happens.
+
+932
+01:38:30,034 --> 01:38:36,518
+And the sort of way that things flow on the graph will be data-driven rather than something that I as an engineer specify.
+
+933
+01:38:37,139 --> 01:38:42,463
+But again, it's something that I like because the less work I have to do, the easier it is for me to get stuff done.
+
+934
+01:38:44,344 --> 01:38:53,090
+Yeah, even as a non-Julia expert, I believe this is a massive step for active inference, even with message passing.
+
+935
+01:38:54,591 --> 01:39:10,695
+you're going to be in a situation if you can't use reactive message passing, where if you have two sensors of different frequency, you either choose to basically have to waste clock cycles calculating updates at a faster rate than the slower sensor or coarse grain or throw away samples from the faster sensor.
+
+936
+01:39:11,015 --> 01:39:21,258
+So having this kind of like just-in-time logistical information supply chain has very, very large
+
+937
+01:39:22,611 --> 01:39:48,504
+performance improvements with some or all of the same formal guarantees and it's going to be especially important if there's an ecosystem of shared intelligence where components are active at different times or have asynchronous or that kind of concurrency yeah in effect which is just basically real systems yeah exactly because you and i don't have like a set schedule and a set you know
+
+938
+01:39:48,900 --> 01:39:49,901
+way that inference is done.
+
+939
+01:39:49,961 --> 01:39:53,965
+We react to what comes in, and then we plan, and then we do things sort of in real time.
+
+940
+01:39:56,227 --> 01:40:07,197
+And the beauty of doing it in this way, and when everything is local, is that even as you go to larger graphs for things happening asynchronously, you inherit a lot of the same convergence guarantees.
+
+941
+01:40:08,938 --> 01:40:14,043
+So basically, as you run more messages, your inference or your free energy is never going to get worse.
+
+942
+01:40:17,522 --> 01:40:22,345
+Something might happen, like we saw these spikes, if you get information, data that's not predicted.
+
+943
+01:40:23,085 --> 01:40:26,768
+But as you run more inference, it's never going to get any worse.
+
+944
+01:40:27,148 --> 01:40:29,790
+So you can run this part a little faster and this part a little slower.
+
+945
+01:40:31,891 --> 01:40:38,535
+And it's still going to end up having this nice, smooth curve.
+
+946
+01:40:39,716 --> 01:40:43,759
+Yeah, it's kind of like a net that ratchets everywhere.
+
+947
+01:40:47,318 --> 01:40:54,960
+Yeah, it's a large distributed system that reacts to data and reacts to the world as things happen.
+
+948
+01:40:57,421 --> 01:41:01,662
+And RxInfer is just being an engineering tool for building that.
+
+949
+01:41:02,602 --> 01:41:06,123
+If you have that as your vision, you need something that does it.
+
+950
+01:41:08,364 --> 01:41:11,285
+And that's what RxInfer is attempting to be.
+
+951
+01:41:12,622 --> 01:41:12,922
+Cool.
+
+952
+01:41:13,022 --> 01:41:16,843
+So maybe one more question and then we'll, we'll close for dot one.
+
+953
+01:41:17,683 --> 01:41:17,964
+Okay.
+
+954
+01:41:18,204 --> 01:41:27,026
+Upcycle Club writes, simulated annealing, including quantum simulated annealing is considered a meta heuristic.
+
+955
+01:41:27,806 --> 01:41:32,828
+Do you use any types of meta heuristics in synthetic active inference agents?
+
+956
+01:41:36,013 --> 01:41:36,554
+Not yet.
+
+957
+01:41:36,574 --> 01:41:41,696
+I'm not familiar with quantum simulated annealing, so I can't really speak to what it does.
+
+958
+01:41:43,396 --> 01:41:54,761
+But the thing that's different about this approach to active inference as opposed to many other approaches is basically that we can do things locally on the graph and we have these backwards messages.
+
+959
+01:41:57,162 --> 01:42:01,464
+I'm sure you can combine that with a quantum simulated annealing approach somehow.
+
+960
+01:42:03,186 --> 01:42:05,207
+And if you find a nice way of doing it, I would love to see it.
+
+961
+01:42:06,567 --> 01:42:08,248
+But it's not something we've done yet now.
+
+962
+01:42:10,549 --> 01:42:10,909
+Cool.
+
+963
+01:42:10,969 --> 01:42:13,851
+Well, this was awesome.
+
+964
+01:42:14,711 --> 01:42:18,853
+It was very relaxing and even-handed.
+
+965
+01:42:20,774 --> 01:42:22,694
+even though it builds on so much.
+
+966
+01:42:23,355 --> 01:42:31,156
+So it was an epic presentation and I think sets us up really well for dot two.
+
+967
+01:42:31,716 --> 01:42:36,538
+When we talk about what happens next now that the dot one is in the books.
+
+968
+01:42:39,258 --> 01:42:43,159
+Yeah, I had a great time and I'm glad you found it relaxing because, uh,
+
+969
+01:42:44,295 --> 01:42:45,876
+I think it was a bit more stressful over here.
+
+970
+01:42:48,378 --> 01:42:52,260
+Maybe receiving the messages is easier than sending them, maybe.
+
+971
+01:42:52,280 --> 01:42:55,322
+Yeah, but I think this was great.
+
+972
+01:42:56,322 --> 01:42:57,623
+I thoroughly enjoyed this.
+
+973
+01:42:59,024 --> 01:42:59,284
+Cool.
+
+974
+01:42:59,564 --> 01:43:09,471
+So thank you, everybody, for watching and leave a comment if you have a question or if you're around in time, then maybe get in touch and join 55.2.
+
+975
+01:43:10,351 --> 01:43:11,172
+So thank you, Magnus.
+
+976
+01:43:12,973 --> 01:43:13,253
+Farewell.
+
+977
+01:43:15,153 --> 01:43:15,342
+Bye.

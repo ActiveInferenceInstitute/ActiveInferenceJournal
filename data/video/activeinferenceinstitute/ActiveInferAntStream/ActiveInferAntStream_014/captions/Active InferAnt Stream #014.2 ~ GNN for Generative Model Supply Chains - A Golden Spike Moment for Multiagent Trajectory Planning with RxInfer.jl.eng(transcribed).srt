@@ -1,0 +1,2715 @@
+1
+00:00:09,700 --> 00:00:36,366
+all right hello welcome everyone i'm going to start this stream with a github push all right it is june 8th 2025 and this is active inference stream 14.2 first where we're going today in terms of
+
+2
+00:00:37,915 --> 00:00:42,072
+AI art to quickly give a little visual beginning.
+
+3
+00:00:44,240 --> 00:00:45,967
+No.
+
+4
+00:00:45,987 --> 00:00:46,710
+I'll just show.
+
+5
+00:00:48,597 --> 00:00:52,484
+Sorry about that, I was just working up to this last moment to get this going.
+
+6
+00:00:53,266 --> 00:01:05,528
+Where we're headed is using RxInfer multi-agent trajectory planning example and using GNN to give an exact reconfiguration.
+
+7
+00:01:06,069 --> 00:01:12,681
+So we're going to be using generalized notation notation to yield
+
+8
+00:01:15,277 --> 00:01:45,267
+this simulation in rx infer so there's a couple steps to go over uh this is just sort of a live working uh presentations and to be refined and polished i just wanted to get it all into this one stream given all these recent updates so to the stream agenda and also people watching live i will look forward to your comments and ideas
+
+9
+00:01:46,057 --> 00:01:50,423
+Let's start with looking at the areas we'll go into.
+
+10
+00:01:54,069 --> 00:01:55,551
+First, just some overview on the tools.
+
+11
+00:01:55,651 --> 00:01:58,355
+I'm using Cursor 1.0, which came out recently.
+
+12
+00:01:58,715 --> 00:02:00,618
+GNN, Generalized Notation Notation.
+
+13
+00:02:00,698 --> 00:02:03,182
+Check out Stream 14.1 if you want to see more.
+
+14
+00:02:04,003 --> 00:02:11,153
+Using LLMs via Cursor, mainly Clod 4, and it's going to be about reverse and forward engineering in the RxInfer setting.
+
+15
+00:02:11,538 --> 00:02:18,153
+Okay, where we're headed is a robust information supply chain from plain text configuration to executable simulation.
+
+16
+00:02:18,855 --> 00:02:21,762
+So here's what that is going to look like again with AIR.
+
+17
+00:02:22,303 --> 00:02:24,889
+We have GNN, the plain text GNN,
+
+18
+00:02:26,168 --> 00:02:54,808
+moving through all of these stages the triple play graphical on through executed simulation so whether we think about that as meeting in the middle between the forward specification of GNN and all of these different kinds of things that we might want to do with GNN like the type checking all the modules of the package and the golden spike moment is meeting in the middle
+
+19
+00:02:54,856 --> 00:03:18,973
+with the reverse engineering of Rx and Fur examples and the forward engineering of the GNN package so that we can end up with this meeting in the middle between the plaintext, which gives us all these benefits of plaintext, reproducibility, et cetera, and all these functionalities of GNN.
+
+20
+00:03:21,029 --> 00:03:39,730
+In the main first section, I'll go over what that specifically was, talk about the reverse engineering in the RxInfer example, from script to more of a package, and then meeting that package with a forward engineering pass from the GNN schema and pipeline on through the needed configuration.
+
+21
+00:03:39,710 --> 00:04:00,604
+and that's the golden spike again just a metaphor uh there have been many changes to the gnn package and still a few more that could occur with logging and so on but i'll go through a few sections of change and documentation a little bit more on the golden spike and the analogy
+
+22
+00:04:03,824 --> 00:04:23,723
+then we'll see what people comment where that goes and I have a little bit of manual writing as well in terms of thinking about what that means from a organizational perspective and for active inference and for the Institute and all that okay going to the package
+
+23
+00:04:31,212 --> 00:04:42,491
+All right, in the doc RxInfer folder, the first thing is this short script clone RxInfer examples.
+
+24
+00:04:43,433 --> 00:04:53,490
+And this clones a repo, which is a fork of the main RxInfer examples that I have on my personal GitHub account.
+
+25
+00:04:54,196 --> 00:05:02,030
+And this, I sync it up with the main examples repo, which is awesome that they're putting out more and more and different.
+
+26
+00:05:02,791 --> 00:05:09,844
+And then in the support folder on my fork, first there's a setup Julia script to get your environment ready.
+
+27
+00:05:10,385 --> 00:05:16,997
+And then there's a notebooks to scripts Julia, which takes the notebooks from the examples and it
+
+28
+00:05:16,977 --> 00:05:21,823
+turns them all into scripts just by extracting out the code blocks.
+
+29
+00:05:21,843 --> 00:05:28,532
+So they don't all necessarily work on the first pass, but it gets all the content.
+
+30
+00:05:31,136 --> 00:05:34,059
+Again, to this forward reverse engineering idea.
+
+31
+00:05:34,880 --> 00:05:36,302
+Here's the process.
+
+32
+00:05:38,625 --> 00:05:44,453
+So first... And the links to all this are in the video description.
+
+33
+00:05:45,091 --> 00:05:51,485
+First use that notebooks to scripts script to convert the notebook into a script.
+
+34
+00:05:51,605 --> 00:05:52,848
+Sometimes it might run away.
+
+35
+00:05:53,068 --> 00:05:55,954
+Other times you might need to change certain things about the control flow.
+
+36
+00:05:56,676 --> 00:06:00,243
+And first step is to just lock in the single script.
+
+37
+00:06:01,366 --> 00:06:04,753
+So what that looks like in the case here,
+
+38
+00:06:07,467 --> 00:06:09,691
+So then it clones in.
+
+39
+00:06:10,272 --> 00:06:16,463
+This is work I did on the fork to get, this is the reverse engineering part with RxInfer.
+
+40
+00:06:17,024 --> 00:06:23,615
+Scripts, advanced examples, multi-agent trajectory, archive.
+
+41
+00:06:25,639 --> 00:06:32,631
+So this is the working single script version of the multi-agent trajectory model.
+
+42
+00:06:34,467 --> 00:06:49,223
+Just for context, where this takes us is these four agents that do a negotiation of avoidance collision and obstacle avoidance.
+
+43
+00:06:49,583 --> 00:06:51,645
+So different collision avoidance.
+
+44
+00:06:52,426 --> 00:07:01,015
+And that's happening with, at the heart of it all, this at model block, as always, in RxInfer.
+
+45
+00:07:01,315 --> 00:07:06,141
+that is used by the path planner inference step.
+
+46
+00:07:06,161 --> 00:07:07,528
+This is the
+
+47
+00:07:08,673 --> 00:07:38,528
+kind of the kernel and then rx infer is making that kernel of the generative model the explicit probabilistic joint distribution makes it look a lot more like the math or the analytical description of the generative model and everything else is pushed into the inference methods so that's that kind of idea of writing shorter at model blocks that distinguish different generative models and then everything else is like
+
+48
+00:07:38,508 --> 00:08:07,620
+rendering that out into the graphical model with the stereotyped inference routines from that single script take it to more of a configular modular approach so that was probably several hours several dozen prompts but not something that couldn't be done eventually in an automated fashion to split up that single script
+
+49
+00:08:10,334 --> 00:08:27,077
+that which was only lightly modified from the notebook format which is 339 lines to modify it from single script into in this case almost 10 different scripts some of them are really short
+
+50
+00:08:27,057 --> 00:08:33,106
+but they clarify and there's other ways that it probably could have been disassembled or disarticulated.
+
+51
+00:08:33,146 --> 00:08:43,881
+This separates out different functions and also adds a lot of visualization and logging methods.
+
+52
+00:08:45,603 --> 00:08:52,693
+Third step, from that multi-script package,
+
+53
+00:08:54,158 --> 00:09:18,090
+all the hard-coded variables take it out to a config toml file so this is like a little domain specific language just for this one example in this one case where this gives all the configuration needed so instead of just having the values coded in the scripts look to this central config standalone file
+
+54
+00:09:19,808 --> 00:09:32,873
+There's multiple ways or stages of generalizing the variables like the dimensional state spaces, initial parameterizations, constraint variables, number of agents, simulation variables like time steps into this config block.
+
+55
+00:09:34,422 --> 00:09:42,574
+That is going from, and all along the way, confirming that the simulation is still running.
+
+56
+00:09:43,515 --> 00:09:46,219
+So that was the reverse engineering of RxInfer.
+
+57
+00:09:46,499 --> 00:10:01,020
+So it's kind of like the original notebook was like a handmade chair, and this was like reverse engineering it so that we could have this cartridge, which gets run like a disassembled Ikea factory,
+
+58
+00:10:01,000 --> 00:10:28,611
+separating out the methods whereas the original example is great and really informative in terms of a blog post readable introduces things sequentially and shows what rxinfer is doing and gets to those exact simulations this shows like one path through the flow
+
+59
+00:10:29,097 --> 00:10:31,219
+and it's a custom made artifact.
+
+60
+00:10:31,520 --> 00:10:43,914
+And again, that reverse engineering process was taking it into these different disassembled components, but exactly reproducing it and then pulling out all the configuration into a config.
+
+61
+00:10:47,097 --> 00:10:50,281
+So that's the reverse engineering of the RX in Fursight.
+
+62
+00:10:51,142 --> 00:10:56,488
+Now in the forward rendering,
+
+63
+00:10:59,641 --> 00:11:04,606
+This is going from a GNN file to that config.
+
+64
+00:11:05,187 --> 00:11:24,687
+Because if we know from that reverse engineering phase that getting to that config is going to allow the execution of the simulation, then the other side of that meeting in the middle is getting the GNN file into that config format.
+
+65
+00:11:26,017 --> 00:11:41,558
+So here is in this examples folder, a GNN style markdown file with all of the parameters that need to be specified in the config.
+
+66
+00:11:41,578 --> 00:11:54,235
+So that when you're in SRC and you run main, main is going to run all of the steps which are turned on
+
+67
+00:11:57,539 --> 00:12:05,288
+of the 14 steps, which are each their own numbered script with the same name module.
+
+68
+00:12:06,249 --> 00:12:19,024
+Whichever ones you have enabled, which is in the new file in pipeline module config,
+
+69
+00:12:20,253 --> 00:12:24,837
+you can turn whichever of these modules on or off.
+
+70
+00:12:26,018 --> 00:12:27,760
+That's different from last time.
+
+71
+00:12:29,101 --> 00:12:39,731
+And that RxInferGNN example gets passed through step one, checks the files.
+
+72
+00:12:40,431 --> 00:12:43,114
+Step two, does set up to the virtual environment.
+
+73
+00:12:43,134 --> 00:12:44,495
+Step three, does any tests.
+
+74
+00:12:45,096 --> 00:12:48,859
+Step four, type checker, output.
+
+75
+00:12:50,172 --> 00:13:16,578
+we can look in the type checking and see, for example, that RxInfer, even though these resource estimates are not currently specifically accurate, especially compared across different packages, but the resources are calculated for that RxInfer example just by virtue of it being a GNN.
+
+76
+00:13:17,799 --> 00:13:18,880
+Then there's
+
+77
+00:13:21,003 --> 00:13:33,697
+Let's continue looking through the... Step five, exports into a bunch of different outputs.
+
+78
+00:13:33,717 --> 00:13:34,858
+Six makes visualizations.
+
+79
+00:13:35,239 --> 00:13:41,485
+And then of interest here is nine, which renders what we want into the Toml.
+
+80
+00:13:42,106 --> 00:13:43,888
+And 11, it's going to call the LLM.
+
+81
+00:13:44,847 --> 00:13:45,688
+Here's the exports.
+
+82
+00:13:46,589 --> 00:14:00,188
+This is the re-export of the GNN file and the export of the GNN file in other formats like XML and other graph formats.
+
+83
+00:14:00,208 --> 00:14:00,809
+That's step five.
+
+84
+00:14:01,570 --> 00:14:02,892
+Step six, visualization.
+
+85
+00:14:06,517 --> 00:14:07,058
+We get
+
+86
+00:14:08,202 --> 00:14:38,040
+the matrix visualization of all of the state spaces and ontology assertions of this model so like this is an interesting example in this engineering rx infer notation namespace a is often used for state transitions whereas in the active inference textbook
+
+87
+00:14:38,020 --> 00:14:39,521
+B is used for state transitions.
+
+88
+00:14:39,581 --> 00:14:46,207
+But it's an example of why we don't want to have a welding between letters and ontology terms.
+
+89
+00:14:46,868 --> 00:14:54,855
+We want to have the flexibility to use the same letters for different ontologies and language in different settings.
+
+90
+00:14:55,816 --> 00:15:07,707
+So it's a perfect example of that, of just the ontology assertion space and all the variables can be described just because it was GNN file.
+
+91
+00:15:08,733 --> 00:15:14,142
+Now we get to step nine.
+
+92
+00:15:18,549 --> 00:15:19,591
+Oh, it didn't run completely.
+
+93
+00:15:20,873 --> 00:15:25,862
+To run it again, Python 3 main.
+
+94
+00:15:30,409 --> 00:15:34,977
+This will run in the render
+
+95
+00:15:41,352 --> 00:15:52,505
+In the render folder in SRC, in the RxInfer section, there's a TOML generator.
+
+96
+00:15:53,526 --> 00:16:06,381
+So this will read in the GNN and then output the TOML, which is the one that we knew that we wanted from the RxInfer site.
+
+97
+00:16:07,745 --> 00:16:20,382
+Then this script in the RxInfer folders and doc demonstrates the GNN RxInfer pipeline for multi-agent trajectory planning.
+
+98
+00:16:20,542 --> 00:16:21,884
+It performs two-step validation.
+
+99
+00:16:22,645 --> 00:16:31,838
+So first it runs a baseline execution from the clone of the RxInfer examples.jl, which doesn't use GNN.
+
+100
+00:16:33,340 --> 00:16:35,743
+Then those
+
+101
+00:16:37,107 --> 00:16:59,689
+files for the example are all copied over into this uh folder right here multi trajectory planning and then it's logged in the running of the script that the config was replaced with one regenerated from the gnm so it's a clean um
+
+102
+00:17:01,070 --> 00:17:28,933
+functional replacement experiment to show that the GNN structured file here can be used as part of this bigger pipeline which includes the type checking the category theory all these different kinds of ontology connections
+
+103
+00:17:29,943 --> 00:17:52,525
+and yield the target toml that we know will make the simulation work for the reverse engineered disarticulated rx infer example so hope that that has been conveyed
+
+104
+00:17:54,952 --> 00:18:14,682
+It took a long time, I think, overall to get here, but it had long been the triple play vision that we would have a unified plain text format for the math diagrams and visualizations and executable code.
+
+105
+00:18:14,662 --> 00:18:41,158
+so it's like okay how do we get triple play integrity so we could have things like okay well you change the visual representation with a drag and drop and then it changes the executable code it's like how is that going to work formally well a lot of the examples scripts and scientific papers used like a all-in-one script which can make reproducing the example
+
+106
+00:18:41,645 --> 00:18:57,882
+simpler and more monolithic but then give fewer degrees of freedom because you might be just like 700 lines in the middle of the script and it's not clear how you change certain aspects more structural about the um
+
+107
+00:18:59,296 --> 00:19:26,350
+model so how do we get to the ability for there to be a triple play where changes in one can be traced to changes in the other and that was where jacob and i were thinking maybe we have some sort of intra or infra lingua with the generative a generalized notation notation
+
+108
+00:19:28,895 --> 00:19:31,459
+Let's find that quote.
+
+109
+00:19:37,227 --> 00:19:55,172
+So Oryx and Fur or any other software we could try doing a reverse engineering of a PyMDP script gives the ability to set everything needed
+
+110
+00:19:57,667 --> 00:20:24,079
+accept the state space of the generative model so there's still a lot to be explored in terms of how do we customize control flows and more simulation environment scale factors um and also a lot more to say um but suffice to say that for
+
+111
+00:20:24,548 --> 00:20:35,503
+simple reproducing of standalone examples this reverse engineering sort of forensic phase is a very important proof of concept
+
+112
+00:20:48,899 --> 00:20:58,834
+So in active inference, research models are often conveyed through assemblages of natural language, pseudocode, programming language, analytical formulas, and pictorial representations.
+
+113
+00:20:59,475 --> 00:21:12,375
+In this paper, we present GNN as a flexible and expressive language tailored for expressing active inference models and encompassing various relevant aspects of languages, including ontology, morphology, grammar, and pragmatics.
+
+114
+00:21:12,355 --> 00:21:27,875
+By leveraging GNN as an active inferlingua or interlingua, infralingua, supralingua, intralingua, we aim to bridge and respect gaps among different modeling approaches in order to facilitate interdisciplinary research.
+
+115
+00:21:28,917 --> 00:21:31,620
+So how can this be used?
+
+116
+00:21:33,783 --> 00:21:41,333
+Well, for our education, we can have these
+
+117
+00:21:42,865 --> 00:22:08,367
+well-tempered generative model infrastructural pipelines and specific well-documented interpretable configurations that help us understand and communicate figure out what different generative models and process flow elements are doing there's also a lot of engineering uses so
+
+118
+00:22:10,372 --> 00:22:18,729
+There could and will be many use cases where GNN is not a front feature of the product.
+
+119
+00:22:18,909 --> 00:22:29,089
+It's just a useful, increasingly useful open source and stack for connecting the dots
+
+120
+00:22:29,525 --> 00:22:57,085
+between existing examples and ways to modify and design with those motifs, and then increasingly forward use of this kind of metaprogramming, program synthesis type approach to generative modeling, which is going to have all these benefits for making them easier to design, like just being able to prompt an LLM and say, make me a GNN file that represents this, like we'll do probably later in this stream.
+
+121
+00:22:57,065 --> 00:23:13,842
+All the way on through having the resource estimation, all these features that we want for any generative model can be abstracted and brought into this infrastructure grade pipeline so that
+
+122
+00:23:14,902 --> 00:23:37,197
+once there are more and more paths and understanding about how do you get more and more generically or in all these different situations to executable simulations, using this pipeline and putting in the cartridge helps separate and give a lot of reproducibility and expressivity to the compute that happens in between.
+
+123
+00:23:38,442 --> 00:23:46,782
+So there's the reverse engineering approach, which is just taking scripts exactly as they are and within that language or in more of a port or transfer,
+
+124
+00:23:47,774 --> 00:23:50,437
+doing an exact reproduction effort.
+
+125
+00:23:50,457 --> 00:24:00,669
+And then from there, maybe certain pieces can be flipped out, but it's always good to know that we can exactly reproduce using the same variable names, the same ontology assertions.
+
+126
+00:24:01,310 --> 00:24:08,959
+So that becomes kind of like a substrate of, well, paper one modeled attention this way, and in natural language, they described attention this way.
+
+127
+00:24:09,460 --> 00:24:15,587
+Paper two in a different programming language in a different natural language said this about attention,
+
+128
+00:24:15,567 --> 00:24:27,730
+And here's how we can use ontology across the natural language and the computational elements to talk about where those are similar or different.
+
+129
+00:24:27,750 --> 00:24:30,415
+Buzzing can be used for different functions.
+
+130
+00:24:30,636 --> 00:24:33,441
+So for example, once we have the config,
+
+131
+00:24:33,522 --> 00:24:46,297
+and the ability to separate out these different variables, we could see what are the perturbations that are allowable because we didn't change any of the logic or the control flow.
+
+132
+00:24:46,317 --> 00:25:02,837
+So for example, if the number of agents were simply changed to 50, then as it is currently written, there might need to be some other refactorizations of state spaces, which just changing NR agents wouldn't exactly do.
+
+133
+00:25:03,188 --> 00:25:08,995
+it might just be part of a loop and then the loop would break because it's like, wait, there were only four because we only had four initial locations.
+
+134
+00:25:09,536 --> 00:25:10,737
+So then you go, okay, okay, okay.
+
+135
+00:25:12,119 --> 00:25:30,681
+How could we develop configuration spaces where a number of agents at a programmatic level had a relationship to instantiations of matrices and other features like knowing that you needed to have as many of these blocks
+
+136
+00:25:31,083 --> 00:25:58,778
+as you do agents so in this exact situation again it was first just an exact reverse engineering but from that reverse engineering through insight and through program synthesis and fuzzing approaches we can explore like what happens when the dt is 0.01 or do a program sweep across generate simulations where dt ranges from this to this while the number of iterations ranges from that to that
+
+137
+00:25:58,758 --> 00:26:27,280
+so then that gives this ability to explore what are the functional the performance aspects optimization and then we can go even further especially as the visualization and the disco pi features improve so here not every single variable was captured by the disco pi category theory description but
+
+138
+00:26:28,087 --> 00:26:31,692
+It wasn't the focus here, but that would be something that could be worked on.
+
+139
+00:26:31,792 --> 00:26:44,170
+And again, in general, the goal is a wide range of defined and checked GNN formats, ranging from discrete time, continuous time, all these different kinds of scenarios.
+
+140
+00:26:44,631 --> 00:26:54,465
+We continue to build out that space and neighborhoods of different models, which can be interpreted a certain way.
+
+141
+00:26:54,496 --> 00:26:57,740
+So there's a lot of things that could happen with the processing pipeline.
+
+142
+00:26:57,760 --> 00:27:04,308
+Like, how do we know that this PyMDP one, we only want to render into PyMDP and the RX.
+
+143
+00:27:04,348 --> 00:27:08,774
+So, okay, should we include that information in the file and or in the file name?
+
+144
+00:27:09,475 --> 00:27:11,337
+How should that be handled by the different modules?
+
+145
+00:27:11,437 --> 00:27:17,685
+Those are the kinds of software improvements that would then allow us to, when we run it,
+
+146
+00:27:17,665 --> 00:27:23,593
+Right now, let's just say we had it perfectly working for rendering PyMDP to PyMDP and RxInfer to RxInfer.
+
+147
+00:27:24,034 --> 00:27:31,264
+We still might get 50% errors, and then it would try to chase around fixing, but it didn't need to be fixed.
+
+148
+00:27:32,045 --> 00:27:45,664
+But then if we had some examples, which are actually quite few, if any, where we have the same exact analytical situation being cross-rendered into PyMDP and RxInfer.
+
+149
+00:27:46,910 --> 00:27:53,916
+So those would be some interesting ways to check that all of the cross rendering is working well.
+
+150
+00:28:02,772 --> 00:28:31,142
+okay returning to the agenda and if anyone has any suggestions or questions write them otherwise I'm just going to try to get through the rest of the agenda go to some of the manual writing see if there's some interesting thing that we could look maybe look at the documentation and just kind of have this informal bringing together of all these recent developments over the last couple of days
+
+151
+00:28:31,122 --> 00:28:57,957
+so that at least it's been worked through and put out there for for those who want to explore it and then it will return in in more forms over the coming months so the golden spike was meeting the middle between reverse engineering of the n equals one rx infer example into the components into the config form
+
+152
+00:29:01,480 --> 00:29:09,762
+Pipeline execution summary is a JSON file.
+
+153
+00:29:11,507 --> 00:29:16,941
+So what's cool about this is different steps can be tucked in with the arrow
+
+154
+00:29:18,322 --> 00:29:25,554
+So you can look at just the logging for each step and it probably makes it more machine readable as well.
+
+155
+00:29:25,935 --> 00:29:33,027
+But like here's the full logging for the step five and then step six visualization and so on.
+
+156
+00:29:37,574 --> 00:29:40,920
+In terms of how the pipeline overall has changed,
+
+157
+00:29:42,638 --> 00:29:48,546
+Big picture is still the exact same, which is all the documentation is in docs.
+
+158
+00:29:48,867 --> 00:29:54,835
+The RxInfer script is in there for now, just to be close to RxInfer cloned repo.
+
+159
+00:29:54,855 --> 00:29:56,518
+And all the source code is in SRC.
+
+160
+00:29:57,079 --> 00:30:01,585
+So you just delete the output folder and then run main.py.
+
+161
+00:30:05,511 --> 00:30:05,731
+Here.
+
+162
+00:30:07,193 --> 00:30:10,097
+It runs whichever...
+
+163
+00:30:12,068 --> 00:30:32,980
+of the modules are configured to run in config.py it will run those sequentially each of them have a function and this is all very documented up in the repo
+
+164
+00:30:46,477 --> 00:31:09,126
+okay GNN computational science deployment science multi-agent systems being able to design and describe these systems and it starts quietly being able to write and read and modify GNN files and Markdown that starts to flow out through more and different places better and better
+
+165
+00:31:10,253 --> 00:31:19,583
+And that's just one trace through an information supply chain, which hops across different operating systems and mines and servers and all of that.
+
+166
+00:31:20,263 --> 00:31:36,160
+However, with this GNN entry point or meeting point, there's the ability to do some verified computing and tracing a little bit better from which generative model and which data inputs and so on are run how, when,
+
+167
+00:31:36,140 --> 00:31:57,523
+to yield what outputs and that flow from abstract concept to concrete execution is unified slash unifiable um some of the most
+
+168
+00:31:59,461 --> 00:32:28,573
+important ways that people could explore from here, getting the GNN repo examples working on their own machine, making GitHub issues or comments with ways to improve it, seeing what kinds of scenarios and value propositions they'd like to do themselves, in which case just go for it and report back, measure back.
+
+169
+00:32:28,553 --> 00:32:38,395
+or to partner or support the Institute so that we can have these kinds of tools being developed very functionally here
+
+170
+00:32:40,653 --> 00:33:07,572
+okay here's a little bit of a interlude manual manually written interlude to contrast with the large amount of computer generated material then we will return to the documentation which has more computer generation but this next piece is going to be a few thoughts that are selected from a larger writing just to give
+
+171
+00:33:09,037 --> 00:33:29,526
+a little bit of variety here get some feedback and um again also more to be shared so here we are in 2022 part all textbook figure 1.2 summarizing the high road and the low road so
+
+172
+00:33:31,177 --> 00:33:39,430
+We want to have notation systems and deployment methods for generative models with expressive methods for and nested addressable spaces of.
+
+173
+00:33:40,292 --> 00:33:46,382
+So this next series is going to be the spaces of our capacity to do that task within.
+
+174
+00:33:46,422 --> 00:33:55,176
+Describe, design, render, simulate, analyze, fit, assess performance of described models.
+
+175
+00:33:57,012 --> 00:34:01,798
+meaning there's a larger set of models we can describe than we can render.
+
+176
+00:34:02,659 --> 00:34:05,923
+We can describe recipes we cannot cook, and that's a good thing.
+
+177
+00:34:06,704 --> 00:34:19,640
+So zooming out, there are these concentric spaces of generative models, which we have different capacities in a given moment around.
+
+178
+00:34:20,621 --> 00:34:26,108
+For example, let's do in the GNN examples,
+
+179
+00:34:30,037 --> 00:34:39,191
+Make another GNN file fast and comprehensive for a full self-driving car.
+
+180
+00:34:40,453 --> 00:34:56,719
+Ensure all state spaces and ontological considerations are accounted for with good GNN style.
+
+181
+00:34:59,264 --> 00:35:09,240
+So this is going to be an example of a GNN file that we certainly cannot render into a programming language in an executable fashion.
+
+182
+00:35:09,558 --> 00:35:31,988
+yet but with some more constrained generation methods and better type checking in ways of looking at which families of models and control flows we can run then it makes it just an empirical fact that we can we can describe systems that we can't even visualize uh we could say
+
+183
+00:35:31,968 --> 00:35:59,106
+it's a graph with 100 trillion nodes and then there's no computer that you have available that can visualize that many but that didn't stop you from just writing the math on the paper or just doing a visualization and then questions like the performance of a given model for a given data set in a setting is like seven horses ahead of the cart from what is possible to describe
+
+184
+00:35:59,086 --> 00:36:23,507
+so that's sort of like the math to application distance to travel which is like consider this equation and this is the attention factor and this one's the regret factor and this one's the the shame modulator and it's like you can just write those math equations however you want no consideration to too much other than just ideally what each of them mean but
+
+185
+00:36:24,500 --> 00:36:42,272
+when it comes to saying well which model would be a better fit of what that's several steps ahead of actually doing the testing and as long as that's known then there's some interesting cybernetic loops where you're like describing multiple kinds of analytical formulas
+
+186
+00:36:42,252 --> 00:37:00,531
+with an insight which could be right or wrong into which one of them might be performant in a different way and sometimes your intuition might be right and it's kind of like a compressibility and there might be some other irreducible jumps that just like have to be computed on through
+
+187
+00:37:03,397 --> 00:37:19,940
+So, when we're talking about performance of a generative model, like this one is good at video games like this and that way, or this one's driving, or this one's drone, or recommending, or resource allocating, whatever domain or function you're making a generative model for.
+
+188
+00:37:20,441 --> 00:37:29,033
+Performance on one benchmark, so the high jump approach, or on a suite of different measures, kind of like a decathlon,
+
+189
+00:37:29,013 --> 00:37:36,206
+It's a relational measurement, assessment, or characterization that's secondary to the primary phenotype or embodiment.
+
+190
+00:37:36,547 --> 00:37:38,149
+So map is not the territory.
+
+191
+00:37:38,871 --> 00:37:39,993
+Generative models are maps.
+
+192
+00:37:40,935 --> 00:37:53,417
+So we're talking about cartography, compositional cognitive cartography, on territories, which might be themselves abstract or might be embodied.
+
+193
+00:37:54,899 --> 00:38:02,409
+Projects in and around the Active Inference ecosystem, they have performance and fitness wants and needs and so on.
+
+194
+00:38:02,889 --> 00:38:17,228
+So someone might think, okay, well, if I can design this kind of algorithm with this kind of runtime requirements, with this performance by this date, with this amount of funding, then this is a viable method for us to have a business.
+
+195
+00:38:17,208 --> 00:38:24,807
+So all these different kinds of performance or this should be more efficient or more resilient against this kind of intervention than this kind of model.
+
+196
+00:38:25,248 --> 00:38:26,992
+All those kinds of assessments.
+
+197
+00:38:28,456 --> 00:38:31,082
+That's all happening within this
+
+198
+00:38:32,800 --> 00:38:57,762
+larger space of generative models which could be specified so of course like even the ones that we describe are only a subset of what is possible so those generative models the larger spaces the known unknowns and the unknown unknowns they include the Baroque absurd tiny useful cute funny and interesting
+
+199
+00:39:00,577 --> 00:39:04,890
+So here is the GNN for the self-driving car.
+
+200
+00:39:11,470 --> 00:39:15,261
+So it's 566 lines.
+
+201
+00:39:16,844 --> 00:39:23,601
+It could be made to be compliant with different kinds of natural language standards.
+
+202
+00:39:25,045 --> 00:39:30,158
+And these state spaces can be type checked for their coherence and their completeness.
+
+203
+00:39:31,461 --> 00:39:33,486
+And then especially with a Sumo type
+
+204
+00:39:34,782 --> 00:40:00,486
+program like implementation of pure active ontology like definitions and other kinds of sentence fragments then there's all these different kinds of static checking that could come into play and resource estimation all the early stages of the pipeline basically up until but everything before 10 even for this model that an llm just blasted out
+
+205
+00:40:00,466 --> 00:40:05,614
+and that's not even with it having an MCP server.
+
+206
+00:40:06,696 --> 00:40:22,221
+So with the ability for all of these methods within each module to be MCP methods, then compliant generation of arbitrary generative models
+
+207
+00:40:23,450 --> 00:40:49,693
+can be dropped into the railroad track which already is going to reliably reach the triple play so we have the free energy principle from the high road and bayes-derham statistics updating learning on the bottom meeting at active inference
+
+208
+00:40:50,618 --> 00:41:17,672
+so that's why the low road is implementation specific and the high road is not because with a high road we want to be able to use fep and related methods on biological organisms and arbitrary levels of analysis or abstract systems so we want to be able to describe systems we can't build whereas the low road needs to be able to build what it's describing
+
+209
+00:41:18,378 --> 00:41:44,723
+that would be that sort of bottom up like a building must have continuous connection even if it's through like tension or something in order to be x feet high it just it's not it's kind of a classic cranes and sky hooks high road low road so now going a little bit further here consider
+
+210
+00:41:45,867 --> 00:42:04,990
+that we have pairwise information and distance measures today in terms of software 1.0 in terms of syntactic edit distance so we can look at two different programs or inputs inputs as programs programs as inputs and look at their syntactic differences
+
+211
+00:42:05,797 --> 00:42:34,302
+more recently we have gained accessibility of information and distance measures in terms of software 2.0 so ai neural networks machine learning as software as per kind of the andre carpathy post 2017 era which is to say that we have these compressive distances semantic distances distances in so-called semantic information geometry model spaces
+
+212
+00:42:34,433 --> 00:42:49,843
+that's how rags how cursor works how llms work here's what's not out there software 3.0 or it doesn't even matter or need a number but cognitive computing distances now that
+
+213
+00:42:50,836 --> 00:43:20,404
+requires a kind of perspectival modeling which is least needed in software 1.0 where there's discrete numbers of changes to strings least to not needed to have multi-perspectivalism software 2.0 the perspectivalism is very enmeshed with the model's geometry intrinsically so we could look at the embeddings of a given input into multiple LLMs
+
+214
+00:43:20,485 --> 00:43:26,277
+and consider each of the LLMs embedding in terms of compressive or semantic distances.
+
+215
+00:43:26,838 --> 00:43:38,342
+So it's not that it's impossible to get multi-perspectivalism, it's just not, it's being implicitly welded together in the trained state space of the LLM.
+
+216
+00:43:39,031 --> 00:43:55,605
+What about having a sort of first principles active inference ontologically specified pre-always-already separation that gives true perspective cognitive semantic information differences
+
+217
+00:43:55,585 --> 00:44:21,643
+differences that make differences for sophisticated cognitive agents what's the accounting system domain specific notation and then general notation notation that lets us cover diverse and unknown cognitive phenomena addressing disparate systems from a first principles perspective which is the high road things we can describe and imagine that we can't necessarily build
+
+218
+00:44:22,889 --> 00:44:39,008
+and then by specification that's larger than what we can build but where the crane and the skyhook meet is when you have the active inference model that is at the triple play point where the math can be traced into the math
+
+219
+00:44:39,950 --> 00:45:08,033
+the variables data supply chain can be traced out to the next level and then the ontologies and the assertions that make up the rhetoric of the scientific model can be also separately broken out and that's like pre-reverse engineered to be massively composable in this super useful way so what does it look like for those cognitive phenomena
+
+220
+00:45:09,802 --> 00:45:37,243
+here in doc cognitive phenomena so here the readme in cognitive phenomena is going to link to each of these folders some of which have files in them some don't but just to show let's do drag them all in comprehensively go through this folder of phenomena
+
+221
+00:45:39,029 --> 00:46:02,640
+Ensure every subfolder has a technical, accurate README and a compliant GNN file showcasing the phenomena.
+
+222
+00:46:03,042 --> 00:46:23,413
+here we have all these different subfolders of cognitive phenomena this is the whole iguana this is the unifying approach to different cognitive phenomena is notationally it doesn't mean that there's functional unification per se it's not that there is a relevant edge first off
+
+223
+00:46:23,984 --> 00:46:44,963
+without a system of interest or scope in mind it doesn't even really make sense to say well is attention related to language processing like yeah in principle you could design a system where there's any kind of relationship within any kind of anything because we're just imagining different recipes then if you specify
+
+224
+00:46:46,343 --> 00:47:09,162
+for a given system like for a Red Harvester ant nestmate does this relate to that well then it starts to become an inquiry that can actually be pursued and whether or not they play some sort of synergistic or trading off role in a given situation as you've defined it as you've set up the situation Etc Etc Etc
+
+225
+00:47:11,318 --> 00:47:37,275
+at least there can be a unified notation system so that within certain spaces those notation systems could be like fused concatenated tested for difference and so on so cod 4.0 sonnet doing incredible work just iterating comprehensively through and
+
+226
+00:47:40,613 --> 00:48:06,233
+writing out uh the files as requested and then again to the point of like these are writing out recipes that are fantastical but then there's a way just like there's a way to build different software into linux there's a way to build approaches that bring you closer and closer to the grand central station rendering assembly
+
+227
+00:48:08,407 --> 00:48:33,823
+so let's let it go through those examples read a little more so for this part was to say four real um first principles design of cognitive computing with all of the relationality and the multi-perspectivalism that entails
+
+228
+00:48:35,035 --> 00:48:43,082
+We want to be able to do semantic information distancing in arbitrary multi-agent assemblies.
+
+229
+00:48:45,044 --> 00:49:02,140
+And I'm contending that some kind of plain text format like GNN and associated packaging and so on can help support that coming to be the case even today with the kinds of things we can do.
+
+230
+00:49:04,887 --> 00:49:13,535
+So in that light, the Active Inference Institute supports reliable and effective applications of cognitive computing and active inference across domains.
+
+231
+00:49:15,317 --> 00:49:26,408
+Different projects have different domains and systems of interest, but those are at the domain level and they're connected through the ontology, through the different tools.
+
+232
+00:49:27,209 --> 00:49:34,776
+There's all these different places where somebody can focus on just a sub, sub, sub domain or anything.
+
+233
+00:49:36,022 --> 00:49:36,483
+But how?
+
+234
+00:49:36,843 --> 00:49:43,593
+How to gain access to a common set of tools and pipelines and methods?
+
+235
+00:49:44,334 --> 00:49:53,006
+We can say, now make a GNN for this domain because the notation and the rendering is being strongly typed.
+
+236
+00:49:54,668 --> 00:49:55,870
+So we support that.
+
+237
+00:49:57,436 --> 00:50:16,761
+reliable effective application by providing key services such as software so that includes inference libraries ones that we develop ones that we just rebroadcast the development of others all kinds of examples of ways that people are carrying out that terminal inference
+
+238
+00:50:16,741 --> 00:50:44,233
+and then we host things like the ontology generalized notation notation like what this stream is about cerebrum the case specific rendering of different generative models there's sections in the docs about cerebrum and also pushing it further back education because the metal rails of the physical supply chain have their own supply chain leading to the education and the mind of the engineer
+
+239
+00:50:45,479 --> 00:50:57,733
+So education and outreach and awareness is also part of it in terms of how do we make something that is lasting across generations and translating into ways of working together.
+
+240
+00:50:59,198 --> 00:51:16,735
+maintaining resources like tech trees professional training symposia internships in-person educational programs and so on these are all different offerings and with hopefully partner organizations we can offer these better and different and other and more
+
+241
+00:51:19,634 --> 00:51:40,208
+now just like dirt and asphalt roads low roads so real generative models that you actually build even if it's just in drafting like a real recipe you imagined let alone a real recipe that you made let alone one that you made like a business idea around but real low roads
+
+242
+00:51:40,728 --> 00:51:58,872
+are built basically only where and as and how needed lest there be a bridge to nowhere you could it's like look being at the um home depot supply store and looking at all this material and thinking you could do this it's like yes
+
+243
+00:51:58,852 --> 00:52:20,860
+you could and if it were a quirky hobby or just a inexpressible curiosity it wouldn't even necessarily be a bad thing it just it takes resources not the least of which time so considered in that way there's already many applications and implementations of variational approaches to cybernetics
+
+244
+00:52:22,949 --> 00:52:38,764
+all but active inference all but the citation network even narrowly considered so whether we look at our curated implementations and the dozens of explicit active inference implementations that we've curated in active blockference
+
+245
+00:52:38,744 --> 00:52:55,251
+Or whether we're just thinking, well, if it's a variational autoencoder and it's using free energy minimization to look at joint distributions of perception, cognition, action, so on, is that not basically doing free energy minimization on the particular partition?
+
+246
+00:52:55,231 --> 00:52:56,894
+And then we could even take that further.
+
+247
+00:52:56,954 --> 00:53:09,780
+We could think about this recent paper and recent guest stream of Takuya Isamura on this triple equivalence and about the relationship between neural networks
+
+248
+00:53:11,195 --> 00:53:34,975
+their loss function base graphs the kind that we're working with more closely with the factor graphs and base graphs and rx infer and continuous turing machines how those have a triple equivalence so that that parenthetical was to say however however deep you're gonna say active inference has already been applied
+
+249
+00:53:34,955 --> 00:54:02,650
+whether you think take a very narrow scalpel and say it's only been applied in these open source papers that use exactly these criteria and these software packages and these calculations or if you zoom out and go actually every calculation cannot but be applying active inference wherever you are in that sort of frame there are some low roads
+
+250
+00:54:04,199 --> 00:54:33,193
+and it is all dots within top-down notationally expressive analytically described spaces of generative models including second layer notational systems which we don't have or use here for operational grammar for kind of control flow but just separating out this generative model
+
+251
+00:54:34,304 --> 00:54:57,696
+probability distribution description question from the more operational side of of how it is used for example the neural network considered as a programming object and math object and then how it's used with what is sent to it when and all those different kinds of things so
+
+252
+00:54:58,216 --> 00:55:25,438
+there are some low roads maybe we think that the low road should be there should be more in this place or fewer in that place or the ones that are dirt should stay dirt and the ones that are this should be that we may have some preferences or some opinions on low road distributions and it's a separate related and separate topic
+
+253
+00:55:25,418 --> 00:55:34,585
+to the expressivity of the high road and the generalizations which are not applying to specific cases
+
+254
+00:55:34,885 --> 00:55:59,863
+so consider this cognitive research tech infrastructural situation analogous to the metallurgy and alchemy of high precision calipers which can be used to describe and measure machine parts during a material industrial revolution hence our focus on accessibility rigor applicability education sovereignty supply chains and security
+
+255
+00:56:04,687 --> 00:56:31,183
+to recap that manual section common dialectic rhetoric in active inference related to the low road and the high road we want to be able to understand where are we talking about recipes that we can and can't do different things with
+
+256
+00:56:33,830 --> 00:56:57,762
+the sort of in that cooking lens the best GNN package would be for very large to all known generative model types what is express what is expressed slash expressible through natural compositional language
+
+257
+00:56:57,742 --> 00:57:17,488
+could be taken on through at least some steps like the type checking the category theory the ontology even if it wasn't known how to compute certain things still the description could be analyzed on its own terms
+
+258
+00:57:27,593 --> 00:57:40,438
+So in terms of applying active inference and that being used in high reliability settings, even if it's just high reliability and important and meaningful for you, we're talking about performance
+
+259
+00:57:41,802 --> 00:58:04,249
+trade-offs fitness phenotype adaptability in specific situations which is very far down the road from imagining the recipe so it's one thing to be like I wonder how a nested generative model for this and that would work for this and if it could be used for this and that important function and then
+
+260
+00:58:04,229 --> 00:58:34,067
+here's my business plan that I believe is going to work for how we're going to do this and that so there's a big space between and that's where the information supply chain for generative models comes to beat and whether that's going to be something that has to be blazed through by individuals and the sorts of failures and trade-offs that would incur
+
+261
+00:58:35,650 --> 00:58:55,515
+and or which parts of that coast to coast are there well characterized methods for so in order for people who care about performance to be able to even get to the point of assessing it and not going down this lifelong
+
+262
+00:58:57,385 --> 00:59:18,516
+learning to write generative models specialty as it has largely been at this point in order for it to break out of that having infrastructure that takes on this scope is going to be critical
+
+263
+00:59:21,871 --> 00:59:40,668
+It will also provide some deeper directions into the organization of education and research and professionalism through connection with information sciences, cognitive computing.
+
+264
+00:59:49,456 --> 00:59:50,157
+So meanwhile,
+
+265
+00:59:52,313 --> 00:59:53,555
+Let's update GitHub.
+
+266
+00:59:59,004 --> 01:00:09,161
+Meanwhile, the LLM was going through the cognitive phenomena folder and writing GNN files.
+
+267
+01:00:10,383 --> 01:00:12,567
+So here's the learning and adaptation.
+
+268
+01:00:14,757 --> 01:00:40,326
+and this sets up a a multi-channel discussion on one hand there's the low road discussion do we really think that there should be this many state spaces no i think this should be 25 dimensions or let's have this as a variable and then do a sweep across how many dimensions or what what are we really talking about with bi-stable perception are we talking about
+
+269
+01:00:40,306 --> 01:00:59,192
+the ballerina spinning or are we talking about the duck rabbit or that so it supports the technical discussion of state spaces or for for a bioregional setting what variables are we taking into account in this model how
+
+270
+01:00:59,172 --> 01:01:27,087
+and then there's there's this sort of duel which is just separate from the state spaces like what are we doing here should we be modeling this what are the feedbacks of us modeling this in general and in specific ways so just very interesting useful moments that can have some
+
+271
+01:01:30,914 --> 01:01:57,647
+describable steps that take them from basically uh through the steps of cognitive systems design there's a few other new folders in the documentation um
+
+272
+01:01:59,382 --> 01:02:24,546
+some are related to other packages there's also the tutorials let's look at this in GitHub I'll look at these then maybe do one or something random so if anyone has a comment or a question or wants to see like a GNN model or some function then just write it in the chat
+
+273
+01:02:38,093 --> 01:03:03,628
+some tutorials so first making a simple gnn model basic perception a simple model with one hidden state and one observation so this is like the first model in step by step hidden state with two categories observation with two categories connections parameterization
+
+274
+01:03:05,735 --> 01:03:33,531
+here's how you run main to go on specific steps to check at how it works and then more future tutorials um
+
+275
+01:03:41,881 --> 01:04:09,643
+Pipeline has some more information on the pipeline itself Pipeline Architecture has more on the control flow the purposes of the different modules
+
+276
+01:04:11,530 --> 01:04:41,335
+probably the main control flow could be redesigned or refactored but it works as it is to call these functions which call into folders so hopefully that gives some touch points
+
+277
+01:04:43,188 --> 01:04:44,810
+That's the forward engineering.
+
+278
+01:04:45,831 --> 01:04:52,400
+Let's separate out one RxInfer example.
+
+279
+01:04:55,103 --> 01:04:55,724
+Scripts folder.
+
+280
+01:05:04,695 --> 01:05:08,520
+Let's do hidden Markov model.
+
+281
+01:05:10,694 --> 01:05:35,352
+then if it is too challenging maybe try the coin toss okay that was just the cognitive phenomena just showing you can make subfolders with lists and so on and it will just rifle through them okay
+
+282
+01:05:39,820 --> 01:05:45,328
+Refactor this example unless anyone makes a specific comment or question.
+
+283
+01:05:49,214 --> 01:05:53,700
+Start by just running the script plainly.
+
+284
+01:05:56,364 --> 01:06:03,955
+Sometimes it works in the notebook format or other times it'll hit a Julia error.
+
+285
+01:06:21,653 --> 01:06:22,754
+Okay, there's the error.
+
+286
+01:06:25,118 --> 01:06:29,383
+I'm just gonna tell cursor.
+
+287
+01:06:29,824 --> 01:06:44,764
+This was from that notebook.
+
+288
+01:06:44,784 --> 01:06:46,767
+So that it runs as a script.
+
+289
+01:06:49,767 --> 01:06:54,554
+Here is the error we get when we run it now.
+
+290
+01:06:58,980 --> 01:07:03,426
+This could be done to more cleanly do it.
+
+291
+01:07:03,827 --> 01:07:12,238
+It probably could be focused on having this only be one script and get a single script version like I did with a multi-agent.
+
+292
+01:07:12,319 --> 01:07:14,762
+Or in this case, let's just go separate it
+
+293
+01:07:15,940 --> 01:07:42,758
+into as many files in the folder as you want okay so it's going to start to get this hidden markov model rx infer program running and meanwhile
+
+294
+01:07:45,134 --> 01:08:11,175
+this this could be done after fully disassembled but let's just try it as per and then i'll just drag in the existing gnm files
+
+295
+01:08:15,340 --> 01:08:29,503
+Write and make to this folder a GNN file for the RxInfer hidden Markov model.
+
+296
+01:08:31,105 --> 01:08:40,420
+Example, all the parameterization it would need as a GNN.
+
+297
+01:08:53,697 --> 01:09:23,080
+and then where it's going to go is in the app model block instead of saying b is this hard-coded matrix or a is an identity matrix with a three three those variables will be extracted into this toml or maybe even we can go right to gnn that's the reverse engineering
+
+298
+01:09:24,106 --> 01:09:52,206
+then the forward engineering is in render rx infer folder say i'm trying to first off if this could already be a gn file we don't even need to do the toml meet in the middle but if the parser can just directly use this information then it's good to go
+
+299
+01:09:55,207 --> 01:09:55,608
+Okay.
+
+300
+01:09:58,572 --> 01:10:11,951
+Now, this config, this GNN for the RxInferPOMDP will not work in the multi-agent trajectory avoidance example and vice versa.
+
+301
+01:10:14,074 --> 01:10:23,627
+So that is just to say there's a lot more that we can diagnose and refine between
+
+302
+01:10:25,666 --> 01:10:33,034
+which GNN can be taken to what step in what language.
+
+303
+01:10:33,754 --> 01:10:44,506
+But this HMM, like for example, we could, let's just say, I'll change it to just ask mode.
+
+304
+01:10:44,726 --> 01:10:47,108
+So it's going to respond to not make code edits.
+
+305
+01:10:47,829 --> 01:10:52,534
+How are these files similar and different?
+
+306
+01:10:54,961 --> 01:11:24,867
+greetings Matthias Conrath so imagine large libraries of GNN files some forensically reverse engineered from examples and papers others generated from program synthesis and we could do different kinds of probabilistic and deterministic analyses on oh this this one differs all but for this or
+
+307
+01:11:26,045 --> 01:11:30,090
+80% of this had that, but this one didn't or something like that.
+
+308
+01:11:34,897 --> 01:11:36,919
+Key differences, similarities.
+
+309
+01:11:39,483 --> 01:11:51,799
+As mentioned earlier, like in the PyMDP, A is the observation matrix, but in the RxInfer HMM, A is the state transition matrix.
+
+310
+01:12:01,482 --> 01:12:29,228
+okay let's see how the refactoring is going so here is that splitting from the uh single craft artifact the local organic handmade farmer's market style into the ikea industrialized
+
+311
+01:12:30,592 --> 01:12:39,487
+high reliability information supply chain format.
+
+312
+01:12:39,507 --> 01:12:44,094
+Maybe it's hanging, but it is at least getting broken up into separate parts.
+
+313
+01:12:48,902 --> 01:12:50,144
+Just letting it know that it's hanging.
+
+314
+01:12:50,605 --> 01:12:50,845
+Okay.
+
+315
+01:13:08,020 --> 01:13:08,661
+Triple play.
+
+316
+01:13:18,233 --> 01:13:20,737
+Okay, while it's fixing the HMM.
+
+317
+01:13:23,741 --> 01:13:31,771
+Various strategies and tactics may be helpful when employing GNN expressions in different settings and using a spectrum of model precisions, e.g.
+
+318
+01:13:31,851 --> 01:13:36,357
+from informal conversation to a beautiful presentation to a fully documented
+
+319
+01:13:38,463 --> 01:13:39,866
+Reproducible research product.
+
+320
+01:13:41,048 --> 01:13:53,029
+Model precision should be balanced against the need for comprehensibility and ease of communication.
+
+321
+01:13:55,473 --> 01:14:03,706
+Broadly strategic considerations for expressing GNN include the overall approach to communication, such as the choice of modality and level of technical rigor applied for a given audience.
+
+322
+01:14:04,527 --> 01:14:11,878
+Tactical considerations for expressing GNN include specific techniques for enhancing clarity and understanding, such as using visual aids, examples, and analogies.
+
+323
+01:14:25,898 --> 01:14:26,519
+AI art.
+
+324
+01:14:28,962 --> 01:14:32,607
+Using models for inference data on inference models as data.
+
+325
+01:14:45,866 --> 01:14:52,615
+Markdown texts as data as GNN files meeting the visualization.
+
+326
+01:14:57,708 --> 01:15:22,264
+Plain text markdown files Meeting RxInfer With additional visualization and methods Kind of the magic of seeing GNN work Here we go So here on the right side
+
+327
+01:15:28,049 --> 01:15:51,542
+At least something is happening Then Here
+
+328
+01:16:05,140 --> 01:16:16,875
+It might be one moment too early to do it, but to now add to the pipeline, add to the rx infer render pipeline.
+
+329
+01:16:21,460 --> 01:16:34,236
+If we can reverse engineer the HMM to use the pure markdown, we don't even need to render it to this intermediate TOML.
+
+330
+01:16:36,663 --> 01:17:06,433
+but part of the reason why I wanted to go to the TOML was I did that standalone in another repo just to get to a controlled input to show that there was a middle to be met at now that we know that there is a middle to meet at we can basically just go
+
+331
+01:17:08,000 --> 01:17:35,695
+straight to GNN and have example specific or category specific parsers but that still needs to be rendered in the GNN folder because the other the side information like the utility functions that this HMM model needs
+
+332
+01:17:36,788 --> 01:18:03,218
+this wouldn't be in a GNN file so we need these kind of kind of like a car body and then the GNN parameterized parts are like the engine but there's a lot of functions in code and so the way that was being done in the multi-agent setting
+
+333
+01:18:04,379 --> 01:18:32,783
+was just by copying the folder minus the config so if here it made the hmm gnn in the gnn folder so from the point of view of the
+
+334
+01:18:35,817 --> 01:19:04,052
+HMM script folder it still does not have a GNN file but if this if it will succeed on this run then we will have succeeded in getting to this face so this one we skipped going to a single functional script went straight from the notebook
+
+335
+01:19:05,703 --> 01:19:27,120
+extract to the modular software so one outcome of the step is a specific config file
+
+336
+01:19:30,526 --> 01:19:42,398
+Another emerging approach is directly to target read write into GNN format directly.
+
+337
+01:19:43,720 --> 01:19:55,572
+Still needs the rendering of extra parametric information.
+
+338
+01:19:58,336 --> 01:20:19,821
+meaning program environment and flow information that's not part of the generative model all right here we go so we got the now it's working for the HMM inference
+
+339
+01:20:24,357 --> 01:20:29,784
+So I'm going to delete the original one or I'll move it to archive.
+
+340
+01:20:49,531 --> 01:20:50,452
+Or maybe it wants that one.
+
+341
+01:20:51,574 --> 01:20:52,455
+Okay.
+
+342
+01:20:52,475 --> 01:20:53,436
+Queue up the next question.
+
+343
+01:20:59,035 --> 01:21:20,706
+Learn again to confirm function comprehensively output more in standalone from standalone file visualizations of free energy values.
+
+344
+01:21:27,318 --> 01:21:31,824
+So several prompts depending on the example to disassemble it.
+
+345
+01:21:33,387 --> 01:21:37,132
+Meanwhile, let's try another approach, which is not to disassemble it.
+
+346
+01:21:37,893 --> 01:21:50,170
+So this will be more, first you have to get it running as a script, or we could develop a plugin
+
+347
+01:21:51,736 --> 01:22:18,402
+that goes directly to the notebooks but it's so much nicer to have it as these which can be concatenated into a notebook too but at least you know it's going to work so while that hmm is is happening let's do another approach which would be
+
+348
+01:22:22,043 --> 01:22:49,975
+For this example, write a GNN file like for comprehensively setting all the needed information for the bike rental demand example.
+
+349
+01:22:50,950 --> 01:23:10,849
+and write a Julia parser that confirms that the DNN you wrote will perfectly align with the initial example.
+
+350
+01:23:21,072 --> 01:23:21,352
+Okay.
+
+351
+01:23:24,096 --> 01:23:25,017
+Let's see how this goes.
+
+352
+01:23:39,435 --> 01:23:43,620
+Move any unneeded files to
+
+353
+01:23:55,582 --> 01:24:08,882
+To archive, confirm that when running the main script, all data and visualizations are saved to a timestamp folder.
+
+354
+01:25:00,618 --> 01:25:20,888
+Okay, so this would be an example of if we can skip even further steps by directly inserting in the GNN repo the state space that needs to be created for an RxInfer example to run.
+
+355
+01:25:31,735 --> 01:25:32,095
+Okay.
+
+356
+01:25:35,919 --> 01:25:37,221
+Let's see what Julia.
+
+357
+01:25:37,241 --> 01:25:56,081
+Okay.
+
+358
+01:25:56,101 --> 01:25:58,063
+So running comprehensive HMM.
+
+359
+01:26:06,464 --> 01:26:12,877
+If anyone has any last ideas or questions, otherwise I'm going to take it just a little bit further with this HMM.
+
+360
+01:26:15,623 --> 01:26:17,206
+And bike rental.
+
+361
+01:26:18,528 --> 01:26:22,296
+Then maybe one triple play who's on first.
+
+362
+01:26:23,539 --> 01:26:24,220
+And then...
+
+363
+01:26:48,314 --> 01:26:53,643
+Seems to be hanging there.
+
+364
+01:26:54,805 --> 01:27:02,158
+Assess and improve and rerun to confirm.
+
+365
+01:27:09,250 --> 01:27:12,516
+Here's the validation parser test.
+
+366
+01:27:15,601 --> 01:27:24,914
+This one also seems to be hanging because it's a small.
+
+367
+01:27:40,074 --> 01:27:40,174
+Okay.
+
+368
+01:27:58,210 --> 01:28:05,877
+All right, let's just start generating some of the baseball stuff.
+
+369
+01:28:17,647 --> 01:28:26,395
+Next steps, seeing who watches and comments and emails and makes issues and contributions on GitHub.
+
+370
+01:28:28,197 --> 01:28:51,078
+I'm going to keep working on the package and the flow and the methods and putting hopefully some useful and interesting work out, but very much open to people's support or feedback on that.
+
+371
+01:28:55,262 --> 01:28:56,263
+That pretty much
+
+372
+01:28:57,796 --> 01:29:27,398
+is what i wanted to cover today okay one baseball related analysis and then that will be
+
+373
+01:29:37,604 --> 01:29:43,031
+Golden who's on first.
+
+374
+01:29:58,409 --> 01:29:59,150
+Oh, that was interesting.
+
+375
+01:30:00,151 --> 01:30:02,094
+Only one of us can be the first to do something.
+
+376
+01:30:02,454 --> 01:30:02,755
+Wow.
+
+377
+01:30:05,578 --> 01:30:06,539
+Only in the tone.
+
+378
+01:30:06,759 --> 01:30:07,240
+Wow, there's
+
+379
+01:30:09,920 --> 01:30:14,906
+Only in the tone of the golden spike, I'm going to be the first to say that I'm not sure what the golden spike is.
+
+380
+01:30:21,694 --> 01:30:39,876
+Explore greatly within that topic in allegorical sequence involving go-not-tell approaches to category theory and
+
+381
+01:30:41,122 --> 01:31:09,998
+recursive self development styled exoterically as pun laden quote who's on first dial 1920s illusion environment
+
+382
+01:31:15,631 --> 01:31:42,718
+make the dialogue totally convey in plain quote fastball down the middle style generalized notation notation GNN
+
+383
+01:31:53,009 --> 01:31:57,815
+Interesting little error there, huh?
+
+384
+01:31:57,835 --> 01:31:58,476
+Can't be deleted.
+
+385
+01:32:03,523 --> 01:32:04,123
+Very strange.
+
+386
+01:32:07,388 --> 01:32:07,668
+Gone.
+
+387
+01:32:14,537 --> 01:32:22,948
+All the technical elements, all the main SRC elements, all the documented...
+
+388
+01:32:24,498 --> 01:32:50,101
+Write this all out vastly and creatively.
+
+389
+01:32:50,121 --> 01:32:54,505
+All right, if anyone has any last question, do write it.
+
+390
+01:32:56,155 --> 01:33:14,181
+otherwise look forward to some collaboration on the tooling and some fun interesting discussions going a little more broadly how does this relate to to how we learn and apply active inference all these topics
+
+391
+01:33:36,149 --> 01:33:36,409
+you
+
+392
+01:34:01,597 --> 01:34:23,622
+yeah it will be uh interesting to see what prompt sequences what measures of information are useful for these kind of nested documentation and code folders how do you know when to stop
+
+393
+01:34:38,553 --> 01:34:40,620
+All right, here it is.
+
+394
+01:34:40,660 --> 01:34:50,672
+Let's look at it in GitHub.
+
+395
+01:35:35,675 --> 01:35:48,621
+okay i'll just read it i'll read it and then if anyone writes any comment i might read that and then that will be the end
+
+396
+01:35:51,672 --> 01:35:52,854
+Alright.
+
+397
+01:35:52,874 --> 01:35:53,936
+The Golden Spike Dialogue.
+
+398
+01:35:54,136 --> 01:35:56,780
+Who's on first base in Generalized Notation Notation?
+
+399
+01:35:57,501 --> 01:35:59,625
+1920s Railroad Depot.
+
+400
+01:35:59,905 --> 01:36:04,332
+Two gentlemen in bowler hats stand before a massive scheduling board covered in cryptic notations.
+
+401
+01:36:05,013 --> 01:36:10,342
+One holds a golden spike, the other clutches a stack of papers marked GNN Pipeline Specification.
+
+402
+01:36:12,345 --> 01:36:18,996
+Well now, Costello, we've got ourselves quite the categorical conundrum here at this Generalized Notation Notation Depot.
+
+403
+01:36:18,976 --> 01:36:26,409
+Say, Abbott, what's all this gobbledygook about spikes and rails and S underscore F zero three one type int?
+
+404
+01:36:27,050 --> 01:36:29,374
+Looks like someone's been playing alphabet soup with mathematics.
+
+405
+01:36:30,576 --> 01:36:34,462
+Ah, my dear fellow, you've stumbled upon the very essence of our enterprise.
+
+406
+01:36:35,063 --> 01:36:39,230
+That there is a state space variable, the foundation of our active inference railroad system.
+
+407
+01:36:40,072 --> 01:36:40,793
+Active what now?
+
+408
+01:36:41,534 --> 01:36:44,359
+I thought we were building a railroad, not running a gymnasium.
+
+409
+01:36:45,183 --> 01:36:45,744
+No, no, no.
+
+410
+01:36:46,505 --> 01:36:47,787
+Active inference, my good man.
+
+411
+01:36:48,308 --> 01:36:50,212
+It's about how minds make models of the world.
+
+412
+01:36:50,692 --> 01:36:51,414
+Think of it like this.
+
+413
+01:36:51,935 --> 01:36:55,561
+Every train car needs to know where it's going, where it's been, and what's around the bend.
+
+414
+01:36:56,503 --> 01:36:58,406
+So the train cars are... thinking?
+
+415
+01:36:59,387 --> 01:37:00,289
+Precisely.
+
+416
+01:37:00,269 --> 01:37:03,074
+Now let me show you our 14-stop construction process.
+
+417
+01:37:03,475 --> 01:37:05,418
+First, we start with Step 1, the GNN parser.
+
+418
+01:37:05,919 --> 01:37:06,701
+The what parser?
+
+419
+01:37:07,362 --> 01:37:08,284
+The GNN parser.
+
+420
+01:37:08,544 --> 01:37:10,347
+It reads our standardized notation files.
+
+421
+01:37:11,289 --> 01:37:11,810
+Oh, I see.
+
+422
+01:37:12,251 --> 01:37:15,196
+So GNN stands for Good Night Nancy?
+
+423
+01:37:16,458 --> 01:37:17,901
+Generalized Notation Notation.
+
+424
+01:37:18,683 --> 01:37:19,364
+That's what I said.
+
+425
+01:37:19,765 --> 01:37:21,147
+Good Night Nancy Notations.
+
+426
+01:37:22,139 --> 01:37:23,744
+No, no, GNN.
+
+427
+01:37:24,266 --> 01:37:28,360
+It's our text-based language for specifying these thinking train systems.
+
+428
+01:37:29,263 --> 01:37:30,327
+Well, why didn't you say so?
+
+429
+01:37:31,090 --> 01:37:33,297
+So this Nancy notation tells the trains how to think.
+
+430
+01:37:34,728 --> 01:37:35,329
+Let's move on.
+
+431
+01:37:35,609 --> 01:37:36,471
+Step two is setup.
+
+432
+01:37:36,911 --> 01:37:38,113
+Absolutely critical, mind you.
+
+433
+01:37:38,674 --> 01:37:41,518
+If setup fails, the whole pipeline stops dead in its tracks.
+
+434
+01:37:42,679 --> 01:37:44,322
+Like a locomotive with a busted boiler?
+
+435
+01:37:45,263 --> 01:37:45,744
+Exactly.
+
+436
+01:37:46,185 --> 01:37:48,268
+Then step three runs our tests.
+
+437
+01:37:48,288 --> 01:37:48,728
+Tests?
+
+438
+01:37:49,750 --> 01:37:50,511
+What kinds of tests?
+
+439
+01:37:50,891 --> 01:37:52,414
+Do the train cars take written exams?
+
+440
+01:37:53,395 --> 01:37:55,538
+In a manner of speaking, yes.
+
+441
+01:37:55,518 --> 01:38:01,046
+We validate their state spaces, check their connections, ensure their probability matrices are properly stochastic.
+
+442
+01:38:02,067 --> 01:38:03,910
+Their what-astic matrices?
+
+443
+01:38:04,651 --> 01:38:06,013
+Stochastic.
+
+444
+01:38:06,033 --> 01:38:11,922
+It means the probabilities sum to one, like making sure all the passengers on a train car add up to the total capacity.
+
+445
+01:38:13,003 --> 01:38:18,992
+Ah, so if I got three passengers in car A and two in car B, I better have five total passengers.
+
+446
+01:38:20,394 --> 01:38:20,995
+Now you're getting it.
+
+447
+01:38:21,476 --> 01:38:22,697
+Step four is our type checker.
+
+448
+01:38:22,938 --> 01:38:25,221
+It estimates computational resources.
+
+449
+01:38:25,741 --> 01:38:26,282
+Type checker.
+
+450
+01:38:26,904 --> 01:38:30,813
+Is that like making sure the passenger manifest has everyone's name spelled right?
+
+451
+01:38:31,996 --> 01:38:35,805
+More like making sure we have enough coal for the engine and enough track for the journey.
+
+452
+01:38:36,326 --> 01:38:40,616
+It looks at your model and says this will need X amount of memory, Y amount of processing power.
+
+453
+01:38:41,558 --> 01:38:41,879
+Smart.
+
+454
+01:38:42,300 --> 01:38:43,142
+What's step five?
+
+455
+01:38:44,827 --> 01:38:45,349
+Export.
+
+456
+01:38:45,910 --> 01:38:48,258
+We translate our GNN models into different formats.
+
+457
+01:38:48,699 --> 01:38:50,244
+JSON, XML, GraphML.
+
+458
+01:38:51,468 --> 01:38:52,893
+Sounds like a whole lot of MLs to me.
+
+459
+01:38:53,274 --> 01:38:54,398
+What's GraphML stand for?
+
+460
+01:38:54,719 --> 01:38:56,946
+Grumpy, manatees language?
+
+461
+01:38:58,428 --> 01:39:01,172
+Graph markup language.
+
+462
+01:39:01,192 --> 01:39:02,254
+Oh, that makes more sense.
+
+463
+01:39:02,454 --> 01:39:04,457
+And step six, visualization.
+
+464
+01:39:04,958 --> 01:39:09,264
+We create beautiful diagrams showing how all the state factors connect to observation modalities.
+
+465
+01:39:10,145 --> 01:39:11,447
+Hold up there, fancy pants.
+
+466
+01:39:11,968 --> 01:39:12,589
+State factors?
+
+467
+01:39:13,390 --> 01:39:14,792
+Observation what-alities?
+
+468
+01:39:15,593 --> 01:39:16,294
+Think of it this way.
+
+469
+01:39:16,975 --> 01:39:20,641
+State factors are like different aspects of what's happening inside the train car.
+
+470
+01:39:21,582 --> 01:39:26,950
+Maybe factor zero is how hungry the passengers are, and factor one is how tired they are.
+
+471
+01:39:28,347 --> 01:39:28,708
+Got it.
+
+472
+01:39:28,808 --> 01:39:30,011
+And observation, what's it?
+
+473
+01:39:30,733 --> 01:39:31,294
+Modalities.
+
+474
+01:39:32,176 --> 01:39:34,181
+Those are the different ways you can sense what's going on.
+
+475
+01:39:34,382 --> 01:39:38,031
+Maybe modality 0 is what you hear, modality 1 is what you see.
+
+476
+01:39:39,655 --> 01:39:43,143
+So the hungry, tired passengers in the train car can be heard and seen?
+
+477
+01:39:44,386 --> 01:39:44,787
+Bingo.
+
+478
+01:39:46,201 --> 01:39:47,824
+Now, step seven gets really interesting.
+
+479
+01:39:48,145 --> 01:39:50,409
+That's our model context protocol integration.
+
+480
+01:39:51,692 --> 01:39:53,155
+Model context what-a-call?
+
+481
+01:39:54,036 --> 01:39:54,477
+Protocol.
+
+482
+01:39:55,118 --> 01:40:00,008
+It's like having a telegraph system that lets different railroad companies talk to each other using the same language.
+
+483
+01:40:00,865 --> 01:40:04,069
+Ah, so like Western Union but for thinking trains.
+
+484
+01:40:05,171 --> 01:40:05,611
+Exactly.
+
+485
+01:40:06,172 --> 01:40:08,335
+Step 8 handles our ontology processing.
+
+486
+01:40:09,617 --> 01:40:10,858
+Our what-ology?
+
+487
+01:40:11,760 --> 01:40:12,360
+Ontology.
+
+488
+01:40:12,721 --> 01:40:17,127
+It's like having a master dictionary that defines what every term means in the active inference world.
+
+489
+01:40:18,048 --> 01:40:21,252
+So if I say belief and you say belief, we both mean the same thing?
+
+490
+01:40:22,274 --> 01:40:22,774
+Precisely.
+
+491
+01:40:23,836 --> 01:40:25,238
+Now here's where it gets really exciting.
+
+492
+01:40:25,538 --> 01:40:29,944
+Step 9 renders our models into executable code for different simulation environments.
+
+493
+01:40:30,312 --> 01:40:31,253
+Executable code?
+
+494
+01:40:31,854 --> 01:40:33,216
+Are we hanging somebody?
+
+495
+01:40:33,256 --> 01:40:34,837
+No.
+
+496
+01:40:35,398 --> 01:40:36,660
+Executable means runnable.
+
+497
+01:40:36,980 --> 01:40:42,146
+We translate our GNN specifications into Python code for PyMDP or Julia code for RxInfer.
+
+498
+01:40:43,608 --> 01:40:44,529
+Hold the phone there, Abbott.
+
+499
+01:40:45,150 --> 01:40:45,811
+PyMDP?
+
+500
+01:40:46,592 --> 01:40:47,192
+RxInfer?
+
+501
+01:40:47,853 --> 01:40:49,375
+These sound like patent medicines.
+
+502
+01:40:50,456 --> 01:40:55,322
+PyMDP is Python for Markov Decision Processes, Discrete Active Inference Simulations.
+
+503
+01:40:56,063 --> 01:40:58,446
+RxInfer is reactive message passing in Julia.
+
+504
+01:40:59,843 --> 01:41:03,307
+So PyMDP is like Python-flavored train scheduling?
+
+505
+01:41:04,048 --> 01:41:05,029
+In a sense, yes.
+
+506
+01:41:05,850 --> 01:41:11,236
+And RxInfer is like having a telegraph network where messages bounce around updating beliefs in real time?
+
+507
+01:41:12,517 --> 01:41:13,378
+Telegraph network.
+
+508
+01:41:13,538 --> 01:41:13,979
+I like that.
+
+509
+01:41:14,819 --> 01:41:15,500
+What's step 10?
+
+510
+01:41:16,441 --> 01:41:17,002
+Execution.
+
+511
+01:41:17,643 --> 01:41:19,445
+We actually run the code we just generated.
+
+512
+01:41:20,145 --> 01:41:21,487
+Like firing up the locomotive?
+
+513
+01:41:22,147 --> 01:41:22,628
+Exactly.
+
+514
+01:41:23,114 --> 01:41:26,599
+Step 11 is where we bring in the big guns, LLM integration.
+
+515
+01:41:27,720 --> 01:41:30,364
+LLM, let me guess, large language models?
+
+516
+01:41:32,287 --> 01:41:32,888
+He knows that one.
+
+517
+01:41:34,049 --> 01:41:34,450
+Very good.
+
+518
+01:41:34,951 --> 01:41:39,337
+We use AI to analyze and enhance our GNN models, provide natural language explanation.
+
+519
+01:41:40,058 --> 01:41:43,823
+So the thinking trains get help from other thinking trains?
+
+520
+01:41:44,950 --> 01:41:46,572
+It's turtles all the way down, my friend.
+
+521
+01:41:47,773 --> 01:41:50,135
+Step 12 is where things get mathematically sublime.
+
+522
+01:41:50,175 --> 01:41:52,258
+Disco pie translation.
+
+523
+01:41:53,038 --> 01:41:53,799
+Disco pie?
+
+524
+01:41:54,400 --> 01:41:56,202
+Are we having a dance party with dessert?
+
+525
+01:41:57,023 --> 01:41:57,603
+Disco pie.
+
+526
+01:41:58,164 --> 01:42:00,126
+Distributional compositional Python.
+
+527
+01:42:00,606 --> 01:42:02,328
+It's category theory for string diagrams.
+
+528
+01:42:03,109 --> 01:42:03,850
+Category theory?
+
+529
+01:42:04,691 --> 01:42:06,933
+What's that got to do with railroad categories?
+
+530
+01:42:07,513 --> 01:42:07,774
+Fright?
+
+531
+01:42:08,194 --> 01:42:08,695
+Passenger?
+
+532
+01:42:09,556 --> 01:42:09,996
+Mail car?
+
+533
+01:42:11,275 --> 01:42:13,458
+Now we're getting to the philosophical heart of it all.
+
+534
+01:42:14,079 --> 01:42:17,344
+Category theory is mathematics that studies how things compose together.
+
+535
+01:42:18,426 --> 01:42:20,869
+Like how you can connect train cars to make longer trains.
+
+536
+01:42:22,271 --> 01:42:27,058
+So if I got a dining car and I connect it to a sleeping car, I get a dining sleeping car?
+
+537
+01:42:29,702 --> 01:42:33,948
+More like you get a composed system where the properties of both cars work together.
+
+538
+01:42:34,529 --> 01:42:35,871
+The beauty is in the connections.
+
+539
+01:42:36,392 --> 01:42:37,934
+The morphisms between objects.
+
+540
+01:42:38,695 --> 01:42:39,797
+Morph what-isms?
+
+541
+01:42:40,823 --> 01:43:07,067
+the arrows the relationships how one thing transforms into another in our railroad it's how beliefs flow between different parts of the system like how the conductor's belief about the schedule flows to the engineer's belief about when to blow the whistle brilliant you've grasped that you've grasped the essence of categorical composition step 13 uses jacks for high performance evaluation
+
+542
+01:43:08,296 --> 01:43:08,717
+Jax?
+
+543
+01:43:08,877 --> 01:43:10,119
+Is that short for Jackson?
+
+544
+01:43:11,121 --> 01:43:12,383
+Just another executable.
+
+545
+01:43:12,944 --> 01:43:17,010
+It's Google's library for automatic differentiation and just-in-time compilation.
+
+546
+01:43:17,892 --> 01:43:19,835
+Automatic differ-at-what-chin?
+
+547
+01:43:21,017 --> 01:43:26,586
+It's like having a mathematical microscope that can instantly tell you how changing one little thing affects everything else in your model.
+
+548
+01:43:27,768 --> 01:43:33,477
+Like if I change the call input, it automatically figures out how that changes the train speed, passenger comfort, arrival time.
+
+549
+01:43:34,857 --> 01:43:35,377
+Exactly.
+
+550
+01:43:36,258 --> 01:43:42,384
+And just-in-time compilation means it optimizes the code right when you need it, like having a master mechanic tune your engine on the fly.
+
+551
+01:43:43,665 --> 01:43:43,966
+Slick.
+
+552
+01:43:44,646 --> 01:43:45,327
+Step 14.
+
+553
+01:43:46,308 --> 01:43:46,989
+Site generation.
+
+554
+01:43:47,569 --> 01:43:50,812
+We generate beautiful documentation websites showing off all our work.
+
+555
+01:43:51,673 --> 01:43:53,635
+Like a fancy brochure for the railroad company?
+
+556
+01:43:54,556 --> 01:43:55,016
+Precisely.
+
+557
+01:43:55,577 --> 01:43:57,879
+Now let me show you the recursive beauty of this whole system.
+
+558
+01:43:58,760 --> 01:43:59,240
+Recursive?
+
+559
+01:43:59,961 --> 01:44:01,723
+That sounds like something you need a doctor for.
+
+560
+01:44:02,784 --> 01:44:03,244
+No, no.
+
+561
+01:44:03,578 --> 01:44:05,260
+Recursive means self-referential.
+
+562
+01:44:05,821 --> 01:44:07,964
+The system can model itself modeling things.
+
+563
+01:44:09,226 --> 01:44:12,631
+So the thinking train can think about itself thinking about thinking?
+
+564
+01:44:15,235 --> 01:44:17,498
+Now you're getting into the philosophical deep water.
+
+565
+01:44:18,419 --> 01:44:23,988
+Each GNN model is like a mirror that can reflect other mirrors, creating infinite depths of self-awareness.
+
+566
+01:44:25,690 --> 01:44:29,956
+Like when you stand between two mirrors in a barbershop and see yourself going on forever?
+
+567
+01:44:31,378 --> 01:44:32,640
+Beautiful analogy.
+
+568
+01:44:33,110 --> 01:44:35,092
+And that's where our state space blocks come in.
+
+569
+01:44:36,153 --> 01:44:38,896
+State space blocks, are we building with Legos now?
+
+570
+01:44:40,697 --> 01:44:42,659
+Think of them as the blueprint sections.
+
+571
+01:44:43,060 --> 01:44:53,090
+Each block defines variables with their dimensions and types like S underscore F zero three one type int means state factor zero is a three by one integer array.
+
+572
+01:44:54,251 --> 01:44:58,695
+So it's like saying car number one holds exactly three passengers and we count them with whole numbers.
+
+573
+01:45:00,582 --> 01:45:01,124
+Precisely.
+
+574
+01:45:01,786 --> 01:45:03,691
+And our connections show how these blocks relate.
+
+575
+01:45:03,872 --> 01:45:08,446
+We use greater sign for directed relationships, hyphen for undirected ones.
+
+576
+01:45:09,329 --> 01:45:13,140
+Like engineer to conductor means the engineer gives orders to the conductor.
+
+577
+01:45:14,487 --> 01:45:14,987
+Exactly.
+
+578
+01:45:15,688 --> 01:45:20,052
+And passenger hyphen passenger might mean passengers can talk to each other both ways.
+
+579
+01:45:21,173 --> 01:45:21,994
+Hashtag cerebrum.
+
+580
+01:45:22,814 --> 01:45:24,396
+This is starting to make sense.
+
+581
+01:45:24,416 --> 01:45:26,097
+What about those matrix things he mentions?
+
+582
+01:45:27,178 --> 01:45:31,302
+Ah, the A, B, C, and D matrices, the heart of active inference.
+
+583
+01:45:31,322 --> 01:45:31,982
+A, B, C, D?
+
+584
+01:45:32,923 --> 01:45:34,304
+Sounds like we're back in kindergarten.
+
+585
+01:45:35,405 --> 01:45:37,047
+Matrix A is your observation model.
+
+586
+01:45:37,187 --> 01:45:40,290
+It tells you the probability of seeing something given what's actually happening.
+
+587
+01:45:41,110 --> 01:45:44,173
+Like the probability you'll hear the whistle given that the train is approaching.
+
+588
+01:45:44,660 --> 01:45:45,080
+Perfect.
+
+589
+01:45:46,622 --> 01:45:48,064
+Matrix B handles transitions.
+
+590
+01:45:48,504 --> 01:45:50,987
+How things change over time, possibly based on actions.
+
+591
+01:45:51,968 --> 01:45:54,230
+Like how pulling the brake lever changes the train speed?
+
+592
+01:45:55,872 --> 01:45:56,072
+Right.
+
+593
+01:45:56,753 --> 01:45:58,355
+Matrix C represents preferences.
+
+594
+01:45:58,615 --> 01:46:00,077
+What outcomes you'd prefer to see.
+
+595
+01:46:00,677 --> 01:46:02,780
+Like preferring to arrive on time rather than late?
+
+596
+01:46:03,721 --> 01:46:05,342
+And Matrix D gives you your priors.
+
+597
+01:46:05,963 --> 01:46:08,085
+What you believed before you had any evidence.
+
+598
+01:46:08,846 --> 01:46:12,270
+Like believing the train is probably on time when you first arrive at the station.
+
+599
+01:46:13,482 --> 01:46:14,686
+You've mastered the fundamentals.
+
+600
+01:46:15,289 --> 01:46:17,236
+Now here's where the golden spike comes in.
+
+601
+01:46:18,139 --> 01:46:21,050
+Finally, I was wondering when we'd get to the spike.
+
+602
+01:46:21,311 --> 01:46:22,395
+Is it made of real gold?
+
+603
+01:46:24,822 --> 01:46:30,668
+The golden spike represents the moment when all these separate components connect into one unified system.
+
+604
+01:46:30,688 --> 01:46:38,956
+When PyMDP talks to RxInfer, when DiscoPy diagrams execute as Jack's code, when LLM analysis enhances human understanding.
+
+605
+01:46:39,977 --> 01:46:42,860
+Like when the eastern and western railroads finally met in Utah?
+
+606
+01:46:43,740 --> 01:46:44,161
+Exactly.
+
+607
+01:46:44,781 --> 01:46:48,906
+That ceremonial spike joining two great endeavors into one transcontinental system.
+
+608
+01:46:49,646 --> 01:46:53,530
+RGNN is the golden spike of computational active inference.
+
+609
+01:46:53,510 --> 01:47:19,011
+so this whole contraption the 14 steps the thinking train cars the matrix algebras the category theories it all comes together to make one big what a standardized way to describe validate visualize and simulate how minds work whether it's a human brain an ai system or a whole ecosystem of interacting agents agents are we talking about secret agents now
+
+610
+01:47:20,088 --> 01:47:24,236
+Computational agents, anything that acts based on beliefs and desires.
+
+611
+01:47:24,777 --> 01:47:26,039
+Your train conductor is an agent.
+
+612
+01:47:26,380 --> 01:47:30,487
+He believes certain things about schedule and desires to keep everything running smoothly.
+
+613
+01:47:31,649 --> 01:47:34,755
+And all these agents can be described using this GNN notation.
+
+614
+01:47:36,035 --> 01:47:38,919
+from the simplest thermostat to the most complex social system.
+
+615
+01:47:39,579 --> 01:47:44,185
+Each one gets its state-state blocks, its connection diagrams, its ABCD matrices.
+
+616
+01:47:45,407 --> 01:48:02,127
+And then they can all talk to each other through this model context protocol telegraph system and be simulated in PyMDP or RxInfer, visualized with pretty diagrams, analyzed by LLMs, translated to category theory, optimized with JAX, and documented on beautiful websites.
+
+617
+01:48:03,203 --> 01:48:04,606
+We'll all be hornswoggled.
+
+618
+01:48:05,207 --> 01:48:11,539
+So this golden spike connects not just two railroads, but 14 different ways of understanding thinking systems.
+
+619
+01:48:12,561 --> 01:48:14,765
+14 steps, infinite possibilities.
+
+620
+01:48:15,707 --> 01:48:24,604
+From parsing text files to generating websites, from validating syntax to executing simulations, it's all connected by the golden thread of standardized notation.
+
+621
+01:48:26,643 --> 01:48:28,425
+And anyone can learn this GNN language?
+
+622
+01:48:29,186 --> 01:48:30,508
+It's designed to be human-readable.
+
+623
+01:48:31,249 --> 01:48:33,032
+Markdown-based files with clear sections.
+
+624
+01:48:33,472 --> 01:48:36,757
+Model name, state space block, connections, initial parameterization.
+
+625
+01:48:37,778 --> 01:48:39,841
+Sounds like a recipe for building thinking trains.
+
+626
+01:48:40,883 --> 01:48:43,706
+More like a recipe for understanding how thinking itself works.
+
+627
+01:48:44,387 --> 01:48:48,793
+The recursive beauty is that we use thinking systems to design better thinking systems.
+
+628
+01:48:49,735 --> 01:48:52,178
+Like using a train to design better trains.
+
+629
+01:48:53,474 --> 01:48:54,035
+Exactly.
+
+630
+01:48:54,456 --> 01:48:59,927
+And the category theory ensures that when we compose these models together, the whole system remains mathematically consistent.
+
+631
+01:49:00,749 --> 01:49:05,478
+Like making sure when you connect train cars, they actually stay connected and don't go flying off in different directions.
+
+632
+01:49:06,240 --> 01:49:06,580
+Beautiful.
+
+633
+01:49:06,921 --> 01:49:09,085
+You've grasped the essence of compositional modeling.
+
+634
+01:49:09,346 --> 01:49:11,009
+Now shall we drive that golden spike?
+
+635
+01:49:12,211 --> 01:49:12,512
+You bet.
+
+636
+01:49:14,011 --> 01:49:15,232
+But just one more question.
+
+637
+01:49:15,573 --> 01:49:18,837
+When we drive this bike, does it start the whole 14-step pipeline?
+
+638
+01:49:19,918 --> 01:49:20,539
+Indeed it does.
+
+639
+01:49:21,279 --> 01:49:25,945
+From the first GNN parse to the final website generation, it all begins with that ceremonial connection.
+
+640
+01:49:26,906 --> 01:49:27,707
+Then let's do this thing.
+
+641
+01:49:28,147 --> 01:49:30,811
+For the Transcontinental Railroad of Computational Consciousness.
+
+642
+01:49:32,052 --> 01:49:34,975
+For active inference and the standardization of thinking systems everywhere.
+
+643
+01:49:35,876 --> 01:49:36,978
+Three cheers for GNN.
+
+644
+01:49:37,819 --> 01:49:38,780
+Hip hip hooray!
+
+645
+01:49:40,021 --> 01:49:40,862
+Wait, Abbott.
+
+646
+01:49:40,882 --> 01:49:42,364
+What happens after we drive this bike?
+
+647
+01:49:43,846 --> 01:49:46,871
+Why then we start working on GNN version 2.0, of course.
+
+648
+01:49:48,454 --> 01:49:50,638
+Oh no, here we go again.
+
+649
+01:49:50,698 --> 01:50:07,828
+Write another work in.
+
+650
+01:50:15,250 --> 01:50:41,815
+exactly like William Blake illuminated poem status woven densely with actual integrated William Blake quotes and styles about GNN implicitly and explicitly.
+
+651
+01:50:47,633 --> 01:51:16,408
+pretty funny baseball ones delete the output folder src python3 main.py
+
+652
+01:51:18,329 --> 01:51:19,771
+regenerates the output folder.
+
+653
+01:51:42,703 --> 01:51:43,965
+And then in another one
+
+654
+01:51:45,515 --> 01:51:55,467
+Run pipeline validation and check comprehensively for full functionality of.
+
+655
+01:52:04,537 --> 01:52:14,509
+And updated streamlines documentation.
+
+656
+01:52:18,893 --> 01:52:47,179
+still on step 6 with the visualization there's the outputs exports so like that self-driving car that we made that's probably why the visualization is taking a long time because now we have the self-driving car GNN
+
+657
+01:52:53,943 --> 01:53:05,194
+So I'll pull... That's the trade-off with having a bunch of the GNN files actively there.
+
+658
+01:53:06,495 --> 01:53:07,416
+But it'll be cool to see.
+
+659
+01:53:09,058 --> 01:53:10,820
+Archive has a bunch of GNN.
+
+660
+01:53:12,962 --> 01:53:13,943
+So we can just run that one.
+
+661
+01:53:18,147 --> 01:53:19,528
+While it's writing the Blakey and
+
+662
+01:53:26,090 --> 01:53:39,911
+This is very effective, having the agent run the pipeline and then test it itself.
+
+663
+01:53:49,165 --> 01:53:50,207
+Now let's move to 7.
+
+664
+01:53:58,979 --> 01:54:19,571
+So this is the attempt to write the TOML falling back on default values, trying to write the PyMDP script.
+
+665
+01:54:19,592 --> 01:54:23,097
+So not a solved problem yet, but
+
+666
+01:54:32,712 --> 01:54:34,474
+Okay, let's see if this will work.
+
+667
+01:54:34,554 --> 01:54:36,196
+Otherwise, I'll just end it here.
+
+668
+01:54:36,376 --> 01:54:55,597
+But I'll wait one minute, have a drink of water, see if anyone writes a comment.
+
+669
+01:54:55,617 --> 01:54:59,682
+Funny, each of the three times it's tried to write it, it's called it a different file name.
+
+670
+01:55:08,015 --> 01:55:13,262
+Here's the visualization of the self-driving car.
+
+671
+01:55:15,945 --> 01:55:24,536
+Yeah, it's massive, but so cool.
+
+672
+01:55:27,220 --> 01:55:37,633
+All the variables and ontology terms for an LLM generated output
+
+673
+01:55:40,246 --> 01:55:41,480
+Fourfold vision of GNN.
+
+674
+01:55:41,520 --> 01:55:42,612
+I hope that one works.
+
+675
+01:56:27,158 --> 01:56:31,783
+Okay, looks like it is not to be, like it is to be unwritten.
+
+676
+01:56:32,504 --> 01:56:35,687
+So, thank you for watching.
+
+677
+01:56:35,747 --> 01:56:40,232
+Hope people can find out how to engage or support as they see fit.
+
+678
+01:56:41,213 --> 01:56:48,101
+Contact Blanket at ActiveInference.Institute if you have any questions or anything, whenever that may be.
+
+679
+01:56:49,022 --> 01:56:50,263
+So, till next time.

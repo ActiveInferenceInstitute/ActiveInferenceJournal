@@ -1,0 +1,3371 @@
+1
+00:00:07,270 --> 00:00:27,844
+hello welcome everyone it is june 25th 2025 we are in active inference guest stream 112.1 brain-like variational inference with hadifafai and i looked and found that actually model stream 11.1 when we discussed
+
+2
+00:00:27,824 --> 00:00:34,431
+Poisson variational autoencoder was on June 26th, 2024.
+
+3
+00:00:35,132 --> 00:00:43,340
+So just kind of funny that it's like exactly one year or all but a day away from a year.
+
+4
+00:00:44,061 --> 00:00:49,947
+So it's awesome to check back in with you and hear these research updates.
+
+5
+00:00:50,387 --> 00:00:54,051
+So thanks again for joining and looking forward to the presentation.
+
+6
+00:00:55,347 --> 00:00:55,768
+All right.
+
+7
+00:00:55,869 --> 00:00:56,210
+Awesome.
+
+8
+00:00:56,230 --> 00:00:57,734
+Thanks, Daniel, for the invitation.
+
+9
+00:00:57,855 --> 00:01:03,953
+I had a great time last time when I presented, and I hope we can have fun this time again.
+
+10
+00:01:04,736 --> 00:01:06,100
+All right.
+
+11
+00:01:07,075 --> 00:01:10,841
+So the work that Daniel mentioned, the Poisson, it's, I think, this one.
+
+12
+00:01:10,861 --> 00:01:11,723
+So you can check it out.
+
+13
+00:01:11,783 --> 00:01:16,691
+It's from last year, and it is published in NeurIPS last year.
+
+14
+00:01:16,871 --> 00:01:20,817
+And this is the new preprint, Brain-like Variational Inference, which we're going to talk about today.
+
+15
+00:01:21,418 --> 00:01:30,433
+And that's a work in collaboration with Dekel, who's an PhD student in Berkeley, and Jake, who's my postdoc mentor.
+
+16
+00:01:31,443 --> 00:01:36,148
+All right, but in the title, there's several words, brain-like variational inference.
+
+17
+00:01:36,688 --> 00:01:42,134
+And I hope that I can communicate what each of these words mean to you by the end of this talk.
+
+18
+00:01:42,854 --> 00:01:44,496
+And let's first start by inference.
+
+19
+00:01:44,636 --> 00:01:45,397
+What is inference?
+
+20
+00:01:46,538 --> 00:01:47,599
+It's understanding the world.
+
+21
+00:01:47,739 --> 00:01:54,766
+So our brains receive sensory information from the world out there, and we have to make sense of the state of the world.
+
+22
+00:01:54,786 --> 00:01:59,391
+We have to understand how the world is right now so that we can act in it and survive.
+
+23
+00:02:00,333 --> 00:02:03,858
+And in fact, this is the topic of a new blog post that I have written.
+
+24
+00:02:03,978 --> 00:02:05,420
+I'm going to plug it here.
+
+25
+00:02:06,522 --> 00:02:08,845
+So this blog post is coming soon.
+
+26
+00:02:08,865 --> 00:02:13,212
+It's probably in a week on my website, mysterioustune.com.
+
+27
+00:02:14,133 --> 00:02:20,262
+And inference is I claim that it's your brain trying to guess the hidden cause of its observations.
+
+28
+00:02:21,524 --> 00:02:28,534
+And to just drive this point home, I give you three very concrete examples, each more difficult than the other.
+
+29
+00:02:28,868 --> 00:02:36,082
+For example, if you go outside and see there is extensive wetness of the ground, you might guess that there was rain last night.
+
+30
+00:02:36,162 --> 00:02:40,110
+So the cause of what you observe, which is wet ground, was rain.
+
+31
+00:02:40,250 --> 00:02:40,931
+So that's inference.
+
+32
+00:02:40,951 --> 00:02:46,422
+You're actually doing inference when you reach that conclusion, which is a very simple kind of inference.
+
+33
+00:02:47,060 --> 00:02:52,795
+Also, I discuss this problem of degeneracy in visual perception.
+
+34
+00:02:53,757 --> 00:03:03,482
+When you see a circular shape, it could be a 2D circle held perfectly perpendicular to your direction of gaze, or it could be actually a 3D sphere.
+
+35
+00:03:03,462 --> 00:03:21,724
+and um you know intuitively you might think that it's most likely a sphere but where does that come from that's your prior knowledge so having lived in this world we have seen more spheres than circles therefore you might actually intuitively think that what you're seeing is actually a sphere and um
+
+36
+00:03:21,704 --> 00:03:28,693
+Last one is the most difficult, nearly impossible type of inference is the social inference.
+
+37
+00:03:28,713 --> 00:03:38,745
+So when somebody says something to you, you want to understand what they actually meant, and that also can be understood as an instance of inference.
+
+38
+00:03:39,787 --> 00:03:50,260
+In linguistics, this is technically called pragmatics, but I claim and develop an argument that all of these examples are basically performing inference.
+
+39
+00:03:50,982 --> 00:03:55,012
+And so I'm going to post this blog post in like a week or so.
+
+40
+00:03:55,654 --> 00:04:02,271
+And you can either subscribe to the website or follow me on social media like Twitter and LinkedIn.
+
+41
+00:04:02,331 --> 00:04:03,574
+I'm going to post it there too.
+
+42
+00:04:04,988 --> 00:04:29,595
+um here's another example from the blog post um most of us here probably are familiar with this allegory of the cave so plato argued that being alive is just like you know being prisoners but in the back of a cave you know you're separated from the real world out there this is the real world you don't really have access to it but you see shadows from the real world projected on the wall that you have access to
+
+43
+00:04:30,655 --> 00:04:39,685
+And when you see those shadows or observations, you perform inference to understand the likely causes that caused those observations.
+
+44
+00:04:40,446 --> 00:04:48,714
+Well, in the case of vision, those shadows are probably just like, you can think of them as photons originating from real objects out there.
+
+45
+00:04:49,275 --> 00:04:55,802
+And it's your brain's job to interpret those photons and build a 3D model of the world from that.
+
+46
+00:04:56,035 --> 00:05:17,875
+that can be understood as uh bayesian inference and this is an idea that um famously helmholtz says perception as unconscious inference you know it's the same idea you know people since 380 bc have been thinking about it and we're still thinking about it you know that's that's what inference is it's a very broad thing that we have to understand
+
+47
+00:05:18,547 --> 00:05:28,162
+But the point of the paper is that, okay, this is inference, and this is a very, let's say, a big challenge that we have to deal with in our lives.
+
+48
+00:05:28,863 --> 00:05:30,206
+And how does brain do it?
+
+49
+00:05:30,827 --> 00:05:37,277
+How can you get a brain-like inference algorithm, especially from first principles?
+
+50
+00:05:37,297 --> 00:05:38,078
+So that's the idea.
+
+51
+00:05:38,158 --> 00:05:43,086
+We want to derive a brain-like inference algorithm from first principles.
+
+52
+00:05:44,922 --> 00:05:50,410
+because we want to understand how does the brain perform this inference task.
+
+53
+00:05:51,091 --> 00:05:51,912
+Okay, that's the idea.
+
+54
+00:05:54,615 --> 00:06:10,137
+So just to summarize what is in the paper, we start from this unifying principle of variational free energy minimization, which is in machine learning, people more commonly refer to free energy as evidence lower bound or ELBO, but it's the same thing.
+
+55
+00:06:11,163 --> 00:06:17,993
+And we're going to use that unifying principle to derive different inference algorithms as instances of free energy minimization.
+
+56
+00:06:19,155 --> 00:06:25,204
+And this paper really is like a half synthesis review and half new algorithm.
+
+57
+00:06:25,624 --> 00:06:34,217
+For the synthesis part, we're going to show that variational autoencoders, predictive coding, and sparse coding are all instances of free energy minimization.
+
+58
+00:06:35,564 --> 00:06:45,216
+And then we use that insight to derive new architecture, which is the iterative Poisson DAE, just by starting from free energy minimization.
+
+59
+00:06:45,896 --> 00:06:48,940
+So that's kind of a top-down derivation of an algorithm.
+
+60
+00:06:48,960 --> 00:06:50,302
+We don't put anything there by hand.
+
+61
+00:06:50,342 --> 00:06:59,072
+We just say, like, look, we accept free energy minimization as our principle, and then we add some other assumptions to it to derive this algorithm.
+
+62
+00:06:59,112 --> 00:07:01,315
+And I'm going to be explicit about all those assumptions.
+
+63
+00:07:02,997 --> 00:07:04,018
+Could you provide...
+
+64
+00:07:13,533 --> 00:07:36,992
+like this a bit better okay all right um so when we derive this algorithm we also test uh whether it has any empirical benefits because of course you know it's it's very cool and it's very theory driven but um we are also interested in empirical benefits um and and we explore convergence properties sparsity reconstruction trade-off and out of domain generalization
+
+65
+00:07:37,664 --> 00:07:45,582
+And I'm going to explain why each of these empirical benefits are interesting or important when we get to that result.
+
+66
+00:07:46,043 --> 00:07:49,311
+But this is just a summary of the empirical results.
+
+67
+00:07:50,843 --> 00:07:55,148
+OK, now let's just talk about Bayesian posterior inference.
+
+68
+00:07:56,470 --> 00:07:58,292
+So probably most of you are just familiar.
+
+69
+00:07:58,332 --> 00:07:59,674
+This is just a Bayes rule.
+
+70
+00:08:00,455 --> 00:08:03,098
+What we have on the left-hand side is the posterior.
+
+71
+00:08:04,139 --> 00:08:09,405
+If you remember from the previous examples, you could imagine like x are the observations.
+
+72
+00:08:09,806 --> 00:08:14,792
+This could be just an image, like a retinal pattern of photon, whatever that you receive.
+
+73
+00:08:14,772 --> 00:08:16,594
+And you want to infer what are the causes.
+
+74
+00:08:16,934 --> 00:08:17,916
+Z are the causes.
+
+75
+00:08:17,996 --> 00:08:20,959
+So you want to compute this probability distribution.
+
+76
+00:08:22,140 --> 00:08:30,030
+What is the likelihood of certain cause Z given that I have observed certain observation X, right?
+
+77
+00:08:30,570 --> 00:08:39,160
+And Bayes tells us you can compute it by dividing this likelihood times prior with the marginal distribution.
+
+78
+00:08:40,152 --> 00:08:42,935
+So this is fairly standard stuff, so I'm not going to linger too much here.
+
+79
+00:08:42,955 --> 00:08:49,984
+And probably there are many interesting videos on this YouTube channel that you can find that explains this idea.
+
+80
+00:08:50,004 --> 00:08:51,867
+So I'm going to move on.
+
+81
+00:08:52,668 --> 00:09:00,237
+But the point I want to make here is that if you want to compute this posterior distribution exactly, you have to go through this
+
+82
+00:09:00,217 --> 00:09:11,676
+computing this integral, which is I just expressed this marginal distribution as an integral over all the possible causes, where this is just the joint distribution broken into this kind of structure.
+
+83
+00:09:12,538 --> 00:09:15,643
+And this is very, very difficult to compute.
+
+84
+00:09:16,585 --> 00:09:26,369
+First of all, in most cases, there is no closed form solution, except if you have a very simple Gaussian distribution for prior and likelihood, then maybe you can compute this.
+
+85
+00:09:27,050 --> 00:09:31,962
+But in most real world cases, you don't have access to that closed form solution.
+
+86
+00:09:31,942 --> 00:09:37,090
+And also, it's computationally hard to approximate as well.
+
+87
+00:09:37,110 --> 00:09:42,277
+You have to go through all the possible latent configurations, add them up to compute this.
+
+88
+00:09:42,718 --> 00:09:51,110
+Therefore, what I want you to remember from this part is that posterior inference actually is a difficult task computationally.
+
+89
+00:09:51,671 --> 00:09:55,296
+Therefore, people have come up with approximate methods.
+
+90
+00:09:56,077 --> 00:09:57,639
+And one of them is variational inference.
+
+91
+00:09:57,659 --> 00:10:00,784
+So you introduce some distribution, q.
+
+92
+00:10:00,764 --> 00:10:04,309
+And you call this approximate posterior or variational posterior.
+
+93
+00:10:05,010 --> 00:10:13,323
+And then you want to use Q to approximate the actual true posterior or optimal posterior.
+
+94
+00:10:14,345 --> 00:10:14,906
+How do you do it?
+
+95
+00:10:15,446 --> 00:10:24,120
+By minimizing the callback Leibler divergence between Q and P. And this is just a very standard textbook level introduction to variational inference.
+
+96
+00:10:24,660 --> 00:10:26,343
+Again, I'm not going to spend too much time.
+
+97
+00:10:26,383 --> 00:10:29,708
+This is just very standard stuff.
+
+98
+00:10:30,363 --> 00:10:31,284
+And here's another.
+
+99
+00:10:31,865 --> 00:10:34,267
+This is the main equation that we're going to work with.
+
+100
+00:10:34,287 --> 00:10:35,909
+And I think this is very important.
+
+101
+00:10:35,929 --> 00:10:39,593
+Therefore, I want to make sure that we understand every detail here.
+
+102
+00:10:40,894 --> 00:10:43,837
+In the paper, in the appendix, we derive this equation.
+
+103
+00:10:43,917 --> 00:10:49,843
+So if you haven't seen this before, this is a very standard result in variational inference.
+
+104
+00:10:50,584 --> 00:10:55,189
+And you can see the paper appendix for a derivation.
+
+105
+00:10:55,490 --> 00:10:58,014
+But here, let's just take this equation as given.
+
+106
+00:10:58,074 --> 00:10:59,697
+It's not a very complicated derivation.
+
+107
+00:10:59,717 --> 00:11:01,480
+It's a very straightforward one.
+
+108
+00:11:01,520 --> 00:11:02,221
+But it's true.
+
+109
+00:11:02,602 --> 00:11:09,132
+This equation holds for any distribution q that is a proper density.
+
+110
+00:11:10,675 --> 00:11:12,979
+So let's actually try to understand what this is.
+
+111
+00:11:13,159 --> 00:11:13,359
+OK.
+
+112
+00:11:13,980 --> 00:11:17,987
+On the left-hand side, we have the log of the marginal distribution.
+
+113
+00:11:18,389 --> 00:11:27,306
+P theta of X. And then we have this object here, which is an expectation over samples drawn from the approximate posterior.
+
+114
+00:11:27,867 --> 00:11:32,817
+And this log ratio of the joint distribution divided by the approximate posterior.
+
+115
+00:11:33,358 --> 00:11:41,173
+And then this thing is what we actually want to minimize to find our best approximate posterior.
+
+116
+00:11:42,385 --> 00:11:47,315
+And one thing I want to mention here is that if you notice, I have these color-coded things.
+
+117
+00:11:47,937 --> 00:12:02,267
+So in this presentation and also in the paper, I'm using red to indicate the inference components of the model and blue to indicate the generative model components.
+
+118
+00:12:03,091 --> 00:12:12,024
+And you can think of the blue parameters as just theta as parameters of the neural network for the generative model.
+
+119
+00:12:12,946 --> 00:12:21,639
+Or if you believe that the brain has a generative model of the world, you can think of theta as the synaptic weights of the connections between neurons.
+
+120
+00:12:22,640 --> 00:12:26,466
+And phi are just parameters that you have to optimize to find the best Q.
+
+121
+00:12:27,695 --> 00:12:35,664
+And for example, a very standard example here is that if you have a variational autoencoder, phi and theta are just both neural networks.
+
+122
+00:12:35,905 --> 00:12:48,800
+And specifically, you have, for example, q can be understood as a neural network that takes any input x and outputs the parameters that define this distribution.
+
+123
+00:12:48,840 --> 00:12:51,643
+Like for example, if phi are neural network parameters,
+
+124
+00:12:51,623 --> 00:12:58,739
+you apply that to x to get back the mean and variance of a Gaussian, if you think q should be a Gaussian.
+
+125
+00:13:01,105 --> 00:13:03,490
+But why is this equation interesting?
+
+126
+00:13:04,955 --> 00:13:30,034
+let me actually just show you this visualization because i think this helps us remember so i told you this is model evidence so um that's evidence you have evidence lower bound or elbow and then the kl divergence so evidence plus elbow is kl okay and and why is this equation interesting to us because we're interested in inference um i want you to take a look at
+
+127
+00:13:30,200 --> 00:13:33,125
+the both left-hand side and right-hand side of this equation.
+
+128
+00:13:33,846 --> 00:13:37,291
+If you notice, there are no red parameters on the left-hand side.
+
+129
+00:13:37,331 --> 00:13:46,326
+So, you know, the right-hand side is the only part of this equation that depends on those red variational parameters, phi, right?
+
+130
+00:13:46,927 --> 00:13:47,668
+Therefore,
+
+131
+00:13:48,374 --> 00:13:52,382
+Intuitively, if you want to minimize the KL, that's our goal.
+
+132
+00:13:52,723 --> 00:14:02,704
+We defined good inference like, you know, the faithful inference as just a queue that is close enough to P and
+
+133
+00:14:02,853 --> 00:14:07,438
+And we define that as a Q that minimizes the KL.
+
+134
+00:14:08,379 --> 00:14:17,469
+So minimizing this KL term on the right-hand side directly is going to maximize ELBO, because the left-hand side doesn't depend on phi.
+
+135
+00:14:17,910 --> 00:14:26,059
+Or if you want to see it in algebraic form, you can just say, if you compute the derivative of this whole equation with respect to phi,
+
+136
+00:14:26,039 --> 00:14:26,980
+This is going to vanish.
+
+137
+00:14:27,000 --> 00:14:27,802
+There is no phi here.
+
+138
+00:14:27,822 --> 00:14:35,413
+It's going to have 0 equals gradient of this elbow with respect to phi plus gradient of KL with respect to phi.
+
+139
+00:14:35,773 --> 00:14:41,322
+Therefore, another way to see how minimizing KL is exactly equivalent to maximizing elbow.
+
+140
+00:14:41,802 --> 00:14:51,316
+And this is the whole idea behind maximizing elbow to do inference, which is elbow is just negative free energy.
+
+141
+00:14:51,356 --> 00:14:54,561
+So that's kind of one way of thinking about free energy principle.
+
+142
+00:14:55,520 --> 00:14:58,207
+Okay, so this is a very important equation.
+
+143
+00:14:58,227 --> 00:15:00,352
+I just wanted to spend quite some time here.
+
+144
+00:15:00,572 --> 00:15:08,090
+And if there's any questions, maybe we can actually turn this into a kind of a discussion rather than like keeping it to the end.
+
+145
+00:15:08,291 --> 00:15:12,060
+And I'm happy to answer questions if there are any.
+
+146
+00:15:14,825 --> 00:15:25,750
+Now that we defined Elbow and we know its utility, we are maximizing Elbow because we're interested in inference, let's actually just see what Elbow looks like if we expand it.
+
+147
+00:15:25,770 --> 00:15:26,653
+This is the definition.
+
+148
+00:15:27,555 --> 00:15:31,163
+And one way to carve up the Elbow is
+
+149
+00:15:32,003 --> 00:15:41,276
+This is the joint distribution, p theta x and z. You can easily see that it can be broken into p theta of x given z. That's what this term is.
+
+150
+00:15:41,756 --> 00:15:53,472
+And then plus p theta of z. And again, if you just invert the denominator and denominator, it turns out that this just looks like another KL term.
+
+151
+00:15:53,452 --> 00:15:56,422
+This is a different KL from the previous one.
+
+152
+00:15:56,563 --> 00:16:00,115
+The previous one was between the approximate posterior and the true posterior.
+
+153
+00:16:00,517 --> 00:16:03,266
+This is between approximate posterior and the prior.
+
+154
+00:16:03,708 --> 00:16:05,554
+Just an important distinction.
+
+155
+00:16:06,952 --> 00:16:09,916
+And there's different ways to interpret this.
+
+156
+00:16:10,397 --> 00:16:22,275
+This is just a reconstruction term, which says if you go from the latent cause and reconstruct your observation, under your posterior, this should have high likelihood.
+
+157
+00:16:22,776 --> 00:16:24,038
+That's the intuition for that.
+
+158
+00:16:24,599 --> 00:16:28,665
+And this just term, it appears from the math.
+
+159
+00:16:28,885 --> 00:16:33,432
+And the interpretation is that you don't want to deviate too much from your prior.
+
+160
+00:16:33,412 --> 00:17:03,250
+this is a penalty this is a regularization penalty that says reconstruct your your input as as good as possible while not deviating too much from your prior and and this has a theoretical analog and information theory where you can think of this term as distortion the other term is rate and um alex alami has a really nice paper where they um make this rigorous okay so this is so far all of this is just standard you know vae
+
+161
+00:17:03,837 --> 00:17:05,328
+kind of theory, right?
+
+162
+00:17:05,389 --> 00:17:07,283
+There's nothing new so far.
+
+163
+00:17:07,769 --> 00:17:16,680
+But I want to highlight, if you want to define this elbow, you have to make decisions about three distinct distributions.
+
+164
+00:17:17,181 --> 00:17:19,604
+The first one is, of course, the approximate posterior.
+
+165
+00:17:20,345 --> 00:17:22,568
+You have to choose what form it has.
+
+166
+00:17:22,628 --> 00:17:23,469
+It could be Gaussian.
+
+167
+00:17:23,489 --> 00:17:26,172
+It could be Poisson, like our Poisson VAE paper from last year.
+
+168
+00:17:26,873 --> 00:17:28,635
+And the likelihood also is a distribution.
+
+169
+00:17:28,655 --> 00:17:30,418
+You have to choose what it is.
+
+170
+00:17:30,778 --> 00:17:31,659
+And the prior as well.
+
+171
+00:17:31,679 --> 00:17:34,603
+So there are three independent choices you have to make.
+
+172
+00:17:36,102 --> 00:17:45,536
+And here's a synthesis part of the paper that we just say that, look, and this is not new, not all of this is known, but we're just putting it nicely in a figure, right?
+
+173
+00:17:46,417 --> 00:17:53,428
+We're saying, look, variational free energy minimization unifies all of these different models across neuroscience and machine learning.
+
+174
+00:17:54,249 --> 00:17:58,155
+And this is the kind of a taxonomy model tree that comes out of that.
+
+175
+00:17:58,295 --> 00:18:00,979
+So you have to first choose a prior.
+
+176
+00:18:00,959 --> 00:18:08,792
+um let's say you choose gaussian okay and then the next decision you're faced with is what is your approximate posterior
+
+177
+00:18:09,143 --> 00:18:34,442
+you choose direct delta you actually recover predictive coding and this you know if you want to i think there's there's a video on this channel that um goes through uh baron millage review paper where they discuss this uh derivation so it's it's not it's not new um but if you choose approximate posterior to be gaussian then you have to also choose what your encoder is right so
+
+178
+00:18:34,726 --> 00:18:47,945
+If you choose a neural network that takes any image x and spits out the parameters, like it's a Gaussian, so you need to give me, in order to construct this queue, you have to give me what is the mean and what is the variance.
+
+179
+00:18:48,586 --> 00:18:55,215
+If you have a neural network that produces those for you, you just recover variational autoencoders, Kingma and Bellum.
+
+180
+00:18:55,195 --> 00:19:08,013
+But if you just don't do that, if you do iterative inference procedure, more like neuroscience approaches like predictive coding, then you have iterative Gaussian VAE, which is just a model we introduced in this paper.
+
+181
+00:19:09,575 --> 00:19:11,518
+And it's... Yes.
+
+182
+00:19:11,538 --> 00:19:13,120
+Can I ask a few questions on this slide?
+
+183
+00:19:13,538 --> 00:19:14,720
+Yes, go ahead.
+
+184
+00:19:14,740 --> 00:19:15,041
+Awesome.
+
+185
+00:19:15,121 --> 00:19:20,752
+Okay, so you have the prior can be Poisson, Gaussian or Laplace form.
+
+186
+00:19:20,953 --> 00:19:23,778
+So what other edges could be coming out of the prior?
+
+187
+00:19:24,039 --> 00:19:28,307
+Or why would somebody select one of those three forms that you have listed here?
+
+188
+00:19:28,608 --> 00:19:34,835
+OK, yeah, I think this is not definitely there are many more priors that you can choose from.
+
+189
+00:19:35,316 --> 00:19:44,327
+There are other papers in the literature that you can, for example, you can choose a student t distribution for your prior if you think that your prior should be heavy tailed.
+
+190
+00:19:44,887 --> 00:19:48,332
+And certainly there are other examples other than these three.
+
+191
+00:19:48,652 --> 00:19:57,062
+I'm just here using these three to illustrate how different models that in the leaves of this tree can be
+
+192
+00:19:57,042 --> 00:20:03,863
+unified through this unifying picture and and you're right like what really um
+
+193
+00:20:04,838 --> 00:20:07,701
+Why would you choose Poisson instead of Gaussian, for example?
+
+194
+00:20:08,041 --> 00:20:09,603
+That's our paper from last year.
+
+195
+00:20:10,083 --> 00:20:24,276
+You would choose Poisson because if you want your model to have representations that are more brain-like, you know that neurons in the brain, they don't have continuous unsigned activations.
+
+196
+00:20:24,377 --> 00:20:31,183
+They communicate through action potentials or spikes, and Poisson is one way to model that.
+
+197
+00:20:31,163 --> 00:20:39,252
+Or in the case of sparse coding, the prior is chosen to be Laplace because it has this sparsity-inducing property.
+
+198
+00:20:40,413 --> 00:20:46,800
+So because you might think that, look, my neurons in the brain, we have observed that they're very sparsely active.
+
+199
+00:20:47,240 --> 00:20:49,502
+Therefore, Laplace is a better choice than Gaussian.
+
+200
+00:20:49,943 --> 00:20:55,269
+That's the possible types of reasoning that could go into your choices.
+
+201
+00:20:56,430 --> 00:20:56,730
+Cool.
+
+202
+00:20:56,750 --> 00:20:59,533
+And then one more, and you may go into this more
+
+203
+00:21:00,070 --> 00:21:05,216
+How is iterative different than iteratively applying amortized inference?
+
+204
+00:21:06,437 --> 00:21:07,418
+It's a very good question.
+
+205
+00:21:07,778 --> 00:21:13,024
+I think here what I mean by iterative is that you don't have any neural networks.
+
+206
+00:21:13,104 --> 00:21:16,047
+There's no free parameters that you train for your encoder.
+
+207
+00:21:16,368 --> 00:21:17,549
+That's like fully iterative.
+
+208
+00:21:17,990 --> 00:21:24,897
+However, there are iterative amortized hybrid models, such as one from Joseph Marino from 2018,
+
+209
+00:21:24,877 --> 00:21:53,010
+where they actually do exactly what you suggested they have they iteratively apply um some there's some amortized neural network that produces um parameters of your of your distribution there's another auxiliary network that produces i think the gradients um i don't i don't exactly remember but they also had this auxiliary network was a pretty complicated algorithm but um but you're right that you know there might be uh hybrid cases where you have iterative
+
+210
+00:21:53,851 --> 00:21:59,839
+iteratively applied amortized neural networks to get to the final posterior.
+
+211
+00:22:02,783 --> 00:22:10,052
+Which, by the way, in the appendix of the paper, so this paper is like, I don't know, like 64 pages, and we wanted to make it self-contained.
+
+212
+00:22:10,433 --> 00:22:21,307
+So the appendix actually contains all sorts of background information and review of all these existing iterative amortized, hybrid iterative amortized, all of that is in the paper.
+
+213
+00:22:21,327 --> 00:22:23,470
+So you can take a look there if you're curious.
+
+214
+00:22:25,087 --> 00:22:36,026
+I just want to mention one thing here is that I didn't know about this derivation, actually deriving sparse coding as Laplace plus Dirac delta posterior.
+
+215
+00:22:36,346 --> 00:22:49,609
+I gave this talk here at the Redwood Center for Theoretical Neuroscience, and Bruno Olshausen, the same Olshausen as here, was like, okay, yeah, this is cute, but I did this derivation back in 96, I'll send it to you.
+
+216
+00:22:49,589 --> 00:22:50,870
+So he sent me this paper.
+
+217
+00:22:50,890 --> 00:22:51,631
+It's not even a paper.
+
+218
+00:22:51,651 --> 00:22:52,792
+It's just a technical report.
+
+219
+00:22:52,812 --> 00:22:53,713
+It's like five pages.
+
+220
+00:22:54,294 --> 00:22:57,297
+He was inspired by Peter Dayan's Helmholtz machine.
+
+221
+00:22:57,517 --> 00:23:00,740
+And then he says, OK, yeah, you can actually derive sparse coding through this.
+
+222
+00:23:01,541 --> 00:23:04,904
+And I think it's a pretty interesting paper, but it's missing from the literature.
+
+223
+00:23:04,924 --> 00:23:09,189
+So I hope that this citation will help fix that.
+
+224
+00:23:10,710 --> 00:23:18,398
+Every time you cite Dirac delta posterior with Gaussian can give you predictive coding from free energy minimization.
+
+225
+00:23:18,378 --> 00:23:24,270
+you can also cite this sparse coding which is like parallels that but it's from 96 so
+
+226
+00:23:24,976 --> 00:23:27,019
+It's a pretty interesting revelation for me.
+
+227
+00:23:27,960 --> 00:23:28,441
+All right.
+
+228
+00:23:28,461 --> 00:23:36,973
+The last one is if you choose Poisson for both prior and approximate posterior and choose amortize, he gets the PVAE paper, which is from the last year.
+
+229
+00:23:37,474 --> 00:23:42,962
+And now we just replace the encoder with an iterative procedure, and we get iterative Poisson VAE.
+
+230
+00:23:43,122 --> 00:23:50,933
+And we're going to discuss why iterative is a little more brain-like than amortize, and what are the empirical benefits, and all of that.
+
+231
+00:23:51,740 --> 00:24:00,172
+But yeah, the whole point of this figure is that, you know, really, you can embrace free energy minimization as just one principle that can give you all sorts of various algorithms.
+
+232
+00:24:00,733 --> 00:24:10,227
+And and also we use this to just say, like, you know, there's all sorts of possibilities and you just make different choices and you get wildly different algorithms.
+
+233
+00:24:10,247 --> 00:24:12,550
+So there's there's a lot more left to explore here.
+
+234
+00:24:13,472 --> 00:24:14,313
+That's one of the points.
+
+235
+00:24:15,054 --> 00:24:18,439
+Just one short comment on the distributions that you have here.
+
+236
+00:24:19,448 --> 00:24:25,457
+Poisson is waiting time, so it's always a positive number, like how much time until the next bus appears.
+
+237
+00:24:25,978 --> 00:24:30,765
+The appearance of the bus is like the Dirac delta because it's a spike event.
+
+238
+00:24:32,167 --> 00:24:35,872
+Wait, no, no, I wouldn't say Poisson is waiting time.
+
+239
+00:24:36,233 --> 00:24:42,722
+I think Poisson, you can actually construct a Poisson process from those waiting times that are exponentially distributed.
+
+240
+00:24:43,503 --> 00:24:47,329
+And Poisson is the event count for a finite observation window.
+
+241
+00:24:48,457 --> 00:24:49,959
+Thank you for the clarification.
+
+242
+00:24:50,660 --> 00:25:00,615
+And then Gauss is just sort of the mother distribution or the sort of central limit theorem type large number convergence.
+
+243
+00:25:00,635 --> 00:25:08,406
+So it's helpful, well-behaved in a lot of ways, but this is sort of like events and their waiting time relationships.
+
+244
+00:25:08,386 --> 00:25:28,723
+right exactly like you're saying look gaussian but by the way i one thing i forgot to mention uh from previous slide i said there are three distributions but right now i in this figure i have only prior and approximate posterior because the reason for that is for literally all of these models uh the likelihood the last third distribution is always gaussian
+
+245
+00:25:28,703 --> 00:25:30,226
+even in the Poisson cases.
+
+246
+00:25:31,207 --> 00:25:41,325
+And I think I also like the idea of thinking about the central limit theorem that could be used to justify why your observations can be Gaussian distributed.
+
+247
+00:25:42,647 --> 00:25:45,312
+And yeah.
+
+248
+00:25:47,705 --> 00:26:16,159
+i i i guess that's it right you know you just think about your problem like whatever you want to model um in our case we want to model neural activity and you know gaussian seems less biologically plausible than integer spike counts but we're not saying that integer spike counts is actually literally what the brain is doing we're just saying like relative to gaussian it's a better choice which reflects that you know discrete um event-based signaling that is ongoing in the brain
+
+249
+00:26:17,624 --> 00:26:18,320
+That's the idea.
+
+250
+00:26:19,700 --> 00:26:49,707
+okay all right so in the paper we also talk about prescriptive theories uh i want to just use this opportunity to to clarify what we mean by prescriptive this is just something that comes from uh physics inspiration so um another thing that we are interested in is that you know uh as when we go through the paper i'm gonna i'm gonna talk about inference which is a computation and dynamics interchangeably like i'm saying like look uh and this is like not
+
+251
+00:26:49,687 --> 00:27:10,530
+you know we didn't come up with this there's a frisson paper like a you know free energy principle uh process theory where they say like neural activity dynamics can be understood as they're just minimizing free energy so so we're interested in dynamics we're interesting in deriving dynamical equations uh for neurons and um
+
+252
+00:27:10,679 --> 00:27:29,413
+that's where this dynamics comes from but but what is the physics inspiration here so in physics you don't really put terms by hand like if you want to come up with a dynamical equation that describes a physical system you usually don't you know for example in effective field theory um
+
+253
+00:27:30,153 --> 00:27:47,790
+You start from the principle of least action, and then the prescription here is that you just look at the symmetries that your system has to satisfy, and that fully dictates the entire Lagrangian that you plug in to this action equation, and you can derive the dynamics from there.
+
+254
+00:27:48,732 --> 00:27:51,296
+So this is pretty elegant, right?
+
+255
+00:27:51,316 --> 00:27:53,540
+You don't put in terms by hand.
+
+256
+00:27:53,901 --> 00:27:56,165
+You just derive it from a top-down approach.
+
+257
+00:27:56,185 --> 00:28:02,776
+Just say, here's my symmetries, and it fully determines what your Lagrangian should be.
+
+258
+00:28:02,796 --> 00:28:11,230
+Of course, we don't have this much elegance in the messy world of neuro-AI, but we can do something
+
+259
+00:28:11,260 --> 00:28:39,310
+roughly similar so we're saying look in our case our principle is free energy minimization so we're saying this this object free energy is is just you have to construct it and you have to minimize it that's going to give you the dynamics and then the prescription is the kind of the important part um in the paper we say like if you choose these three things uh false on distributions for your posterior and online inference and natural gradient descent on free energy you can derive
+
+260
+00:28:39,290 --> 00:28:47,964
+the architecture iterative Poisson VAE, which is a spiking recurrent neural network with stochastic leaky integrative fire neurons and lateral competition.
+
+261
+00:28:48,425 --> 00:28:52,412
+And I'll describe what any of all of these mean.
+
+262
+00:28:53,954 --> 00:28:57,019
+It's just a way of framing.
+
+263
+00:28:57,400 --> 00:29:02,589
+We derive these things from top-down principles.
+
+264
+00:29:03,090 --> 00:29:04,572
+That's kind of the emphasis here.
+
+265
+00:29:06,053 --> 00:29:14,165
+And before going to actually show you the paper and the derivations and the results, I want to show you something very gimmicky that I quite like.
+
+266
+00:29:14,746 --> 00:29:26,784
+So for those of you from neuroscience background, you might have seen those videos of Hubel and Wiesel showing a bar of light to an anesthetized cat and then recording from the cat's visual cortex.
+
+267
+00:29:27,265 --> 00:29:33,715
+And then there's these noises that you can hear, like the neurons are being activated by that bar of light.
+
+268
+00:29:33,695 --> 00:29:39,344
+So what I'm going to show you here is a replication of those experiments, but from just the model neuron.
+
+269
+00:29:39,624 --> 00:29:44,211
+And this neuron never saw neural activity, never saw data from actual neurons.
+
+270
+00:29:44,672 --> 00:29:50,581
+What it did, we derived the algorithm from first principles, and we trained it on natural image patches.
+
+271
+00:29:51,242 --> 00:29:53,425
+And then, for example, here you see that
+
+272
+00:29:53,506 --> 00:30:12,493
+the top right um it it learns receptive fields that look like gabor's which is what you would observe if you stick an electrode to like a primate visual cortex and what i'm gonna do is i'm gonna just slide this bar of light the red bar here uh across that receptive field and i'm gonna here plot
+
+273
+00:30:12,473 --> 00:30:15,359
+the firing rate of this neuron in response to that.
+
+274
+00:30:15,760 --> 00:30:19,848
+So the y-axis is firing rate, and also the sample spike counts.
+
+275
+00:30:19,928 --> 00:30:21,451
+It's a stochastic spiking model.
+
+276
+00:30:22,032 --> 00:30:23,515
+And x is time index.
+
+277
+00:30:23,535 --> 00:30:24,577
+Let's see if you can hear it.
+
+278
+00:30:31,150 --> 00:30:32,052
+One more time.
+
+279
+00:30:35,272 --> 00:30:36,314
+All right.
+
+280
+00:30:36,334 --> 00:30:41,605
+So I'm really excited about this because there's no neural activity.
+
+281
+00:30:41,645 --> 00:30:47,537
+This algorithm was derived from just equations from top down.
+
+282
+00:30:47,877 --> 00:30:49,781
+That's what excites me about that.
+
+283
+00:30:49,961 --> 00:30:50,783
+But anyway.
+
+284
+00:30:51,286 --> 00:31:05,228
+Here is where I switch to paper PDF, and I'm going to walk you through the derivations there, because I think the paper is written decently well, so it's easy to understand.
+
+285
+00:31:06,270 --> 00:31:06,730
+Let's do that.
+
+286
+00:31:07,772 --> 00:31:08,333
+And you see it.
+
+287
+00:31:10,861 --> 00:31:14,806
+OK, yeah, so let's just skip that.
+
+288
+00:31:15,708 --> 00:31:23,518
+And by the way, you can think of this, as I'm going through the PDF, you can think of this as just a step-by-step guideline.
+
+289
+00:31:23,538 --> 00:31:26,963
+If you wanted to read this paper on your own, this is, I think, how you should do it.
+
+290
+00:31:27,163 --> 00:31:29,527
+So OK, here you notice the notation.
+
+291
+00:31:32,311 --> 00:31:35,615
+We have this generative model defined here.
+
+292
+00:31:35,875 --> 00:31:40,682
+And again, the color coding generative and inference are always blue and red.
+
+293
+00:31:40,949 --> 00:31:43,272
+And then we start from the main equation.
+
+294
+00:31:43,432 --> 00:31:46,516
+And of course, I have lots of citations to the appendix here.
+
+295
+00:31:47,117 --> 00:31:49,119
+I provide all the necessary information.
+
+296
+00:31:49,139 --> 00:31:51,823
+You don't need to read anything else, just the appendix.
+
+297
+00:31:52,564 --> 00:31:59,072
+For example, here, just very quickly, this is the perception as inference, more like a philosophical and historical background.
+
+298
+00:31:59,493 --> 00:32:04,459
+Here, I define what is Bayesian posterior inference and why is it difficult.
+
+299
+00:32:04,439 --> 00:32:20,068
+and this is this equation is where i derived that elbow equation that i had on slides so it's very um i think intuitive yeah as if you if you read it you'll see and then here i say okay you need three distributions for the elbow and then
+
+300
+00:32:20,048 --> 00:32:22,372
+The rest is just like carving up the elbow.
+
+301
+00:32:22,432 --> 00:32:24,736
+You know, Gaussian VAEs, what is it?
+
+302
+00:32:25,538 --> 00:32:27,541
+How do you exactly define a Gaussian VAE?
+
+303
+00:32:28,142 --> 00:32:31,929
+And then going to Poisson VAE, which is our work from last year.
+
+304
+00:32:31,969 --> 00:32:35,556
+Here I discuss amortized versus iterative inference and so on.
+
+305
+00:32:36,437 --> 00:32:37,399
+And then...
+
+306
+00:32:38,223 --> 00:32:47,475
+This is my pedagogical intuitive derivation of a linear predictive coding, which, of course, the more complete version is in this millage review.
+
+307
+00:32:47,595 --> 00:32:48,235
+You can check it out.
+
+308
+00:32:48,896 --> 00:32:59,910
+And then finally, this is a summary of the models in this paper and also from elsewhere in this table.
+
+309
+00:33:00,430 --> 00:33:04,619
+So appendix A is just an extended background.
+
+310
+00:33:05,320 --> 00:33:09,629
+And that's all you need to know to be able to understand this paper.
+
+311
+00:33:11,092 --> 00:33:11,954
+But back to this.
+
+312
+00:33:12,054 --> 00:33:16,684
+OK, now we're back at the main paper background section.
+
+313
+00:33:18,098 --> 00:33:36,073
+Okay, as we discussed, you start from elbow, and then you recognize that maximizing elbow is equivalent to minimizing the scale term, which is, in our case, which means you enhance the quality of posterior inference by maximizing elbow.
+
+314
+00:33:36,053 --> 00:33:39,681
+or minimizing free energy, which is exactly negative ELBO.
+
+315
+00:33:39,961 --> 00:33:49,000
+So that's the key insight here that you can connect theoretical neuroscience to machine learning by recognizing F is just negative ELBO.
+
+316
+00:33:50,532 --> 00:33:55,560
+Next, again, just to remind you, we have these three distributions we have to choose.
+
+317
+00:33:56,401 --> 00:34:00,007
+And also the next choice you have to make is the inference method.
+
+318
+00:34:00,127 --> 00:34:01,629
+Is it amortized or is it iterative?
+
+319
+00:34:03,072 --> 00:34:09,342
+Then the introduced VAEs, sparse coding and predictive coding as variational inference, same figure as you just saw.
+
+320
+00:34:10,023 --> 00:34:14,650
+And importantly, I put this derivation of...
+
+321
+00:34:14,630 --> 00:34:19,496
+the dynamics of a predictive coding model, because I'm going to compare our result to this.
+
+322
+00:34:20,076 --> 00:34:27,065
+And we're going to find that, in our case, we get something a little more biologically plausible than this standard predictive coding dynamics.
+
+323
+00:34:28,006 --> 00:34:31,370
+And I guess there's no time for me to really go through this.
+
+324
+00:34:32,251 --> 00:34:33,512
+This is a very standard result.
+
+325
+00:34:33,612 --> 00:34:40,300
+It's an original Rao Ballard paper or any review papers that came after that.
+
+326
+00:34:40,735 --> 00:34:42,116
+Therefore, let's just keep this in mind.
+
+327
+00:34:42,136 --> 00:34:47,261
+This is just the dynamics you derive from standard predictive coding with Gaussian assumptions.
+
+328
+00:34:47,902 --> 00:34:51,945
+And we're going to, you know, then we derive our own iterative Poisson VAE dynamics.
+
+329
+00:34:51,965 --> 00:34:53,967
+We're going to come back and compare to this.
+
+330
+00:34:56,049 --> 00:34:56,289
+Okay.
+
+331
+00:34:56,309 --> 00:35:04,817
+So yeah, here, I think there's several papers that we mentioned here in this paragraph that are, I think, super cool and interesting.
+
+332
+00:35:04,857 --> 00:35:07,139
+So if you're interested, you should check them out.
+
+333
+00:35:07,620 --> 00:35:09,021
+This paper is,
+
+334
+00:35:09,406 --> 00:35:11,510
+is fascinating, Bayesian learning rule.
+
+335
+00:35:12,472 --> 00:35:14,656
+It was published, I think, a couple of years ago.
+
+336
+00:35:14,836 --> 00:35:29,524
+And they basically say that any learning algorithm that has been successful, including, I don't know, Adam, Dropout, whatever, SGD, you can actually cast them as instances of variational inference.
+
+337
+00:35:29,504 --> 00:35:41,337
+So they start from a variational objective, and then they show that if you just swap, if you choose your approximate posterior in different ways, and then you make some additional
+
+338
+00:35:42,413 --> 00:35:45,076
+like approximation assumptions and look elsewhere.
+
+339
+00:35:45,096 --> 00:35:54,445
+And then you apply natural gradient descent on that variational objective to derive many, many different learning rules as instances of variational inference.
+
+340
+00:35:55,146 --> 00:36:04,615
+So this paper shows the unification potential of variational inference in more like an optimization machine learning type of land.
+
+341
+00:36:06,577 --> 00:36:07,478
+So you should check it out.
+
+342
+00:36:07,578 --> 00:36:09,180
+It's very interesting.
+
+343
+00:36:09,751 --> 00:36:13,519
+And then later, building on DLR, this is a paper Jones et al.
+
+344
+00:36:13,539 --> 00:36:14,661
+It's a Kevin Murphy paper.
+
+345
+00:36:15,182 --> 00:36:17,567
+They introduced Bayesian online natural gradients.
+
+346
+00:36:17,587 --> 00:36:26,646
+They just say, if you want to do online inference, you should do it using natural gradient descent on the variational objective.
+
+347
+00:36:26,761 --> 00:36:30,325
+which is exactly the same prescription following PLR.
+
+348
+00:36:30,345 --> 00:36:31,807
+They also do natural gradient descent.
+
+349
+00:36:32,428 --> 00:36:34,691
+And just briefly, why natural gradient descent?
+
+350
+00:36:34,711 --> 00:36:41,519
+Because when we are optimizing the posterior, the posterior is a probability distribution.
+
+351
+00:36:42,140 --> 00:36:46,445
+Its parameters are, they don't live in Euclidean space.
+
+352
+00:36:46,505 --> 00:36:49,088
+There's an intrinsic geometry induced by the Fisher metric.
+
+353
+00:36:49,629 --> 00:36:53,253
+And if you don't respect that geometry, you're going to perform poorly.
+
+354
+00:36:53,273 --> 00:36:54,675
+That's the intuition.
+
+355
+00:36:54,858 --> 00:36:59,986
+which if you're interested, there's a bunch of citations in the paper that you can go dig deeper.
+
+356
+00:37:01,288 --> 00:37:11,925
+But following these two very inspiring papers, Bong and DLR, here's where we introduce our FOND framework.
+
+357
+00:37:12,125 --> 00:37:14,229
+So what does it stand for?
+
+358
+00:37:14,249 --> 00:37:18,756
+It's Free Energy Online Natural Gradient Dynamics.
+
+359
+00:37:18,820 --> 00:37:20,903
+So we're interested in dynamics, neural dynamics.
+
+360
+00:37:20,943 --> 00:37:24,668
+That's why we emphasize dynamics, but that's our framework.
+
+361
+00:37:25,269 --> 00:37:31,938
+We're saying, look, if you want to derive dynamics from first principles, just start from free energy minimization.
+
+362
+00:37:32,739 --> 00:37:36,705
+And then first, you have to identify the dynamical variables.
+
+363
+00:37:37,105 --> 00:37:38,487
+What are the things you're optimizing?
+
+364
+00:37:38,527 --> 00:37:41,612
+How do you parameterize your posterior?
+
+365
+00:37:42,072 --> 00:37:44,035
+That's the first choice you make.
+
+366
+00:37:44,015 --> 00:37:52,898
+And then the temporal evolution of your posterior parameters is fully determined by natural gradient descent on variational free energy.
+
+367
+00:37:53,580 --> 00:37:57,771
+That is our prescription, which will become concrete as we go through the paper.
+
+368
+00:37:59,033 --> 00:38:06,870
+And finally, we also embrace this online update scheme because that's how brain performs inference.
+
+369
+00:38:07,411 --> 00:38:09,976
+Just to give you an intuition what online means here.
+
+370
+00:38:11,760 --> 00:38:16,570
+So in most machine learning cases, you have one single image.
+
+371
+00:38:16,550 --> 00:38:21,014
+And you perform inference on that single image to find a posterior for that.
+
+372
+00:38:22,055 --> 00:38:27,140
+But in reality, the brain doesn't have a prior that is fixed in the past.
+
+373
+00:38:27,841 --> 00:38:29,162
+And it never changes.
+
+374
+00:38:29,322 --> 00:38:32,486
+And you always have images that you have to perform inference.
+
+375
+00:38:33,306 --> 00:38:40,614
+In biological systems, online inference makes a little more sense to modeling how brains perform inference.
+
+376
+00:38:40,954 --> 00:38:46,219
+And online means that your prior constantly gets updated as time goes on.
+
+377
+00:38:46,199 --> 00:39:14,113
+you always have a moving prior that is being updated and um if you perform inference like let's say you have a movie and there's a new frame comes in you perform inference you get to the posterior and that posterior at time t becomes the prior at time t plus one that's what it means to have online updated scheme and i'll let me just show you the figure real quick so if you start these red
+
+378
+00:39:14,414 --> 00:39:20,149
+is just how your posterior distribution is getting evolved in time.
+
+379
+00:39:20,650 --> 00:39:25,302
+Every single point along this curve is a posterior distribution.
+
+380
+00:39:25,720 --> 00:39:31,671
+And in the static inference, you have one prior that is fixed in the distant past, t equals zero.
+
+381
+00:39:32,333 --> 00:39:35,759
+And you evolve in time, you always compare back to that prior.
+
+382
+00:39:36,260 --> 00:39:39,747
+But in online inference, your prior itself gets updated.
+
+383
+00:39:40,448 --> 00:39:48,083
+And you compare your posterior at t to the prior from the previous time point, which is also what Bong does.
+
+384
+00:39:50,071 --> 00:39:52,274
+All right, that's it.
+
+385
+00:39:52,354 --> 00:40:06,172
+So we're going to apply these prescriptions, and we're going to derive a bunch of different VAE models, including the iterative Poisson one that is going to give us interesting theoretical and empirical results.
+
+386
+00:40:06,712 --> 00:40:08,034
+So let's go through that real quick.
+
+387
+00:40:09,576 --> 00:40:10,237
+OK.
+
+388
+00:40:14,222 --> 00:40:18,087
+The first step, we have to choose the distributions, right?
+
+389
+00:40:18,522 --> 00:40:31,778
+And as I mentioned earlier when we were talking about that model tree slide, we choose Poisson because that's a better approximation for brain-like integer-valued spike count representations.
+
+390
+00:40:32,319 --> 00:40:35,123
+At least compared to Gaussian, Poisson is a little more brain-like.
+
+391
+00:40:35,803 --> 00:40:40,749
+But here in Appendix B1, we discussed that we're not saying that the brain is literally Poisson.
+
+392
+00:40:40,769 --> 00:40:45,255
+We're saying it's just a better approximation relative to Gaussian.
+
+393
+00:40:46,889 --> 00:40:50,148
+And then for the likelihood, this is what we go with.
+
+394
+00:40:50,289 --> 00:40:51,516
+This is just
+
+395
+00:40:51,732 --> 00:40:53,935
+simple Gaussian with a linear decoder.
+
+396
+00:40:54,155 --> 00:41:08,195
+So you go from latent cause z, so in our case, these are just spike counts, and you multiply this linear decoder layer phi to that to get to the mean of the Gaussian with some fixed variance.
+
+397
+00:41:08,616 --> 00:41:19,191
+This is the simplest possible case that we go with in this main paper, but we extend that to more complicated cases in the appendix, including a nonlinear decoder.
+
+398
+00:41:19,171 --> 00:41:28,624
+and this phi is actually called dictionary in sparse coding literature so it's the same thing as a dictionary okay so
+
+399
+00:41:30,157 --> 00:41:33,080
+Now let's talk about the prescriptive choices.
+
+400
+00:41:33,820 --> 00:41:41,087
+To derive dynamics from first principles, we have to address two additional questions.
+
+401
+00:41:41,768 --> 00:41:46,332
+What are the dynamical variables, and what equations govern their time evolution?
+
+402
+00:41:46,792 --> 00:41:54,640
+And in Appendix B2, I connect this again back to physics through this prescriptive theories in physics.
+
+403
+00:41:57,422 --> 00:41:58,223
+So OK.
+
+404
+00:41:59,992 --> 00:42:02,254
+First question, what are the dynamical variables?
+
+405
+00:42:03,296 --> 00:42:15,249
+So for Poisson, the only parameter you have to give me so that I can construct a Poisson distribution is the rate parameter, the firing rate.
+
+406
+00:42:16,250 --> 00:42:21,235
+But that's a positive value, and the rate parameter itself is very hard to optimize.
+
+407
+00:42:21,275 --> 00:42:24,759
+Therefore, we're going to make the following choice.
+
+408
+00:42:24,779 --> 00:42:27,602
+We're going to say, look, we're going to start with
+
+409
+00:42:27,751 --> 00:42:38,361
+these real valued vector u, which is k is the number of neurons, and you have u is some real number.
+
+410
+00:42:39,163 --> 00:42:42,452
+And if you exponentiate u, you're going to get the firing rates.
+
+411
+00:42:43,006 --> 00:42:47,591
+And you're going to be able to construct Poisson distribution from those firing rates.
+
+412
+00:42:48,532 --> 00:42:52,537
+And this makes it easier because u is a real number.
+
+413
+00:42:52,577 --> 00:42:54,519
+You don't have to do constrained optimization.
+
+414
+00:42:54,539 --> 00:43:02,708
+You can just do a natural gradient descent on free energy without having to constrain your gradients so that it remains always positive.
+
+415
+00:43:03,229 --> 00:43:06,252
+That's like a pragmatic, like a mathematical convenience.
+
+416
+00:43:06,653 --> 00:43:10,397
+But also, this is not too biologically implausible because
+
+417
+00:43:10,377 --> 00:43:13,165
+you can actually interpret you as membrane potentials.
+
+418
+00:43:17,245 --> 00:43:22,630
+So from neuroscience, we know that neurons have this local private signal to them.
+
+419
+00:43:22,670 --> 00:43:26,174
+There's their membrane potential that fluctuates, goes up and down.
+
+420
+00:43:26,634 --> 00:43:31,339
+And then if it reaches a certain threshold, neurons emit an action potential or a spike.
+
+421
+00:43:31,999 --> 00:43:45,312
+And there's some work that shows that you can actually model that relationship between the membrane potential and the firing rate through expansive nonlinearities like power loss or exponential.
+
+422
+00:43:45,292 --> 00:43:49,138
+That's basically two reasons why we chose this parameterization.
+
+423
+00:43:49,539 --> 00:43:52,784
+Mathematical convenience, and it's not biologically too implausible.
+
+424
+00:43:54,386 --> 00:44:03,641
+And once you choose that, you can just derive the dynamics through natural gradient descent on variational free energy.
+
+425
+00:44:03,962 --> 00:44:04,983
+That's what we're going to do next.
+
+426
+00:44:07,487 --> 00:44:12,936
+OK, so this equation shows if you take negative elbow,
+
+427
+00:44:13,051 --> 00:44:19,787
+with the assumptions that we discussed above and construct your free energy, this is how it's going to look like for Poisson.
+
+428
+00:44:20,560 --> 00:44:23,664
+So first of all, this reconstruction term is kind of familiar, right?
+
+429
+00:44:23,684 --> 00:44:28,571
+You have this mean squared error that appears because you chose Gaussian for your likelihood.
+
+430
+00:44:29,312 --> 00:44:31,975
+So this part should be familiar for all of us.
+
+431
+00:44:33,277 --> 00:44:44,172
+If you've seen like, you know, predictive coding or variational load encoders, this part kind of might look new to you because this is the KL term between the approximate posterior and the prior.
+
+432
+00:44:44,212 --> 00:44:47,496
+And for Poisson distribution,
+
+433
+00:44:47,476 --> 00:44:54,803
+parameterized in its canonical form, which is like the log rate parameterization, it's going to look like this.
+
+434
+00:44:55,593 --> 00:45:00,040
+And it's fine if you don't really understand this equation right now.
+
+435
+00:45:01,302 --> 00:45:10,257
+Just know that there is a derivation over here, appendix B3, where I just start from the Poisson distribution and derive this KL term.
+
+436
+00:45:10,738 --> 00:45:13,142
+So if you're curious, you can check it out there.
+
+437
+00:45:14,203 --> 00:45:22,697
+What we're going to do is now we're going to differentiate this F because we want to derive our dynamics for the membrane potentials U.
+
+438
+00:45:25,293 --> 00:45:32,848
+Okay, the first thing is let's focus on this reconstruction term here.
+
+439
+00:45:34,812 --> 00:45:35,994
+So this is an expectation.
+
+440
+00:45:36,034 --> 00:45:37,116
+We want to differentiate.
+
+441
+00:45:37,597 --> 00:45:38,719
+We want to compute this, right?
+
+442
+00:45:39,240 --> 00:45:45,833
+We want to compute the gradient of F with respect to U because we have U dot equals...
+
+443
+00:45:49,120 --> 00:45:50,241
+this is our prescription.
+
+444
+00:45:50,682 --> 00:46:03,736
+So I told you in words, but in equations, it's just, you know, the rate of change of your approximate posterior parameters u is going to be given by the inverse Fisher metric.
+
+445
+00:46:04,177 --> 00:46:06,039
+This is just the Fisher preconditioning.
+
+446
+00:46:06,059 --> 00:46:08,441
+That's what natural gradient descent means.
+
+447
+00:46:09,603 --> 00:46:15,229
+And the actual gradient of free energy with respect to u. So we're going to
+
+448
+00:46:16,424 --> 00:46:17,446
+Forget about this for now.
+
+449
+00:46:18,349 --> 00:46:24,163
+Our focus is to compute this quantity, gradient u of f. And f has two terms.
+
+450
+00:46:24,905 --> 00:46:26,168
+This is the reconstruction term.
+
+451
+00:46:26,188 --> 00:46:26,910
+This is the KL term.
+
+452
+00:46:27,270 --> 00:46:28,874
+And we're going to do that derivation right now.
+
+453
+00:46:29,857 --> 00:46:33,285
+So first off, gradient of this term with respect to u.
+
+454
+00:46:35,543 --> 00:46:43,915
+OK, yeah, this is a little bit difficult because, first of all, the U dependence appears here in the expectation, right?
+
+455
+00:46:44,116 --> 00:46:45,217
+Let me clean this a little bit.
+
+456
+00:46:46,219 --> 00:46:52,668
+And you see that whatever is inside here does not depend on U. It's only in the expectation.
+
+457
+00:46:53,169 --> 00:46:56,033
+So we have to also make another approximation here.
+
+458
+00:46:56,013 --> 00:46:59,918
+And the standard approximation is that you just take a single sample.
+
+459
+00:46:59,978 --> 00:47:03,042
+You draw a single sample from the posterior.
+
+460
+00:47:03,823 --> 00:47:14,257
+And that sample, importantly, is going to depend on the parameter u. And this sample, of course, because q is a Poisson distribution, this is just an integer spike count.
+
+461
+00:47:14,838 --> 00:47:16,380
+So it's a bunch of integers, right?
+
+462
+00:47:17,021 --> 00:47:18,443
+And you plug that in.
+
+463
+00:47:19,570 --> 00:47:23,902
+And then you say that, oh, this is my approximation of the reconstruction term.
+
+464
+00:47:23,922 --> 00:47:27,794
+Now let's actually compute the gradient of this instead of that expectation.
+
+465
+00:47:29,097 --> 00:47:31,825
+It's technically just a single Monte Carlo sample.
+
+466
+00:47:33,205 --> 00:47:42,679
+And then once you do that, you recognize that the chain of dependence here is that, first of all, you have u, which is the log rate.
+
+467
+00:47:43,059 --> 00:47:45,723
+You exponentiate it to get to the rate.
+
+468
+00:47:46,284 --> 00:47:49,910
+And then you draw a sample to get to this spike count sample.
+
+469
+00:47:50,470 --> 00:47:54,977
+And then you have this reconstruction term as a function of that z.
+
+470
+00:47:55,801 --> 00:48:01,068
+So we have to apply the chain rule several times to actually compute that gradient.
+
+471
+00:48:01,088 --> 00:48:05,914
+So gradient U of reconstruction term is these things.
+
+472
+00:48:08,798 --> 00:48:11,862
+You have to compute three different gradients.
+
+473
+00:48:12,843 --> 00:48:18,451
+And here, the gradient of reconstruction term with respect to z is pretty simple.
+
+474
+00:48:18,571 --> 00:48:20,914
+It's just going to look like this.
+
+475
+00:48:21,113 --> 00:48:28,106
+It's negative phi transpose times x minus phi z. It's very standard.
+
+476
+00:48:29,648 --> 00:48:37,863
+We're going to leave partial z to partial r. We're going to use the straight through approximation to just say that this is going to be 1.
+
+477
+00:48:39,546 --> 00:48:43,273
+And then the partial of r with respect to u is just
+
+478
+00:48:43,692 --> 00:49:01,414
+know e to the u because r is exp of u so if you differentiate r with respect to u you end up with the same thing it's just an exponential so with these approximations the net result is that we have this expression for gradient of the reconstruction terms
+
+479
+00:49:02,761 --> 00:49:05,946
+And now let's go back and look at the KL term.
+
+480
+00:49:06,186 --> 00:49:08,069
+This one is actually a lot easier.
+
+481
+00:49:08,489 --> 00:49:20,026
+You want to compute the gradient of this thing with respect to u. And it's very easy to see that I'm not going to do it, but it's very easy to see that this is actually the final result.
+
+482
+00:49:20,747 --> 00:49:22,990
+So you have e to the u times u minus u0.
+
+483
+00:49:23,551 --> 00:49:26,015
+And u is your posterior membrane potential.
+
+484
+00:49:26,215 --> 00:49:29,680
+u0 is your prior because it's blue.
+
+485
+00:49:30,132 --> 00:49:38,789
+So if you just combine this reconstruction gradient with the KL gradient, you end up with this expression.
+
+486
+00:49:42,276 --> 00:49:45,563
+Now we have the gradient of free energy with respect to you.
+
+487
+00:49:45,583 --> 00:49:50,773
+And then the last step is to apply this Fisher preconditioning.
+
+488
+00:49:51,344 --> 00:50:06,545
+Again, in Appendix B4, I do the derivation, and it turns out if you parametrize a Poisson distribution in its canonical log rate form, the Fisher metric is actually just e to the u. That's just your rate.
+
+489
+00:50:07,246 --> 00:50:14,095
+And it amazingly cancels out this e to the u that appeared here, and you end up with this final equation.
+
+490
+00:50:15,205 --> 00:50:24,812
+OK, so I know that I was being a little fast, but I just wanted to go through that real quick so that I can just interpret the final result.
+
+491
+00:50:25,474 --> 00:50:28,101
+OK.
+
+492
+00:50:30,730 --> 00:50:36,296
+u dot is how your membrane potential changes in time to minimize free energy.
+
+493
+00:50:36,816 --> 00:50:40,180
+That's because that's how we define our dynamics.
+
+494
+00:50:40,881 --> 00:50:52,733
+And whatever appears on the right-hand side is just that's what the math gave us, like the free energy expression for Poisson distributions and all the other approximations we made, like the Monte Carlo sample, whatever.
+
+495
+00:50:53,694 --> 00:50:57,598
+If you do all of those, you end up with these terms.
+
+496
+00:50:58,034 --> 00:51:01,406
+And I want to emphasize, we didn't put any of these in there by hand.
+
+497
+00:51:01,507 --> 00:51:06,947
+It was given to us by the mathematics of the free energy with Poisson assumptions.
+
+498
+00:51:08,232 --> 00:51:10,018
+But now we're going to interpret those terms.
+
+499
+00:51:10,927 --> 00:51:19,477
+So what appears here is that there's this phi transpose X. Phi was our dictionary element, the transpose of our decoder.
+
+500
+00:51:19,537 --> 00:51:38,841
+And you can think of this as a feedforward drive because this says, look, if you have this image X multiplied with this like receptive field, quote unquote, and then this is going to tell you how much your membrane potential should increase given that image X. And then this other term appears that has this like kind of recurrent term.
+
+501
+00:51:39,310 --> 00:51:44,036
+And it also importantly applies to the spiking activity from other neurons.
+
+502
+00:51:44,637 --> 00:51:56,232
+It says how much your membrane potential should drop as a function of how much influence you receive from other neurons.
+
+503
+00:51:57,314 --> 00:52:04,844
+And finally, there's this other homeostatic leak term that says you just don't want to deviate too much from your prior membrane potential.
+
+504
+00:52:05,204 --> 00:52:08,068
+That's what this term is.
+
+505
+00:52:09,331 --> 00:52:21,835
+You know, there's an appendix, one of these appendices, yeah, B5, where I go through, like, explaining why we interpret these terms with these, you know, phrases like feedforward drive, you're kind of explaining away.
+
+506
+00:52:21,875 --> 00:52:23,678
+There's a little bit of discussion there.
+
+507
+00:52:24,367 --> 00:52:35,276
+What I want to emphasize here is that, first of all, this format of the recurrent dynamics equation that we ended up deriving from first principles, this is not new.
+
+508
+00:52:35,316 --> 00:52:38,960
+This has been studied since at least 1970s.
+
+509
+00:52:39,640 --> 00:52:48,508
+There's a paper from Sunichi Amari from like 72 or something, where he explores properties of these types of equations.
+
+510
+00:52:48,628 --> 00:52:54,373
+And you can think of this as a canonical circuit model that different people have studied.
+
+511
+00:52:54,353 --> 00:52:58,199
+But interestingly, in our case, it just popped out of the math.
+
+512
+00:52:58,539 --> 00:53:00,542
+We didn't put any of these terms by hand.
+
+513
+00:53:00,722 --> 00:53:01,984
+That's what I want to emphasize here.
+
+514
+00:53:04,829 --> 00:53:07,372
+So that's one thing that's pretty interesting.
+
+515
+00:53:07,993 --> 00:53:19,350
+Another thing I want to emphasize is, if you remember, I told you the predictive coding equation has certain limitations in terms of biological plausibility that this equation doesn't.
+
+516
+00:53:19,951 --> 00:53:21,373
+Let me emphasize that now.
+
+517
+00:53:25,420 --> 00:53:29,083
+This is just standard predictive coding dynamics.
+
+518
+00:53:29,664 --> 00:53:37,552
+So mu dot is mu is just another real variable that you can plausibly interpret as membrane potential.
+
+519
+00:53:38,753 --> 00:53:44,738
+And in predictive coding, you also get this feedforward drive and leak term and lateral connections term.
+
+520
+00:53:44,758 --> 00:53:45,599
+You get all of them.
+
+521
+00:53:46,120 --> 00:53:48,202
+There's one important difference here.
+
+522
+00:53:49,123 --> 00:53:51,765
+Here, the influence of other neurons
+
+523
+00:53:51,880 --> 00:54:02,312
+if you interpret mu as membrane potential, these neurons through these lateral recurrent connections influence each other through their membrane potentials.
+
+524
+00:54:02,892 --> 00:54:10,501
+And we know that that's biologically not plausible because membrane potential of a neuron is a private signal to that neuron.
+
+525
+00:54:11,682 --> 00:54:20,993
+You cannot expect that other neurons in your vicinity to be able to directly be influenced by whatever your membrane potential value is.
+
+526
+00:54:21,547 --> 00:54:28,015
+More biologically plausible is that you receive influence from your neighboring neurons through their spiking activity.
+
+527
+00:54:29,037 --> 00:54:32,641
+So remember this, and now let's go back to our equation.
+
+528
+00:54:37,047 --> 00:54:44,136
+Whatever we get for iterative Poisson VAE, this is what we get.
+
+529
+00:54:45,118 --> 00:54:49,343
+So the recurrent influence comes through spiking activity.
+
+530
+00:54:49,745 --> 00:54:56,718
+And I think that's a very interesting, more biologically plausible outcome that I wanted to highlight.
+
+531
+00:54:57,139 --> 00:55:07,799
+So when you influence your neighboring neurons through this recurrent term, it happens through your spiking activity, not directly through your membrane potential.
+
+532
+00:55:09,923 --> 00:55:10,183
+OK.
+
+533
+00:55:12,526 --> 00:55:19,332
+Yeah, I guess here next we just go from continuous time to discrete time because we want to implement this.
+
+534
+00:55:19,352 --> 00:55:20,513
+So that's what you see here.
+
+535
+00:55:20,533 --> 00:55:24,556
+This equation is just a discrete time version of that.
+
+536
+00:55:25,537 --> 00:55:37,487
+One last thing before going to the empirical results is that there's some sort of lateral competition or some sort of divisive normalization that appears from the way we construct this problem.
+
+537
+00:55:37,507 --> 00:55:42,111
+I want to mention that before going to the empirical results.
+
+538
+00:55:42,091 --> 00:56:01,568
+okay so remember u is our membrane potentials right so we defined u is just log rate if you exponentiate this equation which is are just you know iterative update rule you get to this equation
+
+539
+00:56:02,375 --> 00:56:15,489
+which says the rate of a neuron at neuron i at time t plus 1 is just its rate at the previous time point modified with this term that appears here.
+
+540
+00:56:16,871 --> 00:56:23,939
+So first of all, there's this feedforward drive term that says if you're being stimulated through the stimulus, you can just increase the firing rate.
+
+541
+00:56:24,359 --> 00:56:31,707
+But there's these other terms that stabilize the dynamics because this says if...
+
+542
+00:56:31,687 --> 00:56:52,885
+this w is by the way just a recurrent connectivity matrix it says if if two neurons have overlapping tuning if they're if they care about the same feature you know if wij is a positive value then if neuron j fires a lot it's going to actually silence this other neuron so this competition
+
+543
+00:56:53,422 --> 00:57:02,920
+is something that has been hypothesized to contribute to many things like stability of cortical computation and emergent sparsity and so on.
+
+544
+00:57:04,082 --> 00:57:08,190
+I just wanted to mention that it just pops out of our math also.
+
+545
+00:57:09,436 --> 00:57:14,943
+just because we made those choices, Poisson, whatever, log rate, something like that appears here.
+
+546
+00:57:16,145 --> 00:57:19,489
+And we're going to see empirically that the algorithm is stable.
+
+547
+00:57:19,609 --> 00:57:21,912
+It actually never diverges.
+
+548
+00:57:22,052 --> 00:57:24,655
+It converges beyond the training regime and so on.
+
+549
+00:57:24,676 --> 00:57:27,119
+So this is kind of a theoretical reason for that.
+
+550
+00:57:27,800 --> 00:57:31,765
+But yeah, let's just move on because we spent too much time on the theory side.
+
+551
+00:57:32,465 --> 00:57:34,448
+I'll just show you some experimental results.
+
+552
+00:57:35,761 --> 00:57:53,169
+If you use the iterative update rule and then turn that into an architecture that performs inference and then train it on natural image patches, this is the type of results you can get.
+
+553
+00:57:53,349 --> 00:57:55,052
+This is the convergence result.
+
+554
+00:57:56,534 --> 00:58:00,603
+We trained these models using 16 training iterations.
+
+555
+00:58:01,404 --> 00:58:08,058
+And here we are comparing a Poisson model with a Gaussian model and a Gaussian plus ReLU model.
+
+556
+00:58:08,600 --> 00:58:13,530
+So before actually looking at these results, let me just mention what is different between these models.
+
+557
+00:58:13,966 --> 00:58:22,475
+So to derive the theory, we just said, look, you can choose Poisson for your posterior.
+
+558
+00:58:23,236 --> 00:58:25,979
+And that gives you all these cool results.
+
+559
+00:58:26,600 --> 00:58:27,741
+But then we don't stop there.
+
+560
+00:58:27,761 --> 00:58:31,064
+We just say, OK, but you can also have Gaussian for your posterior.
+
+561
+00:58:31,084 --> 00:58:34,848
+You can still have the same iterative update through natural gradient descent for Gaussian.
+
+562
+00:58:35,549 --> 00:58:42,977
+Or you can even have Gaussian and follow that up with the ReLU so that you get the positivity of Poisson.
+
+563
+00:58:42,957 --> 00:58:51,767
+So these are different models aimed to tease apart different properties of Poisson that might contribute to its performance.
+
+564
+00:58:52,828 --> 00:58:59,795
+So a Gaussian doesn't have the positivity of Poisson or its discreteness.
+
+565
+00:59:00,196 --> 00:59:03,940
+Gaussian ray loop has its positivity, but it's not discrete.
+
+566
+00:59:03,960 --> 00:59:08,585
+So it's like a continuous positive and continuous unsigned.
+
+567
+00:59:09,826 --> 00:59:11,428
+So that's why we compare these models.
+
+568
+00:59:12,640 --> 00:59:22,347
+So what we have here in the results is that we want to make sure these models converge to good approximate posteriors.
+
+569
+00:59:23,610 --> 00:59:27,561
+And we measure that using these two measures.
+
+570
+00:59:28,958 --> 00:59:31,662
+We want to have a good reconstruction of the input.
+
+571
+00:59:32,303 --> 00:59:33,345
+That's the R squared.
+
+572
+00:59:34,587 --> 00:59:37,932
+And it's a number between 0 and 1, and larger is better.
+
+573
+00:59:38,653 --> 00:59:41,858
+And portion zeros is the number of zeros in your representation.
+
+574
+00:59:42,218 --> 00:59:54,698
+So the idea here is that if you want to represent the world, you have to represent it in a very high fidelity reconstruction, and ideally using not many active neurons.
+
+575
+00:59:54,718 --> 00:59:55,819
+That's how you save energy.
+
+576
+00:59:55,839 --> 00:59:57,582
+That's the sparse coding idea.
+
+577
+00:59:57,697 --> 01:00:01,637
+Therefore, we want both the blue and green curve to be large values.
+
+578
+01:00:02,280 --> 01:00:05,074
+And ignore red for now.
+
+579
+01:00:05,864 --> 01:00:12,033
+And yeah, if you compare these models, we see that Poisson has both high reconstruction and high sparsity.
+
+580
+01:00:13,315 --> 01:00:17,902
+Gaussian has the highest reconstruction, but it's not sparse at all by definition.
+
+581
+01:00:18,603 --> 01:00:26,996
+And Gaussian plus ReLU gets a little bit of sparsity, like a little less than 60% around the same reconstruction performance of Poisson.
+
+582
+01:00:27,597 --> 01:00:31,703
+Therefore, just the conclusion of this figure is that it seems like Poisson
+
+583
+01:00:32,358 --> 01:00:36,769
+reconstructs the images, at least as well as Gaussian.
+
+584
+01:00:38,173 --> 01:00:42,423
+But it doesn't lose much in the reconstruction, but it is very sparse.
+
+585
+01:00:42,784 --> 01:00:43,807
+That's the point of this figure.
+
+586
+01:00:44,789 --> 01:00:48,679
+And also, all of the models converge beyond their training regime.
+
+587
+01:00:50,110 --> 01:01:16,000
+And another interesting thing to notice is that after training these models on natural image patches, you can visualize the dictionary elements, the learned decoder, and then you can see that the Poisson looks like these Gabor's that you would see from, you know, if you look at the selectivity from primate visual cortex, Gaussian looks pretty structure-less, and Gaussian Prostarelu learns these pixel-like representations.
+
+588
+01:01:17,600 --> 01:01:25,291
+So the conclusion is that Poisson is not only more brain-like in this particular way, and also it's more sparse.
+
+589
+01:01:27,434 --> 01:01:36,247
+In the next figure, which is a very dense one, we want to see if that result holds across hyperparameters.
+
+590
+01:01:36,267 --> 01:01:38,810
+So we do a very large hyperparameter sweep.
+
+591
+01:01:41,334 --> 01:01:44,058
+To understand this figure, first of all, let's just focus on what's on there.
+
+592
+01:01:44,799 --> 01:01:46,982
+First of all, on the x-axis,
+
+593
+01:01:47,232 --> 01:01:51,699
+we have sparsity, which we measure as portion of zeros in your representations.
+
+594
+01:01:52,621 --> 01:01:54,624
+And on the y-axis, we have reconstruction.
+
+595
+01:01:56,407 --> 01:01:58,591
+So we want to be ideally here.
+
+596
+01:01:58,631 --> 01:02:01,756
+That's the impossible to achieve ideal point.
+
+597
+01:02:01,796 --> 01:02:07,505
+You have maximum reconstruction using no activation at all.
+
+598
+01:02:07,525 --> 01:02:08,627
+So that's hard to achieve.
+
+599
+01:02:08,687 --> 01:02:13,375
+But the closer you are here to this point, the better you are.
+
+600
+01:02:13,878 --> 01:02:18,589
+And on here, we have all the models that we compared to.
+
+601
+01:02:19,767 --> 01:02:22,271
+We have amortized models, first of all.
+
+602
+01:02:22,291 --> 01:02:28,981
+We have models that have a neural network encoder, and we're going to compare these amortized models to their iterative counterparts.
+
+603
+01:02:29,923 --> 01:02:40,218
+And for the iterative models, one thing that I skipped, I didn't mention, is that as you increase the number of iterations during training, you expect to see different behavior.
+
+604
+01:02:40,839 --> 01:02:46,568
+But that's a detail that you can check out the paper for if you're curious.
+
+605
+01:02:46,919 --> 01:03:00,473
+So let's focus for now just on the iterative versus amortized, because the point of this figure is that iterative inference yields better performance when you measure performance as high sparsity, high reconstruction.
+
+606
+01:03:01,786 --> 01:03:07,894
+Like, for example, in the Poisson case, the blue ones, you have these are the iterative models.
+
+607
+01:03:08,475 --> 01:03:10,737
+They're kind of having this burrito front.
+
+608
+01:03:11,598 --> 01:03:16,925
+And amortized models fail to match that performance, the blue empty squares.
+
+609
+01:03:18,027 --> 01:03:23,794
+And the idea is that these amortized models have
+
+610
+01:03:23,943 --> 01:03:30,854
+deep neural network encoders with 6 million parameters, yet they still cannot match the performance of iterative models.
+
+611
+01:03:31,195 --> 01:03:32,337
+That's the takeaway here.
+
+612
+01:03:34,159 --> 01:03:37,765
+And same is true for Gaussian ReLU, for example.
+
+613
+01:03:38,627 --> 01:03:41,872
+These are the iterative ones, these are the amortized ones.
+
+614
+01:03:42,753 --> 01:03:51,267
+And for Gaussian, again, the reconstruction iterative is better than amortized, but they're not very sparse.
+
+615
+01:03:52,411 --> 01:03:59,363
+So to summarize this figure, really, panel A, we just said, OK, let's just take each of these performances.
+
+616
+01:03:59,864 --> 01:04:04,893
+Each of these points is a model with different hyperparameter, different beta.
+
+617
+01:04:05,835 --> 01:04:09,682
+And we're going to compute the Euclidean distance between that and the star.
+
+618
+01:04:10,383 --> 01:04:12,066
+And that's the summary over here.
+
+619
+01:04:12,086 --> 01:04:14,250
+And here, lower is better.
+
+620
+01:04:15,412 --> 01:04:24,507
+We see that, first of all, the first observation we have is that in all of these cases, iterative model is better than its amortized counterpart.
+
+621
+01:04:24,527 --> 01:04:41,875
+So one takeaway here is that if you have an amortized neural network encoder and your model is not performing well, it's possible that it's because of the amortization gap, which is a technical term that means you don't
+
+622
+01:04:41,855 --> 01:04:46,362
+you're failing to find the optimal posterior through that neural network.
+
+623
+01:04:47,583 --> 01:04:53,172
+And iterative Poisson VAE does best compared to these models.
+
+624
+01:04:53,753 --> 01:05:02,365
+And also LCA, this locally competitive algorithm, which is the sparse coding algorithm, does also as good as iterative Poisson VAE.
+
+625
+01:05:03,167 --> 01:05:05,550
+So one conclusion we draw from here is that
+
+626
+01:05:06,205 --> 01:05:17,644
+Yeah, I kind of skipped this because it's too much details, but the equation we derive for iterative Poisson VAE looks very much like the equation for LCA.
+
+627
+01:05:18,325 --> 01:05:24,836
+Therefore, we can conclude that iterative Poisson VAE is just like LCA, but it's a spiking stochastic version of it.
+
+628
+01:05:25,217 --> 01:05:28,382
+That's one of the takeaways.
+
+629
+01:05:29,459 --> 01:05:37,513
+But yeah, so these are the two main results that we report in the main paper, and we just run out of space, basically.
+
+630
+01:05:37,934 --> 01:05:44,906
+But there's a bunch of, you know, appendix results that are also equally interesting.
+
+631
+01:05:44,946 --> 01:05:47,130
+So let me just really quickly go through them.
+
+632
+01:05:52,207 --> 01:06:00,037
+Yeah, so if you want to read the appendix, this is the extended background, just all you need to understand this paper.
+
+633
+01:06:00,598 --> 01:06:08,127
+Then there's extended theory, where we extend the Poisson derivations to Gaussian and to nonlinear decoders and so on.
+
+634
+01:06:08,808 --> 01:06:13,134
+And there's all sorts of other information, if you're curious.
+
+635
+01:06:13,314 --> 01:06:20,323
+And then extended experiments, where we explore other properties of the model.
+
+636
+01:06:22,143 --> 01:06:23,305
+Yeah, I want to show you this one.
+
+637
+01:06:29,593 --> 01:06:29,954
+Where is it?
+
+638
+01:06:34,100 --> 01:06:42,071
+Yeah, so we have these out-of-distribution generalization results that I think are equally interesting, but we just didn't have space, so we put them in the appendix.
+
+639
+01:06:43,673 --> 01:06:45,356
+What is out-of-distribution generalization?
+
+640
+01:06:45,936 --> 01:06:51,424
+If you train your models on some data set,
+
+641
+01:06:52,012 --> 01:07:02,867
+and then you test it in some other dataset, if those two datasets are sufficiently different, then usually what you get from machine learning models is that they fail to generalize.
+
+642
+01:07:03,288 --> 01:07:07,073
+That's a typical failure mode of machine learning models.
+
+643
+01:07:07,774 --> 01:07:16,146
+But if you have iterative inference, we're going to find that that's really not the case in our iterative Poisson VAE.
+
+644
+01:07:17,003 --> 01:07:18,645
+So that's the point of these results.
+
+645
+01:07:19,206 --> 01:07:39,409
+What we do is we train models on MNIST here and then test it on out-of-distribution data sets like extended MNIST, which is just a character data set, OmniGLOT, and even ImageNet32, so grayscale cropped versions of natural images.
+
+646
+01:07:39,890 --> 01:07:41,712
+And also we tested on rotated MNIST.
+
+647
+01:07:43,582 --> 01:07:46,186
+And we also compare it to alternative models.
+
+648
+01:07:46,967 --> 01:07:56,781
+As we briefly discussed, there are hybrid iterative amortized models, such as iterative amortized VAE.
+
+649
+01:07:57,141 --> 01:08:00,206
+This is the Marino paper, 2018.
+
+650
+01:08:00,606 --> 01:08:03,210
+There's another one, semi-amortized VAE.
+
+651
+01:08:03,697 --> 01:08:18,465
+also from 2018, where they initialize the posterior with an amortized network, and then they perform stochastic variational inference, a few iterative updates on that initial amortized guess.
+
+652
+01:08:19,002 --> 01:08:20,444
+And we're going to compare to those two.
+
+653
+01:08:21,546 --> 01:08:23,008
+Our model is fully iterative.
+
+654
+01:08:23,048 --> 01:08:25,231
+There's no neural network at all.
+
+655
+01:08:25,892 --> 01:08:27,274
+But these two models are hybrid.
+
+656
+01:08:27,815 --> 01:08:34,024
+And you want to find out if hybrid models perform as well on these kind of OOD tasks.
+
+657
+01:08:34,185 --> 01:08:36,749
+And the spoiler alert, no.
+
+658
+01:08:36,929 --> 01:08:37,590
+The answer is no.
+
+659
+01:08:38,471 --> 01:08:42,297
+Iterative wins, basically.
+
+660
+01:08:42,317 --> 01:08:44,801
+So this is, I think, too much detail.
+
+661
+01:08:44,821 --> 01:08:45,742
+I'm going to skip that.
+
+662
+01:08:46,824 --> 01:08:48,486
+Let me just show you this result.
+
+663
+01:08:50,137 --> 01:08:53,532
+What we have here, let's just focus on this panel.
+
+664
+01:08:53,697 --> 01:08:59,765
+We trained all of these models, including iterative Poisson VAE, amortized PVAE.
+
+665
+01:09:00,747 --> 01:09:02,008
+This is iterative Poisson.
+
+666
+01:09:02,890 --> 01:09:04,272
+This is amortized PVAE.
+
+667
+01:09:04,692 --> 01:09:06,414
+This is amortized iterative.
+
+668
+01:09:06,455 --> 01:09:09,419
+There's a hierarchical and single layer version.
+
+669
+01:09:09,939 --> 01:09:11,201
+And this is semi-amortized.
+
+670
+01:09:11,281 --> 01:09:13,664
+We're going to compare all of these models in this task.
+
+671
+01:09:14,866 --> 01:09:16,829
+You have these MNIST digits.
+
+672
+01:09:16,949 --> 01:09:21,375
+All of these models were trained on the standard MNIST data set, which is the first row.
+
+673
+01:09:21,355 --> 01:09:24,259
+And then we're going to rotate the digits by 90 degrees.
+
+674
+01:09:24,840 --> 01:09:30,268
+And we're going to look at two things compared to the rotated digits, the original ground truth.
+
+675
+01:09:31,170 --> 01:09:34,114
+Amortized Poisson fails really bad.
+
+676
+01:09:34,134 --> 01:09:37,780
+It just doesn't reconstruct any of these digits.
+
+677
+01:09:39,462 --> 01:09:47,194
+And among the hybrid models that we compared to, semi-amortized does the best out of those three.
+
+678
+01:09:47,984 --> 01:09:57,995
+And if you quantify this on the right-hand side over here, we find that iterative Poisson VAE does best.
+
+679
+01:09:58,856 --> 01:10:05,103
+The first figure, this one, is reconstruction, where we report mean squared error.
+
+680
+01:10:06,064 --> 01:10:10,428
+And the x-axis is just the amount of rotation we apply.
+
+681
+01:10:10,468 --> 01:10:14,633
+And this other figure is just the classification accuracy.
+
+682
+01:10:15,170 --> 01:10:23,593
+So this is important because if it was just reconstruction, who knows if the model really understands the data?
+
+683
+01:10:23,994 --> 01:10:25,237
+I mean, OK, sure.
+
+684
+01:10:25,257 --> 01:10:29,027
+In this, for example, this is a 90 degrees task.
+
+685
+01:10:29,429 --> 01:10:35,299
+Sure, we see that in the reconstruction, we see does best.
+
+686
+01:10:35,479 --> 01:10:39,045
+It's the lowest reconstruction error.
+
+687
+01:10:40,087 --> 01:10:43,653
+But it could be just the shallow features of the data set.
+
+688
+01:10:43,934 --> 01:10:50,645
+It doesn't mean that this model has learned to actually understand the semantic meaning of this data.
+
+689
+01:10:51,126 --> 01:10:54,812
+And that we confirm by looking at the classification.
+
+690
+01:10:54,792 --> 01:10:56,634
+But this is downstream classification.
+
+691
+01:10:57,215 --> 01:11:06,506
+We just show these images to the model and extract the final posterior, and we train logistic regression to just classify those rotated digits.
+
+692
+01:11:07,587 --> 01:11:12,613
+It turns out that the performance of the iterative Poisson, the blue bars, it doesn't drop.
+
+693
+01:11:12,713 --> 01:11:14,455
+It remains flat.
+
+694
+01:11:15,236 --> 01:11:20,462
+But as the task gets harder and harder, all the other models go down and up.
+
+695
+01:11:21,100 --> 01:11:34,114
+This indicates that it actually learns to interpret the distorted data not only well enough to reconstruct it, but also well enough to be able to classify those rotated digits.
+
+696
+01:11:36,001 --> 01:11:39,687
+And I think there's other experiments that I'm going to skip.
+
+697
+01:11:39,727 --> 01:11:40,488
+There's too much.
+
+698
+01:11:41,750 --> 01:11:44,255
+I think this is a pretty crazy result.
+
+699
+01:11:45,076 --> 01:11:52,969
+Here we just say, okay, let's just take MNIST digits, rotate, crop them, and make them grayscaled.
+
+700
+01:11:53,410 --> 01:12:01,603
+Because, you know, sorry, yeah, these are for ImageNet 32 by 32, but we're cropped so that they're...
+
+701
+01:12:02,933 --> 01:12:08,387
+this center image is where there's variance in ms digits.
+
+702
+01:12:09,802 --> 01:12:22,899
+And if you show these inputs to the model and then let them perform inference across time, as you see, the iterative Poisson VAE starts to actually reconstruct these images.
+
+703
+01:12:23,500 --> 01:12:26,644
+You can recognize this is a panda, this is a dog, and so on.
+
+704
+01:12:27,705 --> 01:12:33,733
+Even though this model, the iterative Poisson VAE, I want to emphasize this, this was trained on MNIST.
+
+705
+01:12:34,270 --> 01:12:38,136
+it hasn't seen any natural images, yet it can reconstruct them.
+
+706
+01:12:39,057 --> 01:12:44,885
+And all the other models, including the semi-amortized, they don't do as well.
+
+707
+01:12:46,027 --> 01:12:50,053
+I mean, this model, amortized iterative, just does the worst.
+
+708
+01:12:50,734 --> 01:12:55,080
+None of these reconstructions look anything like the actual image.
+
+709
+01:12:55,415 --> 01:13:01,274
+The semi-amortized does decently well, but not as good as iterative Poisson VAE.
+
+710
+01:13:02,136 --> 01:13:04,885
+And of course, we also quantify that here.
+
+711
+01:13:05,607 --> 01:13:13,775
+So we have the number of iterations at test time and reconstruction error on these cropped natural images.
+
+712
+01:13:14,776 --> 01:13:18,180
+And there's really two things to notice in this figure.
+
+713
+01:13:18,300 --> 01:13:20,382
+The first thing to notice is the final performance.
+
+714
+01:13:20,462 --> 01:13:22,905
+It's just much better than all of these other models.
+
+715
+01:13:23,305 --> 01:13:23,886
+That's one thing.
+
+716
+01:13:24,487 --> 01:13:29,792
+But equally interesting to me is that the model actually keeps improving as time goes on.
+
+717
+01:13:29,772 --> 01:13:48,321
+you know it's the the other models they don't improve as much or you know they even diverge at the end but iterative Poisson VAE keeps improving and that that shows that it's you know basically you can interpret this as like it's thinking more and more to to be able to understand this difficult data set out of distribution data set
+
+718
+01:13:49,955 --> 01:13:51,958
+And why is that?
+
+719
+01:13:52,058 --> 01:14:00,071
+We provide one possible explanation for why this out of domain generalization happens through this visualization.
+
+720
+01:14:00,792 --> 01:14:12,230
+So if you visualize the learned decoder weights for the last layer of this iterative Poisson VAE, it learns Gabor's from MNIST.
+
+721
+01:14:12,711 --> 01:14:15,355
+I'm sorry, yeah, from MNIST.
+
+722
+01:14:15,959 --> 01:14:22,686
+These are, you know, primitive kind of like universal features that you can construct any image from these.
+
+723
+01:14:23,347 --> 01:14:25,729
+And iterative Poisson VAE learns those Gabor's.
+
+724
+01:14:26,190 --> 01:14:42,167
+The Poisson VAE is the same latent distribution, same integer, whatever sparse representation, but with a NLP encoder, it just learns these like digits, like ghost digits that it doesn't really learn any Gabor's.
+
+725
+01:14:42,687 --> 01:14:45,190
+So the conclusion is that if you have a model,
+
+726
+01:14:46,402 --> 01:15:01,464
+that learns these universal features, and it has an inference algorithm that can utilize those universal features, it's going to be able to reconstruct any dataset, even as crazy as grayscale cropped natural images.
+
+727
+01:15:02,325 --> 01:15:08,253
+So that's the conclusion for these OD results in page 58 of the appendix.
+
+728
+01:15:09,095 --> 01:15:13,641
+But the reason we put this in the appendix is that
+
+729
+01:15:14,363 --> 01:15:23,171
+I think this is a very cool result, and it just warrants more deeper exploration, and even in tasks beyond reconstruction.
+
+730
+01:15:23,852 --> 01:15:40,388
+I suspect that with this iterative inference algorithm, the model learns compositional features that allows this generalization, and we want to test that on more difficult tasks, more involved tasks than reconstruction so that we can explore it, give it the attention that it deserves.
+
+731
+01:15:41,887 --> 01:15:43,389
+But yeah, that's pretty much it.
+
+732
+01:15:43,569 --> 01:15:48,837
+And there's an extended discussion too, which I think there's really no time to go through.
+
+733
+01:15:48,857 --> 01:15:58,370
+But I hope that this was actually interesting enough for you to actually go read the paper, because there's a lot more in the paper that I just simply couldn't talk about.
+
+734
+01:15:58,450 --> 01:16:01,134
+It's just too much.
+
+735
+01:16:01,695 --> 01:16:04,058
+But yeah, with that, I'm happy to take questions.
+
+736
+01:16:05,680 --> 01:16:06,061
+Great.
+
+737
+01:16:07,583 --> 01:16:11,168
+That last reconstruction was awesome.
+
+738
+01:16:12,363 --> 01:16:31,671
+thank you very cool uh in the image of the child it almost looked like like the fingers of the like the the the base image was it almost looks like the child has extended their fingers
+
+739
+01:16:32,697 --> 01:16:49,710
+yeah this one is a little creepy yeah um yeah very cool yeah kevin just wrote nice result and figures emergence of the primitives rather than overfitting yeah like and seeing the seeing the ghost digits in the mnist it's kind of like
+
+740
+01:16:49,910 --> 01:17:04,932
+Yeah, we know we can pull out the template of a digit from overlaying a bunch of copies of the digit and just looking for sort of like the K-means clustering of what does the archetypal representative look like.
+
+741
+01:17:04,912 --> 01:17:22,750
+But to be able to do it the way that the visual system algorithmically does, extracting with the lateral relationships amongst layers to pull out the edges is the kind of neuromorphic transfer.
+
+742
+01:17:24,592 --> 01:17:24,992
+Yeah.
+
+743
+01:17:26,714 --> 01:17:29,437
+Okay, I'll ask some of the questions in the live chat.
+
+744
+01:17:29,517 --> 01:17:30,658
+Anyone else can write.
+
+745
+01:17:31,779 --> 01:17:32,520
+Okay.
+
+746
+01:17:32,540 --> 01:17:32,640
+Okay.
+
+747
+01:17:34,055 --> 01:17:39,154
+Y asks, does this architecture solve catastrophic forgetting?
+
+748
+01:17:41,750 --> 01:17:43,593
+Okay, we haven't tested that.
+
+749
+01:17:43,673 --> 01:17:57,974
+So I think my understanding of catastrophic forgetting is that you train the model on some task, and then you retrain it, you change the model parameters on a new task, and it fails to work on the first task you trained on.
+
+750
+01:17:58,575 --> 01:17:59,897
+We haven't really explored that.
+
+751
+01:18:00,718 --> 01:18:05,405
+And by the way, this model is fairly underparameterized.
+
+752
+01:18:06,306 --> 01:18:07,448
+It just has a decoder.
+
+753
+01:18:07,889 --> 01:18:11,554
+And therefore, I expect that if you train it on one task, and then
+
+754
+01:18:11,534 --> 01:18:16,000
+you know, train it on another task, it might actually have some sort of catastrophic forgetting.
+
+755
+01:18:16,882 --> 01:18:21,188
+But yeah, I haven't, I haven't really experimented with that.
+
+756
+01:18:21,208 --> 01:18:22,470
+So I just don't know.
+
+757
+01:18:23,872 --> 01:18:26,295
+Okay, little curveball question.
+
+758
+01:18:26,655 --> 01:18:29,880
+Are you on the Active Inference Institute discord?
+
+759
+01:18:31,092 --> 01:18:31,713
+I am not.
+
+760
+01:18:31,913 --> 01:18:32,494
+I should join.
+
+761
+01:18:32,995 --> 01:18:36,680
+Okay, I'll put in the chat or afterwards a join link.
+
+762
+01:18:36,700 --> 01:18:37,561
+That would be cool though.
+
+763
+01:18:37,581 --> 01:18:37,961
+Definitely.
+
+764
+01:18:38,422 --> 01:18:38,642
+Yes.
+
+765
+01:18:39,323 --> 01:18:39,664
+Okay.
+
+766
+01:18:40,805 --> 01:18:46,653
+There was one question about this relates to the lateral relationships amongst neurons.
+
+767
+01:18:46,673 --> 01:18:51,480
+You mentioned that the membrane potential is a private variable.
+
+768
+01:18:51,460 --> 01:19:06,637
+So how do we think about, and not that the goal of the model was to give a mechanistic accounts of neural tissue, but how would you account for non-neural cell types like glial cells or like local field potentials?
+
+769
+01:19:08,662 --> 01:19:08,963
+Mm-hmm, mm-hmm.
+
+770
+01:19:09,584 --> 01:19:27,137
+okay yeah i think i should uh highlight here that you know um one of the words we used in the title of this paper brain like you know it's it's a very interesting word because i think it's true to some extent this model is brain like in the following ways okay so it uses
+
+771
+01:19:27,117 --> 01:19:55,217
+discrete and sparse representations that's relatively more brain-like than gaussian it uses iterative inference that gets better and better over time it also you can uh like you know hypothetically we can think that's more brain like even though that's not it's not settled we don't really know maybe brain is actually more amortized iterative hybrid in a particular in a sense but it's really not brain-like in terms of these biological details so
+
+772
+01:19:56,092 --> 01:20:06,909
+Even this recurrent explaining away, like, okay, for example, another important way in which this model is not brain-like is that there are no explicitly inhibitory neurons.
+
+773
+01:20:06,929 --> 01:20:21,593
+If you look at these biologically plausible circuit models that people in computational neuroscience have been working with, they have explicit population of neurons that are excitatory and inhibitory, and they have different...
+
+774
+01:20:22,197 --> 01:20:41,337
+exhibit different behaviors and so on that is missing from this model let alone glia right so i think that it's yeah it's relatively more brain-like than let's say a gaussian model but it's still far from being brain-like in a truth and full sense of the term
+
+775
+01:20:43,966 --> 01:21:13,770
+so in the postdoc phase you're in like looking back on some of these pretty theoretically synthetic but also implementably useful techniques that you've been working on with colleagues like what are you looking to next or what kinds of work are you going to turn to now okay that's uh um i i think that's
+
+776
+01:21:14,290 --> 01:21:18,475
+I really want to emphasize the engineering aspect these days.
+
+777
+01:21:18,635 --> 01:21:21,459
+I want to make models that work on real data sets.
+
+778
+01:21:21,559 --> 01:21:24,763
+So this paper is pretty theory heavy.
+
+779
+01:21:25,023 --> 01:21:28,127
+I guess just let's derive things from first principles.
+
+780
+01:21:28,247 --> 01:21:29,629
+And it works on toy data sets.
+
+781
+01:21:29,709 --> 01:21:31,551
+It works on natural image patches.
+
+782
+01:21:31,671 --> 01:21:32,693
+It works on NNIST.
+
+783
+01:21:32,713 --> 01:21:33,354
+It generalizes.
+
+784
+01:21:33,834 --> 01:21:36,197
+All of these are very...
+
+785
+01:21:36,177 --> 01:21:45,278
+I would say preliminary, but highly encouraging results that shows that this model might actually work on real datasets.
+
+786
+01:21:45,298 --> 01:21:48,565
+So right now I'm exploring many different directions.
+
+787
+01:21:48,605 --> 01:21:50,710
+Like one of them is
+
+788
+01:21:51,533 --> 01:22:00,949
+In this particular paper, we talk about an online update scheme where your posterior at time t literally becomes your prior at t plus 1.
+
+789
+01:22:01,370 --> 01:22:02,873
+There's no predictive dynamics.
+
+790
+01:22:02,913 --> 01:22:08,242
+There's no anticipatory dynamics where you evolve the posterior to become the next prior.
+
+791
+01:22:08,783 --> 01:22:10,767
+I think that's a key missing piece.
+
+792
+01:22:11,869 --> 01:22:14,453
+And without that, it's not going to work on videos.
+
+793
+01:22:14,433 --> 01:22:18,721
+We've only trained this on natural images, like static images repeated many times.
+
+794
+01:22:19,262 --> 01:22:21,887
+That's one thing I'm working on, predictive component.
+
+795
+01:22:22,768 --> 01:22:25,133
+And this model had a single layer.
+
+796
+01:22:25,193 --> 01:22:26,175
+It's not hierarchical.
+
+797
+01:22:26,335 --> 01:22:34,350
+But we know that from predictive coding, and I have another paper from two years ago, that hierarchical inference has many benefits.
+
+798
+01:22:34,650 --> 01:22:36,694
+And if I
+
+799
+01:22:36,674 --> 01:23:03,306
+want to make this work on real data sets like a video it should have hierarchical latent structure so these are two directions uh i think they're related but independent directions like predictive component and hierarchical architecture is what i'm pushing this toward one last thing that i'm actually pretty excited about these days is that you know this out of domain generalization is is a big big challenge in robotics you know people train their robots in some
+
+800
+01:23:03,286 --> 01:23:26,290
+you know in some environments and when you test those robots in some slightly different environment even even just like simple luminance change and things like that breaks the the perception algorithm of those those robots and because i have these like very promising od results i'm hoping that i can beef up this model and then show that it actually uh helps
+
+801
+01:23:26,270 --> 01:23:31,257
+address some of those very difficult challenges in robotics, especially when it comes to OD.
+
+802
+01:23:31,838 --> 01:23:36,083
+So just to summarize, predictive component, hierarchical robotics.
+
+803
+01:23:38,507 --> 01:23:38,907
+Awesome.
+
+804
+01:23:39,388 --> 01:23:45,616
+Just while we're right here, could you say a little bit about the natural aspects?
+
+805
+01:23:45,636 --> 01:23:48,520
+And what does Fisher preconditioning do?
+
+806
+01:23:49,301 --> 01:23:52,986
+What values are being transformed or conditioned how?
+
+807
+01:23:53,084 --> 01:24:20,779
+then how would you say that relates to whether something is like natural i think i'm just borrowing that term from you know the literature natural gradient descent if you just look at the uh amari's papers or like you know recent reviews of that that's just how you define natural gradient descent and what is so natural about it is just it it respects the intrinsic geometry of the you know parameter space i can go back to this figure here so
+
+808
+01:24:21,637 --> 01:24:45,028
+know we have okay um now we have you know uh if you remember we are these we have these membrane potentials that's our state space and this curve red curve here is just how you evolve a posterior distribution like each point literally is just the posterior distribution through this operation you exponentiate you construct a poisson distribution from each point and
+
+809
+01:24:45,008 --> 01:24:58,174
+it's not an euclidean space in the sense that if you want to go from here to here and this is like one unit of distance it might be different if you go in this other direction and i think
+
+810
+01:24:59,673 --> 01:25:21,433
+If you want to understand why it's important, why do we have to have this preconditioning specifically for inference, I'm going to actually find the references to point you to because they do a lot better job than I can doing this to motivate that.
+
+811
+01:25:21,493 --> 01:25:29,460
+I'm going to actually just do it right now because I think this is not appreciated enough in the literature.
+
+812
+01:25:29,778 --> 01:25:45,238
+important thing first of all if you want to appreciate why natural gradient definitely check this out the bayesian learning rule is a great paper and this amari paper is of course you know it's the
+
+813
+01:25:45,505 --> 01:25:49,070
+canonical, like the original paper that talks about that.
+
+814
+01:25:49,972 --> 01:25:54,158
+And there's another paper from Imtiaz Khan from 2018.
+
+815
+01:25:54,278 --> 01:25:59,767
+I think I do cite it, but I might not be able to find it right now.
+
+816
+01:26:00,428 --> 01:26:13,367
+That is a four or five page paper where they show some figures and they discuss the intuition why natural gradient is so central and important, especially if you're doing inference.
+
+817
+01:26:13,427 --> 01:26:14,449
+There we go.
+
+818
+01:26:14,783 --> 01:26:16,485
+Start with this.
+
+819
+01:26:16,505 --> 01:26:17,427
+Check out this paper.
+
+820
+01:26:17,807 --> 01:26:31,626
+It's a five-page paper, and they provide an intuition why computing distances in the distribution space and computing or doing stochastic gradient descent in the distribution space is not ideal.
+
+821
+01:26:31,806 --> 01:26:38,075
+You have to do natural gradient descent to respect the intrinsic geometry.
+
+822
+01:26:40,338 --> 01:26:42,681
+And intrinsic geometry should be respected.
+
+823
+01:26:43,808 --> 01:26:44,349
+Exactly.
+
+824
+01:26:46,251 --> 01:26:47,633
+Anything else you want to add?
+
+825
+01:26:47,693 --> 01:26:54,242
+This was awesome, though, and I think gives a lot of technical details and really useful aspects.
+
+826
+01:26:56,525 --> 01:26:56,905
+Oh, yeah.
+
+827
+01:26:56,965 --> 01:26:57,846
+Thanks for having me.
+
+828
+01:26:57,946 --> 01:27:00,490
+I mean, I always enjoy these discussions.
+
+829
+01:27:00,730 --> 01:27:05,857
+And I guess if you have any questions, you can find me.
+
+830
+01:27:06,137 --> 01:27:07,980
+You can email me here.
+
+831
+01:27:08,701 --> 01:27:09,862
+You can check out the code.
+
+832
+01:27:10,283 --> 01:27:12,145
+And yeah, that's it.
+
+833
+01:27:12,952 --> 01:27:13,273
+Cool.
+
+834
+01:27:13,854 --> 01:27:20,789
+I put the Discord link in the chat if you want to join or you can find other ways and see you in one year.
+
+835
+01:27:22,392 --> 01:27:22,853
+Definitely.
+
+836
+01:27:22,873 --> 01:27:23,114
+Yes.
+
+837
+01:27:23,154 --> 01:27:23,916
+Looking forward to it.
+
+838
+01:27:24,477 --> 01:27:24,757
+Okay.
+
+839
+01:27:25,018 --> 01:27:25,359
+Thank you.
+
+840
+01:27:25,639 --> 01:27:25,840
+Bye.
+
+841
+01:27:26,321 --> 01:27:26,421
+Okay.
+
+842
+01:27:26,461 --> 01:27:26,942
+Thanks again.
+
+843
+01:27:27,042 --> 01:27:27,383
+Bye.

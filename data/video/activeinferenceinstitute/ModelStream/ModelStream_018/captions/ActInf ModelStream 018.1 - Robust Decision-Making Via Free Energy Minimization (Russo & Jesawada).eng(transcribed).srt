@@ -1,0 +1,2075 @@
+1
+00:00:09,346 --> 00:00:32,856
+hello welcome everyone it is april 28th 2025 and we're in actin model stream 18.1 on robust decision making via free energy minimization so thank you to the authors who have joined today looking forward to this presentation and walkthrough so thanks again and to you all go for it
+
+2
+00:00:34,523 --> 00:00:58,978
+okay thank you daniel um and thank you for the invite for inviting us here so we uh are let's say that's three of us today arash unfortunately was the other first author of the paper that made most of the mathematics you cannot be here today but we will we will uh basically go through the uh the the paper that we have just submitted
+
+3
+00:00:59,768 --> 00:01:03,191
+So let me start with thanking all the co-authors.
+
+4
+00:01:03,211 --> 00:01:07,855
+So these are the co-authors of the paper that is currently on the archive.
+
+5
+00:01:08,656 --> 00:01:22,448
+The paper provides a computational model which we call Dr. Free, which relies basically on free energy minimization for policy computation and tries to install robustness into decision making.
+
+6
+00:01:22,468 --> 00:01:29,674
+So our angle is to design policies making decisions that are robust against certain ambiguities.
+
+7
+00:01:30,599 --> 00:01:36,727
+Our background, so from the group in Salerno, so Arash, Josef and myself, is that of control theory.
+
+8
+00:01:36,747 --> 00:01:42,054
+So I apologize if sometimes maybe I will speak about some control terminology.
+
+9
+00:01:44,318 --> 00:01:46,921
+So I will start with some motivation.
+
+10
+00:01:48,343 --> 00:01:59,458
+First of all, motivating the problem, why we should be able to design agents, autonomous agents that can make decisions amid ambiguity.
+
+11
+00:01:59,776 --> 00:02:28,230
+uh and we will uh let's say check some differences between what is probably a natural intelligence how natural intelligence agents behave and autonomous agents current autonomous agents then i will jump into our solution for uh free energy minimization which is doctor free this computational model i'm going to talk about and then i will let the floor to osefa for some discussion about the code to finally conclude with some remarks
+
+12
+00:02:30,100 --> 00:02:35,366
+Very well, so let's start to set out the ground first.
+
+13
+00:02:35,566 --> 00:02:41,652
+So it is undeniable that autonomous agents have achieved groundbreaking performance.
+
+14
+00:02:42,473 --> 00:02:58,150
+For example, in the figure here in the slide on the left, we can design today agents embodied in robots, for example, that can make very complex tasks like building towers from blocks as the popular child game.
+
+15
+00:02:58,923 --> 00:03:20,020
+But if we look closely to the picture, the agent is performing these tasks in a very controlled environment, which is a lab, and perhaps the policies that the agent learns, so the policies, the method that the agent uses to make actions, are quite inflexible to changes against the environment and against the task.
+
+16
+00:03:20,000 --> 00:03:44,978
+in contrast uh natural intelligence so for example a child that is playing exactly the same game can do the same task in a much more robust way and this is of course only a toy problem imagine what would happen if we had these mismatches between uh the with the environment between the training and the environment and what would happen if the agent starts to misbehave we could have
+
+17
+00:03:45,599 --> 00:03:53,752
+failures in the robot, for example, that could cause damages to the environment, to the robot and maybe to people around them.
+
+18
+00:03:54,614 --> 00:04:05,211
+So the angle that we are going to discuss today is an approach based on the free energy minimization that tries to install robustness into the decision making problem.
+
+19
+00:04:05,647 --> 00:04:10,397
+Again, I speak here from the viewpoint of a person that comes from control theory.
+
+20
+00:04:11,199 --> 00:04:24,027
+So we would like really to design policies, so making decisions that allow agents to compute optimal actions that are also robust against certain mismatches that we will see soon.
+
+21
+00:04:24,007 --> 00:04:37,653
+I know this is a much broader topic because there is a lot of research that could fit a lot of research programs here that spans from, I don't know, math sciences, designing better actuators, designing better centers, better software, etc.
+
+22
+00:04:37,994 --> 00:04:41,019
+Here we are really interested in the intelligent step.
+
+23
+00:04:43,123 --> 00:04:46,690
+And in fact, this is a challenge that requires interdisciplinary foundations.
+
+24
+00:04:47,564 --> 00:04:50,809
+And the approach that we present is, in fact, interdisciplinary.
+
+25
+00:04:50,949 --> 00:05:04,168
+It mixes a few key ingredients, of course, free energy minimization that will serve us as a framework to cast policy computation as an optimal control problem.
+
+26
+00:05:04,188 --> 00:05:15,124
+So with optimal control, I mean the discipline, the problem of finding optimal actions that minimize a given cost function that formalizes the agent task.
+
+27
+00:05:15,290 --> 00:05:28,185
+and the way we will frame the problem we will see that this will have a lot to do with optimization in particular optimization in the space of densities in the probability space which is technically an infinite dimensional optimization problem
+
+28
+00:05:28,925 --> 00:05:51,810
+So the mix of these three key ingredients gives us our computational model, our free energy computational model, which in fact consists of an infinite dimensional free energy formulation and a resolution engine that computes the optimal policy, essentially, and is able to output the optimal policy with provable guarantees.
+
+29
+00:05:54,093 --> 00:05:56,495
+What is the game of this approach?
+
+30
+00:05:56,515 --> 00:05:58,037
+First of all,
+
+31
+00:05:58,540 --> 00:06:06,691
+It can provide a normative framework to equip natural agents to explain behaviors of natural agents.
+
+32
+00:06:06,711 --> 00:06:08,994
+Then we could try to reverse engineer.
+
+33
+00:06:09,074 --> 00:06:18,967
+If we could distill this framework into a robot, for example, as we do in the experiments, we would be able to equip artificial agents with robust free energy minimization properties.
+
+34
+00:06:18,987 --> 00:06:26,877
+And of course, coming from a rather theoretical field like control, it can provide some elegant mathematical methods.
+
+35
+00:06:29,118 --> 00:06:53,050
+so the account that we use the unifying account that we use for policy computation is free energy now free energy is very broad uh there is lots of literature it really comes pops up everywhere in in several apparently different domains coming from of course neuroscience as a theory to explain self self-organization brain functions and behaviors in general
+
+36
+00:06:53,030 --> 00:07:02,138
+to some technological fields such as optimization, mirror descent, maximum entropy, statistical learning, etc.
+
+37
+00:07:02,438 --> 00:07:10,985
+So this is really a unifying account that we are going to leverage for autonomous decision making.
+
+38
+00:07:11,005 --> 00:07:14,628
+So let's start to formalize these decision making problems.
+
+39
+00:07:14,648 --> 00:07:22,395
+So we are going to have an agent which will embody our model that is a free energy minimizing agent and the agent interacts with an environment.
+
+40
+00:07:23,202 --> 00:07:30,229
+Now the agent is equipped with a model of the world, a world model, which is obtained, for example, from training.
+
+41
+00:07:30,409 --> 00:07:37,395
+So this trained model, we call it PBAR, is basically any model of the world that the agent has available.
+
+42
+00:07:37,696 --> 00:07:43,901
+Now it can come from training, it can come from past experience, it can come from any sort of different pieces of information.
+
+43
+00:07:44,262 --> 00:07:52,990
+What is important is that this model is available offline to the agent and the agent will ground its decisions based on this model.
+
+44
+00:07:54,387 --> 00:08:01,622
+Now, the environment, the world, is, as we know, nonlinear, stochastic, and non-stationary in general.
+
+45
+00:08:01,642 --> 00:08:03,727
+So it is a challenged world, the one we live in.
+
+46
+00:08:04,288 --> 00:08:06,953
+And it provides to the agent some information.
+
+47
+00:08:07,013 --> 00:08:09,679
+This information, we call it state, x.
+
+48
+00:08:10,351 --> 00:08:17,282
+This X is a label for both observations and beliefs that are relevant to the agent task.
+
+49
+00:08:17,322 --> 00:08:23,251
+So XK-1 here is the information that is available to the agent in order to make a decision.
+
+50
+00:08:23,271 --> 00:08:26,015
+They can be observations and can be belief functions.
+
+51
+00:08:27,498 --> 00:08:36,612
+Based on this information, the agent, well, it has available the classical generative model and it has subject preferences that we express as cost functions.
+
+52
+00:08:37,587 --> 00:08:56,031
+And based on this, as we will see today, we will be computing a policy which is a randomized probability functions, basically probability density function from which the agent computes an action U. So U is going to be the set of actions that are determined by the agent.
+
+53
+00:08:56,291 --> 00:09:01,197
+And these actions are obtained by sampling from the available information.
+
+54
+00:09:02,779 --> 00:09:03,801
+Now, what is the point?
+
+55
+00:09:04,141 --> 00:09:07,105
+The point is that the environment, the world, is
+
+56
+00:09:07,321 --> 00:09:10,465
+different by definition from the word model.
+
+57
+00:09:11,126 --> 00:09:19,879
+So we would like to study what happens when the environment trained model differs from the real environment.
+
+58
+00:09:19,899 --> 00:09:24,585
+Just in terms of notation, as I said, I'll try to keep the mathematics at the minimum.
+
+59
+00:09:24,725 --> 00:09:29,432
+I just like to flag that random capital letters means random variables.
+
+60
+00:09:29,552 --> 00:09:31,615
+Lowercase letters are just realizations.
+
+61
+00:09:32,196 --> 00:09:34,018
+And subscripts are time dependent.
+
+62
+00:09:34,619 --> 00:09:37,243
+Whenever you see bold, it is basically a vector.
+
+63
+00:09:38,557 --> 00:10:03,788
+so we have this framework here so we have this setup we have an agent that is interacting with uh the world around it we have essentially a feedback system where information in the forms of state feeds the agent the agent computes an action and the actions pushes the world to move in a new state so this is a back back and forth information that we can capture mathematically
+
+64
+00:10:04,358 --> 00:10:31,918
+of course there is an initial condition there is an initial state for the environment which is a prior px0 here then what happens the agent given this initial information using the cost function the preferences and the generative model will determine an action in our framework as i just illustrated the action is obtained by sampling from a policy
+
+65
+00:10:32,472 --> 00:10:34,234
+p given .
+
+66
+00:10:34,695 --> 00:10:40,763
+This is the policy that the agent will use to generate given the current information.
+
+67
+00:10:42,165 --> 00:10:52,759
+And this once sampled is sent to the environment, to the world, and it will make it transition to a new state .
+
+68
+00:10:53,600 --> 00:11:16,333
+now this is just a picture a snapshot at one time step this thing happens this thing happens continuously between zero and let's say some final time n and we can capture all of these as a product so we have a product of these probability density functions or probability mass functions depending if you are working with continuous or discrete states
+
+69
+00:11:17,107 --> 00:11:36,887
+All in all, this big product of probability mass or density functions is just a joint, a big joint probability density or a big joint probability mass function that in MATLAB style notation we indicate with P zero n. So this
+
+70
+00:11:37,390 --> 00:11:43,602
+Closed-loop probability function P captures the behavior, the closed-loop behavior of the agent.
+
+71
+00:11:43,622 --> 00:11:47,570
+So it means that captures the interactions between the agent and the world.
+
+72
+00:11:48,372 --> 00:11:52,480
+Now we could do technically exactly the same thing with the generative model.
+
+73
+00:11:52,460 --> 00:12:16,830
+so we could make a big product of all the conditional densities given some initial prior and we can call this probability uh function q0n so this q0n is the joint probability density function of states and actions from the generative model so the subject of our of our model
+
+74
+00:12:17,435 --> 00:12:35,106
+goal of our model is that of computing the method to generate the action so it's to compute the policies and the policies are going to be computed via free energy minimization so how do we cast the free energy minimization problem first of all um
+
+75
+00:12:36,335 --> 00:12:59,322
+we use the definition of variational free energy okay so variational free energy is essentially a complexity plus an expected cost and expected loss terms now complexity statistical complexity it is measured using the standard kulbeck-leibler divergence so the kulbeck-leibler divergence i'm sure everybody that does active inference is familiar with but it has basically this expression here
+
+76
+00:12:59,302 --> 00:13:08,677
+So it is not a distance because it is not symmetric, but it is non-negative and it is zero if and only if P and Q are the same.
+
+77
+00:13:08,737 --> 00:13:17,531
+So we have this complexity term that quantifies how far the closed loop system P0n is from the generative model.
+
+78
+00:13:18,072 --> 00:13:19,875
+So it is a sort of an error term.
+
+79
+00:13:21,290 --> 00:13:48,462
+and then there is an expected loss well the expected loss is just the expectation over the closed loop behavior p zero n of the summation between the state and the action costs the good news uh is that we know how to solve these uh control problems when basically the trained model is the same as the world model where basically you see in green here in the slide we have p
+
+80
+00:13:48,948 --> 00:14:06,957
+k being the train model and being exactly the same as the word model so the good news is that we know how to solve this uh this optimization or optimal for problems in a number of very recent papers that we got with that we got published uh and as a matter of fact we know how to compute policies in this setup
+
+81
+00:14:07,578 --> 00:14:34,243
+let's consider one example that we will use throughout this live stream here which leverages a very nice platform from georgia tech which is called the robotarium the robotarium is a robotic platform that allows you to deploy experiments remotely so these guys from georgia tech basically provide you robots and provide you a small workspace where you can deploy your algorithms and then and there are the experiments for you
+
+82
+00:14:35,422 --> 00:14:49,078
+So the Robotarium uses a rover, a unicycle robot, where xk, the state, is the position of the robot, and uk are the input speeds at the wheels.
+
+83
+00:14:49,819 --> 00:14:58,469
+Now in the experiments that are also in the preprint that is attached to this live stream, the robot has to move in an environment that is filled with obstacles.
+
+84
+00:14:58,489 --> 00:15:00,231
+So whatever you see here in red,
+
+85
+00:15:00,211 --> 00:15:05,080
+are obstacles, and the green position is the goal destination of the robot.
+
+86
+00:15:05,100 --> 00:15:12,453
+So, of course, we would like to solve a navigation task where we reach the green position while avoiding the red.
+
+87
+00:15:15,257 --> 00:15:23,552
+Now, let's use, let's minimize the free energy, pretending that the world model and the robot model are exactly the same.
+
+88
+00:15:24,055 --> 00:15:43,735
+but let's assume let's say that we learn a model of the robot from a set of corrupted data let's say so that there is a very small difference between the real model of the robot which is the one in the bottom in blue and the the the model obtained from training which is the one in red so you see that
+
+89
+00:15:44,204 --> 00:15:51,078
+The difference is only one parameter, and the difference in that parameter is about 10%.
+
+90
+00:15:51,399 --> 00:15:56,550
+So as an engineer speaking now, 10% difference in a parameter is not that much.
+
+91
+00:15:56,630 --> 00:15:59,496
+So it's something that the system should be able to tolerate.
+
+92
+00:16:02,243 --> 00:16:07,773
+Now, let's consider, let's set up the policy computation framework.
+
+93
+00:16:07,793 --> 00:16:21,518
+Let's say we have a very simple generative model where the state distribution is a Gaussian centered in the goal destination and Q, the policy distribution, a generative policy distribution, is just a uniform distribution.
+
+94
+00:16:22,122 --> 00:16:29,034
+And let's say that the preferences, the cost of the agent, formalize collision avoidance with the obstacles.
+
+95
+00:16:29,154 --> 00:16:34,002
+So our cost functions are basically something like the one that you see in the bottom of the picture.
+
+96
+00:16:34,042 --> 00:16:38,169
+So we have walls, mountains that emulate the presence of the obstacles.
+
+97
+00:16:38,490 --> 00:16:47,725
+And then you have a minimum in the bottom left area, in the bottom left part of the work area, minus 1, minus 1.5.
+
+98
+00:16:48,363 --> 00:16:57,083
+So let's see what happens if we pretend, actually, if we don't know that the real robot is different from the robot that we learned during training.
+
+99
+00:16:57,123 --> 00:16:59,769
+So let's apply the results that are known in the literature.
+
+100
+00:16:59,789 --> 00:17:05,241
+So we just minimize these cost function on here in the policy space.
+
+101
+00:17:06,318 --> 00:17:13,229
+And what we see is something that is quite relevant for us.
+
+102
+00:17:13,730 --> 00:17:29,676
+What we see is that in this very simple setup, by using the optimal policy and by only having a 10% discrepancy between the real model and the model from training, basically the robot fails in the task
+
+103
+00:17:29,656 --> 00:17:33,929
+basically every time except then in trivial situations.
+
+104
+00:17:34,089 --> 00:17:42,855
+By trivial situations, I mean situations where the shortest path between the initial position of the robot and the final destination is obstacle-free.
+
+105
+00:17:43,105 --> 00:17:51,397
+You see that only in the red curve there is the only initial position that the robot is able to achieve the final destination.
+
+106
+00:17:51,878 --> 00:18:01,873
+All the others, whenever there is an obstacle along the path so that the robot should change direction to avoid obstacles, the robot fails.
+
+107
+00:18:02,444 --> 00:18:31,472
+does not achieve the destination of course this means if it was a real robot interacting in a real environment this means that there is a crash with a wall or with the environment in general that can be even dangerous this is exactly the type of behavior that we would like to avoid so first of all um this mismatch between the real robot and the robot model available during training is called ambiguity so we have an ambiguous model
+
+108
+00:18:32,060 --> 00:18:34,723
+and this ambiguity can have catastrophic effects.
+
+109
+00:18:35,064 --> 00:18:40,069
+So it can lead to failures that can be catastrophic for the agent and for the surroundings.
+
+110
+00:18:41,611 --> 00:18:51,943
+So in the next part of the presentation, and then Josepa will follow up with the code with implementations, we will discuss how our model can mitigate this issue.
+
+111
+00:18:52,544 --> 00:18:54,186
+In particular, our model
+
+112
+00:18:54,790 --> 00:19:07,332
+relies on free energy minimization but we will see that basically we will minimize the worst case free energy and that means that implies a free energy maximization step which is quite unusual
+
+113
+00:19:09,016 --> 00:19:23,218
+Then the model will allow us to establish what are the best performance that can be achieved by an agent that follows the model, plus will have some interpretability properties.
+
+114
+00:19:23,379 --> 00:19:31,552
+So the cost driving the actions of an agent can be inferred from the viewpoint of an external observer.
+
+115
+00:19:32,834 --> 00:19:34,416
+And also clarifies
+
+116
+00:19:34,868 --> 00:20:03,407
+some cognitive behaviors like this hint he tries to explain some cognitive behaviors in the in the in the regimes of large and small ambivalence so this is what the model will do now let's see what the model actually is and we should start by formalizing a little bit the problem and we should check why the robot was failing we should understand why the robot was failing in the previous example when the ambiguity was not considered
+
+117
+00:20:05,058 --> 00:20:06,580
+So let's go back to our picture.
+
+118
+00:20:07,642 --> 00:20:13,871
+In the end, what happened before was that the real robot was different from the robot learned during training.
+
+119
+00:20:13,931 --> 00:20:16,114
+So the two PDFs there were different.
+
+120
+00:20:16,215 --> 00:20:22,644
+And this small mismatch created the crashes that we saw in the picture just a few minutes before.
+
+121
+00:20:23,826 --> 00:20:29,935
+We can make a step, an abstraction step, and realize that we can look at these objects in the space of density.
+
+122
+00:20:30,370 --> 00:20:34,555
+Okay, now these two objects are just two points in the space of densities.
+
+123
+00:20:34,575 --> 00:20:43,344
+Let's say P bar is the training model, the nominal model that the agent has available, and P is going to be a different point in this space.
+
+124
+00:20:44,485 --> 00:20:56,158
+We are interested in protecting the decisions of the agent against all possible perturbation in this space that are in a suitably defined set.
+
+125
+00:20:56,577 --> 00:21:06,128
+OK, so what we are going to define is a neighborhood, a sort of neighborhood, although it's not properly mathematically enabled, which is centered around the nominal model.
+
+126
+00:21:06,568 --> 00:21:11,534
+And we are going to call this radius eta, which we call a radius of ambiguity.
+
+127
+00:21:12,075 --> 00:21:16,159
+So the set inside the circle here is going to be called ambiguity set.
+
+128
+00:21:17,401 --> 00:21:19,463
+And eta is going to be the radius of ambiguity.
+
+129
+00:21:22,261 --> 00:21:24,366
+We can formalize things a little bit more.
+
+130
+00:21:24,547 --> 00:21:28,777
+There are some technicalities that I refer to the interested readers to the paper.
+
+131
+00:21:29,038 --> 00:21:38,903
+And we can say that basically this set, this circle, is the set of all probability densities that have Kullbeck-Leibler divergence from the nominal model of at most eta.
+
+132
+00:21:39,710 --> 00:21:52,909
+Again, eta is an ambiguity radius, quantifies how ambiguous the model, the training model is, can be state dependent, time dependent, and action dependent, of course.
+
+133
+00:21:54,087 --> 00:21:58,634
+And it has a straightforward interpretation.
+
+134
+00:21:58,734 --> 00:22:08,469
+Basically, if it is small for a given action and state pair, this means that the agent is quite confident or believes it is confident in the model P bar in the training model.
+
+135
+00:22:08,829 --> 00:22:14,458
+Otherwise means that it has low confidence in the model that it has available.
+
+136
+00:22:17,982 --> 00:22:44,327
+so we have formalized this oh sorry this carl maybe wanted to say something i i swear hand raising you you did and i do want to say something and i i should apologize because i have to go in a few minutes but i just wanted the opportunity to congratulate you on on this work um before i go away uh you know there are
+
+137
+00:22:45,775 --> 00:22:48,958
+I think a number of things that this work brings to the table.
+
+138
+00:22:49,218 --> 00:23:08,338
+And the first thing I think you've really highlighted is the intimate relationship between the sort of biomimetic applications of the field entry principle and active inference and control theoretic approaches, which of course really start to matter when in real world implementations and neuro robotics and the like.
+
+139
+00:23:08,478 --> 00:23:13,723
+So I just wanted to acknowledge that that's a really important point of convergence.
+
+140
+00:23:14,058 --> 00:23:42,023
+and just also um foreground the key advance that you've framed and you're about you i'm going to miss my favorite part because you're about to explain my favorite part but uh just to sort of put it in context um you know to my mind this brings a very fresh and different view of ambiguity to the table from the point of view of active inference because
+
+141
+00:23:42,104 --> 00:24:04,095
+Unlike active inference and discrete state space models where ambiguity is all about an intrinsic part of expected free-ranging, ambiguity in this instance, I think, is much closer to the notion that you would find in economics, where it's not only uncertainty about what will happen if I do this,
+
+142
+00:24:04,075 --> 00:24:30,167
+but it's i don't even know the game i'm playing and this is really literally a deep aspect of uncertainty and basically i think what you're bringing to the table here is a principled way of resolving that or incorporating that uncertainty incorporating that uncertainty quantification into a vanilla free energy minimizing process and
+
+143
+00:24:30,434 --> 00:24:39,512
+So to my mind, this is very much and literally a deep solution that one can look at in many ways.
+
+144
+00:24:39,673 --> 00:24:49,152
+One can look at this as basically a clever way of Bayesian model averaging by including uncertainty about the very structure, about the very
+
+145
+00:24:49,418 --> 00:25:14,042
+parameterization of the model itself by bringing hyper priors to the table that say look you know I know what to do if this is the right model but I have this extra kind of ambiguity this extra kind of uncertainty that actually inherits from not knowing what the model in and of itself is and you've provided a particular structure to that I just want to conclude by
+
+146
+00:25:14,022 --> 00:25:27,913
+and this is something that you might pick up in later discussion, but it also, this sort of kind of robust Bayesian model averaging or handling ambiguity,
+
+147
+00:25:28,180 --> 00:25:41,205
+not only accommodates the uncertainty about the very structure of the model itself, but it also resolves something which is generic to variational approaches, which is the overconfidence problem.
+
+148
+00:25:42,408 --> 00:25:44,552
+So even if you knew the right model,
+
+149
+00:25:44,971 --> 00:25:56,100
+the mean field approximations that are inherent in variational bays and the minimization of variational free energy inevitably lead to an overconfidence.
+
+150
+00:25:57,363 --> 00:26:00,972
+And in principle, I think the technology you're about to
+
+151
+00:26:01,981 --> 00:26:27,735
+you know do a deep dive on um will also resolve that overconfidence problem which has been long-standing um you know in variational inference and of course really starts to bite when you actually put robots into play so i'll stop there uh but just to thank you for involving me in this work and again congratulate you thank you for the kind words and
+
+152
+00:26:28,475 --> 00:26:45,066
+we can follow up on the many future and interesting directions that come from this work that start from this work okay so i'm gonna i'm gonna continue uh
+
+153
+00:26:45,299 --> 00:27:09,484
+so uh let me make a step back maybe uh so let me recall here the definition of ambiguity well the mathematical details here are not that relevant although the structure of this formula is important for our proofs whatever i'm going to show you is basically proof supported so there is mathematics out there that supports our claimant claims of course here i'm gonna keep it at a very high level
+
+154
+00:27:11,017 --> 00:27:18,048
+So we want to find this policy that is free energy minimizing, but yet it is robust.
+
+155
+00:27:19,751 --> 00:27:31,810
+So basically, we want to find now a policy, a method that finds the optimal policy minimizing the variation of free energy, but across that ambiguity that Carlo was also mentioning just a few seconds before.
+
+156
+00:27:32,296 --> 00:27:33,538
+And how do we do that?
+
+157
+00:27:33,558 --> 00:27:35,360
+So let me frame it first in English.
+
+158
+00:27:35,641 --> 00:27:35,981
+Okay.
+
+159
+00:27:36,262 --> 00:27:39,126
+So again, we want to find the optimal policy.
+
+160
+00:27:39,646 --> 00:27:45,474
+So we are going to find a probability density function or a sequence of probability density function.
+
+161
+00:27:46,756 --> 00:27:49,380
+P star u k given x k minus one.
+
+162
+00:27:49,420 --> 00:27:55,869
+Now, whenever you see the star symbol means optimality and the curly bracket over there means a sequence.
+
+163
+00:27:56,009 --> 00:27:58,793
+Possibly this is a sequence of policies.
+
+164
+00:27:59,887 --> 00:28:07,082
+So we want this solution, this policy, to be the solution of a problem where we minimize the variation of free energy.
+
+165
+00:28:07,102 --> 00:28:18,064
+So the optimal policy is the hard mean, is the minimizer of a cost functional that is complexity plus expected cost, just in the way we saw a few minutes before.
+
+166
+00:28:18,483 --> 00:28:41,115
+but there is ambiguity and we must take into account ambiguity so we are not just minimizing this cost functional where we are actually accommodating for the worst case so we are minimizing the maximum free energy where the maximum is taken across all possible environments all possible world models that belong to the ambiguity set that i just introduced
+
+167
+00:28:41,568 --> 00:29:06,715
+so we have a mean max problem where the minimization is as usual in the policy space but this minimization in the policy space happens on an inner maximization problem where we maximize over all possible words in the ambiguity set this is the let's say the english translation of of of our of our framework we can be a little bit more mathematical
+
+168
+00:29:07,150 --> 00:29:14,498
+Okay, so I'm just going to put the problem statement here, which looks, let's say, a huge equation, but it's not that complicated.
+
+169
+00:29:14,518 --> 00:29:20,005
+So again, we want to find the optimal policy, the green part in the sentence.
+
+170
+00:29:20,025 --> 00:29:31,057
+And we want to minimize the variation of free energy, which is nothing else than complexity and expected costs, where complexity is again complexity between the closed-loop system and the generative model.
+
+171
+00:29:31,498 --> 00:29:36,043
+And the expected cost is specified through the action and state costs.
+
+172
+00:29:37,407 --> 00:29:51,844
+And we want to minimize the worst-case free energy across ambiguity, which means that we want to minimize the maximum free energy across all possible environments that belong to the ambiguity set I just introduced.
+
+173
+00:29:51,864 --> 00:30:03,077
+So this is basically the formulation, the distributionally robust free energy minimization formulation that we have in the preprint that you see online, that is also linked to the live stream.
+
+174
+00:30:05,453 --> 00:30:15,363
+It is a challenging problem from the mathematical viewpoint because it is infinite dimensional and it is a mean max optimization problem.
+
+175
+00:30:15,864 --> 00:30:17,766
+And it is also a nonlinear problem.
+
+176
+00:30:17,846 --> 00:30:25,113
+So it is basically we cannot rely on linearity of the constraints or linearity of the cost function.
+
+177
+00:30:25,133 --> 00:30:31,900
+Actually, the big step in the preprint online is that this problem can be solved
+
+178
+00:30:32,335 --> 00:30:56,149
+and this basically gives us the resolution engine the resolution engine is the set the software tools and the mathematical methods that make it possible to solve that big optimization problem and make it possible to compute effectively a policy so how does it work in really a nutshell um
+
+179
+00:30:56,517 --> 00:31:08,719
+The agent, which now we are exploding, so we are giving a little bit more details, gets Xk-1, the state, the current state, beliefs or observations, uses the generative model and the state cost.
+
+180
+00:31:09,561 --> 00:31:20,601
+It will compute a policy, and the policy will be computed by minimizing in a recursive way the variation of free energy, the max variation of free energy.
+
+181
+00:31:20,918 --> 00:31:22,820
+So what is the resolution engine?
+
+182
+00:31:22,840 --> 00:31:23,861
+What will it do?
+
+183
+00:31:23,881 --> 00:31:25,603
+And then Josefa will jump in the code.
+
+184
+00:31:26,223 --> 00:31:32,089
+First of all, it can break down at a temporal scale and at a logical level the original free energy problem.
+
+185
+00:31:32,109 --> 00:31:45,402
+So there are lemmas out there, technicalities that tell you that the problem can be solved at different time steps and that minimization and maximization have a precise order in which they should be performed.
+
+186
+00:31:45,422 --> 00:31:48,985
+So first we should do maximization and then we should do minimization.
+
+187
+00:31:49,555 --> 00:31:52,379
+So this gives you basically a bi-level approach.
+
+188
+00:31:55,183 --> 00:32:02,995
+And these software and lemmas, what they do, they yield you an explicit expression for the optimal policy.
+
+189
+00:32:03,355 --> 00:32:05,618
+So we know what the optimal policy is going to be.
+
+190
+00:32:05,638 --> 00:32:10,646
+And also tell you what is the lowest challenge that the agent can achieve under ambiguity.
+
+191
+00:32:10,666 --> 00:32:11,547
+So the optimal value.
+
+192
+00:32:15,003 --> 00:32:36,370
+from the optimal policy which is going to be a probability density function like the one that you see in the picture we are going to sample an action with standard methods so we are going to sample uk send it to the environment and the loop will continue on and on so let me start giving you some just the flavor of these key elements here
+
+193
+00:32:36,738 --> 00:32:40,202
+First of all, the policy can be completed in a recursive way.
+
+194
+00:32:40,402 --> 00:32:48,691
+In particular, it can be shown, I don't do the details here, that the policy can be computed straight away as a minimization problem.
+
+195
+00:32:49,372 --> 00:33:03,488
+Where the original problem is, this is a perturbation of the original problem, where it will be apparent to you that rather than the cost we had before, now we have what we call the cost of ambiguity.
+
+196
+00:33:04,413 --> 00:33:29,728
+we call this cost of ambiguity because it comes from an optimization problem the the maximization step in the in the environment in the environment space that i mentioned before but this cost is there just because there is ambiguity if there was no ambiguity we would not have this step and then we will recover classic methods ambiguity free methods so
+
+197
+00:33:30,164 --> 00:33:56,104
+just two key takeaways here that there is a free energy maximization step if you look at the top diagram top equation top formula in green you will realize that this is maximizing a variational free energy so we have a free energy maximization step and it turns out that this free energy maximization step that gives us a cost of ambiguity is the guy that guarantees robustness
+
+198
+00:33:57,468 --> 00:34:20,674
+also of course as also carl was mentioning the model does not need the agent to know what is the real environment of the of the of in which the robot is moving for example the real robot model the real real robot model um it only relies on the probability uh sorry on the on the ambiguity set b eta
+
+199
+00:34:24,248 --> 00:34:44,164
+also in the top formula there is a c bar that this comes from a a backward recursion so one could use dynamic programming or neural approximators deep neural networks for example to estimate these pieces of this piece i'm not going into the details of this right now so
+
+200
+00:34:44,903 --> 00:35:14,623
+we have two steps as we said and down a logical breakdown of the of the decision problem so we want to find a policy finding the policy means minimizing that cost that is now at the center of the slide in the middle of the slide which has the cost of ambiguity and this cost of ambiguity comes from maximizing the free energy in order to make the model useful so deployable essentially we need to find a way to compute the cost that cost of ambiguity
+
+201
+00:35:15,481 --> 00:35:19,810
+Cost of ambiguity depth, I remind you, comes from this optimization problem.
+
+202
+00:35:19,850 --> 00:35:24,180
+Now, this is a very hard optimization problem because it is infinite dimensional.
+
+203
+00:35:24,220 --> 00:35:27,206
+So this is optimization in the space of density.
+
+204
+00:35:27,908 --> 00:35:33,760
+And it is also a nonlinear problem, although in a constraint that is a compact set.
+
+205
+00:35:34,482 --> 00:36:01,857
+it turns out that most of our methods the formal methods that we developed were aimed at proving that you can actually compute this cost in a rather efficient way i would add or at least with uh off-the-shelf tools from convex optimization okay i this is actually a set of theorems propositions and lemma which i'm going to package as a meta theorem which is very informally stated
+
+206
+00:36:02,208 --> 00:36:07,984
+This method theorem says that the cost of ambiguity has a specific form.
+
+207
+00:36:08,064 --> 00:36:10,591
+It's eta plus c tilde.
+
+208
+00:36:10,611 --> 00:36:10,711
+Okay.
+
+209
+00:36:11,553 --> 00:36:12,756
+Well, eta is a given.
+
+210
+00:36:12,877 --> 00:36:16,707
+Eta is the radius of ambiguity and c tilde is what our model computes.
+
+211
+00:36:17,142 --> 00:36:24,053
+Now this C tilde comes from solving an optimization problem that now is a scalar optimization problem.
+
+212
+00:36:24,093 --> 00:36:27,218
+So in this formula, alpha is a non-negative scalar value.
+
+213
+00:36:27,298 --> 00:36:36,893
+So we just have scalar optimization and B tilde alpha is a function that I'm not going to specify here, but it is convex.
+
+214
+00:36:36,913 --> 00:36:37,935
+So in the end,
+
+215
+00:36:38,303 --> 00:36:52,077
+we can recast the problem of solving or finding the cost of ambiguity and address this problem via a convex scalar optimization problem that moreover has a global minimum, of course, because it is convex optimization.
+
+216
+00:36:54,807 --> 00:37:21,709
+so we can go back to our resolution engine and say that that general step about finding the maximum free energy can be addressed with a scalar convex optimization problem so we did not build a solver for this we used off-the-shelf tool so that the problem that we are going to minimize now the cost function that we are going to minimize has a very specific structure you see that the cost of ambiguity is eta plus c killed
+
+217
+00:37:22,313 --> 00:37:27,396
+So the only thing that is needed to be done is to minimize this guy in the space of policy.
+
+218
+00:37:28,912 --> 00:37:30,134
+Now, this might.
+
+219
+00:37:30,354 --> 00:37:31,617
+Oh, sorry, I forgot.
+
+220
+00:37:31,777 --> 00:37:35,062
+So what what is the engine actually doing?
+
+221
+00:37:35,443 --> 00:37:44,178
+Taking the generative model, it is computing a cost of ambiguity, which sometimes it has this double shaped potential here.
+
+222
+00:37:44,198 --> 00:37:52,692
+So this is a cost of ambiguity means that in minus one and one, the ambiguity is very low or it is lower than other parts.
+
+223
+00:37:52,672 --> 00:38:12,857
+uh and for example uh towards the end of this diagram towards the sides of this diagram the ambiguity is much larger so the cost is much much larger so what does our model do computes this cost of ambiguity and will output the policy and the policy comes from minimizing this cost functional here
+
+224
+00:38:13,141 --> 00:38:22,416
+Now, this might seem as a very abstract, as a rather abstract problem, optimization problem, but actually it is very popular in the literature.
+
+225
+00:38:22,797 --> 00:38:28,847
+And it even has a policy that is a well-defined algebraic solution, which is a softmax.
+
+226
+00:38:28,867 --> 00:38:34,035
+So what you see here is basically a softmax function, a twisted softmax function.
+
+227
+00:38:35,197 --> 00:38:41,285
+And what is the idea that this formula, that this policy implements?
+
+228
+00:38:41,325 --> 00:38:55,643
+Well, the optimal policy expression is telling us that the optimal solution is given by the generative model, QU, so the bias of the agent, the beliefs of the agent, in a sense.
+
+229
+00:38:55,663 --> 00:39:01,390
+And this model is somehow weighted and or distorted by an exponential.
+
+230
+00:39:01,960 --> 00:39:11,655
+Now, the exponential in what I think it is quite interesting is that the exponential assigns lower values that are associated to high ambiguity.
+
+231
+00:39:12,016 --> 00:39:20,830
+So in the end, the probability of getting an action that is very ambiguous is going to be lower and lower, according to our model.
+
+232
+00:39:22,295 --> 00:39:51,998
+moreover as i said before we can also quantify what is the smallest possible free energy which has a log sum exp expression which is standard in the literature from physics for example so there is quite a lot on this slide so i'd like to emphasize again the optimal policy the structure the optimal policy is nothing else than a twisted or distorted version of the generative model q uk given x k minus one and the distortion happens to an exponential function
+
+233
+00:39:52,298 --> 00:39:55,803
+And the exponential is lower when the ambiguity is large.
+
+234
+00:39:56,564 --> 00:40:06,097
+So this means that the probability of sampling an action that is associated to high ambiguity is very small.
+
+235
+00:40:06,117 --> 00:40:15,049
+So the policy in our model has a very clear and neat structure, at least algebraic structure.
+
+236
+00:40:15,873 --> 00:40:38,556
+what happens inside the model so we can continue developing the flow of information inside the model so we have the cost of ambiguity computed with that scalar optimization problem we gather the generative model and we build the exponential inside the policy formula then the two terms here are multiplied with each other and after normalization we obtain the policy
+
+237
+00:40:38,924 --> 00:41:03,042
+you see it is quite clear that the policy the optimal policy coming from multiplication and normalization is a compromise between the generative model and the ambiguity so let me close the loop going back to the original problem that i was considering where the classical method would fail in this setting
+
+238
+00:41:03,460 --> 00:41:09,386
+So we have our rover, unicycle robot that is moving in this environment filled with obstacles.
+
+239
+00:41:09,826 --> 00:41:16,112
+We have the same generative model as before, the same training and robot model as before and the same cost.
+
+240
+00:41:16,132 --> 00:41:19,496
+So exactly the same frame.
+
+241
+00:41:19,516 --> 00:41:31,948
+And I remind you that when we don't take into account ambiguity, bad things can happen in the sense that the robot can crash in the obstacles unless this is really, unless we really have a trivial situation.
+
+242
+00:41:33,143 --> 00:41:45,914
+With our model instead, with Dr. Free, starting exactly from the same initial conditions and starting with exactly the same setup, you see that the robot is able to navigate towards the destination.
+
+243
+00:41:45,934 --> 00:41:50,545
+So, for example, take the green trajectory, the green path of the robot,
+
+244
+00:41:51,166 --> 00:42:06,930
+the right side of the slide on the right side of the slide it will crash in the obstacle in the bottom obstacle instead in the left with our model in the left part of the slide with our model it is able to read out in order to achieve the destination and reach the the final destination
+
+245
+00:42:09,340 --> 00:42:24,254
+Now, I think I gave quite a few details, and probably the best thing is to jump to the code to see it in action, unless there are questions or comments that you would like to discuss at this stage.
+
+246
+00:42:27,437 --> 00:42:28,478
+Looks awesome.
+
+247
+00:42:28,498 --> 00:42:29,159
+Please continue.
+
+248
+00:42:30,500 --> 00:42:33,103
+Then please, Josefa, I'll let you share the screen.
+
+249
+00:42:36,446 --> 00:42:36,546
+Okay.
+
+250
+00:42:42,196 --> 00:42:44,298
+Please confirm, can you see my screen?
+
+251
+00:42:44,739 --> 00:42:45,159
+Looks good.
+
+252
+00:42:45,219 --> 00:42:45,600
+Thank you.
+
+253
+00:42:46,781 --> 00:42:48,063
+Okay.
+
+254
+00:42:48,103 --> 00:42:48,543
+Hello, everyone.
+
+255
+00:42:48,744 --> 00:42:54,050
+My name is Josefa, and I'm a postdoc with Giovanni at University of Salerno.
+
+256
+00:42:54,070 --> 00:42:55,631
+And my background is in control theory.
+
+257
+00:42:56,793 --> 00:43:00,056
+I would like to thank Daniel for inviting us for this presentation.
+
+258
+00:43:01,598 --> 00:43:08,406
+And I will present the code walkthrough for the robust decision making via free energy minimization.
+
+259
+00:43:09,095 --> 00:43:15,802
+So we'll start with the out.
+
+260
+00:43:16,562 --> 00:43:18,304
+First, we'll start with the resolution engine.
+
+261
+00:43:19,826 --> 00:43:23,329
+Then we'll discuss the robot experiments in more detail.
+
+262
+00:43:23,389 --> 00:43:27,113
+What is the cost structure for this implementation?
+
+263
+00:43:27,653 --> 00:43:29,735
+How we train the dynamics model?
+
+264
+00:43:30,716 --> 00:43:32,098
+How we define the cost function?
+
+265
+00:43:32,158 --> 00:43:35,982
+What is the ambiguity radius and what is the cost of ambiguity?
+
+266
+00:43:36,102 --> 00:43:37,363
+How is computed?
+
+267
+00:43:37,732 --> 00:44:01,039
+and at the end how we compute the policy basically and then we'll talk about the in silico and experimental results and then i will talk about in the end about the belief of that part which is a very cool part for of this doctor free algorithm okay so the resolution engine as giovanni just presented a few minutes ago
+
+268
+00:44:01,407 --> 00:44:17,042
+We want to solve a problem in which we want to obtain optimal policy, a set of optimal policies, which minimizes the maximum free energy cost basically.
+
+269
+00:44:18,023 --> 00:44:27,972
+And we have our model, the environment's model, the real environment's model is inside a ball
+
+270
+00:44:28,357 --> 00:44:57,874
+centered around a nominal model p bar and in the code i call p bar as a nominal model and so we we decompose this problem into a bi-level problem where we want to minimize over the free energy and the the maximum maximization of the free energy is implicitly incorporated in the terms of eta and c tilde which which makes the cost of ambiguity
+
+271
+00:44:58,310 --> 00:45:11,162
+And we obtain, by solving this problem, we obtain the twisting kernel policy where eta and C tilde are the exponent of the exponential policy.
+
+272
+00:45:12,603 --> 00:45:15,666
+So this is the flow of the Dr. Free Resolution Engine.
+
+273
+00:45:16,606 --> 00:45:22,952
+Now, so first I will introduce the robot experiments that we want.
+
+274
+00:45:22,972 --> 00:45:26,055
+We use the Robotarium platform by Georgia Tech.
+
+275
+00:45:26,677 --> 00:45:56,565
+and you can send your code to them and they will implement your code on the robots and you can they will send you the video and the results basically and what this is a real real snapshot of the platform of the work area and the robot a unicycle robot basically what we want what our task is that we want to drive the robot successfully to the cross while avoiding the red obstacles basically
+
+276
+00:45:57,271 --> 00:46:18,638
+uh the work area is around three cross two meters in size and uh there are multiple robots if if you have multi-agent problem also it's a it's a good platform for but for now we only consider a single agent here for simplicity um so this is what the
+
+277
+00:46:19,023 --> 00:46:47,713
+code looks like uh um so first we we define the global variables and action space um so so we import all the necessary libraries here the rps is the robotarium python simulator uh it's a package by the robotarium platform uh and we call the robotarium which initializes the robots the transformation from the unicycle dynamics to the
+
+278
+00:46:48,520 --> 00:47:14,393
+the linear dynamics and all the other utilities we call to solve the optimization problem for the obtaining the cost of ambiguity we use scipy and it's a minimized tool tool to minimize the function and we use some other plotting functions plotting libraries like matplotlib and sklearn to initialize our question process model
+
+279
+00:47:14,963 --> 00:47:40,768
+um here uh i define the action spaces so action spaces is basically the velocities of the robot in both axis x-axis and y-axis and we define it as a grid of a pi cross five uh discretization and it ranges from zero point minus 0.5 to 0.5 the speeds of the of the robots in both directions
+
+280
+00:47:41,896 --> 00:48:11,093
+now after doing this first what we have to do is to load the dynamics model or train the dynamics model so the p bar is the model that we have from the of the environment learned by some set of data um and here in our case we have three different data sets x1 x2 and x3 are the like the states of the robot uh and the positions
+
+281
+00:48:11,461 --> 00:48:39,763
+and the u1 the u is the input or the velocity is given to that robot at particular time and we create a stack of these two to make the training input and y is our target so the next possible state given the previous state and the current input what will be the next state is the is represented by so we have such three data sets each consisting of 500 samples
+
+282
+00:48:40,047 --> 00:48:44,612
+And we train three different Gaussian process models here.
+
+283
+00:48:48,356 --> 00:48:54,522
+So the Gaussian process, basically, the most important component of a Gaussian process model is the kernel function.
+
+284
+00:48:54,662 --> 00:49:01,349
+So the kernel function is basically finding the distance between the two data points at a given time.
+
+285
+00:49:02,751 --> 00:49:06,915
+So here, the most widely used kernel function
+
+286
+00:49:07,385 --> 00:49:15,357
+in a Gaussian process modeling is a RBF kernel with some constant term multiplied to it.
+
+287
+00:49:15,797 --> 00:49:23,068
+So here, we define the kernel function, the constant term, the RBF.
+
+288
+00:49:23,689 --> 00:49:28,636
+The RBF, the radial basis function, has parameters called length scale.
+
+289
+00:49:29,177 --> 00:49:34,945
+And since we have a four-dimensional input, we have four-dimensional length scale.
+
+290
+00:49:35,397 --> 00:49:37,599
+parameter, which is landscape hyperparameter.
+
+291
+00:49:37,619 --> 00:49:44,846
+I'm just initializing it here, plus some white noise because white noise, because your data collection channel can be noisy.
+
+292
+00:49:45,326 --> 00:49:53,794
+And so to model that noise, we have a white kernel function as well here in the entire kernel function.
+
+293
+00:49:53,854 --> 00:50:04,003
+Now, given this kernel function, we initialize the Gaussian process regressor and we take this regressor and we start the fitting.
+
+294
+00:50:04,473 --> 00:50:07,778
+And we use the fit command basically for this.
+
+295
+00:50:09,000 --> 00:50:17,854
+And we obtain, so this is the kernel parameters and what we want to, after training, what we obtain is the hyperparameters of these kernels.
+
+296
+00:50:18,334 --> 00:50:23,983
+So the sigma F here is the constant kernel coefficient.
+
+297
+00:50:24,503 --> 00:50:29,851
+The RBF here, the radial basis function here has a parameter W or the length scale.
+
+298
+00:50:30,733 --> 00:50:34,138
+We have that length scale here and the noise term here.
+
+299
+00:50:34,518 --> 00:50:40,608
+So these are the results of the three different data sets for the three different Gaussian models.
+
+300
+00:50:41,569 --> 00:50:50,663
+Now we take these models and then we move on to defining our cost function for the expected loss here.
+
+301
+00:50:51,284 --> 00:51:12,280
+so the loss function is basically consisting of three terms so the first term in the cost is a squared distance between the goal point and the state uh the second term the cost sum actually is a rbf kernel again centered around the obstacles
+
+302
+00:51:12,732 --> 00:51:17,916
+So here are the location of the obstacles on the work area of the robotarium.
+
+303
+00:51:18,657 --> 00:51:21,680
+And we calculate the RBF kernels.
+
+304
+00:51:22,120 --> 00:51:27,605
+We center the RBF kernel around these blue points and we get the Gauss sum.
+
+305
+00:51:27,625 --> 00:51:35,231
+So basically what it's doing is that when you are near an obstacle, the Gauss sum, that second term, will have a very high value.
+
+306
+00:51:36,152 --> 00:51:36,853
+So it will shoot up.
+
+307
+00:51:37,914 --> 00:51:41,777
+And the third term, which with a coefficient five here,
+
+308
+00:51:42,095 --> 00:51:43,477
+is for the walls.
+
+309
+00:51:43,497 --> 00:51:47,461
+So we don't want our robot to go outside the work area.
+
+310
+00:51:47,782 --> 00:51:50,565
+So we don't want to get it outside this rectangle.
+
+311
+00:51:51,246 --> 00:51:54,750
+So basically, it's like a control barrier function.
+
+312
+00:51:54,850 --> 00:52:03,900
+If it's near the wall, this term has a very sharp rise and the cost is very high.
+
+313
+00:52:04,808 --> 00:52:25,602
+so this is this uh this summarizes our cost function and so the cost function takes uh the the initial state uh as an input and the goal points where you want to go the robot wants to go and the obstacle points uh as an input and gives out a a scalar cost so
+
+314
+00:52:26,273 --> 00:52:33,081
+This is what, when we compute this state cost, this function for the entire grid, this is what our function looks like.
+
+315
+00:52:33,362 --> 00:52:36,786
+So you can see that you have a very high value when you are far from the goal.
+
+316
+00:52:37,627 --> 00:52:42,053
+And you have very high value near the obstacles and around the boundaries.
+
+317
+00:52:42,653 --> 00:52:49,281
+And you have the lowest value near the bottom left where the goal is in our scenario.
+
+318
+00:52:51,224 --> 00:52:55,369
+So we take this cost function and the Gaussian process model.
+
+319
+00:52:55,788 --> 00:53:21,846
+and now we come to a very important part of the resolution engine is the cost of ambiguity so the cost of ambiguity as discussed before depends on the two uh two terms which is eta and c tilde the eta is the ambiguity radius and the c tilde is the is the cost transformed cost uh which uh
+
+320
+00:53:22,248 --> 00:53:48,407
+is the we define like this so the city in the function takes an array of costs uh from the cost function eta the ambiguity radius uh here the p bar is the nominal model probability function and the generative i call the generative model the q in the paper as a reference problem and it gives out the scalar again uh in the cost in the form of transform cost
+
+321
+00:53:48,826 --> 00:54:18,343
+so uh before giovanni introduced a a term in the c tilde computation a v v alpha this objective function is the v alpha so this is the objective function that we want to minimize basically and it depends on the in the parameter alpha and it consists of two terms first is the fine term in alpha so alpha into the ambiguity radius eta and the term two basically is alpha into the log sum exponential
+
+322
+00:54:19,268 --> 00:54:25,697
+of the of the cost with rest to one by alpha.
+
+323
+00:54:26,778 --> 00:54:30,924
+So we want to minimize this objective function over alpha.
+
+324
+00:54:32,165 --> 00:54:48,347
+We take the minimize the minimum value of this objective function, and we basically compare it against the baseline, which is computed by the maximization of this log of the cost and the minimum value.
+
+325
+00:54:49,272 --> 00:54:50,694
+gives you C tilde.
+
+326
+00:54:52,497 --> 00:54:59,247
+For more detail, you can refer to the paper how it is formalized there.
+
+327
+00:54:59,848 --> 00:55:05,896
+So this minimization gives you the C tilde, which is dependent on eta and alpha.
+
+328
+00:55:07,839 --> 00:55:17,794
+So eta here, we define eta as a KL divergence between the goal points and the next possible state.
+
+329
+00:55:18,365 --> 00:55:20,769
+computed from the quotient process model.
+
+330
+00:55:22,491 --> 00:55:26,778
+And for computational stability, we clip it between 0 and 100.
+
+331
+00:55:28,100 --> 00:55:41,941
+So KL-divergent is basically the distance between, it's not a distance, but it's a difference between the two different distributions, P and Q. And here I made a mistake.
+
+332
+00:55:41,961 --> 00:55:46,228
+I think there should be Q here instead of P. So this is the expression for KL-divergent.
+
+333
+00:55:46,512 --> 00:56:14,477
+and for the gaussian distributions you can compute the scale divergence in an analytical form in a closed form without any sampling so now given eta and c tilde we can compute our policy which are eta and c tilde makes the makes the exponent of our policy so the policy here the p star
+
+334
+00:56:14,778 --> 00:56:44,498
+the optimal policy is a is a twisting kernel where the qu is the generative model's policy and the exponential in exponential is the gives you high value if the c tilde the ambiguity cost is low in this case particular case in this example we consider qu to be uniform and since it is uniform you can basically remove it from this expression
+
+335
+00:56:45,102 --> 00:57:12,004
+of the policy so the policy computation code uh starts uh the policy computation code uh takes this initial state uh your control space because we have two inputs you have two spaces to control or action spaces uh the goal points and the obstacle points and gives out a uh
+
+336
+00:57:12,946 --> 00:57:17,372
+In this case, it will give out a five plus five matrix of a probability.
+
+337
+00:57:18,874 --> 00:57:25,002
+It's a probability function from which you can also sample the action that will go to the agent.
+
+338
+00:57:27,445 --> 00:57:38,920
+So for this computation, first we initialize the exponent inside the exponential with the control space, according to the control space.
+
+339
+00:57:39,524 --> 00:58:07,371
+and we also initialize the the policy uh distribution according to control space size and now we we go uh we compute using the for loops for each possible combination of action we take the combination of that action we give this action to the gaussian process model and we compute uh we predict the next state the next possible state
+
+340
+00:58:07,739 --> 00:58:35,873
+and the gaussian process model will give you basically a mean and a covariance so the here the next denominator is the mean of the gaussian process and the sigma norm is the is the covariance and using this we compute the samples the we sample from this mean and covariance the next possible states and using this sample um we we compute the we compute the cost
+
+341
+00:58:36,798 --> 00:59:05,252
+uh sample the costs for this number of samples so here okay so now after after computing the samples i compute the eta the ambiguity radius again the ambiguity radius as mentioned before is a KL divergence and it is clipped between 0 and 100 and i take the number of samples 100 number of samples and i compute the cost for all the next possible states
+
+342
+00:59:05,873 --> 00:59:28,978
+uh and i give this cost matrix and the eta to the c tilde function and as the i showed earlier uh it will give out give out another scalar value the transformed cost which is our this is our exponent the minus eta minus c tilde is our exponent and so here we use the exponential trick
+
+343
+00:59:29,482 --> 00:59:34,010
+to normalize this and formulate the action PDF.
+
+344
+00:59:34,030 --> 00:59:43,046
+Because to avoid any overflow and underflow, we subtract the exponent with the maximum of that exponent matrix.
+
+345
+00:59:44,147 --> 00:59:50,258
+And basically, you have the normalized PDF here.
+
+346
+00:59:50,913 --> 01:00:15,165
+and we we do the flat flattening operation and unraveling the index and then we take the sample the action from that uh from this pdf and we give the action the the agent will then give the action to the state uh to the system so uh given this uh policy
+
+347
+01:00:15,770 --> 01:00:44,460
+uh code now we we want to apply to the robotarium exam uh example and we perform uh basically a 12 set of experiments on three different training stages so the doc you can see in the top panel on the top is the doctor free algorithm and on the bottom is the ambiguity unaware panel where you can see that the the doctor free agent even with unknown
+
+348
+01:00:45,200 --> 01:00:53,493
+unknown system dynamics, it can still reach the goal without colliding with any obstacles.
+
+349
+01:00:54,655 --> 01:01:10,380
+While the ambiguity unaware agent, although the policy it is computing is also optimal, it encounters or collides inside the obstacle only in some cases when
+
+350
+01:01:10,630 --> 01:01:14,976
+You can see that the obstacles are not present in the way of the agent.
+
+351
+01:01:15,196 --> 01:01:15,938
+It will reach the goal.
+
+352
+01:01:17,279 --> 01:01:28,515
+So we show that how our method basically solves the issue of the model mismatch.
+
+353
+01:01:30,378 --> 01:01:32,521
+And we also have the experimental results for this.
+
+354
+01:01:33,422 --> 01:01:38,950
+So you can see the agent, the robot moving in the environment, the actual robot.
+
+355
+01:01:39,757 --> 01:02:02,980
+and how it avoids the obstacle so because of some uncertainty sometimes the robot also gets a bit confused let's say but but anyway it will it will reach the destination without uh without colliding which is quite cool
+
+356
+01:02:10,267 --> 01:02:38,451
+okay yeah it's uh it gets okay could you just share a little bit could you just share a little bit right there what what is it spatial awareness like is it aware of its coordinates does it have a egocentric or allocentric navigation like how does it understand the location and the relative position of the obstacles so so so the so yeah okay uh
+
+357
+01:02:39,781 --> 01:03:05,637
+so uh here in this case um so the the location is provided by the the camera so the camera is tracking the top camera is tracking the robot and it it updates its location the camera computes the location and updates the location on the on the grid also it it uh here it it has the input it knows the obstacles location
+
+358
+01:03:06,173 --> 01:03:10,482
+So it is given in the cost function, we define the obstacle points.
+
+359
+01:03:10,983 --> 01:03:13,228
+So it knows the obstacles are present.
+
+360
+01:03:14,130 --> 01:03:19,962
+So when it comes near the obstacle, the cost function is automatically very high and it's immediately the obstacle.
+
+361
+01:03:22,307 --> 01:03:24,351
+I hope it answers your question.
+
+362
+01:03:24,601 --> 01:03:36,019
+Okay, so it's aware of its two-dimensional position and of the obstacle and the goals, and it computes kind of like a suitability that's ambiguity aware.
+
+363
+01:03:36,079 --> 01:03:38,783
+Yeah.
+
+364
+01:03:38,803 --> 01:03:39,805
+Awesome, thank you.
+
+365
+01:03:40,146 --> 01:03:49,360
+But the thing it does not know is if it takes this action, so if it takes, let's say, from the action space, it takes one action,
+
+366
+01:03:49,812 --> 01:03:55,339
+It does not know where this action will take it.
+
+367
+01:03:55,620 --> 01:03:59,265
+So it cannot foresee accurately where this action will take it.
+
+368
+01:03:59,906 --> 01:04:01,968
+So that's where the ambiguity parts come.
+
+369
+01:04:02,169 --> 01:04:03,410
+So that's where the ambiguity is.
+
+370
+01:04:03,591 --> 01:04:07,936
+So it does not know exactly, cannot be sure of its own decision.
+
+371
+01:04:10,800 --> 01:04:11,942
+I'll just ask one more.
+
+372
+01:04:11,962 --> 01:04:12,883
+Oh, yeah, please go ahead.
+
+373
+01:04:13,876 --> 01:04:15,158
+Yeah, okay.
+
+374
+01:04:15,178 --> 01:04:15,758
+No, no, please ask.
+
+375
+01:04:16,079 --> 01:04:18,622
+Yeah, I'll ask one more question from the live chat.
+
+376
+01:04:18,642 --> 01:04:29,035
+So Andrew Pashaya wrote, I'm wondering about what degree of computational overhead this computing the worst case ambiguity adds to running the agents.
+
+377
+01:04:29,495 --> 01:04:37,525
+So like just in this situation, what was kind of the computational complexity or the resource use of these different stages of the algorithm?
+
+378
+01:04:37,906 --> 01:04:42,111
+Like does the Dr. Free add a small overhead
+
+379
+01:04:42,091 --> 01:05:11,997
+to uh most of the computational cost being on the policy inference or does this ambiguity add a significant computational overhead uh no uh it's uh for sure because of the com uh because of the ambiguity uh computation of the ambiguity uh cost there is a there it is a bit slower than the the ambiguity never agent but as you can see uh here in the sorry in the video
+
+380
+01:05:13,124 --> 01:05:37,444
+uh it is all real time so it is doing that this is calculating the actions uh in real time uh i don't know the video is gone for some reason okay yeah if i if i may add something uh daniel i think this is an excellent question because it may be a a research research program per se so finding the computational tricks that
+
+381
+01:05:38,386 --> 01:05:45,416
+improve computational efficiency as much as possible.
+
+382
+01:05:45,456 --> 01:05:47,960
+There are many tricks indeed.
+
+383
+01:05:49,302 --> 01:05:55,772
+Yeah, so the one thing that would be interesting to see is because I can, if you allow me to go back a little bit.
+
+384
+01:05:58,516 --> 01:05:59,958
+Okay, so policy computation here.
+
+385
+01:06:00,559 --> 01:06:05,406
+You can see that we are looping over all the possible actions here, but
+
+386
+01:06:06,247 --> 01:06:29,368
+don't need to do that you can have a multi-threading or some parallel computation and you can compute all the actions for sorry the computation all the costs for all the possible actions in a parallel computation and which will it will uh which will uh i think make it much more faster because here we are using the for loop over uh the it's uh so it's it has a
+
+387
+01:06:29,855 --> 01:06:36,603
+If the action space is very large, then it will for sure have a very high computational overhead.
+
+388
+01:06:37,684 --> 01:06:43,210
+But I think you can resolve it by parallel computation for these four loops.
+
+389
+01:06:47,014 --> 01:06:48,496
+OK.
+
+390
+01:06:48,516 --> 01:06:51,800
+If there are no more questions, I will go ahead.
+
+391
+01:06:55,664 --> 01:06:56,605
+OK.
+
+392
+01:06:57,023 --> 01:07:24,195
+uh now we'll come to the belief update part so belief update what is belief update is that um that if agent is performing some task we can learn the objective functions of the agent of the expert agent just by their data of the input and the states data of that agent and uh
+
+393
+01:07:24,597 --> 01:07:50,605
+uh the cool part for the doctor free policy computation is that the policy is very interpretable so you can reconstruct the objective function of the agent simply by using the data the state and the input data of the export agent and we do this by by solving this by minimizing the likelihood negative likelihood
+
+394
+01:07:50,973 --> 01:08:17,672
+uh given here so the the likelihood function is basically a summation of the affine term plus a log sum x and because both of the both of the terms the affine term and the locks of x are convex this optimization problem is convex even though the the cost function or the objective function uh of the expert agent is non-convex in nature
+
+395
+01:08:19,087 --> 01:08:43,255
+so the major the major components of for this uh belief update are the features the cost features and the weights the feature weights the feature weights is the thing that we want to learn by optimizing over the the log likelihood function and so first let's see the code structure for this
+
+396
+01:08:43,555 --> 01:09:13,225
+solve this problem so again we define the global variables the action space we have to load the train models uh for and the expert agents data so we have the data of the state and the action for from some export we define the cost features uh we compute the feature expectations uh using the gaussian process model and we formulate and solve this optimization problem here and
+
+397
+01:09:13,981 --> 01:09:15,903
+we obtain the reconstructed cost.
+
+398
+01:09:19,848 --> 01:09:25,314
+So I will start with the cost features here.
+
+399
+01:09:25,395 --> 01:09:27,337
+What is the cost features that we define?
+
+400
+01:09:28,518 --> 01:09:37,949
+So similar to the previous task, I am defining the cost feature as the two terms.
+
+401
+01:09:38,210 --> 01:09:41,794
+The first is the squared distance from the goal point.
+
+402
+01:09:42,483 --> 01:09:49,011
+And the second term is again the Gaussian or the RBF kernel centered around some points.
+
+403
+01:09:49,913 --> 01:09:53,617
+And the RBF kernel is defined by this function here.
+
+404
+01:09:55,920 --> 01:10:08,777
+So the RBF kernel now is not defined only on the obstacles, the actual obstacle in the environment, but now the RBF kernel is defined on a set of uniformly distributed points on the grid.
+
+405
+01:10:09,466 --> 01:10:12,850
+which may or may not represent the actual obstacles.
+
+406
+01:10:13,250 --> 01:10:19,497
+So you can see that this is the feature map or the feature grid.
+
+407
+01:10:20,778 --> 01:10:22,139
+And this is uniformly distributed.
+
+408
+01:10:22,760 --> 01:10:26,304
+And the actual obstacles are here and here.
+
+409
+01:10:27,605 --> 01:10:39,017
+So the algorithm has to learn how to give importance to the relevant features only and not to random features in the environment.
+
+410
+01:10:40,921 --> 01:11:06,928
+okay so given this cost features uh we solve this minimization problem uh and uh so we have let's say we have m number of samples from the expert agent so we initialize the initial state and the uh and the the features so for again for all the possible number of inputs we compute
+
+411
+01:11:07,347 --> 01:11:11,393
+the next possible state using the Gaussian process model.
+
+412
+01:11:12,314 --> 01:11:18,463
+And we sample a number of samples from this Gaussian process model and we compute the features.
+
+413
+01:11:20,345 --> 01:11:32,102
+And we compute these features and we basically do the averaging or we do the averaging and we compute the expected value for these features.
+
+414
+01:11:33,324 --> 01:11:36,308
+So here, the second term
+
+415
+01:11:36,980 --> 01:12:01,266
+of the of the equation was log sum exponential and for that you need to compute the features for all the possible inputs while the first term of the of the likelihood function was an affine term which only computes the given action taken from the expert agent so you can see here at the end there are two terms the first is the affine term in the w
+
+416
+01:12:01,651 --> 01:12:17,734
+which takes the feature sample, which is dependent only on the input given from the agent, while the log sum exponential is depending on all the possible inputs, the feature computation for all the possible inputs.
+
+417
+01:12:18,556 --> 01:12:29,852
+And taking these two terms, we stack for the entire time horizon M, capital M, and then we minimize it for the summation of this
+
+418
+01:12:30,136 --> 01:12:32,558
+entire time trajectory.
+
+419
+01:12:33,759 --> 01:12:40,525
+Since it is a convex problem, you will have an optimal solution for any initialization of the weights.
+
+420
+01:12:41,807 --> 01:12:57,561
+So for this particular problem, we get this set of weights and you can see that where there was obstacles in the center, you have very high weights while
+
+421
+01:12:58,013 --> 01:13:27,582
+all the other weights are near zero or are very low compared to the the real obstacles so so this was the real cost function of the objective function of the export agent and this is the reconstructed cost function of the obstacle of the of the uh agent and you can see that they are very similar in nature so you have high costs away from the from the goal point
+
+422
+01:13:27,933 --> 01:13:32,637
+and you have the obstacle in the center, so on and so forth.
+
+423
+01:13:32,657 --> 01:13:41,245
+And using this cost function, the reconstructed cost function, the agent is still able to go to the goal while avoiding the obstacles.
+
+424
+01:13:43,788 --> 01:13:56,860
+So just to recap, so the cost structure for the robot routing task was to define the global variables, action space, load and train the dynamics model,
+
+425
+01:13:58,004 --> 01:14:24,889
+cost function and the features compute the policy and you compute the collect the data and basically visualize uh the robot uh going to the goal while in the belief of that cost structure uh we also define the global we define the cost features hello
+
+426
+01:14:26,000 --> 01:14:28,663
+It just blipped for a second.
+
+427
+01:14:28,723 --> 01:14:29,244
+You're back though.
+
+428
+01:14:32,807 --> 01:14:33,328
+Okay.
+
+429
+01:14:33,348 --> 01:14:33,608
+Yeah.
+
+430
+01:14:33,748 --> 01:14:34,069
+Okay.
+
+431
+01:14:34,109 --> 01:14:34,309
+Sorry.
+
+432
+01:14:35,450 --> 01:14:36,331
+So, okay.
+
+433
+01:14:36,812 --> 01:14:43,279
+As I was saying, so the belief update structure, we also need to define global variables and action space.
+
+434
+01:14:44,400 --> 01:14:45,922
+We need to load the trained models.
+
+435
+01:14:46,562 --> 01:14:54,471
+We define the cost features and we compute the feature expectations and we formulate and solve the
+
+436
+01:14:54,822 --> 01:15:10,705
+minimization of the log likelihood function and we obtain the reconstructed cost so yeah okay uh okay if you have any questions uh now i'm happy to take them
+
+437
+01:15:11,765 --> 01:15:12,226
+Awesome.
+
+438
+01:15:12,686 --> 01:15:17,433
+I'll ask a few quick questions, and if anyone else has a question in the live chat, go for it.
+
+439
+01:15:17,993 --> 01:15:22,259
+So first, it was mentioned that it's infinite dimensional.
+
+440
+01:15:22,639 --> 01:15:30,570
+So could you unpack what that means as you're dealing with a finite number of dimensions in terms of sensors and actuators?
+
+441
+01:15:30,970 --> 01:15:33,694
+So what does that mean for it to be infinite dimensional?
+
+442
+01:15:35,216 --> 01:15:35,677
+Okay.
+
+443
+01:15:39,121 --> 01:15:41,164
+The infinite dimensional was actually...
+
+444
+01:15:41,633 --> 01:15:58,849
+here so uh it's regarding to the maybe the professor's slide is better i can maybe maybe i can put my slides to say because this point is more clear okay give me just one split second please
+
+445
+01:16:01,647 --> 01:16:09,403
+So to answer your question, Daniel, so the infinite dimensional nature comes from the statement of the problem.
+
+446
+01:16:09,443 --> 01:16:12,228
+So you are not sharing.
+
+447
+01:16:13,331 --> 01:16:14,152
+I see it, actually.
+
+448
+01:16:14,192 --> 01:16:15,074
+I see it.
+
+449
+01:16:15,535 --> 01:16:19,283
+Okay, so maybe I'm not sure.
+
+450
+01:16:19,724 --> 01:16:22,930
+It's like on Zoom, like maybe you're both sharing or something.
+
+451
+01:16:24,361 --> 01:16:25,363
+Oh, okay.
+
+452
+01:16:25,944 --> 01:16:26,766
+But it's good, though.
+
+453
+01:16:26,886 --> 01:16:28,128
+I see your slides.
+
+454
+01:16:28,148 --> 01:16:28,950
+Okay, you see it.
+
+455
+01:16:28,970 --> 01:16:29,651
+Okay, perfect.
+
+456
+01:16:29,671 --> 01:16:29,952
+Okay.
+
+457
+01:16:30,333 --> 01:16:45,222
+The infinite dimensional that was mentioned before, it's in the mathematics, in the formal aspect of the framework, because this optimization problem has as decision variables the functions.
+
+458
+01:16:45,202 --> 01:17:09,960
+okay and that makes it an infinite dimensional optimization uh when osefa engineered uh dr free on the code of course you need to estimate this function so he made a step that discretizes at some point some of these functions uh and that of course reduces the problem to the uh final finite dimensional optimization so the infinite dimensional
+
+459
+01:17:10,531 --> 01:17:18,648
+feature that we were referring to was about the problem statement, so the fact that we are optimizing in functional spaces.
+
+460
+01:17:21,735 --> 01:17:22,036
+Awesome.
+
+461
+01:17:22,817 --> 01:17:31,155
+Okay, another question like, how would someone go about adapting this to another setting?
+
+462
+01:17:31,692 --> 01:17:42,424
+Like how would they think about framing the kinds of algorithms and approaches that are already in the active inference or the cybernetics literature?
+
+463
+01:17:42,484 --> 01:17:57,480
+Where do you see opportunities, like which systems for applying this and then how adaptable or how would you go about adapting the open source code you've provided to give this sort of ambiguity aware overlay?
+
+464
+01:17:58,962 --> 01:18:05,109
+So I'll go maybe with the framework and then I'll let Josefa comment more on the code since he developed the code.
+
+465
+01:18:06,650 --> 01:18:10,775
+So, well, the framework is, I would say, rather general.
+
+466
+01:18:11,676 --> 01:18:26,011
+So I would say that the system level steps would be to identify a good cost functional, identify the ambiguity set, model the environment, the training model, and everything else that comes with it.
+
+467
+01:18:26,231 --> 01:18:28,834
+Once you have this key, and the generative model, of course,
+
+468
+01:18:29,287 --> 01:18:49,489
+once you have these key ingredients i see um these framework fitting in the context of sequential policy optimization which is really sits is the bread and butter of control theory but also cybernetics and it has a lot of interdisciplinary links with uh with signal processing etc
+
+469
+01:18:49,908 --> 01:19:08,491
+In terms of code, I think I will let Josefa answer that, but the main challenge is going to be the computation of the integrals and the probability density functions that are implied by the framework.
+
+470
+01:19:08,511 --> 01:19:12,195
+Okay, yeah, so interesting question.
+
+471
+01:19:13,697 --> 01:19:14,278
+So there are
+
+472
+01:19:14,765 --> 01:19:42,308
+uh i think robotics is one of the fields in sequential decision making which is very very cool to apply this because we have seen that when you have mismatching parameters of the models of the system uh the robotics uh the task uh is very difficult to perform we also have also seen robots fail when they are mismatching the in the parameters um so if somebody wants to apply
+
+473
+01:19:42,727 --> 01:19:55,459
+or implement this framework, I would think that they would first need to change the dynamics model that they have.
+
+474
+01:19:55,479 --> 01:20:00,323
+So you need to adapt your dynamics model according to the system that you have, first of all.
+
+475
+01:20:02,786 --> 01:20:09,612
+Then, for example, if you are working in an environment in which
+
+476
+01:20:10,182 --> 01:20:31,566
+the how can i say the nominal model and the generative model are not really gaussians that at that point you will not have the analytical solution or the closed form solutions as given in the code and for that i think you need to revert to sampling some form some form of sampling to compute the integrals and the expectations
+
+477
+01:20:32,103 --> 01:20:44,041
+So that's one part that I think if someone wants to implement this in a system which is more complicated and doesn't have Gaussians assumptions, then yeah, you need to consider sampling.
+
+478
+01:20:45,703 --> 01:21:00,726
+Another part would be, as I said, if the action space of the system is too large, then to avoid operational overhead, you need to consider parallel computing, maybe.
+
+479
+01:21:01,381 --> 01:21:06,529
+or some form of vectorization to avoid the for loops in the input.
+
+480
+01:21:09,875 --> 01:21:11,598
+Yeah.
+
+481
+01:21:12,079 --> 01:21:14,302
+I think that's the core part.
+
+482
+01:21:14,402 --> 01:21:23,097
+But other things like the cost of ambiguity, the function that computes this cost of ambiguity, the structure would be the same for that.
+
+483
+01:21:24,760 --> 01:21:25,060
+Yeah.
+
+484
+01:21:25,613 --> 01:21:26,114
+Awesome.
+
+485
+01:21:26,655 --> 01:21:31,362
+So sort of in closing, what are your next steps for research?
+
+486
+01:21:31,442 --> 01:21:33,565
+Or how do you see this continuing?
+
+487
+01:21:33,786 --> 01:21:38,353
+Or what ways would you like to see people in the community kind of continue with the work that you're doing?
+
+488
+01:21:39,775 --> 01:21:47,126
+Well, first of all, I'd say that if you want to use your code and you have any questions, I think we would be happy to answer these questions.
+
+489
+01:21:47,266 --> 01:21:52,414
+And we are happy if the code is useful beyond, of course, the use case we are considering.
+
+490
+01:21:52,715 --> 01:21:56,940
+Robotics being one remarkable example, I think.
+
+491
+01:21:56,960 --> 01:21:58,902
+And where do we see this placed?
+
+492
+01:21:59,022 --> 01:22:08,612
+I think we prepared this slide that summarizes and maybe captures on some of the points that were discussed and about the interdisciplinary link.
+
+493
+01:22:08,632 --> 01:22:13,217
+So we see these placed in the context of feedback systems.
+
+494
+01:22:13,257 --> 01:22:17,622
+So in the end, the agent and the environment are two systems that are in feedback.
+
+495
+01:22:17,682 --> 01:22:21,726
+So the actions affect state and state affect the actions.
+
+496
+01:22:22,162 --> 01:22:34,252
+And basically what we did was to bring some control theoretical and optimization methods into this minimization of variational free energy.
+
+497
+01:22:34,653 --> 01:22:40,086
+So it is really an intersection between computation, embodiment of agents and robustness.
+
+498
+01:22:40,792 --> 01:23:08,352
+uh possible i think very cool research ideas could be uh integrating deep reinforcement learning so the the techniques that we the technique that we presented dr free is not mutually excluding with deep reinforcement learning one could use deep reinforcement learning to learn ambiguity one could use deep reinforcement learning to to learn a better cost etc so i think there is a sweet spot of applications that can have a high impact
+
+499
+01:23:08,332 --> 01:23:13,887
+for real-world deployments by merging these two approaches.
+
+500
+01:23:14,508 --> 01:23:38,743
+there are also there is also another so i'm not a neuroscientist i'm gonna start with that but uh i think the the model has some cognitive implications as i said i just showed uh it supports bayesian belief updates but one thing that we had no time to discuss about of course is that something very nice happens in the regimes of large and small ambiguities
+
+501
+01:23:39,263 --> 01:24:03,060
+so basically when ambiguity is small you get the behavior of an agent that knows everything about its model and it turns out that nobody cannot perform this agent so it's the best possible agent it is an oracle essentially that does the best possible actions will achieve the best cost function on the other side of the spectrum instead when ambiguity is very high
+
+502
+01:24:03,040 --> 01:24:16,683
+There is a sort of a transition where we can show it is shown in the preprint that the optimal policy is training independence in the sense that is independent on the training model.
+
+503
+01:24:16,703 --> 01:24:26,078
+So it is a kind of situation where the agent dominated by ambiguity grounds its decisions just on ambiguity and not on what it learned previously.
+
+504
+01:24:26,058 --> 01:24:47,003
+which is i think it's a kind of cool behavior of course i'm not a neuroscientist but i think it's something that could be investigated uh on that side on that spectrum on that side of the spectrum i hope i answered your question yeah that's an interesting point kind of like neuroplasticity and age
+
+505
+01:24:47,827 --> 01:25:05,295
+and how you never do worse by knowing more about the environment, all things being equal, and then as you turn up the dial on ambiguity, it erases whatever understanding was made ambiguous.
+
+506
+01:25:06,490 --> 01:25:20,284
+And that could be even empirically fit to understand what are the biological contexts that different ambiguities, different hyperparameters are in play.
+
+507
+01:25:22,126 --> 01:25:24,389
+Yeah, exactly.
+
+508
+01:25:24,409 --> 01:25:28,173
+Well, thank you both and to Carl for joining.
+
+509
+01:25:28,333 --> 01:25:32,477
+We really appreciate the work and for sharing it and having the open source code.
+
+510
+01:25:32,517 --> 01:25:33,358
+It's really cool.
+
+511
+01:25:34,655 --> 01:25:35,156
+Thank you.
+
+512
+01:25:35,838 --> 01:25:42,755
+I put here two links to the papers and the QR codes in case you are curious and you want to check them out.
+
+513
+01:25:43,256 --> 01:25:45,481
+And thank you again, Daniel, for organizing this.
+
+514
+01:25:46,143 --> 01:25:46,423
+Awesome.
+
+515
+01:25:46,624 --> 01:25:46,864
+Okay.
+
+516
+01:25:47,065 --> 01:25:47,646
+Till next time.
+
+517
+01:25:48,027 --> 01:25:49,370
+Bye.
+
+518
+01:25:49,390 --> 01:25:49,651
+Bye.
+
+519
+01:25:50,313 --> 01:25:50,453
+Bye.

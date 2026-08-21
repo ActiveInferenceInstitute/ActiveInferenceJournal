@@ -1,0 +1,3055 @@
+1
+00:00:07,557 --> 00:00:19,761
+hello and welcome this is active inference live stream 58.0 october 29th 2024 we're discussing the paper from pixels to planning scale 3 active inference
+
+2
+00:00:20,905 --> 00:00:22,827
+So welcome to the Active Inference Institute.
+
+3
+00:00:23,548 --> 00:00:29,355
+We're a participatory online institute that is communicating, learning, and practicing applied active inference.
+
+4
+00:00:29,756 --> 00:00:31,298
+You can find us at the links on the slide.
+
+5
+00:00:32,079 --> 00:00:34,201
+This is a recorded and archived live stream.
+
+6
+00:00:34,762 --> 00:00:36,985
+Please provide feedback so we can improve our work.
+
+7
+00:00:37,706 --> 00:00:42,171
+All backgrounds and perspectives are welcome and will follow video etiquette for live streams.
+
+8
+00:00:43,383 --> 00:00:51,015
+Head over to ActiveInference.Institute to learn more about the Institute, get involved with projects like live streams and a lot of other things.
+
+9
+00:00:51,897 --> 00:00:55,382
+Okay, before we jump into the paper, let's say hello.
+
+10
+00:00:56,163 --> 00:00:56,664
+I'm Daniel.
+
+11
+00:00:56,884 --> 00:01:01,652
+I'm a researcher in California and really looking forward to this discussion.
+
+12
+00:01:01,692 --> 00:01:08,563
+Arun, want to say hi, give any context, and thanks again for contributing to the .Zero.
+
+13
+00:01:10,501 --> 00:01:11,082
+Hi, everyone.
+
+14
+00:01:11,442 --> 00:01:11,983
+My name is Aaron.
+
+15
+00:01:12,604 --> 00:01:14,086
+I'm a software engineer in the UK.
+
+16
+00:01:15,148 --> 00:01:20,376
+I did my PhD a good few years ago, in which I touched on dynamicals with modeling and active inference.
+
+17
+00:01:21,077 --> 00:01:22,860
+I've been thinking about it for a long time since then.
+
+18
+00:01:22,880 --> 00:01:28,228
+I came across this paper and thought it was really hard.
+
+19
+00:01:29,049 --> 00:01:31,693
+And so I requested, guys, can we do a live stream on this?
+
+20
+00:01:31,974 --> 00:01:33,837
+I'd really love to understand this paper properly.
+
+21
+00:01:33,857 --> 00:01:37,142
+And now I've somehow ended up contributing to the live stream.
+
+22
+00:01:38,223 --> 00:01:38,584
+So yeah.
+
+23
+00:01:41,062 --> 00:02:00,825
+okay so we're discussing this paper from july 2024 from pixels to planning scale free active inference by carl friston and colleagues the rest of this video is going to be some background and context and an introduction and an overview
+
+24
+00:02:00,805 --> 00:02:18,460
+of the ideas it's not a review it's not comprehensive it will be part of an exciting series where in the coming weeks in the dot one and dot two we discuss with the authors and the dot two is going to fall during the applied active symposium so that'll also be really fun
+
+25
+00:02:18,440 --> 00:02:20,666
+Okay, let's go to the big questions.
+
+26
+00:02:21,228 --> 00:02:33,040
+What are your big questions around whether it's about the paper specifically or what are the big motivators that made you excited and want to pursue these affordances?
+
+27
+00:02:34,943 --> 00:02:37,928
+So I think the big one is the title, right?
+
+28
+00:02:38,348 --> 00:02:48,624
+And I think the question of scale is one that's plagued a lot of Active Inference implementations and previous papers in the past few years.
+
+29
+00:02:49,425 --> 00:02:52,610
+Everyone's like, oh, yeah, I'd love an Active Inference agent that can do stuff.
+
+30
+00:02:52,630 --> 00:02:57,137
+But if I have more than a few states, I get a combinatorial explosion.
+
+31
+00:02:57,117 --> 00:03:04,155
+and things either fall over or they take a very long time compared to alternative methods that are out there.
+
+32
+00:03:05,197 --> 00:03:10,992
+So the question of scale is a really important one and I think this paper nominally looks like
+
+33
+00:03:11,208 --> 00:03:12,089
+There's a way around that.
+
+34
+00:03:12,930 --> 00:03:17,536
+Also, the renormalization group as a way to do that is, I think, a very interesting one.
+
+35
+00:03:18,738 --> 00:03:24,084
+It draws from a lot of physics that I actually studied a very, very long time ago.
+
+36
+00:03:24,905 --> 00:03:32,575
+So that really spoke to me and I thought it was really, really nice to see some things that apply to also like Ising model of ferromagnetism.
+
+37
+00:03:32,555 --> 00:03:42,510
+some other key parts of thermodynamics that now come into AI, which active inference has been doing for a while with the free energy minimization part.
+
+38
+00:03:43,231 --> 00:03:49,000
+But I think the renormalization group is a really interesting part of maths that seems to get you a lot further.
+
+39
+00:03:51,283 --> 00:04:01,178
+I also had some much more technical questions, which maybe don't fall under the big questions, which you'll definitely come on to later when I was reading this paper and looking at it and I go, I don't understand actually what's happening here.
+
+40
+00:04:01,512 --> 00:04:22,206
+So I'd really love to dive into those and particularly catch up with the authors in the later episodes to get some of the more technical answers on how these matrices and tensors play together, which seems to defer a little bit to the textbook by Parr and some of the other formulations by the RxInfer group as well.
+
+41
+00:04:23,208 --> 00:04:28,296
+So actually getting into the nitty gritty of how we implement this will be really fun for me.
+
+42
+00:04:29,474 --> 00:04:29,815
+Cool.
+
+43
+00:04:30,718 --> 00:04:35,997
+Blue also contributed to the .zero, and so she wrote, what is a path?
+
+44
+00:04:36,118 --> 00:04:39,771
+More specifically, how are paths related to the renormalization group?
+
+45
+00:04:39,869 --> 00:04:45,899
+How is the renormalizing generative model, RGM, different from the active inference generative model that we usually study?
+
+46
+00:04:46,580 --> 00:04:49,845
+And how do paths tie into transitions between categories?
+
+47
+00:04:50,566 --> 00:04:52,249
+And I had similar questions.
+
+48
+00:04:52,970 --> 00:04:54,353
+What is the renormalization group?
+
+49
+00:04:54,673 --> 00:04:55,915
+How is it being used here?
+
+50
+00:04:56,356 --> 00:05:00,282
+How does that make the generative models structurally or functionally different?
+
+51
+00:05:01,124 --> 00:05:03,868
+How does that have implications for different media?
+
+52
+00:05:06,363 --> 00:05:08,145
+Few key claims.
+
+53
+00:05:09,306 --> 00:05:18,695
+They're considering one solution to the implicit scaling problem with scale-free generative models that are linked through the renormalization group.
+
+54
+00:05:18,716 --> 00:05:31,088
+They're going to explore generalized MDPs, Markov Decision Processes, as discrete models that do functional cognitive tasks like compression, content generation, and planning.
+
+55
+00:05:32,671 --> 00:05:39,458
+They're going to pay attention to universality and scale and variance for specifying structural form of generative models.
+
+56
+00:05:39,995 --> 00:05:46,401
+And then there will be a sequence of worked examples that we're going to spend most of the dot zero walking through.
+
+57
+00:05:47,502 --> 00:05:54,769
+And they highlight that these kinds of RGMs with quantized paths may or may not be useful in certain application domains.
+
+58
+00:05:55,270 --> 00:06:06,841
+So that's kind of the meta ML question is where, or how would we know where this would or wouldn't be more effective than another given kind of model, no free lunch at all.
+
+59
+00:06:07,582 --> 00:06:09,664
+Could you read the abstract?
+
+60
+00:06:11,534 --> 00:06:13,457
+Yeah, sure.
+
+61
+00:06:13,557 --> 00:06:17,783
+So this paper describes a discrete state space model and accompanying methods for generative modeling.
+
+62
+00:06:18,304 --> 00:06:27,237
+This model generalizes partly observed Markov decision processes to include paths as latent variables, rendering suitable for active inference and learning in a dynamic setting.
+
+63
+00:06:28,259 --> 00:06:32,665
+Specifically, we consider deep or hierarchical forms using the renormalization group.
+
+64
+00:06:33,303 --> 00:06:44,120
+ensuing renormalising generative models can be regarded as discrete homologues of deep convolutional neural networks or continuous space models in generalised coordinates of motion.
+
+65
+00:06:44,982 --> 00:06:57,522
+By construction, these scale invariant models can be used to learn compositionality over space and time, furnishing models of paths or orbits, in other words, events of increasing temporal depth and itinerancy.
+
+66
+00:06:58,362 --> 00:07:03,709
+This technical note illustrates the automatic discovery, learning, and deployment of RGMs using a series of applications.
+
+67
+00:07:04,089 --> 00:07:09,156
+We start with image classification and then consider the compression and generation of movies and music.
+
+68
+00:07:09,176 --> 00:07:13,121
+Finally, we apply the same variational principles to the learning of Atari-like video games.
+
+69
+00:07:14,262 --> 00:07:14,583
+Awesome.
+
+70
+00:07:16,105 --> 00:07:18,368
+Okay, moving on to... Daniel, you're on mute.
+
+71
+00:07:20,150 --> 00:07:20,430
+Thanks.
+
+72
+00:07:20,811 --> 00:07:21,872
+To the roadmap.
+
+73
+00:07:23,573 --> 00:07:24,899
+The first section is the introduction.
+
+74
+00:07:25,802 --> 00:07:29,176
+Section 2 is the background formalism.
+
+75
+00:07:29,678 --> 00:07:34,157
+This is going to make connections with the generative models from the textbook.
+
+76
+00:07:34,357 --> 00:07:39,142
+Then section three, four, five, six, we'll go through a sequence of worked examples.
+
+77
+00:07:39,862 --> 00:07:48,251
+We're going to front load the focus in the dot zero on sections two and three, and then four, five, and six unfold kind of naturally.
+
+78
+00:07:49,072 --> 00:07:54,757
+Three is a static image MNIST handwriting dataset task.
+
+79
+00:07:54,777 --> 00:08:02,625
+Section four is a cyclic video that then slides into a chaotic attractor dynamical system.
+
+80
+00:08:02,605 --> 00:08:04,728
+and a natural video.
+
+81
+00:08:05,288 --> 00:08:13,158
+Section five goes into sound, and six is the general planning case from pixels to planning, and seven's a short conclusion.
+
+82
+00:08:13,638 --> 00:08:17,122
+So it's pretty much introduction and conclusion like bookends.
+
+83
+00:08:18,104 --> 00:08:31,920
+Section two is where the general formalism is, and then three through six take us on from handwriting, several kinds of videos, dynamic images, sound, and then gameplay and planning.
+
+84
+00:08:33,723 --> 00:08:35,806
+Here are the keywords of the paper.
+
+85
+00:08:36,747 --> 00:08:45,941
+Active inference, active learning, Bayesian model selection, renormalization group, compression, structure learning, RG flow, renormalizing generative model.
+
+86
+00:08:46,662 --> 00:08:52,170
+So those are good terms if you're uncertain about to jump into.
+
+87
+00:08:52,150 --> 00:09:08,353
+okay we have a few slides on some of these background concepts just to get it up front so we can proceed with the paper when we get there let's start with what is renormalization so of course much could be said but what what would you say what is renormalization
+
+88
+00:09:09,565 --> 00:09:14,354
+Yeah, so I think this is in itself quite a loaded term.
+
+89
+00:09:14,734 --> 00:09:16,397
+There's a lot from physics.
+
+90
+00:09:16,417 --> 00:09:22,829
+And if you look at the Wikipedia page, the third link that's there, there's a lot in that Wikipedia page.
+
+91
+00:09:22,849 --> 00:09:24,031
+It's very confusing.
+
+92
+00:09:24,512 --> 00:09:26,996
+A lot of quantum electrodynamics coming in.
+
+93
+00:09:27,357 --> 00:09:29,481
+And I think Feynman has an attitude on it.
+
+94
+00:09:29,501 --> 00:09:30,763
+He says he's not a fan of it.
+
+95
+00:09:30,980 --> 00:09:56,464
+um but uh i think for our purposes the top quote that's there that's coming from the paper is actually good enough for a large part so we basically take some sort of system and we say this is way too hard this is way too complex there's way too many moving parts what is a like a take-home message what is the summary of what this is doing
+
+96
+00:09:56,883 --> 00:09:59,530
+at a macroscopic level compared to the micro level.
+
+97
+00:10:00,754 --> 00:10:11,905
+And there are some examples in the upcoming slides on particularly talking about thermodynamics and materials where this will become more obvious as to how this might work in practice.
+
+98
+00:10:11,885 --> 00:10:19,139
+But I think the coarse-grained version that retains the properties of interest is really what to focus on going forward.
+
+99
+00:10:19,660 --> 00:10:25,791
+And yeah, lossy compression for the signal processing engineers in the audience.
+
+100
+00:10:25,871 --> 00:10:29,819
+This is very much a case of you're not keeping everything when you renormalize.
+
+101
+00:10:30,279 --> 00:10:31,682
+You're keeping what's important.
+
+102
+00:10:32,928 --> 00:10:33,810
+Awesome.
+
+103
+00:10:33,830 --> 00:10:34,351
+Yeah.
+
+104
+00:10:34,371 --> 00:10:52,126
+As you coarse grain, so spatially, like thinking about a radius or like a convolutional diameter getting larger and larger, you're choosing a bigger chunk to grain over, coarse graining, and renormalizing what those edges and relations amongst blocks are.
+
+105
+00:10:52,767 --> 00:10:55,392
+So you have one model, it's a...
+
+106
+00:10:55,372 --> 00:11:18,510
+10 by 10 square so you have blocks of size one and all those edges and then you decide okay we're gonna look at blocks of two by two you have fewer blocks fewer edges so you have to renormalize all of your parameter estimates and then you end up with hopefully capturing some of the signal with fewer parameters aka compression whether it's lossy or lossless
+
+107
+00:11:19,351 --> 00:11:20,412
+Okay.
+
+108
+00:11:20,752 --> 00:11:26,558
+I'm going to pick up on one thing quickly where you said spatially, and you can renormalize through space, but you can also renormalize through time.
+
+109
+00:11:26,618 --> 00:11:28,139
+You can renormalize through any dimension you want.
+
+110
+00:11:28,880 --> 00:11:30,882
+It's just easier to imagine the space and time ones.
+
+111
+00:11:31,102 --> 00:11:41,532
+So the time analogy that I think they use in the paper, which is quite a good one, is thinking about if you're, let's say you're watching TV and you're watching something.
+
+112
+00:11:41,752 --> 00:11:46,877
+And in that moment, there are two characters talking that might form part of a scene.
+
+113
+00:11:46,857 --> 00:11:54,328
+which is one renormalization, and then you have a series of scenes, which would be an episode, and then you'd have multiple episodes in a series.
+
+114
+00:11:55,730 --> 00:12:00,436
+So the time one, actually, I find a bit more intuitive to understand what renormalization is.
+
+115
+00:12:00,737 --> 00:12:03,521
+And you can say, oh, yeah, something happened in a particular episode.
+
+116
+00:12:03,761 --> 00:12:13,675
+You can say something happens in a particular series, something happens in a particular scene, but that thing you might be describing might actually be more fine-grained or more coarse-grained.
+
+117
+00:12:14,667 --> 00:12:37,401
+awesome yeah the examples will start with the static handwriting and move on to include time and you're totally right about the time scales it's like saying what's the transition matrix from minute to minute or hour to hour or day to day but each moment is measurable with seconds minutes hours or so on okay how about the spin block transformation
+
+118
+00:12:39,524 --> 00:12:46,574
+Yeah, so now this is sort of back to material science and magnetism.
+
+119
+00:12:47,816 --> 00:12:59,052
+So there's a fairly well understood model of magnetism called the Ising model and physicists generally quite like it, mathematicians quite like it.
+
+120
+00:12:59,032 --> 00:13:07,910
+You imagine a big magnet, there's lots of little magnets that will line up in a grid, and each magnet just talks to the little magnets around it.
+
+121
+00:13:08,732 --> 00:13:17,530
+And you can recover quite a lot of actual behavior of magnets in the real world with a fairly simple model for this.
+
+122
+00:13:17,510 --> 00:13:31,227
+But the spin block transformation is largely going, well, if I have lots of little magnets together and they're all pointing the same way, I can just think of it as one big magnet that's the sum behavior of all of these little ones.
+
+123
+00:13:32,048 --> 00:13:35,993
+And this is a trick that we play a lot in physics of going from the micro to the macro.
+
+124
+00:13:36,033 --> 00:13:37,595
+The micro is too hard to model.
+
+125
+00:13:37,695 --> 00:13:39,017
+It's too painful.
+
+126
+00:13:39,277 --> 00:13:40,459
+You've got all these particles.
+
+127
+00:13:40,539 --> 00:13:43,703
+They could all be doing, you know, spinning every which way.
+
+128
+00:13:43,683 --> 00:14:10,365
+all their speeds and velocities and if you had all of them then you could add them all up and you could figure out what's going on or you can just you know get a thermometer measure the temperature right and the temperature that one number tells you a lot about how this thing is going to behave so you can get a lot of value just from the macro but if that macro is composed of all of the micro so depending on where you are in your core screening of your scaling behavior uh you can get either a lot done or a little bit done and it's just what's useful to you
+
+129
+00:14:10,784 --> 00:14:24,737
+So I quite like this sort of quote at the bottom about the magnitude of an observable of a physical system undergoing an RG transformation and whether that observable is relevant or not.
+
+130
+00:14:24,817 --> 00:14:38,310
+I think that's quite important to bear in mind for the future examples of, well, if something is always increasing, it's always getting bigger, then you're going to see it on the coarse grained transformations that you see later.
+
+131
+00:14:38,290 --> 00:15:03,353
+but if it's always decreasing at a particular level you're not going to see it on the higher levels you're only going to see it on the lower levels so it'll have so this gives you some uh understanding of causality of when you're going up or when you're going down uh on the core screening um so yeah like particle speeds and temperature is a nice uh a nice uh example of this and similarly magnetism with the spin block transformation
+
+132
+00:15:03,333 --> 00:15:06,420
+But by and large, what are these transforms doing?
+
+133
+00:15:06,660 --> 00:15:17,143
+If you take a grid of lots of little things, you just go, well, I'm just going to summarize this with a single thing that represents that behavior and then move on with my day.
+
+134
+00:15:18,465 --> 00:15:18,726
+Awesome.
+
+135
+00:15:19,533 --> 00:15:37,778
+okay quick on the singular value decomposition there's a nice interactive explanation this is related to principal component analysis and it's a way to proportion variance and to take the biggest cut of variance
+
+136
+00:15:37,758 --> 00:15:40,923
+for a given decomposition for a dataset.
+
+137
+00:15:41,423 --> 00:15:59,509
+And you can take, we'll look at it in application a bit later, but it's used to assess the vectors of variance, and then you can truncate them and use that to capture increasing amount of variance for a given dataset.
+
+138
+00:15:59,549 --> 00:16:00,951
+We'll look at it in a specific case.
+
+139
+00:16:01,692 --> 00:16:05,638
+And last kind of background topic on locality principle.
+
+140
+00:16:07,998 --> 00:16:21,925
+Yeah, I don't actually know a huge amount about the locality principle, but I think it's a general intuition that things next to each other affect each other and things far away, in theory, don't affect you.
+
+141
+00:16:22,907 --> 00:16:27,255
+There are definitely some things where if this is violated, this feels very weird.
+
+142
+00:16:28,137 --> 00:16:31,002
+I think quantum entanglement is probably an example of that.
+
+143
+00:16:30,982 --> 00:16:53,158
+uh but i'm gonna stop speaking there because we've hit the limit of my knowledge yes i think wittgenstein wrote something about that okay and this is just a few of the other links but there was a ton of other links that people brought up over the months preparing for this okay onto the paper so
+
+144
+00:16:54,505 --> 00:17:10,472
+here's the link to the coda i'll put this in the youtube live chat right now just if anyone wants to follow back to the workspace where we did the preparation work if you're watching live write any questions in the live chat and we'll check it at the end
+
+145
+00:17:10,925 --> 00:17:23,583
+What we're about to do is go through much of the paper, pulling out some of the key quotes in the main thread, and we show most or all the figures and some of the formalisms.
+
+146
+00:17:23,924 --> 00:17:25,746
+Of course, they're all there in the paper.
+
+147
+00:17:26,327 --> 00:17:31,735
+This is just the highlights so that we can get this done in a reasonable linear amount of time.
+
+148
+00:17:31,715 --> 00:18:00,253
+in preparation for conversations with the authors further open source development and all that so okay here we go onto the paper so first three sentences of the paper this paper considers the use of discrete states discrete state space models as generative models for classification compression generation prediction and planning so for context we're in the discrete time setting
+
+149
+00:18:01,027 --> 00:18:03,892
+Figure 4.3 from the 2022 textbook.
+
+150
+00:18:04,033 --> 00:18:05,687
+We're in the top setting.
+
+151
+00:18:07,507 --> 00:18:13,854
+The inversion of such models can be read as inferring the latent causes of observable outcomes or content.
+
+152
+00:18:14,414 --> 00:18:35,657
+So this is the tale of two densities, meaning that generative models can be used to generate synthetic observations from latent state estimates, that's the generative direction or decompression, as well as infer latent states from data, that's the recognition direction from observations to latent states.
+
+153
+00:18:35,637 --> 00:18:43,092
+And then last of these three sentences, when endowed with the consequences of action, they can be used for planning as inference.
+
+154
+00:18:44,054 --> 00:18:48,904
+So in contrast with sort of a sterile sense-making or perceptual inference task,
+
+155
+00:18:49,542 --> 00:18:55,437
+Active inference considers action as part of a joint inference distribution or problem, which constitutes the agent.
+
+156
+00:18:55,918 --> 00:19:05,863
+So think about how the agent is defined as ABCDE matrices as sensemaking, latent state transition operations, and the consequences of action.
+
+157
+00:19:05,843 --> 00:19:35,817
+so improvements to generative modeling technologies have wide-ranging implications for a variety of both sense making perception tasks on the inbound as well as decision making and action tasks on the outbound which is kind of the theme of active inference that action can be treated as an inference problem any thoughts on these first slides um no i think we should keep going cool okay specifically
+
+158
+00:19:37,012 --> 00:19:40,499
+This paper explores the use of generalized Markov decision processes.
+
+159
+00:19:41,321 --> 00:19:50,700
+This generalization in question rests on equipping a standard, partially observed Markov decision process with random variables called paths.
+
+160
+00:19:52,300 --> 00:20:16,654
+this affords an expressive model of dynamics in which transitions among states are conditioned upon paths which themselves can have lawful transitions so we're going to return to this figure again but the big picture is that from the sort of textbook basic pomdp we're going to add some sophistication which is that variables called paths
+
+161
+00:20:16,634 --> 00:20:45,612
+will condition the state transitions and those could fall under the agency or the efficacy of an agent or not there can be lawful probabilistic transitions among paths which are like transitions amongst actions in a policy sequence except that actions in a policy sequence would be understood to be under the control of an agent and and those paths states influence transitions of latent states
+
+162
+00:20:46,148 --> 00:20:52,299
+Figure one shows that several concepts of depth in generative model.
+
+163
+00:20:52,579 --> 00:20:57,027
+We have temporal depth, which means a deeper unrolling through time.
+
+164
+00:20:57,568 --> 00:21:02,677
+So this is just predicting more time steps deeper into the future linearly.
+
+165
+00:21:03,518 --> 00:21:09,068
+So if this was each one was one day, this is just going rolling out for a bigger number of days.
+
+166
+00:21:09,335 --> 00:21:27,242
+hierarchical depth would be if we had a model that had days months and years and the way that it could deal with longer time scales would be have 30 days within a month and then 12 months within a year so nested hierarchically recursive layers
+
+167
+00:21:27,492 --> 00:21:32,237
+deal with deeper time scales instead of needing to unroll 365 days.
+
+168
+00:21:32,277 --> 00:21:38,004
+And factorial depth can be thought of kind of like a multi-sensory model.
+
+169
+00:21:38,744 --> 00:21:41,768
+So here's an observation of sound and here's an observation of light.
+
+170
+00:21:42,368 --> 00:21:50,958
+And then those different modalities can be factorized separately from each other, like the what and the where in the brain to simplify.
+
+171
+00:21:51,398 --> 00:21:54,542
+And that's another way in which generative models can have depth.
+
+172
+00:21:56,063 --> 00:21:57,465
+Any more thoughts on this?
+
+173
+00:21:58,863 --> 00:22:05,403
+I think one thing to highlight is first of all, the notation is quite difficult to understand in this figure.
+
+174
+00:22:07,208 --> 00:22:08,231
+I found it really hard.
+
+175
+00:22:09,254 --> 00:22:11,100
+There is also a...
+
+176
+00:22:11,570 --> 00:22:19,180
+I think there is a difference, at least in my mind, when I read this figure in the caption compared to, say, the textbook, which is the C matrix.
+
+177
+00:22:20,582 --> 00:22:30,336
+So I think previous formulations of actor inference, the C matrix tends to represent the prior preferences of an agent, sort of its goals, its values.
+
+178
+00:22:30,396 --> 00:22:33,460
+It's like, I expect to see these observations.
+
+179
+00:22:33,440 --> 00:22:57,135
+so if i don't then i'm going to experience a higher free energy so i'm either going to change my mind or change take some action to change the world so that my observations match my priors better and i get a lower free energy here the c matrix seems to be encoding probabilities of paths it's not entirely clear to me how we get value into that as opposed to just
+
+180
+00:22:58,178 --> 00:22:59,765
+what it expects to see.
+
+181
+00:23:00,026 --> 00:23:05,430
+So maybe there is a distinction here that I haven't understood, or maybe it is genuinely a shift.
+
+182
+00:23:05,590 --> 00:23:07,800
+I'd be really curious to ask the authors specifically
+
+183
+00:23:10,447 --> 00:23:30,767
+in the future episodes yeah pending authors accounts but two things I would note to echo that first is every variable through time can be understood as a trace or a path whereas path is also being used to refer to just this specific upstairs string
+
+184
+00:23:30,747 --> 00:23:49,665
+And then a second case of overloading is C, while in previous situations, like in figure 7.3 or 4.3 from the textbook, we have C as playing a role in expected free energy calculation, pragmatic value, the preference over observations.
+
+185
+00:23:50,045 --> 00:23:57,632
+Here, it's not the same C. C as preferences is over observations.
+
+186
+00:23:58,152 --> 00:24:13,139
+Here, transition probabilities are encoded in C. So it's kind of like a B, but this just goes to show letters are just letters and future software will be able to flip out and have different shapes and notation and all of that.
+
+187
+00:24:13,821 --> 00:24:16,245
+So don't get too attached to the letter.
+
+188
+00:24:16,276 --> 00:24:44,477
+look at how they're locally defining things even though that can be really challenging learning too okay the generalization becomes particularly important when composing markovian processes in deeper hierarchical architectures this follows from the use of states at one level to generate the initial conditions and paths at a lower level this recursive aspect speaks to a definitive feature of the generative models considered in this paper renormalizability
+
+189
+00:24:44,930 --> 00:24:45,772
+This is the big idea.
+
+190
+00:24:46,373 --> 00:25:00,441
+Multiscale hierarchical models can be built using this paths-on-states-on-paths-on-states-on-paths-and-dot-dot-dot-dot method, which describes this renormalization happening across scales.
+
+191
+00:25:00,978 --> 00:25:28,605
+you could have the inch by inch path and then that's nested within a foot by foot and mile by mile or you could have the minute by minute path and that's nested within hour by hour and day by day so by having this layering of states and paths and states and paths there's a clean way to get the separation of spatial or temporal or arbitrary scales so
+
+192
+00:25:29,817 --> 00:25:46,105
+that's the big background formalism one other way to get an intuition here's from our paper on the renormalization group in free energy principle applied to multi-scale biological systems
+
+193
+00:25:46,490 --> 00:26:02,895
+On the bottom, we have the kind of figure that we've seen in many active inference papers, where we're thinking about the cognitive behavioral entity like a worm, where the sensory states can be associated with perception, the active states with action, internal states with cognitive states, and all of that.
+
+194
+00:26:04,799 --> 00:26:13,777
+At the end of the day, there's also this nested, extended evolutionary process that is happening at the population scale.
+
+195
+00:26:14,078 --> 00:26:22,234
+So that's kind of like nesting the phenotype of individual worms within a population of worms or within an ecological distribution.
+
+196
+00:26:23,429 --> 00:26:32,997
+And then last note here, in this setting, a policy is not a sequence of actions, but a combination of paths where each hidden factor has an associated state and path.
+
+197
+00:26:33,598 --> 00:26:38,342
+This means there's potentially as many policies as there are combinations of paths.
+
+198
+00:26:39,583 --> 00:26:52,474
+So because these paths are kind of like context combinations, it means that there's a double explosiveness to them.
+
+199
+00:26:53,787 --> 00:27:05,551
+So understanding how do you handle that and understand the computational complexity class, and again, where it wouldn't be useful, those are key questions.
+
+200
+00:27:07,475 --> 00:27:08,016
+Any thoughts?
+
+201
+00:27:09,650 --> 00:27:20,423
+Yeah, I think that last bit, especially in a paper that's talking about scale-free active inference, and then now we're not just combining states for that combinatorial explosion.
+
+202
+00:27:20,583 --> 00:27:24,188
+Now it's combinations of paths of states and actions.
+
+203
+00:27:26,110 --> 00:27:28,073
+In theory, this should be much worse.
+
+204
+00:27:29,214 --> 00:27:30,055
+So I think
+
+205
+00:27:31,132 --> 00:27:37,200
+At the moment, I'm reading this and I'm thinking we're going to pay even more of a cost in terms of computing what the hell is going on.
+
+206
+00:27:38,242 --> 00:27:45,932
+But I think the renormalization group and making these models hierarchical pays for it.
+
+207
+00:27:46,052 --> 00:27:48,535
+That's my intuition of reading this paper.
+
+208
+00:27:49,116 --> 00:27:54,243
+So yeah, there's a good quote to have there and it's a good thing to have bolded.
+
+209
+00:27:54,664 --> 00:27:59,350
+I don't think you're ever going to get a free lunch, but you have to pay for lunch.
+
+210
+00:27:59,920 --> 00:28:13,744
+yeah the number of ingredients for lunch um okay in what follows we illustrate applications of the renormalizing generative model rgm in several settings um
+
+211
+00:28:14,770 --> 00:28:21,897
+The renormalization group requires the functional form of the dynamics, in terms of belief updating, is conserved over levels or scales.
+
+212
+00:28:22,377 --> 00:28:32,327
+This is assured in variational inference in the sense the inference process itself can be cast as pursuing a path of least action, where action is a path integral of variational free energy.
+
+213
+00:28:32,587 --> 00:28:38,613
+Another classic term overloading action here isn't like the robot moving its arm.
+
+214
+00:28:38,673 --> 00:28:42,297
+This is the physics action, sometimes with a capital A.
+
+215
+00:28:42,277 --> 00:29:06,124
+because all inference under free energy principle is considered in terms of the path of least action we can be assured that arbitrarily thick wide thin tall small world however you want to create the topology of a generative model we can be ensured that we're in an analytical setting where the models are quote doing the same thing
+
+216
+00:29:06,543 --> 00:29:33,597
+at different scales and then this takes us all the way from the first principles framing of the problems all the way on through the software tools like rx and fur which might be implementing these kinds of generative models also in this kind of ecumenical way the only thing that changes between levels are the parameters of the requisite action eg sufficient statistics of various probability distributions
+
+217
+00:29:34,420 --> 00:29:42,492
+That's to say, the functional properties of the RGM are simply determined and described by how it's parameterized.
+
+218
+00:29:43,175 --> 00:29:45,223
+So was it statistics all along?
+
+219
+00:29:46,368 --> 00:29:54,096
+And that's what we have in figure three with showing what that blocking looks like.
+
+220
+00:29:54,617 --> 00:29:57,320
+These are statistical parameters that are learnt.
+
+221
+00:29:58,121 --> 00:30:07,671
+So the description of the topology of this graph is the structure, which is either fixed or designed or set or learnt as a structure learning problem.
+
+222
+00:30:08,151 --> 00:30:14,198
+And then there's the values for a given situation that these variables take on.
+
+223
+00:30:14,178 --> 00:30:42,784
+and here's that state path essential coupling that's the state paths state path so compare this with hierarchical or multi-level Bayesian regression compare this with hierarchical predictive processing architectures state path state path and each of those constitute a separation of scales all of this is a statistical model any thoughts on this
+
+224
+00:30:44,873 --> 00:30:48,558
+Yeah, I think the hierarchy part is absolutely key here.
+
+225
+00:30:49,499 --> 00:30:59,372
+There is a little aside in the paper about which things in a hierarchy can affect which things in the lower part to make the inference actually possible.
+
+226
+00:30:59,553 --> 00:31:05,981
+So this is the idea of the Markov blankets and whether a child can have multiple parents, that sort of thing.
+
+227
+00:31:07,063 --> 00:31:08,745
+I think we possibly will come onto that later.
+
+228
+00:31:09,566 --> 00:31:12,450
+But overall, the main critical thing is
+
+229
+00:31:13,038 --> 00:31:23,965
+stuff happening at a higher level in your hierarchy is determining a lot of what's happening at the lower level, but information can flow back up with the observations that you get at the lower level to infer those parameters at the higher level.
+
+230
+00:31:24,145 --> 00:31:28,195
+So that's the classic active inference sort of top-down, bottom-up approach.
+
+231
+00:31:28,377 --> 00:31:55,482
+yeah awesome okay next section active inference learning and selection this section overviews the model which is used in the numerical studies of the following section and figure one provides an overview of the generative model that's considered in the paper we already took a quick look outcomes at any time depend upon hidden states that's the a matrix that's the partially observable part
+
+232
+00:31:56,322 --> 00:32:25,249
+while transitions among hidden states depend on paths and that's this sort of way that we see the transitions amongst latent states so that's the B matrix which is intervening between hidden states S B is being imposed upon by this path happening so it's almost like this is a this is like a rail or a guide up top
+
+233
+00:32:26,039 --> 00:32:31,427
+that's influencing how the actual latent state ends up unfolding through time.
+
+234
+00:32:31,567 --> 00:32:43,786
+And at each time point, there's the emission of an observation, that's the generative direction, or it could be taking in an empirical data point and then updating beliefs through time.
+
+235
+00:32:45,569 --> 00:32:48,874
+They describe the variables just like in the caption
+
+236
+00:32:50,440 --> 00:33:02,277
+The tensors are generally parameterized as Dirichlet distributions whose sufficient statistics are concentration parameters or Dirichlet counts, which count the number of times a particular combination of states and outcomes has been inferred.
+
+237
+00:33:02,818 --> 00:33:10,749
+We focus on learning the likelihood model encoded by Dirichlet counts, A. And that's known as learning by counting.
+
+238
+00:33:10,949 --> 00:33:14,895
+So that's the kind of classic case of pulling balls out of an urn.
+
+239
+00:33:15,010 --> 00:33:37,710
+and then tallying every time you see a certain kind of ball coming out of an urn or here it would be like pulling balls out of an urn and it's either cloudy or sunny and then you're doing learning by counting on the context and the outcome and then you're using that to parameterize everything else
+
+240
+00:33:40,238 --> 00:33:50,738
+carrying on a little bit with this and again connecting back to the 2022 textbook compare with figure 7.3 pomdp
+
+241
+00:33:50,887 --> 00:34:08,466
+The details are basically the same, except notice that paths U are described, as we mentioned earlier, C in the textbook, just the letter C, it's not actually that variable computationally, but the letter C is being used for preference distributions over observations.
+
+242
+00:34:08,986 --> 00:34:12,049
+Here, C is playing a role in the transition.
+
+243
+00:34:12,130 --> 00:34:16,354
+It's kind of like a B, but for this meta path.
+
+244
+00:34:18,528 --> 00:34:21,152
+In the textbook, we have a single-layer model.
+
+245
+00:34:21,613 --> 00:34:36,056
+Now, it has compositionality, but it's just a single-layer model, whereas in the paper we're discussing today, hierarchical levels are described in terms of this state-path-state-path alternation approach, and there's factorial depth.
+
+246
+00:34:37,798 --> 00:34:45,210
+Here, the procedural order of operations for the generative model is provided as policy selection
+
+247
+00:34:46,405 --> 00:34:50,849
+generate hidden state sequences and generate expected outcomes.
+
+248
+00:34:51,630 --> 00:34:54,172
+This is the forward or generative direction.
+
+249
+00:34:54,352 --> 00:34:58,837
+We could also go the recognition direction from real observations to policy inference.
+
+250
+00:34:59,737 --> 00:35:07,385
+So they're unrolling a policy centric approach that yields expected outcomes.
+
+251
+00:35:08,025 --> 00:35:13,290
+That's like running the generative model from policy inference out
+
+252
+00:35:14,080 --> 00:35:21,951
+as opposed to running a generative model from data processing to belief updating about policy going in.
+
+253
+00:35:23,653 --> 00:35:28,580
+Just to highlight some kind of points of contact, similarities with the textbook for those who dapple.
+
+254
+00:35:29,802 --> 00:35:30,944
+Any comments?
+
+255
+00:35:33,407 --> 00:35:34,809
+No, I think that was really good.
+
+256
+00:35:35,169 --> 00:35:36,291
+Awesome.
+
+257
+00:35:37,199 --> 00:35:49,351
+Equations 1, 2, and 3 in this paper are akin to equation 2.5 and 2.6 in the textbook on variational free energy and expected free energy.
+
+258
+00:35:49,711 --> 00:36:06,447
+So to learn about the different decompositions of variational free energy in terms of the ones that look more statistical, like divergence minus evidence, complexity minus accuracy, or the ones that look more statistical physical, like energy and entropy,
+
+259
+00:36:06,730 --> 00:36:33,227
+that's variational free energy and then analogously with equations two and three in the paper or equation 2.6 in the textbook we have expected free energy with the classical decomposition into epistemic value pragmatic value okay now we get to active inference um there's a lot we could say here
+
+260
+00:36:34,878 --> 00:36:51,621
+they describe that first sentence of active inference section in variational inference and learning sufficient statistics encoding posterior expectations which could be about sense making as well as action posterior expectations about what i am going to do pi
+
+261
+00:36:51,601 --> 00:36:54,425
+are updated to minimize variational free energy.
+
+262
+00:36:54,866 --> 00:37:07,826
+So that's the idea of seeing everything it is that the agent is and does on the inbound perceptual and outbound action selection as part of a joint distribution that's undergoing variational free energy minimization.
+
+263
+00:37:09,048 --> 00:37:11,972
+That's the active inference concept.
+
+264
+00:37:12,374 --> 00:37:42,162
+note the circle with a dot notation so the notation implies a sum product operator the dot or inner product that sums over one dimension of a numeric array or tensor so note the difference between circle with a dot as the inner product or tensor contraction while circle with x is the outer product so to look at the figure with message passing
+
+265
+00:37:42,209 --> 00:37:45,532
+and which brings in this circle with a dot notation.
+
+266
+00:37:48,135 --> 00:37:54,401
+Here we see the same graph that we saw in figure one.
+
+267
+00:37:55,202 --> 00:37:56,924
+In figure one, we have a Bayes graph.
+
+268
+00:37:57,024 --> 00:38:03,631
+So the nodes are variables that we would encode in our program, and then the edges are causal relationships.
+
+269
+00:38:03,651 --> 00:38:08,976
+So that's the kind of classic systems modeling kind of flow interaction mind map.
+
+270
+00:38:09,985 --> 00:38:16,432
+Here in this figure, we see a factor graph representation.
+
+271
+00:38:16,752 --> 00:38:28,605
+Now, in Livestream 55 and in the Realizing Synthetic Active Inference Agents discussion and other discussions, we've talked more about the relationship between Bayes graph and the Forney factor graph representation.
+
+272
+00:38:29,186 --> 00:38:36,634
+Suffice to say that what it is that nodes and edges are basically get flipped, but there's a full reproducibility.
+
+273
+00:38:36,614 --> 00:38:42,864
+so that here we have ways to look at the logistics of message passing amongst these nodes.
+
+274
+00:38:43,425 --> 00:38:49,855
+And it turns out that under the hood, this is what RxInfer is doing when it's being implemented.
+
+275
+00:38:50,396 --> 00:38:53,441
+So maybe if we get more into implementation, we could talk about that.
+
+276
+00:38:53,481 --> 00:38:57,728
+This figure is just showing that for that POMDP,
+
+277
+00:38:57,708 --> 00:39:03,114
+which is going to be doing the real work of active inference on the perceptual and the action selection side.
+
+278
+00:39:03,914 --> 00:39:09,841
+It's not just that we can link up the variables on the base graph that account for what we want to do.
+
+279
+00:39:10,541 --> 00:39:21,453
+It's that there's a specific logistics and we know exactly which messages to pack and send in order to get this whole variational inference done at the graph level.
+
+280
+00:39:21,993 --> 00:39:25,757
+And that can be done with either a determined logistical schedule
+
+281
+00:39:26,868 --> 00:39:34,062
+or it can be done in a reactive message passing setting.
+
+282
+00:39:34,082 --> 00:39:36,146
+Okay, active learning.
+
+283
+00:39:37,108 --> 00:39:41,136
+Bayesian model reductions a generalization of ubiquitous procedures and statistics.
+
+284
+00:39:43,561 --> 00:39:46,767
+In the present setting, it reduces to something remarkably simple.
+
+285
+00:39:47,185 --> 00:40:08,793
+By applying Bayes' rules to parent and reduce models, so a model of k parameters and of k-1 parameters, it is straightforward to show that the change in variational free energy can be expressed in terms of posterior Dirichlet counts A, prior counts A, and the prior counts that define a reduced model.
+
+286
+00:40:08,813 --> 00:40:17,023
+So A' corresponds to the posterior one would have obtained under the reduced priors.
+
+287
+00:40:18,472 --> 00:40:23,729
+The alternative to Bayesian model reduction is bottom-up growth of models to accommodate new data or content.
+
+288
+00:40:24,351 --> 00:40:29,528
+If one considers the selection of one parent model over another augmented model as an action,
+
+289
+00:40:30,807 --> 00:40:42,707
+These two equations in the active learning section are like the add and remove variable operations and ultimately what allow us to compare any Bayesian model.
+
+290
+00:40:43,509 --> 00:40:54,688
+So model comparison amongst nested, strictly nested models can be done in the fully parametric setting using the hierarchical likelihood ratio test.
+
+291
+00:40:55,276 --> 00:41:11,364
+Bayesian models allow model comparison amongst models that differ in only one parameter, like adding or removing one parameter as part of structure inference, or there could be radically different model topologies underneath.
+
+292
+00:41:12,486 --> 00:41:19,258
+And that can be evaluated in terms of like a Bayes factor support for one model over another.
+
+293
+00:41:20,723 --> 00:41:38,273
+It also connects to a lot of work, theoretical and applied in sleep-wake type models, where parameters are added, fit increases during wake cycles, and then synapses are pruned, models are reduced, core screening occurs during sleep.
+
+294
+00:41:38,294 --> 00:41:42,040
+And the big picture is you can use Bayesian model comparison
+
+295
+00:41:42,408 --> 00:42:09,276
+framed as a free energy landscape optimization just as always comparing different base graphs comparing different generative models and then this results in the expression of a log base factor or an odds ratio comparing the likelihood of two different models so this allows comparison of different models and the selection of different models as its own inference task
+
+296
+00:42:11,467 --> 00:42:12,549
+Any thoughts on this?
+
+297
+00:42:15,035 --> 00:42:26,360
+Yeah, just one thing I want to pick up on is I actually can't remember, like, I guess with this paper, I think they were just doing sort of like, it's almost like just purely the bottom-up approach, right?
+
+298
+00:42:26,420 --> 00:42:29,627
+They're not starting with like a massive model and then
+
+299
+00:42:30,046 --> 00:42:33,091
+You couldn't start with a very big one at the top and then coarse-grain down.
+
+300
+00:42:33,211 --> 00:42:35,815
+You have to coarse-grain sort of going up the hierarchy, as it were.
+
+301
+00:42:36,076 --> 00:42:44,589
+So I think we end up going with this bottom-up growth of models because you don't want more levels than you need necessarily.
+
+302
+00:42:44,830 --> 00:42:54,265
+Or if you have an image and you're trying to classify it and it's, I don't know, 32 by 32 pixels and you just subdivide it by two,
+
+303
+00:42:54,245 --> 00:43:08,259
+you need to start with your pixel, you need to start with your full image width first and then coarse-grain, coarse-grain, coarse-grain up, rather than going, ah, A4RI, I'm going to have N levels and then cut them down after.
+
+304
+00:43:08,299 --> 00:43:15,305
+So I think that's probably going to be more on the bottom-up growth of models for this particular paper.
+
+305
+00:43:16,326 --> 00:43:17,327
+Yeah, good point.
+
+306
+00:43:17,688 --> 00:43:23,053
+How do you know how big to make each scale and how many scales?
+
+307
+00:43:24,434 --> 00:43:30,324
+We won't read all the text on this page, but big claim.
+
+308
+00:43:30,344 --> 00:43:33,769
+Renormalizability is feasible under the models in Figure 1.
+
+309
+00:43:34,310 --> 00:43:38,577
+So that's kind of the rhetorical chain is, here's the models that we're working with in Figure 1.
+
+310
+00:43:39,799 --> 00:43:42,023
+These models have renormalization properties.
+
+311
+00:43:42,644 --> 00:43:50,897
+That is what makes this state path, state path layering amenable to scale-free or scale-friendly or multi-scale generative models.
+
+312
+00:43:51,687 --> 00:44:13,459
+claim is that given the renormalization properties of base graphs like or including the ones that they're describing with this state path state path nesting there can be computationally tractable possibly multi-level renormalization and the rest of the paper they're going to be explaining and unpacking that and adapting it to specific settings
+
+313
+00:44:14,030 --> 00:44:24,151
+These renormalizing transformations have the effect such that the dynamics slow down in time and space as one ascends levels or scales.
+
+314
+00:44:24,792 --> 00:44:34,452
+So compare that with other work on information theory of individuality, bottom-up and top-down information flows and causality, gapping and laddering.
+
+315
+00:44:37,402 --> 00:44:52,847
+And also they're saying that the structure and the tuning of the variables in the graph, which would yield the full reproducible description of the renormalizable generative model, itself can be reached through this Bayesian model comparison.
+
+316
+00:44:55,892 --> 00:45:00,760
+We had some questions about how the discrete and continuous time are different.
+
+317
+00:45:03,592 --> 00:45:12,463
+A more intuitive view is that successively higher levels encode sequences of sequences and implicitly composition of events or episodes.
+
+318
+00:45:13,104 --> 00:45:23,997
+In other words, at a deep level, one state can generate sequences of sequences of sequences, thereby destroying the Markovian properties of content generated at the lowest level.
+
+319
+00:45:24,871 --> 00:45:33,769
+So this is like encoding or sedimenting nested sequences or paths in event-based or order structured narratives.
+
+320
+00:45:37,155 --> 00:45:40,602
+Deep structure is what allows
+
+321
+00:45:40,818 --> 00:45:55,030
+or possibly advanced or naturalistic, interpretable, fill in your preferable adjective there, models of complex phenomena that do have deep structure like speech and writing and story.
+
+322
+00:45:55,735 --> 00:46:16,427
+and they're going to be walking through renormalization through space in terms of pixels time and in general spaces so it's cool to think about like chris fields and mike levin's work on competency in navigating arbitrary spaces as an invariant for analyzing cognition in diverse embodiments
+
+323
+00:46:16,475 --> 00:46:31,121
+So the idea that space and time are just some state spaces, but other state spaces like semantic embeddings from an LLM or other kinds of state spaces might also have these abilities to yield to the renormalization operation.
+
+324
+00:46:32,243 --> 00:46:32,664
+Any comments?
+
+325
+00:46:35,690 --> 00:46:36,752
+No, that was all good.
+
+326
+00:46:36,772 --> 00:46:37,032
+Cool.
+
+327
+00:46:38,817 --> 00:46:46,613
+Figure 3 is a graphical model, which we looked at a little earlier, where groups of states at a lower level are generated by a single state at a higher level.
+
+328
+00:46:47,294 --> 00:46:57,855
+So here we have a state at a higher level, S sub 1 superscript n plus 2, and then flowing out of it, we have the state and the path at a lower level.
+
+329
+00:46:59,438 --> 00:47:02,883
+Higher states only change after a fixed number of lower state change.
+
+330
+00:47:03,624 --> 00:47:04,725
+So that could be two.
+
+331
+00:47:05,286 --> 00:47:26,475
+It could just be twice as fast, like a frequency doubling every time there's a time scale separation, or it could be fixed like 60 minutes per hour, and or it could be fully reactive in terms of using Rx and Fur for a just-in-time type responsive updating.
+
+332
+00:47:26,523 --> 00:47:37,461
+And this is somewhere where I think that generalized notation notation will be really helpful because talking about what these variables are in detail gets pretty messy.
+
+333
+00:47:38,285 --> 00:48:04,326
+um because each state and path has only one parent the ensuring markov blanket the blue circles of each state red circle ensures conditional independence among latent factors there is a strict uniparental inheritance factorization pattern in the hierarchical model so can latent factors remain conditionally independent so note that the s and the u here are not connected
+
+334
+00:48:04,492 --> 00:48:09,481
+Conditioned upon the higher S, they are conditionally independent.
+
+335
+00:48:10,302 --> 00:48:12,626
+That simplifies the runtime inference.
+
+336
+00:48:13,588 --> 00:48:28,474
+In sum, a renormalizing generative model, RGM, is a hypergraph parameterized by two sorts of tensors, the A and the B, in which the children of states at any level bipartition into initial states and paths.
+
+337
+00:48:29,180 --> 00:48:35,730
+In this example, the blocking transformation groups pairs of states and paths.
+
+338
+00:48:37,060 --> 00:48:59,929
+so here it's kind of like a and b again not exactly the a and the b letters from the textbook but note that a describes the likelihoods or empirical priors and b is the dynamics so a is broadly referring to like this instantaneous sense making like relationship between
+
+339
+00:48:59,909 --> 00:49:23,402
+latent states and observations whereas b is describing the dynamics and the transitions through time so i'm not sure if it's exactly that simple but a is kind of describing synchronous attributes of the model whereas b describes diachronous through time aspects of the model okay anything else
+
+340
+00:49:24,648 --> 00:49:30,984
+Yes, I think one thing to really hook onto is the uniparental inheritance thing.
+
+341
+00:49:31,766 --> 00:49:38,904
+So I think you're correct when you say, yes, that makes everything faster and less computationally difficult.
+
+342
+00:49:39,145 --> 00:49:40,328
+That is a good thing.
+
+343
+00:49:40,308 --> 00:50:01,894
+uh but i think there's a more philosophical thing to raise as well which is when we're talking about causality going up and down the levels uh and learning should in theory be a lot easier uh when you only have a single cause for something so that means that when you make an observation it's much easier to infer oh
+
+344
+00:50:01,874 --> 00:50:06,582
+the parent must have been this in order to cause what I see.
+
+345
+00:50:07,203 --> 00:50:15,538
+And you don't have to consider multiple factors coming in and going, ah, well, it could have been any one of 10 different factors that mean I saw what I saw.
+
+346
+00:50:15,578 --> 00:50:27,358
+So that learning process as well, when we talk about the direct line counts earlier, should be a lot easier to do when you have only a single parent for a particular variable.
+
+347
+00:50:27,338 --> 00:50:51,996
+um so yeah that conditional independence among latent factors i think also features into the locality aspect as well of uh when we're talking about the very beginning of the session but i'm not 100 sure on that but that's my intuitive understanding of what's going on there cool okay one can also regard rgm as an expressive way of modeling non-linearities
+
+348
+00:50:52,280 --> 00:50:58,066
+In the limit of precise likelihood mappings, this can be viewed as the composition of logical operators.
+
+349
+00:50:59,948 --> 00:51:06,114
+One can see why an RGM can compose operators to represent or generate content that has compositional structure.
+
+350
+00:51:07,436 --> 00:51:13,662
+The inversion of an RGM could be construed as a simple form of abductive logic.
+
+351
+00:51:13,682 --> 00:51:16,465
+Okay, now we're going to get to the examples.
+
+352
+00:51:17,373 --> 00:51:18,655
+Here we go.
+
+353
+00:51:18,676 --> 00:51:21,822
+First example, image compression and compositionality.
+
+354
+00:51:22,583 --> 00:51:27,553
+So first it's helpful for background to look at variational autoencoders.
+
+355
+00:51:28,054 --> 00:51:39,195
+These take in some input observations, they project down to a latent space that's smaller and then decode out to reconstruct.
+
+356
+00:51:39,648 --> 00:51:42,531
+So it's really similar to a variational autoencoder.
+
+357
+00:51:42,671 --> 00:51:46,855
+And look at the first word, variational free energy, variational autoencoder.
+
+358
+00:51:47,215 --> 00:51:49,998
+They just call it the ELBO, not the VFE.
+
+359
+00:51:50,338 --> 00:51:56,183
+There's so many similarities between this method and active inference that it's really helpful to study up.
+
+360
+00:51:56,724 --> 00:52:00,247
+It just sometimes uses a little bit of a frame shifted ontology.
+
+361
+00:52:01,989 --> 00:52:02,950
+Here's what they do.
+
+362
+00:52:04,411 --> 00:52:08,575
+They're studying the classic MNIST handwriting data set.
+
+363
+00:52:09,044 --> 00:52:18,874
+They map continuous pixel values to a discrete state space, and then they're going to learn the structure through recursive applications of a blocking transformation.
+
+364
+00:52:19,775 --> 00:52:24,120
+They group together local pixels by tiling or tessellating the image.
+
+365
+00:52:25,041 --> 00:52:29,345
+So that's the first step, is they tessellate over the image at multiple scales.
+
+366
+00:52:30,747 --> 00:52:34,731
+So the smallest dots is a 4x4 cluster of pixels.
+
+367
+00:52:34,863 --> 00:52:38,427
+Then the medium-sized dot is four of those.
+
+368
+00:52:38,507 --> 00:52:41,891
+So then one, two, three, four, these get clustered into this one.
+
+369
+00:52:42,572 --> 00:52:47,417
+And then one, two, three, four get clustered into that one, and so on.
+
+370
+00:52:48,118 --> 00:52:56,407
+So that's the spatial static renormalization via spin block locality principle process.
+
+371
+00:52:57,428 --> 00:53:01,613
+Each group is then subject to singular value decomposition.
+
+372
+00:53:01,711 --> 00:53:06,836
+given the training set of images to identify orthogonal spatial basis of singular vectors.
+
+373
+00:53:07,958 --> 00:53:09,740
+So this is the grouping and the reduction.
+
+374
+00:53:10,360 --> 00:53:11,942
+Grouping is the tessellation.
+
+375
+00:53:12,042 --> 00:53:13,223
+It's like a convolution.
+
+376
+00:53:13,243 --> 00:53:17,688
+We'll talk more about how it differs from convolution, like a convolutional neural network.
+
+377
+00:53:17,708 --> 00:53:19,910
+And then they truncate.
+
+378
+00:53:20,451 --> 00:53:25,576
+So here's an example from the form index project, but there's many other places you can look at this.
+
+379
+00:53:25,656 --> 00:53:30,942
+This is what, for a principal component analysis or for an SVD analysis,
+
+380
+00:53:31,462 --> 00:53:54,229
+every single time it selects the vector that explains the most orthogonal variance and then it takes that profile out of the original data and then it takes the next most variance explaining vector and so you end up with something that looks like a variance explanation curve so the first 10
+
+381
+00:53:54,462 --> 00:53:55,805
+components explain 70%.
+
+382
+00:53:56,166 --> 00:53:59,915
+To get to 90% on this data set, it took 50.
+
+383
+00:54:00,597 --> 00:54:04,145
+So if you say, well, my computer only has space for 10, just take 10.
+
+384
+00:54:04,787 --> 00:54:11,222
+Or if you say, well, I'm interested in this kind of Bayes optimal, Pareto optimal crossover point,
+
+385
+00:54:11,455 --> 00:54:33,700
+you can solve it that way or maybe you have other constraints so that's pretty much how it's working is they're structurally using the nesting with these four by four spin glass blockings and then they do a SVD truncation compression method on each level of that blocking
+
+386
+00:54:38,168 --> 00:55:02,286
+this is how the path state path state path state works it's a multi-scale blocking convolution tessellation operation to group then svd with truncation to reduce to a defined state space they only retain 32 of the variables from the svd at each level um
+
+387
+00:55:05,000 --> 00:55:20,260
+There's more on this slide, but one thing that'll certainly be interesting to discuss with the author is, at first glance, this procedure may appear to generate likelihood mappings of increasing size because the combinatorics of increasingly large groups could explode at higher levels.
+
+388
+00:55:21,000 --> 00:55:26,147
+However, by training on a small number of images, one upper bounds the number of states at each level.
+
+389
+00:55:28,237 --> 00:55:36,250
+In other words, one can effectively encode a finite number of images without any loss of information such that RGM inversion corresponds to lossless compression.
+
+390
+00:55:37,212 --> 00:55:40,277
+So, what's the deal with training data?
+
+391
+00:55:40,938 --> 00:55:48,731
+How do we know about what is going to be an optimal or effective data size, variability, information content, or curriculum for the dataset?
+
+392
+00:55:49,172 --> 00:55:53,299
+How do we address that data selection problem, sometimes called active data sampling?
+
+393
+00:55:56,435 --> 00:56:03,475
+And then to the point about the lossless compression, one can effectively encode a finite number of images without loss of information.
+
+394
+00:56:04,231 --> 00:56:10,500
+So how can or does this do compression better than, for example, Gzip or LLM?
+
+395
+00:56:10,901 --> 00:56:30,188
+That was a great moment in computational history when people realized that in certain ways, these models are doing information compression and that even Gzip or just file compression utilities have attributes that trained machine learning models have because of information theory.
+
+396
+00:56:31,332 --> 00:56:39,823
+And how do we know and infer or describe these trade offs related to the training data set and the structure of the model all these different things.
+
+397
+00:56:40,423 --> 00:56:53,880
+As we expand the scope of our modeling degrees of freedom and how has this problem been solved similarly or approach differently in other work on information geometry in variational auto encoders.
+
+398
+00:56:56,155 --> 00:56:59,660
+And then just last piece on working through this example.
+
+399
+00:57:00,402 --> 00:57:04,228
+So again, they pre-processed the MNIST images.
+
+400
+00:57:05,890 --> 00:57:08,735
+The images were downloaded from the link here.
+
+401
+00:57:08,775 --> 00:57:14,063
+They were converted to the format that they needed.
+
+402
+00:57:15,325 --> 00:57:18,290
+Then they say an exemplar image is shown in figure three in the paper.
+
+403
+00:57:18,370 --> 00:57:19,813
+I think that should be figure four.
+
+404
+00:57:19,853 --> 00:57:24,241
+And then they're showing the centroids of each of these groups.
+
+405
+00:57:25,142 --> 00:57:37,023
+So this is just to get an intuition for what this multi-scale spin glass blocking is doing with the success of clumping and grouping into these multiple spatial scales.
+
+406
+00:57:37,103 --> 00:57:38,245
+Okay, any comments?
+
+407
+00:57:40,874 --> 00:57:53,193
+Yeah, I think I'm still very confused as to how this ends up being from the previous slide, how you get lossless compression if you're also doing the singular value decomposition and truncating some of those vectors.
+
+408
+00:57:55,316 --> 00:58:00,344
+I definitely want to follow up with the office about when are we lossy and when are we lossless?
+
+409
+00:58:01,305 --> 00:58:07,675
+And as you said, the question of training data and how much, what goes in your curriculum, that's going to be huge, I think.
+
+410
+00:58:07,925 --> 00:58:28,701
+yeah good point there's a truncation of variance so it's if it's close to lossless that's also known as lossy compression um here is figure five that's describing these concatenated likelihood matrices this is a common method in a lot of
+
+411
+00:58:29,002 --> 00:58:54,334
+models where four separate matrices can be included as sub matrices in a bigger matrix that can make it simpler to deal with in programming it might make it amenable to sparse matrix methods or compression methods it might make it just easier to visualize but this is kind of a classic trick going back to the spm days um okay
+
+412
+00:58:55,782 --> 00:59:17,217
+if we had imposed an additional constraint or structural prior that likelihood mappings are conserved identically over groups so for example if there was the prior that um let's just talk about these four major quadrants that's the third level of the model if we had said all four of those are the same
+
+413
+00:59:18,901 --> 00:59:38,597
+versus a situation like it was which is it was left open upper left quadrant of five could be different than the bottom right quadrant of five if we had imposed that additional constraint that the likelihood mappings are conserved identically over groups one would have the discrete homolog of a convolutional neural network with implicit weight sharing
+
+414
+00:59:39,573 --> 00:59:46,079
+So this is a super key point because people might have a lot more familiarity with convolutional methods from computer vision.
+
+415
+00:59:46,900 --> 01:00:01,975
+In the case where the mappings are constrained to be the same, so it's a situation where we're learning a single filter that optimally sweeps across a whole image, this is the convolutional neural network case, convolutional case.
+
+416
+01:00:02,936 --> 01:00:07,200
+Here in the multiscale RGM, the learning space is more complex.
+
+417
+01:00:07,383 --> 01:00:34,217
+it's more general so the advantage is we could possibly describe more conditional relationships like oh the upper left quadrant of five looks like this but the bottom right looks like that what's the disadvantage you know where is this lunch getting paid for it massively expands the search and training space as always you can have a more expressive model has more options bigger search space less expressive model smaller search space
+
+418
+01:00:34,197 --> 01:00:44,473
+And then figure six shows more about what these scales look like and connects it also to receptive fields in the visual processing.
+
+419
+01:00:45,474 --> 01:01:02,500
+But just like the four by four spin block window or the 32 truncation dimensions for SVD or the 10 levels of this factor, that's a big question is like, what about three by three with 25 dimensions of SVD and an eight factor or eight levels for the factor?
+
+420
+01:01:02,902 --> 01:01:08,993
+How much meta optimization do you do to determine what these variables should be?
+
+421
+01:01:11,458 --> 01:01:24,201
+One thing to pick up on that, which maybe they don't do in this paper, but I'm sure they've done in others is, well, if I need to optimize something about my model, why don't I just
+
+422
+01:01:25,160 --> 01:01:29,827
+create a bunch of them and then check my free energy and just pick the one with the lowest free energy.
+
+423
+01:01:30,368 --> 01:01:36,537
+So parameter optimization through free energy minimization happens everywhere else in Active Inference.
+
+424
+01:01:36,577 --> 01:01:39,161
+I'm not sure why we couldn't also do it here for some of these.
+
+425
+01:01:40,383 --> 01:01:52,281
+So you'd set up your RGM, but you could have different parameters on how many principles components to keep, how many levels to do, et cetera.
+
+426
+01:01:52,261 --> 01:02:06,000
+And so long as you can generate observations and see which ones are the most internally consistent with the probabilities based on the training data, you could probably learn how to do your RGM.
+
+427
+01:02:06,020 --> 01:02:16,615
+Yeah, I think that's the dream, is you say, here's the meta structure of the 1x1, 2x2, 3x3, 4x4, mxn.
+
+428
+01:02:18,333 --> 01:02:37,050
+grouping and then we'll learn how many n should be grouped by on how many levels per factor with how many variance retention elements from the SVD and then you say okay well should we retain the same number of SVD variables for every level
+
+429
+01:02:37,638 --> 01:02:43,646
+Or should we open up the possibility that, well, maybe the first level we retain 10, but the second we only retain three.
+
+430
+01:02:44,247 --> 01:02:51,577
+Again, that might be more expressive if there really was 10 variance contribution in the first level and three in the second, but it's a bigger search base.
+
+431
+01:02:52,378 --> 01:02:56,103
+So that's the sort of meta question, but that's cognitive computing.
+
+432
+01:02:57,185 --> 01:02:58,186
+So it's exciting times.
+
+433
+01:02:59,408 --> 01:03:02,532
+Figure seven, getting to the performance on the MNIST.
+
+434
+01:03:03,220 --> 01:03:14,760
+So figure five, it says in the text, illustrates the results of active learning, but I think here they mean figure seven, during exposure to the first 10,000 training images of the MNIST dataset.
+
+435
+01:03:15,943 --> 01:03:21,332
+So in this example, images were assimilated if and only if they increased the expected free energy of the RGM.
+
+436
+01:03:22,254 --> 01:03:25,279
+In the absence of prior preferences or constraints,
+
+437
+01:03:25,647 --> 01:03:31,296
+This ensures minimum information loss by underwriting informative likelihood mappings at each level.
+
+438
+01:03:32,198 --> 01:03:36,665
+So my question was, does this address the data sampling issue?
+
+439
+01:03:37,687 --> 01:03:43,597
+It seems like they're selecting from a larger data pool the informative examples which improve the performance of EFE.
+
+440
+01:03:44,658 --> 01:03:47,142
+So how much to threshold or how to prioritize that?
+
+441
+01:03:47,202 --> 01:03:52,431
+How do you deal with a path dependence in training?
+
+442
+01:03:52,833 --> 01:03:57,740
+the order of the curriculum of the points that are seen, or does it not matter?
+
+443
+01:03:58,441 --> 01:04:02,327
+But for real time and online inference methods, it often really matters.
+
+444
+01:04:03,028 --> 01:04:07,534
+It's a complex landscape, so if you head out left or head out right, it's gonna make a big difference.
+
+445
+01:04:08,476 --> 01:04:21,895
+And isn't this substituting another possibly quite challenging inference and data selection problem just so that a special smaller RGM can be made?
+
+446
+01:04:21,993 --> 01:04:32,826
+So there's gonna be situations where it is worth that entry cost to set up a smart active data sampling method to train a powerful RGM.
+
+447
+01:04:33,687 --> 01:04:44,579
+There might be another case where that data sampling component is challenging and it's not worth it and there's another simpler way to do it another way.
+
+448
+01:04:44,639 --> 01:04:49,705
+So of course, in any specific situation, it's an empirical question
+
+449
+01:04:50,073 --> 01:04:53,116
+how these different methods perform.
+
+450
+01:04:53,176 --> 01:05:07,130
+And then just again, with these images, figure eight, the thing to note here is classification accuracy increases with a marginal likelihood that each image belongs to the class of numbers.
+
+451
+01:05:08,191 --> 01:05:19,202
+So here they're showing that their accuracy is very high where they're most confident and their accuracy drops as their confidence drops.
+
+452
+01:05:19,925 --> 01:05:31,161
+And from a quick perplexity search, I'll also be curious to see what others have to add, classic shallow machine learning algorithms can easily achieve 97% accuracy on MNIST.
+
+453
+01:05:31,641 --> 01:05:43,738
+In 2015, convolutional neural networks approach achieved an error rate of just 0.29%, so 99 plus percent.
+
+454
+01:05:44,022 --> 01:06:06,876
+So especially at the way that they're presenting it here without code and things like that, keep in mind that it's more of a proof of concept in analytic foundation, not necessarily being described as a computational advance, which would have a lot more details on what was run rather than just saying it was learned automatically within a few seconds on a personal computer.
+
+455
+01:06:07,096 --> 01:06:09,479
+That's kind of a casual way to describe it.
+
+456
+01:06:09,580 --> 01:06:11,262
+I think it's very...
+
+457
+01:06:11,326 --> 01:06:16,894
+colorful and inspirational, though more assessment would need to be looked at.
+
+458
+01:06:16,954 --> 01:06:20,179
+How does the fit relate to other methods?
+
+459
+01:06:20,259 --> 01:06:33,839
+And so this is a super exciting open source direction to support empirical reproducibility efforts to establish how and when and where different code bases do differently on different datasets.
+
+460
+01:06:36,223 --> 01:06:36,643
+Okay.
+
+461
+01:06:36,663 --> 01:06:39,207
+Yeah, 100% just want to echo on the
+
+462
+01:06:42,629 --> 01:06:46,252
+It can't just be in a MATLAB script on Carfridson's computer.
+
+463
+01:06:46,433 --> 01:06:49,956
+It's got to be out there so that we can use it and build on it and understand what's going on.
+
+464
+01:06:51,337 --> 01:06:57,843
+One thing I think that's also worth highlighting is this classification and confidence question.
+
+465
+01:06:58,604 --> 01:07:01,347
+I'm not sure if the convolutional neural networks will also give you that.
+
+466
+01:07:01,607 --> 01:07:08,974
+So if they classify something, maybe they just say, oh, I think it's the digit zero
+
+467
+01:07:09,072 --> 01:07:11,516
+And I'm like, 95% confident?
+
+468
+01:07:11,536 --> 01:07:13,319
+I don't even know if you get that necessarily.
+
+469
+01:07:13,760 --> 01:07:22,194
+I think maybe you get something that's a pseudo confidence number on a scale between zero and one, but it's not really confidence in the same way that this is.
+
+470
+01:07:22,234 --> 01:07:27,362
+This is like, you've got a probability distribution and you can do a credible interval on it if you want.
+
+471
+01:07:28,164 --> 01:07:32,110
+So I think that's something to really highlight, the explainability
+
+472
+01:07:32,866 --> 01:07:40,256
+is often in many cases worth swapping a few percentage accuracy points so that you know why your algorithm has suggested something.
+
+473
+01:07:40,597 --> 01:07:47,666
+Yeah, earlier work by a lot of those authors have highlighted that true element of interpretability and uncertainty.
+
+474
+01:07:48,147 --> 01:08:01,405
+For example, in a LLM today, even if it does say something like, I'm not sure about X, that string, I'm not sure about X, was actually achieved as a high confidence outcome.
+
+475
+01:08:01,975 --> 01:08:09,150
+And so it doesn't actually reflect an introspection of the uncertainty intervals on x.
+
+476
+01:08:09,940 --> 01:08:10,861
+fun topics to go into.
+
+477
+01:08:10,881 --> 01:08:13,605
+Okay, that was the first example.
+
+478
+01:08:13,965 --> 01:08:18,691
+Now we're gonna go faster through the next examples because they're structured much the same way.
+
+479
+01:08:18,711 --> 01:08:22,856
+It's just each of these following examples is gonna bring in a new dimension.
+
+480
+01:08:23,517 --> 01:08:27,362
+So the next dimension is gonna be video compression.
+
+481
+01:08:27,982 --> 01:08:35,792
+Generalize the renormalizing procedures of the previous section to include dynamics for recognizing and generating ordered sequences of images.
+
+482
+01:08:36,453 --> 01:08:39,677
+So video is sequence of images.
+
+483
+01:08:40,383 --> 01:08:51,518
+Also algorithm one has the fast structure learning, even just copying and pasting this into perplexity and working in cursor from there does amazing things.
+
+484
+01:08:51,598 --> 01:09:00,851
+So I'm super excited for what people come up with in terms of using the algorithms that are laid out and implementing them in different languages and so on.
+
+485
+01:09:00,871 --> 01:09:08,061
+So this section is gonna generalize the static univariate grayscale example of MNIST.
+
+486
+01:09:08,041 --> 01:09:35,263
+into an rgb three color three channel plus time time color pixel voxel tuple structure here's where we get to time time wasn't present in the mnist example but by partitioning each sequence into non-overlapping pairs during the time scale transformation at successive levels one effectively halves the length of the sequence when ascending from one level to the next
+
+487
+01:09:35,328 --> 01:09:40,237
+So we talked about different ways to do nesting in time, 60 minutes in an hour, 24 hours in a day.
+
+488
+01:09:40,277 --> 01:09:45,506
+Here is going to be a strict frequency doubling.
+
+489
+01:09:45,526 --> 01:09:54,942
+This means that higher levels encode sequences of sequences of sequences, paging exhibit, that can be regarded as episodes of successive events.
+
+490
+01:09:56,585 --> 01:09:57,707
+So key idea.
+
+491
+01:09:57,907 --> 01:10:01,550
+State path, state path, state path, encodes transitions through time.
+
+492
+01:10:02,551 --> 01:10:05,174
+And there's this enforced frequency doubling.
+
+493
+01:10:05,994 --> 01:10:08,837
+So processes are encoded relationally.
+
+494
+01:10:10,338 --> 01:10:16,744
+Look into something like successor representation learning or cue learning to see some other approaches.
+
+495
+01:10:19,427 --> 01:10:25,112
+During inference, the separation of temporal scales manifests as a particular kind of reactive message passing.
+
+496
+01:10:26,020 --> 01:10:29,864
+So it's possible to define and use message passing among levels.
+
+497
+01:10:31,285 --> 01:10:44,859
+It could also be possible to provide alternative operations orders, or like in RxInfer, use graphs that have no preset order of updating or other rules for how updating occurs.
+
+498
+01:10:45,800 --> 01:10:52,247
+Okay, here's where in figure 10, 11, and 12, we get to the example.
+
+499
+01:10:52,615 --> 01:10:56,360
+We used a short video sequence of a dove flapping her wings.
+
+500
+01:10:57,121 --> 01:11:02,890
+The original video was downsampled to 32 frames and they describe a little bit more.
+
+501
+01:11:03,130 --> 01:11:05,493
+They use the same four by four blocking.
+
+502
+01:11:06,955 --> 01:11:09,199
+So this is key information on the video processing.
+
+503
+01:11:10,440 --> 01:11:17,290
+And it's really exciting to think about what they do to these file formats
+
+504
+01:11:17,455 --> 01:11:39,396
+as analytic affordances i found this actually more from the discourse analysis area and rhetoric studies but if we think about the choices and the degrees of freedom that are made in the data processing and meta modeling those are analytical affordances and it relates to how we were talking about you could do inference on those variables
+
+505
+01:11:39,933 --> 01:11:46,542
+And so here we see analogous to the images that were output for the MNIST summaries and performance.
+
+506
+01:11:47,023 --> 01:11:52,551
+Here we similarly have prediction through time of this dove flapping the wings.
+
+507
+01:11:52,991 --> 01:11:55,475
+It's a cyclic generated video.
+
+508
+01:11:55,655 --> 01:12:09,214
+And for example, the stimulus here is just if like a spotlight is only on part of the dove and then it can reconstruct through space at the same moment
+
+509
+01:12:09,346 --> 01:12:15,843
+and through time, how it will continue to unfold given the patchy observations that it gets.
+
+510
+01:12:16,806 --> 01:12:19,272
+So that's the kind of dove video example.
+
+511
+01:12:20,315 --> 01:12:29,734
+I think there's some background on why does that matter, that you can just do the spotlight thing and recover the original in a way.
+
+512
+01:12:30,736 --> 01:12:35,305
+So this is a fairly common way of understanding unsupervised learning.
+
+513
+01:12:36,167 --> 01:12:40,095
+Has your algorithm actually understood the data?
+
+514
+01:12:40,075 --> 01:12:54,872
+And so masking parts of the image and asking it to infill it is a very common way of testing that what you've got actually understands what's going on and it's not just going to hallucinate anything random.
+
+515
+01:12:54,892 --> 01:12:58,436
+So, yeah, when I first came across it, I thought, oh, this is a bit odd.
+
+516
+01:12:58,476 --> 01:13:04,783
+But then, yeah, it's worth looking into just as background of like, well, if you have an unsupervised learning technique, how do you know it's actually doing a good job?
+
+517
+01:13:06,080 --> 01:13:30,636
+yeah cool okay the next example in the video section in the preceding example the sequence of the image constitutes a closed path namely a simple orbit so it's like a gif of the dove flapping the wings it returns to the same spot and then it continues again this can be regarded as a quantized representation of a periodic attractor in the section paths orbits and attractors
+
+518
+01:13:31,510 --> 01:13:39,111
+They use the same procedures to compress and generate stochastic chaos using images generated by a Lorenz system.
+
+519
+01:13:39,131 --> 01:13:46,431
+The aim of the example is to show how active learning after structured learning furnishes a generative model of chaotic orbits.
+
+520
+01:13:47,170 --> 01:13:56,158
+So Lorenz system and active inference is discussed in the four-part series on Livestream 32, Stochastic Chaos and Markov Blankets.
+
+521
+01:13:56,818 --> 01:14:02,083
+And here we see an analogous process to the MNIST, analogous to the DOVE.
+
+522
+01:14:02,103 --> 01:14:05,106
+We have an image or sequences of images through time.
+
+523
+01:14:05,766 --> 01:14:09,409
+It's traces from this Lorenz chaotic attractor.
+
+524
+01:14:10,991 --> 01:14:17,076
+Similarly, there's this grouping and reduction operation happening through space and time.
+
+525
+01:14:17,427 --> 01:14:34,862
+And then parameterization of those models, that's the structured learning followed by parameterization, results in the ability to have, even when there's a gap in the observations, like in figure 15 on the right,
+
+526
+01:14:34,842 --> 01:14:52,075
+here we have a gap in the observations but the predictive posterior is able to continue it's an empirical question how well it lines up but this is just really fascinating because it shows well even though the generative process we can say has this chaotic instability
+
+527
+01:14:52,713 --> 01:14:55,438
+that might make it analytically intractable.
+
+528
+01:14:55,478 --> 01:15:06,195
+From the generative modeling perspective, the RGM enables a really nicely typed way that can accommodate systems that have these chaotic properties.
+
+529
+01:15:06,997 --> 01:15:09,000
+What was exciting to you about this part?
+
+530
+01:15:10,938 --> 01:15:13,261
+Yeah, exactly that.
+
+531
+01:15:13,281 --> 01:15:19,508
+It's, you know, chaos is fascinating, and modeling it, famously very difficult.
+
+532
+01:15:21,331 --> 01:15:29,601
+So yeah, I think this is actually, I feel like they should be shouting about this more in the paper, in a way, like, maybe they could have opened with this, I don't know.
+
+533
+01:15:30,542 --> 01:15:31,663
+But
+
+534
+01:15:31,643 --> 01:15:40,113
+I would really like to see some more like actually simpler examples of chaotic systems being modeled in this way.
+
+535
+01:15:40,693 --> 01:15:42,435
+And maybe that could be a separate paper entirely.
+
+536
+01:15:43,697 --> 01:15:56,892
+But even just, you know, one dimensional signals that change in time that are famously quite chaotic that we don't do a very good job of modeling would be really interesting to see how
+
+537
+01:15:57,462 --> 01:16:02,529
+getting that into an orbit modeling procedure using this would be and see how that goes.
+
+538
+01:16:03,130 --> 01:16:05,393
+We were very excited to try that.
+
+539
+01:16:05,413 --> 01:16:05,773
+Awesome.
+
+540
+01:16:05,834 --> 01:16:06,875
+Yeah, totally agree.
+
+541
+01:16:08,557 --> 01:16:17,770
+The next example continuing in the image and video sequence is a bird, so a natural extension.
+
+542
+01:16:18,491 --> 01:16:24,219
+Figure 16 illustrates the spatial blocking of a more natural video, a short sequence from this website.
+
+543
+01:16:24,279 --> 01:16:27,283
+So that URL was no longer active.
+
+544
+01:16:27,263 --> 01:16:57,068
+but either way it was just a search url so it'd be cool to see the exact video maybe it could be uploaded but either way this is a short video of a bird in a natural setting and again figure 17 staying with this theme there's a latent state prediction ongoing even though the stimulus the observation is withheld sometimes so in a way that's like what happens when we blink or have an isocate
+
+545
+01:16:57,183 --> 01:17:15,488
+We have this ongoing posterior prediction of the visual scene, which is what's being experienced or attended to, with color everywhere and equal precision everywhere and all this stuff, including continuity when we blink or have an eye saccade, because it's basically what's happening here.
+
+546
+01:17:15,688 --> 01:17:22,137
+There's just transiently no stimulus, but still the likeliest thing that's happening is the latent state prediction.
+
+547
+01:17:22,717 --> 01:17:25,401
+So that last little sequence took us from
+
+548
+01:17:25,567 --> 01:17:50,106
+handwriting static images grayscale into three video settings which was a cyclic oscillatory synthetic video a synthetic chaotic video and then a natural video so you could imagine if this was more structured natural video it would be easier to learn with probably any method
+
+549
+01:17:50,086 --> 01:17:56,835
+If this was a more complex scene with multiple different things switching positions, it would be a harder video to learn.
+
+550
+01:17:58,718 --> 01:18:00,440
+Any more thoughts on the natural extension?
+
+551
+01:18:01,862 --> 01:18:11,035
+Yeah, actually, so if it's trained on this particular video, one thing I wasn't sure is what frames does it predict at the end?
+
+552
+01:18:11,135 --> 01:18:16,442
+So we talked about if you miss some frames in the middle, and then it can catch up and keep up.
+
+553
+01:18:16,803 --> 01:18:18,625
+But if you just run this indefinitely,
+
+554
+01:18:19,533 --> 01:18:22,118
+I'm not actually sure what the bird would be predicted to do.
+
+555
+01:18:22,138 --> 01:18:24,643
+And would it just eventually loop back?
+
+556
+01:18:24,843 --> 01:18:30,133
+Because it's sort of like if you had that chaotic path in the previous one, it's still in orbit.
+
+557
+01:18:30,174 --> 01:18:33,019
+It still returns to the same attractor states.
+
+558
+01:18:33,235 --> 01:18:37,806
+Whereas here, I'm not sure what the bird would do when it's predicted to be doing stuff.
+
+559
+01:18:38,568 --> 01:18:40,392
+Maybe it just flies off the screen and we don't see it anymore.
+
+560
+01:18:40,472 --> 01:18:41,294
+I don't know.
+
+561
+01:18:41,615 --> 01:18:44,081
+It's kind of like a sci-fi simulation to run.
+
+562
+01:18:44,441 --> 01:18:49,433
+It's like a sci-fi, like what if it's like the movie's an hour and a half long and then you keep watching.
+
+563
+01:18:49,473 --> 01:18:50,836
+It's like, wait, it's still going.
+
+564
+01:18:51,117 --> 01:18:51,919
+What's happening?
+
+565
+01:18:54,042 --> 01:18:59,227
+Okay, the next case that they study is sound.
+
+566
+01:18:59,767 --> 01:19:05,033
+So the video examples in the prior three were just transitions.
+
+567
+01:19:05,393 --> 01:19:07,014
+It was an ordered sequence of images.
+
+568
+01:19:07,815 --> 01:19:16,503
+Whereas the video more broadly understood like the live stream that you're listening to now is video as image plus audio.
+
+569
+01:19:16,644 --> 01:19:21,248
+So here they just kind of leave the video behind and say, let's just look at the audio.
+
+570
+01:19:21,498 --> 01:19:27,019
+In this setting, pixels, and there's an analogy for the multimodal LLMs,
+
+571
+01:19:27,337 --> 01:19:37,147
+where the tokenization methods that work for natural language in the discrete setting also work for tokenization of image and audio like GPT-4.0.
+
+572
+01:19:37,968 --> 01:19:39,530
+So in this setting, pixels, i.e.
+
+573
+01:19:39,570 --> 01:19:44,575
+picture elements, are replaced by voxels, volume elements over frequency and time.
+
+574
+01:19:45,936 --> 01:19:52,483
+These constitute time frequency representation of time series or a continuous wavelet transform, CWT.
+
+575
+01:19:53,847 --> 01:20:01,924
+Renormalizing generative models for sound are simpler than for video content because there's only one metric dimension, frequency, that accompanies time.
+
+576
+01:20:02,906 --> 01:20:11,704
+Using a spin block transformation to coarse-grain over frequency reflects the factor assumption that neighboring frequencies fluctuate in a correlated fashion.
+
+577
+01:20:12,342 --> 01:20:18,671
+So kind of similar data availability setting, URL provided, but unclear what the songs were.
+
+578
+01:20:18,691 --> 01:20:34,435
+And then we see the similar visual representations culminating in, for example, 20, where predictions, latent state predictions are able to continue even though part of the stimulus has been redacted.
+
+579
+01:20:36,102 --> 01:20:51,450
+So it's kind of like a video chat or a phone call and then someone drops out for a few seconds, but you're able to still have your unrolling expectations about what did happen, even though you might be missing some observations.
+
+580
+01:20:52,051 --> 01:20:55,798
+So any comments on this first sound part?
+
+581
+01:20:57,702 --> 01:20:59,127
+No, let's carry on.
+
+582
+01:20:59,147 --> 01:20:59,388
+All right.
+
+583
+01:21:00,351 --> 01:21:01,374
+From sounds to music.
+
+584
+01:21:02,377 --> 01:21:07,895
+One might ask if RGMs could be applied to language, perhaps in the spirit of hierarchical Dirichlet process models.
+
+585
+01:21:08,718 --> 01:21:10,564
+We will not address this here.
+
+586
+01:21:10,797 --> 01:21:20,748
+but provide an application to music to illustrate the generalized synchrony that accompanies communicative exchange, Fristin and Frith 2015, the classic songbird dyad.
+
+587
+01:21:21,589 --> 01:21:33,561
+So keep in mind that the birds that are in this dyadic songbird setting, which is also reflected in the 2022 textbook, are literally singing from the same sheet music.
+
+588
+01:21:34,182 --> 01:21:37,986
+They have the same single fixed song.
+
+589
+01:21:37,966 --> 01:21:56,481
+so it's not modeling the flow of language as conversation at the level of new lexemic information provided like go to the store and get me milk or meta lexemic like prosodic or stylistic elements of language
+
+590
+01:21:56,849 --> 01:22:05,785
+It's a very restricted sense of language, but it's part of the tech tree of building towards models that capture more sophisticated elements of language.
+
+591
+01:22:06,406 --> 01:22:11,695
+But here is more structured than this sound example.
+
+592
+01:22:12,136 --> 01:22:16,123
+It'd be interesting to hear some of these songs in their
+
+593
+01:22:16,222 --> 01:22:18,647
+original versions and in their generated versions.
+
+594
+01:22:19,309 --> 01:22:24,961
+And like, how well does this do from a performance and file size perspective?
+
+595
+01:22:25,202 --> 01:22:27,026
+How well does that do to MP3?
+
+596
+01:22:27,647 --> 01:22:29,993
+Which is another example of data compression.
+
+597
+01:22:30,033 --> 01:22:33,741
+And that's exactly like the Gzip and LLM comparison earlier.
+
+598
+01:22:34,328 --> 01:22:51,578
+If at the heart of a variational autoencoder or an RGM or something else is using a structurally determined model as parameterized to have a smaller representation of a larger space, how do these
+
+599
+01:22:52,435 --> 01:23:16,671
+physics inspired first principles of intelligence models or classical machine learning and compression related models do are we getting what fraction of compression how good is the performance all these you know can you tune the bit rate all those kinds of questions okay on to the last section from pixels to planning so
+
+600
+01:23:17,883 --> 01:23:27,916
+In the final section, we turn to the deployment of RGMs for planning as inference and implicitly their use as synthetic agents and decision makers under uncertainty.
+
+601
+01:23:28,657 --> 01:23:38,490
+So we're getting to the generalized active agents, which is to say the capacity for control and navigation in arbitrary spaces.
+
+602
+01:23:39,263 --> 01:23:45,335
+And so here we also see a comparison or juxtaposition of active inference and reward learning.
+
+603
+01:23:45,816 --> 01:23:50,125
+And Ran Wei gave a great guest stream recently on similarities and differences there.
+
+604
+01:23:51,307 --> 01:23:57,981
+And they make some more comments about how the RGM
+
+605
+01:23:57,961 --> 01:24:04,270
+has relationships with generalized multi-level learning.
+
+606
+01:24:04,811 --> 01:24:17,028
+So now we're kind of briefly dropping any specific case, like a data set of images or video, and just thinking more generally about how this RGM could be used for multi-scale active agents.
+
+607
+01:24:18,350 --> 01:24:19,151
+Any comments?
+
+608
+01:24:23,517 --> 01:24:23,918
+No, Scario.
+
+609
+01:24:24,218 --> 01:24:52,116
+um procedurally this looks very much like conventional reinforcement learning however it is simpler and more efficient because it learns a compressed representation of and only of paths that link rewarded states so that might have some connections with the inductive behavior paper that they also wrote another way of looking at this is smart data selection that relates to my earlier question of well if you knew which data to select and in what order
+
+610
+01:24:52,822 --> 01:24:56,847
+for free, then maybe the model can be trained effectively.
+
+611
+01:24:57,888 --> 01:25:09,141
+But if it's a hard problem to determine which data to sample or what order to do it in, then it's just substituting one type of problem for another, which might be effective in a situation, but that's not a general approach.
+
+612
+01:25:10,022 --> 01:25:22,356
+Effectively, this leads to the automatic selection of model structures that can only recognize and predict rewarding episodes, thereby eluding subsequent parameter learning.
+
+613
+01:25:23,129 --> 01:25:29,898
+This rests upon the fact that one does not need to learn how to maximize reward if one has a generative model that can only predict paths that lead to reward.
+
+614
+01:25:31,320 --> 01:25:40,333
+I was a bit uncertain about this because different paths may probabilistically lead to different reward.
+
+615
+01:25:41,013 --> 01:25:44,278
+And then I thought, well, wait a minute, that's just pragmatic value.
+
+616
+01:25:45,119 --> 01:25:51,668
+What about the automatic selection of model structures that can only recognize and predict epistemic information?
+
+617
+01:25:52,357 --> 01:26:03,753
+Isn't the expected free energy gonna be able to select data, active data sampling, live stream 57, smart data selection, according to epistemic plus pragmatic value?
+
+618
+01:26:05,255 --> 01:26:06,758
+And thereby specify the next action.
+
+619
+01:26:07,739 --> 01:26:18,955
+Again, reinforcement learning selects the next action based upon highest expected value or reward, but expected free energy has epistemic plus pragmatic value.
+
+620
+01:26:20,099 --> 01:26:25,588
+In what follows, we will illustrate this approach in sequential policy optimization and unpack some of its corollaries.
+
+621
+01:26:28,372 --> 01:26:29,213
+Games and attractors.
+
+622
+01:26:30,035 --> 01:26:37,506
+So here, they use simple Atari-like games to show how a model of expert play self-assembles given a sequence of outcomes under random actions.
+
+623
+01:26:38,909 --> 01:26:41,413
+The first simple game in question is the game of Pong.
+
+624
+01:26:42,715 --> 01:26:46,140
+They describe how they coarse-grain the blocks.
+
+625
+01:26:48,044 --> 01:26:54,290
+And then they selected frames that started from a successful outcome.
+
+626
+01:26:56,252 --> 01:26:58,995
+So they trained on successful examples.
+
+627
+01:26:59,195 --> 01:27:03,019
+In short, we use rewards for and only for data selections.
+
+628
+01:27:03,079 --> 01:27:16,532
+That's kind of an interesting possibility that there's a pragmatic filter on training data followed by then an epistemic openness to whatever it is that that data has.
+
+629
+01:27:19,313 --> 01:27:40,242
+um and renormalization happened through space and time like the video examples and through the action policy that's the section that we're in here where we're saying in the general case we're also able to do rgm on nested policy but here there was just one time scale of policy um
+
+630
+01:27:41,420 --> 01:27:47,909
+figure 25, 26 and 27 go over some of those representations.
+
+631
+01:27:48,610 --> 01:27:50,373
+So any thoughts on this?
+
+632
+01:27:53,457 --> 01:27:58,324
+Yeah, I think it's the training part is really interesting.
+
+633
+01:27:59,005 --> 01:28:10,060
+And what I think maybe possibly as well, we're getting a bit closer as to why they use that C letter for paths, if it's only ever
+
+634
+01:28:11,305 --> 01:28:19,857
+encoding paths that are rewarding, then we sort of go full circle back to the definition in the par textbook of C is like rewards.
+
+635
+01:28:21,059 --> 01:28:24,343
+It's just rewarded paths rather than rewards of observations.
+
+636
+01:28:25,505 --> 01:28:27,648
+But I think they come onto this later on in the paper.
+
+637
+01:28:28,269 --> 01:28:31,494
+This feels like a very brittle way of training a model.
+
+638
+01:28:31,934 --> 01:28:38,123
+If it only ever encounters positive states or like things that it likes or things that we want it to like,
+
+639
+01:28:39,014 --> 01:28:47,983
+What happens if you drop it in a situation that it hasn't seen before, where there's a negative state and it has no way to recover back to a positive one?
+
+640
+01:28:48,323 --> 01:28:55,570
+So if you think of like for training on a game, if you start in a losing state, how do you bring it back?
+
+641
+01:28:56,010 --> 01:28:56,971
+How do you recover?
+
+642
+01:28:58,292 --> 01:29:04,318
+So I think that's something that we will come onto later, but it's a really interesting thing to bear in mind of, well, what are you training on?
+
+643
+01:29:04,338 --> 01:29:05,960
+Are you only training on success?
+
+644
+01:29:06,260 --> 01:29:07,401
+How do you deal with failure?
+
+645
+01:29:07,904 --> 01:29:26,115
+yeah great point that also makes me wonder about the transfer applicability so we trained on that bird video but then what if it's the same bird but it's just a little bit darker light or it's a different angle what are the transfer limits or what is it really training on
+
+646
+01:29:26,433 --> 01:29:39,215
+And then especially if there's a sort of data filtering or selection to pass data, that is one of the critiques of large data set related training.
+
+647
+01:29:39,255 --> 01:29:43,041
+So maybe this uses a subset of it, like a filtered subset,
+
+648
+01:29:43,021 --> 01:30:04,388
+since there's already a database of successful and unsuccessful plays just selecting the successful ones and then at the same time there's this interesting biological tie-in which is like the organism's training data through life in a way is all successful with respect to survival
+
+649
+01:30:05,785 --> 01:30:22,444
+so by having the training data only reflect a certain kind of success perhaps with a lot of variability still it it's an interesting question what it learns and how transferable that could be
+
+650
+01:30:23,723 --> 01:30:27,790
+And then this is the last of the worked examples.
+
+651
+01:30:28,611 --> 01:30:33,820
+Figure 28 shows the same simulation using a slightly more complicated game based upon Breakout.
+
+652
+01:30:34,381 --> 01:30:44,558
+So what's happening in these gameplay settings is gameplay is like a video plus controllable state transitions.
+
+653
+01:30:45,660 --> 01:30:49,326
+So it'd be like if there was a dove flapping its wings,
+
+654
+01:30:49,458 --> 01:30:53,806
+And then also there was another parameter which was lights on or lights off.
+
+655
+01:30:54,907 --> 01:30:58,955
+And then there's one latent state which is where is the dove's wings really?
+
+656
+01:30:58,995 --> 01:31:06,167
+And then how does the dove's wing state get emitted to observations when the light is on or off?
+
+657
+01:31:07,126 --> 01:31:19,870
+then that would be like a simple example where the dove does not respond to the light and then a more complex example would be oh it flaps differently in the light and the dark and so that's where you start getting into these factorized models and paths on states on paths and states
+
+658
+01:31:20,643 --> 01:31:29,494
+So here they study this game Breakout, where there's, in a way, niche modification happening.
+
+659
+01:31:30,395 --> 01:31:37,524
+It doesn't show any of the cells on the top getting broken, but that would be interesting.
+
+660
+01:31:38,025 --> 01:31:45,635
+How does it represent, down into the really fine scale, what numbers represent the presence or absence of a block?
+
+661
+01:31:46,255 --> 01:31:48,338
+And how does that really get encoded
+
+662
+01:31:50,090 --> 01:31:52,915
+So any last comments before we go to the conclusion?
+
+663
+01:31:55,760 --> 01:31:58,725
+I actually found this example the most difficult to follow in the paper.
+
+664
+01:32:00,809 --> 01:32:12,469
+I think it's still not entirely clear to me how this RG operator handles the action inside this as well, and how you...
+
+665
+01:32:12,753 --> 01:32:41,494
+coarse grain the effects of action that might happen at a particular time step that then gets sort of diluted out as it were so uh that's just something i think from for this uh for the game section that i'd quite like to ask the authors about is uh to go to a bit more detail on the rg operators when action is happening but that action can only happen on a particular time like uh what's the word uh sort of period as it were uh
+
+666
+01:32:42,993 --> 01:33:04,073
+yeah also i wasn't sure if these were meant to be empty or if something but then i wondered well is there a natural interpretation of levels one two and three and do these scale separations capture some natural components of the game or
+
+667
+01:33:04,576 --> 01:33:33,570
+is there a possibility that by using like a four by four or any n by n or using a strict doubling of time that there's kind of an aliasing where real natural scales of analysis get sort of chopped up strangely with different time scale separations and so then it depends a lot on what spatial temporal scales are divided on
+
+668
+01:33:34,040 --> 01:33:38,306
+And then there'd be some training data for some partitionings that would work really well.
+
+669
+01:33:38,367 --> 01:33:49,163
+Like if you had a ton of good information on the structure of a problem, then maybe one measurement would be all you needed.
+
+670
+01:33:49,203 --> 01:34:01,161
+Like if you knew the whole class schedule of the university and how all the class beginnings and endings were related, and then someone said, there's a lecture in that hall on Tuesday,
+
+671
+01:34:01,327 --> 01:34:05,375
+And then you could have a ton of information about how that was correlated with everything else.
+
+672
+01:34:06,216 --> 01:34:19,622
+But then if you were studying it on a meter by meter subdivision on a timescale that wasn't related to the timescale of the classes were happening, you might need a ton of data and still be shocked with the next time step.
+
+673
+01:34:20,969 --> 01:34:33,790
+So that's just the structure learning challenge, and I think that is the hope and the question, how can automated, semi-automated, and ultimately unified methods for structure learning be applied?
+
+674
+01:34:37,156 --> 01:34:38,418
+Okay, conclusion.
+
+675
+01:34:40,201 --> 01:34:47,533
+The paper has showcased several applications of a generative model for discrete state-space approaches based on the renormalization group.
+
+676
+01:34:49,522 --> 01:34:53,846
+The appeal to the apparatus of the renormalization group is relatively straightforward in the setting.
+
+677
+01:34:54,287 --> 01:35:04,216
+This is because active inference is an application of the free energy principle, which is itself a variational principle of least action, whose functional form is conserved over scales or hierarchical levels.
+
+678
+01:35:05,738 --> 01:35:11,744
+Having said this, the restriction to spin block transformations and pixel spaces could also be regarded as a limitation.
+
+679
+01:35:12,264 --> 01:35:13,145
+Classic answer.
+
+680
+01:35:14,847 --> 01:35:18,330
+In principle, any outcome space could be a candidate for coarse graining.
+
+681
+01:35:20,453 --> 01:35:25,699
+How do we know, understand and balance where and when these spin blocks would work or not?
+
+682
+01:35:26,200 --> 01:35:45,904
+We've discussed and in other conversations, the applicability of the viability of doing sweeps and structure learning and act-inf, on-act-inf, on-act-inf, on-RL, on-act-inf, on-RL and how many layers back before your data science team is just like, I think this is fine.
+
+683
+01:35:46,897 --> 01:35:50,961
+RGM with quantized paths may or may not be useful in certain application domains.
+
+684
+01:35:52,062 --> 01:35:58,148
+The applications above illustrate the simplicity and efficiency with which the structure of the models can be learned.
+
+685
+01:35:58,928 --> 01:36:00,430
+So that's the key claim.
+
+686
+01:36:00,570 --> 01:36:03,673
+That's the key point.
+
+687
+01:36:03,693 --> 01:36:09,018
+Further limitations of the approach described above rest on the efficiency of the accompanying methods.
+
+688
+01:36:09,819 --> 01:36:11,901
+The efficiency is both a gift and a burden.
+
+689
+01:36:13,002 --> 01:36:14,203
+Again, great.
+
+690
+01:36:15,837 --> 01:36:22,707
+Clearly, in terms of sample efficiency and compression, the schemes described above are designed to outperform conventional learning schemes.
+
+691
+01:36:23,768 --> 01:36:28,735
+Okay, but designed to outperform is something that anyone can say.
+
+692
+01:36:28,815 --> 01:36:34,042
+So did they outperform when other learning schemes weren't presented in the paper?
+
+693
+01:36:35,264 --> 01:36:44,477
+This follows because model construction procedure is constructive as opposed to the reductive approach of Bayesian model reduction and related procedures.
+
+694
+01:36:45,453 --> 01:36:52,240
+enabling the self-assembly of a minimally expressive model to recognize, generate and predict the content at hand.
+
+695
+01:36:52,388 --> 01:36:57,312
+So that's this bottom-up construction through tessellation that we've discussed.
+
+696
+01:36:58,073 --> 01:37:15,509
+This should be contrasted with the reductive, but not to be confused necessarily with reductionism or reductionist account, but reductive in terms of starting with a large, overly expressive model that's reduced or pruned, minimizing complexity to recover predictive validity and generalization.
+
+697
+01:37:15,889 --> 01:37:21,214
+So one way to think about that is like in the VAE, the latent space is a bow tie.
+
+698
+01:37:21,194 --> 01:37:48,501
+it's smaller in the middle whereas for an image processing neural network you might take in 64 pixels output 64 pixels but then the thickness in the middle is huge so these are the approaches saying well you can kind of have this constructivist approach to building a smaller latent space that's projected down to and then unpacked from that's the vae rgm type style
+
+699
+01:37:49,342 --> 01:38:12,244
+another approach is to start with a massive surfeit of parameters you know 70 billion 405 billion and then use that as a function approximator to fit an approximation to some other function but more generally how could efficiency be a burden um
+
+700
+01:38:13,591 --> 01:38:18,679
+They make some more points about learning and skills.
+
+701
+01:38:18,759 --> 01:38:24,207
+And this gets to our question about the successful trials for training.
+
+702
+01:38:24,828 --> 01:38:33,141
+So these such models are necessarily brittle in the sense they will not recognize or respond to events they have not previously encountered.
+
+703
+01:38:34,583 --> 01:38:36,226
+That almost seems like too far to say.
+
+704
+01:38:36,246 --> 01:38:41,033
+I mean, the MNIST model will be able to respond to a digit it has never encountered.
+
+705
+01:38:41,519 --> 01:38:53,012
+It won't be able to respond to a temperature reading because it just doesn't even have that capacity, but it's like out of sample learning or out of structure learning.
+
+706
+01:38:53,773 --> 01:38:56,295
+A useful heuristic here is learning to ride a bike.
+
+707
+01:38:57,697 --> 01:39:05,486
+In this kind of procedural learning, we learn from a starting position and accumulate successive cycles of pedaling until we avoid falling completely.
+
+708
+01:39:06,066 --> 01:39:09,450
+But we do fall and we learn from when we fall.
+
+709
+01:39:09,751 --> 01:39:14,758
+In other words, we retain only experiences characteristic of successful bike riding until we can ride fluently.
+
+710
+01:39:15,499 --> 01:39:22,129
+However, we would not be able to ride a bike starting from any arbitrary state e.g.
+
+711
+01:39:22,149 --> 01:39:22,990
+falling over.
+
+712
+01:39:24,532 --> 01:39:28,738
+We would have to return to a known starting position to recover our flow.
+
+713
+01:39:29,815 --> 01:39:39,968
+Flow is meant in manifold, which itself is a pun, senses here, the fluency associated with being in the flow, control flow, dynamical flow, and of course, RG flow.
+
+714
+01:39:41,310 --> 01:39:59,113
+So what is really being claimed about what are the situations where successful examples are enough, where negative examples are and aren't learned from or recovered to, and then how well did these methods work within and out of sample
+
+715
+01:40:00,427 --> 01:40:20,671
+After all, that is what the whole question is in training a model is how well do you do on the training and the test for different kinds of out of sample being from really similar, but not in the exact training data itself all the way on through totally different kinds of work.
+
+716
+01:40:22,373 --> 01:40:26,258
+So we don't know the next steps or implications.
+
+717
+01:40:26,418 --> 01:40:28,881
+We have a lot of questions and hopefully do too.
+
+718
+01:40:30,886 --> 01:40:33,008
+What are you looking forward to?
+
+719
+01:40:33,028 --> 01:40:37,353
+Or just what are your thoughts having now gone through all this?
+
+720
+01:40:37,373 --> 01:40:43,599
+Yeah, I'd love to see some code.
+
+721
+01:40:44,080 --> 01:40:47,643
+I'd love to see some implementations that we can hack around with ourselves.
+
+722
+01:40:48,624 --> 01:40:55,071
+And yeah, I think it's a really because a lot of
+
+723
+01:40:55,439 --> 01:41:01,552
+what's come in the past for Active Inference has been, it's felt very like, I need to write my generative model down on paper.
+
+724
+01:41:02,394 --> 01:41:08,767
+I need to really sit down and think, undistracted, and think, how do I model this problem?
+
+725
+01:41:09,248 --> 01:41:10,110
+What are the causes?
+
+726
+01:41:10,290 --> 01:41:11,252
+What are the observations?
+
+727
+01:41:11,573 --> 01:41:13,617
+How might they relate?
+
+728
+01:41:13,968 --> 01:41:17,574
+and then I create a function which will generate these observations.
+
+729
+01:41:17,814 --> 01:41:20,078
+And then you can plug it into active inference and go all the way.
+
+730
+01:41:20,859 --> 01:41:26,248
+But often the hardest part is writing down those A, B, C, D matrices.
+
+731
+01:41:27,530 --> 01:41:30,795
+It's actually really difficult for lots of people.
+
+732
+01:41:30,815 --> 01:41:35,723
+You can be a trained physicist and it's still really hard to think, how do I model this problem in the real world
+
+733
+01:41:35,703 --> 01:41:37,406
+in terms of mathematical matrices.
+
+734
+01:41:37,806 --> 01:41:38,547
+That's really hard.
+
+735
+01:41:39,208 --> 01:41:47,440
+So in theory, if your RG operators are good enough, and you just you can just chuck some data, maybe it has to all be positive data, all the happy path stuff.
+
+736
+01:41:48,202 --> 01:42:01,221
+But that's already quite powerful, I think, and moves, I think, active inference closer to more traditional machine learning in terms of accessibility and ease of use, so that data science teams could just use this in
+
+737
+01:42:03,142 --> 01:42:05,928
+does represent quite a significant step forward for that.
+
+738
+01:42:06,970 --> 01:42:19,155
+And I think with all the work that you've done on this channel of just making active inference more accessible and easier to play around with, easier to try in new scenarios, that's such a good thing.
+
+739
+01:42:19,556 --> 01:42:23,344
+So very excited for the future livestream sessions on this paper.
+
+740
+01:42:24,252 --> 01:42:24,734
+Awesome.
+
+741
+01:42:24,754 --> 01:42:33,233
+Yeah, great point that how much of the modeling specification
+
+742
+01:42:34,428 --> 01:43:02,967
+today and tomorrow will be manual semi-automated automated like would you just put in the eeg data and just say go for it or how would you embody side information about the eeg problem and then how would it do on training tests and how would it transfer all these different questions so it's great do you have any last comments
+
+743
+01:43:04,583 --> 01:43:08,687
+Uh, yeah, I just think the explainability thing is going to be the key here.
+
+744
+01:43:08,707 --> 01:43:15,014
+So as soon as you go to unsupervised sort of structure learning, what did those levels mean?
+
+745
+01:43:15,254 --> 01:43:18,457
+And what did those factors mean that it's learned from the data itself?
+
+746
+01:43:19,098 --> 01:43:28,648
+If I, if we go the old fashioned route, if I come up with a generative model and I say, this is how I'm modeling the system, I can explicitly say this level, this latent variable is for whether it's raining or not.
+
+747
+01:43:28,708 --> 01:43:31,671
+And this observation corresponds to water observed on the grass outside.
+
+748
+01:43:32,444 --> 01:43:39,501
+But because I'm coming up with that model, I can use words to communicate that to you, and you have that full explainability of this model.
+
+749
+01:43:40,088 --> 01:43:53,060
+With this approach, we are going to lose some of that, and it'll be really interesting to see whether we can recover the explainability of, well, what does this factor mean when I did a principal components transformation and ditched half the components?
+
+750
+01:43:53,701 --> 01:43:54,582
+What does that actually mean?
+
+751
+01:43:54,642 --> 01:43:57,425
+You can sort of look at it on the MNIST example and go, oh, yeah, it's a digit, right?
+
+752
+01:43:57,905 --> 01:43:59,667
+But we still have to look at that.
+
+753
+01:44:00,227 --> 01:44:04,551
+So getting that in a semi-automated way would be very exciting as well.
+
+754
+01:44:04,772 --> 01:44:07,294
+Yeah, that makes me think about what
+
+755
+01:44:07,527 --> 01:44:11,698
+natural joints of the world handles for the world will
+
+756
+01:44:12,573 --> 01:44:17,060
+a possibly automated method fail to find?
+
+757
+01:44:18,001 --> 01:44:24,451
+And then conversely, what new natural scales might it come up with?
+
+758
+01:44:24,671 --> 01:44:28,156
+For example, just doing PCA analysis on natural language.
+
+759
+01:44:28,276 --> 01:44:33,965
+It's like, okay, principal component one is whether it's happy or sad or whether it's written in this language or that language.
+
+760
+01:44:34,045 --> 01:44:39,373
+But then you get to principal component seven and it's like, huh?
+
+761
+01:44:39,353 --> 01:45:06,407
+does that eigen term mean something with it a little bit more of this and a little bit less of that does that what does that really mean and then the further you go out usually the less reliable those variance components are across different data sets so then that comes back to how do we interpret
+
+762
+01:45:08,328 --> 01:45:16,592
+and set up systems that have few or many, you know, when shorter lists are more interpretable.
+
+763
+01:45:17,494 --> 01:45:21,325
+But then when you clump under fewer things, they have more
+
+764
+01:45:21,845 --> 01:45:47,582
+grouping of dissimilar things so it's like lumpers and splitters the neets and the scruffies those those are all coming to play right on that field so thank you very much arun and also to blue and to courtney for the contributions to the dot zero so looking forward to the next two weeks peace thanks very much

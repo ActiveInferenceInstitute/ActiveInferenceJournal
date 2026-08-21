@@ -1,0 +1,2235 @@
+1
+00:00:37,207 --> 00:00:50,706
+Hello, we're back with Samuel Nehrer, Jonathan Larsen, and Peter Wade discussing ActiveInference.jl, staying with the ActiveInference plus Julia theme.
+
+2
+00:00:51,667 --> 00:00:54,531
+Thank you all for coming on and sharing this work.
+
+3
+00:00:54,652 --> 00:00:55,833
+So looking forward to it.
+
+4
+00:00:59,378 --> 00:01:00,099
+Hi, everyone.
+
+5
+00:01:00,660 --> 00:01:02,242
+It is a pleasure to be here.
+
+6
+00:01:02,923 --> 00:01:06,268
+So like Daniel said, we'll present on
+
+7
+00:01:07,126 --> 00:01:14,415
+a new package for doing active inference simulations, but also for applying it to data in Julia.
+
+8
+00:01:15,536 --> 00:01:22,425
+And we will leave time for questions at some moments during the presentation, and then some time in the end.
+
+9
+00:01:23,686 --> 00:01:30,755
+Additionally, we're three people, because we've been working on this together, so we'll alternate a little bit with the setting.
+
+10
+00:01:32,477 --> 00:01:33,218
+All right, let's record.
+
+11
+00:01:34,177 --> 00:01:37,021
+So first, it's nice just to mention who we are.
+
+12
+00:01:37,322 --> 00:01:38,744
+So we're all at Aarhus University.
+
+13
+00:01:39,585 --> 00:01:45,514
+I'm a PhD candidate and Sami and Jonathan are students who have been working on developing this package with me.
+
+14
+00:01:46,776 --> 00:01:57,351
+And we all come from computational cognitive science, specifically called cognitive modeling, where you model behavior in computational models.
+
+15
+00:01:57,371 --> 00:02:02,659
+And of course, within that specifically, predictive processing models, including active inference models.
+
+16
+00:02:02,679 --> 00:02:03,981
+And that's why we made this package.
+
+17
+00:02:06,391 --> 00:02:15,242
+And we use this in the context of computational psychiatry for clinical questions and also more broadly for just modeling behavior.
+
+18
+00:02:16,244 --> 00:02:28,079
+And this package is part of a somewhat larger project of developing software for these kinds of research questions in Julia.
+
+19
+00:02:30,302 --> 00:02:33,546
+And I'll start with just giving a brush up on what cognitive
+
+20
+00:02:34,083 --> 00:02:40,493
+modeling is in general, so some members of the audience might be familiar with this, but others might not.
+
+21
+00:02:40,593 --> 00:02:48,847
+Just to set the stage for an introduction to ActiveInference, you all have seen this before, so we'll go through it briefly, but it's nice to have this on our fingertips.
+
+22
+00:02:50,109 --> 00:03:01,407
+Then we get to the meat of the matter, which is, of course, how to do this specifically in code with ActiveInference.jl, both simulating behavior and also fitting it to data.
+
+23
+00:03:01,910 --> 00:03:10,641
+And finally, if there's time, we have some applications and some future work that we'll be happy to spend some time.
+
+24
+00:03:10,661 --> 00:03:11,842
+We might skip that as well.
+
+25
+00:03:14,345 --> 00:03:14,625
+All right.
+
+26
+00:03:15,046 --> 00:03:29,824
+Cognitive modeling or computational cognitive modeling comes out of psychology, comes to science where the main question in those fields is to find out what are the mental mechanisms that
+
+27
+00:03:30,142 --> 00:03:31,865
+makes us do the things we do.
+
+28
+00:03:33,126 --> 00:03:35,890
+And so the classic perception-action loop, we have to pick it here.
+
+29
+00:03:36,131 --> 00:03:38,634
+People who maybe do that too.
+
+30
+00:03:38,654 --> 00:03:57,482
+It's going to be our active instance book, where you have some agent, which could be a person, but it could actually also be an animal or even an organoid or even a simulated thing, system that receives inputs from its environment and takes actions that changes its environment.
+
+31
+00:03:58,120 --> 00:04:11,271
+And we are here interested in essentially, and I don't know if you can see my cursor, but essentially the relation between those observations and the actions that are created.
+
+32
+00:04:11,612 --> 00:04:21,220
+So basically the path after the observation error ends and before the action error starts.
+
+33
+00:04:21,240 --> 00:04:27,165
+And traditionally in psychology and cognitive science, this has been done experimentally.
+
+34
+00:04:27,837 --> 00:04:35,608
+You take people out of natural situations and control laboratory situations where you measure, well, you control both of these.
+
+35
+00:04:35,648 --> 00:04:39,114
+So you decide what they observe and you measure what they do.
+
+36
+00:04:39,674 --> 00:04:43,600
+And so the kind of classical example of this is a computer screen.
+
+37
+00:04:43,620 --> 00:04:50,610
+You show people some images, something, maybe you ask them to classify them or predict what's going to happen and you measure what they do.
+
+38
+00:04:50,630 --> 00:04:53,915
+And then you have a measurement of inputs and measurements of outputs.
+
+39
+00:04:55,498 --> 00:04:57,220
+And you then create some theory.
+
+40
+00:04:57,588 --> 00:04:59,811
+that will make some prediction as to how they relate.
+
+41
+00:05:01,212 --> 00:05:02,454
+And of course, there's a big field.
+
+42
+00:05:02,474 --> 00:05:08,421
+You might have theories of personality types where you predict that actions will change faster depending on inputs.
+
+43
+00:05:08,501 --> 00:05:10,844
+There's theories of reinforcement learning, et cetera.
+
+44
+00:05:12,626 --> 00:05:23,839
+And so importantly here, we're using already natural science approaches, experimental approaches with quantitative analyses, but still with purely conceptual theories.
+
+45
+00:05:24,280 --> 00:05:26,903
+So theories are not formal as they often are in, let's say,
+
+46
+00:05:27,625 --> 00:05:53,565
+have mathematical theory and the trick is often to go from some conceptual theory to a quantitative prediction that you can then test and specifically give me a moment here sorry about that and specifically
+
+47
+00:05:55,047 --> 00:06:03,498
+As many people know, there's been what's called a replication crisis in psychology and cognitive science, where the whole issue is that the experiments don't replicate.
+
+48
+00:06:03,619 --> 00:06:14,233
+And that's partly due to statistical methods issues, but also partly due to problems stemming from the fact that our theories are not clearly formulated.
+
+49
+00:06:15,134 --> 00:06:19,480
+So one sentence that's saying that there is social learning might mean many different things.
+
+50
+00:06:19,600 --> 00:06:23,265
+And so in a recent attempt to address this,
+
+51
+00:06:24,427 --> 00:06:27,891
+is to move into the formal field, just like in physics.
+
+52
+00:06:28,011 --> 00:06:31,875
+So computational models of this relation between oscillations and action.
+
+53
+00:06:35,259 --> 00:06:36,300
+And this is inspired by physics.
+
+54
+00:06:36,340 --> 00:06:39,784
+So in physics, people are no strangers to having things they can observe.
+
+55
+00:06:41,606 --> 00:06:49,335
+In our case, it's the behavior, but in physics, it can be, let's say, radiation from the sun and then trying to make inference about something you can't observe.
+
+56
+00:06:49,916 --> 00:06:51,818
+In our case, the mind.
+
+57
+00:06:52,321 --> 00:06:58,771
+In this case, it's perhaps the molecules of the sun.
+
+58
+00:06:58,791 --> 00:07:00,654
+And so the methodology is exactly the same.
+
+59
+00:07:00,854 --> 00:07:18,582
+Create mathematical equations that will describe how actions evolve over time given observations in the environment and test them on how well they describe empirically collected actions in observations.
+
+60
+00:07:19,523 --> 00:07:32,941
+And here I just put on one of the very classic cognitive models, which is the Scholar-Warner, where you have some very, very simple equations that describe how actions depend on the observations in the previous time step with some classic learning data.
+
+61
+00:07:33,642 --> 00:07:38,088
+And that's just to say that many of the first cognitive models were very simple.
+
+62
+00:07:38,308 --> 00:07:40,471
+In a few equations, you would kind of describe these.
+
+63
+00:07:43,515 --> 00:07:47,100
+I think primarily in three fields is this approach used where you have some
+
+64
+00:07:47,722 --> 00:07:51,446
+person or some system, and you want to find formal models of its behavior.
+
+65
+00:07:52,807 --> 00:07:56,631
+That's in computational psychiatry, where you want to use it to understand psychiatric conditions.
+
+66
+00:07:57,411 --> 00:08:00,014
+Mathematical psychology, which traditionally has been broader.
+
+67
+00:08:00,374 --> 00:08:04,118
+It's essentially the same questions, but a different community and different types of models used.
+
+68
+00:08:05,019 --> 00:08:07,841
+But also broader, just behavior in general, not specifically psychiatry.
+
+69
+00:08:08,602 --> 00:08:14,708
+And computational neuroscience, where you want to relate these models to
+
+70
+00:08:15,211 --> 00:08:44,357
+example neurobiological processes that could implement and they also overly like overlap with artificial intelligence and engineering and so on all right so i think a primary use case especially in our field of active influence is theoretical simulations where you just take something on let's say learning or let's say learned helplessness you create a simulation that can do that
+
+71
+00:08:44,506 --> 00:08:49,253
+create that kind of behavior, and you suggest this as a proposed mechanism of how that behavior comes about.
+
+72
+00:08:50,075 --> 00:09:02,815
+You can use this for one agent, doing one type of behavior, or you can use it for many, and then you're doing agent-based models, specifically cognitive agent-based models, where you rely on actual cognitive theories to make them.
+
+73
+00:09:02,835 --> 00:09:04,357
+But you can also apply it to behavioral data.
+
+74
+00:09:05,539 --> 00:09:12,690
+And here you're often trying to either find out what mechanisms provide actually empirically observed data,
+
+75
+00:09:13,582 --> 00:09:20,308
+You might want to distinguish, let's say, clinical populations from each other and what's called computational fingerprinting.
+
+76
+00:09:20,328 --> 00:09:24,212
+You might also use results here to inform future theoretical simulations.
+
+77
+00:09:24,252 --> 00:09:29,157
+You can have ABMs where every agent has parameter values that you found in an experiment.
+
+78
+00:09:30,278 --> 00:09:32,860
+And you can also use this to design future experiments.
+
+79
+00:09:32,880 --> 00:09:39,686
+We use simulation to make sure that your experimental design will give you as good results as possible.
+
+80
+00:09:39,706 --> 00:09:41,428
+And finally, you can also apply
+
+81
+00:09:41,678 --> 00:09:43,541
+these approaches in machine learning and engineering.
+
+82
+00:09:43,561 --> 00:09:55,577
+And here, of course, you can make robots that use current models that people might also use in a way that in general technology and knowledge of biological systems have always worked with each other.
+
+83
+00:09:56,318 --> 00:10:05,671
+So in the same way you might be inspired in how to build a plane by looking at a bird, you might also be inspired in how to build an image recognizer by looking at a human being.
+
+84
+00:10:07,894 --> 00:10:09,897
+Our packages specifically target
+
+85
+00:10:10,248 --> 00:10:12,991
+the application to behavioral data.
+
+86
+00:10:13,011 --> 00:10:17,837
+And so they can do their simulations and also in principle be used for engineering purposes.
+
+87
+00:10:17,857 --> 00:10:27,067
+But if we optimize them for this situation where you have participants, you put them in an experiment, you get behavioral data and you use those models to understand the data.
+
+88
+00:10:28,108 --> 00:10:34,896
+And that's what distinguishes it from some of the other software tools that are present.
+
+89
+00:10:35,376 --> 00:10:39,681
+And PIME-DP now has this capability also.
+
+90
+00:10:40,403 --> 00:10:48,550
+But otherwise, many of the, and there is in the MATLAB SPM software, also some ways to apply it to data.
+
+91
+00:10:49,111 --> 00:10:53,595
+But otherwise, the focus has often been on theoretical simulations or on machine learning.
+
+92
+00:10:53,615 --> 00:11:08,588
+And if you look at packages like RxInfer, which is incredibly powerful and well-made, then also, at least to my understanding, focuses more on the machine learning engineering part, where the ultimate goal is to use these models to build tools that can do things
+
+93
+00:11:09,648 --> 00:11:13,194
+or maybe for simulations, but not to specifically apply to behavior.
+
+94
+00:11:15,357 --> 00:11:15,598
+All right.
+
+95
+00:11:16,319 --> 00:11:24,172
+And I'll just give a sense of what the workflow here looks like, because if you come from theoretical simulations or engineering, this might seem really weird.
+
+96
+00:11:24,953 --> 00:11:28,339
+You start off designing hypothesized models for how people work.
+
+97
+00:11:29,801 --> 00:11:34,609
+You then check these models before applying them to anything to whether they are worth applying.
+
+98
+00:11:38,099 --> 00:11:39,961
+simulate behavior with some parameters.
+
+99
+00:11:40,742 --> 00:11:44,806
+You then estimate those parameters and you see if you can actually estimate the real parameters.
+
+100
+00:11:44,846 --> 00:11:53,976
+If you can't recover parameters that you know are true, you can't trust this when applied to real data.
+
+101
+00:11:54,076 --> 00:12:01,965
+And also prior and posterior predictive checks, where you just check that your model can actually generate the kind of data that you might see in an experiment.
+
+102
+00:12:02,145 --> 00:12:05,068
+And if it can't, it's also not worth applying to real data.
+
+103
+00:12:06,989 --> 00:12:14,156
+Then you fit it to data, which means finding out what parameters of my model, what they must have been to generate the data that I did observe.
+
+104
+00:12:14,176 --> 00:12:16,638
+So in classical models, there will be learning rates.
+
+105
+00:12:16,718 --> 00:12:20,601
+You ask, oh, this person adapted this fast, so his learning rate must be this and this.
+
+106
+00:12:21,782 --> 00:12:30,931
+In the context of active inference, it's usually parameters of the generative model, the A matrices and B matrices, for example, that we want to estimate.
+
+107
+00:12:30,951 --> 00:12:35,595
+And finally, we can also estimate how well the model fits our given data.
+
+108
+00:12:36,352 --> 00:12:41,498
+Because some models might describe some data better than others, we might want to use this to select them.
+
+109
+00:12:43,400 --> 00:12:50,287
+We use this to relate parameter estimates to some measure that's across participants.
+
+110
+00:12:50,307 --> 00:12:51,588
+Often this is clinical populations.
+
+111
+00:12:51,628 --> 00:12:58,916
+We might say, are learning rates or are AMA trees parameters different between clinical populations?
+
+112
+00:12:58,936 --> 00:13:05,143
+But it might also be in relation to, let's say, age or psychopharmacological interventions, etc.
+
+113
+00:13:06,710 --> 00:13:13,299
+We're not related to within participant things, let's say physiological correlates and the QBI, pupil dilation, etc.
+
+114
+00:13:13,319 --> 00:13:21,150
+But the primary use case, of course, is neuroimaging, where you say, according to my model, this participant now has a high prediction error.
+
+115
+00:13:21,671 --> 00:13:28,420
+Do I see a difference in brain activity at this moment compared to when he has low prediction error?
+
+116
+00:13:28,440 --> 00:13:35,670
+It's often to find out what the neurobiological implementation of the computation that we think people do
+
+117
+00:13:37,945 --> 00:13:50,620
+And finally, you might compare models and ask questions like which of these hypothesized models are the ones that best describe the data and therefore perhaps the actual mechanism within people.
+
+118
+00:13:51,300 --> 00:14:00,711
+So you could compare an active inference and reinforcement learning model, or let's say two active inference models with different generative models inside.
+
+119
+00:14:00,731 --> 00:14:05,657
+Finally, it's worth mentioning that fitting this to data, there are many different approaches.
+
+120
+00:14:06,194 --> 00:14:08,357
+Broadly speaking, there are Bayesian and frequent system methods.
+
+121
+00:14:08,637 --> 00:14:11,060
+They have different advantages and disadvantages.
+
+122
+00:14:11,080 --> 00:14:16,587
+We usually use Bayesian approaches, and that's a long discussion of why that's nice.
+
+123
+00:14:16,927 --> 00:14:18,289
+They propagate uncertainty.
+
+124
+00:14:18,329 --> 00:14:19,871
+They don't have so much data.
+
+125
+00:14:20,752 --> 00:14:24,397
+But let me go to that just to say that there are also other ways to fit models to data.
+
+126
+00:14:25,978 --> 00:14:32,987
+And within Bayesian methods, because you can't do exact Bayes to fit them, there are also approximations.
+
+127
+00:14:33,568 --> 00:14:35,290
+One classical approximation is variational methods.
+
+128
+00:14:36,198 --> 00:14:49,150
+where you choose some arbitrary distribution, we call it Q, and you make it be as similar as possible to the true posterior belief about the optimal parameters.
+
+129
+00:14:49,650 --> 00:14:52,353
+You do this by minimizing the variation of the energy.
+
+130
+00:14:52,513 --> 00:14:56,096
+And as it happens, that's also what active inference agents use.
+
+131
+00:14:58,658 --> 00:15:05,084
+Another, in cognitive modeling, widely used method is sampling approaches, like Markov chain Monte Carlo.
+
+132
+00:15:05,304 --> 00:15:05,985
+There are also others.
+
+133
+00:15:06,573 --> 00:15:11,658
+where essentially you try out many different parameter values, and for each of them you calculate the likelihood of that value.
+
+134
+00:15:12,699 --> 00:15:20,086
+You do this in a smart way, but it still takes a long time, and you get a full estimate of the probabilities of different parameters.
+
+135
+00:15:22,108 --> 00:15:32,418
+They have different claims to being useful for different use cases, so sampling is good for parameter estimates, but they take a long time, and they might not probably work.
+
+136
+00:15:33,099 --> 00:15:36,242
+Variation-based has some claims to being a better estimate of
+
+137
+00:15:36,914 --> 00:15:42,300
+quality fit or model evidence, there's a whole few where people are still writing.
+
+138
+00:15:44,863 --> 00:15:47,807
+If anyone's interested, we can take questions on that.
+
+139
+00:15:47,827 --> 00:15:52,472
+But importantly, the tools we make here can do either of these two things.
+
+140
+00:15:52,492 --> 00:16:04,586
+Finally, it's just worth mentioning that we as researchers use Bayesian methods to understand people's behavior, but within active inference, we also theorize that people use Bayesian methods to understand the world.
+
+141
+00:16:05,327 --> 00:16:06,769
+It's nice to keep those separate.
+
+142
+00:16:07,002 --> 00:16:17,298
+We might use a sampling approximation to patient influence to fit our models to data, but still believe that people use a variational base to understand their environment.
+
+143
+00:16:17,318 --> 00:16:22,366
+And so in the following, when we talk about generative models, we're not talking about our model of people.
+
+144
+00:16:22,586 --> 00:16:24,830
+We're talking about people's models of the world.
+
+145
+00:16:26,532 --> 00:16:28,475
+And again, do ask questions in that.
+
+146
+00:16:28,615 --> 00:16:33,583
+That's one of the tricky points sometimes when we're doing this, what's called metabation modeling.
+
+147
+00:16:35,588 --> 00:16:37,771
+There are many paradigms within cognitive modeling.
+
+148
+00:16:38,812 --> 00:16:45,159
+Mathematical psychology have many, many ways of modeling, often specific behavioral tasks.
+
+149
+00:16:45,179 --> 00:17:00,196
+There are these old cognitive architecture models, ACT-R and SOAR are the biggest ones where people are also trying to do unified models of behavior in general, which rely on very different assumptions than active inference.
+
+150
+00:17:01,097 --> 00:17:02,139
+And often we're not aware of them.
+
+151
+00:17:02,960 --> 00:17:05,022
+Perhaps we should be, so I'll just bring them up here.
+
+152
+00:17:05,660 --> 00:17:10,907
+And they're kind of raw, old school computationalist models, different modules interacting.
+
+153
+00:17:11,708 --> 00:17:22,323
+There's of course reinforcement learning models where you assume that people do actions, get rewards from the environment, and then try to find actions that maximize those rewards.
+
+154
+00:17:23,024 --> 00:17:25,047
+There are many others like deep learning models, et cetera.
+
+155
+00:17:26,408 --> 00:17:34,840
+But of course, today most evidently there are Bayesian mind models, where you think that people's minds use Bayesian inference of some sort to understand the environment.
+
+156
+00:17:36,085 --> 00:17:37,727
+There are many schools of Bayesian mind models.
+
+157
+00:17:38,307 --> 00:17:45,054
+You might look at Josh Tenenbaum for a different school than ours, but active inference specifically belongs to a variational Bayesian mind model.
+
+158
+00:17:45,815 --> 00:17:50,239
+We use variational approximate Bayesian inference as a model of how people work.
+
+159
+00:17:51,861 --> 00:17:55,705
+And this has close ties to predictive coding and predictive processing.
+
+160
+00:17:55,725 --> 00:17:59,448
+So broadly speaking, we might call this variational Bayesian predictive processing models.
+
+161
+00:18:00,049 --> 00:18:04,253
+They can be just a perception, like hierarchical regression filters or
+
+162
+00:18:05,212 --> 00:18:09,738
+plenty of models out there, or they can include action as well.
+
+163
+00:18:09,758 --> 00:18:13,564
+And when they include action, it's called active inference.
+
+164
+00:18:13,584 --> 00:18:21,014
+So variation of Bayesian predictive processing models of perception and action is active inference.
+
+165
+00:18:21,034 --> 00:18:26,362
+And now we'll give an introduction to that, but we'll give time for one question before we move on.
+
+166
+00:18:26,542 --> 00:18:27,203
+Are there any questions?
+
+167
+00:18:29,726 --> 00:18:29,907
+Sure.
+
+168
+00:18:30,648 --> 00:18:33,432
+I'll ask one, maybe you'll revisit it later too.
+
+169
+00:18:34,133 --> 00:18:35,134
+Arun asked,
+
+170
+00:18:36,295 --> 00:18:39,318
+What's the biggest challenge you faced building this package?
+
+171
+00:18:43,462 --> 00:18:45,284
+That's a long and technical discussion.
+
+172
+00:18:45,304 --> 00:18:57,437
+I think the main thing is that in Julia, there are many ways of doing what's called the auto differentiation, which is a technical thing that you need to do the parameter estimation.
+
+173
+00:18:58,438 --> 00:19:02,202
+And there's just a whole ecosystem of packages doing that, and we've had to
+
+174
+00:19:02,823 --> 00:19:05,813
+become very familiar with those to find the ones that work the best.
+
+175
+00:19:06,033 --> 00:19:07,679
+And that's not an easy task.
+
+176
+00:19:07,719 --> 00:19:11,311
+Part of the package is to hide that from the user so they don't have to engage with it.
+
+177
+00:19:11,933 --> 00:19:14,200
+I don't know if you agree with that.
+
+178
+00:19:18,854 --> 00:19:19,154
+Okay.
+
+179
+00:19:20,756 --> 00:19:23,019
+One more question just while we're paused.
+
+180
+00:19:23,640 --> 00:19:33,051
+Fraser asked, is there anything in ActiveInference.jl that is particularly suited to compositional agents or collectives?
+
+181
+00:19:33,892 --> 00:19:36,275
+Kind of leading you into your paper, I know.
+
+182
+00:19:38,077 --> 00:19:47,528
+So I'll return to that in the end if we have time, but basically you can use the same method that we use to make inferences about
+
+183
+00:19:47,727 --> 00:20:05,092
+given a human participant in an experiment, instead of a human participant, you can use it on a simulated collective and treat that collective as if that is also doing some kind of cognition or active inference at least, which is, of course, fundamental to active inference in general.
+
+184
+00:20:05,613 --> 00:20:08,617
+We expect a cell to do active inference, but also a person and also a collective.
+
+185
+00:20:10,039 --> 00:20:17,650
+And so if we treat a simulated collective as, let's say, a foreign system that's doing something we don't know what is,
+
+186
+00:20:18,203 --> 00:20:31,999
+We can fit a model to that in exactly the same way we do to a person and make inferences about, let's say, the parameters of that simulated collective's guaranteed model of the environment.
+
+187
+00:20:32,019 --> 00:20:39,808
+And in the end, if we have time, I'll just show the results from that paper where we do exactly this, just demonstrating a lot to our example.
+
+188
+00:20:39,828 --> 00:20:41,971
+That's an exciting question, obviously.
+
+189
+00:20:41,991 --> 00:20:42,572
+Yes.
+
+190
+00:20:42,592 --> 00:20:42,892
+All right.
+
+191
+00:20:43,553 --> 00:20:43,873
+All right.
+
+192
+00:20:44,410 --> 00:20:50,201
+I will just briefly touch on the software ecosystem that we built the package in.
+
+193
+00:20:50,882 --> 00:20:52,044
+So firstly, why Julia?
+
+194
+00:20:53,126 --> 00:21:01,000
+It's fast and it's very intuitive, meaning that if you come from Python or MATLAB, you can carry a lot of the same intuitions over into Julia.
+
+195
+00:21:01,561 --> 00:21:08,494
+And then it has a community that is growing quite fast of people doing data science, machine learning, and cognitive modeling.
+
+196
+00:21:09,402 --> 00:21:18,933
+Then Julia is natively auto-differentiable, which means that you don't need to have a backend in another language to do auto-differentiation, which makes it very fast in Julia.
+
+197
+00:21:19,674 --> 00:21:27,703
+For this, there's a very nice package called Turing.jl, which is just a package for probabilistic programming in general.
+
+198
+00:21:27,803 --> 00:21:36,473
+And it can do both sampling methods such as MCMC or no-U-turn sampler and variational inference as well.
+
+199
+00:21:37,415 --> 00:21:49,272
+Then in Julia, there's also a sister package to Active Inference, which takes different kinds of cognitive models and make it very easy to fit data into those kinds of models by wrapping Turing.
+
+200
+00:21:50,554 --> 00:22:03,412
+And that's where our ActiveInference.jl package comes into play, as this is a cognitive model that through action models can be used to Turing to fit data quite easily.
+
+201
+00:22:03,652 --> 00:22:06,156
+And we'll show this later in the presentation as well.
+
+202
+00:22:07,385 --> 00:22:14,798
+Then we'll just briefly touch on some of the core elements of active inference with regards to perception, action and learning.
+
+203
+00:22:15,780 --> 00:22:27,520
+So for the perception part, this is the minimization of the quantity variational free energy where we through this minimization, we can infer states optimally based on observations.
+
+204
+00:22:28,041 --> 00:22:32,228
+And there's different kinds of variational inference, sorry, different kinds of algorithms
+
+205
+00:22:32,680 --> 00:22:34,142
+that we can use to do this.
+
+206
+00:22:34,763 --> 00:22:38,128
+I'll later go into the specific algorithm that we're using in this package.
+
+207
+00:22:39,089 --> 00:22:44,497
+Then we have action and active inference, which is guided by the minimization of a quantity called expected free energy.
+
+208
+00:22:44,938 --> 00:22:47,442
+And this can have a lot of different kind of expressions.
+
+209
+00:22:47,642 --> 00:22:58,097
+If you look at the ones that we show here in the slide, we have one that's information gain versus pragmatic value, which is basically where you get the explore exploit behavior for free in active inference, which is really nice.
+
+210
+00:22:58,651 --> 00:23:06,102
+And then we also use the expected free energy to calculate posterior probability over policies, where policies are actions.
+
+211
+00:23:06,302 --> 00:23:10,127
+So this is kind of like the points that we use to kind of like guide the action selection.
+
+212
+00:23:10,888 --> 00:23:12,310
+We're also going to go into that a bit later.
+
+213
+00:23:13,432 --> 00:23:15,235
+Then we have learning inactive inference.
+
+214
+00:23:15,255 --> 00:23:18,960
+This is specifically for categorical distribution beliefs.
+
+215
+00:23:19,120 --> 00:23:23,226
+So there's other ways of learning for continuous cases.
+
+216
+00:23:23,286 --> 00:23:26,110
+However, here we take it for categorical distributions.
+
+217
+00:23:26,630 --> 00:23:30,615
+And for this, we use Dirichlet priors over the generative model parameters.
+
+218
+00:23:31,095 --> 00:23:32,437
+This is basically Dirichlet's.
+
+219
+00:23:32,557 --> 00:23:35,861
+They have concentration parameters that we can then add counts to.
+
+220
+00:23:35,881 --> 00:23:42,789
+And this is the update equation that we show here, where we have an omega, which is the forgetting value times current concentration parameter.
+
+221
+00:23:42,809 --> 00:23:45,312
+And then you add the new here is the learning rate.
+
+222
+00:23:45,392 --> 00:23:48,135
+And then you then add the chi, which is the data observed.
+
+223
+00:23:48,495 --> 00:23:51,258
+And in this sense, you just add counts to the concentration parameters.
+
+224
+00:23:51,278 --> 00:23:56,164
+And then through normalizing it, it becomes your new updated generative model parameter.
+
+225
+00:23:56,853 --> 00:23:59,417
+And we will come back to how that's implemented in the package as well.
+
+226
+00:24:00,519 --> 00:24:04,545
+And then a quick refresher on partially observable market decision processes.
+
+227
+00:24:05,347 --> 00:24:11,857
+So we just want to make sure to say that this is one type of generative models in active inference.
+
+228
+00:24:11,877 --> 00:24:14,061
+There's other types of generative models as well.
+
+229
+00:24:14,802 --> 00:24:22,354
+And PMDPs, they're not active inference specific in the sense that you can also use it in other frameworks.
+
+230
+00:24:22,857 --> 00:24:29,043
+And then what we have done in this package is a discrete state space implementation of PMDPs.
+
+231
+00:24:29,063 --> 00:24:33,447
+You can have continued state space implementation of PMPDs.
+
+232
+00:24:33,507 --> 00:24:39,453
+The Markovian element of it, though, is that the time steps, they are discrete and not continuous.
+
+233
+00:24:40,574 --> 00:24:45,359
+So we'll just briefly go over conceptually the different parameters in the PMDP.
+
+234
+00:24:45,939 --> 00:24:50,063
+And for this, we have created sort of like this little toy environment
+
+235
+00:24:50,465 --> 00:25:11,089
+to explain this and if you can see this thing here where you kind of like if you imagine that it's a dial where we can spin it in different ways and then the goal is to get state three on top in the little rectangle and so then you have three actions you can spin counterclockwise clockwise or you can just make it stay in place which you would do if you have state three on top for example
+
+236
+00:25:11,879 --> 00:25:15,163
+But we'll start with the observation state likelihood model.
+
+237
+00:25:15,704 --> 00:25:21,370
+Basically what this encodes is the agent's beliefs on how states generate observations.
+
+238
+00:25:22,031 --> 00:25:26,716
+So it's a categorical distribution where each column has to sum up to one.
+
+239
+00:25:26,817 --> 00:25:37,249
+So in this case, as we have a identity matrix, this indicates that the agent can deterministically infer the state based on the observation.
+
+240
+00:25:37,329 --> 00:25:39,912
+So if the agent observes observation one,
+
+241
+00:25:40,212 --> 00:25:42,495
+then it will infer that it is in state one.
+
+242
+00:25:42,916 --> 00:25:50,847
+And this can be more or less entropic in the sense we could also have a completely uniform column where we just have 0.3, 0.3 for all of these.
+
+243
+00:25:51,207 --> 00:25:55,313
+And then the agent wouldn't be able to infer the states based on the observation.
+
+244
+00:25:56,635 --> 00:25:56,935
+All right.
+
+245
+00:25:57,096 --> 00:25:59,239
+So this was the observation state likelihood model.
+
+246
+00:25:59,339 --> 00:26:02,163
+Then we're going to go to the state transition likelihood model.
+
+247
+00:26:02,183 --> 00:26:06,068
+And this is basically how the agents believes that the states change over time.
+
+248
+00:26:06,588 --> 00:26:14,275
+And so in this case, I've taken the example of doing it for the action of going counterclockwise because this is usually dependent on actions.
+
+249
+00:26:14,936 --> 00:26:25,486
+So here we see that, for example, if the agent is in state one and it does the action spin counterclockwise, then it believes that the next state it's going to be in is going to be state two.
+
+250
+00:26:25,566 --> 00:26:28,569
+And the same if it's in state two, then it believes that it's going to be in state three.
+
+251
+00:26:30,391 --> 00:26:33,554
+And so that's the state likelihood transition model.
+
+252
+00:26:33,914 --> 00:26:36,156
+Then we have the prior preference.
+
+253
+00:26:36,440 --> 00:26:43,587
+And so this is basically where we kind of like get to encode kind of like the preferences or the goals of the agent.
+
+254
+00:26:44,949 --> 00:26:51,175
+This can be done both over states and observations, but in our case, we have done it for observations and this is the case in our package as well.
+
+255
+00:26:51,736 --> 00:26:58,242
+So here, for example, for observation one, we have encoded a dislike for this observation, which is coupled to the state one.
+
+256
+00:26:58,683 --> 00:27:01,966
+And then for observation two, we have neither dislike nor preference.
+
+257
+00:27:02,507 --> 00:27:05,670
+And then for observation three, which is coupled
+
+258
+00:27:06,258 --> 00:27:10,905
+to state three, which is kind of like the goal that we want, we have set a preference.
+
+259
+00:27:10,925 --> 00:27:21,520
+And this is important as this kind of encodes the pragmatic value, which is then part of the calculation of the expected free energy, as you can see here below.
+
+260
+00:27:24,284 --> 00:27:26,447
+Yes, and that's the C parameters.
+
+261
+00:27:26,467 --> 00:27:33,177
+Then we'll continue to the D parameters, which are basically just the agent's initial belief at time one.
+
+262
+00:27:33,393 --> 00:27:34,915
+which state is it going to be in.
+
+263
+00:27:35,215 --> 00:27:38,238
+And here we just encode it to be certain that it's going to be in state one.
+
+264
+00:27:39,380 --> 00:27:42,243
+Then we have the prior over policies.
+
+265
+00:27:42,623 --> 00:27:57,980
+It'll just quickly introduce the notion of policies where policies are collections of actions that can have a specific link determined by the policy link, which is basically how long in the future, how many time steps in the future should the agent plan.
+
+266
+00:27:58,040 --> 00:28:00,683
+So for this case, we only have one time step in the future.
+
+267
+00:28:01,118 --> 00:28:03,140
+which is why we only have the three actions here.
+
+268
+00:28:03,280 --> 00:28:09,545
+And this is also sometimes described as the agent's kind of habits, meaning that it has a preference for certain actions.
+
+269
+00:28:09,665 --> 00:28:16,951
+In this case, we have given it a uniform distribution, meaning that the agent doesn't really have any preference over any policies.
+
+270
+00:28:18,152 --> 00:28:18,352
+All right.
+
+271
+00:28:19,173 --> 00:28:25,318
+So now that we have the generative model down, I'm going to show you how to implement this in our package.
+
+272
+00:28:26,039 --> 00:28:30,923
+And we're going to do this by providing a work example of a teammates environment
+
+273
+00:28:31,291 --> 00:28:34,936
+where the agent is going to learn the reward probabilities in the arms.
+
+274
+00:28:35,597 --> 00:28:40,764
+And for this, I'll just quickly have to introduce the notion of factors and modalities.
+
+275
+00:28:41,505 --> 00:28:44,409
+So factors are basically different kinds of states.
+
+276
+00:28:44,889 --> 00:28:53,501
+So in this case, it would be we have location states and we have reward condition states, where reward condition states are whether the left arm or the right arm is going to provide a reward.
+
+277
+00:28:54,262 --> 00:28:55,203
+Then we have modalities.
+
+278
+00:28:55,784 --> 00:28:58,648
+Modalities are basically different kinds of observations
+
+279
+00:28:59,118 --> 00:29:03,624
+And so here we have a location observation, we have a reward observation, and we have a queue observation.
+
+280
+00:29:04,225 --> 00:29:08,010
+And I'll go into these when we get to define them in the generative model.
+
+281
+00:29:08,811 --> 00:29:15,259
+To start using our package, you can just add it from the Julia registry using the Julia package manager as shown here.
+
+282
+00:29:16,080 --> 00:29:20,887
+Basically for this code, you can run through it by yourself and it should be able to run.
+
+283
+00:29:21,868 --> 00:29:28,737
+And then we initialize the package and we also import the environments module, which is important for the teammates environment that we're using as an example here.
+
+284
+00:29:29,273 --> 00:29:31,735
+And then we initialize the TMAs environment.
+
+285
+00:29:31,815 --> 00:29:36,580
+And here we just set a 95% probability of providing reward in the reward condition arm.
+
+286
+00:29:37,541 --> 00:29:42,485
+So now we can create the actual generative model, the PMDP generative model.
+
+287
+00:29:42,505 --> 00:29:44,667
+And you can do this manually by yourself.
+
+288
+00:29:45,868 --> 00:29:56,698
+But then you have to make sure that the generative model parameters are typed in the correct manner, which is shown here where it has to be vectors of raise for AB and vectors to vectors for the C and D and vector of floats for E.
+
+289
+00:29:57,286 --> 00:30:00,331
+It's very similar to object arrays in NumPy.
+
+290
+00:30:01,052 --> 00:30:06,120
+However, we have created a helper function that makes this a lot easier.
+
+291
+00:30:06,481 --> 00:30:11,809
+And so I'll just quickly go through the arguments that the helper function takes.
+
+292
+00:30:11,829 --> 00:30:17,939
+So the first argument is the number of states in each factor.
+
+293
+00:30:18,620 --> 00:30:20,343
+And so remember, we had two factors.
+
+294
+00:30:20,383 --> 00:30:24,610
+We had the location state factor and the reward condition factor where we had in the location factor we had.
+
+295
+00:30:24,995 --> 00:30:29,421
+four states, we have the sense, the cue location, and the two right arms, so that's four.
+
+296
+00:30:29,942 --> 00:30:33,267
+And then we have two reward condition states, reward condition right and reward condition left.
+
+297
+00:30:34,148 --> 00:30:38,815
+So we take this as a vector and give it to this function as the first argument.
+
+298
+00:30:39,796 --> 00:30:43,161
+And then the second argument is the number of observations in each modality.
+
+299
+00:30:43,201 --> 00:30:54,377
+So we have four, we have three different modalities in this case, where we have four observations in the first modality, the location modality, we have the location, sense, cue, and the arms.
+
+300
+00:30:54,863 --> 00:30:58,133
+Then we have the second modality, which is the reward modality.
+
+301
+00:30:58,494 --> 00:30:59,578
+It has three observations.
+
+302
+00:30:59,698 --> 00:31:02,848
+It has the observation of no reward, reward and loss.
+
+303
+00:31:03,453 --> 00:31:07,918
+Then we have the last observation modality, which is the Queue observation modality.
+
+304
+00:31:08,378 --> 00:31:12,683
+These we also take as a vector and give to the function as a second argument.
+
+305
+00:31:12,703 --> 00:31:16,767
+The third argument is the number of controls for each of these factors.
+
+306
+00:31:16,867 --> 00:31:20,031
+We have two factors, the location factor and the reward condition factor.
+
+307
+00:31:21,252 --> 00:31:28,600
+We only want the agent to be able to control the location factor, so it can move freely between the locations, but in the reward condition state factor,
+
+308
+00:31:28,580 --> 00:31:54,115
+it shouldn't be able to control what arm should be the reward arm and so therefore we just give it a one in this case then we have the policy link which i have described before it's how many steps in the future does the agent plan and then we have the fifth and last argument which is the initial fill which basically says like when we have cons when we have made the structure of these journal to model parameters uh what should be the initial filling of these and here it takes both
+
+309
+00:31:54,550 --> 00:32:05,164
+It takes zeros, which we've chosen in this instance, and it also takes the argument random, which is nice for testing, and uniform, which is the default in this case.
+
+310
+00:32:06,065 --> 00:32:06,306
+Good.
+
+311
+00:32:06,887 --> 00:32:14,076
+So now we just, having created this helper or these generative model parameters, we just need to fill them with the appropriate values.
+
+312
+00:32:14,977 --> 00:32:18,482
+So we'll start out with the observation state likelihood model.
+
+313
+00:32:18,867 --> 00:32:27,078
+And remember, this is the one that encodes the agent's beliefs of how states generates observations and then infers states based on the observations it receives.
+
+314
+00:32:27,759 --> 00:32:32,025
+So in this case, we have the location observation, which is not as interesting to us.
+
+315
+00:32:33,507 --> 00:32:38,895
+Basically, it's an identity matrix, meaning that the agent just infers the correct states because we have encoded to do so.
+
+316
+00:32:39,656 --> 00:32:48,688
+And then we have two matrices here because we have for each of the location states, which is one matrix, and then we have two matrices, one for each reward condition state factor.
+
+317
+00:32:49,259 --> 00:32:55,912
+And if you go to the second modality, which is the reward modality, this is the one that is interesting to us.
+
+318
+00:32:55,952 --> 00:33:04,729
+Because if you look at the first column and the last column, this is the queue and center location, we see that it expects that these are going to provide the observation of no reward.
+
+319
+00:33:05,009 --> 00:33:05,530
+However,
+
+320
+00:33:05,864 --> 00:33:18,676
+For the second and third column, which are the right and left arms, we see that in the second row that it has a 50% chance that it believes that this state is going to produce a reward observation.
+
+321
+00:33:18,996 --> 00:33:27,344
+And then if we go to the third row, we see that it has a 50% chance of generating this, or the agent believes that there's a 50% chance of generating this observation.
+
+322
+00:33:27,765 --> 00:33:32,889
+So in this sense, the agent doesn't know which of the arms is going to provide the reward observation.
+
+323
+00:33:32,909 --> 00:33:33,610
+And this is the
+
+324
+00:33:33,927 --> 00:33:35,709
+modality that we want the agent to learn.
+
+325
+00:33:35,749 --> 00:33:40,154
+We want it to approximate the actual reward probabilities in the teammates environment.
+
+326
+00:33:40,174 --> 00:33:51,966
+Then we have the queue observation modality, which basically just tells the agent that only when it's in the queue location does it correctly get an observation that informs it on the reward condition state of the environment.
+
+327
+00:33:54,249 --> 00:33:59,935
+And then we're going to add a prior over a, and this is where the learning part comes in.
+
+328
+00:34:00,505 --> 00:34:23,882
+The prior over A is the Dirichlet distribution, and the way that we create this is basically just that we copy the structure of A, and then we add a scaling concentration parameter, which basically says that these counts in the Dirichlet distribution, if they are very high, like if we give a high scaling concentration parameter, each new data observation is not going to matter as much.
+
+329
+00:34:24,422 --> 00:34:26,766
+If we set the scaling concentration parameter low,
+
+330
+00:34:26,948 --> 00:34:30,654
+then each data observation we have is going to matter a bit more.
+
+331
+00:34:31,395 --> 00:34:36,983
+And then it's important to say that, and this is a bit clunky, but this is now going to define the A matrix.
+
+332
+00:34:37,003 --> 00:34:44,975
+So the prior over A is going to define the A matrix, meaning that the A matrix that we just made is not going to be exactly used.
+
+333
+00:34:45,556 --> 00:34:51,825
+However, we used it as a template to create the prior over the A.
+
+334
+00:34:52,058 --> 00:34:52,439
+Great.
+
+335
+00:34:52,459 --> 00:34:54,382
+So now we have the observation state likelihood model.
+
+336
+00:34:54,543 --> 00:34:56,927
+Now we need to encode the state transition likelihood model.
+
+337
+00:34:56,947 --> 00:35:01,275
+And this is the matrices for the first factor, the location factor.
+
+338
+00:35:01,315 --> 00:35:10,552
+And basically, we just note here that we have rows that are filled with ones, meaning that from wherever the agent is for that action, it goes to that place that it wants to go to.
+
+339
+00:35:11,594 --> 00:35:16,142
+And then we have the second factor, which is the uncontrollable one.
+
+340
+00:35:16,544 --> 00:35:18,386
+which is the reward condition factor.
+
+341
+00:35:18,406 --> 00:35:28,099
+And basically this identity matrix just tells the agent or the agent believes that the reward condition state doesn't change over time, that it stays the same.
+
+342
+00:35:29,120 --> 00:35:29,300
+Good.
+
+343
+00:35:29,941 --> 00:35:35,348
+So now we come to an interesting parameter, which is the prior preference over observations.
+
+344
+00:35:35,989 --> 00:35:38,893
+So we have a vector here for each of the modalities.
+
+345
+00:35:39,373 --> 00:35:42,417
+However, the one that we are interested in is the reward observation.
+
+346
+00:35:42,886 --> 00:35:48,854
+So in this case, the first index is the index of the observation no reward, and we set no preference or dislike for this.
+
+347
+00:35:49,535 --> 00:35:55,563
+The second index is the observation of reward, which we set to have a preference for that it wants the reward.
+
+348
+00:35:56,063 --> 00:36:01,090
+And then we have the third index, which is the loss observation, which we set a dislike for.
+
+349
+00:36:02,592 --> 00:36:02,812
+Yes.
+
+350
+00:36:03,573 --> 00:36:10,402
+And then we continue to the D parameters where we had a vector for each of the factors.
+
+351
+00:36:10,422 --> 00:36:11,644
+We have the location factor.
+
+352
+00:36:12,181 --> 00:36:14,665
+where we basically tell it that it's going to start.
+
+353
+00:36:14,685 --> 00:36:19,713
+The first index is the sender location that we're just telling it that it's going to start in the sender location.
+
+354
+00:36:20,274 --> 00:36:29,088
+And then for the second factor, which is the reward condition factor, we just have a uniform distribution, meaning that the agent does not know what the reward condition is going to be.
+
+355
+00:36:30,150 --> 00:36:30,330
+Good.
+
+356
+00:36:30,670 --> 00:36:34,977
+Then we have the last of these parameters, which is the prior over policies.
+
+357
+00:36:36,039 --> 00:36:38,543
+And we're just going to here provide it with the uniform
+
+358
+00:36:38,945 --> 00:36:45,775
+So this means that as the E parameters are the habits, it's not going to have any habits in this case.
+
+359
+00:36:46,336 --> 00:36:51,584
+We see here that we have 16 different policies because we have a policy length of two and we have four actions.
+
+360
+00:36:51,824 --> 00:36:55,390
+So the total number of combinations of these two actions is going to be 16.
+
+361
+00:36:56,391 --> 00:37:02,100
+And then as I said, we just give it a uniform distribution over these policies.
+
+362
+00:37:02,722 --> 00:37:02,982
+Good.
+
+363
+00:37:03,443 --> 00:37:07,529
+So now we're almost ready to initialize the active inference agent.
+
+364
+00:37:07,950 --> 00:37:10,493
+Before we do that, we have to specify some settings.
+
+365
+00:37:11,375 --> 00:37:14,099
+And I'll just briefly go into these, what they do.
+
+366
+00:37:14,739 --> 00:37:16,442
+The policy length we have talked about.
+
+367
+00:37:16,462 --> 00:37:23,292
+The use utility basically means, should we include the C parameter preferences that we just set?
+
+368
+00:37:23,412 --> 00:37:24,293
+And we've set this to true.
+
+369
+00:37:24,734 --> 00:37:30,923
+Then we have the use states info gain, which basically says that in the calculation of the expected free energies, which is going to guide action,
+
+370
+00:37:31,358 --> 00:37:34,623
+And should we include the expected information gain?
+
+371
+00:37:35,344 --> 00:37:44,799
+And then we have the use parameter infogain setting, which basically says that when we calculate the expected free energy, should we include the expected learning or updating of the generative model?
+
+372
+00:37:45,861 --> 00:37:50,529
+Then we have action selection, which can take two values, either stochastic or deterministic.
+
+373
+00:37:51,811 --> 00:37:55,797
+I'll go into what they do when we come to the function that actually uses this setting.
+
+374
+00:37:56,317 --> 00:38:02,371
+Then we have modalities to learn, which basically specifies what modality do we want the agent to learn.
+
+375
+00:38:02,511 --> 00:38:06,962
+In our case, we wanted to learn the reward observation modality, so we specify this by giving it two.
+
+376
+00:38:07,784 --> 00:38:08,966
+We also have factors to learn.
+
+377
+00:38:09,367 --> 00:38:14,038
+This is only relevant when we're doing B and D matrix learning, so it's not going to be relevant in our case.
+
+378
+00:38:14,525 --> 00:38:20,352
+Then we have the fixed point iteration number of iterations and the fixed point iteration tolerance, which is basically saying that.
+
+379
+00:38:21,293 --> 00:38:32,507
+When should the inference algorithm stop so you can set it to either as we do here after 10 iterations or when the difference between iterations are equal to a lower between this threshold.
+
+380
+00:38:33,749 --> 00:38:37,073
+Yes, the last thing that we need to define to initialize the agent.
+
+381
+00:38:37,458 --> 00:38:56,715
+is the parameters here i'll just briefly go over what they do the gamma is an inverse temperature function on the expected free energies then we have the alpha which is in this temperature on the action selection and then we have the learning and forgetting rates for the priors over a b and d
+
+382
+00:38:56,999 --> 00:39:00,002
+parameters, which are the ones that we currently have learning for.
+
+383
+00:39:00,362 --> 00:39:10,212
+The ones that we are interested in at the moment, though, is the prior over A, which is the learning rate and forgetting rate for this, which we're going to set to its default value of one.
+
+384
+00:39:10,272 --> 00:39:13,675
+And the values here are all the default values.
+
+385
+00:39:14,516 --> 00:39:14,716
+Good.
+
+386
+00:39:15,136 --> 00:39:22,743
+So now we can initialize our active inference agent by providing it with the generative model and the settings and these parameters.
+
+387
+00:39:24,145 --> 00:39:26,567
+And we are almost ready for the perception and action loop
+
+388
+00:39:26,716 --> 00:39:27,197
+in itself.
+
+389
+00:39:27,617 --> 00:39:31,962
+And before we do that, we just have to specify how many iterations does this loop need to contain.
+
+390
+00:39:32,522 --> 00:39:36,727
+And then we reset the teammates, which just gives the agent like an initial observation.
+
+391
+00:39:38,108 --> 00:39:43,014
+And this is the perception action learning loop, and it has five functions.
+
+392
+00:39:43,354 --> 00:39:48,099
+And I'm going to go through them and just briefly explain how they relate to active inference.
+
+393
+00:39:49,721 --> 00:39:55,187
+So the info states function is the one that actually does the minimization of the variational free action.
+
+394
+00:39:55,471 --> 00:39:56,733
+the variation-free energy.
+
+395
+00:39:57,734 --> 00:40:00,939
+And this is the perception part of active inference.
+
+396
+00:40:01,039 --> 00:40:09,371
+Here in our package, we use an algorithm called fixed point iteration, also known as coordinate ascent variational inference.
+
+397
+00:40:10,132 --> 00:40:21,107
+And here we also just provided a picture of an observation where you can see that we have these three observations, the location observation, reward observation, and the queue observation.
+
+398
+00:40:21,948 --> 00:40:46,352
+we have the infrared policies this is the one that actually calculates the expected free energies and is affected by the settings that we talked about before and the gamma and the e parameters it returns the expected free energies and it also returns the posterior over policies which is and it's this posterior probability that we are going to be sampling from when we are sampling actions
+
+399
+00:40:46,771 --> 00:40:53,101
+And so basically this function sample action just samples from this posterior probability over policies.
+
+400
+00:40:53,843 --> 00:41:05,902
+And it is affected by the action selection, where it could be either stochastic or deterministic if it's stochastic it just samples from the probability distribution, but if it's deterministic it always takes the policy with the highest probability.
+
+401
+00:41:07,365 --> 00:41:11,091
+Then we have the update eight, which is where the learning occurs.
+
+402
+00:41:11,392 --> 00:41:19,823
+And this is where we basically add the Dirichlet counts to the prior over A, and then it updates the A by normalizing the concentration parameters.
+
+403
+00:41:21,545 --> 00:41:31,338
+Then we have the step teammates, which is basically just the agent interacting with the environment, and then it provides the observation for the next iteration in the perception action learning loop.
+
+404
+00:41:33,461 --> 00:41:40,690
+So this is the loop, and this is the one that is also going to be used in the model fitting part.
+
+405
+00:41:41,260 --> 00:41:45,364
+And I think we're taking some questions now.
+
+406
+00:41:45,625 --> 00:41:46,646
+One question.
+
+407
+00:41:46,906 --> 00:41:47,327
+One question.
+
+408
+00:41:47,587 --> 00:41:48,168
+Yes.
+
+409
+00:41:50,210 --> 00:41:50,510
+Okay.
+
+410
+00:41:50,850 --> 00:41:53,293
+I'll ask one question from Tin Tin in the chat.
+
+411
+00:41:53,353 --> 00:41:56,917
+They wrote, hello, thanks all for this great work.
+
+412
+00:41:57,538 --> 00:42:07,909
+Have you implemented Bayesian model reduction or incremental model construction slash structure learning with ActiveInference.jl rather than manual construction?
+
+413
+00:42:09,982 --> 00:42:36,968
+happened no that's the shortcut yeah so the package is just now ready for deployment and there's many ways to extend it which we'll work on but also i mean if people interested in collaboration to develop the package so this is exciting for two reasons like in two ways by the way um basically model structure learning it can either be model structure learning from the perspective of the agent
+
+414
+00:42:38,315 --> 00:42:40,077
+learning the structure of the environment.
+
+415
+00:42:40,578 --> 00:42:48,788
+They can also be unstructured learning from the perspective of us researchers wanting to find out what kind of structure a given agent has in the environment.
+
+416
+00:42:48,948 --> 00:42:54,075
+And both of these purposes are the same thing we would like to do.
+
+417
+00:42:54,675 --> 00:42:58,700
+I think a useful kind of connective tissue question.
+
+418
+00:42:58,841 --> 00:43:08,052
+Where would you put ActiveInference.jl in relationship to what PyMDP does in Python and what RxInfer does in Julia?
+
+419
+00:43:09,770 --> 00:43:26,154
+So PyMGP was originally a port of the SPM functions into Python, brilliant work by Connor and colleagues, where they make it modular and easy to use, but made for theoretical simulations only.
+
+420
+00:43:27,096 --> 00:43:35,348
+And I think this summer, they just finished Jack's reimplementation of PyMGP, which means now you can also use it to fit to behavior.
+
+421
+00:43:36,490 --> 00:43:37,431
+But it's not designed
+
+422
+00:43:38,187 --> 00:43:39,909
+It wasn't primarily designed for that.
+
+423
+00:43:40,770 --> 00:43:45,315
+And it was also not made for engineering purposes.
+
+424
+00:43:45,455 --> 00:43:48,578
+Python is too slow, although I'm sure you could in principle.
+
+425
+00:43:50,340 --> 00:43:54,405
+And since then has come the C++ package, right?
+
+426
+00:43:54,705 --> 00:43:55,686
+Which is much faster.
+
+427
+00:43:56,086 --> 00:44:04,315
+And I think, but harder to use because it's in C, although there are records in different languages, that would be useful for machine learning.
+
+428
+00:44:06,017 --> 00:44:06,878
+RxInfer,
+
+429
+00:44:07,516 --> 00:44:18,829
+implements active inference and many other things on only style factor graph, which is a very efficient and powerful way of thinking patient inference and variation of patient inference.
+
+430
+00:44:19,690 --> 00:44:22,853
+And that is optimized much more for engineering purposes.
+
+431
+00:44:22,893 --> 00:44:31,603
+If you want to build something that does something using active inference, go C++ or RxInfer.
+
+432
+00:44:33,225 --> 00:44:35,768
+And if you want to apply it to behavioral data,
+
+433
+00:44:36,760 --> 00:44:40,366
+then go pymdp or active-entrance.gl.
+
+434
+00:44:40,526 --> 00:44:42,750
+And there are some tools for this also in MATLAB.
+
+435
+00:44:43,291 --> 00:44:49,581
+But I think our package and pymdp are made to make this easier.
+
+436
+00:44:49,862 --> 00:44:53,708
+And as you might notice, we use much of the syntax from pymdp.
+
+437
+00:44:54,049 --> 00:44:55,191
+So we're heavily inspired by that.
+
+438
+00:44:55,752 --> 00:45:00,760
+And in the next part, you'll see how to use it to apply the package to behavioral code.
+
+439
+00:45:01,583 --> 00:45:02,684
+Does that answer those questions?
+
+440
+00:45:02,704 --> 00:45:03,025
+Cool.
+
+441
+00:45:03,365 --> 00:45:04,026
+Yeah, perfect.
+
+442
+00:45:04,086 --> 00:45:04,646
+Definitely.
+
+443
+00:45:04,667 --> 00:45:18,722
+The functions look great and your team's understanding and clarity around the problem setup, taking that all the way through the helper functions for the matrices, that's where so much of the friction is.
+
+444
+00:45:18,783 --> 00:45:20,384
+So this makes it really clear.
+
+445
+00:45:20,404 --> 00:45:22,327
+It's a great open source point.
+
+446
+00:45:23,848 --> 00:45:28,013
+It's also where a kind of future development, yeah, it was really happening there.
+
+447
+00:45:28,499 --> 00:45:32,904
+So the API can be improved for sure, and we will work on it.
+
+448
+00:45:33,304 --> 00:45:41,554
+Because I think one of the main challenges active inference has faced as a tool for cognitive modeling is that it's hard to use and hard to understand.
+
+449
+00:45:42,835 --> 00:45:46,619
+And that's why much of the mathematical psychology world, for example, just leaves it.
+
+450
+00:45:47,100 --> 00:45:49,643
+They say, we have a two or three equation model.
+
+451
+00:45:50,023 --> 00:45:54,308
+Why would we use your beam of a machine instead?
+
+452
+00:45:54,348 --> 00:45:58,152
+But just as it has been the case with many other methods,
+
+453
+00:45:58,638 --> 00:46:12,474
+making tools that make it easy to use and conceptualizations that make it easy to understand is the kind of thing that will make these models feasible and therefore used more broadly.
+
+454
+00:46:13,956 --> 00:46:21,745
+Yeah, that's making me think like RX Infer is the car factory, this is the bike, and Active Inference is the wheel.
+
+455
+00:46:23,487 --> 00:46:26,430
+You can think of it, yeah.
+
+456
+00:46:26,450 --> 00:46:28,172
+You need a logo.
+
+457
+00:46:28,945 --> 00:46:34,953
+All right, let's do the last important section and we'll see how much time we have.
+
+458
+00:46:34,973 --> 00:46:41,042
+Okay, because we're short on time, I will need to skip through a few of the sections, but I hope it's going to be all right.
+
+459
+00:46:41,943 --> 00:46:56,623
+So I think Peter already mentioned that we have this sort of environment of packages in Julia, and one of them is action models, which is sort of a system package for us, which mediates the data fitting process for us, right?
+
+460
+00:46:57,093 --> 00:47:06,926
+So here we are essentially going in the opposite direction where our inputs and the actions of our experimental subjects are known.
+
+461
+00:47:07,647 --> 00:47:14,857
+But now we are interested in the hidden or latent parameters of the subjective generative model.
+
+462
+00:47:17,440 --> 00:47:23,168
+So there's a sort of core component of action models is the action model function, which
+
+463
+00:47:23,570 --> 00:47:48,717
+depending on our model can be an arbitrary function which takes a single input which in our case is a single observation it updates the states of the agent and then it sort of quantifies the probabilities of actions so we end up with a probability distribution from which we can assemble our actions right and so in our case we have this nice function called action pure mdp
+
+464
+00:47:49,388 --> 00:47:52,150
+which is our active inference action model.
+
+465
+00:47:52,731 --> 00:48:00,598
+And it takes these two arguments, which is our initialized AI object with the parameters of the generative model, settings, et cetera.
+
+466
+00:48:01,298 --> 00:48:07,684
+And it takes the single observation and then it outputs the action distribution.
+
+467
+00:48:07,704 --> 00:48:13,829
+So in this particular case, we have two action distributions, one for each state factor.
+
+468
+00:48:15,631 --> 00:48:18,433
+And then another core component of action models
+
+469
+00:48:18,937 --> 00:48:37,143
+is an agent, so it sort of wraps our action model function and our active inference object in a more abstract structure, which we will be using for pitching and for simulation as well.
+
+470
+00:48:37,163 --> 00:48:41,569
+And it also stores parameters, states, history, etc.
+
+471
+00:48:42,477 --> 00:48:49,145
+All right, now I'll just allow myself to skip through some of the convenience functions so I can just go straight to the data fitting, if that's all right.
+
+472
+00:48:50,266 --> 00:48:55,672
+Okay, so this is, I would assume, the most interesting part of this.
+
+473
+00:48:56,253 --> 00:49:00,758
+So how to actually fit active inference models to data.
+
+474
+00:49:01,499 --> 00:49:12,332
+So all of our fitting functions kind of operate on Turing, and we wrap all of the necessary Turing operations in our convenience functions for fitting.
+
+475
+00:49:12,818 --> 00:49:19,884
+So let's say, for example, we want to fit a single subject and we want to recover a single parameter, a sort of minimal, simple example.
+
+476
+00:49:20,565 --> 00:49:22,066
+So we start by specifying a prior.
+
+477
+00:49:22,647 --> 00:49:26,510
+So here, let's say we want to recover our action precision parameter alpha.
+
+478
+00:49:26,530 --> 00:49:33,016
+So we set a prior for it, let's say the Gaussian with a mean of six and sigma two and set it in a dictionary.
+
+479
+00:49:33,697 --> 00:49:40,783
+And then in case we want to put more parameters at once, we just add them to the same dictionary and their corresponding prior distributions.
+
+480
+00:49:41,675 --> 00:49:49,286
+And so now we can use the create model function, which will instantiate our probabilistic model on our data.
+
+481
+00:49:49,306 --> 00:50:01,004
+And it takes these inputs, which is our initialized agent, it takes our priors and our collected observations and actions, which we collect, let's say, from a behavioral experiment.
+
+482
+00:50:01,404 --> 00:50:05,891
+And in this case, we're just using some data from simulated teammates.
+
+483
+00:50:06,432 --> 00:50:09,336
+So here we, our actions,
+
+484
+00:50:09,721 --> 00:50:17,714
+is a matrix which has rows corresponding to timesteps, or let's say trials, and columns corresponding to state factors.
+
+485
+00:50:17,794 --> 00:50:23,142
+And similarly in observations, we have columns corresponding to observation modalities.
+
+486
+00:50:25,446 --> 00:50:37,365
+And then we'll have our model object instantiated, which we can easily fit in a single line using our fit model function, which will run the sampler with appropriate defaults.
+
+487
+00:50:37,868 --> 00:50:46,036
+And then we can, like, obviously people would want to pass some more specific settings into the sampler.
+
+488
+00:50:46,436 --> 00:50:56,926
+So here I'm passing, for example, the number of iterations per chain, and I'm running four chains, and then I'm using the distributed module to run the chains in parallel.
+
+489
+00:50:59,188 --> 00:51:06,475
+Right, and then we, after the sampling is finished, then we will end up with the results object, which contains our chains, and then we can
+
+490
+00:51:06,893 --> 00:51:08,475
+work further with this, right?
+
+491
+00:51:08,495 --> 00:51:19,106
+So I'm just going to quickly go through some of our other convenience functions, for example, to rename chains, which will rename the names of the parameters in our chains to something more, more intuitive.
+
+492
+00:51:19,847 --> 00:51:25,714
+And we can extract quantities from our chains that we can just simply display the results of, of our chain.
+
+493
+00:51:26,074 --> 00:51:34,944
+So again, the summary statistics, some information about, about the conversions of our chains, quantiles, et cetera, right?
+
+494
+00:51:35,144 --> 00:51:35,905
+Or then we can just
+
+495
+00:51:36,290 --> 00:51:45,080
+Here's a sort of native Julia uploading function so we can pass our chains to it to take a look at chain traces or posterior distributions.
+
+496
+00:51:46,201 --> 00:51:50,706
+Or what we can do is we can sample from our prior.
+
+497
+00:51:50,767 --> 00:52:04,322
+So here I'm taking a thousand samples from the prior and I'm using our plot parameters function to plot the posterior distribution against the prior distribution for our
+
+498
+00:52:04,572 --> 00:52:07,535
+synthetic participant, let's say.
+
+499
+00:52:09,156 --> 00:52:16,403
+Okay, and this is the part that's going to be mostly interesting, I think, for people in computational psychiatry and cognitive modeling.
+
+500
+00:52:17,544 --> 00:52:21,768
+And it's the case where we want to fit a full data set.
+
+501
+00:52:21,788 --> 00:52:32,638
+So in this case, let's say that we have some data with 10 participants, and let's assume that we have two clinical groups in our data.
+
+502
+00:52:33,040 --> 00:52:59,217
+can be i don't know control and whatever psychotic or it can be young old right and we can simply pass the whole data set with our collected data let's say from from our behavioral experiment to the same create model function so it instantiates the the probabilistic model on the whole data set
+
+503
+00:52:59,720 --> 00:53:11,782
+And then additional things that we need to tell the function is which column to use to differentiate between individual subjects and which columns contain our observations and which columns contain our actions.
+
+504
+00:53:12,443 --> 00:53:18,915
+And again, we have our model instantiated on the whole dataset and we can just pass it on to our fit model function.
+
+505
+00:53:20,057 --> 00:53:23,483
+And again, this following is sort of the same procedure as before.
+
+506
+00:53:23,986 --> 00:53:50,803
+can play around with our recovered chains here we have the recovered values of alpha for each participant using native Julia functions to deploy the chain traces and again we can let's say sample from the prior and plot the posterior against priority solutions for each participant right and then
+
+507
+00:53:51,205 --> 00:54:05,122
+So keeping also with this default procedure in cognitive modeling, now let's say that we have our estimates and we want to see where there is actually a difference in our two groups.
+
+508
+00:54:06,003 --> 00:54:11,529
+So here I'm just extracting the quantities from the chain and I'm getting the estimates, which in this case are medians.
+
+509
+00:54:12,230 --> 00:54:19,018
+And we can see here that there are indeed two groups present in our data.
+
+510
+00:54:19,640 --> 00:54:30,640
+After, let's say that we run some statistics on our estimates, then we might be also interested to see whether there's any correlation with other states of our agent.
+
+511
+00:54:30,660 --> 00:54:42,120
+And let's say some physiological data, but here I'm putting the state action prediction error, which then my people want to correlate, let's say with brain data or pupilometry, for example.
+
+512
+00:54:44,294 --> 00:54:56,654
+And for people who might want to use variational inference for various reasons over sampling, the good news is that Turing can do variational inference too.
+
+513
+00:54:57,595 --> 00:55:05,728
+So here I just sort of remade the tutorial that you can find on the official Turing web page where I'm
+
+514
+00:55:06,333 --> 00:55:16,545
+In the beginning, just initializing the variational inference algorithm with a sort of default number of samples and a default number of iterations.
+
+515
+00:55:16,565 --> 00:55:22,312
+And importantly, I'm setting the automatic differentiation backend to reverse mode automatic differentiation.
+
+516
+00:55:23,133 --> 00:55:32,965
+And then in the VI function, which runs the variational inference algorithm, I'm just reusing our probabilistic model, which we have already created previously.
+
+517
+00:55:33,586 --> 00:55:35,328
+So this is very nice.
+
+518
+00:55:35,669 --> 00:55:40,615
+And what we end up with is our variational posterior, which is a type of distribution.
+
+519
+00:55:40,635 --> 00:55:43,980
+So we can sample from it or work further with it.
+
+520
+00:55:46,584 --> 00:55:50,008
+And just to rather quickly wrap up.
+
+521
+00:55:50,268 --> 00:55:53,533
+So we're currently working on the documentation.
+
+522
+00:55:54,274 --> 00:55:55,135
+We know it's important.
+
+523
+00:55:55,315 --> 00:55:58,339
+So it should be done in the next few weeks, let's say.
+
+524
+00:55:59,861 --> 00:56:01,804
+Until then, you can either reach out
+
+525
+00:56:02,122 --> 00:56:08,211
+or you can refer to Action Models documentation, which is really nicely written.
+
+526
+00:56:12,277 --> 00:56:12,497
+Okay.
+
+527
+00:56:13,258 --> 00:56:19,848
+And yeah, just briefly, just to summarize what we need to do in our next potential future.
+
+528
+00:56:20,950 --> 00:56:22,091
+So we need to optimize.
+
+529
+00:56:22,292 --> 00:56:26,418
+The package is fast, but there are still a lot of things that need to be improved.
+
+530
+00:56:26,438 --> 00:56:30,103
+Then the idea was to, for example, be able to fit
+
+531
+00:56:30,522 --> 00:56:58,453
+all parameters because for now we were only able to to recover the the sort of hyper parameters and what's been called the non-matrix parameters but in principle one can also one should be also able to fit an entire let's say a matrix or c matrix which would be really nice and then okay we can um extend the parameter learning to all other uh parameters of the of the generative model and that idea was to introduce a sort of custom parameterizations where
+
+532
+00:56:58,703 --> 00:57:08,915
+the user could introduce a temperature parameter on an A matrix, and this could be also in principle then recovered using data fitting from empirical data.
+
+533
+00:57:10,457 --> 00:57:27,478
+And last, I'm just going to say that for our fitting, we are using reverse automatic differentiation, which is fast, but we are also planning to start experimenting with other engines which are currently under development in Julia also, which includes Enzyme and
+
+534
+00:57:27,712 --> 00:57:31,037
+Mooncake, which might be potentially faster.
+
+535
+00:57:31,998 --> 00:57:40,170
+And then on the side of action models, Peter has been working for some time also on the possibility of adding linear regressions.
+
+536
+00:57:40,630 --> 00:57:47,560
+So the idea would be that we could fit the data, we could recover our estimates, and we could
+
+537
+00:57:47,860 --> 00:57:54,948
+run linear regressions with our estimates or with other variables that we might have.
+
+538
+00:57:55,528 --> 00:57:56,449
+In one model.
+
+539
+00:57:56,470 --> 00:57:56,690
+Yes.
+
+540
+00:57:56,710 --> 00:57:58,251
+Which is statistically up to you.
+
+541
+00:57:58,972 --> 00:57:59,172
+Yes.
+
+542
+00:58:00,154 --> 00:58:00,394
+Okay.
+
+543
+00:58:00,414 --> 00:58:12,948
+And the last thing you're going to hear from me is that when you decide that you want to start experimenting with our package and you encounter an issue or do you have any specific feature in mind that you would like us to implement, please feel free to open an issue.
+
+544
+00:58:13,608 --> 00:58:16,872
+Any kind of feedback will be greatly appreciated.
+
+545
+00:58:18,758 --> 00:58:19,139
+Thank you.
+
+546
+00:58:19,600 --> 00:58:20,322
+And we're out of time.
+
+547
+00:58:20,382 --> 00:58:29,425
+So I'll just briefly mention this point that you can treat a whole group of agents as one agent and do cognitive modeling on a separate paper.
+
+548
+00:58:29,445 --> 00:58:32,413
+So I'm sure there'll be time to talk about that at another time.
+
+549
+00:58:38,063 --> 00:58:38,824
+Yes.
+
+550
+00:58:38,844 --> 00:58:40,086
+I think that's it.
+
+551
+00:58:40,106 --> 00:58:40,727
+Thanks, Sol.
+
+552
+00:58:41,809 --> 00:58:44,173
+This is a huge advance.
+
+553
+00:58:44,353 --> 00:58:45,756
+It's really awesome.
+
+554
+00:58:45,836 --> 00:58:51,064
+Brings a lot of features a lot closer to people's hands and minds.
+
+555
+00:58:52,166 --> 00:58:56,954
+And it's exciting that we'll continue developing and learning about it.
+
+556
+00:58:58,737 --> 00:59:00,079
+Thank you.
+
+557
+00:59:00,099 --> 00:59:00,720
+Okay.
+
+558
+00:59:00,740 --> 00:59:01,121
+Thank you.
+
+559
+00:59:01,381 --> 00:59:01,962
+Till next time.

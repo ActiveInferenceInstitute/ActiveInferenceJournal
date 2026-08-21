@@ -1,0 +1,1299 @@
+1
+00:00:06,207 --> 00:00:28,249
+hello and welcome it's december 13th 2024 we're in active inference guest stream 93.1 with nassim dihush we're going to be discussing a paper we wrote together enhancing population-based search with active inference so thank you nassim for joining looking forward to your presentation in the discussion
+
+2
+00:00:28,972 --> 00:00:29,473
+My pleasure.
+
+3
+00:00:29,493 --> 00:00:29,994
+Thank you, Daniel.
+
+4
+00:00:30,014 --> 00:00:34,581
+I'm very happy to be here and to share this joint work we did together a few months ago.
+
+5
+00:00:34,621 --> 00:00:42,334
+Perhaps I could give a brief background information about how this work came to be.
+
+6
+00:00:42,394 --> 00:00:52,030
+We did a podcast together and we had a few chats on Discord about Active Inference, and it was actually a way you used to explain Active Inference.
+
+7
+00:00:52,571 --> 00:00:54,574
+You said
+
+8
+00:00:54,740 --> 00:01:05,654
+that it's like the sense of touch, for example, wouldn't be really active unless you move your hand to really discover the texture.
+
+9
+00:01:06,154 --> 00:01:15,246
+And it's the idea that, indeed, perception is not a passive process where you're just receiving data and processing it.
+
+10
+00:01:15,749 --> 00:01:19,153
+it's that agents have an intact, right?
+
+11
+00:01:19,173 --> 00:01:42,077
+And this is something that meditators can also, you know, experience is that even seeing, you know, sight, if you are really empty inside, wouldn't really be active unless you have some intent, you know, so I thought about this in the context of a class of multi agent systems that are
+
+12
+00:01:42,057 --> 00:01:44,924
+used for optimization problems.
+
+13
+00:01:44,985 --> 00:01:48,333
+So perhaps I'll give an overview of our work.
+
+14
+00:01:49,316 --> 00:01:58,800
+So this is a kind of meta heuristic methods that are used to solve all sorts of optimization problems.
+
+15
+00:01:59,236 --> 00:02:05,710
+but we mainly focus on combinatorial optimisation, so problems in graphs, typically.
+
+16
+00:02:06,571 --> 00:02:12,604
+And they use a population of agents to explore different solution paths.
+
+17
+00:02:13,765 --> 00:02:40,347
+and one one common feature as i will highlight later of these methods is that they just like you know the the the naive perception we have of uh you know how how um even humans perceive is that they they consider that these agents have only reactive responses to the data they discover in the environment uh we'll see it in more details later when i do a brief literature review and so
+
+18
+00:02:41,272 --> 00:02:50,049
+We try to incorporate predictive modeling, giving these agents an intent, which is to reduce their surprise and also update their belief.
+
+19
+00:02:50,250 --> 00:02:51,332
+We'll talk about that as well.
+
+20
+00:02:52,474 --> 00:02:59,247
+So the idea is to minimize the difference between the outcomes they observe and what they expect.
+
+21
+00:02:59,581 --> 00:03:12,366
+And we tried to integrate this to this class of methods known as population-based search methods with an instantiation on one method called the ant colony optimization.
+
+22
+00:03:12,827 --> 00:03:17,657
+That's also inspired by you, Daniel, and your background working with ants.
+
+23
+00:03:17,637 --> 00:03:24,386
+And so this would be applied to a problem which I think is famous enough.
+
+24
+00:03:24,566 --> 00:03:39,526
+So I don't have to give a very detailed explanation of it, but perhaps for people who are not familiar with the traveling salesman problem, I will briefly explain it with this little app we put together for the paper.
+
+25
+00:03:40,207 --> 00:03:45,214
+So it's a problem in graphs where you have typically
+
+26
+00:03:46,679 --> 00:04:00,975
+set of cities or locations the problem consists in finding a route that visits all cities and goes back to your initial point okay now with this kind of problems um
+
+27
+00:04:02,221 --> 00:04:07,409
+There are two classes, typically, problems in P, which can be solved in polynomial time.
+
+28
+00:04:08,030 --> 00:04:12,096
+One example would be finding the shortest route from one point to the other.
+
+29
+00:04:12,597 --> 00:04:19,507
+That is very easy to solve, and it remains easy even for very large-scale graphs, very large numbers of CDs.
+
+30
+00:04:19,928 --> 00:04:30,203
+But this problem, the traveling salesman problem, the idea of visiting all CDs and going back to your initial point, happens to be in a different class, NP-hard.
+
+31
+00:04:30,183 --> 00:04:33,388
+So it is as hard as any computational problem you can think of.
+
+32
+00:04:34,008 --> 00:04:37,694
+And here again, the difficulty comes with scale.
+
+33
+00:04:37,774 --> 00:04:48,088
+It's that we don't have a better method than exhaustively listing all paths.
+
+34
+00:04:49,190 --> 00:04:52,174
+So there are approximate
+
+35
+00:04:52,542 --> 00:04:55,425
+solution methods known as heuristics and meta heuristics.
+
+36
+00:04:55,925 --> 00:05:06,795
+A very simple one, a very intuitive one could be to visit the nearest city from your starting point and repeat this process until you go back to your initial point.
+
+37
+00:05:06,815 --> 00:05:11,779
+So this is known as the nearest neighbor heuristic.
+
+38
+00:05:12,240 --> 00:05:16,584
+So here I would start, for example, from this one, go to the next one, next one, next one, next one.
+
+39
+00:05:17,084 --> 00:05:21,148
+And then with this, you can get stuck in very bad, you know,
+
+40
+00:05:22,597 --> 00:05:25,061
+branches of the tree of possible solutions.
+
+41
+00:05:25,462 --> 00:05:35,559
+For example, if the last city is very far here, you would need to waste a lot of distance in your solution.
+
+42
+00:05:35,980 --> 00:05:43,272
+So nearest neighbor is not that great and the diameters that try to improve on it.
+
+43
+00:05:44,234 --> 00:05:47,980
+One of them is the one we will discuss.
+
+44
+00:05:48,196 --> 00:06:13,579
+this presentation beyond colony optimization method so as i was saying it's part of a large class of methods known as population-based search meta heuristics they are typically nature inspired or biology inspired but one very good point you raised daniel is that uh well can there be anything that is not nature inspired that's a good question to
+
+45
+00:06:13,559 --> 00:06:14,360
+to ponder.
+
+46
+00:06:14,700 --> 00:06:17,663
+In any case, these are inspired by phenomena in nature.
+
+47
+00:06:17,723 --> 00:06:26,451
+Initially, I think the first method in this class was invented in the 70s.
+
+48
+00:06:26,551 --> 00:06:29,133
+It's the genetic algorithm that is inspired by evolution.
+
+49
+00:06:29,454 --> 00:06:32,556
+And here again, there will be interesting bridges with active inference.
+
+50
+00:06:33,938 --> 00:06:37,881
+Ant colony optimization is also one of the most successful and oldest.
+
+51
+00:06:37,941 --> 00:06:43,026
+But then there was a deluge of nature inspired methods for about 30 years.
+
+52
+00:06:43,293 --> 00:07:01,795
+anything from honeybees to cuckoo to wolves to lions, dolphins, what have you, even the way jazz players, human jazz players, synchronize when they improvise, were used as inspiration for these methods.
+
+53
+00:07:02,576 --> 00:07:10,566
+And just as a fun fact, artificial neural networks were considered as part of this class of methods
+
+54
+00:07:11,221 --> 00:07:14,348
+up until the mid-2000s when I was an undergrad myself.
+
+55
+00:07:14,870 --> 00:07:25,755
+And they were usually listed in textbooks like the two I have cited here among these population-based meta-heuristics before taking a life on their own.
+
+56
+00:07:26,858 --> 00:07:29,905
+But because of this
+
+57
+00:07:30,543 --> 00:07:34,875
+a very large number of methods that offer very little innovation.
+
+58
+00:07:35,957 --> 00:07:43,337
+Some authors, notably Kenneth Sorensen here with this important paper that was published in 2013,
+
+59
+00:07:43,790 --> 00:07:59,372
+call for a stop to these very superficial improvements and innovations, just taking inspiration from the next natural process, and to go back to more abstract ways of seeing these methods.
+
+60
+00:08:00,274 --> 00:08:08,886
+So more abstractly, we can break down these population-based search methods
+
+61
+00:08:10,199 --> 00:08:12,122
+by the fact that they have these three characteristics.
+
+62
+00:08:12,723 --> 00:08:17,250
+First, there is, of course, a population of agents that cooperate.
+
+63
+00:08:17,470 --> 00:08:26,464
+So each one of them is going to explore some solution parts since exploring, you know, exhaustively exploring the whole tree of possible solutions is not feasible.
+
+64
+00:08:27,225 --> 00:08:34,637
+Agents would have some way to explore solutions themselves, and they're going to cooperate, share information,
+
+65
+00:08:35,427 --> 00:08:41,974
+Another common characteristic of these methods is that they usually include self-adaptation.
+
+66
+00:08:42,034 --> 00:08:49,643
+The agents respond to their environment, and we'll come back to this one later, and modify their search strategy accordingly.
+
+67
+00:08:50,244 --> 00:08:59,334
+And there is also competition among the solutions discovered so far by the population of agents, and we keep the best subset of solutions.
+
+68
+00:08:59,955 --> 00:09:03,038
+So if we see it this way,
+
+69
+00:09:04,672 --> 00:09:16,808
+Many of the nature-inspired methods we have here come down to just ways to define these three characteristics.
+
+70
+00:09:17,142 --> 00:09:36,068
+But one common thing among all methods pretty much is that they all assume, and I think it's a common bias we have in designing algorithms and multi-agent systems, is that we assume that agents passively receive information and in the way they retrieve this information, they have no intent.
+
+71
+00:09:37,650 --> 00:09:39,032
+And so that's one thing that
+
+72
+00:09:39,907 --> 00:09:47,078
+we could possibly explore as a way to improve these meta-heuristics, particularly ant colony optimization.
+
+73
+00:09:48,540 --> 00:09:55,791
+So to present the method briefly, the population is a population inspired by the behavior of ants.
+
+74
+00:09:55,811 --> 00:10:06,927
+Each agent would be exploring one possible path of solutions.
+
+75
+00:10:07,598 --> 00:10:28,288
+So it mimics how ants behave in that once an ant or agent finds a promising path, they're going to leave a trail of pheromones that is going to be more and more attractive to other agents as it is explored by more ants.
+
+76
+00:10:28,308 --> 00:10:36,880
+So the pheromone system is a way for agents to leave information for others and progressively reinforce the best solutions.
+
+77
+00:10:38,294 --> 00:10:57,072
+And so one subtlety is that there is also a phenomenon of evaporation of these frameworks, as would happen naturally, in fact, so that we don't get stuck in local minima and that we forget bad solutions over time.
+
+78
+00:10:59,955 --> 00:11:07,542
+And the choice of the next node to explore in the application to the traveling settlement problem, for example,
+
+79
+00:11:08,011 --> 00:11:24,163
+would be based on what trail of pheromone other ants left and also the intrinsic potential of that choice in finding a minimum length traveling route.
+
+80
+00:11:25,679 --> 00:11:52,497
+so this is the basic ant colony optimization but here again as you can see agents are considered to be passive you know receptors be it of pheromone or information in general they don't have any any intent in their in their exploration and so ant colony optimization was a very successful method for the traveling seismic problem up until very recently now there are better uh you know approximate methods
+
+81
+00:11:53,843 --> 00:12:09,986
+And as I was briefly explaining, the way the ants are going to collectively construct a good route would be that each ant visits node by node until it completes one tool.
+
+82
+00:12:10,787 --> 00:12:20,982
+And the most promising tools are going to have the most promising edges, in fact, between nodes are going to have a higher concentration of pheromone over time.
+
+83
+00:12:20,962 --> 00:12:29,357
+And at the end, we keep the best encountered solution by the population as a whole.
+
+84
+00:12:29,377 --> 00:12:35,308
+Now, on the other hand, active inference and here I speak under your supervision, Daniel.
+
+85
+00:12:35,592 --> 00:12:59,862
+It's a shift in the way we view perception itself from just reacting to data that is assumed to be received passively to considering that agents have an intent, which is to predict some outcome and also minimize their surprise
+
+86
+00:13:01,057 --> 00:13:06,245
+when encountering real outcomes, the surprise compared to what they had predicted.
+
+87
+00:13:07,166 --> 00:13:20,426
+So there could be interesting discussions to be had about the statistical models that you use for modeling this prediction and also the surprise.
+
+88
+00:13:21,027 --> 00:13:25,393
+But speaking again abstractly and at the high level,
+
+89
+00:13:26,453 --> 00:13:29,175
+He will assume that agents anticipate some future state.
+
+90
+00:13:29,676 --> 00:13:46,892
+They build a belief about the current observations they are making, and the choices they make in the future are not just based on the immediate data they receive, but also on this belief that they have built and overall that their objective will be to minimize free energy.
+
+91
+00:13:48,073 --> 00:13:53,878
+And so the way we implemented this in ant colony optimization
+
+92
+00:13:54,179 --> 00:14:02,989
+is that it is going to change the way we calculate the node selection probability, which was initially just based mainly on pheromones.
+
+93
+00:14:03,510 --> 00:14:06,079
+And here we're going to balance
+
+94
+00:14:06,599 --> 00:14:22,244
+the thermal level available in that choice, with the total distance of the route built so far, and also the current belief of the agent, the aunt that is exploring it.
+
+95
+00:14:22,865 --> 00:14:30,177
+We also have a calculation of free energy, the typical way with the logs of B in this case.
+
+96
+00:14:33,768 --> 00:14:49,966
+And we'll adjust the belief or confidence level of the ant in its current exploration path based on the length of the current path compared to the best path encountered so far by the whole population.
+
+97
+00:14:52,168 --> 00:15:00,417
+And then the pheromone would be updated based on the typical way, based on the length of the current path.
+
+98
+00:15:03,923 --> 00:15:19,919
+And so we're going to integrate this in the typical scheme for ant colony optimization with these changes in the way we update, the way we calculate the probability of selecting the next node.
+
+99
+00:15:21,420 --> 00:15:30,589
+So the typical steps would be that we start with some uniform pheromone levels for all choices.
+
+100
+00:15:32,493 --> 00:15:38,462
+the ants, each one of them is going to update its belief based on its current exploration.
+
+101
+00:15:39,023 --> 00:15:41,667
+We calculate the free energy for each agent.
+
+102
+00:15:42,308 --> 00:15:50,341
+And then we're going to iteratively update both the beliefs and the best encountered solutions.
+
+103
+00:15:51,062 --> 00:15:58,433
+And at the end, we keep the best route discovered by the
+
+104
+00:15:58,987 --> 00:15:59,528
+the population.
+
+105
+00:15:59,548 --> 00:16:16,313
+And here again, there would be some adjustments to be made about the number of agents in the population that you would like to consider, the amount of computation time that you give yourself that could more or less influence the quality of the resulting solutions.
+
+106
+00:16:16,894 --> 00:16:21,320
+But again, abstractly, this is how we would structure the algorithm.
+
+107
+00:16:21,981 --> 00:16:26,007
+And so we have applied this to the traveling salesman problem.
+
+108
+00:16:26,577 --> 00:16:28,579
+problem I have presented here.
+
+109
+00:16:29,240 --> 00:16:31,864
+Let me clear them up to take another example.
+
+110
+00:16:33,365 --> 00:16:51,808
+And we compare this enhanced anti-colony optimization, as we call it, or active anti-colony optimization with both basic anti-colony optimization and the nearest neighbor, the very naive heuristic as baseline.
+
+111
+00:16:53,847 --> 00:16:59,478
+So we took random symmetric graphs of increasing sizes.
+
+112
+00:17:00,380 --> 00:17:06,432
+And one interesting thing we found, we found a few interesting things.
+
+113
+00:17:06,492 --> 00:17:09,358
+It's that first
+
+114
+00:17:09,541 --> 00:17:18,850
+This simple change in the way you calculate the probability of selecting the next node does improve the quality of the results significantly.
+
+115
+00:17:19,871 --> 00:17:27,159
+So it does give you shorter routes on average than basic ant colony optimization.
+
+116
+00:17:27,179 --> 00:17:29,361
+I don't know if we can see it on this example.
+
+117
+00:17:29,521 --> 00:17:29,981
+Let's try.
+
+118
+00:17:30,702 --> 00:17:34,106
+So I will run the basic ant colony optimization here.
+
+119
+00:17:35,667 --> 00:17:36,628
+We find
+
+120
+00:17:37,587 --> 00:17:56,524
+root of this length 1 1 2 8 6 with active inference seems to be the same so maybe we should add more nodes and here again the the difference is really uh only appears when you have large enough graphs
+
+121
+00:17:56,588 --> 00:18:23,811
+complex enough graphs let's try again with this one maybe it would be luckier i'll give a comment on that i'll give a comment on that while you're running the different ones yeah yeah this and this gives possibly an interesting uh case so first off there's many graphs where a number of heuristics could and would and should converge on the same simple output so there's never any thing wrong with running multiple uh parallel meta heuristics
+
+122
+00:18:23,791 --> 00:18:34,482
+And so I was seeing that free energy calculation as counteracting with an entropic force, the convergent tendency of the attractive pheromone.
+
+123
+00:18:34,502 --> 00:18:39,326
+So you have the ants laying down pheromones based upon shorter paths and prior success.
+
+124
+00:18:39,987 --> 00:18:50,037
+And then there's this kind of expansive force that's keeping an additional variance element around.
+
+125
+00:18:50,818 --> 00:18:52,279
+And so it's kind of like,
+
+126
+00:18:52,394 --> 00:19:12,647
+ball is is rolling to the bottom of the hill that's the standard ant colony optimization and then the free energy is in keeping it a little bit off the bottom so then looking at a huge numbers of replicates for graphs it was interesting that on many cases it would do a tiny bit worse
+
+127
+00:19:13,488 --> 00:19:41,807
+but then in several cases keeping it lifted off the ground with that entropic force would actually let it explore a totally different neighborhood and find vastly better solutions so that that overall it found shorter paths but that it found basically either the same or almost the same in most cases and then a few situations where it found something that was hugely shorter
+
+128
+00:19:43,660 --> 00:19:45,823
+Well, I have two comments on this.
+
+129
+00:19:46,323 --> 00:19:49,547
+That was actually going to be my conclusion for this presentation.
+
+130
+00:19:50,428 --> 00:20:05,245
+The way I see it is that at this point, it is interesting and useful to do applied work like we do here, to show in practice that this simple shift in the way you define the behavior of your agents does improve things empirically.
+
+131
+00:20:05,265 --> 00:20:07,888
+And here we have an improvement, actually, with this graph.
+
+132
+00:20:07,908 --> 00:20:12,013
+So it is actually significant.
+
+133
+00:20:11,993 --> 00:20:18,797
+Basic ant colony gives us something like 17.4.
+
+134
+00:20:20,988 --> 00:20:25,213
+and we get 16 something with active inference.
+
+135
+00:20:25,613 --> 00:20:28,517
+So there is definitely value in applied work like this.
+
+136
+00:20:28,597 --> 00:20:42,954
+And what I would be interested in exploring would be whether this also replicates for other population-based meta-heuristics, notably genetic algorithms or other approaches, simulated annealing, et cetera.
+
+137
+00:20:43,635 --> 00:20:46,438
+But the point you raise,
+
+138
+00:20:46,958 --> 00:20:52,747
+Well, it's a little beyond my understanding of active inference, to be honest.
+
+139
+00:20:52,767 --> 00:20:56,292
+But I think there is definitely need for more theoretical grounding.
+
+140
+00:20:56,392 --> 00:20:59,056
+And it sounds very interesting.
+
+141
+00:20:59,076 --> 00:21:09,873
+It's that active inference, just this change in the way you calculate probability can allow you to escape minima that are not that promising.
+
+142
+00:21:11,555 --> 00:21:14,620
+So that would be definitely needed at some point.
+
+143
+00:21:15,815 --> 00:21:24,886
+of course, when and if we get promising results with other methods is to justify it theoretically, because right now it's just based on intuition.
+
+144
+00:21:25,767 --> 00:21:31,755
+Indeed, agents can be improved by having this intent in their exploration.
+
+145
+00:21:31,795 --> 00:21:42,789
+But I would be very interested in reading more about the relationship with entropy and how it can be seen in the graph of the tree of possible solutions.
+
+146
+00:21:44,231 --> 00:21:45,332
+That's one point.
+
+147
+00:21:45,802 --> 00:21:48,910
+And the second one is that indeed,
+
+148
+00:21:49,683 --> 00:22:02,659
+The complexity of the graph matters, of course, but even in the paper, let alone in my toy example here with this mini app, we are still considering relatively small graphs.
+
+149
+00:22:03,079 --> 00:22:07,685
+The largest graph we have considered was 500 nodes, which remains significant.
+
+150
+00:22:07,785 --> 00:22:09,748
+You see important improvements.
+
+151
+00:22:10,589 --> 00:22:16,476
+But of course, the real value would come only with perhaps hundreds of thousands of nodes.
+
+152
+00:22:16,876 --> 00:22:19,099
+That's when you really need meta heuristics.
+
+153
+00:22:19,079 --> 00:22:32,459
+So perhaps I didn't give, I wanted to share this as well, you know, an overview of why this problem matters, why the traveling salesman problem matters.
+
+154
+00:22:32,820 --> 00:22:40,952
+First, theoretically, it matters because, as I've said, it is as hard as any problem you can think of computationally.
+
+155
+00:22:41,236 --> 00:23:03,970
+and all NP-hard problems reduced to each other so you could reduce you could express any NP-hard problem as a traveling salesman and also because it has well practical applications it could be literally you know determining routes for trucks or for drones but more and more it is
+
+156
+00:23:04,203 --> 00:23:24,427
+being used in chip design, in electronic chips design, that's when you may have a very, very large number of nodes and you need methods that are progressively better at the limit for tending towards infinity.
+
+157
+00:23:24,447 --> 00:23:28,472
+So Daniel, you have an idea about the theoretical grounding of the method?
+
+158
+00:23:29,465 --> 00:23:47,642
+well i mean just um well learning from you about the this broader metaheuristic space and and seeing how this builds on prior work in ants optimization and in an active and for ants um
+
+159
+00:23:49,225 --> 00:24:00,973
+There was just a few interesting pieces and I agree that there could be theoretical and empirical exploration to
+
+160
+00:24:03,080 --> 00:24:28,530
+flesh out some of the decisions that we made here like the bigger picture on these collective intelligence algorithms and the reason why there's so many species and so many different metaphors is because there's no free lunch if the collective behavioral algorithm recapitulates important features of the environment then it might be able to do well
+
+161
+00:24:28,510 --> 00:24:34,777
+However, if it doesn't recapitulate features of the environment, then it won't necessarily do well.
+
+162
+00:24:35,638 --> 00:24:44,128
+So I'm thinking now about how each ant's nestmate knows the best solution.
+
+163
+00:24:45,550 --> 00:24:46,972
+Several slides, I think 11.
+
+164
+00:24:46,992 --> 00:24:54,180
+They know their own path length and the best path length.
+
+165
+00:24:54,329 --> 00:25:04,065
+So that's an example of an abstraction or a calculation that a real ant nestmate wouldn't necessarily know.
+
+166
+00:25:04,085 --> 00:25:15,223
+However, it might have expectations about path length from its own learned experience or from evolution.
+
+167
+00:25:15,423 --> 00:25:44,991
+So I think that this design space of how do we recognize natural history and understand what the cognitive constraints and what the cognitive functions are in nature for harvester ants and turtle ants and leafcutter ants, just going to nature, understanding what kinds of problems are being solved and then being able to
+
+168
+00:25:44,971 --> 00:26:01,849
+work and abstract that to find slightly more generic forms of those collective intelligence methods that can be transferred to other analogous situations.
+
+169
+00:26:02,183 --> 00:26:27,330
+like more generally collecting resources or information or finding short paths and then what what other elements need to come into play and what can can situationally supercharge the algorithms again like having each nestmate know at all times whether it's itself is on a short or long path
+
+170
+00:26:28,390 --> 00:26:50,770
+yet paths of real ant colonies don't have that feature so i i just see it as like kind of like a mechanic shop with all these different options and meta meta heuristics how do we design that biological metaphor so that it
+
+171
+00:26:51,222 --> 00:27:03,279
+captures relevant features of our task and domain, because there could be some incredibly efficient algorithms, which isn't even to say that they would be super transferable.
+
+172
+00:27:04,720 --> 00:27:18,259
+But there might be some really specific algorithms that could have incredible interpretability or performance attributes, if we can select appropriately among collective behavioral algorithms.
+
+173
+00:27:20,602 --> 00:27:46,542
+what could really help here i think um you know to to to feed this this um reflection about what could be you know the underlying um abstract principles that that explain this this improvement uh would be perhaps if we could visualize the tree of you know solutions being explored for small scale problems like we have here of up to a few hundred notes uh i think it would be very interesting to to have
+
+174
+00:27:46,522 --> 00:27:55,510
+perhaps some colorful visualization of basic SEO, basic anti-colony optimization versus the active version.
+
+175
+00:27:55,931 --> 00:28:13,727
+And I would really like to explore this idea you have mentioned, which is that this small change you make to the way the probability of selecting the next node is calculated does allow you to escape potentially
+
+176
+00:28:13,707 --> 00:28:43,714
+not very good uh neighborhoods so that's definitely something we'll keep in mind in any case for this paper uh and the the so far limited experience we have run one very consistent uh trend is that the larger the the graph the the higher the relative percentage of improvements so you only see the the real value for for large scale graphs there is a little hiccup here for 100 node for some reason uh and i think we had
+
+177
+00:28:43,694 --> 00:28:48,658
+100 graphs per node size.
+
+178
+00:28:48,678 --> 00:29:02,430
+So it may be because of the samples or in any case, we can see the trend, which is that the larger the size of the graph, the higher the percentage of improvement.
+
+179
+00:29:02,490 --> 00:29:11,899
+But on the other hand, and very interestingly, the computation time does not increase proportionally to the size of the graph.
+
+180
+00:29:11,919 --> 00:29:13,380
+In fact, it decreases.
+
+181
+00:29:13,360 --> 00:29:39,452
+so again it's it's it's not much um adding new new operations to the the method new you know uh new steps but simply changing the way one operation is done which is the the you know the the probability of selecting the next node uh so obviously that's going to add some complexity but very interestingly uh this decreases with the the size of the graph
+
+182
+00:29:39,787 --> 00:29:47,097
+So it may even become neglectable for very large scale graphs where this kind of improvements matter.
+
+183
+00:29:47,937 --> 00:30:11,970
+so yes please yeah i think another another design pattern or something to explore is having more simpler nest mates versus having fewer more cognitively sophisticated nest mates and that's something again that that real colonies trade off in
+
+184
+00:30:11,950 --> 00:30:33,418
+the wild too but now we can explore ranging from um truly multi-threadable simple nest mates no information sharing not even finding out these colony level summary statistics super multi-thread super paralyzable all the way on through having
+
+185
+00:30:33,803 --> 00:30:44,657
+more advanced nest mates at the per-thread level, but maybe they can send each other messages, or they can plan ahead explicitly three time steps.
+
+186
+00:30:44,975 --> 00:30:53,504
+but if they're planning ahead explicitly three time steps and each of them is doing a little tree rollout at each time step, it's like, then the computational complexity increases a lot.
+
+187
+00:30:54,184 --> 00:31:11,202
+And so that space of being able to do sweeps across more simpler to fewer, more complicated nest mates or cuckoos or whatever the metaphor is,
+
+188
+00:31:11,182 --> 00:31:17,968
+and then understand where are we getting the most bang for the buck for a given type of graph
+
+189
+00:31:18,067 --> 00:31:22,291
+Maybe if it's a lattice-like graph, simpler colonies do better.
+
+190
+00:31:22,351 --> 00:31:35,344
+But if it's a small world graph topology or preferential attachment, then having the planning capacity so that you can know that you're going to get out of a small neighborhood, maybe that comes into play again.
+
+191
+00:31:35,364 --> 00:31:47,196
+So it just shows that there isn't going to be a general approach other than this sort of meta-heuristic design approach
+
+192
+00:31:47,767 --> 00:32:12,998
+level of generality helping us articulate which collective behavioral methods and how they should be tuned to bring to a given problem so i i think yeah there are two points here that could be interesting uh definitely graph um topology matters that's something we definitely need to explore uh whether the structure of the graph
+
+193
+00:32:14,564 --> 00:32:16,627
+influences the quality of the results you get.
+
+194
+00:32:17,408 --> 00:32:38,158
+And I think for your first point, which is basically what is the most bare bones population search method we could explore to really just pinpoint what is the improvement brought by the active inference, something we could also see would be, I think, genetic algorithms.
+
+195
+00:32:38,138 --> 00:32:40,201
+evolutionary genetic algorithms.
+
+196
+00:32:40,281 --> 00:32:44,568
+Evolution is really the most general metaphor, right, for behavior of populations.
+
+197
+00:32:45,489 --> 00:32:50,076
+And there you don't have information sharing across generations.
+
+198
+00:32:50,516 --> 00:32:53,621
+You just have message transmission, you know, in the genes.
+
+199
+00:32:54,482 --> 00:33:06,981
+You may also have some randomness introduced by mutation, random mutations that can happen and that can help you, you know,
+
+200
+00:33:07,147 --> 00:33:10,276
+can help you escape not-very-promising neighborhoods.
+
+201
+00:33:10,898 --> 00:33:20,025
+And I think you wrote a paper with Carl Frist, if I'm not mistaken, about an application of active inference to evolution, Daniel, right?
+
+202
+00:33:21,440 --> 00:33:25,425
+Yes, the variational synthesis for EcoEvoDevo.
+
+203
+00:33:26,186 --> 00:33:26,547
+Exactly.
+
+204
+00:33:27,768 --> 00:33:30,372
+And I found a very interesting idea there.
+
+205
+00:33:30,873 --> 00:33:43,650
+Again, without getting into the technicalities, it's that what can explain the evolution of species or populations could also explain the evolution of individuals.
+
+206
+00:33:44,090 --> 00:33:49,978
+So I thought it's a very powerful idea that you have this multilevel insight.
+
+207
+00:33:49,958 --> 00:34:03,664
+And that's perhaps something we could also explore within the scope of genetic algorithms, which are really just a simple model for evolution that does perform very well for problems like the TSP.
+
+208
+00:34:04,758 --> 00:34:07,323
+Yeah, just a short comment on that.
+
+209
+00:34:07,343 --> 00:34:19,067
+So in cognitive sciences, the unifying imperative is kind of like, well, why should we have a separate theory of anticipation or memory or attention?
+
+210
+00:34:19,729 --> 00:34:25,180
+Why not seek this unifying approach to model various cognitive phenomena?
+
+211
+00:34:25,160 --> 00:34:51,100
+now applying that to to ecology or to biology why why would we have one method or analytical framework for studying dynamics and change within a lineage vertical transmission and then have a separate theory for change that happens across lineages or communication across lineages like in ecology so
+
+212
+00:34:51,080 --> 00:35:16,530
+by unifying analogy how could we look at ecosystems as consisting of these composed interacting components that are changing and constituting of of sub components as well how can we see all of those processes sometimes which look more like vertical lineage-based transmission
+
+213
+00:35:16,510 --> 00:35:42,282
+other times which look more like horizontal ecological message passing and start to look at those overall dynamics as part of a unified at least measurement observation modeling approach like let's just say we were to do um two different colonies or two populations of colonies and then we have them doing different algorithms
+
+214
+00:35:43,679 --> 00:36:05,468
+then we start to let that whole thing play out we could be talking about the variational free energy of the nestmate within a colony the the colony as a collective with its best solution the populations and and and so on um will that
+
+215
+00:36:05,988 --> 00:36:11,696
+yield better explanations, predictions, transferable methods?
+
+216
+00:36:12,357 --> 00:36:16,944
+That's the question, but that's the setup.
+
+217
+00:36:16,964 --> 00:36:18,987
+Yeah, it would be very interesting to find this.
+
+218
+00:36:19,027 --> 00:36:26,157
+I think that would be the most, at least aesthetically and in terms of Occam's razor,
+
+219
+00:36:26,947 --> 00:36:48,330
+simplest theory it's to have something that does apply indeed for both the individual agents as well as the the whole population and here another in terms of you know elegance and and beauty another thing that's also helpful is to have agents share as little information as as possible
+
+220
+00:36:49,053 --> 00:36:49,534
+between them.
+
+221
+00:36:49,914 --> 00:36:57,525
+And also, as you have mentioned before, plan ahead as little as possible, which also has, of course, practical computational implications.
+
+222
+00:36:57,545 --> 00:37:00,409
+You would consume less computation.
+
+223
+00:37:01,130 --> 00:37:09,683
+So I think that would be useful for that, to have this unifying theory that will apply both for the behavior of individual agents as well as the population as a whole.
+
+224
+00:37:10,103 --> 00:37:13,208
+So perhaps something to explore with genetic algorithms.
+
+225
+00:37:13,709 --> 00:37:18,115
+In any case, for this particular work, and to conclude,
+
+226
+00:37:18,601 --> 00:37:44,473
+We have shown, and we can demonstrate it even more potently on larger scale graphs, that active inference does improve the performance of recreation-based metaheuristics with a very simple change, again, that is very cheap computationally, that may even disappear, become neglectable for very large scale graphs, this additional computational cost.
+
+227
+00:37:45,618 --> 00:37:50,647
+And for future research directions, I think we have mentioned the main ones.
+
+228
+00:37:51,108 --> 00:37:58,240
+It's that, in my opinion, the most important one, and if there's someone to provide this, I think it would be yourself, Daniel.
+
+229
+00:37:58,841 --> 00:38:02,347
+We need better theoretical grounding for what is going on.
+
+230
+00:38:02,447 --> 00:38:07,997
+We could definitely, of course, inform that with visualizations, like I've mentioned, of
+
+231
+00:38:07,977 --> 00:38:26,728
+the the tree of solutions and how it is explored in in both methods but uh it would be useful to understand how uh you know this this enhancement uh occurs fundamentally you know in abstract terms uh we also need to apply it to to other uh meta heuristics
+
+232
+00:38:27,130 --> 00:38:37,522
+I think the best candidates, as I've mentioned, would be first genetic algorithms, but also particle swarm optimization, which has its own peculiarities.
+
+233
+00:38:40,325 --> 00:38:45,811
+We also need, as I've said, simpler and more bare bones methods.
+
+234
+00:38:45,851 --> 00:38:56,563
+This is just an engineered belief update mechanism, but there is certainly a simpler and more elegant way to state the equation.
+
+235
+00:38:57,505 --> 00:39:11,337
+And to go even beyond population-based search, and I know that many people are working on this in the Active Inference Discord, what about other multi-agent systems?
+
+236
+00:39:12,178 --> 00:39:19,224
+Not just language model systems, but in general, multi-agent systems for robotics, et cetera.
+
+237
+00:39:20,505 --> 00:39:25,629
+Could we also improve their collective behavior by including active inference?
+
+238
+00:39:25,649 --> 00:39:27,411
+That's something I would also love to explore.
+
+239
+00:39:31,289 --> 00:39:34,633
+And so some references, if you are interested in taking it further.
+
+240
+00:39:34,693 --> 00:39:38,897
+First, our paper, which is on archive and also on preprints.io.
+
+241
+00:39:38,957 --> 00:39:49,329
+But the advantage on preprints.io is that you can listen to podcasts in layman's terms about the paper.
+
+242
+00:39:49,729 --> 00:39:51,411
+So enhancing is here.
+
+243
+00:39:51,912 --> 00:39:55,896
+You can download the AI-generated podcast
+
+244
+00:39:57,766 --> 00:40:19,487
+layman's overview of the paper we have also open sourced the whole code and process from the beginning in both our githubs so active aco is the the name of the repo and we have this mini app active acu dot repeat dot app where
+
+245
+00:40:20,598 --> 00:40:42,702
+you can experiment with different solutions, different paths on real maps, for example, South America here, both for neighborhood traveling salesman problems as well as global optimization problems, and compare the outcomes of both active SEO, basic SEO with the baseline nearest neighbor.
+
+246
+00:40:43,783 --> 00:40:47,247
+So this is it for me.
+
+247
+00:40:48,644 --> 00:40:54,012
+Thank you very much for the invitation, Daniel, and the listeners, if any, for their attention.
+
+248
+00:40:55,134 --> 00:41:09,035
+If you'd like to chat about this paper or the integration of active inference in general into operations research problems or theoretical CS, here is my contact.
+
+249
+00:41:11,138 --> 00:41:11,378
+Thank you.
+
+250
+00:41:13,197 --> 00:41:13,738
+Awesome.
+
+251
+00:41:13,758 --> 00:41:16,421
+I'll make a comment and then read a question from the chat.
+
+252
+00:41:16,441 --> 00:41:23,370
+Well, I also really like all these accessory... Fractal.
+
+253
+00:41:23,390 --> 00:41:29,578
+All these accessory pieces to the work, the preprints and also the Replit app.
+
+254
+00:41:30,479 --> 00:41:39,390
+I think it also is like kind of building out this meta publication
+
+255
+00:41:39,725 --> 00:41:48,264
+That's something I learned from you as well, Daniel, was that the PDF is just the beginning of the lifecycle of research work, which is absolutely true.
+
+256
+00:41:48,304 --> 00:41:50,769
+We tend to see it as the end game.
+
+257
+00:41:50,789 --> 00:41:51,471
+You got published.
+
+258
+00:41:51,491 --> 00:41:53,756
+You got the PDF posted somewhere.
+
+259
+00:41:54,197 --> 00:41:56,923
+But that's really just the beginning of it.
+
+260
+00:41:56,903 --> 00:42:03,611
+The real fruits may only appear three, five years later with the contacts you make, the discussions, the products you build on top of it.
+
+261
+00:42:04,111 --> 00:42:05,533
+So that's definitely important.
+
+262
+00:42:05,553 --> 00:42:07,455
+Yeah, I think that's super cool.
+
+263
+00:42:07,936 --> 00:42:15,204
+And we can continue making that really multimedia and accessible and rigorous.
+
+264
+00:42:15,264 --> 00:42:19,169
+So it's like on that sort of DeSci level, that's really exciting.
+
+265
+00:42:19,910 --> 00:42:23,434
+Okay, I'll ask a question from the chat.
+
+266
+00:42:23,768 --> 00:42:35,432
+Okay, Bert wrote, would this approach be suited for multivariable optimization, like adding in travel time or time slots?
+
+267
+00:42:35,952 --> 00:42:37,494
+So multi-objective, right?
+
+268
+00:42:38,476 --> 00:42:40,098
+Optimization is what we're talking about.
+
+269
+00:42:40,539 --> 00:42:46,729
+And here, I think, well, that's pretty much my PhD topic, multi-objective optimization.
+
+270
+00:42:46,929 --> 00:42:51,636
+So I feel very strongly about the kind of methods that can work there.
+
+271
+00:42:52,458 --> 00:42:57,285
+Meta heuristics in general, I mean, there are different classes of meta heuristics
+
+272
+00:42:57,569 --> 00:43:01,333
+that work better for multi-objective optimization.
+
+273
+00:43:01,353 --> 00:43:05,618
+But this is definitely something to explore, integrating active inference.
+
+274
+00:43:06,319 --> 00:43:13,526
+Notably, to generate, as you know, multi-objective optimization problems don't have one optimal solution.
+
+275
+00:43:13,887 --> 00:43:19,012
+But even the meaning of optimal is kind of moot for multi-objective problems.
+
+276
+00:43:19,493 --> 00:43:26,040
+Say, for example, that you have a car that is iterated on both its price, its cost,
+
+277
+00:43:26,138 --> 00:43:43,573
+and its performance well what would you do if one is good the other is not that great you would only consider efficient solutions right so the main problem is to generate or explore this front this large potentially large set of solutions that are not dominated
+
+278
+00:43:43,992 --> 00:43:55,344
+And I wouldn't make any guess about whether active inference would work there or whether this method would be translatable.
+
+279
+00:43:55,865 --> 00:44:11,181
+But as a research product, it could be really a PhD or postdoc project to explore the use of active inference in generating and exploring the frontal front of multi-objective optimization problems.
+
+280
+00:44:11,161 --> 00:44:15,045
+perhaps the Active Inference Institute could get something like that going.
+
+281
+00:44:16,021 --> 00:44:16,381
+Cool.
+
+282
+00:44:16,422 --> 00:44:17,062
+Yeah.
+
+283
+00:44:17,102 --> 00:44:18,184
+What comes to mind there?
+
+284
+00:44:18,584 --> 00:44:33,604
+One would be keeping the kernel method the same and using program logic to implement other constraints, like adding some day-night cycle.
+
+285
+00:44:33,664 --> 00:44:45,420
+So not even trying to make that part into active inference, but just add some secondary logic or one in every hundred nodes just randomly disappears or something like that.
+
+286
+00:44:45,400 --> 00:45:14,293
+and then see how these meta heuristics in a in a more changing constraint setting adapt to changes in the environment and then the the more fully active inference approach would be develop more sophisticated generative models so more multi-variable joint distributions for nestmate and colony perception cognition action impact
+
+287
+00:45:14,273 --> 00:45:18,647
+and then explore, okay, as we bring in more joint
+
+288
+00:45:18,813 --> 00:45:24,521
+variables into the distribution, obviously it's taking more computational resources.
+
+289
+00:45:24,621 --> 00:45:26,544
+It's a higher dimensional front to explore.
+
+290
+00:45:26,604 --> 00:45:32,892
+So when and how should we pursue that full joint distribution?
+
+291
+00:45:32,933 --> 00:45:40,703
+And then what ways would there be to factorize it down to solve that as a subset of linked problems?
+
+292
+00:45:41,484 --> 00:45:47,773
+And how do we find which subsetting and factorizing of linked problems allows
+
+293
+00:45:47,753 --> 00:46:16,343
+the simplest possible nest mate to still have relevant performance and then we we sketch out those subspaces with parameter sweeps and sampling yeah the reason why I think uh you know active inference is honestly even more promising than for um you know single objective problems like this in multi-objective it's at another dimension if you have a car for example that costs a lot but
+
+294
+00:46:17,909 --> 00:46:37,926
+is performance another one that is cheap but not that great is that there is no objectively optimal solution and there is a whole class of methods known as interactive methods where you try to integrate the preferences of decision maker into the exploration method so it is really a person guiding the
+
+295
+00:46:38,294 --> 00:46:40,796
+you know, getting the expression with their own preferences.
+
+296
+00:46:41,377 --> 00:46:50,426
+And here we are touching on, you know, something that neuroscience and active inference is familiar with, which is how to integrate reasoning and perception.
+
+297
+00:46:51,367 --> 00:47:07,322
+So I would be very interested in exploring this, reading about it, if anyone is inspired to write about it, you know, how to integrate active inference in these interactive methods that are typically used for, you know, exploring large scale parietal fronts.
+
+298
+00:47:07,606 --> 00:47:12,655
+yeah one one i think footnote there for the the curious would be
+
+299
+00:47:13,293 --> 00:47:27,812
+in the language model space, we have these reward reinforcement driven models that then get tuned through human feedback, RLHF, with humans giving a rating or a preference score.
+
+300
+00:47:28,353 --> 00:47:39,688
+So you have the algorithm is focusing on maximizing satisfaction, and then the human feedback has to do with, do I like this more or less?
+
+301
+00:47:39,905 --> 00:47:45,257
+we could be exploring some interactive optimization methods with more expressivity
+
+302
+00:47:45,912 --> 00:47:54,387
+Like I'm interested in paths for the traveling salesmen that have small turning angles.
+
+303
+00:47:55,449 --> 00:48:00,257
+And then that would adjust the decision-making if there was a turning angle variable.
+
+304
+00:48:00,738 --> 00:48:02,862
+Now we're focusing on making that small.
+
+305
+00:48:03,463 --> 00:48:10,215
+And then we say, actually, I care 20% about the small turning angle and 80% about short path length overall.
+
+306
+00:48:10,195 --> 00:48:23,655
+And so be able to have this interactive blending and a more expressive epistemic toolkit for having interactive optimization, co-optimization, and that could be really cool.
+
+307
+00:48:24,516 --> 00:48:27,060
+Or, you know, a pod that is just aesthetically pleasing.
+
+308
+00:48:27,561 --> 00:48:34,431
+There are actually routing methods used in tourism that try to integrate both the
+
+309
+00:48:34,833 --> 00:48:36,475
+the length of the route.
+
+310
+00:48:36,495 --> 00:48:41,260
+But if you are designing tourist routes, you also want it to be pleasant.
+
+311
+00:48:41,640 --> 00:48:44,503
+So there are definitely methods that are applied this way.
+
+312
+00:48:44,923 --> 00:48:50,509
+And here, it's a remark in general about single objective optimization.
+
+313
+00:48:51,070 --> 00:48:55,915
+It's that it's always an oversimplification where you say that this is the one objective that matters.
+
+314
+00:48:57,276 --> 00:49:00,199
+It's never
+
+315
+00:49:00,584 --> 00:49:01,325
+fully the case.
+
+316
+00:49:01,846 --> 00:49:04,209
+And there are always other dimensions that can be integrated.
+
+317
+00:49:04,289 --> 00:49:23,035
+Now, our percentages, or, you know, just a weighted sum of the objectives, are they enough, they are more often than not limiting, because there's a whole, you know, whole part of the part of from that you will be able to reach with a weighted sum.
+
+318
+00:49:23,055 --> 00:49:28,262
+So it's definitely interesting to you mentioned, language models, you mentioned,
+
+319
+00:49:30,031 --> 00:49:31,773
+reinforcement learning from human feedback.
+
+320
+00:49:32,434 --> 00:49:36,998
+So these are definitely interesting approaches to integrate in exploring this.
+
+321
+00:49:37,759 --> 00:49:46,568
+In general, you know, having a multi-objective optimization 2.0 with all these recent advances, I think is sorely needed.
+
+322
+00:49:47,950 --> 00:49:48,270
+Cool.
+
+323
+00:49:49,351 --> 00:49:53,515
+Okay, do you have any closing comments or thoughts?
+
+324
+00:49:54,436 --> 00:49:59,802
+Well, my last thoughts is that it was a very pleasant
+
+325
+00:49:59,933 --> 00:50:25,755
+time i thank you very much for this invitation and uh honestly i thought it was just five minutes or ten minutes of presentation but i look at my clock and i see that we have spent almost an hour so it is really a rare pleasure to to have this kind of experiences where you don't you don't feel time anymore thank you very much daniel thank you awesome okay looking forward to the next chapters until next time thank you bye

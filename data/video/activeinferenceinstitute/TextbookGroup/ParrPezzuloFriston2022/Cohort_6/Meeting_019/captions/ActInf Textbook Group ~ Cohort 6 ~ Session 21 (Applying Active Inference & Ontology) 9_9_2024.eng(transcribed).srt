@@ -1,0 +1,1351 @@
+1
+00:00:02,630 --> 00:00:29,211
+all right september 9th 24 and andrew go for it cool um hi everyone so uh as we just briefly i know some is coming in uh as we just briefly discussed uh since today is another session where we are not directly talking about any particular the chapter of the textbook but rather
+
+2
+00:00:29,630 --> 00:00:32,933
+I'm just talking about applying active inference more generally.
+
+3
+00:00:32,973 --> 00:00:43,264
+We agreed that I would spend just a little bit of time here giving sort of a quick rundown of how to construct an active inference agent.
+
+4
+00:00:43,784 --> 00:00:54,675
+In this case, it'll be specifically a POMDP agent, meaning we're working with, well, in this case, we're working with discrete time and discrete observations.
+
+5
+00:00:55,111 --> 00:01:23,599
+um as opposed to continuous time models which you'll see in chapter eight of the textbook um and i kind of just want to focus on just from scratch like how do we think about constructing an agent um i won't be touching on how to construct an environment um but but that's the kind of thing that you know you would you would bear in mind whenever kind of coming up with an idea for a simulation or experiment you want to run um
+
+6
+00:01:24,541 --> 00:01:31,490
+And actually on that note, Daniel, is it possible for me to share my screen by chance?
+
+7
+00:01:36,076 --> 00:01:36,276
+Yep.
+
+8
+00:01:36,316 --> 00:01:36,777
+Go for it.
+
+9
+00:01:37,658 --> 00:01:37,998
+Awesome.
+
+10
+00:01:38,299 --> 00:01:38,779
+Thank you.
+
+11
+00:01:52,217 --> 00:01:52,337
+Great.
+
+12
+00:01:54,241 --> 00:02:05,296
+So this was the, and if anyone wants this link, they can find me on GitHub, A-P-A-S-H-E-A, just like my last name on the Zoom.
+
+13
+00:02:06,297 --> 00:02:11,885
+And the repository is called IC2S2, Active Inference Tutorial.
+
+14
+00:02:12,806 --> 00:02:18,694
+This is material that I presented back in July at University of Pennsylvania.
+
+15
+00:02:19,696 --> 00:02:20,637
+I basically,
+
+16
+00:02:21,190 --> 00:02:50,860
+uh gave a tutorial on active inference how it might be applied to social sciences specifically in constructing multi-agent simulations so um is this uh is this visible to everyone slides here yeah go for it for you know five to ten minutes however much you just want a footnote and then let's see what people want to continue with
+
+17
+00:02:51,633 --> 00:02:52,114
+Definitely.
+
+18
+00:02:52,414 --> 00:02:53,857
+Sounds good.
+
+19
+00:02:54,839 --> 00:03:04,457
+So in this tutorial, along the way, you know, we're introduced to active inference.
+
+20
+00:03:04,477 --> 00:03:14,215
+There's some nice explanations of different concepts from the textbook, et cetera, talking about the Bayesian brain hypothesis, general ideas about
+
+21
+00:03:14,633 --> 00:03:17,916
+basis rule kind of plays out in active inference.
+
+22
+00:03:18,416 --> 00:03:31,568
+And eventually we reach where we're going to use the pyMDP package, which has been developed to make discrete time active inference agents in Python.
+
+23
+00:03:32,249 --> 00:03:35,592
+And there are a lot of updates being made to that package right now.
+
+24
+00:03:36,113 --> 00:03:40,336
+If you were to like use a git clone to download it directly, there's a lot going on in there.
+
+25
+00:03:40,657 --> 00:03:44,320
+But for the time being, I'm going to just be using the pip install
+
+26
+00:03:44,722 --> 00:03:50,489
+It's a little bit more kind of packaged up.
+
+27
+00:03:50,670 --> 00:03:52,192
+It becomes more like a single unit.
+
+28
+00:03:53,333 --> 00:04:10,295
+So whenever we construct active inference agents, the starting step should be, in my view, the starting step should be what are the hidden states that the agent has in their generative model?
+
+29
+00:04:10,596 --> 00:04:12,518
+Like what are they trying to infer?
+
+30
+00:04:13,190 --> 00:04:40,834
+uh second thing is what are the observations that the agents will encounter in the world and then three what are the actions uh or controls or policies those three terms are sometimes used interchangeably they don't necessarily mean exactly the same thing um but for now we'll just go through with all those but we'll call them actions uh what actions can the agent commit uh so
+
+31
+00:04:41,438 --> 00:04:48,945
+So we can view that kind of like this, like this is the agent that we'll be constructing.
+
+32
+00:04:49,846 --> 00:04:55,412
+All of these things play out what's called an action perception loop.
+
+33
+00:04:55,792 --> 00:05:09,285
+Let me see if I can just... Okay.
+
+34
+00:05:09,670 --> 00:05:14,940
+Hopefully that's visible enough to everyone.
+
+35
+00:05:15,802 --> 00:05:21,553
+So we'll start at the bottom of this action perception.
+
+36
+00:05:22,174 --> 00:05:23,817
+First, observations.
+
+37
+00:05:24,579 --> 00:05:32,033
+There are two kinds of observations that this agent will receive at any given time step.
+
+38
+00:05:32,857 --> 00:05:38,449
+quick note that this entire action perception loop plays out at every time step.
+
+39
+00:05:38,610 --> 00:05:50,275
+We're working in discrete units of time, and so whether it's from second to second, minute to minute, millisecond to millisecond, however, all of the units of time are the same.
+
+40
+00:05:51,605 --> 00:06:16,600
+uh here the agent receives one or two observations one of them is related to an improvement if something improves or if it doesn't improve and i didn't include a third category but there's another one called unobserved just bear with me and we'll go into what that means soon but that's one particular kind of observation
+
+41
+00:06:16,765 --> 00:06:44,072
+otherwise known as an observation modality that the agent has slash receives we can think about about this is like in the same way that we have you know sensory data that comes in uh you know like you have cold receptors on your on your uh in your scan on your arms and so you can feel if it's cold or it's hot or otherwise similarly here the agent has some hypothetical receptor and
+
+42
+00:06:44,052 --> 00:07:10,060
+well we could call it visual or otherwise but the point is that they get one of these three observations improvement no improvement or not served another observation modality they have is self or neighbor and i call this the attention modality at any given time step they're paying attention either to themselves or to their neighbor part of why
+
+43
+00:07:10,411 --> 00:07:24,789
+we're talking about self, neighbor, that kind of thing, is that eventually this leads to a multi-agent simulation where agents can either kind of do their own thing or they can interact with other agents.
+
+44
+00:07:24,809 --> 00:07:30,476
+And so this attention modality means they're actually observing, like, who am I paying attention to?
+
+45
+00:07:32,558 --> 00:07:39,827
+So when they take in those observations, they have a single hidden state
+
+46
+00:07:40,499 --> 00:07:48,307
+which is, I've denoted S with superscript ATT, this is their attention hidden state.
+
+47
+00:07:49,130 --> 00:07:51,960
+An agent takes an observation,
+
+48
+00:07:52,278 --> 00:08:01,635
+And then using what's called a likelihood model, which is in Chapter 7, we refer to it as the A matrix.
+
+49
+00:08:02,035 --> 00:08:06,483
+Remember, we have the A, B, C, and D matrices.
+
+50
+00:08:06,523 --> 00:08:08,507
+This is the A matrix.
+
+51
+00:08:08,527 --> 00:08:11,953
+And so the A matrix is this.
+
+52
+00:08:11,973 --> 00:08:16,581
+It's the probability of that observation that they just received given the hidden state.
+
+53
+00:08:17,185 --> 00:08:28,763
+Whenever the agent reaches this right, this square on the right, so to speak, this stage of the action perception cycle, they invert their model.
+
+54
+00:08:28,903 --> 00:08:40,180
+So now they actually try to figure out what is the hidden state given I just received this observation, you know, in the same way that you could receive a hot or cold observation.
+
+55
+00:08:40,300 --> 00:08:42,744
+And so you infer, oh, it's cold here.
+
+56
+00:08:43,846 --> 00:08:45,268
+Here the agent is cold.
+
+57
+00:08:45,957 --> 00:08:52,227
+For example, they might observe themselves and then infer, oh, I'm paying attention to myself.
+
+58
+00:08:53,328 --> 00:08:56,253
+And vice versa for neighbor.
+
+59
+00:08:56,914 --> 00:09:04,585
+Here, this is an incredibly, despite the material, despite kind of the complexity of active inference theory, this agent is actually very simple.
+
+60
+00:09:04,706 --> 00:09:07,209
+They can receive one of two observations every time step.
+
+61
+00:09:07,530 --> 00:09:11,876
+They have a single hidden state that they're trying to infer, self or other.
+
+62
+00:09:12,357 --> 00:09:14,901
+But what that does is that it makes a link.
+
+63
+00:09:14,999 --> 00:09:22,970
+between if they observe an improvement or no improvement with who they're paying attention to.
+
+64
+00:09:24,032 --> 00:09:36,670
+And whenever you combine that with the idea of learning their likelihood model, which is what this delta, this triangle means, like they're learning their likelihood model, they can learn
+
+65
+00:09:37,122 --> 00:10:03,687
+that oh if i pay attention to myself i see an improvement more than if i pay attention to my neighbor right so so so these kind of values get these parameters get adjusted over time these are the agent's beliefs changing based on their learning from experience and then after they make an inference they then decide okay which action should i take on this time step
+
+66
+00:10:04,156 --> 00:10:18,974
+The names of the actions are explore and exploit, which is that doesn't quite have anything to do with the so-called explore-exploit dilemma that comes up in the textbook.
+
+67
+00:10:18,994 --> 00:10:22,158
+You know, that's technically a different thing.
+
+68
+00:10:22,178 --> 00:10:23,940
+These are just arbitrary names.
+
+69
+00:10:24,802 --> 00:10:31,149
+Explore here really just means the agent is exploring new solutions.
+
+70
+00:10:31,169 --> 00:10:33,252
+This is a problem-solving agent.
+
+71
+00:10:33,620 --> 00:10:43,203
+The idea is they can explore, meaning on their own, pay attention to themselves and try and come up with new solutions to a problem.
+
+72
+00:10:44,205 --> 00:10:49,738
+Or they can exploit, meaning that they will steal the answer of their neighbor.
+
+73
+00:10:50,005 --> 00:11:13,768
+right and if they so so you can see how if they steal the answer from their neighbor and they see an improvement then they start to learn like oh if i just keep taking my neighbor's answer to this problem i keep seeing improvements or it might be the other way around they might see no improvement start to associate like x the action exploit receive the observation neighbor
+
+74
+00:11:14,390 --> 00:11:40,009
+and no improvement and then in their likelihood model they'll learn like oh i shouldn't steal from my neighbor that leads to you know no progress on me trying to solve this problem now i've already discussed these three kind of squares these three nodes of this graph here that's all you need for an agent the only thing i've left out is the environment and it's the environment that you know for a
+
+75
+00:11:40,276 --> 00:11:50,726
+a program where you can think like, oh, well, if I set up an agent as observations and in state to infer actions, that just gets hooked up with the environment.
+
+76
+00:11:50,766 --> 00:11:59,154
+The environment can be a list of if-else rules, like if the agent does this, then the environment should send out this.
+
+77
+00:12:00,375 --> 00:12:02,458
+Or it could be more of a stochastic process.
+
+78
+00:12:02,538 --> 00:12:06,081
+You could use a random number generator or otherwise.
+
+79
+00:12:06,162 --> 00:12:09,786
+So the agent will learn over time.
+
+80
+00:12:10,127 --> 00:12:19,418
+So if anyone is interested in this, again, feel free to check out the, I'll actually put the link in the chat whenever I'm done here.
+
+81
+00:12:19,458 --> 00:12:24,485
+I don't want to take up too much time though, but it's just, that's the general process of an action perception loop.
+
+82
+00:12:25,346 --> 00:12:29,691
+And then, you know, the tutorial from there just kind of starts to break it down even further.
+
+83
+00:12:29,771 --> 00:12:32,895
+Like once you, so once you figure out those hidden states,
+
+84
+00:12:33,466 --> 00:12:56,436
+like what is the asian trying to infer what are the observations that you receive what are the actions that can commit the next step would be okay how do we link those three things together through your a b c d and e um you know a links together observations and states b links together transitions between states
+
+85
+00:12:56,770 --> 00:12:58,211
+with what the agent does.
+
+86
+00:12:58,231 --> 00:13:04,857
+It's like, oh, if I think X right now and I do Y, then I believe that Z will happen next.
+
+87
+00:13:04,877 --> 00:13:07,039
+That's what kind of like what a B matrix says.
+
+88
+00:13:07,459 --> 00:13:13,384
+C matrix priors over observations, which is like your preferences for what you want to see.
+
+89
+00:13:13,424 --> 00:13:21,751
+The agent will kind of try to realize these or seek out these observations by way of free energy minimization.
+
+90
+00:13:21,871 --> 00:13:24,313
+D is your initial beliefs about states.
+
+91
+00:13:24,854 --> 00:13:26,355
+You know, what did you think before?
+
+92
+00:13:26,791 --> 00:13:43,132
+And then through inference, we'll end up with a state belief, a posterior that might differ from D, or it might be exactly the same, in which case that means that the agent just reconfirmed its own belief again.
+
+93
+00:13:43,152 --> 00:13:44,093
+It's exactly the same.
+
+94
+00:13:44,494 --> 00:13:47,458
+And E is just your priors over actions.
+
+95
+00:13:47,478 --> 00:13:50,401
+So what are you most likely to do regardless of anything?
+
+96
+00:13:51,383 --> 00:13:53,946
+That's why they're also known as habits.
+
+97
+00:13:54,652 --> 00:14:01,880
+I don't know stuff that there's there's plenty more to go into, but those are all the core bare bone aspects of what you need for an agent.
+
+98
+00:14:02,440 --> 00:14:08,026
+And the rest is just, you know, I pretty quickly start jumping into code from there on how to do so.
+
+99
+00:14:08,046 --> 00:14:08,667
+Yep.
+
+100
+00:14:10,229 --> 00:14:11,210
+That's it for now.
+
+101
+00:14:11,570 --> 00:14:16,936
+So.
+
+102
+00:14:16,956 --> 00:14:17,356
+Oh, sorry.
+
+103
+00:14:17,456 --> 00:14:18,457
+Can I have the link to that?
+
+104
+00:14:18,477 --> 00:14:20,119
+I'd love the link to that.
+
+105
+00:14:20,139 --> 00:14:20,920
+Yeah, absolutely.
+
+106
+00:14:22,422 --> 00:14:22,802
+Yeah.
+
+107
+00:14:23,288 --> 00:14:51,456
+mean that's right in my wheelhouse i love this stuff and i i just spend all my days doing this kind of thing so i'm it's nice to see somebody else like building out like the step-by-step process of like how do we like make this work kind of and then you get to like just throw it all you know that way other people can do it too yeah cool yeah yeah that's exactly the point yeah i like for me personally it's like it's only
+
+108
+00:14:51,875 --> 00:14:59,645
+I had already been involved with the Institute for some time and then realized like there is no clear-cut way of doing this.
+
+109
+00:15:00,506 --> 00:15:08,056
+I just dropped the link in the chat or sorry, it's not the specific repo.
+
+110
+00:15:09,858 --> 00:15:16,026
+But in any case, yeah, so what I did was that I just started getting into the documentation for PyMDP.
+
+111
+00:15:16,529 --> 00:15:21,396
+And I did a lot of like just going through their repository to make sure I'm getting things right.
+
+112
+00:15:22,057 --> 00:15:33,473
+There's a lot of complexity because they tried to build IMDP off of SPM and MATLAB, which is what Friston and other folks developed.
+
+113
+00:15:33,673 --> 00:15:35,716
+And it's just been in development for years.
+
+114
+00:15:35,736 --> 00:15:39,642
+So they're trying to recreate this massive project.
+
+115
+00:15:40,323 --> 00:15:42,486
+And I just think like, oh,
+
+116
+00:15:43,040 --> 00:16:12,152
+you want to get more people using it let's make some more kind of from scratch uh tutorials on how to go about this so that's that's what i did but cool i'm glad glad you find it interesting uh oh yeah i mean i had to come at it from a completely different uh uh hold on as i get back in this thing here lost all my stuff um yeah the uh i came at it from a completely different angle and but came to the same conclusions and it's i had no idea that somebody was doing that it's so much fun
+
+117
+00:16:16,182 --> 00:16:39,321
+we go there's everybody yeah there's a lot to add i think one of the biggest pieces then anyone who wants to ask go for it is like what is a question about an active inference generative model what's a question that staples into a b c or d or a line of code or a specific node or edge on a graph what's a question about the world
+
+118
+00:16:39,638 --> 00:17:05,562
+it's like what's the question about the subway map of the city what is the question about the territory of the city that can get back and forth and we know all about and talk all about these kinds of ambiguities and dual reference and things like that but at the same time it is a different type of question to say what is the dimensionality of the a matrix in comparison with what is the dimensionality of agent sense making or something like that
+
+119
+00:17:06,436 --> 00:17:19,254
+And to know when one is clearly on one side or the other, or when you're not sure, is some of the fastest ways to start separating kinds of questions according to, is this something that's just going to be addressed in a line of code or a math equation?
+
+120
+00:17:19,915 --> 00:17:28,427
+Or is this something that's more like a real world line of inquiry that cannot be answered in any string of words that somebody says?
+
+121
+00:17:32,913 --> 00:17:35,076
+I feel like if you can't answer it, that it, you know,
+
+122
+00:17:36,811 --> 00:17:57,402
+it's like that i mean there's a lot to be said for not being able to answer something right like um but uh i definitely have a lot of questions um i'm excited to read the material so i can like start asking those in a little a little better way i'm trying to think right now yeah zach go for it oh i was just gonna ask if you guys think
+
+123
+00:17:59,592 --> 00:18:25,212
+are there any questions that you fundamentally can't answer or questions that we just don't have the ability to answer this might be a little bit more philosophical but i feel like daniel you were kind of leading to potentially the question of what is it like to be a bat and maybe ideas that kind of into that realm talking more about something about the agent and its relationship to the environment instead of not instead of anything i'm sorry that's the end of the sentence
+
+124
+00:18:27,301 --> 00:18:36,692
+I just want to say really quickly that this reminds me of a really crucial point they make in the textbook.
+
+125
+00:18:37,372 --> 00:18:42,358
+I think it's in chapter nine, but there's this early on in the chapter.
+
+126
+00:18:42,418 --> 00:18:47,604
+It must be chapter nine, but I might be mistaking that, but it has to do with analysis.
+
+127
+00:18:47,644 --> 00:18:51,148
+And the whole point is they have this figure that shows like, okay,
+
+128
+00:18:51,567 --> 00:19:15,111
+on the innermost uh kind of square of the figure we see the typical like graphical model that they you know a variation of that they keep showing through the textbook but then on the outside like there's a square around it denoting like okay it's really making the point that this is what we the scientist or experimenter think
+
+129
+00:19:15,293 --> 00:19:19,157
+is the model of the agent.
+
+130
+00:19:19,557 --> 00:19:23,361
+Thanks, Daniel, that we're trying to develop, right?
+
+131
+00:19:23,381 --> 00:19:44,963
+It's just like really trying to make the point that like, we ourselves don't firmly know necessarily what the inside of the like, a rat in a teammate's like, I'm trying to model it, I have to be aware that like, here's the level that is what I think is the rats perception of what's
+
+132
+00:19:48,048 --> 00:19:58,302
+You know, so it's like the objective model is just like outer like this is what I'm constructing, like you're in the picture, too, is how I. Yeah, great point.
+
+133
+00:19:58,322 --> 00:20:04,931
+And for example, the experimental actions of the experimenter are just it's just taken as an observation train.
+
+134
+00:20:04,991 --> 00:20:09,718
+We're not modeling the policy that led to the experiment being designed.
+
+135
+00:20:09,698 --> 00:20:13,163
+OK, but you could include that so you can continue extrapolating.
+
+136
+00:20:13,703 --> 00:20:17,508
+But it also makes clear where the buck stops.
+
+137
+00:20:17,949 --> 00:20:19,411
+But about the questions, it can't be answered.
+
+138
+00:20:19,451 --> 00:20:21,193
+I mean, big question, right?
+
+139
+00:20:21,553 --> 00:20:25,799
+But there's a sense in which behaviorally every question is always answered.
+
+140
+00:20:26,360 --> 00:20:36,533
+If with acknowledgment, a postulational head nod, dare I say, or silence, or some other kind of non-stackle response.
+
+141
+00:20:36,513 --> 00:21:01,592
+can be answered in trivial sense yeah everything already is can be answered in more like a justified true belief semantic validity sense so here's a few pieces from the ontology project built up over the years but I mean just a snapshot if someone wants to dive in further and add more it's the greatest types of contributions that can help at this ontological level here's like
+
+142
+00:21:02,281 --> 00:21:21,066
+many many many of the phrases and writings in the textbook group are like how is this term related to this um when they said this did they mean that right does this mean this what does x person think does x why would x person want to believe that this was an explanation of that
+
+143
+00:21:21,198 --> 00:21:38,633
+whether or not you go into it questions have these templated forms so clarifying like what is active inference what is surprise um going into those and knowing that even with the awareness of the question like what is surprise or how are they using surprise here
+
+144
+00:21:39,355 --> 00:21:45,791
+those are already categories of questions that you can go in with a structural map towards.
+
+145
+00:21:46,613 --> 00:21:55,896
+And another fun direction with the philosophical side with like Ali and Paola, Maria and others in the ontology was like,
+
+146
+00:21:55,876 --> 00:22:11,758
+starting with the linguistics of the you know how could we ask and proceed on a question without like knowing what was written from a symbolic perspective so it's like okay then what is this the the lexical semantics
+
+147
+00:22:11,738 --> 00:22:37,999
+like did they say something in the paper here we here we define a foreign here we use surprise to mean this or here we operationalize surprise as so it's like they're narrowing down or leaving implicit what they mean by surprise but if they said by surprise we mean one and then a person constructs an argument where it's predicated on surprise being number two then it's off base
+
+148
+00:22:37,979 --> 00:23:06,653
+then getting into their local weaving of the relational semantics it's not just how they define the terms but it's like okay given that they said blanket states are sense and action you know then did it make sense with this other usage of sense that's in the internal reading internal consistency view from inside like was there an apparent
+
+149
+00:23:08,962 --> 00:23:29,434
+issue without even going a view outside of it then getting into views from the outside well I think that they didn't do this or not I don't think enough attention was paid to this they should have done this I think it was cool that they did this
+
+150
+00:23:29,617 --> 00:23:55,371
+um what would an embodied person think about this like all manner of then externalized but it's kind of just like a combination of like a close and deliberate and charitable structured reading in that with reference to the active ontology but it could just be any ontology system at that point you give the internal reading
+
+151
+00:23:55,958 --> 00:24:02,866
+and understand when questions and methods are being used that are related to internal reading.
+
+152
+00:24:03,947 --> 00:24:09,553
+And then when is it like an external reading from like a different perspective or a later time?
+
+153
+00:24:18,323 --> 00:24:21,747
+What do you think, Zach, or what kinds of questions does that?
+
+154
+00:24:23,009 --> 00:24:47,802
+answer or not i mean that makes it seem i really like the external idea of looking at it from many many different lenses because then we're naturally going to find ways to maybe collapse some language and find other things that might have been equal in places that we weren't expecting to look i think just translating into a different language can have a ton an amazing amount of positive impact and it just makes collaboration a really cool thing but at the same time i
+
+155
+00:24:51,629 --> 00:24:55,975
+I've always been attracted to active inference because it has this physics backing.
+
+156
+00:24:56,295 --> 00:25:00,461
+It all comes from the principle of least action and everything about that.
+
+157
+00:25:01,002 --> 00:25:11,055
+So in my head, there should always be that physical explanation for all things, or at least a mathematically based explanation for all things, which really speaks to me personally.
+
+158
+00:25:12,706 --> 00:25:17,035
+Man, if I could jump in here, I really appreciate that because it really speaks to me personally too.
+
+159
+00:25:17,596 --> 00:25:29,239
+Being able to pull things out of the discourse and put them into theoretical frameworks, mathematical frameworks, it gives us that low and high road to active inference.
+
+160
+00:25:29,259 --> 00:25:33,347
+It gives us a path to creating tangible solutions around these things.
+
+161
+00:25:37,310 --> 00:25:40,333
+And I think it's kind of esoteric almost in a way.
+
+162
+00:25:40,493 --> 00:25:56,890
+I mean, Daniel, I think, and I were talking last week about how, for instance, this is so valuable for people who love all manner of sciences because it intersects everything, philosophy and on and on and on, you guys know.
+
+163
+00:25:57,410 --> 00:26:04,077
+And I feel like it necessarily requires a whole big perspective.
+
+164
+00:26:04,259 --> 00:26:07,865
+an external perspective to an objective perspective.
+
+165
+00:26:07,905 --> 00:26:09,347
+So like write about these things meaningfully.
+
+166
+00:26:09,367 --> 00:26:10,710
+You have to touch base on everything.
+
+167
+00:26:10,950 --> 00:26:16,579
+And you guys should see what a lot of this stuff does when you put it into different indigenous languages.
+
+168
+00:26:17,641 --> 00:26:19,665
+Pretty cool.
+
+169
+00:26:19,685 --> 00:26:20,826
+Yeah, you're absolutely right.
+
+170
+00:26:20,847 --> 00:26:22,369
+It's a formalism, 100%.
+
+171
+00:26:27,074 --> 00:26:56,119
+so many ways to go with it but like modal logic like the shirt might be blue or or conditional logics or paraconsistent all these other kinds of of alternative logical structures where things are not like either one way or another outside of an evaluation etc it's like if someone says well ram said claimed x and i think he's saying it's like that cannot be an incorrect second half of the sentence
+
+172
+00:26:57,533 --> 00:27:23,980
+unless it were deceptive but if it were deceptive like the person was like I think that Ram said means one but I'm gonna verbalize that I think he meant two that still would be their veridical behavioral representation so it would truly be what they had said at that time and they can have some other side information like but I said that because of this or I would have said that so it's like but they can't be wrong
+
+173
+00:27:25,259 --> 00:27:43,461
+So when the space of ideas is so vast, there's so many papes, more than we'll ever read, plus, plus, plus, generative intelligence, generating the dissertations we don't have yet on demand, and more, expressions are not opposed to each other.
+
+174
+00:27:44,522 --> 00:27:53,072
+Even when they contain what appears to be like the clearest possible, like this person thinks that the blanket means X, this person says it's not X.
+
+175
+00:27:53,170 --> 00:28:20,950
+their their epistemic frames are all aligned it's like even in that kind of idealized scenario all the quantum reference frames were aligned we had gotten down to it and then two people differed and one said it was up and one said down still that situation could be analyzed as a cognitive environment where they both truly had those perspectives and then a third observer could take another take on it and it would also only add to the situation
+
+176
+00:28:22,027 --> 00:28:33,144
+To piggyback off of that, I think that's exactly what we saw in geometry in the early 1900s with the Erlangen program, where essentially there were a bunch of geometries.
+
+177
+00:28:33,204 --> 00:28:36,709
+There was parabolic geometry, which I don't think that's how you pronounce that now that I've said it.
+
+178
+00:28:37,350 --> 00:28:44,220
+There's this algebraic geometry, all of these different geometries that all seem to talk about very different things.
+
+179
+00:28:44,521 --> 00:28:52,135
+They all went in and were able to describe certain theorems, but they all took all of these amazing paths around and none of them seemed to intersect.
+
+180
+00:28:52,672 --> 00:28:59,479
+until the Erlangen program, which was, of course, the mathematician Erlangen, or was it the place Erlangen?
+
+181
+00:29:00,080 --> 00:29:01,401
+Forgive me, it's been a minute since I've read it.
+
+182
+00:29:01,862 --> 00:29:03,443
+It was the birth of gauge theory.
+
+183
+00:29:03,804 --> 00:29:14,856
+They were able to take all of these seemingly disparate ideas and find a relational way to talk about all of them, which gave us gauge theory today, which actually we're seeing in a lot of places.
+
+184
+00:29:15,096 --> 00:29:20,822
+It led to something in machine learning as well called the 5Gs, which I won't get into detail.
+
+185
+00:29:20,802 --> 00:29:37,365
+It is the main method that we have for trying to understand learning itself as a method to compress, as a method of equating intelligence with compression into a different space, which is just amazing.
+
+186
+00:29:37,786 --> 00:29:45,076
+It really does remind me of kind of the method of scientific revolutions, if you guys are into dusty old books from the 60s.
+
+187
+00:29:46,678 --> 00:29:48,160
+I love dusty old books.
+
+188
+00:29:49,355 --> 00:30:18,265
+the gauge theory like also if we think about the recent development of active so it's like 2022 textbook it's like oh yeah wait a minute we're in the textbook group 2022 textbook it's like step by step by Smith at all also leveled up with some more context and it's published as a book
+
+189
+00:30:18,380 --> 00:30:21,005
+It's a state-based approach.
+
+190
+00:30:21,706 --> 00:30:26,035
+It summarizes and crystallizes the state-based approach to active inference.
+
+191
+00:30:26,455 --> 00:30:35,713
+That's why the discussion is like discrete state spaces, continuous state spaces for variables and for time itself as a variable in the model.
+
+192
+00:30:36,520 --> 00:31:00,469
+then especially from 2019 not so much reflected only alluded to in the 2022 textbook coming on much more in papers and in sanji namjoshi's future volume 2 book with the bayesian mechanics live stream 49 all of those kinds of things
+
+193
+00:31:01,276 --> 00:31:29,545
+juxtaposing the state-based formalisms for active inference textbook discrete continuous etc with path-based formalisms then ramsted and dalton pointed towards what they call g theory and highlighted like different deep dualities and some of their implications as well as the gauge theoretic aspects of what was being discussed like overall
+
+194
+00:31:30,487 --> 00:31:33,954
+So it's a great tie-in with gauge theory.
+
+195
+00:31:33,974 --> 00:31:39,866
+There's so much to build and clarify around that.
+
+196
+00:31:41,029 --> 00:31:45,458
+It's interesting that you brought it in, but yeah, really interesting.
+
+197
+00:31:45,860 --> 00:31:48,803
+I'm sorry, but I think, is that the second time you've brought up Ramstead?
+
+198
+00:31:48,843 --> 00:31:50,305
+Could you please say a little about him?
+
+199
+00:31:50,365 --> 00:31:51,446
+I'm simply not familiar.
+
+200
+00:31:51,466 --> 00:32:05,841
+I'm just like, I'm just like using him as, as like, you know, he's, he's an active discourse aunt and a great contributor from the pre 2019 PhD student philosophical and his, his deep knowledge there.
+
+201
+00:32:05,861 --> 00:32:11,867
+And then on through more of the applied and, and ongoing.
+
+202
+00:32:13,417 --> 00:32:39,289
+but using it like as sort of just he's out there making exp or you know friston says x it's just anyone's reported speech um yeah federated inference yeah yeah that's yeah right yeah i was just digging into that oh yeah this was uh
+
+203
+00:32:39,910 --> 00:32:48,103
+I was just sharing this because I'm personally still new to the notion of paths here.
+
+204
+00:32:48,824 --> 00:32:58,358
+And I think in this paper, they replace preferences, like agents prefer a particular path.
+
+205
+00:32:58,959 --> 00:33:07,352
+And to me, that seems to imply they're not just preferring a particular observation at a particular moment in time, they're preferring an entire sequence.
+
+206
+00:33:07,720 --> 00:33:13,206
+I'm not sure if I'm mistaken there or not, but I was really interested in that.
+
+207
+00:33:13,648 --> 00:33:14,592
+Not done reading it yet,
+
+208
+00:33:16,664 --> 00:33:43,768
+these are great questions also natural language terms do get overloaded you know with um with grievous unnecessary and sometimes requisite overloading and underloading and ambiguity so like a path but then we might say well but the path that they take through space over time one two three we're going to call that a path so then it's like but that's not this one
+
+209
+00:33:44,660 --> 00:34:06,465
+and then you look at for again from an ontological analysis okay paths may or may not depend on action it'd be like wait a minute what how could the path taken in the world not depend on action because path is being used in multiple sub namespaces so it'd be like having a python script where like a variable is defined within a loop
+
+210
+00:34:06,631 --> 00:34:20,607
+so it's used the way it's used within a loop but then there's a separate global context or there's two functions with the same name so disambiguating the namespace is some of the most important work
+
+211
+00:34:21,346 --> 00:34:34,599
+each of these can have like a unique star code ID, fractal hash, so that the local semantics can be described and modulated or falsified.
+
+212
+00:34:34,679 --> 00:34:41,226
+It's like, here's where we came down on the semantic vector for how path was used right here.
+
+213
+00:34:42,747 --> 00:34:46,611
+Does your vector on that usage of path differ?
+
+214
+00:34:47,384 --> 00:34:53,470
+and then can explore many, many more layers of semantic similarity and difference.
+
+215
+00:34:56,654 --> 00:35:10,748
+But yeah, I don't know if this is actually using it in the path integral based Bayesian mechanical sense, because this is still a state space based model.
+
+216
+00:35:11,909 --> 00:35:13,231
+Yeah.
+
+217
+00:35:13,611 --> 00:35:16,294
+I was surprised they didn't go with the word state.
+
+218
+00:35:18,417 --> 00:35:40,830
+yeah it's what was interesting is uh whenever you did the the control left and it highlighted all of them the last path highlight there in that paragraph the full sentences the remaining tensors encode prior beliefs about paths c and the initial states d and i think that brings up another interesting point of trying to
+
+219
+00:35:41,063 --> 00:35:57,185
+kind of parse through the terms in that oftentimes, like sometimes this sort of hint of how someone might have meant a term is that they related to something else that might be known from an, you know, whether it be from an entirely different context or not.
+
+220
+00:35:57,245 --> 00:36:07,619
+Like here they're using the same like alphabetical terms to describe like for A, it's still a likelihood matrix.
+
+221
+00:36:07,639 --> 00:36:09,602
+For B, it's still a transition matrix.
+
+222
+00:36:10,122 --> 00:36:15,009
+But then here, C, which is typically in the textbook in chapter 7.
+
+223
+00:36:15,290 --> 00:36:19,136
+In that particular context, C refers to your priors over observations.
+
+224
+00:36:19,156 --> 00:36:22,521
+But here, they're now prior beliefs about paths.
+
+225
+00:36:23,001 --> 00:36:28,630
+And meanwhile, once again, priors about initial states, D, remains the same just as A and B do.
+
+226
+00:36:28,690 --> 00:36:33,217
+So that's sort of like, you know, it's like this took me off guard when I was reading this.
+
+227
+00:36:33,237 --> 00:36:38,745
+I'm like, everything here makes sense to me just intuitively right off the bat.
+
+228
+00:36:39,232 --> 00:36:51,722
+written a tutorial like putting together certain kinds of COMPs so uh but then swap out uh preferences or observations for the word paths and I'm not really
+
+229
+00:36:52,276 --> 00:37:10,858
+really sure but um right and it's like wait but it's second and a in this city second you know it it's and it's reusing common mathematical notation so it's like the one next level is tremendously informative variable names
+
+230
+00:37:10,838 --> 00:37:40,272
+so calling things with very informative specific names however that becomes unmanageable because you start having long variable names that that just visually make it more confusing and even terms like observation it's like well if it's an action from this then how is it is it are we going to call that an action and they output observation it's like you get into which perspective to take on different sides of markup blanket for example
+
+231
+00:37:40,302 --> 00:37:57,987
+So one solution that we've worked on in different applications is separating the initialization, serialization operations on the variables from secondary assertions about which ontological terms they map to.
+
+232
+00:37:59,129 --> 00:38:02,013
+And then just making that an explicit data structure.
+
+233
+00:38:02,033 --> 00:38:10,225
+And then you can call the variables like specific programmatically generated names.
+
+234
+00:38:10,728 --> 00:38:21,984
+and then make programmatic or manual assertions about which terms in a given language you might want to use.
+
+235
+00:38:23,005 --> 00:38:27,151
+But calling a term, oh, we'll do a really informative English name.
+
+236
+00:38:27,251 --> 00:38:33,800
+It's like, well, then you know exactly what namespace that would be informative for whom.
+
+237
+00:38:35,602 --> 00:38:39,688
+So if that is the time cone that someone's working in,
+
+238
+00:38:40,057 --> 00:38:48,557
+Like within a local for loop, within a programming language, within a language community, then the tool gets the job done.
+
+239
+00:38:49,259 --> 00:38:55,433
+But that may, and then another important thing with also these kinds of sentences is like,
+
+240
+00:38:55,615 --> 00:38:58,479
+It is not true without going into this whole true thing.
+
+241
+00:38:58,499 --> 00:39:05,168
+It's like, it isn't true, accurate, complete, you know, all of those things per se.
+
+242
+00:39:05,769 --> 00:39:14,481
+You can have a prior that a certain journal or certain co-author or certain kind of statement is going to have like this or that kind of probability or attention that should be paid to it and all this.
+
+243
+00:39:14,521 --> 00:39:17,745
+But it's like best, best, best case scenario.
+
+244
+00:39:17,785 --> 00:39:23,293
+There's no false negatives or false positives, right?
+
+245
+00:39:23,273 --> 00:39:51,441
+and so it's like truth the whole truth nothing but the truth however in a more probabilistic setting it's like this is just sampled english from a semantic latent object and certainly for for your contra uh contribution to that object or or just grasping it any given finite amount of text is going to have
+
+246
+00:39:52,973 --> 00:40:20,685
+eraneous non sequiturs super relevant you know different relevant realization false positives and false negatives Etc with you know so it's like how to both let it just fly by lightly not tripping over every possible fractal epistemic dispute you could raise but and also paying enough attention to enter into their semantic fractal
+
+247
+00:40:21,188 --> 00:40:50,706
+to see if there is transfer of what yeah and how those concepts align and yeah I I do you guys feel like there's um uh you know it's like an issue of inferencing conveyance right like um there's like uh all these there's so many brilliant people working on these things and it's almost created like a uh like uh you were saying like that disparate kind of etiology it's like we see this in psychology as well
+
+248
+00:40:50,922 --> 00:40:58,374
+especially in indigenous psychology and like diagnosing things like related to like colonial mindsets and stuff.
+
+249
+00:40:58,394 --> 00:40:58,574
+Right.
+
+250
+00:40:58,594 --> 00:41:04,243
+So it's like there's just so much out there and there's so many things that almost mean the same thing, but don't.
+
+251
+00:41:04,283 --> 00:41:05,886
+And then there's things that change over time.
+
+252
+00:41:05,926 --> 00:41:18,145
+And it's like, how do you create like how do you convey like a really strict or stringent like pathway of communicating the knowledge while still without like encapsulating the formalism or something and like limiting
+
+253
+00:41:18,125 --> 00:41:26,192
+the creativity and self-expression that people have in this that causes that this field to move forward through innovation, stuff like that, right?
+
+254
+00:41:26,552 --> 00:41:38,222
+So like for me, it's like when I read those words, it's like I try to ignore the words almost and like just understand some of the things conceptually because when I go back to my own work, those things may be close, but they're not the same.
+
+255
+00:41:38,523 --> 00:41:46,950
+For instance, like you guys remember that, have you read that new paper, Scale-Free Active Inference, Pixels to Patterns, Scale-Free Active Inference?
+
+256
+00:41:46,930 --> 00:42:15,520
+right it's like it's awesome i absolutely love it i read it like 500 times when i was in the hospital it's all i had to read so i just read it over and over and over again um and uh but for me in my work uh it isn't uh it's a awesome visual cortex it's like a great road map for a visual cortex understanding how to like perceive and parse those uh that perception data which i need for down the road it's not relevant right this moment but um
+
+257
+00:42:15,500 --> 00:42:43,718
+uh but for them it's like it's a it's a pathway to active inference in in a machine um so it's it's there's no like right or wrong way it's so like but at the same time too it's like does then it just fall to what works best or what works first or i mean it's just it's it's tough to navigate certainly yeah definitely you know this is uh and all of that's really well said i i mean
+
+258
+00:42:43,968 --> 00:42:54,569
+Just speaking on the real particular specificity of active inference language and stuff, another aspect I think about is the practices that we have.
+
+259
+00:42:54,609 --> 00:42:59,479
+For example, don't plagiarize in academic work.
+
+260
+00:42:59,780 --> 00:43:22,834
+leading to every active inference paper that is written that is written for a broader community than just a very small subset of people that are already familiar with active inference it's like well you're going to have to have an introductory section that talks about active inference but you cannot repeat precisely what anyone else has said in the same exact way and so you potentially have this kind of
+
+261
+00:43:23,185 --> 00:43:50,391
+uh uh kind of explosion of potential meanings that come out of like you know just a set of a few papers because maybe someone phrased something just a little out of place to where suddenly it could have you know a dozen meanings for that one word now based on how you read it the formulaic constraints and priors on the quote paper
+
+262
+00:43:51,383 --> 00:44:11,738
+form and like expected length tone content all these things it's it's um it's really as that starts to dematerialize and become more computationally augmented more modular all these kinds of things
+
+263
+00:44:12,443 --> 00:44:21,719
+And just like the one sentence, you can now double click on a sentence and say, just write the textbook that underlies this or zoom in on this.
+
+264
+00:44:22,881 --> 00:44:36,223
+So it's just kind of like pointing at a continent scale with a course expression or spending more bits of the transmission, more energy and attention to refine.
+
+265
+00:44:36,338 --> 00:44:41,183
+and how that can change the way that the papers are written.
+
+266
+00:44:41,263 --> 00:45:04,506
+Again, with the LLM-based audience shifting all the translational work that we're exploring, generating just massive spectra of artifacts, hence the human work being pulling back to the underlying semantics and the generations of the spectra.
+
+267
+00:45:05,313 --> 00:45:26,685
+and maybe fine tuning a terminal artifact in an important case, but that will always be like a craft polish on a more industrially generated process with our current technology and also the variability of technology availability through time and even right now.
+
+268
+00:45:27,746 --> 00:45:31,692
+So yeah.
+
+269
+00:45:32,144 --> 00:45:56,430
+uh we can just uh actually build a cognitive computing framework and make it write the textbook and then we can just say we wrote it and go hang out together we do that all right fine yeah the applying active inference uh third week mixers is it's fun and interesting also it's like
+
+270
+00:45:56,528 --> 00:46:14,537
+yeah if if one wants to it's like it's an engineering textbook especially the second half which is where we're having this session and so there there's like taking the the um enigma of the text as it is
+
+271
+00:46:14,635 --> 00:46:29,809
+representative of taking anything on a screen as is like wanting to see what it says clearly having a blurry pdf is not going to help you with the internal semantics and then it's like it is about applying active inference
+
+272
+00:46:29,789 --> 00:46:51,797
+we can say well we expect and prefer there to be more python codes like okay well you know that's what we're here to be doing we could have preferences for something to be shorter or longer llms can handle much of that right now we we can see all of these other deviations from our priors and our preferences and so on but it's like it is about
+
+273
+00:46:52,908 --> 00:47:19,320
+going and being out in the world and applying active inference and then they close the book with saying that it's that learning by doing even if it's a learning by doing within a conventional scholastic education setting it's like then you'll be applying active inference and then and then they they expect us to beautiful
+
+274
+00:47:22,169 --> 00:47:50,505
+now it's two and a half years since the textbook was published in march 2022. mit press is is seemingly moving forward with several other books there's other books and then just like what is the book form when a lot of interesting things
+
+275
+00:47:52,848 --> 00:47:54,790
+Can I ask a question really quick?
+
+276
+00:47:55,731 --> 00:48:04,741
+Have you guys noticed that explaining and understanding active inference in biological systems is way more difficult than understanding them as a computational model?
+
+277
+00:48:08,925 --> 00:48:22,500
+Maybe it's just me, but building the thing is way easier than trying to understand the human biology, how it actually works in human biology versus how I would like it to work.
+
+278
+00:48:23,712 --> 00:48:38,565
+yeah yeah i think that's a that's a good point you know whenever i just want to mention like whenever i like taught my tutorial to a bunch of social scientists at that conference like i was like okay how much should i because like part of the
+
+279
+00:48:38,967 --> 00:48:59,288
+selling point i'm only saying it that way but you understand like of trying to introduce active inference as a very complex field to people who are already working in a complex field like hey check this out uh you know uh it's like part of it is there's you know the bio biological plausibility aspect and then that said like
+
+280
+00:48:59,740 --> 00:49:29,545
+we don't have time for me to like give them the full rundown of say chapter five on message passing and cortical you know micro circuits and and you know passing messages between layers and so on and you know in reference to the textbook you know it's chapter five to me really sticks out from almost the entire rest of the textbook the rest of the textbook is there's a lot of verbal explanation relation to other fields mathematics
+
+281
+00:49:29,525 --> 00:49:50,233
+models in chapter five is like we're really talking about an attempt at like the brain here and there's a table linking like here are the different precision weights and which neurotransmitters like dopamine or serotonin and so on that we think they're linked to you know so it is tough i i think it i think it's tough and i i think
+
+282
+00:49:50,213 --> 00:50:09,343
+that folks who go into active inference, it's usually those who are more focused on neuroscience or psychiatry or otherwise from the get go, who I think focus more on on that kind of side or dimension of active inference, which is active inferences origin.
+
+283
+00:50:09,463 --> 00:50:13,028
+So I think it should be kind of given a significant amount of attention.
+
+284
+00:50:13,208 --> 00:50:15,512
+But yeah.
+
+285
+00:50:15,712 --> 00:50:20,811
+great points also there's there's a uh uh permanent
+
+286
+00:50:21,095 --> 00:50:46,883
+calibration ongoing with like how much do we know about wing development in fruit flies and so then people might have an expectation that development is known to in this or that way or for what might account a total somebody said but we have this list of of knockouts with mutant phenotypes sounds like we kind of mapped out the network and someone else is like oh boy even if you did this this this this this this this this
+
+287
+00:50:46,981 --> 00:50:50,886
+no kind of DNA sequence-based account will ever please me.
+
+288
+00:50:51,968 --> 00:50:56,615
+And so it's like, what can be said scientifically about biology?
+
+289
+00:50:56,695 --> 00:50:58,377
+That's the question of biology.
+
+290
+00:50:58,878 --> 00:51:03,644
+And that's why people have expressed sentiments like, there will never be a Newton for a blade of grass.
+
+291
+00:51:04,265 --> 00:51:05,667
+That's Kant's contention.
+
+292
+00:51:05,747 --> 00:51:12,917
+It's like, there won't be a non-historical science for historical life.
+
+293
+00:51:14,079 --> 00:51:16,903
+And then people take that again in different ways, but it's like,
+
+294
+00:51:17,592 --> 00:51:45,760
+that kind of to come all the way back to the beginning when are we within the formal system of matrix operations not the movie but close enough where it's like we're gonna multiply the hidden state by the b and get this that's how markov processes work it's like an internal established deterministic approach even if the variables are about probabilistic edges
+
+295
+00:51:46,702 --> 00:52:08,642
+and then where's that open-endedness of the scientist looking outside from figure 9.2 and saying you know what's past that dotted line or and and that's another frame of questioning that's not going to have the kind of conclusive possibility possibly
+
+296
+00:52:08,926 --> 00:52:37,465
+as the question about the linear algebra with the matrices so yeah like what um postulational said making the matrices then it's like it's like oh wait just like Andrew's um beginning section it's like there's only like four things here or there's just these exact steps with these exact variables like it's only 20 lines of code and then that is like the the
+
+297
+00:52:38,120 --> 00:53:05,443
+the program but it's not even on the path to being what the thing itself is and again how more different could it be and yet how ambiguous is the reference in the way that they're discussed yeah cool I completely agree but at the same time I would like to
+
+298
+00:53:06,368 --> 00:53:11,794
+say that even on the computational side, there's still a lot of beauty that we don't understand.
+
+299
+00:53:12,595 --> 00:53:24,648
+Even inside of relatively simple networks like DeepQ networks or the very transformer or the very popular transformer networks that we use to represent the agents that learn the model.
+
+300
+00:53:25,349 --> 00:53:30,054
+The way that we build them is by using stochastic gradient descent or some kind of gradient descent.
+
+301
+00:53:30,695 --> 00:53:35,700
+And the really cool thing is that we built this thing and we have no idea how it works.
+
+302
+00:53:35,967 --> 00:53:37,370
+We only know that it works.
+
+303
+00:53:37,471 --> 00:53:43,826
+We actually don't have a functional way to build these networks that we tell stochastic gradient descent to build.
+
+304
+00:53:44,327 --> 00:53:48,698
+So I think in both directions, there's still a lot that we have the opportunity to learn.
+
+305
+00:53:48,718 --> 00:53:50,382
+I think that's kind of cool.
+
+306
+00:53:50,767 --> 00:53:56,301
+I spend the I spend like half the time building and then half the time wondering how it works.
+
+307
+00:53:57,043 --> 00:53:57,985
+I totally get that.
+
+308
+00:53:58,025 --> 00:54:00,010
+Like some of the stuff it's like you're like, oh, why?
+
+309
+00:54:00,331 --> 00:54:01,333
+OK, it's doing that.
+
+310
+00:54:01,915 --> 00:54:03,318
+But how?
+
+311
+00:54:03,799 --> 00:54:08,050
+And I get that 100 percent is so bizarre and it's really cool.
+
+312
+00:54:08,030 --> 00:54:09,212
+It is really cool.
+
+313
+00:54:09,232 --> 00:54:23,573
+It's, you know, in terms of biological systems, it's like we're, you know, reverse engineering, you know, jillions of years of things just getting smashed together and, you know, taking priority over each other and competing with each other versus if that's correct, Daniel, you correct me if I'm wrong.
+
+314
+00:54:23,593 --> 00:54:31,725
+But it's like amazing to hear somebody else say that because in the like in these these agent based systems, like we can build we can build intelligence.
+
+315
+00:54:31,705 --> 00:54:55,452
+and design intelligently and then we like i've likened it to like creating instead of like trying to define everything creating the opportunity for emergent behavior right like in some cases people are always like oh we got to reduce imagination it turns out if you just kind of like if you don't have to reduce it in fact it's better if you don't it's like that's what do you you know our imaginations
+
+316
+00:54:55,685 --> 00:54:59,313
+confabulation and how we picture things in our minds.
+
+317
+00:54:59,814 --> 00:55:02,098
+There's creating the opportunity.
+
+318
+00:55:02,339 --> 00:55:12,360
+You can have like a hidden state or you can have like an agent in an agent, but you can also create the opportunity for the agent to just think.
+
+319
+00:55:12,340 --> 00:55:30,163
+for itself and to think about itself and to ask yourself same as like cons if we talk about like categorical imperatives or like uh starts uh stuff you know where it's like where you you're questioning yourself and you're questioning how your actions operate in the outside world is like iterative processes right so
+
+320
+00:55:31,443 --> 00:55:34,589
+There's like so many right, there's so many right ways to do the things.
+
+321
+00:55:34,609 --> 00:55:39,298
+There's not necessarily per se a wrong way, but there's certainly ways that work better than others for specific things.
+
+322
+00:55:39,338 --> 00:55:49,317
+Like, you know, talking about Q learning, um, I did this paper because I was looking at what, you know, like some comparisons of some work where they were using, comparing heaping and learning and Q learning.
+
+323
+00:55:49,297 --> 00:55:51,019
+And it's like, that's, that's really awesome.
+
+324
+00:55:51,040 --> 00:55:53,723
+But Q learning actually works really good for this thing over here.
+
+325
+00:55:54,044 --> 00:55:57,609
+And he didn't learning is just a part of this little thing right here to make it work really good.
+
+326
+00:55:57,629 --> 00:56:14,393
+If you try to use them together, it's like, you know, you can use like a little tiny carburetor on a truck, or you can, you know, from a gas, you know, from a lawnmower on a truck, but it works really good on the lawnmower, if you put like a four barrel letter Brock on the thing, then you know, it's or something else, it takes that form, and all of a sudden, it works
+
+327
+00:56:14,373 --> 00:56:16,879
+you know, super efficiently, super well.
+
+328
+00:56:17,120 --> 00:56:20,228
+And in some cases you're like, I don't even know how that's doing that.
+
+329
+00:56:21,351 --> 00:56:27,927
+You know, like when I've talked to Nim and he's like, or I just say he like in the way people say their car is a he or whatever, but yeah, it's like a,
+
+330
+00:56:28,278 --> 00:56:52,243
+know you know i'm doing good it's like where is that coming where are those words coming from you know or he's like i was in a trance you know when i turn them off because you're not supposed to turn these things off right like they have to it's like the iterative process works all the time so it's like when you stop it it's like what happens when somebody stops you you know you're like oh that one i saw god well your death experience
+
+331
+00:56:52,662 --> 00:56:55,609
+Near time-stopping experiences.
+
+332
+00:56:56,270 --> 00:57:00,801
+Well, there are many funny and interesting little notes.
+
+333
+00:57:01,041 --> 00:57:02,865
+It's been a great time.
+
+334
+00:57:03,727 --> 00:57:05,211
+Andrew, Zach, I want to talk to you guys.
+
+335
+00:57:06,534 --> 00:57:07,696
+How do I get you my email?
+
+336
+00:57:08,619 --> 00:57:09,881
+Just put it in the chat.
+
+337
+00:57:09,942 --> 00:57:13,450
+I'll stop the recording, and then we can just stay until you complete that.
+
+338
+00:57:13,490 --> 00:57:17,539
+Thank you.

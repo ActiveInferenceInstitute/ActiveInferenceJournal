@@ -1,0 +1,1255 @@
+1
+00:00:03,828 --> 00:00:28,603
+okay it's September 14th 24 or 16th like my clock was looking weird um we're entering chapter nine for cohort six um do either of you want to type or ask any topics you want to
+
+2
+00:00:32,482 --> 00:00:55,080
+cover explore for nine otherwise we can look through the chapter i was actually about to i'm sorry go okay good i was actually going to ask if we could just like run through the chapter because this was the first chapter that i was like oh man we are jumping into creating this model uh could we just run through uh
+
+3
+00:00:55,921 --> 00:01:11,905
+one time into going through like what was the data and what was the model that we were actually applying as well as just going through the loop of the gear i'm sorry i've lost the figure it doesn't really matter for that last part yeah got it okay
+
+4
+00:01:14,062 --> 00:01:17,387
+Pulling back, I think going over the chapter is the first thing that we'll do.
+
+5
+00:01:17,427 --> 00:01:20,091
+Then there's the questions and some notes.
+
+6
+00:01:20,852 --> 00:01:25,279
+And then there's also looking at software, just speaking generally.
+
+7
+00:01:25,319 --> 00:01:28,283
+Maybe we can do that in one or two weeks from now.
+
+8
+00:01:29,084 --> 00:01:36,595
+Looking at the JAX branch on PyMDP, looking at RxInfer, and looking at other empirical work.
+
+9
+00:01:36,856 --> 00:01:39,660
+Let's start with the chapter though.
+
+10
+00:01:39,800 --> 00:01:39,900
+Okay.
+
+11
+00:01:40,555 --> 00:02:05,803
+second half of the book applying active inference coming fresh off of chapter six recipe chapter seven and eight giving the continuous and discrete time now getting to using the models that are created for data analysis that's kind of revealing that in all the previous chapters two three four um not five
+
+12
+00:02:05,783 --> 00:02:29,142
+but then seven and eight when talking about building a generative model it's to produce synthetic data like to run a simulation forward here now we're also or alternatively looking at a setting of having a certain structure of data and then seeking to recover latent parameters instead of specifying the latent parameters and then generating the synthetic observation like data
+
+13
+00:02:29,915 --> 00:02:37,426
+Our general goal is to recover the parameters of the generative model that system of interest uses to produce behavior, subjective model.
+
+14
+00:02:39,228 --> 00:02:41,872
+9.2, Metabasian methods.
+
+15
+00:02:41,892 --> 00:02:45,036
+This is really well summarized in figure 9.1.
+
+16
+00:02:46,018 --> 00:02:59,517
+It's like zooming out a layer from figure 4.3, figure 7.3 type, POMDP, hashtag model stream 14.1,
+
+17
+00:03:00,357 --> 00:03:27,478
+um umdp that we've been specifying talking about minimizing the variational free energy and so on zooming out saying okay not just the mouse and the teammates now considering the observations for the mouse are actions for the researcher and then conversely the output behaviors of the mouse are objective observations for the ethologist
+
+18
+00:03:28,522 --> 00:03:34,077
+Interesting how it's using the notation of like the subject centered view.
+
+19
+00:03:34,782 --> 00:04:04,738
+because it's it's calling them oh where whereas you might also call them actions the researcher and then it's like it gives the the hint of the suggestion okay yeah you could make a policy if you wanted to do policy control variable um like another Pi sub scientist and then have that connect to O but otherwise we're just taking this as a given so we're just taking that as the input data for here and so that subjective model which does the forward
+
+20
+00:04:04,718 --> 00:04:23,554
+inference which is like um the kind of perception action loop that it's focused on that's happening with a given set of observations in an experimental context and outputting some behavior so this kind of
+
+21
+00:04:24,378 --> 00:04:37,813
+showing okay the data like the input data here's the the information we knew on the which where we put the food in the tea maze and here's the actual sequence of moves that the mouse made
+
+22
+00:04:48,442 --> 00:05:01,017
+um brief little statistical interlude that starts to to Bridge back from this question of
+
+23
+00:05:05,637 --> 00:05:11,266
+reducing uncertainty of the unknown parameters of interest, figuring out the subject's prior beliefs.
+
+24
+00:05:11,607 --> 00:05:13,810
+It's like, we know where their eye saccades were.
+
+25
+00:05:14,371 --> 00:05:15,413
+That's just empirical.
+
+26
+00:05:16,415 --> 00:05:18,298
+Or we know which things they bought.
+
+27
+00:05:18,558 --> 00:05:19,600
+That's just empirical.
+
+28
+00:05:19,880 --> 00:05:30,818
+But then to do belief modeling, cognitive modeling beyond just the pure behaviorist layer, then that is reducing uncertainty about these causal parameters of interest.
+
+29
+00:05:30,798 --> 00:05:36,149
+So how are those going to be analyzed from real finite data?
+
+30
+00:05:38,173 --> 00:05:39,937
+They go into variational Laplace.
+
+31
+00:05:40,277 --> 00:05:46,410
+This is something brought up in other textbooks, in the SPM textbook.
+
+32
+00:05:53,545 --> 00:06:12,508
+Okay, 9.3, 9.4 giving like two different ways, more of a classical statistically parametric, and then more of a empirical Bayesian approach to fitting a first kind of structural layer on these hidden belief distributions.
+
+33
+00:06:14,791 --> 00:06:22,000
+Variational Laplace centers a Gaussian in the log likelihood
+
+34
+00:06:22,199 --> 00:06:33,269
+Thomas Parr discusses this in 57.1 or 0.2, fits a Gaussian on the log likelihood.
+
+35
+00:06:33,309 --> 00:06:42,117
+So in the actual likelihood space, it doesn't have like a, or it's a parabola in the log space and then like it looks different in the non-log space.
+
+36
+00:06:42,678 --> 00:06:51,666
+But this just fits a central tendency on a belief distribution parametrically.
+
+37
+00:06:53,165 --> 00:07:18,919
+that that doesn't require any um that doesn't that fits a simple distribution to uh data parametric empirical base takes a slightly different approach which is like to kick start the estimation of the prior from the empirical overall distribution of the data or like a previous or related experiment
+
+38
+00:07:22,696 --> 00:07:26,662
+Here's the instructions for doing the model-based analysis.
+
+39
+00:07:26,922 --> 00:07:32,391
+So collect data first, or maybe the data are already collected, like it's a meta-analysis.
+
+40
+00:07:34,754 --> 00:07:43,948
+So just like the previous figure, the data that are important here are like, you know, the input, which arm was the food on?
+
+41
+00:07:44,108 --> 00:07:46,071
+Which color was the strobe light?
+
+42
+00:07:46,186 --> 00:08:13,122
+then the context of the experiment if if only to normalize out and say yeah actually the uh the digit in the in the minutes column has no correlation with this but it might be something just included formulate a pomdp model so that's as we saw here with taking the subjects
+
+43
+00:08:13,253 --> 00:08:36,544
+kind of first-person perspective on taking in observations and how it does its belief construction here's a map describing its belief construction representation and then um how that information becomes actionable and then we have just empirically the information on the temperature of the room and the the teammates
+
+44
+00:08:39,697 --> 00:08:43,282
+This information in the list is summarized in Figure 9-2.
+
+45
+00:08:43,642 --> 00:08:48,489
+So we had data collection, or we're reviewing some data that were already collected about the T-MACE.
+
+46
+00:08:49,430 --> 00:08:51,893
+But we have the lab-type data.
+
+47
+00:08:52,574 --> 00:08:59,002
+Then we have Chapter 7.3 POMDP for the T-MACE.
+
+48
+00:09:02,968 --> 00:09:06,312
+Three, specify likelihood function, Equation 9.2.
+
+49
+00:09:10,105 --> 00:09:39,707
+action selected depend on the observations made we could look more about this but it kind of gets to the punch line of the and and it's kind of subtle with the bold and what and the bold being vector but the the policy that's selected is the the argument that's minimizing the variational free energy over all the policies so that's a like how um
+
+50
+00:09:41,459 --> 00:10:10,926
+how decision making is going to be evaluated from the outside as if it's minimizing free energy as opposed to other approaches like as opposed to it maximizing reward this tells us how the model should be used to calculate a likelihood this typically calls a pmdp solver spm mdp vbx it's interesting these are like super oft referenced
+
+51
+00:10:13,437 --> 00:10:42,145
+scripts they're in matlab there are matlab engines that can call matlab if you have a real license from other languages so it can be really called within python um other options there's octave which is like an open source cousin of matlab oh well there's spm standalone which is actually matlab but it's just like a reduced kind of single s spm only um download
+
+52
+00:10:42,293 --> 00:10:44,175
+Then there's Octave and Patches.
+
+53
+00:10:45,457 --> 00:10:52,625
+I don't know how well the coverage is for patching certain things of SPM MATLAB into Octave.
+
+54
+00:10:53,126 --> 00:10:58,292
+There's Julia SPM, which is an attempt to port over to Julia.
+
+55
+00:10:59,133 --> 00:11:01,316
+There's PyCall and JuliaCall.
+
+56
+00:11:01,756 --> 00:11:04,960
+So basically calling languages within each other.
+
+57
+00:11:04,940 --> 00:11:31,386
+um and the getting these scripts which are kind of key central pillars of a lot of the inference across prior papers getting these scripts into um non-proprietary more easily callable um methods and implementations it's it's huge
+
+58
+00:11:34,235 --> 00:11:39,300
+Four, specify prior beliefs about the parameters in terms of expectations and precisions.
+
+59
+00:11:43,925 --> 00:11:48,810
+Here, setting a prior just to give an initial condition.
+
+60
+00:11:48,870 --> 00:11:57,139
+Again, that could be parametrically gleaned from data, or it could be empirically set like PEB.
+
+61
+00:11:58,580 --> 00:12:01,103
+Inverting a model is...
+
+62
+00:12:03,158 --> 00:12:31,174
+using this rearrangement that's possible with bayes equation and using kind of algebra and separation from there to calculate what we're interested in which is like the belief the the the um distributions of subjective beliefs beliefs of the mouse in the teammates conditioned upon all the stuff that we're putting into the model
+
+63
+00:12:32,538 --> 00:12:44,364
+Whereas the synthetic generative direction would be given the ad hoc specification of belief distributions, like what if it thought it was three times more likely?
+
+64
+00:12:45,266 --> 00:12:49,095
+Then you could generate realistic trains of behavior.
+
+65
+00:12:50,003 --> 00:13:13,317
+you take those final behavioral data estimates and it's like, here's five days of the week we did the experiment and belief whether we calibrated or didn't calibrate, like whether it's just a fear score or it's calibrated or it's somehow normalized, like it's a percentile or something like that.
+
+66
+00:13:13,497 --> 00:13:17,783
+And then this is like a figure, just normal figure from a paper.
+
+67
+00:13:17,982 --> 00:13:31,581
+We had five different condition groups and their belief on this distribution, here it was seven plus or minus one, five plus or minus one, one plus or minus one, negative one plus or minus one.
+
+68
+00:13:32,242 --> 00:13:33,864
+And then you can just do a t-test.
+
+69
+00:13:34,705 --> 00:13:37,610
+And then you put little stars, statistically different groups.
+
+70
+00:13:40,013 --> 00:13:45,120
+That's the main outline for nine.
+
+71
+00:13:45,252 --> 00:13:54,268
+I think it'll be awesome to see fully worked cases, like if we can get a repo that has all of these steps labeled this way.
+
+72
+00:13:54,308 --> 00:13:57,794
+The last piece is 9.6 gives a few examples.
+
+73
+00:13:57,814 --> 00:14:05,287
+9.3 looks at iCicade in a continuous and in a discrete control setting.
+
+74
+00:14:06,630 --> 00:14:08,593
+We could look to the paper if we wanted to look at that one.
+
+75
+00:14:10,632 --> 00:14:18,204
+Table 9.1 reviews many citations where these kinds of methods have been applied.
+
+76
+00:14:20,508 --> 00:14:21,129
+That's the chat.
+
+77
+00:14:29,241 --> 00:14:35,391
+So it's interesting because nine is like, it's kind of like a Jimi Hendrix thing, if six were nine.
+
+78
+00:14:36,164 --> 00:14:39,791
+And then six is like the recipe for building the generative model.
+
+79
+00:14:40,532 --> 00:14:47,486
+And then nine, starting, well, we still have to build it as per six.
+
+80
+00:14:48,889 --> 00:14:49,991
+But it's another recipe.
+
+81
+00:14:51,333 --> 00:14:53,177
+But they don't call it a recipe here.
+
+82
+00:15:06,995 --> 00:15:12,300
+Any thought or what should we continue with?
+
+83
+00:15:23,410 --> 00:15:26,893
+Whenever they introduced, I think it was the variational applause.
+
+84
+00:15:27,013 --> 00:15:27,894
+I may be misremembering.
+
+85
+00:15:27,934 --> 00:15:32,518
+They casually brought up, oh, yeah, you don't really need to understand this, but this is predictive coding.
+
+86
+00:15:32,538 --> 00:15:34,200
+This is just the example we're using.
+
+87
+00:15:34,822 --> 00:15:47,555
+If you don't mind, could you say a little bit about, if I'm remembering correctly, predictive coding, as well as in your experience, like what kind of models are being used right now in active inference in general?
+
+88
+00:15:47,856 --> 00:15:53,862
+Is it all going to be like just taking about the same model and trying it through different things?
+
+89
+00:15:54,022 --> 00:15:59,648
+Are many different models used whenever you're actually building these experiments or is it just really, really diverse?
+
+90
+00:16:02,902 --> 00:16:04,666
+Yeah, good questions.
+
+91
+00:16:04,686 --> 00:16:05,007
+Okay.
+
+92
+00:16:07,633 --> 00:16:16,152
+And then let's look at this page.
+
+93
+00:16:50,945 --> 00:16:51,667
+Hmm.
+
+94
+00:16:51,807 --> 00:16:52,268
+Okay.
+
+95
+00:16:52,288 --> 00:16:52,869
+2007 here.
+
+96
+00:16:52,889 --> 00:16:59,886
+2007.
+
+97
+00:17:00,126 --> 00:17:04,436
+All right.
+
+98
+00:17:04,476 --> 00:17:09,207
+First, let's see where it came up in this
+
+99
+00:17:23,007 --> 00:17:39,953
+okay this is totally pending pending pending just um seeing one um just kind of one take on it look octopus or others might be able to bring a lot more detail in
+
+100
+00:17:41,738 --> 00:17:45,524
+This is coming from the parametric statistic approach.
+
+101
+00:17:46,505 --> 00:17:59,325
+So kind of classical, pre-computational, at least pre-1900s, let's say, approaches to fitting distributions.
+
+102
+00:17:59,305 --> 00:18:14,526
+Whereas once you can do parametric empirical Bayes or like sampling based methods, then there's this whole alternative branch of doing sampling to fit analytically intractable distributions.
+
+103
+00:18:15,227 --> 00:18:20,275
+But if it's going to be like, well, how do you make it more analytically tractable?
+
+104
+00:18:20,795 --> 00:18:29,127
+That might be advantageous or simple, might be ineffective, but also it really does have certain advantages.
+
+105
+00:18:29,107 --> 00:18:56,818
+if it if it if it totally mangles the underlying structure then again it wasn't adequate so this isn't to say that it's adequate for every distribution but if you do a sampling based approach then you have to also put a nice behaving continuous distribution over that or or choose to not do that because the sampling gives you a good shadow or kind of scatter if you do it well but it still doesn't have the kind of smoothness
+
+106
+00:18:57,068 --> 00:19:25,405
+so it's kind of like if you want to get to the parametric why not go directly from um the data instead whereas now it's sometimes sampling is thought of as as an alternative approach but it doesn't really get to the same end point this is a incrementally like Matrix gradient based method
+
+107
+00:19:25,874 --> 00:19:43,005
+to fit based upon the the gradients of um of a Gaussian or a parabola or something downward facing over log likelihood and Thomas part mentioned it more on the stream
+
+108
+00:19:52,520 --> 00:20:06,662
+Possibly because it's working, again, whether it's, okay, maybe it is a Gaussian, fitting a Gaussian, but then the Gaussian is locally approximated with a quadratic.
+
+109
+00:20:06,682 --> 00:20:14,374
+So then that keeps the approximation of the gradient possible.
+
+110
+00:20:18,080 --> 00:20:19,202
+This paper describes it.
+
+111
+00:20:22,422 --> 00:20:26,368
+Okay.
+
+112
+00:20:48,641 --> 00:20:49,763
+That's just the preview.
+
+113
+00:20:52,409 --> 00:21:17,877
+but it seems like a lot for the preview okay so maybe for us to learn more about but it's a tractable way to use gradient information geometric gradients to incrementally optimize statistical models
+
+114
+00:21:21,198 --> 00:21:49,078
+being proposed existing kind of alternatively to a sampling based approach how is it actually being applied this is a great question like whenever I come across code or GitHub I try to bring in this table everyone everyone else can too as we build many more we'll think of better ways to organize it as as the number of examples gets way larger than this um
+
+115
+00:21:49,514 --> 00:22:00,228
+I mean, there's the whole RxInfer, RxEnvironments branch that's rapidly growing.
+
+116
+00:22:02,131 --> 00:22:09,580
+And there's a lot of MATLAB and SPM ones that are not added in here, but there's that large branch.
+
+117
+00:22:09,600 --> 00:22:13,986
+Those ones mostly...
+
+118
+00:22:14,033 --> 00:22:43,990
+call back to those spm vbx bays spm um mdp check except like all these kind of names so there it's like friston at all curated the functionality of those core utility files and then papers would use relatively simple generative models and then just know that if it was built a certain way that the um
+
+119
+00:22:44,628 --> 00:23:06,957
+generative and the data fitting directions would work so that's the kind of matlab um there's there's a long tail of languages like in the active inference package like rust go shell just like a bunch of random languages they're not super performant but it's enough to get started
+
+120
+00:23:07,966 --> 00:23:17,980
+C++, haven't seen any presentations per se using it, but I think some on the more engineering side might be.
+
+121
+00:23:18,000 --> 00:23:30,758
+Of course, one of the major questions is like, well, this is what is known in open source research, but anything other than that, of course, I don't know.
+
+122
+00:23:32,201 --> 00:23:36,066
+On the Python side, there's PyMDP.
+
+123
+00:23:36,552 --> 00:23:42,159
+which is the main Python package.
+
+124
+00:23:43,521 --> 00:23:57,098
+It has a characteristic and lovable slash challenging file structure that can make it a little challenging to get the exact thing you want.
+
+125
+00:23:57,598 --> 00:24:05,428
+However, there's a folder jacks, which is bringing in the kind of jacks, and there's more active work on this in the branches too.
+
+126
+00:24:05,527 --> 00:24:13,034
+So there's a lot of work there kind of to the chapter nine theme of fitting from data.
+
+127
+00:24:13,055 --> 00:24:32,614
+There's a lot of other Python work in model stream 14, which was shown briefly earlier.
+
+128
+00:24:34,045 --> 00:24:57,808
+ran way said that deep dreamer he said that friston said deep dreamer it is basically active inference so i mean at least i think rand said this which makes sense because one of the collaborators was danger hafner so
+
+129
+00:24:58,936 --> 00:25:04,326
+I think if we kind of just return to the original, what are the applications of Act-Inf?
+
+130
+00:25:05,989 --> 00:25:07,972
+What methods are people using to apply it?
+
+131
+00:25:08,733 --> 00:25:13,883
+There's the threads and the streams that can be followed from here.
+
+132
+00:25:13,923 --> 00:25:21,957
+And then there's the parallel slash is it Act-Inf question.
+
+133
+00:25:22,021 --> 00:25:37,468
+If you end up with a pragmatic and epistemic element to a RL or meta RL or POMDP type model, or something that can be described as such, I mean, has that not reached active inference from the low road by another way?
+
+134
+00:25:39,311 --> 00:25:39,912
+What do you think?
+
+135
+00:25:49,696 --> 00:26:18,977
+i kind of wanted to ask you about that especially at the end of the live stream he was talking about how there's different spaces that you could use as well as a work that i've never heard of before by uh simone i think he said uh from the oxford lab and he was saying that you can think of the model in terms of of course the model itself where we're doing a gradient descent so we're actually going to be able to talk about gradients flowing in one direction we can also talk about
+
+136
+00:26:20,273 --> 00:26:26,621
+of the actual concept space of the model, like Shimon was talking with representation spaces, I think it was called.
+
+137
+00:26:27,202 --> 00:26:36,173
+And then there's also going to be the thing that we're learning about right now, which is designing the environment through the POMDP and then having the model learn from that.
+
+138
+00:26:36,614 --> 00:26:38,336
+So there's going to be some environment space.
+
+139
+00:26:38,817 --> 00:26:42,221
+There's going to be some belief space that the model uses to interact with the environment.
+
+140
+00:26:42,802 --> 00:26:47,648
+And then there's also going to be the model itself, which is going to be in the space that back propagation is really natural.
+
+141
+00:26:47,932 --> 00:27:00,109
+I bring this up because in Figure 9.2, like we were looking at earlier, whenever we're actually looking at the model, we're thinking of it in the space of, oh, what are we looking to get out of it, which may not be the same space.
+
+142
+00:27:00,149 --> 00:27:13,888
+It may be like the POMDP, like the environment space that the model is working with that we're designing is not the native space that the model is working in, which is going to be the belief space, which reminds me a lot of Markov blankets, which maybe that has nothing to do with anything.
+
+143
+00:27:14,358 --> 00:27:36,703
+but i thought that was going to be an interesting link and i wanted to get your thoughts on it the movement of spaces of the changing of spaces as you move through these squares yeah let's return to the question let me just copy out what this quote was because i mean this is
+
+144
+00:27:40,733 --> 00:28:03,163
+this is this is very interesting to it that ran well for those who have not seen it it's it's really an informative stream some of the most information density on um epistemic value pragmatic value connections with active inference and reinforcement learning um
+
+145
+00:28:04,409 --> 00:28:12,518
+A lot of people's view of Dreamer versus deep active inference, he mentioned that deep active inference has been used in essentially three ways.
+
+146
+00:28:12,678 --> 00:28:18,465
+One of them is when neural networks and other approaches are used.
+
+147
+00:28:18,525 --> 00:28:24,932
+That's also called amortized inference, but that's kind of like deep learning, but deep active inference.
+
+148
+00:28:24,952 --> 00:28:27,295
+The other two are like temporal depth.
+
+149
+00:28:27,697 --> 00:28:50,160
+like long Horizon of planning and then the third is hierarchical depth like um and then we talked about how also those can be flattened uh deep active inference is that many people have implemented is that dreamers so similar to active inference especially I can't remember if which version of dreamer and if it does use information to gain
+
+150
+00:28:51,524 --> 00:29:13,600
+term in planning in a planning objective and if it does then you basically cannot tell whether there's any difference between dreamer and deep active inference um so in a sense even Carl Tristan has mentioned it sometimes that dreamer is basically some variations of an active inference agent what a truth drop
+
+151
+00:29:17,765 --> 00:29:41,275
+here was the major approach of the paper which is the pomdp has an aboutness of uncertainty subjectively like the a matrix describes uncertainties associated with the mapping between observations and hidden states and then the b describes the possibly conditional mapping of states unfolding um
+
+152
+00:29:41,862 --> 00:30:08,410
+that whole picture though can be seen as an mdp because like if you're programming in pi mdp you're making a pomdp but for you the pomdp is a fully observable mdp so then there are certain things that you can say that are results that only exist subjectively for mdps like chess but not for pomdps
+
+153
+00:30:09,250 --> 00:30:17,511
+But then as a modeler, you can say MDP-like things about POMDPs.
+
+154
+00:30:19,456 --> 00:30:25,993
+And it turns out that the key thing that the agent's behavior has to follow along is the information gain.
+
+155
+00:30:34,327 --> 00:30:41,237
+But it really just shows how different... And then I said something about FEP and the high road and low road.
+
+156
+00:30:41,698 --> 00:30:43,721
+And then he's like, I'm kind of like a low road guy.
+
+157
+00:30:43,901 --> 00:30:47,707
+I don't really have anything to say on that.
+
+158
+00:30:47,727 --> 00:30:51,994
+Which was just amazing and very humble and funny.
+
+159
+00:30:53,636 --> 00:31:00,807
+For how informed and how capable his presentation research is, that it's like...
+
+160
+00:31:02,575 --> 00:31:25,056
+it wasn't about fep he didn't really want to go there yet he was talking about the free energy functionals with like the highest degree of understanding so then that's just like wow free energy is on the low road
+
+161
+00:31:25,154 --> 00:31:29,481
+That's the whole thing with energy-based learning, variational autoencoder.
+
+162
+00:31:29,501 --> 00:31:37,493
+I mean, millions of people are using evidence lower bound in model fitting.
+
+163
+00:31:39,496 --> 00:31:51,634
+As Ram pointed out, RL and meta RL and Deep Dreamer go on the low road to indistinguishable from active inference.
+
+164
+00:31:55,597 --> 00:31:59,177
+So that really puts the low and the high road into context.
+
+165
+00:32:46,323 --> 00:32:47,224
+Pretty interesting.
+
+166
+00:33:09,107 --> 00:33:10,508
+Procedural method.
+
+167
+00:33:11,872 --> 00:33:33,761
+for, I mean, this is like live stream 42, but here with three light time layers, days, hours, minutes, and then using a procedural method to fill this in, as opposed to like doing this and then that one, and then just this, and then emitting just from here or something.
+
+168
+00:33:34,963 --> 00:33:40,410
+So, I mean, there's so many low road methods.
+
+169
+00:33:41,048 --> 00:34:05,149
+every method is on the low road but but none of it is in competition with the high road like before we started zach and i were talking a little bit about the reward learning also and and um kind of like okay want to build the skyscraper taller
+
+170
+00:34:06,074 --> 00:34:33,077
+it's just reward function it's taller and then in contrast it's sort of like um I want to reduce my uncertainty about looking from the 100th floor and then maybe you build um a 75 story and jump or you build a 200 and go to the 100th floor or something like that but then if there's like a um an equilibrium that can be reached when that preference is achieved it's just so interesting to see like
+
+171
+00:34:34,340 --> 00:35:01,917
+how those can yield this they could yield similar or different computational policies inferred to get there like there are situations where um the the the RL and the active agent would have indistinguishable behavior but and there's situations where they might have different behavior but
+
+172
+00:35:03,078 --> 00:35:10,286
+that would all be situational on literally just specifying, okay, what is the setting?
+
+173
+00:35:10,306 --> 00:35:10,967
+What are the data?
+
+174
+00:35:18,556 --> 00:35:28,748
+Maybe certain generic things could be said like, well, for these kinds of environments, this kind of outperformance would be expected or this kind of asymmetry would be expected.
+
+175
+00:35:28,829 --> 00:35:34,551
+some more generic statements about kinds of environments where there'd be different kinds of competitiveness.
+
+176
+00:35:34,572 --> 00:35:38,788
+But I mean, it still is just a basically empirical question.
+
+177
+00:36:05,920 --> 00:36:34,729
+do you think biology is going to help us solve that empirical question because i remember whenever it was inside of the book that introduced the uh system one and system two uh thinking fast and slow that's what it was and oh i'm sorry inside of that they were talking about the example of i believe it was falcons uh that were in california
+
+178
+00:36:35,603 --> 00:36:43,676
+And so whenever they were discussing it, they asked, what was the value that you would like to apply towards saving this many falcons?
+
+179
+00:36:44,317 --> 00:36:50,267
+And then what they did was either they introduced increasing the space or increasing the number of falcons that you would save.
+
+180
+00:36:50,307 --> 00:36:54,754
+And they asked, how much would you be willing to spend in order to donate to this cause?
+
+181
+00:36:55,255 --> 00:36:57,999
+And they started to vary the amount of difference that it would make.
+
+182
+00:36:58,680 --> 00:37:02,927
+And they really showed that even our own belief systems are unintuitive to us.
+
+183
+00:37:03,447 --> 00:37:23,228
+of how we actually value things and how much we value that especially at different scales is not something that we would expect from ourselves do you think that we would be able to find an empirically good way to solve this strictly from how we function biologically or how any mammal might function inside of us
+
+184
+00:37:38,446 --> 00:37:39,687
+Frank or Axel?
+
+185
+00:37:44,613 --> 00:37:46,034
+Sorry, I just got in here.
+
+186
+00:37:46,094 --> 00:37:48,037
+I've been setting up, so I didn't catch it.
+
+187
+00:37:48,057 --> 00:37:48,637
+Oh, it's all good.
+
+188
+00:37:51,020 --> 00:37:53,583
+Zach, it's a great question.
+
+189
+00:37:53,923 --> 00:38:02,933
+And is slash how is active inference related to being a theory of inquiry along the lines of the pragmatists?
+
+190
+00:38:03,353 --> 00:38:04,875
+What can be...
+
+191
+00:38:05,176 --> 00:38:33,883
+empirically and theoretically said about empirical situations like laboratory behaviorism and also theory producing situations considered empirically i don't know though if even a very strong account there would be equivalent to the resolution of uncertainty or the account for the like the last mile
+
+192
+00:38:34,859 --> 00:38:50,465
+So as to whether this RL or this ACT-INF model will do better on explaining this bacteria data set, that's like, to know that would be like to know, it's like the halting problem.
+
+193
+00:38:51,426 --> 00:38:58,999
+I mean, if you could just, it's like, it would be equivalent to knowing how a data would fit a model before doing it.
+
+194
+00:39:00,141 --> 00:39:01,423
+You can use heuristics.
+
+195
+00:39:02,635 --> 00:39:13,849
+And those heuristics may be 100% right in certain settings, but that still wouldn't be like actually knowing it.
+
+196
+00:39:17,213 --> 00:39:30,550
+But then you could have certain, it'd be like, okay, for linear models or for transformer models, like adding another layer sometimes takes more train time, but it never does worse.
+
+197
+00:39:31,036 --> 00:39:54,175
+then you could say certain things about two hypothetical architectures being applied to a data set or two models being applied but it's kind of like the bayesian model reduction question or like structure learning you could have a procedure for adding and pruning down latent accounts and and all these kinds of things
+
+198
+00:39:56,416 --> 00:40:13,699
+But if you already knew which model to apply before, then you might be coincidentally right with your prior, but you wouldn't have been right except by prior.
+
+199
+00:40:15,907 --> 00:40:17,009
+Okay, I see what you're saying now.
+
+200
+00:40:17,249 --> 00:40:27,446
+I think I was anthropomorphizing too much because I was thinking of 9.2 and I was thinking that like, oh, the ideal situation would be to where you design a system that's like, oh, it works like I work.
+
+201
+00:40:27,927 --> 00:40:28,749
+So that's where I was coming from.
+
+202
+00:40:28,789 --> 00:40:33,517
+Interesting.
+
+203
+00:40:33,557 --> 00:40:39,687
+I mean, because it could be like, it works like I think it works would be like, okay, this is a metronome.
+
+204
+00:40:40,443 --> 00:40:46,770
+and just changing temperature didn't matter, turning the dial totally explained the frequency of this.
+
+205
+00:40:47,971 --> 00:41:01,305
+So it's like, there are situations where this box is, well, or this could be just an AND gate, or this could be just some other discrete or designed system.
+
+206
+00:41:02,146 --> 00:41:08,172
+And then on the other side of that could do would be like, this is a person talking to another person
+
+207
+00:41:09,755 --> 00:41:13,981
+And then but that is so that is that which one is like, it works like I work.
+
+208
+00:41:15,843 --> 00:41:24,595
+Like seeing the world work as expected, or seeing the world work in a way that is open and surprising.
+
+209
+00:41:31,084 --> 00:41:37,112
+And I think these become such interesting questions as the technical, um,
+
+210
+00:41:41,800 --> 00:42:04,905
+as what the our our active computational niche is doing around us gets more active than like what is it that we're really doing but like opening I of course ironically doesn't have I don't think they release the technical information um it says you can read more on the technical research post
+
+211
+00:42:07,720 --> 00:42:32,715
+log linear but kind of subtle log compute better evals on domain expertise better coding it's available in cursor 01 mini is doesn't cost any extra they hide the chains of thought
+
+212
+00:42:35,817 --> 00:42:51,312
+But it's kind of like, but you don't even know whether what has happened, but it's doing, I mean, so then if it's doing, um,
+
+213
+00:42:53,300 --> 00:43:14,177
+kind of something between working memory transient um chain of thought with pruning planning and thought dreaming to plan planning to dream maybe using a uh energy-based method or an elbow and then like
+
+214
+00:43:15,102 --> 00:43:39,287
+also with with kind of a niche modification maybe chains of thoughts can read and write to each other or something like that there's just so many architectures people have proposed yeah axel
+
+215
+00:43:41,765 --> 00:43:43,948
+Yeah, I just have a quick question here in the end.
+
+216
+00:43:44,088 --> 00:43:46,170
+I'm sorry I missed pretty much most of this.
+
+217
+00:43:46,431 --> 00:43:48,073
+I was in transport.
+
+218
+00:43:48,113 --> 00:43:50,576
+But I have a bit of a more technical question.
+
+219
+00:43:51,377 --> 00:43:55,822
+I'm interested in the differences between RL and active inference.
+
+220
+00:43:56,082 --> 00:44:01,128
+And right now, I'm going through some of these PI MDP Colab notebooks.
+
+221
+00:44:01,709 --> 00:44:09,358
+And one of the first ones is a tutorial where you're setting up these different matrices for, for example,
+
+222
+00:44:09,338 --> 00:44:28,967
+like a is your matrix that maps the states to observations and b is your belief matrix about the beliefs of what will happen if you carry out a certain action and so on and so forth and yeah i think if you open it maybe the solutions will already be there and you can see what i'm talking about
+
+223
+00:44:29,673 --> 00:44:33,080
+But in this example, of course, it's a simple one.
+
+224
+00:44:33,120 --> 00:44:35,985
+It's unambiguous.
+
+225
+00:44:36,045 --> 00:44:45,403
+So you start out with all of the matrices that you need to solve the problem, or at least that's how it seems to me.
+
+226
+00:44:45,383 --> 00:44:50,171
+And I'm kind of interested in how little you need to specify.
+
+227
+00:44:50,191 --> 00:44:57,103
+When I first got interested in active inference, I was kind of attracted by the idea that you might not have to specify anything at all.
+
+228
+00:44:57,123 --> 00:45:06,700
+You would have an agent that learns how to carry out useful actions, not by having a reward function, but just by...
+
+229
+00:45:06,680 --> 00:45:14,667
+doing things that makes it able to control its environment better, which in the end will be things that perhaps are useful.
+
+230
+00:45:15,047 --> 00:45:20,492
+And I think my question is just, how little do you need to specify?
+
+231
+00:45:20,532 --> 00:45:36,366
+Is it possible to specify not even the agent's understanding of when it sees that it is in square one, it also will think that it should expect itself to be in square one?
+
+232
+00:45:37,004 --> 00:45:42,839
+What is the least thing that I can specify in this setup and still get an agent that learns all of these things itself?
+
+233
+00:45:46,067 --> 00:45:46,387
+Yeah.
+
+234
+00:45:46,548 --> 00:45:48,052
+Great question.
+
+235
+00:45:49,134 --> 00:45:54,287
+Um, first part on RL.
+
+236
+00:45:54,993 --> 00:46:24,190
+and active i think check out this model stream 14 that we discussed a little bit because it was some of the most distilled and um experienced comparisons but then this question of like what is needed to be specified so um you're totally right that that um this is kind of like it's like a canon inference canon or reverse canon set up on rails
+
+237
+00:46:24,440 --> 00:46:46,903
+with with a certain like it's kind of aimed on a certain axis already because it's like well how does it know it's in a teammates how does it know the the semiotics of how the queue at the bottom relates to um whether it's on the left or the right you know how does it know how to walk so it's like but that's where it becomes really important to clarify what are questions about the world
+
+238
+00:46:47,795 --> 00:46:49,638
+What are questions about generative models?
+
+239
+00:46:50,539 --> 00:46:55,226
+And then where are we developing generative models to address questions about the world?
+
+240
+00:46:55,707 --> 00:46:57,570
+And then those can go back and forth.
+
+241
+00:46:58,051 --> 00:47:04,721
+But it's like, if you wanted to study, well, how does the semiosis become associated between the Q and the T maze?
+
+242
+00:47:05,262 --> 00:47:07,305
+You could study that.
+
+243
+00:47:07,370 --> 00:47:09,555
+with a degree of freedom around that relation.
+
+244
+00:47:10,578 --> 00:47:19,540
+Or you could just say, we're assuming it's a perfectly trained rat that already 100% understands like the left and the right cues.
+
+245
+00:47:20,195 --> 00:47:45,645
+those are generative models that are being constructed for different cases so depending on what is is wanting to be um gotten intuition for like in a toy model or what kinds of research questions are being addressed from it's like it'd be like downloading a genome and just like model it it's like but i mean to what end a 3d shape or like you know the regulatory network it's like well all of them it's like yeah but then that's just the whole project
+
+246
+00:47:45,625 --> 00:48:13,675
+of the field or something that's that's not a specific research question to ask about so yes definitely and then when it comes down to in into this level it's like yeah so then but then what what about adding a fourth grid location or what how would it come down you know then then it has to change it so those are some of the rate limiting steps in the in implementing things like structure learning
+
+247
+00:48:13,891 --> 00:48:43,594
+in the models today which is like the dimensionality has all these repercussions or how does it how would it look how would it come to know that it could add a new affordance so can it be something very simple with a procedural approach to like changing the dimensionality and the number of slices on abcde and then could that like a procedure over abcde
+
+248
+00:48:44,468 --> 00:49:06,122
+have the ability to learn in this or that way it's an open question to and then okay you could set it up but but then if you set it up in a computational environment that only has like multi-armed bandit slot machines i mean it's not gonna code in python so
+
+249
+00:49:07,064 --> 00:49:23,166
+then that gets into the niche specification either the computational niche for for training and learning and inference or more of the robotics route with the real world niche
+
+250
+00:49:24,732 --> 00:49:34,141
+So yeah, I get what you're saying in terms of it's interesting how you might want to procedurally change your structure when you've already established it.
+
+251
+00:49:34,461 --> 00:49:38,105
+But then let me ask, what if you have established the exact structure?
+
+252
+00:49:38,165 --> 00:49:40,087
+You live in this simple grid world.
+
+253
+00:49:40,447 --> 00:49:41,648
+You can establish all of that.
+
+254
+00:49:42,028 --> 00:49:44,070
+And perhaps there are certain things you can do in the grid world.
+
+255
+00:49:44,150 --> 00:49:49,936
+Maybe you have to get keys in order to open doors, in order to go somewhere.
+
+256
+00:49:50,156 --> 00:49:54,300
+But there's no final reward in the goal position you want to go to.
+
+257
+00:49:54,280 --> 00:50:17,335
+do you think an active inference agent because it's curious and because it wants to learn to understand its world will figure out how to do the actions which will end up getting it to be able to predict what's gonna like get the furthest in the world just because it uh has that incentive perhaps
+
+258
+00:50:18,260 --> 00:50:20,222
+Okay, great question.
+
+259
+00:50:20,843 --> 00:50:25,628
+So we never really brought a model together, but we explored it, but it was 2021.
+
+260
+00:50:25,788 --> 00:50:30,153
+This was before like PyMDP and RSFER and all this, but it was like NetHack.
+
+261
+00:50:30,173 --> 00:50:34,717
+It's like this text-based explorer that's famously convoluted.
+
+262
+00:50:35,458 --> 00:50:41,905
+But even just considering like, yeah, how do you do items as affordances, but then do every turn...
+
+263
+00:50:41,885 --> 00:50:48,634
+Are you going to do like this mega deep act info on like every possible spell that you could cast in every direction?
+
+264
+00:50:49,636 --> 00:50:56,605
+Or how are we even going to learn to know possibly things that even people haven't written down?
+
+265
+00:50:58,268 --> 00:51:04,136
+Like how two spells interact with the dragon only on the 13th level or something.
+
+266
+00:51:04,156 --> 00:51:08,241
+It's like, so this could be a very interesting setting.
+
+267
+00:51:08,742 --> 00:51:11,706
+Again, it's, it's, it's hardest in general, but it's,
+
+268
+00:51:12,361 --> 00:51:28,800
+the the reinforcement learning a reward approach let's just say that it's like um you know kind of this surrealist uh dream grid world with the keys and the doors and all this other stuff I mean there's the physiological sort of grounded layer
+
+269
+00:51:28,983 --> 00:51:48,713
+which like what makes more sense saying I'm rewarded by being at physiology or I expect to be at physiology and that's just where I satisfy so let's just say physiology can be equally well explained by active or by a reward term um then it's like well where do you go then with your reward
+
+270
+00:51:49,402 --> 00:52:17,198
+then it's like if you set your reward arbitrary function on curiosity learning epistemic value then you're doing function approximation for epistemic value so then you've just created a sort of epistemic approximator rl agent there's nothing wrong with that it might be totally fine but um it's it's the low road side of a question that could be approached from a high road
+
+271
+00:52:17,330 --> 00:52:23,801
+which would just be the epistemic value expected information gain, things that might be important for the NetHack challenge.
+
+272
+00:52:26,085 --> 00:52:33,398
+But then how would you come to tune and adjust the epistemic and pragmatic balance on the fly?
+
+273
+00:52:34,964 --> 00:52:44,141
+It isn't that, you know, like, again, thinking about the RL and the ACT-IMP, it's like, let's just say there's a basketball hoop that's 20 feet tall.
+
+274
+00:52:44,903 --> 00:52:48,009
+And someone's like, I prefer myself to be dunking.
+
+275
+00:52:48,229 --> 00:52:53,639
+Or the reinforcement learning is just like, I want to jump higher and then I'll be able to dunk.
+
+276
+00:52:54,200 --> 00:52:57,647
+But it's like, that doesn't mean it's possible to even do it.
+
+277
+00:52:58,538 --> 00:53:21,660
+but the reinforcement learner would train to jump up to 10 feet and then they would just stall and they just would be like you know I think I could do better or I'm at the best score I've ever gotten or something the active would just have a a would reach a Plateau of surprise like I'm why am I three bits surprised about my jumping when I expect to be doing a 20-foot Dunk
+
+278
+00:53:22,889 --> 00:53:29,098
+But if it's an irresolvable situation, then it's been set up that it can't be done.
+
+279
+00:53:30,379 --> 00:53:44,459
+Whereas if it was an achievable situation, then both of those would have a possibility to be able to dunk.
+
+280
+00:53:44,479 --> 00:53:52,390
+But at least leaving the door open for the epistemic and having a stabilized open door
+
+281
+00:53:53,112 --> 00:54:17,500
+that isn't just pragmatic because if you operationalize the epistemic value into pragmatic value okay we train the reinforcement learning on learning then we get back to these questions right that we're having at the very beginning like well then it would learn at cost to other variables oh no well then we'll learn to balance that okay
+
+282
+00:54:18,357 --> 00:54:28,283
+But then you can just have this infinite like regress of reinforcement learning, but it still is in pragmatic value from the high road side.
+
+283
+00:54:33,562 --> 00:54:33,882
+Right.
+
+284
+00:54:33,902 --> 00:54:37,407
+I think I'm just having a hard time understanding exactly.
+
+285
+00:54:37,427 --> 00:54:48,602
+There was this paper once about how you could teach agents to learn to ride a bike just by trying to maximize empowerment.
+
+286
+00:54:48,942 --> 00:54:56,532
+So trying to make it so that these agents would not have a reward for having the bike upright, but would have a reward for
+
+287
+00:54:56,512 --> 00:54:58,355
+being able to do more things in the world.
+
+288
+00:54:58,495 --> 00:55:03,343
+And since they had the bike upright, they could drive further and go more places.
+
+289
+00:55:03,423 --> 00:55:06,228
+And because of that, they could do more things.
+
+290
+00:55:06,248 --> 00:55:13,660
+And I'm wondering if the same kind of thing happens in active inference, where if you had an agent in a grid with
+
+291
+00:55:13,640 --> 00:55:37,032
+a place where a key comes out if it would just go up and see that a key comes every 10 seconds and think that that's nice and now it's learned that and there's no more surprise or if it would somehow be incentivized to say oh but what happens if i take this key and go down into the bottom of the maze where there's this door even though it didn't know anything about that that that would open anything or
+
+292
+00:55:38,935 --> 00:56:03,120
+yeah this um ali was there for this stream with tom ringstrom it's it's a it's a totally viable path um it's interesting also about the bellman equations which come up in the mdp solutions so treating an appeal mdp like an mdp
+
+293
+00:56:03,539 --> 00:56:26,965
+which is a using Bellman optimality PDP MDP style on the agents PMDP um there might be situations where where expected free energy and optimal and empowerment are are like correlated or there might be um designable situations where they're differentiable
+
+294
+00:56:28,598 --> 00:56:51,940
+I think one important note and it's kind of the separation between the equation 2.5 and 2.6 is like 2.5 variational free energy is not prospective this is just like a real-time existence check so this is more like a a through the flow of the present
+
+295
+00:56:53,202 --> 00:57:18,872
+once you get into planning over expected Futures like there's expected free energy then there's free energy of the expected future f-e-e-f there then there's other approaches that have been proposed so I think there's a lot of constructions that highlight different parts of the future to say nothing of the of the procedural ways that you could like prune through Futures
+
+296
+00:57:20,506 --> 00:57:42,708
+but there might be the heuristic of maximum occupancy or maximal empowerments or maximal time discounted reward for some agent or time discounted learning or like the amount of this or that within a certain timeframe.
+
+297
+00:57:44,410 --> 00:57:47,813
+So I think there's a lot more ways to model the future.
+
+298
+00:57:54,593 --> 00:57:55,234
+Thank you so much.
+
+299
+00:57:55,394 --> 00:57:56,976
+Yeah, I'll definitely check out this paper.
+
+300
+00:57:58,818 --> 00:58:00,340
+Yeah, this it's a great connection, though.
+
+301
+00:58:00,360 --> 00:58:19,285
+And I think it's a similar, there might be other intrinsic motivators like, like, you know, would learning would wanting to learn a space equate to occupying it through time equate to empowerment in movement in that space?
+
+302
+00:58:21,610 --> 00:58:30,279
+Again, you could imagine a space in an agent where those are all indistinguishable.
+
+303
+00:58:30,299 --> 00:58:38,467
+But then they could have some other space where just like, oh, but the cells change at different rates.
+
+304
+00:58:38,587 --> 00:58:44,313
+So if you are equally occupying the space, then you're not equally learning it.
+
+305
+00:58:45,735 --> 00:58:51,060
+But then that's just getting into these more generic comparators.
+
+306
+00:58:52,272 --> 00:59:05,507
+But I mean, these are great questions, and these are all weaving together in a Chapter 9-esque way.
+
+307
+00:59:07,169 --> 00:59:21,486
+As we think about generating data from Act-Inf models, fitting Act-Inf models to data, I mean, if we can...
+
+308
+00:59:22,883 --> 00:59:40,227
+share and borrow infrastructurally with Dreamer and all of these mainstream machine learning models and contextualize it from a high road and add new paths on the low road.
+
+309
+00:59:40,267 --> 00:59:44,233
+Just a few memes away.
+
+310
+00:59:52,600 --> 00:59:52,942
+Okay.
+
+311
+00:59:53,927 --> 00:59:54,409
+Thank you all.
+
+312
+00:59:55,816 --> 00:59:58,348
+See you next time.
+
+313
+00:59:58,368 --> 00:59:58,911
+Thank you so much.
+
+314
+01:00:00,700 --> 01:00:01,564
+Bye.

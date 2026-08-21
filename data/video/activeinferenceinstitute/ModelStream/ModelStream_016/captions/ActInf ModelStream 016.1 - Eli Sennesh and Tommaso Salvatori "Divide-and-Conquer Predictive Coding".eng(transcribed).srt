@@ -1,0 +1,1847 @@
+1
+00:00:07,591 --> 00:00:08,432
+Hello and welcome.
+
+2
+00:00:09,033 --> 00:00:11,596
+This is Active Inference Model Stream 16.1.
+
+3
+00:00:12,678 --> 00:00:14,480
+It's December 6th, 2024.
+
+4
+00:00:14,560 --> 00:00:22,490
+We're here with Eli Sinesh and Tomaso Salvatore discussing Divide and Conquer Predictive Coding.
+
+5
+00:00:22,811 --> 00:00:25,114
+So thank you both for joining.
+
+6
+00:00:25,955 --> 00:00:27,417
+Eli, to you for the presentation.
+
+7
+00:00:29,279 --> 00:00:29,900
+All right.
+
+8
+00:00:29,920 --> 00:00:31,422
+Hi, everyone.
+
+9
+00:00:32,853 --> 00:00:40,444
+I recall being here once before, presenting that old paper, Interoceptionist Modeling Allostasis as Control.
+
+10
+00:00:40,504 --> 00:00:52,662
+And I think at the time I even mentioned that there wasn't really an inference algorithm that I could just go and apply to all of these kinds of active inference and predictive coding problems.
+
+11
+00:00:52,923 --> 00:01:02,016
+And over roughly the last year, let's say, we've started work, this whole team of myself,
+
+12
+00:01:02,148 --> 00:01:11,498
+Hao Wu, who is unfortunately not on the stream due to having a 9 to 5, and Tommaso Salvatore, who's here with us.
+
+13
+00:01:12,679 --> 00:01:14,581
+We've actually been working on this.
+
+14
+00:01:15,743 --> 00:01:24,032
+How would we take these theories and this predictive coding idea and just turn it into a Bayesian inference algorithm you can use for stuff?
+
+15
+00:01:26,354 --> 00:01:29,978
+So as background, to really refresh ourselves,
+
+16
+00:01:30,380 --> 00:01:33,085
+This is the super short, you know, NeurIPS version of our talk.
+
+17
+00:01:35,088 --> 00:01:44,685
+You know, there's like basically theoretical neuroscience, neuro AI, or now, I don't know, Tommaso, like what keyword do you guys use it versus?
+
+18
+00:01:44,926 --> 00:01:46,028
+I should have asked you maybe.
+
+19
+00:01:46,048 --> 00:01:52,138
+We do use neuro AI actually, bioplausible deep learning.
+
+20
+00:01:53,220 --> 00:01:55,324
+That's a sentence I often use.
+
+21
+00:01:56,755 --> 00:02:01,182
+I think that dates back from even before my versus times, I guess.
+
+22
+00:02:02,724 --> 00:02:13,620
+Yeah, so the broad theory is that predictive coding sort of solves two tasks for the brain, and that's credit assignment and Bayesian inference.
+
+23
+00:02:16,304 --> 00:02:20,471
+Now, predictive coding is also a thing in machine learning now.
+
+24
+00:02:21,132 --> 00:02:23,135
+They do a lot of it at versus.
+
+25
+00:02:23,235 --> 00:02:25,378
+Tommaso's done a bunch with it.
+
+26
+00:02:27,080 --> 00:02:38,271
+But it doesn't always, for various reasons we can go into, it sometimes doesn't always scale as well as back prop, basically.
+
+27
+00:02:38,312 --> 00:02:52,446
+And so we basically started over again, I guess you could say, with the concept of predictive coding to build our divide and conquer PC algorithm.
+
+28
+00:02:53,185 --> 00:02:58,995
+And we basically find that you can use this at roughly the same scale you would with VAEs.
+
+29
+00:03:03,483 --> 00:03:10,035
+So of course, in order to test it out, we had this deep latent Gaussian model.
+
+30
+00:03:10,095 --> 00:03:17,809
+It's actually the same one from, I think, the Monte Carlo predictive coding paper out this year.
+
+31
+00:03:18,970 --> 00:03:42,803
+We really did this a lot, like, leaning on, you know, comparing to other predictive coding papers rather than to some arbitrary baseline, because, you know, we figured, if we pitch this as being about bioplausibility, then we can sort of maybe actually get results that are good enough to publish.
+
+32
+00:03:45,167 --> 00:03:47,610
+Anyway, yeah.
+
+33
+00:03:47,945 --> 00:04:13,142
+so you know we racked up our first win there you know we went into other algorithms that were related or inspired us really
+
+34
+00:04:16,430 --> 00:04:45,778
+actually interesting is you know basically we would say all right you have yeah oh um you know after you know demonstrating that this quote unquote wins like okay it works well enough the which
+
+35
+00:04:50,973 --> 00:04:53,215
+Oh, this entire slide.
+
+36
+00:04:53,255 --> 00:04:53,475
+Yes.
+
+37
+00:04:53,595 --> 00:04:56,058
+Okay.
+
+38
+00:04:56,078 --> 00:04:56,918
+Yeah.
+
+39
+00:04:56,938 --> 00:05:03,845
+So our DCPC, in addition to being a predictive coding algorithm, is a particle algorithm.
+
+40
+00:05:04,766 --> 00:05:11,752
+So it's training a particle cloud, so to speak, to approximate the posterior distribution in a Bayesian inference problem.
+
+41
+00:05:12,933 --> 00:05:18,178
+So as such, we compared it to this algorithm particle gradient descent, PGD,
+
+42
+00:05:18,597 --> 00:05:42,664
+which we were drawing pretty direct inspiration and then we also compared it to you know langevin predictive coding out at icml this year and so we compared on you know the fresh at inception distance that people use in deep learning rather than on you know the um variational bound to the surprise
+
+43
+00:05:44,517 --> 00:05:53,891
+You know, we didn't compare on log evidence because that's, you know, you can often get very bad visual samples from a model that has a very good log evidence, actually.
+
+44
+00:05:53,951 --> 00:06:06,689
+So in order to, you know, sort of say, like, okay, that, you know, log evidence is not the only thing that counts, we, you know, compared on this fresh at inception distance.
+
+45
+00:06:08,131 --> 00:06:14,220
+Over here, we've got some samples from our pseudo-posterior predictive distribution.
+
+46
+00:06:15,196 --> 00:06:19,888
+So it's a proper predictive distribution, but constructed from a pseudo-posterior.
+
+47
+00:06:19,928 --> 00:06:32,158
+Pseudo in the sense that we're fitting, I think, a small Gaussian mixture model to our big particle cloud of the actual posterior distribution.
+
+48
+00:06:33,083 --> 00:06:46,180
+And then having done that, we say, all right, now we'll draw samples from this GMM as a pseudoposterior, then pass those latents through the generative model again to generate samples.
+
+49
+00:06:49,344 --> 00:06:56,113
+And the actual neural architecture here is basically a one-level VAE.
+
+50
+00:06:57,735 --> 00:06:59,918
+You just chop off the encoder.
+
+51
+00:07:00,235 --> 00:07:18,868
+from a one-level VAE that would be used in these baseline papers, use the same neural architecture in PyTorch, and then basically just got slightly better results visually by just improving the inference algorithm and the training.
+
+52
+00:07:28,889 --> 00:07:31,052
+Okay, did you manage not to lose that?
+
+53
+00:07:32,394 --> 00:07:32,574
+Cool.
+
+54
+00:07:34,377 --> 00:07:42,269
+Okay, so sort of the interesting stuff about it, you know, especially compared to previous work, is how this actually works.
+
+55
+00:07:43,471 --> 00:07:47,356
+As I said, it's a particle algorithm, so we're actually drawing samples.
+
+56
+00:07:48,117 --> 00:07:53,646
+I think I said before we went live, you know, this is sort of the year of Monte Carlo predictive coding methods.
+
+57
+00:07:54,647 --> 00:07:58,052
+We're one of maybe, you know, three or four that are out this year.
+
+58
+00:07:59,855 --> 00:08:15,759
+So after you've initialized your graphical model by just doing ancestor sampling to get yourself some initial cloud, what you can do during every inference pass is start from the bottom up.
+
+59
+00:08:17,061 --> 00:08:22,690
+So that's the right over here would be the quote unquote bottom of the hierarchy.
+
+60
+00:08:24,222 --> 00:08:49,116
+can calculate you know your prediction errors which are the same kind of thing as in previous predictive coding work you know there's score functions with respect to the latent variable and the thing that we actually do differently from other work is that rather than just taking like a score function as a local gradient of the event of
+
+61
+00:08:51,138 --> 00:09:13,450
+let's say rather than taking a score function as like a direct gradient of the variational free energy we take score functions with respect to the log complete conditional distribution so like a coordinate update distribution if you have you know this variable z1
+
+62
+00:09:13,683 --> 00:09:21,231
+then its complete conditional is the distribution of this variable Z1 given its entire Markov blanket.
+
+63
+00:09:22,873 --> 00:09:30,361
+So given both the predictions coming in from above it and the observations coming in from below.
+
+64
+00:09:32,203 --> 00:09:42,795
+So that's why rather than one error unit here, we have an error unit that connects Z1 to the observation below it.
+
+65
+00:09:43,771 --> 00:09:56,923
+We also have an error unit that sort of recurrently tries to draw Z1 back towards its local prior until that prior is changed by an update at Z2.
+
+66
+00:10:04,150 --> 00:10:13,018
+But if you think about how Bayesian inference works, Bayesian inference is just what you get when you have one distribution and it has to be normalized.
+
+67
+00:10:13,741 --> 00:10:34,483
+but you're trying to fit it as closely as you can to both the likelihood and the prior at the same time and so when you try to do that locally within a big structured graphical model you know the logical posterior to go after is the complete conditional and that's what we actually did
+
+68
+00:10:35,375 --> 00:10:57,675
+And I want to shout out Hal here because he's not on the stream, but his previous work on amortized population Gibbs samplers is really what showed that this kind of sampling from the complete conditionals could work at scale and inspired this project pretty directly.
+
+69
+00:10:57,715 --> 00:11:04,521
+This is kind of follow-up work to his paper on that.
+
+70
+00:11:07,943 --> 00:11:24,123
+And the way that we sort of make this work in terms of constructing a free energy or in terms of making sure we target the correct joint distribution is that we can use Langevin proposals.
+
+71
+00:11:26,747 --> 00:11:36,499
+If you have a prediction error from E sub zero and another E down sub one, add them together.
+
+72
+00:11:36,580 --> 00:11:40,205
+you have the gradient of the log complete conditional.
+
+73
+00:11:40,245 --> 00:11:55,584
+Now it's the log unnormalized complete conditional, but that's fine because, you know, the gradient doesn't like, you know, when you take a gradient of a log density, the normalizing constant falls out.
+
+74
+00:11:56,785 --> 00:12:04,495
+And so you can target that with, you know, a Langevin dynamics proposal, which just says, take your previous prediction,
+
+75
+00:12:06,483 --> 00:12:16,976
+you know, multiply your prediction error by a learning rate, add the prediction error to the previous prediction, and then add some Gaussian noise.
+
+76
+00:12:18,898 --> 00:12:26,988
+You know, you have to balance like the, you have to balance the magnitude of the Gaussian noise with the learning rate in a certain way, but like that's a detail.
+
+77
+00:12:27,869 --> 00:12:35,258
+Really it's saying let's be in the latent space, then let's follow the gradient, and then let's inject a little bit of noise so we explore most of the time.
+
+78
+00:12:36,503 --> 00:13:04,401
+rather sorry so we explore some of the time while exploiting whenever the gradient signal is strong enough and then you know i note that we use sequential monte carlo here and what that's actually for is that sequential monte carlo algorithms give you a whole set of rules for how you can start from you know the proposal that you sample from then go to the local target
+
+79
+00:13:04,988 --> 00:13:20,254
+that you are actually trying to sample from, and then combine those in a neat way to get samples from the complete joint distribution.
+
+80
+00:13:21,396 --> 00:13:28,228
+So you would start here from the data on the right, do this predictive coding step for Z1,
+
+81
+00:13:29,137 --> 00:13:51,317
+be done with it, repeat the same predictive coding step for Z2, but now with a new prediction error from Z1 down here, repeat all the way up here, and then you have a bunch of samples from different complete conditionals, and you have to come up with some way to say, well, what's my free energy?
+
+82
+00:13:51,337 --> 00:13:55,381
+Or in SMC terms, what's my importance weight?
+
+83
+00:13:56,362 --> 00:13:57,743
+And that's really where
+
+84
+00:13:59,377 --> 00:14:05,724
+you know, that's really where like the SMC technique becomes helpful is for proving the whole thing is correct.
+
+85
+00:14:07,166 --> 00:14:17,797
+So if you think, you know, we named it divide and conquer because, you know, what we're essentially doing is we divide the graphical model into these complete conditional units.
+
+86
+00:14:19,039 --> 00:14:26,667
+Then we conquer each of them with, you know, basically a Monte Carlo predictive coding proposal.
+
+87
+00:14:28,672 --> 00:14:31,716
+And then we conquer the whole thing by recombining them.
+
+88
+00:14:33,879 --> 00:14:37,503
+So it really is like a divide and conquer algorithm in the classic sense.
+
+89
+00:14:39,345 --> 00:14:43,811
+Also, the reviewers wanted us to name it something clearer than the old name.
+
+90
+00:14:44,312 --> 00:14:47,596
+All right.
+
+91
+00:14:47,716 --> 00:14:52,562
+So then, you know, that's a summary of the talk, really.
+
+92
+00:14:52,762 --> 00:14:58,189
+And then we can go into like details of the paper and, you know, anything else we want to talk about.
+
+93
+00:15:00,262 --> 00:15:15,690
+But broadly, the idea here is that predictive coding as a theory enjoys biological plausibility for approximate Bayesian inference, which is actually this really hard task.
+
+94
+00:15:15,890 --> 00:15:20,599
+In deep learning world, people use all of these awkward neural network
+
+95
+00:15:21,203 --> 00:15:50,535
+arrangements to try and amortize inference and then the people who are real purists are just doing markov chain monte carlo because amortized inference isn't good enough for them and to be fair it's often not very good if you don't you know structure your amortized posterior like just so and more to the point in neuroscience you know like predictive coding theories
+
+96
+00:15:50,819 --> 00:16:13,789
+have often been you know built on like mean field assumptions about the approximate posterior so then you just have a coordinate wise representation of the approximate posterior and it's pretty well known that like this can't actually get you a very close approximation to a correlated structured posterior
+
+97
+00:16:17,110 --> 00:16:18,593
+So that was where the trouble was.
+
+98
+00:16:18,653 --> 00:16:23,501
+That was the problem that we took a first step on solving.
+
+99
+00:16:23,521 --> 00:16:33,699
+And we got it to work well enough that you can substitute it for neural networks in some of these cases where people use neural networks.
+
+100
+00:16:34,821 --> 00:16:40,030
+And we're going to be at the poster session next Friday at NeurIPS if anyone wants to come and talk to us.
+
+101
+00:16:42,625 --> 00:16:47,009
+You know, and of course, we have to mention the places that we work and our affiliations.
+
+102
+00:16:52,674 --> 00:16:52,874
+All right.
+
+103
+00:16:52,894 --> 00:16:53,895
+Awesome.
+
+104
+00:16:53,915 --> 00:16:54,355
+Thank you.
+
+105
+00:16:55,176 --> 00:16:55,617
+Thank you.
+
+106
+00:16:56,377 --> 00:16:58,099
+I'll stop the screen share.
+
+107
+00:16:59,160 --> 00:17:01,041
+Yeah, I'll ask some questions.
+
+108
+00:17:01,101 --> 00:17:04,985
+And if anyone in the live chat has questions, they can write.
+
+109
+00:17:05,345 --> 00:17:10,229
+Maybe just starting with the structured part.
+
+110
+00:17:10,530 --> 00:17:11,991
+What do you mean that
+
+111
+00:17:14,114 --> 00:17:15,777
+It's a structured problem.
+
+112
+00:17:18,403 --> 00:17:18,904
+Oh, yeah.
+
+113
+00:17:19,004 --> 00:17:35,498
+So, like, this is the experiment, you know, originally, I looked at this and said, well, how do we actually replicate how's results from amortized population Gibbs, and that was like a full on time series model.
+
+114
+00:17:35,815 --> 00:18:03,865
+in which there were you know like some local variables that were updated at each time step but also some global random variables that were standing you know at the hierarchical level above so you know that was really like I thought okay we need to tackle these kinds of structured problems because you know if you I mean go look at I'm trying to think like
+
+115
+00:18:04,402 --> 00:18:10,091
+You know, honestly, most of the time, most interesting generative models are going to be kind of structured.
+
+116
+00:18:11,293 --> 00:18:33,126
+If there's more than one latent variable, and it's not just IID sampling, so any kind of hierarchical Bayes, you know, time series structure, dynamical system structure, like all of this stuff that you find in cognitive science and neuroscience, so, so commonly,
+
+117
+00:18:34,591 --> 00:18:47,267
+And yet, which is often, you know, we've often sort of given up on doing anything better than particle filtering or amortized inference if you look in the machine learning world.
+
+118
+00:18:51,280 --> 00:19:21,034
+okay and the graphical structure you showed was a linear hierarchical model or it was going from side to side but that's just graphical convention so do you ever need to account for branching or any other kinds of structures or how do you divide and conquer when there's also splitting and merging so i mentioned about markov blankets right
+
+119
+00:19:21,807 --> 00:19:29,259
+As long as you're in a directed acyclic graphical model, then there's still a notion of a Markov blanket for every single random variable.
+
+120
+00:19:29,900 --> 00:19:40,296
+That's the thing that you divide the graphical model into, is variables with their Markov blankets.
+
+121
+00:19:40,316 --> 00:19:44,963
+And this is sort of intended to be a bit free energy principle.
+
+122
+00:19:49,263 --> 00:19:54,227
+perhaps bringing the notebook up would help
+
+123
+00:19:55,102 --> 00:19:58,565
+I'll ask the two questions, so return to them as you see fit.
+
+124
+00:19:58,625 --> 00:20:01,969
+The first is, how do you specify the model?
+
+125
+00:20:02,449 --> 00:20:07,694
+What does it look like before training and what does get updated during training?
+
+126
+00:20:08,355 --> 00:20:22,088
+And the second question is, how do you take that step as a modeler between the structure of a given problem, like the handwriting digits and adapting that
+
+127
+00:20:22,253 --> 00:20:41,950
+to what is that something more generic or does that graph need to already from some other source have structure that's amenable to the target
+
+128
+00:20:48,545 --> 00:20:55,153
+So the target density that we would try to sample from is defined by the graphical model structure.
+
+129
+00:20:56,976 --> 00:20:59,319
+And yeah, that has to come from somewhere.
+
+130
+00:20:59,359 --> 00:21:10,773
+So conventionally, if you're doing machine learning engineering, then that's sort of up to your choice as the user of our algorithm.
+
+131
+00:21:12,055 --> 00:21:16,020
+It depends on what domain knowledge you have about your application.
+
+132
+00:21:16,996 --> 00:21:41,957
+and if we were talking about brains then that structure of the generative model is something that evolved you know and there could be you know and I should mention you know the recent verses work like of course you can also have you know structure learning problems you know throughout like development but
+
+133
+00:21:44,047 --> 00:21:47,431
+throughout development and through certain behavioral tasks.
+
+134
+00:21:49,773 --> 00:21:53,096
+But that gets you a bit beyond the realm of just graphical models.
+
+135
+00:21:53,437 --> 00:22:00,604
+And so we basically aimed at just a given graphical model.
+
+136
+00:22:01,465 --> 00:22:04,849
+Take a graphical model as given and try to do inference in it.
+
+137
+00:22:05,970 --> 00:22:08,072
+You can work your way up to the harder stuff later.
+
+138
+00:22:08,132 --> 00:22:12,957
+In practice, we often use deep neural networks.
+
+139
+00:22:13,325 --> 00:22:16,150
+because we tried to replicate the experiments of other papers.
+
+140
+00:22:16,531 --> 00:22:19,656
+So we had multilayers and the convolutional models.
+
+141
+00:22:24,925 --> 00:22:28,992
+Yeah, maybe share the notebook and or the repo.
+
+142
+00:22:29,734 --> 00:22:30,675
+Working out, yeah.
+
+143
+00:22:31,737 --> 00:22:36,345
+Oh, the GitHub repo is like, yeah, we can share that pretty easily.
+
+144
+00:22:43,801 --> 00:22:47,545
+I'm going to put this first in the Zoom chat, then share my screen.
+
+145
+00:22:59,477 --> 00:23:06,244
+Yeah, so in the GitHub repo, we try, we attempt.
+
+146
+00:23:08,186 --> 00:23:09,567
+Just zoom in a little bit.
+
+147
+00:23:09,667 --> 00:23:11,449
+That's actually, sorry.
+
+148
+00:23:11,609 --> 00:23:13,011
+Yeah.
+
+149
+00:23:13,031 --> 00:23:13,251
+Yeah.
+
+150
+00:23:14,665 --> 00:23:24,077
+So in the GitHub repo minus a requirements file, we try to share enough that you could hypothetically download and run this like just from your command line.
+
+151
+00:23:25,980 --> 00:23:32,108
+You would need, you know, a Python environment that's got the necessary stuff installed, but all of that is standard stuff.
+
+152
+00:23:33,790 --> 00:23:40,639
+So if you wanted to just rerun the MNIST experiment, you would literally run this command on your command line.
+
+153
+00:23:41,716 --> 00:23:45,541
+And then you could also start your tensor board and watch it train.
+
+154
+00:23:45,601 --> 00:24:01,202
+Then we include evaluation notebooks that basically would help you to replicate the figures from the paper.
+
+155
+00:24:05,507 --> 00:24:07,470
+And yeah, we actually have
+
+156
+00:24:11,585 --> 00:24:16,873
+Yeah, we also share some pre-trained weights and particles.
+
+157
+00:24:18,996 --> 00:24:24,904
+I know that's probably a bit of a colliding name with weights and biases.
+
+158
+00:24:26,307 --> 00:24:28,810
+In this case, the weights include the biases.
+
+159
+00:24:28,850 --> 00:24:38,284
+Weights would mean neural network weights, and then particles would mean the frozen samples from the posterior distribution for random variables.
+
+160
+00:24:42,584 --> 00:24:48,213
+And then, of course, we just give, you know, the paper or sorry, the table of results.
+
+161
+00:24:50,677 --> 00:25:05,721
+And as a small bonus to everyone else who has to try and replicate our results, we include an implementation of the discretized Gaussian distribution, which is otherwise like buried in the diffusion models literature.
+
+162
+00:25:05,761 --> 00:25:08,085
+Thank you very much.
+
+163
+00:25:11,423 --> 00:25:19,132
+Yeah, and it's under MIT license, so you can pretty much go ahead and fork this, contribute that.
+
+164
+00:25:20,553 --> 00:25:30,104
+It's in the universal probabilistic programming language, Pyro, since that's basically the largest deep probabilistic programming language.
+
+165
+00:25:31,486 --> 00:25:33,248
+Let's take a look at some of the notebooks.
+
+166
+00:25:34,249 --> 00:25:35,170
+Let's see.
+
+167
+00:25:37,715 --> 00:25:39,777
+That one's going to look like garbage.
+
+168
+00:25:41,058 --> 00:25:42,940
+This one's going to look like not garbage.
+
+169
+00:25:49,487 --> 00:25:49,747
+Yeah.
+
+170
+00:25:49,907 --> 00:26:07,485
+So what this does is, you know, it's basically like PyTorch and PyTorch lightning, you know, so you're going to like read some JSON file and that's going to give you, you know, your data, your model and your trainer.
+
+171
+00:26:09,676 --> 00:26:15,641
+then you're going to remind the trainer to just load the weights and particles from a checkpoint.
+
+172
+00:26:17,223 --> 00:26:21,146
+The random variables are saved as part of the PyTorch light and checkpoints.
+
+173
+00:26:24,750 --> 00:26:27,412
+Yeah.
+
+174
+00:26:27,432 --> 00:26:29,994
+It loads them, blah, blah, blah, blah, blah.
+
+175
+00:26:30,775 --> 00:26:38,502
+Right there when it says 357,000 trainable parameters, what is that number coming from?
+
+176
+00:26:39,393 --> 00:26:41,535
+That is the number of neural network weight.
+
+177
+00:26:41,635 --> 00:26:45,840
+Like that's the number of float 64s in the neural network weights.
+
+178
+00:26:47,721 --> 00:26:51,445
+So that's actually a relatively small number because this was sort of a toy problem.
+
+179
+00:26:51,465 --> 00:26:55,269
+And normally it would be more in the millions.
+
+180
+00:26:57,852 --> 00:27:03,337
+And where were those combinatorics specified?
+
+181
+00:27:06,781 --> 00:27:08,843
+Right here in the architecture specification.
+
+182
+00:27:13,548 --> 00:27:14,630
+That's after it, though.
+
+183
+00:27:17,254 --> 00:27:19,618
+Yeah, because you have to load the thing to print the thing.
+
+184
+00:27:21,742 --> 00:27:22,163
+Okay, okay.
+
+185
+00:27:22,183 --> 00:27:24,026
+That's just printing it out.
+
+186
+00:27:24,046 --> 00:27:27,853
+But you specified it elsewhere, what the structure would actually be, loaded it in, printed it out.
+
+187
+00:27:27,933 --> 00:27:31,258
+Okay.
+
+188
+00:27:31,278 --> 00:27:37,429
+Yeah, the JSON file tells you which modules in the Python code you have to load and all of that.
+
+189
+00:27:40,598 --> 00:28:04,007
+So if we go look at what is the actual training file that we were loading here, it tells you load this model module, pass it these hyperparams, checkpoint this often, load this data set with this hyperparameter and batch size.
+
+190
+00:28:06,721 --> 00:28:29,050
+you know here's like learning rates and the number of particles you know the number of sweeps meaning like passes over the graphical model you know that you do per training step yeah this is like a relatively standard deep learning type stuff
+
+191
+00:28:34,379 --> 00:28:37,445
+Yeah, and when we've loaded the architecture, we actually print it out.
+
+192
+00:28:40,570 --> 00:28:43,396
+So it's a simple isotropic Gaussian prior.
+
+193
+00:28:43,436 --> 00:28:57,602
+And then we're running it through a linear layer, an activation function, a deconvolution layer.
+
+194
+00:28:58,882 --> 00:29:24,670
+some batch you know the then you know each layer includes batch normalization you know two more convolutional layers with their batch normalization and non-linearity two more convolutional layers again and then finally a deconvolutional layer that gives you the correct image size and channel number
+
+195
+00:29:32,007 --> 00:29:32,788
+Well, that's rude.
+
+196
+00:29:37,836 --> 00:29:54,403
+Anyway, yeah, so then we have this method we call load particles, which just tells you that's really for loading the particles into GPU memory, once you know which data items you're testing on.
+
+197
+00:29:56,948 --> 00:30:18,692
+again like relatively standard deep learning stuff, then here we say we're going to open a Python context handler by clamping the graphical model to the pre-trained particles that we loaded from disk.
+
+198
+00:30:21,656 --> 00:30:23,698
+So if you load your
+
+199
+00:30:24,269 --> 00:30:26,431
+posterior particle cloud from disk.
+
+200
+00:30:27,172 --> 00:30:30,756
+Then you have to say to the graphical model, I'm testing right now.
+
+201
+00:30:30,816 --> 00:30:32,839
+Don't do any additional inference steps.
+
+202
+00:30:32,919 --> 00:30:37,764
+Just use these samples as your distribution.
+
+203
+00:30:40,687 --> 00:30:41,428
+So then we run.
+
+204
+00:30:41,488 --> 00:30:47,815
+We average over particles to get our reconstructions of training images.
+
+205
+00:30:47,875 --> 00:30:51,019
+Now we're going to plot them.
+
+206
+00:30:53,007 --> 00:31:22,305
+here's the actual reconstructions so like they're you know kind of blurry like you expect from a VAE but it shows that you know things did actually work then you say okay I don't want to look at reconstructions of training images you know I want to know do I have a trained generative model so you clear all that stuff out and you're going to get
+
+207
+00:31:23,332 --> 00:31:36,988
+all of the training and validation particles from disk for fitting your pseudoposterior.
+
+208
+00:31:37,048 --> 00:31:42,274
+And you're going to predict some new images using the pseudoposterior.
+
+209
+00:31:42,315 --> 00:31:51,145
+Then lo and behold, you plot out the samples from the pseudoposterior.
+
+210
+00:31:52,711 --> 00:32:22,617
+kind of blurry and they're not as varied as you would sort of like them to be but that is what happens when you have a very simple generative model like you know if you go back to this neural architecture here this is nothing like a state-of-the-art you know diffusion model or whatever that you would use for image generation it's really just a bunch of neural layers stuck together mapping a latent variable to an observation
+
+211
+00:32:25,786 --> 00:32:40,519
+Yeah, and then we're gonna, you know, having generated those, we go through, we calculate, you know, some metrics across the validation data under a series of different random seeds.
+
+212
+00:32:42,581 --> 00:32:54,392
+We can also sample from the prior rather than the pseudo-posterior, and that gives us lower visual quality, but more variation, more realistic variation.
+
+213
+00:32:56,667 --> 00:33:00,693
+And then, you know, we calculate the statistics that we reported in the paper.
+
+214
+00:33:09,107 --> 00:33:12,452
+Plus some statistics we don't report in the paper now that I think of it.
+
+215
+00:33:15,797 --> 00:33:17,901
+Like the effective sample size.
+
+216
+00:33:17,941 --> 00:33:20,565
+That one's a good one for inference nerds.
+
+217
+00:33:21,811 --> 00:33:33,588
+You divide that by the number of particles you're using, and it gives you a sort of percentage that tells you how well are you actually fitting the true posterior distribution with this batch of samples.
+
+218
+00:33:35,371 --> 00:33:41,119
+And in our case, the answer is, yeah, about 92% effective samples.
+
+219
+00:33:47,275 --> 00:33:47,635
+Thanks.
+
+220
+00:33:47,956 --> 00:33:52,602
+Maybe could we walk through a similar logic for the MNIST handwriting?
+
+221
+00:33:54,024 --> 00:33:54,645
+Yeah, totally.
+
+222
+00:33:55,386 --> 00:33:56,047
+Let's see.
+
+223
+00:33:56,067 --> 00:34:02,155
+I think it would be almost equivalent.
+
+224
+00:34:02,175 --> 00:34:03,597
+It's just that we use a different model.
+
+225
+00:34:08,884 --> 00:34:16,995
+Yeah, it's pretty much the same, but with, you'll notice there's quote unquote three decoders here.
+
+226
+00:34:18,089 --> 00:34:25,599
+So each of these is actually performing a random Gaussian sampling step in between.
+
+227
+00:34:25,760 --> 00:34:28,604
+So this is a proper hierarchical Bayesian problem.
+
+228
+00:34:33,390 --> 00:34:34,292
+So you have a prior.
+
+229
+00:34:34,332 --> 00:34:40,160
+Then you have a forward conditional and a forward conditional.
+
+230
+00:34:40,981 --> 00:34:43,304
+So you have three levels of latent variables.
+
+231
+00:34:44,746 --> 00:34:46,729
+And then finally, you have your likelihood.
+
+232
+00:34:53,712 --> 00:34:56,937
+What leads you to use those here?
+
+233
+00:34:57,538 --> 00:35:02,727
+Like do you sweep or scan over two, three, four layers?
+
+234
+00:35:02,867 --> 00:35:06,933
+Do you explore out features equals other multipliers?
+
+235
+00:35:07,755 --> 00:35:14,185
+Or what led you to this specification for the Lightning DCPC?
+
+236
+00:35:17,152 --> 00:35:32,194
+So in this case, we took this exact specification from Monte Carlo predictive coding, which is over here.
+
+237
+00:35:36,461 --> 00:35:41,488
+So we wanted to compare inference algorithms head to head.
+
+238
+00:35:42,869 --> 00:35:49,683
+So we picked exactly the same generative model structure and replicated it.
+
+239
+00:35:53,450 --> 00:35:53,831
+Awesome.
+
+240
+00:35:53,851 --> 00:36:02,989
+Yeah, that makes a lot of sense and it helps with the continuity and isolating the inference algorithmic component.
+
+241
+00:36:03,711 --> 00:36:04,472
+Is there a...
+
+242
+00:36:06,055 --> 00:36:34,290
+in a methods or a procedural step anywhere other than these or or all that are needed these json configs and the notebooks like this so this is runnable like this should be runnable if you actually just download it and you know if you download it and follow the links to download you know the pre-trained weights put them in the path that the notebook expects here
+
+243
+00:36:35,620 --> 00:36:37,262
+then you should just be able to run this.
+
+244
+00:36:37,683 --> 00:36:38,684
+It should be point and click.
+
+245
+00:36:40,427 --> 00:36:46,896
+I say should because, you know, like I've tried it, but I've tried it once.
+
+246
+00:36:50,001 --> 00:36:50,301
+Cool.
+
+247
+00:36:50,562 --> 00:36:53,266
+Definitely opportunities for people to explore.
+
+248
+00:36:53,326 --> 00:36:57,251
+And then what about the training step?
+
+249
+00:37:00,596 --> 00:37:05,323
+So that would be done from the command line as the repo readme tells us.
+
+250
+00:37:07,582 --> 00:37:14,034
+That's this step.
+
+251
+00:37:14,054 --> 00:37:19,585
+And you watch on TensorBoard and make a manual call based on diagnostics?
+
+252
+00:37:19,966 --> 00:37:22,611
+Or how else do you determine?
+
+253
+00:37:22,631 --> 00:37:29,404
+I mean, I would generally say let it run, at least for these experiments, let it run to completion.
+
+254
+00:37:31,477 --> 00:37:47,835
+Like, you know, I know that if I'm stopping something partway in because of the diagnostics I see on TensorFlow, you know, like, for instance, a very noisy, staticky, like, loss curve, well, that's how I know when it's not working.
+
+255
+00:37:50,458 --> 00:37:56,064
+You know, the experiments that are mentioned in the paper are actually, you know, known to work.
+
+256
+00:37:56,485 --> 00:37:59,408
+Like, you can just leave that running until it's done,
+
+257
+00:37:59,658 --> 00:38:06,747
+and you will get, subject to differences in your random number generator, more or less the result we got in the paper.
+
+258
+00:38:11,733 --> 00:38:26,391
+I actually want to say this is one of the nice things about the culture of machine learning these days, is that everything is really expected to be not just replicable, but idiot-proof replicable.
+
+259
+00:38:27,164 --> 00:38:33,642
+As in, if you cannot just run this by rote and get the same result, then reviewers don't believe the result is real.
+
+260
+00:38:36,269 --> 00:38:40,802
+Which is very much for replicability of science the way it actually should be.
+
+261
+00:38:47,735 --> 00:38:50,899
+So we looked at faces and digits.
+
+262
+00:38:51,240 --> 00:39:00,071
+Let's say somebody were looking at another kind of image classification problem, cats and dogs.
+
+263
+00:39:00,091 --> 00:39:03,175
+So what would need to be adapted?
+
+264
+00:39:03,235 --> 00:39:10,344
+What kind of data would be in for the training step?
+
+265
+00:39:11,045 --> 00:39:17,674
+And then to what extent do these same lightning DCPC specs structures
+
+266
+00:39:19,072 --> 00:39:25,781
+work or to what extent do the first or the secondary layers need to be adapted to alternative cases?
+
+267
+00:39:27,784 --> 00:39:39,740
+So this thing that gets called a graph inside the Lightning DCPC, you'd have to write a new one of these classes for a new problem.
+
+268
+00:39:40,721 --> 00:39:46,429
+So let's say, for instance, that you want to do semi-supervised Bayesian learning.
+
+269
+00:39:46,763 --> 00:39:50,049
+My old advisor from my PhD had a paper about that.
+
+270
+00:39:51,651 --> 00:40:00,206
+So if you're doing, say, cats or dogs, then you're going to want to specify a new graphical structure that's rooted in a prior over your latent embedding.
+
+271
+00:40:00,246 --> 00:40:05,515
+And then it should have a pair of likelihoods.
+
+272
+00:40:07,486 --> 00:40:37,037
+essentially you know one being to the class label which is going to be it's semi-supervised so let's say you only get class labels on about half the samples and the other is going to be you know for the actual image which is going to be fully observed you know and then after writing what is it a um a high torch lightning data module for your data set
+
+273
+00:40:38,215 --> 00:41:05,505
+which like tells you you know when which sorry it handles figuring out which data points are semi are supervised versus unsupervised because it's a semi-supervised problem and then yeah you would put that together and run it more or less you know you would write another little json file and just run it and hopefully you would get
+
+274
+00:41:06,700 --> 00:41:24,376
+hopefully if your architecture for the generative model is rich enough, then your latent embedding space should begin to capture differences between the supervised classes and give you good prediction on classification.
+
+275
+00:41:24,416 --> 00:41:36,707
+And then if you wanted to do classification style testing or evaluation, you would present a whole new image as the observation
+
+276
+00:41:37,632 --> 00:41:59,877
+then just perform joint Bayesian inference on both the latent embedding and the class label and then check that your class labels are good so to speak you know for an unobserved class label you're not getting a one hot vector you're getting
+
+277
+00:42:00,447 --> 00:42:09,023
+you know, a series of logits or like an element on the simplex that specifies probabilities of class membership.
+
+278
+00:42:09,424 --> 00:42:13,431
+So, hence my saying good rather than absolutely correct.
+
+279
+00:42:15,155 --> 00:42:19,062
+You never get a completely absolute yes-no answer out of a classifier.
+
+280
+00:42:21,847 --> 00:42:23,350
+At test time, at least.
+
+281
+00:42:24,443 --> 00:42:29,307
+I think in general, you could also generalize it to different kinds of data types.
+
+282
+00:42:29,327 --> 00:42:33,311
+So it does not have to be, for example, continuous data as images.
+
+283
+00:42:34,091 --> 00:42:39,296
+You could generate discrete distribution, or you can also generate time series distribution.
+
+284
+00:42:39,676 --> 00:42:46,202
+This is something that has not been tested in this paper, but in theory, the theoretical framework would allow to do so.
+
+285
+00:42:47,503 --> 00:42:53,488
+Yeah, like we have an appendix in the paper that extends the math to discrete distributions.
+
+286
+00:42:56,523 --> 00:43:01,359
+That does take a mathematical extension, and then that would take some more coding.
+
+287
+00:43:02,603 --> 00:43:05,773
+So we don't make any promises there.
+
+288
+00:43:09,027 --> 00:43:36,098
+so in in past dreams and and journeys eli as you mentioned we discussed with dean and others the anticipatory allostasis and then tomaso we discussed the causal modeling so where would you triangulate this work or how do you see it as sort of
+
+289
+00:43:37,799 --> 00:43:50,796
+drawing on or complementing or or not but just interesting that it's it's not a homeostatic model often in the organismal ethological active inference there's a lot of focus on
+
+290
+00:43:51,721 --> 00:44:20,023
+organismal behavior in these kinds of topics homeostasis allostasis being critical there and then in the bayesian modeling space often there's a focus on the interpretability of smaller models and carving nature at the joints and all of that not this more machine learning sort of specify it in a sequence of convolutional layers
+
+291
+00:44:21,134 --> 00:44:39,373
+So how do you see all, just having worked on those different areas, how do each of you see, because clearly this is a relevant contribution and advance, so in what direction or how do you relate it with those prior pieces?
+
+292
+00:44:41,535 --> 00:44:45,499
+I think it depends in which direction you want to push this work a little bit forward.
+
+293
+00:44:45,860 --> 00:44:48,002
+So for example, if we're looking at the machine learning side,
+
+294
+00:44:48,809 --> 00:44:57,822
+and we want to scale it up to larger models, larger convolutional networks, you don't get interpretability because of this method.
+
+295
+00:44:57,962 --> 00:45:04,131
+I think the same interpretability you would have with the old algorithms, you have them with this one.
+
+296
+00:45:05,313 --> 00:45:09,940
+What you gain, apparently, what this work shows, is that you get better performance.
+
+297
+00:45:11,438 --> 00:45:37,699
+but then of course if you apply if you apply to for example uh directed graphical models or vision networks that have a specific causal structure that you can observe in that case you have the you're able to to stay you can do for example the the intervention kind uh queries that i that i presented here like a year ago or something like that and uh but i think i think that's not in the algorithm is more in the kind of model you
+
+298
+00:45:38,388 --> 00:45:43,976
+you pick up is the kind of task that you want to solve and whether you care about it or not.
+
+299
+00:45:44,256 --> 00:45:50,325
+So let's say maybe for generating faces for now, we did not care about having an interpretable model.
+
+300
+00:45:57,615 --> 00:45:58,336
+What would you say?
+
+301
+00:45:58,636 --> 00:45:59,457
+Yeah, Eli.
+
+302
+00:46:01,500 --> 00:46:04,885
+I would sort of compare it to something like a car engine.
+
+303
+00:46:05,219 --> 00:46:14,451
+You need to design a car engine of a certain size and power in order to put in a certain weight class of vehicle.
+
+304
+00:46:16,013 --> 00:46:21,840
+But that doesn't actually determine whether that vehicle is a Honda or a Jaguar.
+
+305
+00:46:21,860 --> 00:46:29,810
+If it's the same size and weight class, then you can actually use a very similar engine inside both of them.
+
+306
+00:46:30,811 --> 00:46:32,914
+And I think that's sort of, on the one hand,
+
+307
+00:46:34,025 --> 00:47:01,635
+the both the beauty and the pain in the ass of working with Bayesian methods is that you know the promise on the sticker is that here's Bayesian methods and you're going to solve a very broad range of problems with by reducing them to the same problem which is Bayesian inference and that's you know sort of what the free energy principle is all about is saying it's all really just reducible to variational inference right
+
+308
+00:47:03,100 --> 00:47:29,040
+now what you do find if you go look at like pi mdp or a lot of you know free energy type papers is that they'll design a model for the paper in order to model some piece of interesting organismic behavior but they'll include some real restrictions on the expressivity of that model which is that it has to be solvable by something like say variational message passing
+
+309
+00:47:31,062 --> 00:47:38,990
+So then there's the question of, well, how do you stop restricting the model class according to what inference algorithm you're going to use?
+
+310
+00:47:40,172 --> 00:47:51,744
+And that was really like the dirty secret of Bayesian methods that I learned in grad school was you're always restricting the model class to what you have a good inference algorithm for.
+
+311
+00:47:51,804 --> 00:47:58,791
+Or at absolutely last resort, running something like
+
+312
+00:47:59,362 --> 00:48:28,153
+plain old metropolis hastings with a gaussian random walk proposal and just waiting for like three weeks of compute and hoping so you know what we actually want to do here is to say we have a better engine like literally we have a better inference engine you don't have to you know now structure an entire neural network architecture of inference proposals
+
+313
+00:48:28,268 --> 00:48:34,414
+You don't have to play graduate student descent with your inference algorithm too much.
+
+314
+00:48:36,316 --> 00:48:55,795
+Assuming that brains have some kind of wondrous generic inference algorithm that solves so many different Bayesian problems all at once, let's try to model that and then just use it because it'll be more powerful and more efficient.
+
+315
+00:48:56,078 --> 00:49:20,500
+than you know customizing to the particular generative model you want and you know really it's like first baby steps but it is encouraging that you know if you i think we show in the table yes like we trained a variational auto encoder you know as a baseline
+
+316
+00:49:20,750 --> 00:49:26,917
+To say, well, what if you're doing variational inference by actually, you know, training a neural network to do it, to do it for you.
+
+317
+00:49:26,938 --> 00:49:36,489
+And it's encouraging to show that we can do a little bit better with like a generic inference algorithm that doesn't need a separate neural architecture.
+
+318
+00:49:36,529 --> 00:49:43,838
+You know, compared to like build a second neural network and train it jointly with the first one.
+
+319
+00:49:47,328 --> 00:50:17,267
+think something that is also exciting about this i mean at least for me is that we like we've been we've been working a lot with creative coding algorithms for machine learning in and i guess you can clearly separate them in like supervised learning and unsupervised learning and in supervised learning for example you train like large convolutional models on c410 c400 or tiny image net it seems that we've kind of like hit a momentary wall so it's
+
+320
+00:50:17,703 --> 00:50:21,069
+up to a certain point, it's becoming really hard to scale up those algorithms.
+
+321
+00:50:22,652 --> 00:50:34,615
+And I think like the old community and it's not it's not only predictive coding, like when I talk with, for example, the equilibrium propagation, three people with all the life by a plausible deep learning community, there's a there's a kind of similar
+
+322
+00:50:35,236 --> 00:51:01,227
+problem that is a when the model is more than seven eight layers deep it doesn't perform well and for example scaling it up to image net is a pain so a lot of people are taking a step back and say okay let's do a little bit more research to find out why and generalize and try to improve the performance in when using for example predictive coding for generative ai so to generate images to sample data points in an unsupervised way
+
+323
+00:51:02,000 --> 00:51:27,045
+the first problem that we had is that like in machine learning we had a couple of until like two years ago it was a mostly a deterministic algorithm so we were taking mostly raw and ballard's version which was the classification one there was no stochasticity so a bunch of people including me started publishing like associative memory papers it's like i give it a data set and i can by giving it a little bit of information you can regenerate exactly the same data points
+
+324
+00:51:28,392 --> 00:51:35,042
+And then in the last year and a half, as Eli said, some people started developing sampling algorithms.
+
+325
+00:51:35,063 --> 00:51:47,282
+And basically, the papers before ours, a little bit, either they do it on MNIST and Fashion MNIST, or they do it on colored images like C410, C400.
+
+326
+00:51:48,303 --> 00:51:53,792
+But they use some kind of gradient descent, so it's not a completely local message passing algorithm.
+
+327
+00:51:55,088 --> 00:52:05,037
+And what we did in our paper is that we have a local message passing algorithm and we compare against theirs by using basically exactly the same architectures, exactly the same number of epochs.
+
+328
+00:52:05,578 --> 00:52:08,340
+I think in some cases even exactly the same learning rate and things like that.
+
+329
+00:52:09,401 --> 00:52:14,646
+As a small correction, we aren't actually a message passing algorithm.
+
+330
+00:52:16,728 --> 00:52:21,973
+We're not technically any form of some product message passing.
+
+331
+00:52:22,797 --> 00:52:49,041
+that's a local algorithm let's say yes local algorithm yes and uh and and we do well like for example the images of faces you've seen may not be may not seem perfect but they are at least from my perspective better than expected and the thing is we haven't i don't i don't feel like we have reached a wall in terms of performance like we've tested only on the architectures that other people have used before and we do well
+
+332
+00:52:49,645 --> 00:52:54,009
+And for now, there's little knowledge on how much this can scale up.
+
+333
+00:52:54,750 --> 00:52:57,793
+Maybe you scale it up like two layers more and it doesn't work anymore.
+
+334
+00:52:57,973 --> 00:52:59,495
+That's something that we don't know yet.
+
+335
+00:53:00,175 --> 00:53:11,547
+But potentially, it would be interesting to, for example, something I was messaging with Eli earlier this week is, can we scale it up to larger decoder-only transformer models, for example?
+
+336
+00:53:12,488 --> 00:53:18,994
+Not like, of course, LLMs or things like that, but for example, something that is like a
+
+337
+00:53:19,463 --> 00:53:28,679
+four, five, six layers deep transformer model, that would already be quite an interesting result.
+
+338
+00:53:28,699 --> 00:53:30,442
+Definitely not an easy one.
+
+339
+00:53:30,923 --> 00:53:37,033
+But I think there is definitely room to improve the results of this paper.
+
+340
+00:53:40,051 --> 00:53:51,885
+Could you also maybe highlight, how do you see local update rules as superset, subset, what have you, of message passing?
+
+341
+00:53:52,506 --> 00:54:03,139
+What differentiates the local locality of connectivity from something that you would explicitly, Eli, call a message as passed?
+
+342
+00:54:08,047 --> 00:54:09,308
+That's an interesting question.
+
+343
+00:54:09,348 --> 00:54:26,164
+I guess there's a I think for message passing, you could call like all the belief propagation algorithms, or at least basically some kind of this class of algorithms where you clearly state which information has to be passed from from basically one latent variable to the other.
+
+344
+00:54:28,606 --> 00:54:34,371
+While local message passing, and they're in those kinds of algorithms, they're all local.
+
+345
+00:54:34,392 --> 00:54:34,932
+So it's a
+
+346
+00:54:35,266 --> 00:54:40,615
+Since you define them to be this way, they must have local information.
+
+347
+00:54:41,356 --> 00:54:51,213
+Well, probably if you generalize to local message passing in general, there are some proposals, maybe including this one, in which maybe things are not supposed to be local.
+
+348
+00:54:51,954 --> 00:55:01,510
+Like maybe you can, like since it's a structured learning algorithm, you may, in theory, get information from other, from latent variables that are more far away.
+
+349
+00:55:02,367 --> 00:55:28,594
+but is that but then when you actually do the computation they are local but that's that's an answer and giving now to the spot maybe like as a better thought on this so i would say that message passing algorithms differ from ours in both their means and their goals and really it's the goals actually that they're starting from so that family of algorithms
+
+350
+00:55:29,890 --> 00:55:43,631
+When people were working on it maybe, I don't know, 20 years ago, what they were really trying to do was to get a summary of a posterior marginal distribution.
+
+351
+00:55:43,651 --> 00:55:51,223
+So they just wanted to be able to pick out one latent variable for an inference query.
+
+352
+00:55:51,760 --> 00:56:09,617
+or a decision they needed to make say what is the posterior on this variable given the data not given any settings for all the other latent variables and that sort of
+
+353
+00:56:10,728 --> 00:56:26,762
+restricts you know the space of tasks that you can really address with message passing and it also you know does end up meaning that you know what you're basically doing is some form of some product or really integral product you know algorithm
+
+354
+00:56:28,531 --> 00:56:41,366
+And that gets you all the way out to, I think, probabilistic circuits are the most current and advanced form of some product-based exact inference algorithm.
+
+355
+00:56:43,088 --> 00:56:53,401
+And they only support tree-shaped generative models rather than those that are directed acyclic graphs in general.
+
+356
+00:56:54,462 --> 00:56:56,344
+So trees rather than forests.
+
+357
+00:56:58,163 --> 00:57:10,876
+And we said, well, let's try targeting, you know, the full joint distribution of all the latent variables together, partly because that's the most general form of evasion inference problem.
+
+358
+00:57:10,996 --> 00:57:21,606
+And partially because, you know, if you have something like a hierarchical time series model from the active inference literature, you might need several levels of the hierarchy.
+
+359
+00:57:21,686 --> 00:57:27,512
+You might need the latent variables across those levels in order to make an action decision.
+
+360
+00:57:31,154 --> 00:57:42,008
+several levels of hierarchy might actually parameterize your policy or the thing that defines the inference problem you care about solving as a modeler.
+
+361
+00:57:49,700 --> 00:57:59,113
+That's very interesting, again, to the sort of settings that a lot of active inference literature has tackled.
+
+362
+00:57:59,314 --> 00:58:12,752
+In these cases, it's like digit in, pixel intensities, et cetera, digit classification, generativity of digits out.
+
+363
+00:58:13,153 --> 00:58:15,977
+How would it be similar or different with something like
+
+364
+00:58:17,425 --> 00:58:34,607
+digit pixels in teammate's behavior out or robot arm out are you leveraging this uh identity or or at least uh
+
+365
+00:58:35,752 --> 00:58:40,039
+structural congruence with the recognition and the generativity?
+
+366
+00:58:40,059 --> 00:58:57,688
+Or like a VAE, can you have something different coming in and have the output be something that's categorically different than the type that was used as input?
+
+367
+00:58:57,708 --> 00:59:00,713
+Like action.
+
+368
+00:59:02,397 --> 00:59:13,351
+So I think one of the advantages of defining anything as a Bayesian inference problem is that it really changes your conception of what's an input versus an output variable.
+
+369
+00:59:14,553 --> 00:59:17,156
+For a Bayesian inference problem, you start with a graphical model.
+
+370
+00:59:17,657 --> 00:59:20,721
+You clamp several variables to be observed data.
+
+371
+00:59:20,761 --> 00:59:23,885
+Those observed data are now your inputs.
+
+372
+00:59:25,106 --> 00:59:30,413
+Your output is any aspect of the posterior distribution that you care to examine.
+
+373
+00:59:35,658 --> 00:59:40,244
+So we don't have to be outputting classification logits.
+
+374
+00:59:41,265 --> 00:59:48,915
+We could also be outputting functions.
+
+375
+00:59:52,340 --> 01:00:02,593
+You could have, say, an active inference time series module where your agent gets some data
+
+376
+01:00:04,092 --> 01:00:22,708
+at every step of computation, performs a full sweep over the entire history of latent variables, and then and only then actually makes a decision about what action it's going to take.
+
+377
+01:00:30,164 --> 01:00:57,032
+which really highlights the importance of being able to specify the full joint distribution and then clamp down with nuance on what you want to be taking as observable, but kind of clamping down from the full joint and then just specifying and then having an inference algorithm that will facilitate that locally operationally
+
+378
+01:00:57,974 --> 01:01:15,004
+rather than trying to, amidst the constraints of which inference procedures you can perform, work within subclasses of graphical models that abide by those constraints.
+
+379
+01:01:21,515 --> 01:01:49,024
+It's almost like it's a far cry in some ways from 2022 textbook figure 4.3, the kind of POMDPs and the matrix multiplication that it gets implemented in PyMDP, the sorts of pedagogical cases that do highlight certain key moves.
+
+380
+01:01:51,012 --> 01:01:58,901
+This, though, looks and feels so much more like a machine learning work.
+
+381
+01:02:01,403 --> 01:02:09,752
+And it's really interesting, though, what this enables.
+
+382
+01:02:09,792 --> 01:02:13,256
+I think you also shaped the work with respect to the venue you want to submit to.
+
+383
+01:02:14,217 --> 01:02:19,703
+Yes, I was just going to say, now that I've found... When we were discussing which experiments to run,
+
+384
+01:02:20,020 --> 01:02:22,663
+The first question is, are we going to submit a new REAPS?
+
+385
+01:02:22,703 --> 01:02:22,923
+Yes.
+
+386
+01:02:23,324 --> 01:02:23,945
+It's going to be OK.
+
+387
+01:02:24,005 --> 01:02:32,455
+Then it's going to be mostly image generation and also a little bit the venue and a little bit what did prior work do?
+
+388
+01:02:36,340 --> 01:02:47,513
+We picked out image generation because predictive coding networks had not yet been used to get this quality of result on unconditional image generation.
+
+389
+01:02:57,145 --> 01:03:06,015
+So other than the conference next week, what ways might you be taking it?
+
+390
+01:03:11,121 --> 01:03:15,486
+I mean, probably there are many future directions.
+
+391
+01:03:16,768 --> 01:03:24,857
+I guess from the perspective that interests me the most, I would be really curious about doing what I mentioned earlier about scaling it up.
+
+392
+01:03:25,259 --> 01:03:31,285
+So for example, how much can we push this kind of algorithm?
+
+393
+01:03:31,305 --> 01:03:52,566
+So I think at some point, if we're going to have enough compute and maybe a faster, this is like some fast training, but probably if it's implemented in a parallelizable library or things like that, you can run larger models, you can run a huge number of hyperparameter search, and you can see at some point where it scales up.
+
+394
+01:03:52,883 --> 01:04:00,071
+Because it's also true, we didn't do a huge hyperparameter search at the end.
+
+395
+01:04:01,172 --> 01:04:11,504
+We did some, but it's definitely not comparable to what's standard in a machine learning paper in which they try thousands of combination of hyperparameters.
+
+396
+01:04:11,644 --> 01:04:14,788
+No, we did not do grid sweeps of hyperparameters.
+
+397
+01:04:14,808 --> 01:04:15,528
+Yeah, yeah, exactly.
+
+398
+01:04:16,009 --> 01:04:21,355
+So I think there's room for pushing this a little bit more.
+
+399
+01:04:22,010 --> 01:04:30,741
+and may hopefully much more but this is I think scalability is something that is really hard to intuitively predict.
+
+400
+01:04:31,442 --> 01:04:42,136
+Like why some models work well on seven layers and then attend they collapse is you just just do it and notice that and then I guess you can do some interpretability afterwards and understand the reason.
+
+401
+01:04:42,597 --> 01:04:46,722
+But doing it before is always a tricky thing.
+
+402
+01:04:46,742 --> 01:04:49,165
+And so I guess trying it is probably the
+
+403
+01:04:49,938 --> 01:04:54,886
+If you have a method that allows you to try fast and fail fast is the best way of scaling it up, I guess.
+
+404
+01:04:56,768 --> 01:05:18,882
+Yeah, so I would also say, based on some of the not so publishable results that I've seen in, for instance, trying to replicate Howe's work with bouncing MNIST digits, how well this works often does seem to depend on exactly how much structure
+
+405
+01:05:19,081 --> 01:05:44,717
+the generative model provides you you know to give like prediction errors that point in the right direction rather than well in exactly the right direction rather than just vaguely the right direction right so you know what is sort of how smooth versus how peaked tightly peaked is the landscape of your like is your free energy landscape
+
+406
+01:05:46,402 --> 01:05:50,908
+And when it's more tightly peaked, this algorithm seems to work significantly better.
+
+407
+01:05:52,090 --> 01:06:10,654
+Versus when it's not so tightly peaked, it'll often sort of get into the region of valid solutions and then get very noisy as it becomes unable to decide which of the potentially valid solutions is really the best one to converge on.
+
+408
+01:06:16,895 --> 01:06:25,810
+I would say it's not so good yet at dealing with multimodal posterior distributions once a good generative model has been learned.
+
+409
+01:06:27,312 --> 01:06:28,715
+So they're scaling it up to that.
+
+410
+01:06:29,636 --> 01:06:43,459
+I'm also interested to see how far could we take this on a fairly standard machine learning problem by just saying every time we have more layers than would be biologically plausible to differentiate,
+
+411
+01:06:43,912 --> 01:06:58,631
+just insert a random variable, like parameterize a Gaussian right there, and then just say, okay, now, you know, the amount of gradient calculation you have to do between layers is biologically plausible.
+
+412
+01:06:58,791 --> 01:07:11,708
+And we'll use the predictive coding math to actually, you know, effectively solve like the, we'll have the random variables substitute for back propagation in a certain way.
+
+413
+01:07:14,945 --> 01:07:15,886
+What do you mean by that?
+
+414
+01:07:18,329 --> 01:07:28,543
+So if you have like a 12-layer, I think, Tommaso, you said like a 12-layer energy-based transformer or something?
+
+415
+01:07:30,485 --> 01:07:40,598
+So I think the general concept about biological plausibility is that you have a latent variable, another latent variable,
+
+416
+01:07:41,168 --> 01:07:51,081
+anyone, anyone that is basically computing the gradients of the parameters to depend on both latent variables, and not on other stuff that are in between.
+
+417
+01:07:51,982 --> 01:08:00,173
+So for example, if you consider the function that goes from one latent latent variable to the to the first from the first to the second, to be a three layer network,
+
+418
+01:08:01,081 --> 01:08:20,642
+the gradients of the weights of the intermediate layer or of the first they would depend on the last latent variable and this would make it basically make you break the locality assumption and biologically biological plausibility while if you consider like a function to be the function to be a single feed forward or convolutional layers
+
+419
+01:08:21,095 --> 01:08:24,480
+It means that for every weight, you have a latent variable before it.
+
+420
+01:08:24,821 --> 01:08:27,966
+So you have a presynaptic neuron and a postsynaptic neuron actually in practice.
+
+421
+01:08:28,587 --> 01:08:38,063
+And this will basically allow you to, once you compute the gradients of the free energy, to have everything that depends on presynaptic and postsynaptic neurons.
+
+422
+01:08:39,485 --> 01:08:42,790
+So this is the concept of biological plausibility.
+
+423
+01:08:44,112 --> 01:08:48,840
+The problem that, for example, I'm noticing when you do classification,
+
+424
+01:08:49,259 --> 01:09:12,786
+is that doing this allows you to propagate the error a little bit less regularly than backprop does because backprop is sequential so it shines a little bit for very deep models especially if you have the right activation function so as a so i guess that's what eli was mentioning when he was saying about yeah so if you have for instance 12
+
+425
+01:09:14,150 --> 01:09:34,786
+If you have, for instance, image, 12 layers, classification, then roughly speaking, getting a gradient for the activations of the middle layer of the neural network depends on all the way on the final observation.
+
+426
+01:09:37,009 --> 01:09:39,634
+Now, what we'd like to say is, well,
+
+427
+01:09:40,508 --> 01:09:48,038
+Ultimately, it's been proved that predictive coding in the limit implements backprop, just very slowly.
+
+428
+01:09:48,078 --> 01:09:53,505
+But what we'd like to do is to calculate gradients a bit more quickly.
+
+429
+01:09:53,525 --> 01:10:03,357
+And so what I was saying is that what you could do is take the middle layer and just say, well, this is going to be a random variable now.
+
+430
+01:10:03,477 --> 01:10:09,385
+Instead of a single deterministic activation that has to be exactly right,
+
+431
+01:10:09,466 --> 01:10:14,591
+in order to pass gradients through, this is now going to be a Gaussian distribution over activations.
+
+432
+01:10:16,914 --> 01:10:27,745
+And having done that, you can then use our predictive coding algorithm to say, I'll try and propagate through the latent space of possible weights.
+
+433
+01:10:30,027 --> 01:10:30,988
+Or actually, no, sorry.
+
+434
+01:10:31,809 --> 01:10:36,334
+I'll try to propagate through the latent space of layer activations.
+
+435
+01:10:38,221 --> 01:10:54,041
+find a relatively good solution, or rather a particle cloud of relatively good solutions for those, and then update the weights in order to make those activations more likely without depending on the final classification.
+
+436
+01:10:55,082 --> 01:11:00,769
+So without depending on the entire backwards computation tape of backcrop.
+
+437
+01:11:06,537 --> 01:11:10,162
+But at the cost of being a little bit random, let's say.
+
+438
+01:11:15,309 --> 01:11:16,070
+What's wrong with that?
+
+439
+01:11:18,894 --> 01:11:34,215
+Well, nothing say probabilistic machine learners and say free energy principle people and active inference people, but currently the machine learning world doesn't like it very much.
+
+440
+01:11:35,039 --> 01:11:36,622
+They say Bayes doesn't scale.
+
+441
+01:11:36,662 --> 01:11:40,368
+We're going to teach them they're wrong about that.
+
+442
+01:11:43,613 --> 01:11:45,135
+Well, it's super cool.
+
+443
+01:11:46,097 --> 01:11:55,592
+If you have any other things you want to add, otherwise, good luck with the conference and with proceeding.
+
+444
+01:11:55,633 --> 01:12:00,861
+It's super exciting, and I hope people watching this go to the repo
+
+445
+01:12:01,803 --> 01:12:06,988
+continue on some of the explorations that you've mentioned and explore it in their own ways too.
+
+446
+01:12:10,031 --> 01:12:17,478
+Yeah, I mean, feel free to send questions to our email addresses that are listed on the paper if you are not able to get the repo to work.
+
+447
+01:12:20,121 --> 01:12:23,364
+Or if you make the repo work and you have ideas for follow-ups.
+
+448
+01:12:23,905 --> 01:12:25,046
+Yes, that too.
+
+449
+01:12:27,308 --> 01:12:30,291
+Yeah, we've got a few ideas already, like...
+
+450
+01:12:30,929 --> 01:12:48,826
+You know, I think I was talking to Tommaso and saying, like, I've been meaning to write some code that will allow you to sort of pass a deterministic output between random variables so that we would, you know, not just be able to do like graphical models, but proper stochastic computation graphs.
+
+451
+01:12:52,309 --> 01:12:53,490
+Divide and contribute.
+
+452
+01:12:55,792 --> 01:12:56,233
+Exactly.
+
+453
+01:12:56,873 --> 01:12:58,675
+Yes.
+
+454
+01:12:59,363 --> 01:12:59,724
+Cool.
+
+455
+01:13:00,565 --> 01:13:01,266
+Thank you, fellas.
+
+456
+01:13:02,508 --> 01:13:02,868
+Until next time.
+
+457
+01:13:02,888 --> 01:13:04,711
+Thank you very much, Daniel, for organizing this.
+
+458
+01:13:05,833 --> 01:13:07,135
+Yeah, thanks for running these.
+
+459
+01:13:07,996 --> 01:13:18,312
+Like, every time a new one comes out, it goes on my Watch Later list, which, admittedly, I never work through, but they do go on it, and sometimes, sometimes, one or two videos.
+
+460
+01:13:19,634 --> 01:13:19,955
+Cool.
+
+461
+01:13:20,395 --> 01:13:20,916
+Cool.
+
+462
+01:13:20,997 --> 01:13:29,691
+when I get the opportunity to binge you are what I'm binging thank you see you guys bye have a nice day bye

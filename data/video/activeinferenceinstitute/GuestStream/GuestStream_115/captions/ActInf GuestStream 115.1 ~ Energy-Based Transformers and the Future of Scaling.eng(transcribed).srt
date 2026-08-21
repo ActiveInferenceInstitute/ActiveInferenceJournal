@@ -1,0 +1,2195 @@
+1
+00:00:07,962 --> 00:00:09,044
+Hello, welcome.
+
+2
+00:00:10,025 --> 00:00:24,267
+It is July 30th, 2025, and we're in Active Inference Guest Stream 115.1 with Alexi Gladstone, who will be presenting and discussing energy-based transformers and the future of scaling.
+
+3
+00:00:24,247 --> 00:00:45,917
+there will be a presentation followed by a discussion so if you're watching live please write any questions in the live chat otherwise thank you alexi at all for the paper and the work and for joining and looking forward to the presentation thank you thanks for having me daniel excited to uh start this presentation so let's go ahead and get started
+
+4
+00:00:46,623 --> 00:00:51,392
+And I'm going to ask a philosophical question at the start of this, just to get everyone thinking.
+
+5
+00:00:51,913 --> 00:00:53,897
+And we'll circle back to this at the end of the presentation.
+
+6
+00:00:54,558 --> 00:01:04,537
+But that question is, would you trade off 100 times the amount of computation, so burning your GPUs for 100 times longer, for 1% better generalization?
+
+7
+00:01:05,358 --> 00:01:08,985
+So generalizing 1% better out of distribution, tiny amount.
+
+8
+00:01:09,286 --> 00:01:12,311
+And you might say, this question sounds absolutely ludicrous.
+
+9
+00:01:12,351 --> 00:01:16,898
+Who in their right mind would spend 100 times the amount on computation just to do 1% better?
+
+10
+00:01:16,938 --> 00:01:19,923
+And maybe we're already actually seeing it, right?
+
+11
+00:01:19,983 --> 00:01:26,113
+So this is an example with OpenAI as 01 and it thinking for a very long time to generalize better.
+
+12
+00:01:26,330 --> 00:01:27,972
+albeit maybe not 1% better.
+
+13
+00:01:28,433 --> 00:01:37,083
+But this is kind of the insight that I think will lead you into the ideas behind energy-based transformers that we are going to dive into now.
+
+14
+00:01:37,924 --> 00:01:46,514
+So to give some contextualization, there's been lots of interest recently in what are called thinking and reasoning models broadly in AI, especially in language modeling.
+
+15
+00:01:46,995 --> 00:01:48,777
+So in language models, particularly with
+
+16
+00:01:48,757 --> 00:01:51,244
+Large language models, we've seen tons of models.
+
+17
+00:01:51,344 --> 00:01:56,638
+In fact, this slide is now outdated because Grok 4 and Cloud 4 Sonnet have come out.
+
+18
+00:01:57,219 --> 00:02:04,960
+So many models, including open source Chinese models, have been used to basically perform this reasoning or thinking for longer during inference.
+
+19
+00:02:05,581 --> 00:02:07,504
+And the same thing has actually happened in vision.
+
+20
+00:02:07,524 --> 00:02:14,375
+So there's been lots of interest in scaling diffusion models at test time as well for image generation or for video generation.
+
+21
+00:02:14,896 --> 00:02:23,870
+So broad interest from the field in basically making models perform better at inference by kind of doing search or thinking or reasoning or test time compute, whatever you'd like to call it.
+
+22
+00:02:25,132 --> 00:02:33,445
+But today I'm going to take a perspective on these approaches that these approaches are ultimately unsatisfying in the quest for human level intelligence.
+
+23
+00:02:33,762 --> 00:02:34,543
+And you might say, why?
+
+24
+00:02:34,583 --> 00:02:37,206
+These approaches have had widespread success.
+
+25
+00:02:37,687 --> 00:02:43,314
+I mean, I use O1 every day and these models have been largely successful in doing great in math and coding benchmarks.
+
+26
+00:02:44,215 --> 00:02:46,037
+So why are these approaches unsatisfying?
+
+27
+00:02:46,138 --> 00:02:47,259
+And what is my argument today?
+
+28
+00:02:47,279 --> 00:02:57,932
+Well, from the intellectual perspective of achieving human level intelligence, we need approaches that are modality agnostic because humans are able to reason and think over any modality.
+
+29
+00:02:58,153 --> 00:03:00,816
+And the current approaches do not have that characteristic.
+
+30
+00:03:01,792 --> 00:03:03,755
+Another challenge is problem agnosticness.
+
+31
+00:03:03,995 --> 00:03:09,322
+So current approaches very much rely on, especially in language, verifiable rewards, i.e.
+
+32
+00:03:09,362 --> 00:03:14,469
+domains or problems such that they can be easily verified with a binary reward.
+
+33
+00:03:14,889 --> 00:03:20,897
+An example of this is coding or math, where we can verify very easily whether or not a coding or a math solution is correct.
+
+34
+00:03:21,822 --> 00:03:27,652
+And ultimately, this kind of hints at another problem, which is the reliance of these approaches on external supervision.
+
+35
+00:03:28,333 --> 00:03:37,189
+So us models, or sorry, us humans are able to get to human levels intelligence without any external rewards or verifiers or supervision.
+
+36
+00:03:37,710 --> 00:03:42,598
+We're able to learn how to think on any modality or any problem without this type of supervision.
+
+37
+00:03:43,034 --> 00:04:03,472
+So I'm going to make an argument today that if we want human-level intelligence, so if we want artificial general intelligence or artificial super intelligence, whatever you'd like to call it, we really do need systems that learn to think on their own, on any modality, problem, and without any additional supervision, just like us humans.
+
+38
+00:04:03,832 --> 00:04:06,074
+So you might ask, OK, this makes sense.
+
+39
+00:04:06,615 --> 00:04:11,539
+I want my model to be modality agnostic, problem agnostic, supervision agnostic, et cetera, et cetera.
+
+40
+00:04:11,992 --> 00:04:12,934
+But how can I achieve this?
+
+41
+00:04:13,314 --> 00:04:13,535
+Right.
+
+42
+00:04:13,555 --> 00:04:18,804
+The current paradigm is very much rely on tons of humans labeling tons of data for verifiable rewards.
+
+43
+00:04:19,305 --> 00:04:20,346
+Same thing with the fusion models.
+
+44
+00:04:20,367 --> 00:04:23,772
+They rely on external verifiers kind of labeling how good responses are.
+
+45
+00:04:24,734 --> 00:04:26,958
+So how can we do this without external supervision?
+
+46
+00:04:28,020 --> 00:04:36,835
+And the point that this kind of leads to, which our paper energy based transformers asks, is how can we learn to think from unsupervised learning?
+
+47
+00:04:37,557 --> 00:04:43,967
+And this is the goal of today is to demonstrate to you that we actually can teach models to learn how to think from unsupervised learning.
+
+48
+00:04:44,568 --> 00:04:47,172
+And there's a clever way of doing this, right?
+
+49
+00:04:47,513 --> 00:04:51,560
+And we'll kind of go over that briefly and describe in detail how that works later on.
+
+50
+00:04:51,980 --> 00:04:56,047
+But the general idea is in order to do thinking, we generally need a verifier.
+
+51
+00:04:56,427 --> 00:04:58,671
+So we're going to learn to verify our predictions.
+
+52
+00:04:59,242 --> 00:05:04,069
+And then what we'll do is we'll learn to optimize predictions with respect to this verifier.
+
+53
+00:05:04,930 --> 00:05:09,817
+So given a verifier, it can tell me how good any prediction is with a given context.
+
+54
+00:05:09,857 --> 00:05:16,906
+So given a sequence and a next distribution prediction for a language model, this verifier can tell me how good that distribution is.
+
+55
+00:05:17,768 --> 00:05:24,557
+Or doing classification on ImageNet, given an image and a class, that verifier can tell me how good that class is with the image.
+
+56
+00:05:25,465 --> 00:05:32,012
+It turns out that all these ideas can actually kind of be summed up in one framework called energy-based modeling.
+
+57
+00:05:33,333 --> 00:05:35,996
+And in the active inference community, I'm sure many of you are familiar with this.
+
+58
+00:05:36,076 --> 00:05:38,658
+In the broader AI community, energy-based models have been less popular.
+
+59
+00:05:38,719 --> 00:05:48,649
+The general idea is energy-based models frame thinking or system two or reasoning as optimization over what is called a learned energy landscape.
+
+60
+00:05:49,570 --> 00:05:52,873
+And we'll talk more in detail about what that means to train an energy-based model.
+
+61
+00:05:54,035 --> 00:05:56,879
+So I'm gonna make everyone in the next two minutes an expert.
+
+62
+00:05:57,780 --> 00:06:00,704
+Okay, so what are feedforward models?
+
+63
+00:06:00,804 --> 00:06:08,114
+Feedforward models generally take the form for supervised learning of given an input, given an X, predict a Y hat, right?
+
+64
+00:06:08,134 --> 00:06:13,501
+So given an image, predict the image's label, or given a sequence of tokens, predict the next token.
+
+65
+00:06:13,521 --> 00:06:16,785
+This is the way language models work, classification models work, et cetera, et cetera.
+
+66
+00:06:17,558 --> 00:06:23,246
+The idea behind an energy based model is that they are given an input X and a prediction Y hat.
+
+67
+00:06:23,587 --> 00:06:29,014
+So, for example, a context or a sequence of tokens and a distribution over next tokens.
+
+68
+00:06:29,635 --> 00:06:32,840
+And they tell you how high energy or low energy those are.
+
+69
+00:06:32,880 --> 00:06:38,067
+And the general idea is like low energy is high probability and high energy is low probability.
+
+70
+00:06:38,167 --> 00:06:40,731
+So high energy is unlikely or not compatible.
+
+71
+00:06:41,386 --> 00:06:45,753
+And then this ultimately brings about the question of, okay, I've trained this energy-based model.
+
+72
+00:06:46,414 --> 00:06:48,677
+How do I predict using my energy-based model, right?
+
+73
+00:06:48,998 --> 00:06:50,720
+I have this X and this Y hat.
+
+74
+00:06:50,981 --> 00:06:52,202
+How do I predict this Y hat?
+
+75
+00:06:52,223 --> 00:06:54,746
+Because we ultimately care about using these models for prediction.
+
+76
+00:06:56,289 --> 00:06:59,894
+It turns out that there's an elegant way to do this that's very similar to diffusion models.
+
+77
+00:07:00,515 --> 00:07:02,398
+The general idea is this.
+
+78
+00:07:02,632 --> 00:07:06,359
+What we will do is we will start like diffusion models with a random prediction.
+
+79
+00:07:06,760 --> 00:07:10,187
+So this Y hat will start as, for example, random noise.
+
+80
+00:07:10,908 --> 00:07:17,562
+And what we'll do is we'll input this Y hat into the model and we'll get the energy of this Y hat, right, with the context.
+
+81
+00:07:18,223 --> 00:07:23,273
+And ideally, this energy will be very high because this Y hat is not compatible with the current X.
+
+82
+00:07:23,607 --> 00:07:31,923
+And then what we'll do is we'll get the gradient from this energy to this y hat and iteratively refine this y hat with respect to this energy.
+
+83
+00:07:31,963 --> 00:07:45,649
+This is actually doing exactly what we said earlier, which is learning a verifier, which is this energy scalar, and then learning to optimize predictions with respect to this verifier by updating y iteratively or updating y hat iteratively.
+
+84
+00:07:46,793 --> 00:08:11,282
+you can kind of visualize this so for example if you're training a video model the initial prediction would be a random frame if you're training a language model the initial prediction would be a random noise distribution and the idea is what you'll do is you'll feed this into the model you'll get the energy and then you'll iteratively perform energy descent or energy minimization and you continuously doing that until convergence so i tell people about this and they often ask me
+
+85
+00:08:11,667 --> 00:08:13,869
+Why do we care about formulating models in this way?
+
+86
+00:08:14,350 --> 00:08:16,252
+Feedforward models seem much simpler.
+
+87
+00:08:16,312 --> 00:08:22,578
+With the feedforward model, all we do is input X and we get Y. Why do we care about doing this energy minimization thing?
+
+88
+00:08:23,439 --> 00:08:26,342
+And there's a couple theoretical perspectives on why this is useful.
+
+89
+00:08:26,402 --> 00:08:28,084
+The first one is flexibility.
+
+90
+00:08:28,585 --> 00:08:30,487
+So energy-based models are very broad.
+
+91
+00:08:30,527 --> 00:08:36,133
+It turns out that virtually anything can be, any model can be formulated as an implicit energy-based model.
+
+92
+00:08:36,733 --> 00:08:40,117
+And you're really just doing density estimation over all the possible variables.
+
+93
+00:08:40,377 --> 00:08:41,218
+So it's very broad.
+
+94
+00:08:42,110 --> 00:08:43,492
+also very theoretically sound.
+
+95
+00:08:44,172 --> 00:09:05,417
+So we'll kind of talk about this in more detail later, but one of the huge theoretical benefits of these energy-based models is that they could potentially be Turing complete per prediction, which means that for predictions that require an inherent amount of serial computation, energy-based models could actually solve these problems, whereas a feedforward model cannot because feedforward models have a finite program.
+
+96
+00:09:05,988 --> 00:09:12,282
+Energy-based models can also verify predictions with this energy scaler and can learn uncertainty in continuous state spaces pretty easily.
+
+97
+00:09:12,783 --> 00:09:17,854
+So it's very much more difficult to do this with feed-forward models.
+
+98
+00:09:19,015 --> 00:09:22,220
+And it turns out that energy-based models are a very broad framework.
+
+99
+00:09:22,360 --> 00:09:23,501
+I kind of hinted at this earlier.
+
+100
+00:09:23,922 --> 00:09:31,833
+And I like to think about energy-based models under two different perspectives, explicit energy-based models and implicit energy-based models, to kind of clarify this.
+
+101
+00:09:32,614 --> 00:09:40,566
+And the reason I say this is because a lot of models that exist, for example, GANs and diffusion models, can actually be seen as implicit energy-based models.
+
+102
+00:09:40,586 --> 00:09:48,617
+So what this means is models where you can implicitly derive an energy function, but where this energy function is not an explicit output of the model.
+
+103
+00:09:48,597 --> 00:10:00,281
+So just want to clarify that the models that we focus on in this paper are explicit energy-based models, where the entire model, given a set of inputs, maps to a single scalar field called the energy.
+
+104
+00:10:01,022 --> 00:10:04,369
+And implicit energy-based models, you need to do some work to get this scalar energy.
+
+105
+00:10:05,391 --> 00:10:09,660
+And it's worth noting that these explicit energy-based models have never really worked well.
+
+106
+00:10:10,636 --> 00:10:19,046
+So what I'm telling you about the attraction of these energy-based models for verification and prediction and turn completeness, it sounds great, but they've never really worked.
+
+107
+00:10:19,126 --> 00:10:24,452
+And the general intuition behind practitioners pursuing energy-based models in AI is like, don't.
+
+108
+00:10:25,113 --> 00:10:25,894
+They don't work.
+
+109
+00:10:25,914 --> 00:10:26,575
+They don't scale.
+
+110
+00:10:26,595 --> 00:10:27,516
+They're unstable.
+
+111
+00:10:27,756 --> 00:10:28,537
+There's tons of issues.
+
+112
+00:10:28,577 --> 00:10:29,779
+They're slow, et cetera, et cetera.
+
+113
+00:10:29,819 --> 00:10:34,264
+So the goal of this work, the TLDR, if I had to give one,
+
+114
+00:10:34,582 --> 00:10:37,186
+would be we wanna make energy-based models actually work.
+
+115
+00:10:37,547 --> 00:10:47,643
+We want to make them relevant, we wanna see how they scale, and we wanna make them work practically so that we can get these great benefits of dynamic computation and verification, et cetera, et cetera, at inference.
+
+116
+00:10:48,765 --> 00:10:53,232
+And in order to do that, we need a stable and parallelizable architecture.
+
+117
+00:10:53,465 --> 00:11:03,399
+particularly because energy-based models have very much failed to scale because of inherent serialness and computation and non-paralyzability, as well as instability.
+
+118
+00:11:03,439 --> 00:11:08,245
+So when people try and scale energy-based models, they tend to be very unstable and have issues with the gradient.
+
+119
+00:11:09,908 --> 00:11:12,251
+And it turns out that transformers are a great fit.
+
+120
+00:11:12,351 --> 00:11:15,996
+Transformers have amazing gradient control, having a very long residual stream,
+
+121
+00:11:16,246 --> 00:11:24,475
+And there's strong empirical evidence suggesting that transformers can scale hugely, widely, and to multi-trillion parameter scale regimes.
+
+122
+00:11:25,836 --> 00:11:30,622
+Okay, so this is why we created energy-based transformers with this natural synergy.
+
+123
+00:11:31,402 --> 00:11:38,090
+And I like to visualize how energy-based transformers look compared to existing approaches, just to understand what are the qualitative differences.
+
+124
+00:11:39,051 --> 00:11:44,937
+And I like to think about this in the perspective of some of the kind of cognitive facets or abilities we talked about earlier.
+
+125
+00:11:44,917 --> 00:11:53,065
+So if you have a feedforward model, and we're just thinking about autoregressive modeling for now, the amount of computation that you have for every prediction made, i.e.
+
+126
+00:11:53,085 --> 00:11:55,327
+with current language models, is fixed.
+
+127
+00:11:55,728 --> 00:12:02,014
+So these have finite depth, the program ends, the amount of computation it has is equivalent to the amount of depth, and that's it.
+
+128
+00:12:02,194 --> 00:12:04,817
+You can't use any more computation for a specific prediction.
+
+129
+00:12:06,218 --> 00:12:10,182
+RNNs generally, the way that they are trained currently, have the same flaw.
+
+130
+00:12:10,550 --> 00:12:24,171
+So because we usually train RNNs to only update their hidden state, given new state information, they don't have this ability to dynamically compute, at least in the current regime, for most of the popular RNN variants per prediction.
+
+131
+00:12:24,573 --> 00:12:27,741
+Diffusion models, on the other hand, actually do have this capability.
+
+132
+00:12:27,781 --> 00:12:32,913
+So diffusion models can have an unbounded amount of computation for every prediction being made.
+
+133
+00:12:32,933 --> 00:12:41,434
+So that means essentially that my diffusion model can denoise for an unbounded amount of time and therefore can be potentially turned complete.
+
+134
+00:12:41,414 --> 00:12:48,626
+One of the challenges with diffusion models in practice, theoretically they have this, but in practice they don't really, is being able to verify predictions.
+
+135
+00:12:48,646 --> 00:12:53,213
+So let's say I generate sample A with my diffusion model and sample B with my diffusion model.
+
+136
+00:12:54,055 --> 00:12:56,899
+My diffusion model has no clue whether sample A or sample B is better.
+
+137
+00:12:57,080 --> 00:12:59,203
+It generally does not work in practice.
+
+138
+00:12:59,538 --> 00:13:01,403
+Energy-based models actually can do this.
+
+139
+00:13:01,423 --> 00:13:13,395
+So with an energy-based model, I can generate sample A, generate sample B, pass both of these into the model, get a single scalar energy for both of them, and then use the argument of the energies to determine which sample is better.
+
+140
+00:13:15,535 --> 00:13:20,762
+Okay, so I'm going to dive into quickly kind of the theoretical properties that these models have.
+
+141
+00:13:21,463 --> 00:13:28,372
+And feedforward models, per prediction, don't really have many of the properties that would be desirable for making predictions with dynamic compute.
+
+142
+00:13:28,852 --> 00:13:34,059
+So feedforward models, per prediction, are not turn complete, and they also cannot give likelihoods without tricks.
+
+143
+00:13:34,299 --> 00:13:43,551
+So particularly in continuous state spaces, if you're using a feedforward model, you have to resort to stuff like ELBO or VQ for discretization in order to give, like,
+
+144
+00:13:43,531 --> 00:14:05,758
+likelihoods and this results in kind of some icky compression and some other uh undesirable traits so generally kind of standard vanilla feed forward models can't do many of these things in continuous state spaces diffusion models can be turned complete because they can have potentially unbounded amount of computation for making predictions but in practice they don't verify or give likelihoods
+
+145
+00:14:05,738 --> 00:14:08,344
+Energy-based models can do all these things.
+
+146
+00:14:08,365 --> 00:14:13,598
+So you can run energy-based inference for longer, giving you this Turing completeness from a theoretical perspective.
+
+147
+00:14:14,079 --> 00:14:18,229
+And you can also give relative likelihoods with these energy-based models.
+
+148
+00:14:18,985 --> 00:14:24,331
+I think it's also worthwhile to visualize how these energy-based models actually look and how they perform inference.
+
+149
+00:14:25,092 --> 00:14:30,598
+So this is an example here of what an energy-based model would learn during training, which we call an energy landscape.
+
+150
+00:14:31,379 --> 00:14:47,878
+And the idea is this energy landscape is a high dimensional space spanning your predictions that tells you, it's a scalar field, telling you at each point in this prediction space, how high or low energy is this, essentially how high or low probability this is,
+
+151
+00:14:47,993 --> 00:14:50,556
+based off the prediction, its compatibility with the context.
+
+152
+00:14:52,197 --> 00:14:54,700
+So let's say we have a context of the dog caught though.
+
+153
+00:14:55,180 --> 00:14:59,084
+If we feed in a random noise distribution prediction, this would likely be high energy.
+
+154
+00:14:59,124 --> 00:15:10,916
+And the idea would be what you're doing during inference is you're performing energy minimization to get to this local minima, which corresponds to like a local energy minima that is strong and has a good prediction.
+
+155
+00:15:11,497 --> 00:15:16,802
+This prediction is a good distribution corresponding to a token that has high likelihood under this context.
+
+156
+00:15:17,255 --> 00:15:27,151
+And the idea is like learning this energy landscape allows you to dynamically allocate computation, verify predictions, have uncertainty in continuous state spaces, et cetera, et cetera.
+
+157
+00:15:27,691 --> 00:15:44,578
+Dynamic computation can be performed by performing energy minimization for longer, prediction verification can be done by getting the energy at specific points, and uncertainty can be done with highly multimodal energy landscapes, where if there's multiple local minima, you know that the model is uncertain about which prediction is best.
+
+158
+00:15:46,111 --> 00:15:50,303
+Okay, so I'm gonna dive into how energy-based transformers perform in practice.
+
+159
+00:15:50,824 --> 00:15:56,340
+We did a lot of scaling results in this paper to kind of dive into this and to determine whether or not they actually can scale well.
+
+160
+00:15:56,759 --> 00:15:59,263
+And generally the results were very good, right?
+
+161
+00:15:59,283 --> 00:16:00,866
+So we tested on a variety of axes.
+
+162
+00:16:01,006 --> 00:16:02,989
+I'll show parameters scaling and flop scaling later.
+
+163
+00:16:03,510 --> 00:16:14,869
+But if you're just holding everything else constant, just changing the amount of data or the batch size or the depth, energy-based transformers scale faster than the strong transformer plus plus autoregressive baseline.
+
+164
+00:16:15,330 --> 00:16:18,755
+And it's worth noting that these are autoregressive energy-based transformers as well.
+
+165
+00:16:19,116 --> 00:16:21,079
+They could be bidirectional potentially, but...
+
+166
+00:16:21,059 --> 00:16:23,563
+We compared fairly to the transformer plus plus.
+
+167
+00:16:24,224 --> 00:16:28,512
+And what we really care about is the slope or the asymptotic down into the right performance.
+
+168
+00:16:28,552 --> 00:16:32,419
+And you can see that these energy based transformers generally have much higher slope.
+
+169
+00:16:32,799 --> 00:16:39,250
+So as much as like almost 36% for data scaling and perform better down into the right, which is great.
+
+170
+00:16:39,351 --> 00:16:44,299
+That's what really matters when you're scaling these models to foundation model level compute.
+
+171
+00:16:45,292 --> 00:16:49,384
+We also did parameter scaling, or these are commonly referred to as scaling laws in NLP.
+
+172
+00:16:50,126 --> 00:16:58,491
+And you can see that the trend for energy-based transformers is generally better, especially in video, for basically scaling during pre-training.
+
+173
+00:16:59,956 --> 00:17:09,508
+We also did downstream inference results, or what I like to call thinking scaling, and basically testing the generalization of these models given a similar pre-training performance.
+
+174
+00:17:10,289 --> 00:17:16,877
+And you can see that at first the energy-based transformers have more perplexity degradation, which is like, corresponds to performing worse.
+
+175
+00:17:17,518 --> 00:17:21,002
+But when you basically run these energy-based transformers for
+
+176
+00:17:20,982 --> 00:17:31,482
+longer or have them think for longer the performance actually gets better so asymptotically they generalize much better than the transformer plus plus by dynamically allocating more computation
+
+177
+00:17:32,525 --> 00:17:38,896
+And then another thing that's great is we see many of the metrics that we care about with these energy-based transformers improving during training.
+
+178
+00:17:39,617 --> 00:17:58,549
+So verification improves as you train the model for longer, which essentially means that if you were to train a foundation model with energy-based transformers, the verification would get better and better during training, which is great for avoiding adversarial examples or generalizing even better during test time.
+
+179
+00:18:00,031 --> 00:18:07,157
+We also compared energy-based transformers to diffusion models in this sort of bidirectional variance on like a simple image denoising task.
+
+180
+00:18:07,177 --> 00:18:10,821
+And we can see that energy-based transformers generally denoise much faster, i.e.
+
+181
+00:18:11,762 --> 00:18:14,604
+with less forward passes and have better quality.
+
+182
+00:18:14,784 --> 00:18:16,666
+So the downstream metrics are better.
+
+183
+00:18:17,387 --> 00:18:22,631
+And one thing that's really important that I think is potentially very impactful is representation learning.
+
+184
+00:18:23,372 --> 00:18:28,136
+And representation learning with diffusion models tend to be very difficult.
+
+185
+00:18:28,577 --> 00:18:30,038
+And there are a lot of tricks that you need
+
+186
+00:18:30,018 --> 00:18:32,304
+for representation learning with diffusion models.
+
+187
+00:18:32,966 --> 00:18:39,403
+With energy based transformers, we've pretty easily seen that they learn decent representations, albeit better than diffusion models.
+
+188
+00:18:41,020 --> 00:18:46,446
+One other great property that we kind of investigated qualitatively was the ability to learn uncertainty.
+
+189
+00:18:46,466 --> 00:18:49,970
+And the idea is like, and you could do this in continuous space as well.
+
+190
+00:18:50,851 --> 00:18:53,734
+We want the models to know what they don't know.
+
+191
+00:18:53,775 --> 00:19:03,906
+And this is a huge challenge and perhaps like why a lot of the current models struggle at inference and with hallucination and other stuff like this, because they don't really know what they don't know.
+
+192
+00:19:04,797 --> 00:19:08,081
+So generalizing out of distribution tends to require knowing what you don't know.
+
+193
+00:19:08,582 --> 00:19:14,209
+And we can see here that energy-based transformers have higher energy for tokens that are hard to predict.
+
+194
+00:19:14,229 --> 00:19:15,871
+So for example, a quick round fox.
+
+195
+00:19:16,511 --> 00:19:18,113
+Same thing with research and problem here.
+
+196
+00:19:18,674 --> 00:19:24,221
+Whereas tokens that are easier to predict, such as is, a, but, period, have lower energy.
+
+197
+00:19:24,241 --> 00:19:32,391
+So this is very promising for principle generalization out of distribution or for teaching models what they don't know.
+
+198
+00:19:32,911 --> 00:19:38,507
+And that is one of the general kind of theoretical benefits of energy-based models, especially in continuous state spaces.
+
+199
+00:19:42,117 --> 00:19:46,228
+Okay, this wraps up the last of the results.
+
+200
+00:19:46,681 --> 00:19:56,136
+Now I'm going to transition the talk a bit and talk a bit about something more reflective and sort of prospective based off a lot of the learnings from this paper.
+
+201
+00:19:56,857 --> 00:20:09,418
+So I conducted a lot of experimentation for this paper, lots of scaling runs, and I kind of realized something, realized that there's something deeper going on and particularly something that is kind of the whole field is trending towards.
+
+202
+00:20:09,558 --> 00:20:10,900
+And that's what I'm going to talk about.
+
+203
+00:20:11,403 --> 00:20:12,964
+So if we ask the question, where are we headed?
+
+204
+00:20:13,805 --> 00:20:16,688
+Where are models headed as we train them longer and longer?
+
+205
+00:20:16,728 --> 00:20:19,390
+And there's a trend in all loss plots.
+
+206
+00:20:20,111 --> 00:20:31,142
+So if we can imagine that we have 10,000 times the amount of computation that we have now, virtually all models would approach approximately zero loss or close to zero loss.
+
+207
+00:20:32,243 --> 00:20:38,068
+So given 10,000 times the amount of GPUs instead of 10,000 GPUs having, I don't know, 100 billion or whatever.
+
+208
+00:20:38,622 --> 00:20:40,866
+all models will approach zero loss.
+
+209
+00:20:40,886 --> 00:20:42,248
+And this kind of looks like this, right?
+
+210
+00:20:42,268 --> 00:20:50,942
+So all models eventually achieve close to zero loss or whatever the irreducible slash random noise or loss corresponding to prediction of random noises.
+
+211
+00:20:51,082 --> 00:20:56,631
+And I kind of like to visualize that as a perplexity of one or an MSE of 0.5 here.
+
+212
+00:20:57,522 --> 00:21:02,429
+And in fact, I'd argue that frontier labs are already starting to achieve this, right?
+
+213
+00:21:02,509 --> 00:21:07,697
+So frontier labs are already very much saying that they are not compute bound, but rather that they are data bound.
+
+214
+00:21:08,398 --> 00:21:09,560
+That data is the main issue.
+
+215
+00:21:09,620 --> 00:21:14,507
+And what this kind of signals is most of these models are achieving close to zero loss, right?
+
+216
+00:21:14,607 --> 00:21:17,171
+Or potentially what is called the irreducible loss.
+
+217
+00:21:19,514 --> 00:21:26,685
+And what this means is that we care much less when we're not compute bound, but rather data bound about convergence speed, right?
+
+218
+00:21:26,918 --> 00:21:35,611
+So all these models, regardless of the scaling rate, even if EBTs do scale faster during pre-training, reach the same kind of zero loss or close to zero loss.
+
+219
+00:21:36,632 --> 00:21:38,855
+So different journeys, but the same destination.
+
+220
+00:21:40,317 --> 00:21:41,199
+Okay, so what am I getting to?
+
+221
+00:21:41,960 --> 00:21:47,888
+This is like approximate zero loss, irreducible, the best models can possibly do, et cetera, et cetera.
+
+222
+00:21:48,309 --> 00:21:49,050
+What matters here?
+
+223
+00:21:49,731 --> 00:21:55,339
+If models really are approaching this kind of close to zero loss regime, what actually matters?
+
+224
+00:21:56,450 --> 00:21:59,055
+And I kind of hinted at this earlier, but it's not the scaling rate.
+
+225
+00:21:59,075 --> 00:22:03,342
+So all models will eventually kind of reach close to zero loss, all decent models at least.
+
+226
+00:22:04,064 --> 00:22:05,406
+So the question is like, what matters here?
+
+227
+00:22:05,847 --> 00:22:09,333
+And you might say, what about inference speed or flops or latency?
+
+228
+00:22:09,513 --> 00:22:11,096
+And I would also argue that these don't matter.
+
+229
+00:22:11,236 --> 00:22:16,486
+If we have 10,000 times the amount of computation, models are already getting close to being able to run on device.
+
+230
+00:22:17,127 --> 00:22:20,533
+With 10,000 times the amount of compute, inference speed and flops won't really matter.
+
+231
+00:22:21,205 --> 00:22:22,606
+So is our job done, right?
+
+232
+00:22:22,626 --> 00:22:27,591
+Do we have to do anything else in this 10,000 X compute regime once our models achieve close to zero loss?
+
+233
+00:22:28,913 --> 00:22:32,796
+And today I'm going to argue that the answer is no, and that we have a lot of work left to do.
+
+234
+00:22:33,517 --> 00:22:35,779
+And this is the insight that I gained from doing this project, right?
+
+235
+00:22:36,640 --> 00:22:46,690
+So there's sort of a secret, an unspoken secret of AI research that a lot of the big tech companies don't want the public to know, which is that zero training loss
+
+236
+00:22:46,670 --> 00:22:52,476
+does not equal real world perfection, or 100% benchmark saturation does not equal real world perfection.
+
+237
+00:22:52,876 --> 00:23:04,828
+In other words, even if your model achieves 100% on every single difficult AI benchmark there is and does perfect on your validation set, this model will still not generalize perfectly out of distribution, right?
+
+238
+00:23:04,848 --> 00:23:14,398
+So in other words, there will always, always, always be novel unseen situations in the real world that your model has to adapt to and then it has to generalize to.
+
+239
+00:23:14,733 --> 00:23:19,188
+And it turns out that humans adapting to this novelty is what we are very good at.
+
+240
+00:23:19,890 --> 00:23:25,148
+So we're able to generalize every day to out of distribution scenarios that we have never seen in our life.
+
+241
+00:23:26,596 --> 00:23:33,226
+In fact, I really like this example of a counterintuitive fact about just how much we generalize.
+
+242
+00:23:33,967 --> 00:23:46,005
+So if you just think hypothetically for a second about training a model on all possible human data, so all video data that humans have ever seen, all language data that humans have ever spoke, all audio data, etc., etc.,
+
+243
+00:23:46,812 --> 00:23:47,713
+Right?
+
+244
+00:23:47,734 --> 00:23:52,742
+The crazy thing about this data is that most of it will still be out of distribution.
+
+245
+00:23:53,623 --> 00:23:58,772
+Most of this data will still be very much data that the model has to generalize to.
+
+246
+00:24:00,314 --> 00:24:08,027
+In fact, something very interesting is that you can mathematically guarantee that this video that you have observed for the past five minutes
+
+247
+00:24:08,378 --> 00:24:30,522
+this is the first time you are seeing in this video in fact this is the first time anyone in our universe has ever observed this past five minute video that you're observing right so this is how high dimensional the data we are dealing with is and that's why this out of distribution generalization problem is the core problem that we have with ai right now and that we'll have to tackle over the next 10 years
+
+248
+00:24:32,071 --> 00:24:37,407
+So what matters in the zero loss regime, I kinda said this earlier, is generalization, right?
+
+249
+00:24:37,447 --> 00:24:41,338
+So how your model performs on this out of distribution data.
+
+250
+00:24:41,504 --> 00:24:44,629
+And I like to refer to this as the era of generalization, right?
+
+251
+00:24:44,669 --> 00:24:51,200
+So this era where all models in the frontier labs are essentially achieving the same performance or approximately zero loss.
+
+252
+00:24:51,821 --> 00:24:54,626
+What really matters is how well does your model generalize?
+
+253
+00:24:55,227 --> 00:25:06,465
+And this kind of explains why there's been a lot of interest in reasoning or thinking models, because these models allow for better generalization at test time, more adaptability, more test time compute, more thinking, et cetera, et cetera.
+
+254
+00:25:07,559 --> 00:25:15,152
+Okay, this brings us to the question, which is if we care about generalization instead of just flop scaling, how do we measure it, right?
+
+255
+00:25:15,894 --> 00:25:24,589
+And today I'm gonna propose a simple metric that I believe will be more helpful than relying on many downstream benchmarks.
+
+256
+00:25:24,569 --> 00:25:49,615
+and that is because downstream benchmarks tend to be very high bias and variance right so depending on which benchmarks you use to measure models they'll look better or worse you can see this in the frontier you know the benchmarks that different companies use show their bench their models being better but oftentimes are worse etc etc so i'm going to give insight into a potentially more useful and practical metric for generalization which is data efficiency
+
+257
+00:25:50,303 --> 00:25:53,948
+And I'll be arguing that data efficiency is actually a form of generalization.
+
+258
+00:25:54,549 --> 00:26:07,608
+And the reason for this is if I have given you three concepts, sorry, three examples, and you were able to learn a new concept given those three examples, but it takes me four examples to learn such a new concept, you have generalized better.
+
+259
+00:26:08,509 --> 00:26:16,621
+So you have used less data to achieve the same compression rate or the same representations or potentially better representations with less data.
+
+260
+00:26:16,761 --> 00:26:19,365
+So that's data efficiency, but you've also generalized better.
+
+261
+00:26:19,953 --> 00:26:26,984
+So given that you keep everything constant, same metric, same architecture, same parameter count because you need the same compression ratio.
+
+262
+00:26:27,746 --> 00:26:34,577
+If you achieve the same metric during pre-training with less data, your model is actually generalizing better.
+
+263
+00:26:35,418 --> 00:26:37,101
+And that's what I'll argue for here today.
+
+264
+00:26:37,604 --> 00:26:45,315
+Okay, so I've claimed that data efficiency is how we will measure generalization and that generalization is what we should care about.
+
+265
+00:26:45,835 --> 00:26:52,705
+So this ultimately brings us as researchers or engineers to the question of how do we measure models, right?
+
+266
+00:26:52,805 --> 00:26:55,849
+What X axis do we use to measure model performance?
+
+267
+00:26:56,892 --> 00:27:02,802
+And over the last five years, it's an X axis that makes energy-based transformers look very bad, which is flop scaling.
+
+268
+00:27:03,443 --> 00:27:13,921
+Energy-based transformers, they need to do MCMC or optimization during pre-training, are inherently more expensive, although I'm sure you can make this better, but are inherently more expensive than feed-forward models, right?
+
+269
+00:27:13,961 --> 00:27:17,207
+And hence why you see that this flop count is much higher.
+
+270
+00:27:17,848 --> 00:27:22,596
+So you might say, okay, these models are terrible for flop scaling.
+
+271
+00:27:22,846 --> 00:27:24,348
+What about the era of generalization?
+
+272
+00:27:24,849 --> 00:27:27,333
+So what about when all we really care about is generalization?
+
+273
+00:27:27,433 --> 00:27:40,252
+If all models achieve close to the zero loss or close to approximately zero loss, then what really matters is not their flop scaling, because all models will eventually achieve this, but actually their data efficiency and their generalization.
+
+274
+00:27:41,114 --> 00:27:48,685
+And I like to propose that we take a look at this graph and focus more on this over the next couple of years, because generalization is becoming the big bottleneck.
+
+275
+00:27:50,268 --> 00:27:59,261
+Okay, now I'm going to bring the talk back to a question from the start, which is, would you trade off 100x times the amount of compute for 1% better generalization?
+
+276
+00:27:59,341 --> 00:28:01,764
+So running your GPUs for 100 times longer.
+
+277
+00:28:01,804 --> 00:28:19,549
+And I hope that under this perspective, under this perspective that potentially we are in this era of generalization, where the bottleneck really is just generalizing out of distribution rather than being more flop efficient, the answer becomes an undoubtable yes, because generalization will be all that we care about.
+
+278
+00:28:21,082 --> 00:28:22,203
+That's it for the presentation.
+
+279
+00:28:22,223 --> 00:28:25,667
+I'm happy to answer any questions and thank you very much for listening.
+
+280
+00:28:27,488 --> 00:28:27,849
+Awesome.
+
+281
+00:28:29,010 --> 00:28:29,731
+Great talk.
+
+282
+00:28:30,632 --> 00:28:30,992
+Okay.
+
+283
+00:28:31,813 --> 00:28:40,261
+While everyone in the live chat gets some questions ready and enters them, which I will read to you, could you just give a little background?
+
+284
+00:28:40,341 --> 00:28:42,664
+How did you come to this problem?
+
+285
+00:28:43,545 --> 00:28:44,586
+What about grad school?
+
+286
+00:28:44,666 --> 00:28:48,810
+What was your trajectory to get to this question and collaboration?
+
+287
+00:28:49,752 --> 00:29:00,353
+yeah good question i would say that i very much started working on energy-based models just from a uh i thought they were very intuitive perspective so to me
+
+288
+00:29:00,569 --> 00:29:27,049
+know if you ask me like is the brain doing something more similar to energy-based modeling or feed forward modeling and no doubt there's no doubt in my mind that it's more similar to energy-based modeling at least in some respects um particularly with regards to like some of the capabilities we talked about right so being able to dynamically allocate computation verify predictions but i think one key thing is also learning like this joint distribution over variables
+
+289
+00:29:27,434 --> 00:29:54,015
+think that's very important especially when we eventually take these to multimodal learning to kind of learn like this compatibility between all the input variables and like predictions right so you don't just learn given an image to map to a classification head it's not like there's some classification head in my brain that tells me the logic value for each class when you're doing image classification no it doesn't work like that right you learn this joint distribution over all the possible images
+
+290
+00:29:53,995 --> 00:30:23,614
+in all the possible language and then you learn how compatible these are right you know whether this image of a dog is compatible with the word dog you don't just learn a distribution over the possible classes so to me they were always very intuitive and that's kind of why i started working on them um and then i saw that there was lots of room for reasoning with them and uh eventually started working on them during around two years ago and yeah i just kept working on them for a while and making them try and making them work and exploring and
+
+291
+00:30:24,050 --> 00:30:34,701
+yeah now we're here so that's the the journey very much just curiosity led started from the energy Maxima now we're here yeah
+
+292
+00:30:35,322 --> 00:30:57,263
+okay there's so many entry points and i'm sure people will have interesting questions but you brought up one of the advantages being the flexibility so what exactly is that energy landscapes flexibility what data matters and why what could we say about what kinds of generalization
+
+293
+00:30:57,327 --> 00:31:27,132
+would be in out of distribution scope versus out of out of distribution scope like what is it about the energy landscape do you just dump random data is it about organic data what is it that is about the data and what does the energy landscape reflect that would or does have flexibility yeah um this is a challenging question i would say uh the
+
+294
+00:31:29,120 --> 00:31:34,786
+The general intuition is this energy landscape is learned over all possible values based off the data.
+
+295
+00:31:34,806 --> 00:31:38,390
+So your data shapes this landscape that's learned over all possible prediction values.
+
+296
+00:31:39,511 --> 00:31:44,957
+And a feedforward model doesn't learn this landscape over all possible values.
+
+297
+00:31:45,098 --> 00:31:47,700
+It learns a single pointwise estimate of the prediction.
+
+298
+00:31:48,782 --> 00:31:56,410
+And the ability to learn this estimate over all possible predictions rather than just predicting a single prediction, like a pointwise estimate,
+
+299
+00:31:56,558 --> 00:32:06,492
+is what enables this better generalization because at test time, what you can do is instead of just giving a point wise prediction estimate, you can search over these predictions, right?
+
+300
+00:32:06,512 --> 00:32:10,858
+So that's what you're actually doing with energy minimization is you're searching over the prediction space.
+
+301
+00:32:11,940 --> 00:32:13,582
+And that's why this energy landscape is great.
+
+302
+00:32:14,303 --> 00:32:21,013
+And then with regards to your questions about data, which data is important, you know,
+
+303
+00:32:21,398 --> 00:32:24,021
+where can energy based models generalize better?
+
+304
+00:32:24,081 --> 00:32:29,786
+I would say that in general, energy based models have generalized better, which we show as well as some other papers show.
+
+305
+00:32:30,267 --> 00:32:35,132
+I think that on certain tasks, energy based models generalize orders of magnitude better.
+
+306
+00:32:35,212 --> 00:32:49,566
+So there's this other paper that we cite that shows that for some synthetic tasks, energy based models can generalize like ten times better than a feed forward model because the energy function or like this verification is very well defined.
+
+307
+00:32:49,546 --> 00:32:52,310
+So I can give an example of this, which would be solving a maze.
+
+308
+00:32:53,612 --> 00:32:59,702
+So if you were to generate a solution to a maze with a feedforward model, you could imagine the maze is like this and solving that.
+
+309
+00:33:00,283 --> 00:33:07,334
+You need to be able to predict in a single forward pass all of the different routes or all of the different turns and everything to solve this maze.
+
+310
+00:33:07,354 --> 00:33:13,944
+Whereas an energy-based model, this energy function, will just learn whether or not the solution is a valid solution.
+
+311
+00:33:14,125 --> 00:33:16,228
+That is the solution verification.
+
+312
+00:33:16,310 --> 00:33:19,736
+And on that problem, it's much easier to verify than it is to generate.
+
+313
+00:33:19,916 --> 00:33:26,206
+And because of that, I think you could see that EBMs would generalize much better because this energy function is very well defined.
+
+314
+00:33:26,226 --> 00:33:31,194
+So I would say that in general, EBMs can generalize better, but there are certain problems where they can generalize much better.
+
+315
+00:33:31,675 --> 00:33:43,093
+And then with regards to the question on what data can EBMs generalize better on, I think that in the short term, we'll see EBMs more applicable for
+
+316
+00:33:43,073 --> 00:33:52,273
+data that is for applications where there is limited data, particularly because of this data efficiency that we've seen with IBM's and you can train them.
+
+317
+00:33:52,774 --> 00:33:55,480
+They do require more flops at least in the short term.
+
+318
+00:33:55,730 --> 00:34:00,916
+But you can train them such that they kind of learn this energy landscape over this very limited amount of data.
+
+319
+00:34:01,076 --> 00:34:05,681
+And because you might have a limited amount of data, you have tons of compute to work with that data.
+
+320
+00:34:06,102 --> 00:34:15,112
+And that essentially means that you can generalize better out of distribution by kind of learning this huge distribution over all possible predictions with this limited data.
+
+321
+00:34:15,272 --> 00:34:17,975
+So I see that as the primary use case in the short term.
+
+322
+00:34:17,995 --> 00:34:22,560
+But in the long term, I think that most data we could definitely see EBMs perform better on.
+
+323
+00:34:23,061 --> 00:34:24,302
+So, yeah.
+
+324
+00:34:25,244 --> 00:34:37,451
+So in the provocative opening question, at first, when I heard it, I was thinking, oh, this is kind of like a Pascal's wager or how many cousins to save a brother and those kinds of questions.
+
+325
+00:34:38,012 --> 00:34:45,008
+But then it's like, actually, we're, if, as you're describing, looking to
+
+326
+00:34:45,967 --> 00:35:09,257
+research to where the puck is going and head to a place if we're not already past it where compute isn't a limitation and then it's like yes it is worth it to spend more compute so that was just that was definitely very counterintuitive but also helps contextualize and yet out of that provocation
+
+327
+00:35:09,777 --> 00:35:33,237
+are coming models which could be more efficient per watt and per data set so it just is like but that question is the entry point to understanding what we're really limited in okay i'll read a question from the live chat so tucker chambers wrote
+
+328
+00:35:34,972 --> 00:35:38,535
+Do any current models generalize into the real world at all?
+
+329
+00:35:39,376 --> 00:35:46,942
+Maybe Tesla vision-based models have a leg or a wheel up on the competition as they're using real world data in the physically embodied sense.
+
+330
+00:35:48,984 --> 00:35:53,748
+Yeah, I think this is a debatable question that depends on who you ask.
+
+331
+00:35:56,291 --> 00:35:59,033
+I mean, I think, yes, some models are generalizing to the real world.
+
+332
+00:35:59,053 --> 00:36:04,658
+The question is how well are they generalizing and are they generalizing to the point where they're widely useful?
+
+333
+00:36:05,465 --> 00:36:12,061
+Robotics is very much unsolved and seems to be very far from being solved, which is one of the biggest use cases of AI.
+
+334
+00:36:13,906 --> 00:36:18,537
+Completely autonomous driving has been promised to be solved for a long time, but it's still unsolved.
+
+335
+00:36:18,798 --> 00:36:22,647
+Even with Waymo, there are still people watching.
+
+336
+00:36:23,032 --> 00:36:33,967
+So I would say that some models are generalizing, but they are not generalizing as well as humans would, which is the core challenge is like generalization to the same extent as humans, the same performance.
+
+337
+00:36:35,109 --> 00:36:43,420
+Ideally, given the same data, all of these models are trained on orders of magnitude, thousands of times the amount of data that humans have ever seen.
+
+338
+00:36:43,838 --> 00:36:45,059
+Yeah, I hope that answers your question.
+
+339
+00:36:45,079 --> 00:36:47,542
+So they're generalizing, but not to the extent that we would like.
+
+340
+00:36:47,943 --> 00:36:57,915
+And then, Daniel, I want to kind of hit on what you said earlier, which is like this provocative question of, is it just a tradeoff or, you know, in this regime, is it really even a tradeoff anymore?
+
+341
+00:36:57,935 --> 00:37:03,001
+Because like if our GPUs are just idling, if we have 10,000 times the amount of GPUs, it might not even matter, right?
+
+342
+00:37:03,401 --> 00:37:07,446
+We might really just say, OK, we don't care about burning 100 times the amount of GPUs.
+
+343
+00:37:07,486 --> 00:37:09,048
+We really just care about generalization.
+
+344
+00:37:09,168 --> 00:37:11,090
+So, yeah, I think it's interesting.
+
+345
+00:37:11,110 --> 00:37:12,512
+And I think that, yeah,
+
+346
+00:37:12,492 --> 00:37:26,788
+you know we're definitely not there especially in academia right now everywhere maybe the frontier labs are starting to get there and like people have said like open ai released a video where they talk about gpt 4.5 and they basically say that and actually have this on here um
+
+347
+00:37:26,887 --> 00:37:30,853
+that we're more data bound than we are compute bound, which is cool.
+
+348
+00:37:30,893 --> 00:37:33,737
+So I'm sure that many of the frontier labs are starting to face this as well.
+
+349
+00:37:34,118 --> 00:37:44,853
+And I think that as this happens more and more, we'll tend to see like a shift more from like flop scaling and that being the predominant thing that people care about to like data efficiency and generalization.
+
+350
+00:37:45,314 --> 00:37:51,643
+Because at the end of the day, what really matters is how well does your model generalize once it's gotten to this point of kind of fitting the training set already.
+
+351
+00:37:51,803 --> 00:37:52,945
+So, yeah.
+
+352
+00:37:54,680 --> 00:37:56,284
+Super interesting.
+
+353
+00:37:56,885 --> 00:38:06,286
+Again, anyone can write more questions in the live chat, but how about a little bit on the almost developer experience here?
+
+354
+00:38:06,907 --> 00:38:08,571
+What was it like?
+
+355
+00:38:09,732 --> 00:38:11,033
+getting those results.
+
+356
+00:38:11,834 --> 00:38:20,724
+Was there a lot of under the hood and fine tuning and what kinds of software and methods are useful and what are they like today?
+
+357
+00:38:20,744 --> 00:38:34,238
+And then what kinds of methods could unlock the amount of attention that's currently going into alternative methods to make use of what you're demonstrating in the paper?
+
+358
+00:38:35,281 --> 00:38:47,248
+yeah so in terms of getting the results it was i would say a very difficult journey mostly because there's not much practical advice on how to train energy-based models online
+
+359
+00:38:48,055 --> 00:38:53,701
+A lot of the work that's online is very much theoretical and also hasn't really been tested at scale.
+
+360
+00:38:54,462 --> 00:39:11,482
+So a lot of work in this paper that's kind of not necessarily super cool but is important nonetheless for practicality is just determining like what hyperparameters are necessary, how to tweak things so that things work, what are kind of the core challenges with stability and what tricks do you need to solve them.
+
+361
+00:39:11,982 --> 00:39:14,265
+We have a lot of tricks that we mentioned in the paper.
+
+362
+00:39:14,245 --> 00:39:39,814
+um and that help that you know help us with stability and can help with scalability but I think that this is one of the key challenges it's just kind of like pretty much all models now rely on tricks like diffusion models there's tons of tricks flow models there's tons of tricks even on regressive models at scale there's tons of tricks with layer norm and all this stuff so it's all about really figuring out like what are the right tricks for these models and it took a while and it was a lot of just like kind of
+
+363
+00:39:39,794 --> 00:39:42,862
+and banging your head on the wall and just trying things out and seeing what sticks.
+
+364
+00:39:43,324 --> 00:39:50,282
+But I think eventually, and to the point where we are now, we have hyperparameters and general tricks that make things work more generally.
+
+365
+00:39:50,302 --> 00:39:52,208
+And we know how to scale these things.
+
+366
+00:39:52,268 --> 00:39:55,677
+So if you told me to train a 7B model and you gave me the compute, we could.
+
+367
+00:39:55,657 --> 00:40:05,771
+So I think that once we started figuring out how to make things stable and scalable and kind of, you know, look good without loss spikes or anything like that, the results started to look really great.
+
+368
+00:40:05,791 --> 00:40:09,336
+And that's when we started to get like really great data efficiency curves and other stuff like that.
+
+369
+00:40:09,356 --> 00:40:14,763
+And it was super rewarding having worked on just kind of tuning these tricks for a very long time.
+
+370
+00:40:15,484 --> 00:40:24,837
+And then with regards to long term adoption and kind of making energy based models adopted more widely as compared to something like diffusion models or
+
+371
+00:40:24,817 --> 00:40:29,323
+pure feed forward autoregressive models, I think that there's a couple of things that need to happen.
+
+372
+00:40:29,904 --> 00:40:34,870
+I think one is like it would be great if a foundation model energy based model was scale.
+
+373
+00:40:35,891 --> 00:40:39,015
+That way people can really see that these do work out foundation model scale.
+
+374
+00:40:39,456 --> 00:40:48,968
+Our results are just that, you know, given extrapolation that things could scale well, but we don't actually know because we haven't trained them and we didn't have the computing resources to do that.
+
+375
+00:40:48,948 --> 00:40:50,851
+So I think kind of at scale would be nice.
+
+376
+00:40:51,573 --> 00:40:55,881
+Another thing that would be helpful is just like more tricks and tuning with diffusion.
+
+377
+00:40:55,901 --> 00:41:01,611
+I like to bring up this example where it took lots of tricks and papers to kind of figure out, like, how do I sample from this?
+
+378
+00:41:01,671 --> 00:41:03,434
+How do I make sampling faster?
+
+379
+00:41:03,514 --> 00:41:05,939
+How do I make them efficient and more practical, et cetera, et cetera.
+
+380
+00:41:06,480 --> 00:41:10,467
+I have no doubt that over the next year or two, lots of effort will come.
+
+381
+00:41:10,447 --> 00:41:32,033
+go into basically just having tricks that are better for these energy-based models and kind of making it so they're faster to train faster during inference etc etc um but i think with those things and given kind of the way that compute is headed there will start to be interest in the next couple years so i'm very hopeful yeah tucker asks a follow-up question there
+
+382
+00:41:32,435 --> 00:41:36,260
+Can EBM be built and trained on normal civilian hardware?
+
+383
+00:41:36,661 --> 00:41:56,206
+Or I guess just more generally like what kind of hardware resources within the von Neumann paradigm are most relevant and what kinds of unconventional or thermo informational or biomimetic computing could be a little bit on the horizon to go even beyond that?
+
+384
+00:41:57,488 --> 00:42:01,193
+Yeah, so I will clarify that
+
+385
+00:42:02,202 --> 00:42:08,309
+We focus very much on energy based models that are, you know, sort of efficient on von Neumann hardware here.
+
+386
+00:42:08,329 --> 00:42:13,314
+So that's like models with matrix multiplications using back propagation.
+
+387
+00:42:13,354 --> 00:42:24,446
+There are other energy based models or like, for example, predictive coding learning algorithm that are faster to implement on other hardware that I am by no means an expert.
+
+388
+00:42:26,188 --> 00:42:28,851
+So these energy based models are very much
+
+389
+00:42:28,831 --> 00:42:41,187
+strong on modern von Neumann architectures, especially GPUs, because everything is done with matrix multiplications and is learned end-to-end with back propagation, which we can compute quickly on modern hardware.
+
+390
+00:42:41,605 --> 00:42:49,413
+So, yeah, you can definitely train these energy based transformers on, you know, smaller GPUs.
+
+391
+00:42:49,433 --> 00:42:51,676
+They do take more memory than a feed forward model.
+
+392
+00:42:51,836 --> 00:42:56,881
+But, you know, most of our experiments were done at very small scale on smaller GPUs.
+
+393
+00:42:56,921 --> 00:43:05,891
+So you can definitely do this on potentially laptop GPUs or like a, you know, small scale school setup that you have for the smaller scale models, at least.
+
+394
+00:43:06,091 --> 00:43:09,655
+So, yeah, very akin to modern hardware.
+
+395
+00:43:10,816 --> 00:43:23,762
+we return to the slide with the architectural layouts yes of course actually let me just do this okay
+
+396
+00:43:24,653 --> 00:43:47,286
+yeah so maybe just highlight what is different here structurally and then possibly take that towards what would that look like in practice is this the same chat gpt perplexity interface that's just doing better but giving the same kind result is this like
+
+397
+00:43:47,266 --> 00:44:16,159
+horse and buggy versus car and we're talking about different kinds of assessments like what is happening under the hood and structurally and then is that a hot swap competing on the same kinds of measures and input output structures that we see today with all the zoo of available models or what other kinds of harnesses are needed or functions arise
+
+398
+00:44:17,118 --> 00:44:17,458
+Yeah.
+
+399
+00:44:18,199 --> 00:44:18,359
+Yeah.
+
+400
+00:44:18,379 --> 00:44:19,000
+Great question.
+
+401
+00:44:19,761 --> 00:44:23,945
+So I'll start to dive into the first part, which is like a general overview.
+
+402
+00:44:26,587 --> 00:44:37,498
+So with feed forward models, you'll get this input X and you'll predict this like just for autoregressive modeling, this X hat of T plus one, which is like the next token.
+
+403
+00:44:37,879 --> 00:44:44,205
+If you're turning a language model and then you'll back propagate with an RNN, you'll do essentially the same thing.
+
+404
+00:44:44,843 --> 00:44:55,427
+the diffusion model it's a little bit different where uh these are normally not trained auto aggressively but i kind of visualize that here for ease of visualization but um what you'll do
+
+405
+00:44:56,167 --> 00:45:24,942
+is you will take as input prediction of noise and then you will essentially predict like the sound of noise uh so yeah so you'll start with random noise and you'll predict uh based off the schedule and like the current time of this score here or like kind of the denoising to apply to this x hat of t plus one um and you'll do this for all the different x hat of t plus ones that kind of go from like pure random noise to uh the actual data itself um
+
+406
+00:45:25,276 --> 00:45:36,431
+With an energy based model it's a lot like a diffusion model that you initialize this X hat of T plus one as or this next token prediction for language models as random noise or a random distribution in this case.
+
+407
+00:45:37,112 --> 00:45:44,382
+And then, instead of just predicting the noise and like subtracting out the noise we'll do is you'll predict the energy and then.
+
+408
+00:45:45,273 --> 00:46:14,993
+will get the gradient from this energy to this prediction right and you'll subtract that gradient out so it's just like gradient descent um and like you'll multiply by step size etc etc and then you will pass this back into the model get the energy again update it using the gradient etc etc and you continue doing this for every next token at once so it's worth noting that we we train these as like gpt2 decoder style language models so every single prediction is made at the exact same time
+
+409
+00:46:15,395 --> 00:46:20,123
+And that's part of a lot of the effort that went into these decoder-only energy-based transformers.
+
+410
+00:46:20,677 --> 00:46:30,406
+And yeah, you're basically just predicting the grading of every single next token prediction at the exact same time using the energy scaler for each token.
+
+411
+00:46:32,208 --> 00:46:32,468
+Yeah.
+
+412
+00:46:32,588 --> 00:46:45,620
+And then in terms of kind of integrating these things from a more applied perspective on actual like applications or in a UI, I see in the short term, very similar applications to like what we currently see, such as like chat GPT or perplexity.
+
+413
+00:46:46,101 --> 00:46:47,863
+We're just doing inference with the language model.
+
+414
+00:46:48,443 --> 00:46:49,384
+I think that the
+
+415
+00:46:50,444 --> 00:47:15,355
+the short term you'll especially see like hybrid or ensembling of like a feed forward model with an energy based model where what you do is you initialize the prediction with this feed forward model like initialize the distribution and then you pass this into the energy based model and just refine this distribution right so you're kind of just like uh amortizing a lot of the work that's done with this energy based model with this feed forward model or you can consider ensembling these models um
+
+416
+00:47:16,178 --> 00:47:24,992
+And then another thing that you could do is use like speculative decoding to kind of like speed up the iterative decoding with these energy-based transformers.
+
+417
+00:47:25,012 --> 00:47:35,728
+So instead of doing every single next token prediction with these energy-based transformers, have a lighter weight model and then just check which logits are kind of, or sorry, which distributions are different and sample that way.
+
+418
+00:47:36,029 --> 00:47:41,477
+So you kind of don't have as much inference costs because they do require more flops during inference.
+
+419
+00:47:42,335 --> 00:47:51,046
+And then in the long term, yeah, I think that there's a couple of things that you could potentially see with energy based models that you wouldn't be able to see with these other feed forward models.
+
+420
+00:47:51,726 --> 00:47:53,869
+One thing that's exciting is like compositionality.
+
+421
+00:47:54,550 --> 00:48:02,960
+So there's been a lot of work with energy based models and compositionality, basically like combining different models with different attributes and generalizing to something new.
+
+422
+00:48:02,980 --> 00:48:09,608
+So this could be something like, for example, generating new images or generating new languages or whatever it is you want to do.
+
+423
+00:48:11,225 --> 00:48:13,449
+That's one thing that you could see in terms of applications.
+
+424
+00:48:13,869 --> 00:48:20,300
+But I think in the short term, from a practical perspective, most of what you will see would just be similar to what you would see with the feed forward model.
+
+425
+00:48:20,921 --> 00:48:33,722
+It might also be that the way that you do inference with these energy based transformers kind of gives you like a separate way of reasoning where you're kind of reasoning through this iterative optimization rather than in token space with next token prediction.
+
+426
+00:48:33,702 --> 00:49:03,102
+so the current models are doing this like next token prediction uh iterative reasoning rather than doing it like in a latent space so yeah what exactly makes a transformer a transformer such that it could be feed forward diffusive or energy based and is that part more durable or could something else be there in that green box yes um yeah great question so
+
+427
+00:49:03,773 --> 00:49:07,218
+I think the definition of a transformer depends on who you ask.
+
+428
+00:49:07,878 --> 00:49:20,415
+I would say to me the general definition is like you have per token level computation and then like global sequence mixing via attention.
+
+429
+00:49:21,176 --> 00:49:28,245
+So every token is operated on independently besides for attention where you kind of mix information globally across the sequence.
+
+430
+00:49:29,069 --> 00:49:33,538
+And then, is there different architectures you can use?
+
+431
+00:49:33,598 --> 00:49:34,420
+Yes, actually.
+
+432
+00:49:34,500 --> 00:49:44,800
+I think that we just focus on Transformers because it's one of the most popular architectures that has proven itself to be very successful across wide modalities and domains, etc., etc.,
+
+433
+00:49:45,286 --> 00:49:49,771
+Ideally, you could use any new architecture with energy-based models that comes out.
+
+434
+00:49:49,791 --> 00:49:58,460
+So there's a recent paper on autoregressive U-Nets, or I think they're also called H-Nets, that is essentially a new architecture for autoregressive modeling.
+
+435
+00:49:58,800 --> 00:50:07,610
+And I think it'd be great to combine these things as well, as long as these other architectures are stable and scalable and parallelizable in addition to transformers.
+
+436
+00:50:07,990 --> 00:50:12,475
+So I don't think that energy-based models necessarily need to be paired with
+
+437
+00:50:12,455 --> 00:50:39,407
+transformers it's just there's good synergy here due to the high success of transformers and high computational efficiency and stability so makes sense could you go to the energy landscape with the dog catching the uh yes okay yeah okay burt burkers asks do ebm get stuck in local minima during inference
+
+438
+00:50:40,315 --> 00:50:52,350
+yes yeah that is a great question so the answer is yes and unfortunately this is not necessarily something that is easy to avoid but
+
+439
+00:50:52,972 --> 00:50:57,381
+This isn't a huge problem because in high dimensional spaces, there are less local minima.
+
+440
+00:50:58,102 --> 00:51:01,028
+So it turns out that there are less local minima and more saddle points.
+
+441
+00:51:01,930 --> 00:51:04,816
+So it's hard to get stuck in local minima in very high dimensional spaces.
+
+442
+00:51:05,737 --> 00:51:11,048
+But you are not guaranteed to converge to a global minimum with these energy-based models.
+
+443
+00:51:11,332 --> 00:51:22,399
+So part of one of the benefits of sampling many, many times is that you can converge two different local minima, one of which may be your global minimum, and then you use this as your response.
+
+444
+00:51:23,402 --> 00:51:27,973
+So I think it would be interesting to try and kind of enforce some constraints to
+
+445
+00:51:28,544 --> 00:51:37,296
+Actually, I don't think it's possible to enforce constraints to have a single global minima because then you would restrict the expressivity of your model and you wouldn't be able to kind of fit very high dimensional data.
+
+446
+00:51:37,737 --> 00:51:40,581
+But it's very, it's a difficult problem.
+
+447
+00:51:40,601 --> 00:51:47,331
+And there's lots of theoretical work broadly on MCMC and kind of converging to the best minima.
+
+448
+00:51:47,691 --> 00:51:49,033
+So, yeah.
+
+449
+00:51:50,330 --> 00:51:51,151
+Definitely.
+
+450
+00:51:52,394 --> 00:51:59,806
+There's problems slash data sets that are easy and monotonic, and there's ones that are wickedly designed.
+
+451
+00:52:00,728 --> 00:52:04,694
+You brought up MCMC and you mentioned sampling as well.
+
+452
+00:52:04,895 --> 00:52:13,249
+So how do you see sampling based approaches with variational optimization based incremental
+
+453
+00:52:13,229 --> 00:52:13,970
+approaches?
+
+454
+00:52:14,732 --> 00:52:20,943
+Where do sampling particle based distribution based methods come into play?
+
+455
+00:52:20,983 --> 00:52:25,611
+How do we know where to use different balances of those?
+
+456
+00:52:27,234 --> 00:52:29,097
+Yeah, I'm not an expert on this.
+
+457
+00:52:29,137 --> 00:52:29,878
+I'll preface with that.
+
+458
+00:52:29,938 --> 00:52:32,082
+But um, I think that all of these are pretty like,
+
+459
+00:52:33,192 --> 00:52:58,542
+disjoint from this work and not disjoint i should say like compatible with this work and sort of adjacent slash like not necessarily in conflict to so you can in principle use particle based approaches or other more complex mcmc samplers to sample from your ebm like one example would be using hmc hamiltonian monte carlo to kind of sample better we just use first order information or like launch of on dynamics
+
+460
+00:52:58,522 --> 00:53:04,995
+But you could, in principle, use more complex samplers as well as particle based algorithms to sample better.
+
+461
+00:53:05,035 --> 00:53:08,382
+You can kind of consider that what we are doing.
+
+462
+00:53:08,422 --> 00:53:13,813
+I'm forgetting the name by sampling many times and choosing the minimum energy.
+
+463
+00:53:13,793 --> 00:53:37,253
+is sort of it's like there's some reference to this in statistical physics you can also use many of the ideas from statistical physics and kind of like inspiring better inference or sampling algorithms where you like anneal the step size or you like determine whether or not the energy decreases and then if it increased like decrease the step size so you kind of better get to local minima um
+
+464
+00:53:37,233 --> 00:53:38,457
+there's tons of ways you can do it.
+
+465
+00:53:38,477 --> 00:53:44,599
+And I think that broadly, you know, this work and the work on MCMC can only help each other basically.
+
+466
+00:53:44,699 --> 00:53:48,874
+So they're sort of adjacent and can help in tandem.
+
+467
+00:53:49,657 --> 00:53:49,757
+Yeah.
+
+468
+00:53:50,024 --> 00:53:51,245
+Yeah, I agree with that.
+
+469
+00:53:51,285 --> 00:54:03,059
+There's work on Stein mixture models and particle transport and accelerated optimization on different kinds of information geometries.
+
+470
+00:54:03,119 --> 00:54:06,363
+It's kind of just like exciting how it's all coming together.
+
+471
+00:54:06,744 --> 00:54:17,196
+So one reflection, which I'd be curious to hear your thoughts seeing from an academia researchy and from an industry side is like,
+
+472
+00:54:17,868 --> 00:54:24,555
+In the data-driven or data-based approach, there is some extant data.
+
+473
+00:54:24,655 --> 00:54:29,561
+Maybe you can acquire more, but it's about doing something with that data.
+
+474
+00:54:30,121 --> 00:54:46,879
+Whereas on, at least in the active inference, computational psychiatry, cognitive modeling space, often it's more like a priori systems modeling where we're designing that joint generative model, but
+
+475
+00:54:47,602 --> 00:54:52,291
+An empirical data set doesn't actually have to come into play.
+
+476
+00:54:52,772 --> 00:55:00,266
+You might be interested in just ab initio modeling of a cognitive agent and generating synthetic data.
+
+477
+00:55:00,447 --> 00:55:05,897
+And then there's methods for tuning the parameters to recapitulate empirical
+
+478
+00:55:06,299 --> 00:55:30,091
+parameters, but it's just sort of interesting to see the difference between having an extant data set as like the block of marble that you want to do the best on, like you have a language corpus and you want it to be fluent and write awesome PhD dissertations, but not much structural information about linguistics has to be encoded.
+
+479
+00:55:30,632 --> 00:55:35,378
+And that's the sort of stochastic parent type critique perspective.
+
+480
+00:55:35,645 --> 00:56:00,876
+in comparison or in compliment to making models who structurally embody linguistic constraints and using that to then meet in the middle also you'd hope with reasonable looking linguistic expression but that approach wouldn't necessarily need to be trained
+
+481
+00:56:00,856 --> 00:56:14,393
+from unstructured text corpuses so if we're thinking about general purpose ebms or domain specific ebms are you arbitrarily narrow to arbitrarily broad
+
+482
+00:56:15,149 --> 00:56:32,375
+where is that going to be from just dumping a blob of data, setting the number of parameters and some other aspects, kind of like how vision neural networks might work, just here's my data folder, here's the architecture, now go.
+
+483
+00:56:32,395 --> 00:56:43,772
+And where is it going to take more of a scaffolded, structured approach that
+
+484
+00:56:45,085 --> 00:56:51,028
+has a model that embodies aspects of the situation yeah
+
+485
+00:56:52,088 --> 00:57:20,678
+yeah that is very hard i think that it's very dependent on the amount of data that you have and the problem i think there are certain problems where you need a prior and that without this prior you sort of or some inductive bias with your model to be more data efficient such that without this inductive bias you will not succeed and i think that particularly we'll see that more often on domains with limited data
+
+486
+00:57:21,130 --> 00:57:34,622
+So if you have very limited data, having just a model and just the data, no prior on the structure or inductive biases of your model, your model will very much overfit that data and not generalize.
+
+487
+00:57:35,803 --> 00:57:42,329
+I think the reason that we're able to do this with language and video and audio is because we have huge amounts of data.
+
+488
+00:57:42,550 --> 00:57:50,597
+I mean, data that is on orders of magnitude more than any human will ever read or see in their lifetime.
+
+489
+00:57:51,337 --> 00:58:07,354
+So it may very well be that when we actually care about, well, we do care about this, but when we care very much about achieving human level intelligence, given the same amount of data as humans, we need stronger priors on architecture and structure.
+
+490
+00:58:07,334 --> 00:58:22,609
+etc it may also be that from a practical perspective these are more useful on specific modalities or domains where we don't have as much data as we do for language or for video so for example for medical data
+
+491
+00:58:23,028 --> 00:58:33,608
+I am not an expert on this, but I very much believe that there is many more data constraints with medical data than there is with just general videos online or general language online.
+
+492
+00:58:34,189 --> 00:58:45,610
+And because of this, it may be that, you know, inductive priors or kind of structures in your model that are more akin to how human cognition works or however your model of
+
+493
+00:58:45,691 --> 00:59:10,618
+know psychology works uh are much better at making decisions and performing or generalizing so i think the key is really data you know if you have infinite data you don't need any priors you just learn everything from the data if you don't have infinite data then priors are helpful and this is kind of broadly what we've observed in ai in the last decade where
+
+494
+00:59:10,953 --> 00:59:17,939
+Over time, the amount of priors that these models have has decreased, and you really just let the model fit the data.
+
+495
+00:59:17,979 --> 00:59:19,580
+You don't really make any assumptions.
+
+496
+00:59:20,521 --> 00:59:31,971
+10 years ago or 15 years ago, when we didn't have that much data in compute, people did a lot of hand-tweet things in engineering and feature engineering, et cetera, et cetera, for their vision models to make them work better.
+
+497
+00:59:32,332 --> 00:59:35,474
+And they did work better with those hand-engineered features at the time.
+
+498
+00:59:36,095 --> 00:59:39,778
+So I think the key is how much of a bottleneck is your data?
+
+499
+00:59:42,442 --> 01:00:09,411
+I believe I'm resonant with you on that with this sort of zigzagging forward moving pendulum between expert systems focus so-called and more unstructured and to combine the structured and the unstructured is the chocolate chip cookie that has these kind of neuro symbolic hybrid synthetic intelligence there's just a million ways to point at these architectures that have
+
+500
+01:00:09,391 --> 01:00:16,789
+different sorts of elements ranging from logical discrete to interpolated continuous.
+
+501
+01:00:16,849 --> 01:00:17,510
+So that's awesome.
+
+502
+01:00:18,292 --> 01:00:27,113
+Okay, last sort of two areas that I'd love to hear your take on and then I'll see if there's any final comment in the live chat would be,
+
+503
+01:00:27,582 --> 01:00:33,189
+How would somebody who's wanting to learn and apply get onboarded?
+
+504
+01:00:33,709 --> 01:00:37,574
+What resources did you all provide in the repository?
+
+505
+01:00:38,295 --> 01:00:44,582
+And what kinds of things would somebody want to learn up on and train up on to be able to replicate and extend?
+
+506
+01:00:45,443 --> 01:00:48,828
+And then of course, where is this all going?
+
+507
+01:00:49,468 --> 01:00:51,090
+What is the next shoe to drop?
+
+508
+01:00:51,531 --> 01:00:54,214
+What is the next pheromone that will be deposited?
+
+509
+01:00:55,696 --> 01:00:57,900
+Yeah, I like that last question a lot.
+
+510
+01:00:58,641 --> 01:01:02,707
+With the first question, yeah, we tried to make it a little bit easier to get started.
+
+511
+01:01:02,808 --> 01:01:13,485
+So at the end of the paper, like section, I think, H and I, there's some intro to EBM tutorial and stuff like that and some pseudocode.
+
+512
+01:01:14,208 --> 01:01:17,094
+There's also some videos by Yannick Kilcher.
+
+513
+01:01:17,114 --> 01:01:21,123
+He's a YouTuber that he made on energy based models that I think are really great for getting started.
+
+514
+01:01:21,804 --> 01:01:32,267
+But I recommend like checking out those videos and checking out those later sections in the paper that are sort of more easily written because I found it even for me, you know, like I've been doing EBMs for a while.
+
+515
+01:01:32,247 --> 01:01:57,748
+very difficult to read a lot of the literature because it's super theoretical and sort of like maybe not catered towards beginners so i think that you know just maybe checking this out or checking out some intro or tutorials on ebms would be great as well as just pie torch in general um yeah the yana culture videos are great as well and then the second question where where are we headed
+
+516
+01:01:58,707 --> 01:02:01,502
+Yeah, that is a great question.
+
+517
+01:02:01,522 --> 01:02:04,819
+I think in the long term,
+
+518
+01:02:05,693 --> 01:02:17,746
+Like what we'll see with diffusion models is kind of like what we saw with energy or sorry, what we'll see with energy based models is kind of like what we saw with diffusion models where like at first they're kind of like, oh, these are impractical.
+
+519
+01:02:18,026 --> 01:02:25,734
+No one's going to use these to like, okay, maybe there's some promise to like, okay, these have narrow applications to like, oh, wow, we can apply these to almost everything.
+
+520
+01:02:26,595 --> 01:02:31,380
+Like now diffusion language models are very much becoming very popular when it used to just be image generation.
+
+521
+01:02:31,850 --> 01:02:34,796
+And now they're used for planning and robotics, et cetera, et cetera.
+
+522
+01:02:35,518 --> 01:02:43,014
+I think we'll see the same thing with energy-based models where over time they will become more and more widespread because of potentially better generalization.
+
+523
+01:02:43,815 --> 01:02:46,742
+So I think that that is the future.
+
+524
+01:02:46,762 --> 01:02:48,846
+I think the question is really like how much time
+
+525
+01:02:49,366 --> 01:03:17,955
+much compute do we need and what are the the kind of core tricks and algorithms you know and the improvements that can be made so that is what i see but i think that if you believe that generalization will be the blocker in the next decade for sure energy-based models are a good way good bet to put your money on so if you generalize from your past experience to update your belief that generalization is important belief to have updated to
+
+526
+01:03:19,184 --> 01:03:20,648
+This is an interesting architecture.
+
+527
+01:03:22,552 --> 01:03:22,893
+Yeah.
+
+528
+01:03:23,775 --> 01:03:26,321
+Yeah, yeah, yeah, yeah.
+
+529
+01:03:26,562 --> 01:03:28,005
+I agree with that.
+
+530
+01:03:28,747 --> 01:03:36,045
+Any final comments or just what's next for you and your graduate and beyond adventures?
+
+531
+01:03:36,599 --> 01:04:04,159
+um not much final comments just thank you guys for the the interest and it's been kind of amazing I did not expect as many people to be interested in the paper so it's super super grateful for people even listening and for giving me the time to speak um in terms of my future uh yeah we'll have to see it's it's hard to know I mean I I definitely plan to continue working on ebms but um
+
+532
+01:04:04,797 --> 01:04:07,621
+Yeah, I have some crazy ideas planned in the future as well.
+
+533
+01:04:07,701 --> 01:04:09,143
+So we'll see how those go.
+
+534
+01:04:10,826 --> 01:04:11,286
+Amazing.
+
+535
+01:04:11,907 --> 01:04:12,308
+Thank you.
+
+536
+01:04:12,809 --> 01:04:13,730
+Super informative.
+
+537
+01:04:13,790 --> 01:04:19,298
+There's really a big community of researchers and people kind of in the engine room.
+
+538
+01:04:19,338 --> 01:04:28,191
+And I think also broader and broader peripheries of interest from everything AI ethics and just the future of what is going to happen.
+
+539
+01:04:28,912 --> 01:04:31,376
+So it's awesome to see.
+
+540
+01:04:31,636 --> 01:04:32,998
+And I hope we can have a follow-up
+
+541
+01:04:34,177 --> 01:04:34,982
+I hope so as well.
+
+542
+01:04:35,143 --> 01:04:35,405
+Yeah.
+
+543
+01:04:35,445 --> 01:04:36,451
+Thank you so much for having me.
+
+544
+01:04:36,652 --> 01:04:38,021
+Really appreciate it.
+
+545
+01:04:38,041 --> 01:04:38,262
+All right.
+
+546
+01:04:38,906 --> 01:04:39,127
+Peace.
+
+547
+01:04:39,288 --> 01:04:39,651
+Thank you.
+
+548
+01:04:40,878 --> 01:04:41,039
+Bye.
+
+549
+01:04:41,059 --> 01:04:41,200
+Bye.

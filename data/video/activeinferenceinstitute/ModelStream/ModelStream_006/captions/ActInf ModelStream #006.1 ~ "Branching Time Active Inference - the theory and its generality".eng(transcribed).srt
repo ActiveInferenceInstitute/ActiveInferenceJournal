@@ -1,0 +1,2547 @@
+1
+00:00:07,250 --> 00:00:08,892
+Hello and welcome everyone.
+
+2
+00:00:09,633 --> 00:00:18,544
+It is September 1st, 2022 and we are here in model stream number 6.1.
+
+3
+00:00:19,586 --> 00:00:24,632
+We're going to be discussing branching time, active inference, the theory and its generality.
+
+4
+00:00:25,709 --> 00:00:44,499
+going to have a presentation followed by a discussion so thank you ali and jacob for joining and anyone else to be adding their questions in the live chat without further ado over to tiafili champion and thanks so much for joining really appreciate it
+
+5
+00:00:45,879 --> 00:01:09,435
+hello thank you very much for the kind introduction uh and thank you for inviting me to present today i'm very glad i had this opportunity so today i will be speaking about branching time active in france um basically three different versions of the of the approach the first using biological message passing the second using bayesian filtering and the third one is using
+
+6
+00:01:10,396 --> 00:01:17,660
+belief propagation and allows the model to contain several observations and several ident states.
+
+7
+00:01:18,801 --> 00:01:26,746
+This work has been realized in collaboration with Lancelot Acosta, Marek Jesch and Howard Bromath.
+
+8
+00:01:28,887 --> 00:01:35,531
+So first of all, I want to speak a bit about the action perception cycle, which is a core idea in active inference.
+
+9
+00:01:36,431 --> 00:01:38,573
+Basically, there are two entities here.
+
+10
+00:01:38,613 --> 00:01:43,377
+The first is the environment, and the second is the agent, which is over there.
+
+11
+00:01:44,358 --> 00:01:49,643
+The environment provides an observation to the agent, for example, an image of the environment.
+
+12
+00:01:50,984 --> 00:01:55,648
+And then the agent takes this input and performs inference on it.
+
+13
+00:01:55,968 --> 00:02:02,914
+And the goal of the inference process is to extract high-level ident states, such as the position of Pac-Man in x and y,
+
+14
+00:02:04,190 --> 00:02:07,411
+or the position of the ghost, or whatever information may be relevant.
+
+15
+00:02:08,352 --> 00:02:12,873
+Then, based on those states, we can perform planning and action selection.
+
+16
+00:02:13,714 --> 00:02:27,439
+And action selection outputs the action to perform, maybe the action going up, which is fed into the environment, which produces another observation, and this cycle continues until the trail ends.
+
+17
+00:02:29,662 --> 00:02:39,026
+Now that we have the core idea of active inference, which is the action perception cycle, I will be speaking about active inference in a bit more depth.
+
+18
+00:02:40,387 --> 00:02:45,249
+Basically, active inference is about an agent which is equipped of a model.
+
+19
+00:02:46,490 --> 00:02:52,833
+This agent makes, as I said, observations, which are represented here at the bottom of the screen.
+
+20
+00:02:53,948 --> 00:02:59,153
+And those observations depend on the ident states through the A matrix.
+
+21
+00:02:59,634 --> 00:03:05,900
+So basically the A matrix provides a distribution of the observations for each possible latent state.
+
+22
+00:03:07,221 --> 00:03:13,588
+We also have the D-vector, which contains the parameter of the prior over the initial ident state.
+
+23
+00:03:15,023 --> 00:03:20,888
+as well as the B matrix, which explains how the transition of the environment works.
+
+24
+00:03:21,528 --> 00:03:29,154
+So basically, it explains how, given a state and an action, we get the new state at time t plus one.
+
+25
+00:03:30,270 --> 00:03:50,332
+we, as I said, have an action, or here it's a policy variable, and this action variable, or policy, depends on the precision parameter, which is called gamma, and as we will see, influence how stochastic or deterministic the policy of the agent will be.
+
+26
+00:03:52,321 --> 00:03:57,268
+So here we see how the prior overaction is being defined.
+
+27
+00:03:58,109 --> 00:04:09,484
+So it depends, as I said, on the gain parameter, and it is defined as the softmax function of minus the gamma, the precision parameter, times the expected free energy.
+
+28
+00:04:10,419 --> 00:04:23,305
+And the expected free energy for a particular policy is basically a sum over all future time steps, so from t plus 1, which is the first time step into the future, to uppercase t, which is the time horizon.
+
+29
+00:04:24,726 --> 00:04:30,908
+And for each time step, the expected free energy is defined as the expected cost plus the ambiguity.
+
+30
+00:04:31,789 --> 00:04:38,172
+The expected cost is the KL divergence between the predictive posterior over future observation
+
+31
+00:04:39,634 --> 00:04:40,895
+and the prior preferences.
+
+32
+00:04:41,536 --> 00:04:46,801
+The prior preferences defines which observation the agent wants to observe.
+
+33
+00:04:47,262 --> 00:04:53,108
+And this, the predictive posterior, defines how likely each observation is.
+
+34
+00:04:54,649 --> 00:05:00,255
+And so what we want to do is to minimize the divergence between those two distributions so that we actually observe what we like.
+
+35
+00:05:02,185 --> 00:05:10,429
+Okay, and the second term is about the entropy of the likelihood mapping expected under the variational posterior overstate.
+
+36
+00:05:11,209 --> 00:05:12,950
+So I'm speaking about variational posterior.
+
+37
+00:05:13,611 --> 00:05:22,315
+I will explain what this is in a minute, but that's the definition of the expected free energy, risk plus ambiguity, or also called expected cost plus ambiguity.
+
+38
+00:05:24,269 --> 00:05:25,490
+So I presented the model.
+
+39
+00:05:25,530 --> 00:05:27,291
+Here's a more formal definition.
+
+40
+00:05:27,731 --> 00:05:30,913
+Here we have a joint over all the variables in the model.
+
+41
+00:05:31,633 --> 00:05:36,316
+We saw that the policy depends upon the precision parameter.
+
+42
+00:05:37,016 --> 00:05:42,019
+We have a gamma distribution for the precision, like the gamma parameter.
+
+43
+00:05:42,679 --> 00:05:51,964
+We have Dirichlet priors for each of the tensor of parameters, so A, B, and D. And we see that S indeed depends on D.
+
+44
+00:05:53,565 --> 00:05:57,407
+and that the observation depends on the state through the A matrix.
+
+45
+00:05:58,588 --> 00:06:07,033
+And same thing for the transition mapping, we have a state which depends on the previous states and the B matrix, as well as the action being performed in the environment.
+
+46
+00:06:09,535 --> 00:06:19,441
+Okay, so now we have the model, but what we want to do is, given some observation, we want to be able to compute posterior beliefs over the latent variables.
+
+47
+00:06:20,592 --> 00:06:29,301
+In probability theory, we call that computing the posterior distribution, and we do that through a process which is called inference.
+
+48
+00:06:30,882 --> 00:06:42,854
+We can, for example, use exact inference, which is based on Bayes' theorem, so that the posterior is equal to the likelihood times the prior, and then we normalize using the evidence.
+
+49
+00:06:44,150 --> 00:07:04,766
+And basically, the evidence is just obtained from the numerators by summing out all the latent variable x. The problem is that when x is a continuous random variable, this summation turns into an integral, and we may not have an analytical solution for this integral.
+
+50
+00:07:05,827 --> 00:07:09,950
+So this method, the exact inference, can become intractable because of this.
+
+51
+00:07:11,107 --> 00:07:28,339
+What we do instead, when using variational inference, is that maybe this true posterior is very complex, but we are going to approximate it using this Q, this variational distribution, and try to make the divergence between those two distributions as close as possible.
+
+52
+00:07:28,959 --> 00:07:39,086
+So here we have the true posterior in red, and here we have an example of how the variational posterior may be fit to the true posterior in red.
+
+53
+00:07:41,454 --> 00:07:45,635
+In the context of active inference, the variational distribution is defined as follows.
+
+54
+00:07:46,136 --> 00:07:59,440
+So it is a joint distribution over all the latent variables of the model, and we are doing what we call the mean field approximation, which means that all the variables within this distribution are assumed to be independent.
+
+55
+00:08:00,282 --> 00:08:06,126
+Thus, there is no more dependency for the pi, a, b, d, and gamma parameters.
+
+56
+00:08:06,746 --> 00:08:12,610
+And we do a slight exception where the state still depends on the policy pi.
+
+57
+00:08:13,911 --> 00:08:16,793
+Okay, so that's the definition of the variational distribution.
+
+58
+00:08:17,773 --> 00:08:23,037
+And now that we have the variational distribution and the generative model, we can define the variational free energy.
+
+59
+00:08:23,657 --> 00:08:27,340
+So the goal of the variational free energy is to make sure that the
+
+60
+00:08:28,590 --> 00:08:52,388
+approximate posterior so that our variational distribution remain as close as possible to the true posterity and it is defined as the KL divergence between the approximate posterior and the generative model this variational free energy is also called like the negative evidence lower bound or ELBO in machine learning and it decomposes into
+
+61
+00:08:53,424 --> 00:08:54,624
+two intuitive terms.
+
+62
+00:08:54,664 --> 00:09:03,486
+So this is the variational free energy, and it decomposes into the KL divergence between the approximate and the true posterior.
+
+63
+00:09:04,106 --> 00:09:08,367
+This is the term that will make the approximate posterior be as close as possible to the true posterior.
+
+64
+00:09:09,587 --> 00:09:16,169
+And here we have as evidence, but which is a constant with respect to the variational distribution, which we are optimizing for.
+
+65
+00:09:16,689 --> 00:09:21,570
+So yeah, really the variational free energy is a proxy for the first term over there.
+
+66
+00:09:24,363 --> 00:09:26,384
+Okay, so what is variational message passing?
+
+67
+00:09:26,624 --> 00:09:29,445
+Variational message passing is an inference algorithm.
+
+68
+00:09:30,605 --> 00:09:33,726
+Basically, it is based on what is called the Markov blanket.
+
+69
+00:09:33,766 --> 00:09:40,448
+So let's suppose we want to compute the variational posterior for one specific node in a graphical model.
+
+70
+00:09:42,469 --> 00:09:49,191
+What variational message passing is about is saying that this node A only depends on its Markov blanket.
+
+71
+00:09:50,276 --> 00:10:05,628
+More specifically, it depends on the child of A, so here D and C. It depends on the parent of A, here F and G, and also in the co-parent of A, for example, E and B in this picture.
+
+72
+00:10:06,469 --> 00:10:16,077
+And what this Markov blanket says is that, really, we only need to know the values of the variable inside the Markov blanket to be able to perform inference over A.
+
+73
+00:10:17,935 --> 00:10:22,038
+Here is a bit more formal view on this question.
+
+74
+00:10:22,939 --> 00:10:30,585
+So here we have the optimal variational distribution for one random variable.
+
+75
+00:10:30,605 --> 00:10:39,913
+So this could be, for example, A. And the equation on the right gives us basically the analytical solution for this posterior.
+
+76
+00:10:40,474 --> 00:10:46,979
+And we see that it's only depending on the node itself, its parents, its children, and the co-parents.
+
+77
+00:10:48,464 --> 00:10:50,747
+And that's all we need to know.
+
+78
+00:10:50,907 --> 00:10:53,230
+Okay, so why a variational message passing?
+
+79
+00:10:53,951 --> 00:11:05,525
+The message bit comes from the decomposition of this analytical solution into messages, which are added together to form the variational posterior.
+
+80
+00:11:06,772 --> 00:11:10,515
+Here we can see the first message, which basically comes from the parents.
+
+81
+00:11:10,695 --> 00:11:13,137
+Here we can see one message for each chap.
+
+82
+00:11:13,657 --> 00:11:20,622
+And what we do is that all those messages will be added to form the parameter of the approximate posterity.
+
+83
+00:11:22,142 --> 00:11:23,403
+Here's a graphical example.
+
+84
+00:11:24,003 --> 00:11:47,074
+Basically, we are trying to perform inference over the random variable y. So we want to compute the parameter of the distribution, like the posterior distribution over y. And the way we go about doing this is that we send messages from the parents all the way through the random variable y. And same thing for the child and the co-parents.
+
+85
+00:11:48,007 --> 00:12:09,796
+And each time we reach a factor node, we combine the input messages and forward the result, forward y. When we have received all the messages, we just add them together and this provides us with the parameter of the variational distribution over y. So this was variational message passing, which is basically the algorithm that we use to perform inference.
+
+86
+00:12:10,700 --> 00:12:22,566
+Now I will be speaking about Monte Carlo research, which is a planning algorithm that we use to look forward into the future and estimate the quality of each policy.
+
+87
+00:12:24,087 --> 00:12:28,069
+So before to do that, I want just to introduce the notion of multi-index.
+
+88
+00:12:29,329 --> 00:12:34,012
+So here we can see the roots of the tree, which is the state at the present time step.
+
+89
+00:12:35,427 --> 00:12:44,675
+And then from there, we see that we have nodes in the future which are indexed by sequences of indices.
+
+90
+00:12:45,115 --> 00:12:51,380
+For example, here's a sequence of size one, which contains just the action or the index one.
+
+91
+00:12:52,541 --> 00:12:55,703
+So this is a state reached after taking action one.
+
+92
+00:12:56,644 --> 00:12:57,145
+And then here,
+
+93
+00:12:58,450 --> 00:13:10,718
+we have the states rich when performing action one followed by action two and this those indices are called multi-index because they are composed of several indices which here represent actions
+
+94
+00:13:12,079 --> 00:13:16,264
+OK, so now that we have this in mind, I can discuss Monte Carlo's research.
+
+95
+00:13:17,065 --> 00:13:21,410
+So the way Monte Carlo's research is structured is in four steps.
+
+96
+00:13:21,810 --> 00:13:28,018
+First, we have the selection step, where we start at the root node and compute the UCT criteria.
+
+97
+00:13:28,138 --> 00:13:32,063
+So this is just a real value, like a number, for each of the child.
+
+98
+00:13:33,226 --> 00:13:38,392
+And then we select the node which actually has the highest UCT value.
+
+99
+00:13:38,913 --> 00:13:42,957
+For example, maybe it is S1, so the state we reach after taking action 1.
+
+100
+00:13:43,778 --> 00:13:49,365
+Then from this, we can compute the UCT of each children, and maybe this node will be the highest value.
+
+101
+00:13:51,007 --> 00:13:58,430
+Okay, once we have reached a lift node, we can move towards the second phase, which is about expanding the child run of this node.
+
+102
+00:13:59,030 --> 00:14:10,475
+And for each child, what we are going to do is just simulating some rollouts from this node and computing the average expected frequency for this node.
+
+103
+00:14:11,528 --> 00:14:29,520
+Once we have this, there is a fourth phase, which is about updating the expected synergy of the ancestor of the node we just expanded, as well as the number of visits, because we want to explore part of the tree which have not been explored a lot in the past.
+
+104
+00:14:31,001 --> 00:14:34,904
+So we need to keep track of how many times each branch has been explored.
+
+105
+00:14:36,065 --> 00:14:37,946
+Okay, so that was the algorithm for planning.
+
+106
+00:14:39,434 --> 00:14:49,046
+And I now have introduced all the background required to discuss the first approach, which is branching time active inference with variational message passing.
+
+107
+00:14:51,115 --> 00:14:53,016
+So first, we need to define the model.
+
+108
+00:14:53,917 --> 00:14:55,739
+It is basically split into two parts.
+
+109
+00:14:56,159 --> 00:15:00,162
+The first one represents the past and the present.
+
+110
+00:15:00,782 --> 00:15:08,668
+And it is basically a partially observable Markov decision process, which is just a fancy word to say that we have observations, which depends on state.
+
+111
+00:15:09,169 --> 00:15:10,389
+This is with the A matrix.
+
+112
+00:15:11,530 --> 00:15:17,215
+We have action variables over there, and we have states, as I said.
+
+113
+00:15:19,264 --> 00:15:24,728
+So the likelihood mapping, as I said, is parameterized by the A matrix.
+
+114
+00:15:25,108 --> 00:15:28,810
+The transition, as usual, is parameterized by the B matrix.
+
+115
+00:15:29,671 --> 00:15:35,575
+And we also have here the D vector, which defines the prior over the initial island states.
+
+116
+00:15:36,235 --> 00:15:39,157
+So this is coming from standard active inference.
+
+117
+00:15:39,977 --> 00:15:45,201
+And then the novelty is that we are expanding basically the future
+
+118
+00:15:47,775 --> 00:15:55,080
+Each time we have this model, then we perform multi-carriage research.
+
+119
+00:15:55,240 --> 00:16:00,743
+Each time we want to expand a node, what we do is that we are going to add some parts, some bits to the generative model.
+
+120
+00:16:00,763 --> 00:16:07,508
+For example, if we want to add this part of the generative model, we are going to add one transition mapping.
+
+121
+00:16:09,068 --> 00:16:12,470
+This will add a random variable, here it's like S12.
+
+122
+00:16:14,010 --> 00:16:20,273
+And then we will add the associated observation using the likelihood map.
+
+123
+00:16:20,293 --> 00:16:22,834
+This is how we expand the generative model as we go.
+
+124
+00:16:23,894 --> 00:16:25,795
+Mathematically, this is defined like this.
+
+125
+00:16:26,275 --> 00:16:30,416
+So we see here a generative model over all the variables in the model.
+
+126
+00:16:31,197 --> 00:16:36,859
+We have Dirichlet prior over the parameters of the model, so the A, B, and D matrices.
+
+127
+00:16:38,425 --> 00:16:46,607
+The state at time-step zero depends on D. Each observation depends on the state associated to it and the A matrix.
+
+128
+00:16:47,887 --> 00:16:55,769
+And then we have prior distribution over actions, which depends on some theta parameters for which we have a Dirichlet prior.
+
+129
+00:16:57,870 --> 00:17:06,552
+Okay, and then the state, as usual, depends on the previous state and the previous actions, as well as on the B matrix, which defines the transition probabilities.
+
+130
+00:17:08,086 --> 00:17:14,469
+So this is a POMDP version, like the POMDP part of the model.
+
+131
+00:17:15,190 --> 00:17:20,633
+And this is a tree-like structure that expands as planning is going on.
+
+132
+00:17:22,094 --> 00:17:28,397
+So IT is a set of all multi-indexes which has been expanded in the model.
+
+133
+00:17:29,017 --> 00:17:35,661
+For example, if I come back here, we see that there are three multi-indexes that have been expanded.
+
+134
+00:17:37,210 --> 00:18:02,219
+so i is equal to the multi-index is one the multi-index is two and the multi-index uh one one okay and now for each of those multi-index we add to the generative model a transition and likelihood mapping that's exactly what we are doing for each index in the set of multi-index which have been expanded we had
+
+135
+00:18:03,573 --> 00:18:07,076
+the likelihood mapping and then transition for this specific node in the future.
+
+136
+00:18:09,517 --> 00:18:16,222
+Okay, so now we need to test this approach in an environment.
+
+137
+00:18:16,443 --> 00:18:24,729
+And for now, we'll be testing it inside a maze environment where we have here the exit of the maze.
+
+138
+00:18:25,626 --> 00:18:35,963
+here the starting position and then the prior preferences of the agents will be that the closer we are from the exits the more the happier uh the agents will be
+
+139
+00:18:37,287 --> 00:18:40,009
+So here we have a distance of 0, 1, 1, 2, 3, 4.
+
+140
+00:18:43,653 --> 00:18:48,557
+One feature which is really important is that the prior preferences fly across both.
+
+141
+00:18:48,717 --> 00:18:53,942
+So here we have 3, and here we have 4 in terms of the distance.
+
+142
+00:18:54,342 --> 00:18:55,983
+We don't have like 5, 6, 7, 8.
+
+143
+00:18:57,825 --> 00:18:58,105
+We have 4.
+
+144
+00:18:59,086 --> 00:19:00,387
+And what this produces
+
+145
+00:19:01,468 --> 00:19:26,654
+is a blue cell and what this blue says blue cell actually is is a local minimum in which the agent can be stuck if it is not careful and the way to avoid this local minimum will be to be able to plan final into the future to see that the rewarding path is actually this one and not the one leading to the local minimum so this is basically a challenge that we are adding uh to the task
+
+146
+00:19:28,567 --> 00:19:33,630
+And here what we can see, so here is basically an illustration of the tree which is being expanded.
+
+147
+00:19:34,271 --> 00:19:35,752
+And here we have the table of results.
+
+148
+00:19:36,152 --> 00:19:53,484
+We see that as we increase the number of planning iterations, we go from the agent being stuck inside the local minimum, so never reaching the exit, to an agent which is basically behaving properly and reaches the exit 100% of the time.
+
+149
+00:19:56,201 --> 00:20:02,527
+Next, we need to compare our potential branching time active inference to the previous state of the art, which is active inference.
+
+150
+00:20:04,088 --> 00:20:14,038
+And basically, we designed an environment in which for the agent to be able to solve it, it has to plan three, five, and then eight time steps into the future.
+
+151
+00:20:16,035 --> 00:20:21,218
+For ActiveInference, what happened is that it was able to properly solve the two first tasks.
+
+152
+00:20:21,639 --> 00:20:33,767
+But then, what happened is that because the number of policy tasks we evaluate into the future grows exponentially with the number of times that it has to plan for, the last one, which is the biggest, crashed.
+
+153
+00:20:35,216 --> 00:20:43,565
+With our approach, we did the exact same thing where we increased once again the number of planning iterations.
+
+154
+00:20:44,066 --> 00:20:57,360
+We see that the agent becomes able to solve tasks all the time and does not crash because it is able to explore in a clever fashion the space of all possible policies using multi-carriage research.
+
+155
+00:20:59,685 --> 00:21:05,010
+This was a bit of an empirical comparison between BTEI and active inference.
+
+156
+00:21:05,750 --> 00:21:11,796
+Now what I want to do in this slide is to compare them in terms of complexity classes, which is a lot more theoretical.
+
+157
+00:21:13,462 --> 00:21:23,870
+So basically here, each circle corresponds to a categorical distribution of a state, which means that to store one of those circles, we need to store the number of states.
+
+158
+00:21:24,631 --> 00:21:27,773
+So a number of parameters, which is equal to the number of state values.
+
+159
+00:21:28,153 --> 00:21:32,997
+So if we have a state which takes three values, we need to store three parameters.
+
+160
+00:21:35,396 --> 00:22:02,532
+then for each time step into the future we need to store one more parameters one more categorical when it comes to active inference and we also need to store one more categorical for each possible policy so the total complexity class is equal to the number of policies times the number of time step until the time horizon times the number of parameters we need to store for each categorical distribution
+
+161
+00:22:03,479 --> 00:22:12,762
+Now in the worst case scenario, the first thing to say is that BTEI does not store every single possible combination.
+
+162
+00:22:13,502 --> 00:22:21,445
+It's using the tree structure of the generative model to store only one distribution for the past and present.
+
+163
+00:22:22,389 --> 00:22:41,338
+for each time step in the past and present and then it's if we expand all the tree then it's going to x to store uh the number of action to the power of the time horizon minus t so this is still exponential in terms of course because of this change over there
+
+164
+00:22:42,588 --> 00:22:45,870
+But in practice, we never expand the entirety of the tree.
+
+165
+00:22:45,910 --> 00:22:50,452
+So what we do is maybe we will expand this, this, this, and this, but not the two others.
+
+166
+00:22:50,933 --> 00:22:58,317
+So in practice, the real complexity class of this algorithm is linear in the number of expansions that we are making.
+
+167
+00:23:00,258 --> 00:23:08,142
+Okay, so that was to show that branching time active inference does not require as much storage space as standard active inference.
+
+168
+00:23:10,231 --> 00:23:37,353
+now we want i want to speak about the second approach which is based on bayesian filtering so first what is bayesian filtering well basically it is an inference algorithm which starts with just a simple generative model with a state and an observation we actually know which observation we are making and we have we also know what is the prior of a state and the likelihood is and then we can for example use
+
+169
+00:23:38,533 --> 00:23:43,354
+by a sterine to compute the posterior overstate, given some observations.
+
+170
+00:23:45,114 --> 00:23:47,015
+And we just compute it like this.
+
+171
+00:23:48,195 --> 00:23:55,376
+Once we have a posterior overstate, we can use it as an empirical prior.
+
+172
+00:23:56,336 --> 00:23:58,377
+So here is our empirical prior.
+
+173
+00:23:58,737 --> 00:24:03,958
+And we also know the transition probability that leads us to the next time stop.
+
+174
+00:24:05,376 --> 00:24:19,567
+So we can use this information as well as the action that we are actually performing in the environment to compute the predictive posterior over the state at time step one, given the action that we just made, which is U0 and the observation that we made before.
+
+175
+00:24:20,848 --> 00:24:26,992
+And the way this is done is just by performing Bayesian prediction through the transition mapping.
+
+176
+00:24:27,413 --> 00:24:30,075
+So averaging out the dimension of S0.
+
+177
+00:24:32,529 --> 00:24:45,633
+And then comes another observation, and we can just use our predictive posterior that we got from the previous prediction step to now compute a posterior over S1 according to this new observation.
+
+178
+00:24:46,113 --> 00:24:54,675
+And those two steps of integrating evidence and then prediction through the transition mapping are going to be iterated as many times as we need to.
+
+179
+00:24:56,752 --> 00:25:03,597
+So this leads us to the second approach that I want to present today, which is branching time active inference with Bayesian filtering.
+
+180
+00:25:05,018 --> 00:25:18,227
+So first thing, we are not storing anymore the past, the past observation on state, because all the information we need is stored within the beliefs over the initial state, like the current time state.
+
+181
+00:25:19,228 --> 00:25:21,129
+The state as a current time state.
+
+182
+00:25:22,841 --> 00:25:38,586
+Okay, so we have an observation at time t. We can perform the integration of evidence step to get a belief about this state at time step t. And then we can perform forward prediction for each of the children that we want to expand.
+
+183
+00:25:39,793 --> 00:25:44,137
+For example, maybe we'll compute this one, and then this one, and so on and so forth.
+
+184
+00:25:44,518 --> 00:25:53,546
+And if Monte Carroll's research tells us to expand this child, then we will just perform forward prediction as well for this one and expand its associated observations.
+
+185
+00:25:54,607 --> 00:25:55,948
+So that's the main idea.
+
+186
+00:25:56,609 --> 00:26:03,676
+So really, the only difference here is that we don't even have any more partially observable Markov decision process for the past.
+
+187
+00:26:04,793 --> 00:26:13,697
+We only have the current timestep, and we are also changing the inference algorithm from variational message passing to Bayesian catchment.
+
+188
+00:26:16,258 --> 00:26:19,800
+Here is a more formal definition of the generative model.
+
+189
+00:26:20,300 --> 00:26:26,282
+So we can see here the likelihood and prior overstate for the initial timestep.
+
+190
+00:26:26,803 --> 00:26:30,985
+Here is the current timestep t. And then for each likelihood,
+
+191
+00:26:33,851 --> 00:26:43,600
+For each future state and observation, for each multi-indices that we already have expanded, we have the likelihood mapping and the transition mapping associated to it.
+
+192
+00:26:46,161 --> 00:26:57,726
+In terms of performance, we compare here branching time, active inference, using Bayesian filtering, to the same algorithm, so BTEI, but with via Einstein message passing.
+
+193
+00:26:58,286 --> 00:27:13,692
+And we see that for the same task, one of them is performing with an order of magnitude which is about minute scale, so around four minutes, between four and seven minutes, while the other performs a lot faster, between two and 11 seconds.
+
+194
+00:27:14,551 --> 00:27:22,033
+So this speed up in performance is basically made possible by the change of inference algorithm.
+
+195
+00:27:24,933 --> 00:27:33,395
+But now what we want to do is to be able to define more than one observation and state at each time point.
+
+196
+00:27:34,815 --> 00:27:43,077
+So the way we are going to do this is by changing once again the inference algorithm from Bayesian filtering to belief propagation.
+
+197
+00:27:45,410 --> 00:27:46,770
+So what is belief propagation?
+
+198
+00:27:47,511 --> 00:27:54,853
+Basically, belief propagation is an algorithm that takes as input a function over some state variables.
+
+199
+00:27:56,013 --> 00:28:01,935
+And this function, we know that it factorizes into a set of n factors, which we call fi.
+
+200
+00:28:04,002 --> 00:28:17,612
+And the question is, how can we compute the marginal distribution, like the marginal over the marginal of this function, when we marginalize out all the other random variables except for one, sm.
+
+201
+00:28:18,912 --> 00:28:22,955
+Okay, so we want to marginalize the distribution over all but sm.
+
+202
+00:28:24,136 --> 00:28:32,362
+And the way I believe propagation is solving this task is basically by passing messages through the computational graph.
+
+203
+00:28:33,942 --> 00:28:35,744
+So in the graph, we have two kinds of nodes.
+
+204
+00:28:35,864 --> 00:28:41,329
+We have factor nodes, which represent factors of the distribution, for example, F1.
+
+205
+00:28:41,969 --> 00:28:48,055
+And then we have random variable, maybe X1.
+
+206
+00:28:49,016 --> 00:28:51,758
+And we may have several of them, so F2 and then X2.
+
+207
+00:28:52,319 --> 00:28:58,625
+Okay, and maybe we have a transition mapping between the two.
+
+208
+00:28:59,804 --> 00:29:13,613
+this is the setting and now what we want to do is to pass some messages through the graph so when it comes to a message from a node x to a factual so let's suppose we have one more here
+
+209
+00:29:14,747 --> 00:29:25,557
+What we are going to do to compute the output message is just multiply the input messages that come from the other arrows that go towards this node.
+
+210
+00:29:26,457 --> 00:29:31,021
+And we just multiply all of the input messages and output the result.
+
+211
+00:29:32,142 --> 00:29:37,067
+When it comes to a message for PowerFacture,
+
+212
+00:29:39,286 --> 00:29:51,671
+We basically are going to take the factors associated to this factor node and multiply it by all the incoming messages.
+
+213
+00:29:52,071 --> 00:29:57,874
+So we take all the incoming messages and multiply them by the factor associated to this factor node.
+
+214
+00:29:58,908 --> 00:30:09,685
+And then we marginalize out all the input dimensions so that the message has the exact same shape as the output, as the target random variables.
+
+215
+00:30:10,886 --> 00:30:13,591
+So this is the marginalization I'm speaking about.
+
+216
+00:30:15,148 --> 00:30:18,610
+We do that for every single messages we can inside of the phytograph.
+
+217
+00:30:19,130 --> 00:30:26,493
+And then we use those messages to compute the marginal that was the goal of this algorithm.
+
+218
+00:30:26,973 --> 00:30:32,556
+And the way we do that is that we just take all the input messages and multiply them together.
+
+219
+00:30:33,056 --> 00:30:37,738
+And this gives us the marginal distribution over the specific state we wanted to.
+
+220
+00:30:40,031 --> 00:30:47,134
+So this leads us to multimodal on multifactorial branching time activity trends, which is the last approach that we have been developing.
+
+221
+00:30:48,875 --> 00:30:54,117
+Before to be able to speak a bit more about this approach, I need to introduce the notion of temporal slice.
+
+222
+00:30:55,297 --> 00:31:00,659
+So a temporal slice is just a set of states and observations.
+
+223
+00:31:01,360 --> 00:31:04,441
+We have S states and O observations.
+
+224
+00:31:06,307 --> 00:31:10,429
+So this is a plate notation which just duplicates the variable O time or S time.
+
+225
+00:31:11,410 --> 00:31:13,351
+And then we have those dashed lines.
+
+226
+00:31:13,871 --> 00:31:20,614
+What those dashed lines are doing is just connecting the observation to a subset of the states over there.
+
+227
+00:31:21,195 --> 00:31:25,837
+So for example, maybe we have an observation 1, which depends on state 1 and state 2.
+
+228
+00:31:28,498 --> 00:31:29,659
+And then maybe we have observation 2.
+
+229
+00:31:30,902 --> 00:31:32,923
+But this observation 2 only depends on state 2.
+
+230
+00:31:33,703 --> 00:31:41,287
+So the reason for which it's a dashed line is because we can have a sparse mapping between the state and observation.
+
+231
+00:31:41,747 --> 00:31:44,288
+We don't have to have all the possible connections.
+
+232
+00:31:47,088 --> 00:31:54,831
+Okay, and two slides, two temporal slides, can be connected through the transition mapping, which is these arrows.
+
+233
+00:31:55,251 --> 00:31:58,513
+And what these arrows mean is exactly the same, but between two timesteps.
+
+234
+00:31:59,033 --> 00:32:11,998
+So, for example, this, the state over there, can depend on the state at the previous timestep in an arbitrary fashion, exactly like the observation depends on an arbitrary subset of the state.
+
+235
+00:32:13,476 --> 00:32:19,069
+But this representation is a bit unpractical when it comes to presenting the entire generative model.
+
+236
+00:32:19,630 --> 00:32:22,777
+So what we do is that we just represent this temporal slice.
+
+237
+00:32:23,835 --> 00:32:27,376
+as a square, which is called TST.
+
+238
+00:32:27,657 --> 00:32:35,560
+So the temporal slice at time T. And the background here is gray because the observations within the temporal slice are provided.
+
+239
+00:32:36,400 --> 00:32:37,300
+They are actually observed.
+
+240
+00:32:38,060 --> 00:32:43,643
+While in the future, the background will be white because the observations are just not observed.
+
+241
+00:32:44,983 --> 00:32:49,745
+Okay, so now that we have this more compact presentation, we can present the generative model.
+
+242
+00:32:50,405 --> 00:32:52,066
+So here we see the initial time step.
+
+243
+00:32:53,160 --> 00:33:01,445
+And then from there, we can expand some new temporal size, exactly when multi-carot research asks us to.
+
+244
+00:33:01,945 --> 00:33:04,887
+So we start there, maybe we complete the UCT criterion.
+
+245
+00:33:05,527 --> 00:33:12,732
+This is the node with the highest UCT criterion, so we are basically asked to expand those children.
+
+246
+00:33:14,162 --> 00:33:30,717
+we can do so by just using the forward prediction for computing the state here and then from the state we use forward prediction once again to predict the future observation associated to this temporal slice okay more formally
+
+247
+00:33:32,043 --> 00:33:49,206
+this generative model is a joint over all the random variable once again and it is the product of the probability of the temporal size at time t multiplied by all the future time temporal size okay so all the temporal size we have already been expanding during Monte Carlo research
+
+248
+00:33:51,348 --> 00:34:02,052
+Each observation depends on a subset of the state within this temporal slice.
+
+249
+00:34:02,712 --> 00:34:07,994
+And because we are at the top of the tree, the state at time step t does not depend on anything.
+
+250
+00:34:10,135 --> 00:34:14,817
+After that, for each temporal slice in the future, we still have the dependency
+
+251
+00:34:17,288 --> 00:34:29,839
+that we still have the fact that the observation depends on the state within this temporal slice, but we also have the fact that the state in this temporal slice depends on the state in the parent temporal slice.
+
+252
+00:34:30,420 --> 00:34:37,867
+So, for example, the state within this temporal slice has parents inside this temporal slice.
+
+253
+00:34:39,828 --> 00:34:42,391
+Okay, so this is the way the generative model is defined.
+
+254
+00:34:43,757 --> 00:34:49,028
+Now, the way we perform inference is using what we call the IP algorithm.
+
+255
+00:34:49,509 --> 00:34:54,780
+So I stand for inference and P will stand for prediction.
+
+256
+00:34:56,636 --> 00:35:08,381
+So this slide is about the inference step, and the goal is to compute the posterior over the state within the initial, like the current temporal slice, given the observations.
+
+257
+00:35:09,081 --> 00:35:13,983
+I'm not going to go through this derivation, but you can pause the video if you are watching it on YouTube.
+
+258
+00:35:15,884 --> 00:35:20,006
+But yeah, so basically we do some derivation and then we obtain this solution.
+
+259
+00:35:21,175 --> 00:35:32,463
+which just tells us to take the product over all the likelihood mapping, with all the priors, and then use the belief propagation to actually marginalize out this function.
+
+260
+00:35:34,325 --> 00:35:36,727
+And that's exactly what we are going to do.
+
+261
+00:35:37,107 --> 00:35:39,769
+We use belief propagation within the current time step.
+
+262
+00:35:40,229 --> 00:35:47,735
+So if I go back here, we have some observation here, and we use belief propagation to compute the state within the initial temporal phase.
+
+263
+00:35:49,326 --> 00:35:52,949
+So this is the E-step, the I-step, which is the inference step.
+
+264
+00:35:54,010 --> 00:36:01,156
+Then we need to perform the P-step each time the multicolored research tells us to expand a part of the generative model.
+
+265
+00:36:02,216 --> 00:36:14,927
+So once again, I'm not going to go through this derivation, but basically the idea is to compute the posterior over the state in the next temporal slice, given the observation that we made in the current temporal slice.
+
+266
+00:36:16,963 --> 00:36:46,253
+so here we see that basically once again we have some kind of summation over all the parents of the states in the temporal size that we want to conclude the posterior form and this is the transition mapping that we know and this is a posterior distribution from the previous temporal size so basically what we are doing is just doing forward prediction in this case taking the expectation of the transition mapping
+
+267
+00:36:47,128 --> 00:36:51,094
+We can do this for the state and for the observations.
+
+268
+00:36:53,218 --> 00:37:00,910
+So to come back to the main picture, we first use the i-step to compute the posterior over the state at the initial temporal slice.
+
+269
+00:37:02,076 --> 00:37:03,076
+So this is the I-step.
+
+270
+00:37:03,697 --> 00:37:11,540
+And then we can use this posterior distribution to compute the posterior over the state in the future.
+
+271
+00:37:11,840 --> 00:37:13,521
+So maybe the state in this top wire slice.
+
+272
+00:37:14,141 --> 00:37:22,925
+And then we can use, once again, the P-step to compute the distribution over future observations that correspond to this top wire slice.
+
+273
+00:37:23,545 --> 00:37:30,088
+And we are going to do that for all top wire slides we want to explain in the future.
+
+274
+00:37:33,297 --> 00:37:39,160
+Okay, and the next thing that we need to define, and last for this approach, is the expected fringe.
+
+275
+00:37:40,060 --> 00:37:47,904
+So basically, the way we are going to define this is by first grouping all the observations into distinct subsets.
+
+276
+00:37:48,624 --> 00:37:59,029
+So basically, O is the set of all observations in the temporal slice index by the multi-index I. Okay, and now we are going to split
+
+277
+00:38:06,235 --> 00:38:18,880
+Once we have grouped those observations into subsets, the way we define the expected free energy is just as a sum over all possible groups of random variables.
+
+278
+00:38:19,180 --> 00:38:33,987
+So each of those, we will iterate over those, and then include the K-diversions between the prior and the predictive posterior for those observations.
+
+279
+00:38:34,892 --> 00:38:39,655
+So this is the risk term, the total divergence between what will happen and what we want to happen.
+
+280
+00:38:41,136 --> 00:38:51,583
+And then we will compute the ambiguity for each of the observations, which is as usual defined as the expected entropy of the likelihood mapping.
+
+281
+00:38:53,744 --> 00:39:00,509
+So this vert equation is probably new for people that have not read the paper.
+
+282
+00:39:01,567 --> 00:39:06,789
+But we can look at one specific case, which makes it more intuitive.
+
+283
+00:39:07,229 --> 00:39:14,192
+And basically, this specific case is just when each subset corresponds to one observation in the temporal phase.
+
+284
+00:39:14,852 --> 00:39:21,955
+And in this case, the expected free energy for a specific policy, so for one specific multi-index,
+
+285
+00:39:23,530 --> 00:39:48,947
+is just the risk for the specific observation plus the ambiguity for the specific observation so we still have ambiguity plus uh risk and now we need um to present like to test those approaches together so compare branching time access inference with various time message passing by the same filtering and the last approach which is based on belief propagation
+
+286
+00:39:50,831 --> 00:40:09,993
+way we are going to do that is by using a variant of the described data sets basically we represent the environment as a bride and so we okay in this environment we have three different shapes we have entities
+
+287
+00:40:10,816 --> 00:40:33,604
+hertz that need to be pulled towards the bottom right corner of the image and we have squares and the squares need to be pulled on the bottom left corner of the image and because there are way too many positions in x and y what we do is that we do some form of state aggregation and
+
+288
+00:40:34,551 --> 00:40:47,320
+For the 8th first position in the upper left corner, if the shape is in one of those 8 positions, we are going to aggregate them into one state with index 0.
+
+289
+00:40:47,360 --> 00:40:54,305
+And for this, it will be index 1, and so on and so forth, up to 19 for the squares.
+
+290
+00:40:55,186 --> 00:41:00,630
+And if it's a Hertz, we will just allocate those states, the indices, between 20 and 39.
+
+291
+00:41:03,690 --> 00:41:26,595
+something for ellipses so what we are doing is basically reducing the state space so that some of those approaches can still do something because they are not powerful enough to solve the entire state space so here are the results where we compare violation passing but by then filtering and the last one which is based on belief propagation
+
+292
+00:41:28,280 --> 00:41:40,565
+In variational message passing, we had to use a granularity of 4, which meant that the size of the square is like a 4x4 square.
+
+293
+00:41:40,865 --> 00:41:43,266
+So the cells are the size of 4x4.
+
+294
+00:41:44,547 --> 00:41:47,208
+And with this setting, we were able to solve 96% of the task.
+
+295
+00:41:47,228 --> 00:41:50,269
+And the average time for one trial is around 5 seconds.
+
+296
+00:41:59,158 --> 00:42:04,980
+With the Bayesian filtering approach, we were able to go down to a granularity of 2.
+
+297
+00:42:05,640 --> 00:42:08,461
+So this time the cells are the size of 2 by 2.
+
+298
+00:42:09,741 --> 00:42:16,684
+And with this granularity, the agent becomes able to solve the task 98% of the time.
+
+299
+00:42:23,564 --> 00:42:29,388
+But the thing is that because we reduce the size of the granularity, we also increase the size of the state space.
+
+300
+00:42:29,948 --> 00:42:39,015
+And this produces an increase in computational times, which means that each trial now requires around 17 seconds to be executed.
+
+301
+00:42:40,612 --> 00:42:47,798
+For the last approach, we use the fact that we now know the factorization of the likelihood and transition mapping.
+
+302
+00:42:48,599 --> 00:42:54,864
+And this allows us to go down all the way to only one, a range of one, basically.
+
+303
+00:42:55,224 --> 00:43:00,449
+So we are now able to differentiate between every single x and y position inside the image.
+
+304
+00:43:02,944 --> 00:43:05,765
+And with this granularity, we can solve the task perfectly.
+
+305
+00:43:06,346 --> 00:43:14,409
+And because we can take advantage of the factorization of the distribution, we go a lot faster than all of the previous approaches.
+
+306
+00:43:14,930 --> 00:43:16,831
+And we can solve the task in around 2.5 seconds.
+
+307
+00:43:19,210 --> 00:43:42,158
+just i would just want to make one thing uh very clear here because this approach basically was able to model every y position every x position every shapes inside like your shapes uh of the despite environments all the orientation like possible orientation of the shape and all the scale um so basically each
+
+308
+00:43:43,178 --> 00:44:11,379
+its shape can have different sizes and this scale dimension uh represent that so basically this approach was able to to deal with around 700 000 configuration of the state space now we have presented the results and show that this approach approaches um very performance like can be a very good performance but now how do we create that uh well here i've got a very small uh
+
+309
+00:44:12,287 --> 00:44:18,690
+code example, where basically I'm retrieving from the environment the A, B, C and D matrices.
+
+310
+00:44:19,670 --> 00:44:34,597
+The C matrix corresponds to the prior preferences of the agent, and as I already said several times, A corresponds to the likelihood, B corresponds to the transition, and D is the prior of the initial states.
+
+311
+00:44:35,742 --> 00:44:51,506
+And then the way we go about creating the BTEI 3MF agents is just by creating a temporary slice builder, telling him that we have one action, which is called A underscore zero, then giving it the number of value that this action can take.
+
+312
+00:44:52,563 --> 00:45:13,331
+then we just add one state for every single state of our system so the x position y position shape scale and orientation and we provide as a second parameter the like is the parameter of the trial over the state so now within our generative model we have the state of the system then we need to add the observation
+
+313
+00:45:14,735 --> 00:45:23,021
+For each of the states, we add one observation, which depends on the state through an A matrix.
+
+314
+00:45:23,561 --> 00:45:26,663
+So we provide an A matrix and the list of parents over there.
+
+315
+00:45:27,544 --> 00:45:31,947
+And this basically will add an observation for each state in the generative model.
+
+316
+00:45:33,925 --> 00:45:37,866
+The before last step is just to add transition.
+
+317
+00:45:37,966 --> 00:45:47,429
+So basically for each state in the system, we say what is the B matrix that need to be used and what are the parents for this state.
+
+318
+00:45:47,969 --> 00:45:56,771
+So for example, the position in X of the agent depends on the position in X at the previous time step and the action which is being performed.
+
+319
+00:45:58,752 --> 00:46:02,553
+And this will basically add transition probabilities within the model.
+
+320
+00:46:03,738 --> 00:46:26,916
+the last step before to build the temporal size is just to define our prior preferences and because in the display data set we need to have prior preferences about the x y and the shape of um of a blob what we do that we we say here is one factor this is one of the x subsets of observations and we provide the c matrix associated to that
+
+321
+00:46:27,950 --> 00:46:32,995
+Then we call the function build, which just returns the temporal slice.
+
+322
+00:46:33,596 --> 00:46:38,021
+And we create a BTEI3MapAgent, which uses this temporal slice.
+
+323
+00:46:38,781 --> 00:46:48,091
+And we provide the number of planning iterations we want the algorithm to use, as well as the exploration constants that trade off exploration versus exploitation.
+
+324
+00:46:49,212 --> 00:46:50,574
+Exploration versus exploitation.
+
+325
+00:46:53,152 --> 00:46:57,434
+And this is a graphical user interface that we have been developing.
+
+326
+00:46:57,994 --> 00:47:01,336
+Basically, here we can see the initial temporal slice.
+
+327
+00:47:02,376 --> 00:47:10,280
+If we were in the software, we can click on the temporal slice and see the different posterior over all the state variable.
+
+328
+00:47:11,320 --> 00:47:15,362
+We can also see different information about those as the temporal slice.
+
+329
+00:47:15,682 --> 00:47:17,963
+So the number of times have been visited on all the states.
+
+330
+00:47:18,823 --> 00:47:26,029
+And then we can use the button on the right, on the left, to basically perform a step-by-step multi-carriage research.
+
+331
+00:47:26,329 --> 00:47:37,037
+So what will happen in the interface is just we are going to add the children, and then we will be able to click on those children to explore those parts of the trees.
+
+332
+00:47:37,217 --> 00:47:40,580
+And we will have information about the temporal slice in the future.
+
+333
+00:47:42,321 --> 00:47:48,466
+So that's a tool that you can use to analyze both planning and the beliefs of the agents.
+
+334
+00:47:50,720 --> 00:47:54,162
+Okay, so now I'm done with presenting the different approaches.
+
+335
+00:47:54,362 --> 00:47:56,363
+It's now time for me to conclude this presentation.
+
+336
+00:47:58,224 --> 00:48:00,005
+So we have seen three different approaches.
+
+337
+00:48:00,725 --> 00:48:06,268
+The first is based on Bayerstein-Mistache passing, and obviously using active inference and multicolored research.
+
+338
+00:48:07,449 --> 00:48:11,311
+The second is based on Bayesian filtering.
+
+339
+00:48:11,851 --> 00:48:17,954
+And the last one is based on the IP algorithm, which is a mixture of belief propagation and forward prediction.
+
+340
+00:48:20,360 --> 00:48:34,469
+In terms of performance, the first, so BTEI-VMP, was basically slower, like less performance than the second one, which is less performance than the third one.
+
+341
+00:48:34,550 --> 00:48:42,975
+But even with this increase in terms of performance ability on one approach to the next, there are still some tasks that we cannot solve.
+
+342
+00:48:43,035 --> 00:48:46,277
+For example, how do we solve image-based problems?
+
+343
+00:48:48,297 --> 00:48:51,242
+it is not clear how we can learn the structure of the generative model.
+
+344
+00:48:51,282 --> 00:48:59,758
+For now, the modeler has to provide the description of the model, but it would be very nice if we could learn it from the data.
+
+345
+00:49:00,719 --> 00:49:01,280
+And also,
+
+346
+00:49:02,793 --> 00:49:09,676
+For now, we have been providing the agent with useful sequences of actions.
+
+347
+00:49:10,456 --> 00:49:23,222
+For example, if we go back to the display environment, we could imagine a task where each time we go right, it's only pushing the shape one position on the right, and then one more, and then one more.
+
+348
+00:49:23,795 --> 00:49:34,899
+But what we have been doing to make planning tractable is just by chunking all those actions together and maybe executing like eight actions altogether or maybe four actions altogether.
+
+349
+00:49:35,599 --> 00:49:42,702
+But this has its limitation and it will be really nice if we could run sequences of action like this automatically.
+
+350
+00:49:44,082 --> 00:49:45,362
+But that's all I wanted to say.
+
+351
+00:49:45,863 --> 00:49:50,144
+Here are a few references if you want to look them up after the presentation.
+
+352
+00:49:50,784 --> 00:49:52,625
+And yeah, thank you.
+
+353
+00:49:56,837 --> 00:49:58,138
+Thank you for the presentation.
+
+354
+00:49:58,698 --> 00:50:00,860
+Indeed use our reactions.
+
+355
+00:50:04,302 --> 00:50:04,482
+Well,
+
+356
+00:50:05,714 --> 00:50:10,918
+Very interesting, a lot of material and things for us to discuss.
+
+357
+00:50:11,939 --> 00:50:17,042
+I'll start with just one general question and then Jakob and Ali looking forward to your questions.
+
+358
+00:50:17,883 --> 00:50:25,829
+Just for some context, how did this team and you come to be working on this problem?
+
+359
+00:50:26,129 --> 00:50:34,615
+Were you working on active inference and interested in extensions or were you working in a different adjacent area and came to this algorithm?
+
+360
+00:50:35,905 --> 00:50:42,377
+Okay, so maybe one thing that I should have said is that I started a PhD at the University of Kent and
+
+361
+00:50:44,482 --> 00:50:50,927
+Basically, Howard and Marek, which are two of my collaborators on this project, are my supervisors.
+
+362
+00:50:51,367 --> 00:50:54,750
+So this is how we came up to work together just through my PhD.
+
+363
+00:50:55,430 --> 00:51:07,600
+And Nostra Lacosta is a collaborator that I've been working with because I've been doing some presentation at the FILM, which is the Institute of Neuroscience, where Carl Finston is.
+
+364
+00:51:08,400 --> 00:51:15,789
+And likely through a presentation, like during a presentation, Lancelot told me that he was interested in working with me.
+
+365
+00:51:16,089 --> 00:51:18,852
+So this is how I started working with Lancelot da Costa.
+
+366
+00:51:19,813 --> 00:51:24,439
+And so in terms of my background, I'm coming from a very computer science-like school.
+
+367
+00:51:25,814 --> 00:51:33,366
+pull up into coding, and then I arrived at the University of Kent, where I started to study about machine learning.
+
+368
+00:51:33,947 --> 00:51:40,297
+And this is where I started to gain some experience into reinforcement learning or even active inference.
+
+369
+00:51:41,238 --> 00:52:04,885
+and uh basically Howard Bowman was initially and my suggestion as well was uh where two of my teachers and Howard Bowman was already interested in uh active inference and one one day basically after those classes i came and see him and say well i would be interested to a side project and that's how everything started and i ended up doing a PhD after that so
+
+370
+00:52:06,502 --> 00:52:06,782
+That's it.
+
+371
+00:52:07,282 --> 00:52:08,823
+So basically, a bit of both.
+
+372
+00:52:09,063 --> 00:52:10,843
+I come from machine learning, my address as well.
+
+373
+00:52:11,524 --> 00:52:13,064
+Low slow comes from pure mathematics.
+
+374
+00:52:13,744 --> 00:52:20,666
+And what comes from, like neuroscience is a guy which bringing the activity from subject to the table.
+
+375
+00:52:22,307 --> 00:52:22,627
+Excellent.
+
+376
+00:52:23,027 --> 00:52:23,367
+Thank you.
+
+377
+00:52:23,907 --> 00:52:26,168
+So I have many more questions.
+
+378
+00:52:26,288 --> 00:52:28,569
+But how about Ali first with a question?
+
+379
+00:52:32,383 --> 00:52:37,187
+Yeah, well, first of all, thanks a lot for your amazing presentation.
+
+380
+00:52:37,207 --> 00:52:39,369
+I really learned a lot.
+
+381
+00:52:40,230 --> 00:52:46,035
+Well, I'd like to make a couple of comments, if I may, and maybe a bunch of questions.
+
+382
+00:52:47,156 --> 00:52:55,743
+Well, as you're well aware, active inference slash FVP research has been going on recently in basically two distinct paths.
+
+383
+00:52:56,664 --> 00:52:59,086
+The theoretical work geared
+
+384
+00:52:59,910 --> 00:53:03,254
+mostly toward developing the underlying foundational principles.
+
+385
+00:53:03,334 --> 00:53:08,620
+For example, the work of Dalton, Sack, DeVita, Bell, Maxwell, Ramstead and colleagues comes to mind.
+
+386
+00:53:09,621 --> 00:53:19,251
+And the more application-oriented research, perhaps not unlike the distinction between theoretical and experimental physics line of researchers.
+
+387
+00:53:20,198 --> 00:53:41,819
+But I'm not sure if you agree with me on this, but it seems to me that sadly the application-oriented research and especially the work on the various algorithmic implementations of active inference has not gained as much recognition as it should, at least as compared to the research and theoretical side.
+
+388
+00:53:42,540 --> 00:53:43,461
+I mean, the amount of
+
+389
+00:53:44,142 --> 00:53:48,687
+related published literature is pretty scarce comparatively.
+
+390
+00:53:49,248 --> 00:53:50,830
+So in light of this context,
+
+391
+00:53:52,441 --> 00:53:58,467
+Your line of research seems to me a lot more daring and, again, much more significant.
+
+392
+00:53:58,487 --> 00:54:00,508
+So I wanted to congratulate on that.
+
+393
+00:54:01,269 --> 00:54:07,094
+But you see, I'm a big fan of unification in science and technology.
+
+394
+00:54:07,154 --> 00:54:14,101
+So my first question is about your opinion on the possibility of unifying
+
+395
+00:54:18,945 --> 00:54:22,167
+the different algorithmic implementations of active inference.
+
+396
+00:54:23,008 --> 00:54:33,836
+As an example, you just mentioned the automatic learning of the structure of the generative model as a possible subject for future research.
+
+397
+00:54:34,336 --> 00:54:37,018
+I'm not sure if you've seen Wuthier et al.
+
+398
+00:54:36,998 --> 00:54:46,805
+'s very recent paper from a couple of weeks ago, namely Learning Generative Models for Active Inference Using Tensor Networks, if I'm correct.
+
+399
+00:54:47,325 --> 00:54:51,667
+which outlines an interesting physics-inspired approach for that task.
+
+400
+00:54:52,567 --> 00:55:02,912
+But it doesn't include any citations to any of the branching time active inference papers, probably because they weren't aware of your work at the time of their writing.
+
+401
+00:55:03,532 --> 00:55:14,337
+But this work looks to me as a pretty good candidate for a potential integration with BTAI in order to overcome some of the limitations you just mentioned.
+
+402
+00:55:15,656 --> 00:55:20,681
+Or another recent example would probably be Senech et al.
+
+403
+00:55:20,641 --> 00:55:33,373
+'s paper deriving time-averaged active inference from control principles, which is an attempt to derive an infinite horizon average surprise formulation of active inference.
+
+404
+00:55:34,634 --> 00:55:38,458
+So I really liked your comparative overview of the different variants of
+
+405
+00:55:39,008 --> 00:55:42,431
+branching time active inference, especially the benchmark analyses.
+
+406
+00:55:43,032 --> 00:55:50,979
+And I know you described a sophisticated active inference in your work as a subset of branching time active inference.
+
+407
+00:55:50,999 --> 00:56:04,151
+But regardless of these specific examples I just mentioned, I wanted to ask, how do you see the future of BTAI in terms of its possible unification with the other variants of active inference
+
+408
+00:56:04,611 --> 00:56:15,499
+implementations, each with its own pros and cons, in order to overcome some of their limitations without compromising the advantages of each.
+
+409
+00:56:16,420 --> 00:56:28,589
+I mean, do you see it as a possibility that branching time active inference will one day subsume all the other approaches somehow in a truly integrated kind of framework?
+
+410
+00:56:29,915 --> 00:56:32,076
+So to be honest, I don't exactly know.
+
+411
+00:56:32,096 --> 00:56:43,323
+The only part of the literature that I've been exploring is the connection with project-time active inference as being active inference and sophisticated inference.
+
+412
+00:56:44,023 --> 00:56:52,368
+I won't be able to speak about this in the presentation, but I can quickly give the idea of what has been the conclusion of this
+
+413
+00:56:55,379 --> 00:57:09,591
+And basically, it is really about how we backpropagate what I call the local expected free energy, which is basically the expected free energy associated with one node in the future.
+
+414
+00:57:10,312 --> 00:57:15,156
+And so if you backpropagate those upwards in the tree following
+
+415
+00:57:16,957 --> 00:57:45,768
+like multi-carriage research which basically comes from Bellman's equations and all this kind of literature and reinforcement learning you will fall into you will end up with an approach which is very close to sophisticated inference basically because sophisticated inference is also taking some inspiration into the Bellman equations just applying it to the expected free energy instead of just having reward
+
+416
+00:57:46,628 --> 00:58:04,766
+uh if you go downward so if you back propagate those local local costs towards the future then what you are effectively doing is just computing like the path integral of the expected free energy and so this will be active inference just taking the sum of all future parent stat of
+
+417
+00:58:06,286 --> 00:58:08,427
+of the expected for energy basically.
+
+418
+00:58:08,447 --> 00:58:11,169
+So this was sophisticated inference and this would be active inference.
+
+419
+00:58:11,710 --> 00:58:19,174
+Now concerning the other approaches that you mentioned, I haven't been reading those papers, so I can't really state on that.
+
+420
+00:58:20,075 --> 00:58:23,437
+But yeah, I believe that branching time-active inference is a fairly general framework.
+
+421
+00:58:23,797 --> 00:58:28,961
+So it may be the case that some of them will be related, but more research is needed on this.
+
+422
+00:58:31,082 --> 00:58:31,742
+Thank you so much.
+
+423
+00:58:32,563 --> 00:58:33,504
+Great comments.
+
+424
+00:58:34,104 --> 00:58:35,525
+Jakob, do you have any question?
+
+425
+00:58:36,949 --> 00:58:40,935
+Yeah, once again, thanks a lot for the awesome presentation.
+
+426
+00:58:41,215 --> 00:58:50,249
+It definitely explained a lot of things that I didn't understand on my reading through the original paper.
+
+427
+00:58:52,001 --> 00:59:00,087
+I'm wondering, again, going back to the question of learning the structure of the different components of the generative model.
+
+428
+00:59:01,668 --> 00:59:13,157
+In your paper, you mentioned using deep neural networks as general function approximators for learning the states-based representation.
+
+429
+00:59:13,297 --> 00:59:14,117
+And I'm wondering whether you...
+
+430
+00:59:14,918 --> 00:59:23,903
+have given some thought of into how neural networks might fit into this factor graph representation of the generative model.
+
+431
+00:59:24,823 --> 00:59:33,307
+And I guess I guess there are perhaps also two ways to look at learning the structure of these different components.
+
+432
+00:59:33,427 --> 00:59:42,092
+One is just the initial step of in your slide where you showed the kind of initialization of the model, getting the
+
+433
+00:59:43,192 --> 01:00:04,706
+a and b tensors the the prior the preferences and and um the prior beliefs kind of replacing that step with uh with deep neural networks to learn the representations but perhaps there's also another uh another side to um where you could dynamically change
+
+434
+01:00:05,586 --> 01:00:32,712
+the dimensions of these different components as in perhaps the agent receives an observation that wasn't captured in the likelihood mapping of the a tensor or perhaps it's a multi-agent setting where one agent has affordances the other agent doesn't and a new transition mapping needs to be learned through observations uh so i'm uh wondering what your thoughts are on this and
+
+435
+01:00:33,792 --> 01:00:59,521
+how you think this might be compatible with branching time active inference okay so the deep learning um area is i think really interesting and should be enabling active inference to scale to a more complicated task and more recently so this paper is not yet out but i'm working on a deep learning version of active inference so for now there is no branching time inside the picture so there is no multi-carat research
+
+436
+01:01:00,859 --> 01:01:06,464
+And the reason is because it's already surprisingly difficult to make it work just for active inference.
+
+437
+01:01:07,452 --> 01:01:16,541
+And basically, I've been reviewing some of the paper in the literature, and then I provide my own implementation of deep active inference.
+
+438
+01:01:17,221 --> 01:01:30,233
+But for example, I spoke about this prior dataset, and I was not able to make deep active inference work on these approaches, on these environments.
+
+439
+01:01:31,580 --> 01:01:58,213
+so yeah and i've been doing a presentation as a fear about this uh but basically some of the implementation of the internets contain mistakes um and yeah some of the paper also contains some like i mean i'm not sure if for the paper it's like mistake but that's that i don't understand and um for now the authors have not been able to to answer my questions um so basically what i'm trying to say that i've been trying to implement deep active inference and
+
+440
+01:01:59,446 --> 01:02:14,605
+surprisingly it's quite difficult to make it work at least on the despite environment so there will be a first paper about and that is analyzing what the deep neural networks are actually learning and why it is failing on these environments
+
+441
+01:02:15,715 --> 01:02:38,571
+And then what I wanted to do is to try to apply this implementation that I hope is correct to different tasks, more especially like the target games and stuff like this, and try to find out whether there are some tasks for which the expected free energy and this implementation of deep active inference can actually solve the task.
+
+442
+01:02:39,312 --> 01:02:42,094
+And the preliminary result that I have on this
+
+443
+01:02:44,375 --> 01:03:08,795
+is that there seems to be some task of which uh deep active inference um is actually performing better than for example dqn which is a benchmark from the reinforcement learning literature and uh yeah but it's not as um as straightforward basically uh as it seems um for now it's quite challenging to implement that so that was more for like the
+
+444
+01:03:10,422 --> 01:03:37,574
+deep learning aspects i think we still need to work quite a lot before to to make something very robust and that can beat more standard reinforcement learning for like benchmarks and yeah the other approaches to structural learning i have not been able like i have not researched it for now so we need more time to to think about a more robust answer to your question that's yeah that's basically what i had to say
+
+445
+01:03:39,571 --> 01:03:40,212
+Thank you.
+
+446
+01:03:42,073 --> 01:03:48,419
+One really striking aspect of the presentation was the analysis of the computational complexity.
+
+447
+01:03:49,180 --> 01:03:55,346
+So maybe we could return to this because it's something that we've wondered about and discussed on a few occasions.
+
+448
+01:03:56,932 --> 01:04:11,717
+You presented the theoretical complexity classes with a big O notation and then also discussed some of the practical aspects of the actual clock time on a given hardware.
+
+449
+01:04:11,897 --> 01:04:22,160
+Wasn't exactly sure what language or hardware you ran it on, but provided the theoretical complexity class as well as some runtime provisioning.
+
+450
+01:04:22,720 --> 01:04:25,201
+So I was curious to hear some...
+
+451
+01:04:26,803 --> 01:04:46,617
+Thoughts on how does this big O computational complexity analysis shine light on different variants of active inference as well as branching time active inference and what real computational resources were taxed
+
+452
+01:04:47,618 --> 01:05:10,230
+in the analysis was this a ram overflow that caused the crash that you referenced earlier is it a cpu throttling is it paralyzable does it require temp files like what in theory is happening with the computational complexity and the exponential blow up and then what in practice is going to facilitate this kind of analysis to scale
+
+453
+01:05:11,909 --> 01:05:23,316
+Okay, so first thing, this complexity analysis was done in terms of the space which is required to store all the parameters of the distribution of a state.
+
+454
+01:05:23,996 --> 01:05:33,002
+Okay, so here we are really interested in how much space do I need in order to store all the distribution of a state, like all the posterior distribution of a state.
+
+455
+01:05:34,358 --> 01:05:55,999
+and that if what happens in standard active inference is that the number of policies that will be available to the agent so let's suppose we have two actions we have one here one here okay action zero action one here at the first time step there are two actions at the second time step there will be four of them like four policies basically that the agent can
+
+456
+01:05:58,052 --> 01:05:59,193
+can actually perform.
+
+457
+01:05:59,553 --> 01:06:03,235
+It can go for 00, 01, 10, and 11.
+
+458
+01:06:05,396 --> 01:06:11,940
+And this number of policies will basically be multiplied by two each time step further down the road, right?
+
+459
+01:06:12,381 --> 01:06:17,103
+Because each time we can now pick each of the action again for each of the previous policies.
+
+460
+01:06:18,364 --> 01:06:25,429
+And this exponential growth is quite problematic for, for example, the prior of a policy.
+
+461
+01:06:25,449 --> 01:06:26,109
+So if you remember,
+
+462
+01:06:30,245 --> 01:06:32,166
+this definition for the prior of the policies.
+
+463
+01:06:32,727 --> 01:06:39,551
+We see that in order to define the prior over the policy, we need to compute the expected free energy for each of those policies.
+
+464
+01:06:40,711 --> 01:06:46,635
+But we need to do that for an exponential number of them as the time horizon of planning increases.
+
+465
+01:06:47,455 --> 01:06:48,396
+So this is the first problem.
+
+466
+01:06:48,416 --> 01:06:49,476
+Also,
+
+467
+01:06:52,794 --> 01:07:21,480
+this exponentially exponential explosion is not limited to the number of policy because we still remember okay so maybe for this one i need to go and look at the variational distribution which is used in variational inference but we see that the number like the variational posterior of a state depends on the policy so for each of the policy we need to store a distribution of a state
+
+468
+01:07:22,958 --> 01:07:33,523
+And this is, once again, a problem because there is an exponential number of policy, which means that there is an exponential number of of a that we need to store.
+
+469
+01:07:35,604 --> 01:07:41,126
+So this is the kind of problem that happens within standard active inference.
+
+470
+01:07:41,827 --> 01:07:44,668
+The number of policy is growing exponentially.
+
+471
+01:07:45,889 --> 01:07:51,051
+And we also need to store the distribution of a state for each time step.
+
+472
+01:07:53,567 --> 01:08:10,188
+now where branching time active inference becomes useful is that it uses a structure like the graph structure to avoid to have to store every single single possible combination of uh you know time step versus policy and so
+
+473
+01:08:11,892 --> 01:08:21,180
+this, those two, we see that it's growing linearly because we just keep in memory one distribution for each state in the past and present.
+
+474
+01:08:22,160 --> 01:08:28,205
+And only when it comes to the current time step do we start imagining what's going to happen in the future.
+
+475
+01:08:29,206 --> 01:08:31,728
+And this growth is still exponential.
+
+476
+01:08:32,008 --> 01:08:38,854
+Like if we had to explore every single possible policy in the future, we will still have an exponential growth.
+
+477
+01:08:39,901 --> 01:09:08,443
+but because we are using multi-carriage research basically we are going to only explore a small amount of the tree and this is where the complexity move from exponential to linear into the with respect to the number of expansion of the model so each time we expand a new branch in this model we need to store one more categorical for this uh future time step basically and
+
+478
+01:09:08,792 --> 01:09:21,400
+So this is how we can move from an exponential complexity class into a linear one with respect to the number of expansion of the generative model.
+
+479
+01:09:23,281 --> 01:09:24,962
+So that was for the complexity class.
+
+480
+01:09:26,963 --> 01:09:29,745
+In terms of hardware, it was basically just on my own computer.
+
+481
+01:09:30,405 --> 01:09:36,089
+So no graphical GPU used, nothing like this, just CPU, basically.
+
+482
+01:09:39,244 --> 01:09:44,711
+Very interesting and on the hardware or on the implementation side, where do you see
+
+483
+01:09:46,325 --> 01:09:54,509
+packages in Python or Julia like Forney Lab and the reactive message passing paradigm being developed?
+
+484
+01:09:55,169 --> 01:09:57,930
+Or do you see GPUs as being relevant?
+
+485
+01:09:58,290 --> 01:10:00,691
+Like this is the storage consideration.
+
+486
+01:10:01,272 --> 01:10:10,576
+What kinds of scaling relationships or in theory and practice, how are the operational aspects of the computing rather than the space requirements computed?
+
+487
+01:10:11,949 --> 01:10:20,834
+So, first thing to say is that the space complexity is also linked to the time and computational complexity.
+
+488
+01:10:21,734 --> 01:10:24,776
+Because, for example, as I said when I was speaking about the
+
+489
+01:10:28,280 --> 01:10:50,784
+the prior of our policy if we have an exponential number of policy we need to compute an exponential number of expected free energy for each of those policies so and same thing for when it comes to the posterior when we have to store the variational posterior and that there is an exponential number of them then we also need to compute them so this will also become intractable in the long term
+
+490
+01:10:52,421 --> 01:10:59,505
+And in terms of implementation, I know that some people have been developing like Phonelab in Julia.
+
+491
+01:11:00,265 --> 01:11:02,266
+I've been providing my own implementation in Python.
+
+492
+01:11:03,627 --> 01:11:05,528
+So yeah, those are possibilities.
+
+493
+01:11:06,148 --> 01:11:19,335
+In terms of GPUs, I guess their usage will be really useful only if the graphical model allows for parallelization.
+
+494
+01:11:20,680 --> 01:11:47,004
+example one case where the gpus are very useful is for images because each position in the image can generally be processed in parallel so if we had like a generative model where we had i don't know likelihood mapping purchase four pixel next to each others like a patch in the image and we had to compute the all the posterior for all the image then there is a very large potential for parallelization
+
+495
+01:11:48,427 --> 01:11:59,815
+But if, for example, a message has a dependency on a previous message, then there will be just a part of the GPU which is just waiting for the input message to arrive.
+
+496
+01:12:00,575 --> 01:12:09,321
+So there is also a particular limitation on that, because some of the analytical solutions require some other messages.
+
+497
+01:12:09,341 --> 01:12:15,325
+So there are some dependencies throughout the dependency, like the graphical model, by the way.
+
+498
+01:12:16,385 --> 01:12:24,568
+So using GPU, yes, but probably in specific generative model for which it's useful, such as image-based generative model.
+
+499
+01:12:26,108 --> 01:12:27,269
+So yeah, this kind of generative model.
+
+500
+01:12:27,329 --> 01:12:34,951
+If we have something which is very simple, then I think it's not going to benefit a lot from GPU's computation.
+
+501
+01:12:37,852 --> 01:12:38,212
+Excellent.
+
+502
+01:12:39,293 --> 01:12:39,673
+Thank you.
+
+503
+01:12:42,494 --> 01:12:45,895
+Ali again, or Jakob, if you'd like another question, or I can ask one.
+
+504
+01:12:49,944 --> 01:12:58,055
+Yeah, I also wanted to ask about the different possible future implementations of branching time active inference because
+
+505
+01:13:00,450 --> 01:13:04,974
+Daniel and Jakob know that I'm a big Julia fan.
+
+506
+01:13:05,915 --> 01:13:19,825
+So I wanted to know if there's a plan to have a Julia implementation of branching time active inference, because I think we already have C++ and Python, if I'm correct.
+
+507
+01:13:19,866 --> 01:13:22,488
+The first branching time active inference was implemented in C++.
+
+508
+01:13:24,809 --> 01:13:26,951
+the multimodal one in Python.
+
+509
+01:13:27,671 --> 01:13:35,637
+So what are the future plans for the other forms of implementation of BTAI?
+
+510
+01:13:36,815 --> 01:13:40,377
+So for now, I was just planning to just use Python.
+
+511
+01:13:40,977 --> 01:13:44,819
+But I guess it should not be too hard to port it in Julia.
+
+512
+01:13:44,839 --> 01:13:46,560
+It's just for now I don't have the usage for it.
+
+513
+01:13:49,001 --> 01:14:00,427
+But yeah, and also for future possibility when it comes to branching time active inference, I've been starting to work on trying to implement a SLAM algorithm.
+
+514
+01:14:01,347 --> 01:14:16,363
+um so this uh is a simultaneously location and mapping so that if we create a map of the environment as we navigate for it so this is also like a possibility but within this context
+
+515
+01:14:17,628 --> 01:14:44,343
+basically was going to grow exponentially that we can have observation that depends on a very large number of states and therefore what we need to have is more like a conditional probability table which is stored as a tree so it's basically you can encode rules within the conditional probability table for example you have let's put that you have okay probability of c given a and b
+
+516
+01:14:45,543 --> 01:14:53,292
+then maybe if A is equal to one, you want to have a branching on B, and then we have zero one.
+
+517
+01:14:54,113 --> 01:14:57,437
+And maybe this is the whole point, okay, nine.
+
+518
+01:14:58,959 --> 01:15:10,528
+Okay, so what this means is that if A is equal to 1 and B is equal to 0, then the probability distribution of a C is going to be 0.1 for the first value and 0.9 for the second value.
+
+519
+01:15:11,228 --> 01:15:22,337
+And so basically the idea is to try to not represent the entire table, but choose a tree structure to encode rules about the dynamic of the world and the likelihood function as well.
+
+520
+01:15:23,740 --> 01:15:31,389
+And then the challenge is to be able to perform forward prediction from this tree and inference also from this tree.
+
+521
+01:15:32,110 --> 01:15:37,076
+So this is another feature which may be integrated inside BTEI in the future.
+
+522
+01:15:39,841 --> 01:15:59,585
+Definitely a theme that runs through a lot of these discussions is representing objects as trees and then taking the tree turn or the forest turn seriously because the tree structure allows us to avoid redundancies and enable some new types of analyses.
+
+523
+01:16:00,325 --> 01:16:02,265
+Jakob, do you have a question or I can ask one?
+
+524
+01:16:03,505 --> 01:16:04,966
+Yeah, maybe.
+
+525
+01:16:06,772 --> 01:16:33,744
+Continuing on the SLAM thread, I'm wondering whether you're considering the application of SLAM to the image classification problem, and perhaps how the image classification problem needs to be reframed to even fit this, well, first of all, branching time active inference scheme, but overall active inference scheme, because
+
+526
+01:16:36,041 --> 01:16:55,970
+It seems that active inference overall is much better suited to these kind of continuously evolving problems where the generative process changes whenever the agent takes actions, whereas an image classification problem
+
+527
+01:16:57,150 --> 01:17:13,042
+seems to be way more static, which at least in the machine learning scheme, it's just input and output, and then perhaps some error that gets back-propagated through the network.
+
+528
+01:17:14,724 --> 01:17:26,132
+So I'm wondering how you are thinking about image classification with active inference, and overall, just how
+
+529
+01:17:27,273 --> 01:17:53,472
+images can act um as input in in um dynamical environments so yeah thank you for the question once again um this is so basically the thing with like image classification is that we don't have this temporal structure like you just mentioned which makes it quite difficult for an active inference agent to be applied to this in some sense it's a bit like the transition mapping is
+
+530
+01:17:54,525 --> 01:17:56,767
+is like an identity function in some sense.
+
+531
+01:17:57,327 --> 01:18:01,470
+So it's difficult to think about how you can bring it.
+
+532
+01:18:01,550 --> 01:18:05,834
+But yeah, because each timestamp could be one image, for example, in the classification.
+
+533
+01:18:07,415 --> 01:18:13,099
+But I think active inference is just not really well suited to something like this for classification.
+
+534
+01:18:13,620 --> 01:18:19,444
+I think there are just classification models, like whatever, ResNet or whatever, which are much better suited.
+
+535
+01:18:22,093 --> 01:18:33,276
+Basically, if you had to apply active inference, you would have to change the structure of the model to remove the temporal transition and just to have observation.
+
+536
+01:18:34,916 --> 01:18:44,118
+Otherwise, you will need some kind of dynamic environments, like the Atari games, Pac-Man, or this kind of thing, or the display environments.
+
+537
+01:18:44,639 --> 01:18:50,420
+And in this case, you can model the temporal dynamic of the environments.
+
+538
+01:18:50,780 --> 01:19:15,051
+and so here active inference really helps because you can you know think about action and how they impact the transition and you can have so basically an encoder that will compress the image so you will have technically an image here you will have an encoder networks a bit like in a variation autoencoder that will produce a parameter so the mean and the variance
+
+539
+01:19:15,891 --> 01:19:38,389
+of a distribution of a state and then we will have the decoder over there which produce another image from the latent variable basically and then we will have here like a transition networks which is also a deep neural networks which outputs as a minimum variance of a distribution over the state at the next time step
+
+540
+01:19:39,406 --> 01:19:58,796
+and yeah and then here you will have another encoder for the future image and another decoder for the future image as well and these transition networks will have to take into account basically the action as well as the states to predict the next state so that's the kind of architecture you will need to create a deep active inference agent
+
+541
+01:20:00,433 --> 01:20:06,016
+And I think it's better suited to dynamic environments, like a target game, than it is for static environments.
+
+542
+01:20:07,316 --> 01:20:09,517
+This is indeed a lot more complicated to apply it to.
+
+543
+01:20:11,638 --> 01:20:14,120
+If I could give a few thoughts on ImageSlam.
+
+544
+01:20:15,300 --> 01:20:21,963
+Very fascinating point about static analyses and dynamic analyses.
+
+545
+01:20:22,584 --> 01:20:22,944
+And so,
+
+546
+01:20:24,278 --> 01:20:30,919
+what are some ways that we could pseudo-dynamicize the image classification task?
+
+547
+01:20:31,119 --> 01:20:32,060
+So a few options.
+
+548
+01:20:32,500 --> 01:20:37,461
+One of them is navigation amongst large databases of images.
+
+549
+01:20:38,161 --> 01:20:51,724
+So potentially choosing informative examples for training in large empirical image databases or frames from video, or in a dynamic feedback with prompt engineering for AI generated images.
+
+550
+01:20:52,384 --> 01:21:10,667
+so then it makes it into a dynamic question response task that would be using dynamics at the level across images but still taking in the whole image and one other approach could be building on some of the oculomotor active inference models of attention
+
+551
+01:21:11,926 --> 01:21:30,074
+only taking in a small amount of the image, potentially reducing the state space or the computational complexity vastly, and then making the dynamics of some lower level entity related to policy selections on eye movements or attention.
+
+552
+01:21:30,954 --> 01:21:59,400
+and then treat that as like the lower level of the slam and the classification what kind of image am i looking at as a higher level of a slam but the policy is being enacted at the level of which parts of the image are being scanned yeah that's indeed a very nice setting of ideas which require modification of the task uh but is indeed pretty much more like much better suited to active inference um so very interesting
+
+553
+01:22:01,294 --> 01:22:15,578
+I wanted to also ask about two modules or functions that various other active proposals have had, which are hierarchical nesting of models and learning.
+
+554
+01:22:16,679 --> 01:22:24,021
+So how do nesting and learning influence the theoretical and the realized computational complexity?
+
+555
+01:22:25,419 --> 01:22:33,948
+So I think having a hierarchy can really help reduce the computational complexity of an active inference agent.
+
+556
+01:22:35,129 --> 01:22:39,614
+For example, one idea would be to... So I was speaking about generative model over images.
+
+557
+01:22:41,557 --> 01:22:55,248
+imagine you had like an image and then so an image can be like it's millions of possible combination rights like not even more than that but probably more than atoms in the universe but what you could do is like a bit
+
+558
+01:22:56,389 --> 01:22:59,951
+by imitating the structure of a convolutional neural networks.
+
+559
+01:23:00,351 --> 01:23:07,795
+Maybe you can create, over a patch of pixels, a generative world that will extract, for example, different line patterns.
+
+560
+01:23:07,815 --> 01:23:12,938
+So maybe diagonal lines or horizontal lines.
+
+561
+01:23:13,358 --> 01:23:17,701
+And so you will have a first level of the hierarchy, which will extract those informations.
+
+562
+01:23:18,101 --> 01:23:21,202
+And then you will have pattern of patterns and so on and so forth.
+
+563
+01:23:21,583 --> 01:23:22,623
+I think you can create this.
+
+564
+01:23:24,224 --> 01:23:40,214
+know as a category called distribution but in a year model basically at the very beginning you have pixels and then you have uh small edges and stuff like this and combination of pages and all the way up basically to to having objects um
+
+565
+01:23:41,135 --> 01:23:55,562
+but this is very complicated like um in terms of implementation we will require to like probably use gpu for the inference process because there will be a very large number of patches uh so we will need to speed up the training
+
+566
+01:23:57,150 --> 01:24:03,015
+But still, I think this is a very good way to reduce the state space of the agents.
+
+567
+01:24:03,675 --> 01:24:16,245
+Because if you try to basically put an image as input of a standard active inference agent, you will have to have more possible images on the board of atoms in the universe, even for relatively small images.
+
+568
+01:24:17,386 --> 01:24:19,208
+So the hierarchy can really help on that.
+
+569
+01:24:22,073 --> 01:24:25,275
+So you had another question, right?
+
+570
+01:24:25,415 --> 01:24:27,336
+The second aspect was about learning.
+
+571
+01:24:27,536 --> 01:24:41,166
+For example, what if we update our priors as the tree continues, or we want to consider policies on priors or other types of updating of our different parameters that might be fixed in other settings?
+
+572
+01:24:42,406 --> 01:24:47,410
+Yeah, so one thing to say about having learnable priors is that
+
+573
+01:24:49,079 --> 01:25:16,677
+some cases this could go very wrong so if you don't like okay imagine you have observations and you have states so those are the observations uh or sorry this is the states and this would be the observations so three possible states two possible observations and if you start with the gvhk prior which is just fully uniform so maybe the parameters are all one everywhere
+
+574
+01:25:17,950 --> 01:25:30,532
+Well, what's going to happen is that if you make one of the observations, it's just going to give you as much as the inference process within a uniform distribution of the states.
+
+575
+01:25:31,913 --> 01:25:35,873
+Because the weights within the matrix are basically all one.
+
+576
+01:25:36,133 --> 01:25:43,615
+So for each observation, there is no real state which will be more likely to basically generate it.
+
+577
+01:25:44,721 --> 01:26:08,850
+mean that the inference process will have a uniform distribution of a state and basically this is a problem because what you will end up having is like a matrix where maybe some states are more likely but each state is not more likely to generate different observations and so basically there is a failure of learning because
+
+578
+01:26:10,430 --> 01:26:22,640
+it's just not able to... So if you remember the way we update the parameters of the Dirichlet, it's just by counting the number of state observation pairs that we have been observing.
+
+579
+01:26:23,401 --> 01:26:29,526
+And if the state which is observed is always like one point, like one third, for example,
+
+580
+01:26:30,612 --> 01:26:37,135
+like if it's a uniform distribution, then it's going to count one third of the observation for all the states at the same time.
+
+581
+01:26:37,836 --> 01:26:46,980
+And we are not able to identify which state has been able to generate this observation because they are all as likely to generate these observations.
+
+582
+01:26:47,701 --> 01:26:59,787
+And so what is going to happen is that you obviously just cannot learn which states generate which observations just counting the number of times a state has appeared, but not with respect to observations.
+
+583
+01:27:00,956 --> 01:27:13,575
+So this is a degenerate case, which shows that having matrices, for example, with Dirichlet priors and stuff like this, can fail to ruin the dynamic of the environment and the likelihood of the environment as well.
+
+584
+01:27:15,120 --> 01:27:44,387
+so maybe having deep neural networks can you know avoid this problem uh but yeah it seems that's a real challenge like learning the parameters within an active inference model seems to require like a human to first give it a first draft where the likelihood like like the prior is not uniform when it comes to the Jewish layer if the model is to be able to learn
+
+585
+01:27:45,762 --> 01:27:49,203
+So this is one of the challenges for learning in active inference.
+
+586
+01:27:53,724 --> 01:28:00,386
+It's something we've come across in specifying the state space and what policies are possible.
+
+587
+01:28:01,347 --> 01:28:09,409
+And it's an interesting conversation because it brings us as modelers into engagement with the model.
+
+588
+01:28:10,746 --> 01:28:25,827
+and helps clarify where are we setting scaffolds and constraints what information are we what manifolds are we placing that agent into that set it up oh it's rolling downhill
+
+589
+01:28:26,488 --> 01:28:38,294
+within some super local context, even if that local context is still enormous in its state space, it may still be just the tip of the iceberg in terms of the total model structures.
+
+590
+01:28:38,874 --> 01:28:55,162
+And that's not even to say we need to explore the total model structure in practice, but in theory, it's quite important, or we might just be looking where the light is and putting the rabbit in the hat, making these models that play out a certain way, maybe even deterministically,
+
+591
+01:28:55,982 --> 01:29:00,087
+because they've been kind of told a secret in the beginning.
+
+592
+01:29:00,107 --> 01:29:08,096
+I have one more question, and then I'll leave it to Jakob.
+
+593
+01:29:11,058 --> 01:29:21,980
+You juxtaposed and contrasted three different approaches, which were variational message passing, Bayesian filtering, and belief propagation.
+
+594
+01:29:23,020 --> 01:29:38,203
+And whether for didactic or pragmatic use, where do you see these different approaches as being useful or specialized?
+
+595
+01:29:39,324 --> 01:30:05,119
+where are they better or where is one a generalization or a special case of another so for example by national message testing so the way we structured the model in via massage passing that we keep track of the past and each time we get new observation into inside into the future so let me maybe just go here um oh no
+
+596
+01:30:05,939 --> 01:30:22,512
+yeah so okay so in variational message passing for example we keep the past and this is quite interesting because when you have variational message passing you can also have backward messages between that as you get a new observation you will have an echo like the state associated to it
+
+597
+01:30:23,735 --> 01:30:29,882
+And what is going to happen is that you will have a message like this, and you will also have messages that go backward in time.
+
+598
+01:30:30,643 --> 01:30:37,090
+And those messages will enable you to refine your understanding of what happened in the past.
+
+599
+01:30:38,234 --> 01:30:57,430
+So this ability to revisit or update your understanding about the past is something which is quite specific to the Weierstein message passing algorithm and does not appear, for example, in Bayesian filtering, in the Bayesian filtering setting, because we only keep a belief state
+
+600
+01:30:58,331 --> 01:31:24,242
+of uh over the current random viable and when we expand like when we get a new observation um and a new state associated to it we are just going to perform prediction uh to get the posterior and then we are going to get rid of that so we cannot have those backboard messages um to get posterior beliefs over past states so we can't really have this kind of counterfactual abilities
+
+601
+01:31:26,181 --> 01:31:35,987
+Now with the belief propagation algorithm, basically it's very similar in ID to what is done in the belief propagation settings.
+
+602
+01:31:36,647 --> 01:31:54,078
+It is just a more scalable approach, which enables one to have different item states and different observation, because this BTIBF approach was only restricted to one observation and one state.
+
+603
+01:31:54,878 --> 01:32:08,318
+And if you have, for example, the X position, the position of the text as a disparate environment, then you will need to create one random variable that corresponds to all the combinations of those X and Y positions.
+
+604
+01:32:08,718 --> 01:32:09,419
+So maybe it will be
+
+605
+01:32:10,160 --> 01:32:24,666
+random variable describing the position and if we had two value for each of other you know for the x position and the y position then all the combination will be like four uh each of the value for one uh times all the other
+
+606
+01:32:26,147 --> 01:32:47,862
+and and this goes exponentially with the number of variables so let's suppose we have now a scale variable available and that this kind of variable can take two additional values then the total number of combinations of those three random variables will be like eight eight possible combinations basically all the x and y position for each of the two scale a possibility maybe scale one and scale two
+
+607
+01:32:49,187 --> 01:33:01,533
+And this exponential growth becomes problematic if you don't have this ability to have several observations and several states, because you will have an exponential growth in the number of states and observations you try to model.
+
+608
+01:33:02,434 --> 01:33:14,940
+And this is where the other approach, multi-factor and multi-modality, is really useful to scale to a more complicated approach with more states and observations.
+
+609
+01:33:17,068 --> 01:33:17,408
+Excellent.
+
+610
+01:33:17,969 --> 01:33:21,832
+Ali or Jakob, any closing questions or thoughts?
+
+611
+01:33:27,077 --> 01:33:39,008
+Well, you see, I came across your work a few months ago, and it got me truly excited so much that I read all five of your papers.
+
+612
+01:33:40,750 --> 01:33:42,231
+Is the number five right?
+
+613
+01:33:42,492 --> 01:33:42,712
+I mean,
+
+614
+01:33:43,688 --> 01:33:49,473
+You've published five papers up to now.
+
+615
+01:33:49,714 --> 01:34:06,348
+Because you see, more often than not, people see active inference and the free energy principle as basically speculative thinking and endeavor without so much pragmatic value in the real applications.
+
+616
+01:34:06,928 --> 01:34:10,011
+So in my opinion, your work,
+
+617
+01:34:10,700 --> 01:34:18,543
+As I mentioned, there's a very welcome addition to this nascent yet exponentially growing field.
+
+618
+01:34:19,363 --> 01:34:33,629
+And I hope to see more exciting developments in the future for branching time active inference or possibly the other variants you might come up with in the future.
+
+619
+01:34:35,030 --> 01:34:38,711
+And I'll definitely keep following your work from now on.
+
+620
+01:34:39,591 --> 01:34:42,814
+So thanks so much for your joining us today.
+
+621
+01:34:44,276 --> 01:34:44,756
+No problem.
+
+622
+01:34:44,817 --> 01:34:46,058
+And thank you for inviting me.
+
+623
+01:34:46,438 --> 01:34:48,300
+I'm really glad I could present here.
+
+624
+01:34:48,320 --> 01:34:50,022
+So thank you for the invitation.
+
+625
+01:34:51,904 --> 01:34:53,105
+Jakob, any final thoughts?
+
+626
+01:34:55,107 --> 01:34:55,788
+Yeah.
+
+627
+01:34:55,868 --> 01:35:01,274
+Well, this has been a really great presentation and discussion.
+
+628
+01:35:03,169 --> 01:35:11,480
+Ali also linked your work a couple of months ago and also got me very excited for the
+
+629
+01:35:15,285 --> 01:35:17,546
+future of active inference modeling.
+
+630
+01:35:18,086 --> 01:35:25,490
+And it's a topic that we're discussing quite a lot in the Institute.
+
+631
+01:35:26,291 --> 01:35:44,700
+And I think that this approach to reducing the computational cost of performing active inference in more and more complex state spaces is
+
+632
+01:35:46,305 --> 01:35:56,561
+probably the best way to go to really reach adoption of these models in different domains.
+
+633
+01:35:57,242 --> 01:36:00,087
+So yeah, thank you very much for
+
+634
+01:36:01,485 --> 01:36:25,948
+joining today and uh i look forward to reading that paper on on the deep active inference deep branching time active inference sure thank you well you're welcome back anytime and we will um certainly be observing thank you sure thank you bye bye thanks bye
+
+635
+01:36:34,195 --> 01:36:34,576
+Perfect.
+
+636
+01:36:36,822 --> 01:36:37,463
+Yeah, great.
+
+637
+01:36:38,365 --> 01:36:38,806
+Brilliant.

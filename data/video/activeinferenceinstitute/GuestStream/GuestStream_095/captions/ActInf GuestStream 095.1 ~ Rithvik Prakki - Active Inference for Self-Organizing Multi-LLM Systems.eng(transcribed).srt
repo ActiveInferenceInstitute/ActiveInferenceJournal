@@ -1,0 +1,1875 @@
+1
+00:00:06,157 --> 00:00:33,514
+hello and welcome everyone it's january 16th 2025 we're an active inference guest stream number 95.1 with rithvik prakhi discussing active inference for self-organizing multi-llm systems a bayesian thermodynamic approach to adaptation so rithvik thank you for joining looking forward to your presentation and sharing more and discussing so thank you to you
+
+2
+00:00:33,494 --> 00:00:44,972
+great thank you thank you daniel for having me um yeah so i'm gonna talk about kind of active inference for self-organizing multi-lm systems so basically making llm agents better with active inference
+
+3
+00:00:46,302 --> 00:00:52,574
+So to motivate the problem a little bit, current multi-LLM agents kind of have a lot of complex parameters.
+
+4
+00:00:52,614 --> 00:01:01,091
+For example, prompts, agent architecture, tool use, like these are things that you can't just kind of fix with hyperparameter optimization.
+
+5
+00:01:01,151 --> 00:01:05,219
+You have to find better, more intelligent ways to improve these in time.
+
+6
+00:01:05,861 --> 00:01:08,125
+And that's not really a thing right now.
+
+7
+00:01:08,105 --> 00:01:23,194
+um also another thing is that lms themselves are used as a vector f adaptation for the agent in many ways so for example in the voyager paper um llms are used to acquire new skills and then use those skills to explore the environment of minecraft further um
+
+8
+00:01:23,596 --> 00:01:26,663
+which is useful, but also quite limited.
+
+9
+00:01:27,364 --> 00:01:33,317
+And then the third thing is that there's no formalized mechanism of balancing the exploration exploitation trade off.
+
+10
+00:01:33,878 --> 00:01:43,258
+Right now it's kind of just using LLMs internal abilities to go about that, but there's no formalized mechanism and that kind of limits a lot of the potential.
+
+11
+00:01:44,369 --> 00:01:50,784
+Now, our solution is using active inference to kind of overcome a lot of these problems.
+
+12
+00:01:51,486 --> 00:01:57,781
+So the first thing is that the best possible prompt for different LLMs within the agent can be learned over time.
+
+13
+00:01:58,563 --> 00:02:02,091
+These things are something that we can figure out from the environment.
+
+14
+00:02:02,071 --> 00:02:14,798
+large we can do search to figure out what are the best new prompting techniques so we can test out different prompts to see which ones give better scores on certain metrics so these things can be learned over time and the active inference agent
+
+15
+00:02:15,706 --> 00:02:27,670
+can help with that because now the active inference agent becomes the vector of adaptation, allowing for real learning through belief updates and structural updates versus just solely in context adaptation, which is what LLMs can do.
+
+16
+00:02:28,031 --> 00:02:33,883
+So we're actually learning and we're actually adding information and updating beliefs within our model.
+
+17
+00:02:33,863 --> 00:02:54,083
+And Active Inference acts as a formalized mechanism to balance the explore-exploit boundary, allowing for a more principled understanding of uncertainty and also giving us the option to verify optimality, see if the path of selecting actions is actually an optimal one or not, which we can't do with LLMs directly.
+
+18
+00:02:58,383 --> 00:03:00,789
+So active inference works through a generative model.
+
+19
+00:03:01,632 --> 00:03:09,633
+And the generative model we typically use for active inference in discrete time is called the Partially Observable Markov Decision Process, POMDP.
+
+20
+00:03:10,275 --> 00:03:12,882
+That's Markov because
+
+21
+00:03:13,418 --> 00:03:32,170
+current states are only influenced directly by past states and it's partially observable as opposed to a regular MDP because of the agent doesn't have the ability to directly observe the states that must go through an observation, which allows it to update beliefs about the states without any direct observation of the states.
+
+22
+00:03:32,538 --> 00:03:43,270
+So within active inference, we have several matrices that we put into these POMDPs to encode the actual information that we're learning from the environment or that is contained within the environment.
+
+23
+00:03:44,211 --> 00:03:46,954
+So the first thing is the A matrix or the likelihood matrix.
+
+24
+00:03:47,375 --> 00:03:55,044
+This is basically just showing the relationships between the likelihood, showing the relationships between states and observations.
+
+25
+00:03:55,745 --> 00:04:02,292
+So what are the chances that this observation is related to this state or this state produces this type of observation?
+
+26
+00:04:02,474 --> 00:04:16,228
+The B matrix is showing the relationship between states at t plus 1 and states at t, time t. So basically, what is the probability that this state will occur at this time, given that this state occurred at a past time?
+
+27
+00:04:17,629 --> 00:04:20,572
+Now, the C matrix encodes the preferences of the active inference agent.
+
+28
+00:04:21,112 --> 00:04:29,781
+So for example, if some of the states that this model had was sunny weather and rainy weather, the C matrix would encode that the model likes sunny weather.
+
+29
+00:04:29,896 --> 00:04:55,498
+then the d matrix encodes the prior beliefs over states now the ultimate goal is to minimize surprise because surprise low surprise means that the model we have is actually a good representation of its environment but if we don't if we have high surprise that means we're not really understanding the environment well because every observation we're getting is surprising us so the goal is to minimize surprise and
+
+30
+00:04:56,525 --> 00:05:13,007
+However, the issue with just directly minimizing surprise, which is shown in this equation here as negative log of the probability over all observations, is that this is typically intractable when the state space gets really big and it grows exponentially.
+
+31
+00:05:13,047 --> 00:05:16,832
+So we can't directly minimize the surprise.
+
+32
+00:05:16,973 --> 00:05:18,094
+So we have to...
+
+33
+00:05:18,074 --> 00:05:23,866
+turn that into a new quantity that we can more easily approximate to instead of directly computing.
+
+34
+00:05:24,407 --> 00:05:33,366
+So this is how we derive variational free energy by doing a variety of steps from Bayes' theorem to get to this final equation.
+
+35
+00:05:34,730 --> 00:05:40,542
+Now, the variational free energy equation is constituted of two terms, the complexity term and the accuracy term.
+
+36
+00:05:41,284 --> 00:05:48,459
+So the complexity term is basically just showing us the difference between the distributions for the prior beliefs and the posterior beliefs.
+
+37
+00:05:49,081 --> 00:05:53,430
+And the accuracy term is just trying to show us how close
+
+38
+00:05:54,642 --> 00:06:02,877
+how well the observations that, how well the states that we're seeing and how well those observations align with the states that we're seeing or the states that we believe in.
+
+39
+00:06:03,778 --> 00:06:17,022
+So effectively the goal is to minimize the difference between our prior beliefs and posterior beliefs, and also to have our beliefs be as accurate as possible given the observations.
+
+40
+00:06:17,002 --> 00:06:20,187
+Now, the way this actually happens is a minimization process.
+
+41
+00:06:20,547 --> 00:06:23,732
+Like we said before, this is a quantity we want to approximate to.
+
+42
+00:06:23,772 --> 00:06:34,409
+So this equation right here, the DF over DQS, is just the partial derivative of free energy in terms of the posterior beliefs.
+
+43
+00:06:35,010 --> 00:06:41,119
+This first equation is just showing it in terms for one state factor.
+
+44
+00:06:41,099 --> 00:06:45,325
+And when we do this, we want the derivative to equal zero over time.
+
+45
+00:06:45,825 --> 00:06:50,111
+But in practice, what happens is we have a max number of iterations.
+
+46
+00:06:50,772 --> 00:07:03,729
+Once those max number of iterations are reached, or the change in variational for energy falls below a certain threshold, the optimization process stops, and we have our final posterior beliefs that have minimized the quantities we want to minimize.
+
+47
+00:07:04,790 --> 00:07:09,857
+This is the final posterior belief equation shown right here, basically just showing how
+
+48
+00:07:11,002 --> 00:07:19,531
+the final posterior beliefs will look, how they're influenced by the prior beliefs, and how they're influenced by the observations, the current state factor, and also the other state factors.
+
+49
+00:07:22,734 --> 00:07:28,039
+Now, the second quantity in active inference that we're trying to minimize is the expected free energy.
+
+50
+00:07:28,079 --> 00:07:35,507
+Now, this is related to policies and actions in future states, as opposed to variation of free energy, which is very in the present.
+
+51
+00:07:36,753 --> 00:07:42,202
+So expected free energy is made up of two terms, information gain and pragmatic value.
+
+52
+00:07:42,743 --> 00:07:48,432
+So information gain is just trying to show how much we expect to gain by doing a certain action.
+
+53
+00:07:48,472 --> 00:07:53,580
+So the way that transitions are determined is
+
+54
+00:07:53,982 --> 00:07:55,365
+they're conditioned on an action.
+
+55
+00:07:55,805 --> 00:07:58,290
+So if we do this action, what is the likely outcome?
+
+56
+00:07:58,931 --> 00:08:08,810
+So right here, we're saying, if we do this specific action, so a policy, if we execute the certain policy, what is the likelihood of having significant information gain?
+
+57
+00:08:09,952 --> 00:08:16,024
+If we have a lot of information gain, that means it's a useful action because it's highly informative and that's what we wanna optimize for.
+
+58
+00:08:17,354 --> 00:08:21,404
+So the second term is called pragmatic value, also known as expected utility.
+
+59
+00:08:21,464 --> 00:08:28,782
+This term is useful for comparing the expected observations to our preferred observations.
+
+60
+00:08:29,343 --> 00:08:34,536
+So as I said before, the C matrix is the one that encodes the preferred observations.
+
+61
+00:08:34,904 --> 00:08:44,893
+And since we have some idea of what the expected states are from the B matrix, we also have some idea of what the expected states are in the A matrix.
+
+62
+00:08:45,513 --> 00:08:48,696
+We can figure out what the expected observation should be as well.
+
+63
+00:08:49,277 --> 00:09:03,409
+And on those expected observations, we can do a computation with the C matrix to see how high the expected utility or the expected level of preferred observations exists in the action we're about to commit.
+
+64
+00:09:06,123 --> 00:09:12,733
+The final part we need for this paper, at least, is the A matrix updates.
+
+65
+00:09:13,334 --> 00:09:19,823
+So the A matrix is the, like I said before, the matrix that encodes the relationship between states and observations.
+
+66
+00:09:20,644 --> 00:09:27,735
+But in our specific implementation, the agent doesn't initially know exactly how the states mapped observations.
+
+67
+00:09:27,835 --> 00:09:32,181
+It's intended to learn that over time by getting in new observations.
+
+68
+00:09:32,988 --> 00:09:35,572
+So to do that, we need to have some mechanism to update it.
+
+69
+00:09:35,772 --> 00:09:36,894
+And this is the mechanism.
+
+70
+00:09:37,034 --> 00:09:49,252
+So we do a similar thing we did with variational free energy, where we take the derivative of variational free energy with respect to the modality or the A matrix with a certain modality.
+
+71
+00:09:49,312 --> 00:09:53,038
+And we basically compute that over time.
+
+72
+00:09:54,790 --> 00:10:00,758
+And then we take this equation, and then this equation turns into the final derived equation below.
+
+73
+00:10:00,818 --> 00:10:05,485
+This final derived equation below is just explaining how we should update the A matrix.
+
+74
+00:10:06,085 --> 00:10:12,414
+So the main updates are going to come from the outer product between the observation and the current belief.
+
+75
+00:10:12,855 --> 00:10:23,329
+So for example, if you have two states that are sunny and rainy, and the observation that you get is that it's sunny,
+
+76
+00:10:23,461 --> 00:10:42,949
+All we would do is update the aspect of the sunny part of the A matrix to say that we're getting an observation that's sunny, and then add those to the counts of the A matrix.
+
+77
+00:10:42,969 --> 00:10:47,055
+So getting to the actual specific work done,
+
+78
+00:10:48,419 --> 00:10:51,984
+So this whole generative model consists of three state factors.
+
+79
+00:10:52,605 --> 00:10:54,648
+So the first is prompt combinations.
+
+80
+00:10:55,349 --> 00:10:57,893
+The second is search states or search terms.
+
+81
+00:10:58,013 --> 00:10:59,254
+And the third is the info state.
+
+82
+00:11:00,216 --> 00:11:02,078
+And then there's seven observation modalities.
+
+83
+00:11:02,519 --> 00:11:09,870
+So the accuracy, relevance, and comprehensiveness observation modalities are directly tied to the prompt states.
+
+84
+00:11:10,731 --> 00:11:17,160
+The information relevance, information usefulness, and source quality modalities are directly related to the search state.
+
+85
+00:11:17,393 --> 00:11:25,428
+And then the infostate just has three modalities with an infostate observation modality and an infostate state factor.
+
+86
+00:11:25,448 --> 00:11:27,291
+So they're directly related to each other.
+
+87
+00:11:27,391 --> 00:11:34,845
+So that means any observation in the infostate modality is just a direct reflection of the state factor.
+
+88
+00:11:36,209 --> 00:11:45,219
+So this figure just shows the A matrices for each of these state factors and their relationship with the observation modality.
+
+89
+00:11:45,680 --> 00:11:48,750
+So the first three is just for the prompt quality matrix.
+
+90
+00:11:49,928 --> 00:11:57,404
+So this is basically just showing the relationship between the three quality metrics we described, the accuracy, relevance, and comprehensiveness, and the prompt states.
+
+91
+00:11:57,845 --> 00:12:01,232
+Now, initially, you see all these squares are just blue.
+
+92
+00:12:01,292 --> 00:12:03,537
+This is because the model has engaged in no learning.
+
+93
+00:12:03,597 --> 00:12:09,810
+It's starting with a complete blank slate and has no understanding of the environment in this specific case.
+
+94
+00:12:11,967 --> 00:12:16,966
+Now, the way the generative process actually works is that agents can select actions.
+
+95
+00:12:17,407 --> 00:12:20,800
+So they can either select prompt actions or search actions like we showed before.
+
+96
+00:12:20,840 --> 00:12:23,209
+These are the two controllable states.
+
+97
+00:12:24,218 --> 00:12:30,529
+Now, what a prompt action will do is it'll take a certain set of prompts that the agent selects.
+
+98
+00:12:31,170 --> 00:12:35,077
+It'll run them through the actual research agent that we're trying to optimize here.
+
+99
+00:12:35,118 --> 00:12:37,001
+It'll run them through an agent.
+
+100
+00:12:37,041 --> 00:12:38,744
+It'll give certain observations.
+
+101
+00:12:39,485 --> 00:12:45,957
+So as you can see, this kind of JSON structure here, what we're doing is we're using a chat 54 mini.
+
+102
+00:12:45,937 --> 00:13:00,216
+and that's just going to give us a score from 0.0 to 1.0 counting up by 0.1 on the three different metrics we need so for example if an agent selects a prompt action we first
+
+103
+00:13:00,736 --> 00:13:03,920
+run that prompt, run those set of prompts through the agent.
+
+104
+00:13:04,221 --> 00:13:05,382
+We get a final result.
+
+105
+00:13:06,023 --> 00:13:10,910
+On that final result, CheshDPoroMini will evaluate it and then give us three scores.
+
+106
+00:13:11,711 --> 00:13:20,483
+Those three scores will then get turned into an observation vector, and that observation vector will get passed back to the active inference agent to use as observation.
+
+107
+00:13:20,969 --> 00:13:25,278
+Now, this is the exact same process that happens for the search action as well, just with a different prompt.
+
+108
+00:13:25,298 --> 00:13:27,122
+So this is actually the prompt for the search action.
+
+109
+00:13:27,764 --> 00:13:35,721
+As you can see, we're telling Chats for Tea to return scores on info relevance, usefulness, and source quality.
+
+110
+00:13:36,427 --> 00:13:41,437
+Now, the info state is unique because it's determined purely by the amount of knowledge base.
+
+111
+00:13:42,159 --> 00:13:51,718
+So the way that knowledge base works is by the amount as search actions are carried out and more information is added to the knowledge base.
+
+112
+00:13:52,053 --> 00:13:59,484
+the info state goes from no knowledge to some knowledge to a high level of knowledge.
+
+113
+00:13:59,965 --> 00:14:05,293
+And those are observations that are directly getting passed from the environment to the agent.
+
+114
+00:14:05,613 --> 00:14:08,678
+So the agent doesn't actually have any encoding
+
+115
+00:14:08,658 --> 00:14:32,387
+of the information it's getting from the search actions all it knows is that there's some knowledge state coming from the environment and it's using that as a way to determine what to do next and what observations it prefers so yeah that's where that's where that's where that's coming from now for the results
+
+116
+00:14:32,806 --> 00:14:39,117
+This is the same figure I showed before, but now with learned environment mappings.
+
+117
+00:14:39,759 --> 00:14:48,334
+So as you can see, for the first three matrices, these are the prompts, the agent for each prompt has a distribution over what scores of expecting.
+
+118
+00:14:48,770 --> 00:14:52,277
+So for example, for the first prompt, it's going for eight and nine.
+
+119
+00:14:52,898 --> 00:15:00,093
+So it has a distribution saying it's most likely expecting, so this is the accuracy, this is the accuracy metric.
+
+120
+00:15:00,494 --> 00:15:08,871
+So saying that for prompt one, for prompt combination one, it's generally gonna expect an eight or a nine on the accuracy metric.
+
+121
+00:15:08,851 --> 00:15:11,116
+And it does that all the way through for all the prompts.
+
+122
+00:15:11,136 --> 00:15:12,819
+And it does the same thing for search as well.
+
+123
+00:15:13,340 --> 00:15:16,046
+So this is the info relevance metric.
+
+124
+00:15:16,587 --> 00:15:26,067
+So for example, it's saying that for prompt one, it's generally going to expect a score of 9 out of 10 or 0.9 out of 1.0 on the info relevance metric.
+
+125
+00:15:26,958 --> 00:15:27,900
+So kind of all that.
+
+126
+00:15:27,960 --> 00:15:32,507
+And then the info state metric is just concentrated around the second observation.
+
+127
+00:15:32,527 --> 00:15:34,931
+The second observation is just high info.
+
+128
+00:15:34,951 --> 00:15:36,814
+So like detailed information from the environment.
+
+129
+00:15:37,315 --> 00:15:43,144
+This is because the agent was running over 20 trials and once
+
+130
+00:15:43,276 --> 00:15:49,303
+and the info state metric gets to the knowledge base that we have gets to a high level pretty quickly.
+
+131
+00:15:49,443 --> 00:15:58,833
+And then so that the info state kind of just keeps getting observations about that it's in a high level of information, has high level of information and just keeps getting those observations.
+
+132
+00:15:58,913 --> 00:16:02,116
+So it's all concentrated around that observation specifically.
+
+133
+00:16:04,239 --> 00:16:08,203
+Now, one of the main points of this was to show how we could
+
+134
+00:16:08,960 --> 00:16:15,408
+show how we could go through the explore exploit trade-off really well by using active inference.
+
+135
+00:16:15,448 --> 00:16:16,790
+And this is kind of showing that.
+
+136
+00:16:16,910 --> 00:16:21,515
+So this is just some time series data from time step zero all the way to time step 80.
+
+137
+00:16:23,137 --> 00:16:27,683
+The red dots are search actions and the blue dots are prompt actions.
+
+138
+00:16:28,244 --> 00:16:38,376
+So as you can see, we have a preponderance of search actions in the initial stages because the agent is trying to learn the environment, trying to get more information
+
+139
+00:16:38,356 --> 00:16:39,157
+and stuff like that.
+
+140
+00:16:40,299 --> 00:16:44,084
+So it's trying to understand how prompts work, how prompting works.
+
+141
+00:16:45,005 --> 00:16:59,885
+And then towards the end, there's mainly search actions, or sorry, mainly prompt actions as the agent is testing these prompts to see if they work well or if they don't work well, kind of using the information it's gotten from the search actions.
+
+142
+00:16:59,945 --> 00:17:01,627
+Now, we know it's not actually using this.
+
+143
+00:17:01,647 --> 00:17:04,431
+It's more kind of a simulation.
+
+144
+00:17:04,934 --> 00:17:12,344
+It's using it in the sense that it knows that we already have a lot of information from the environment because of that info state observation it's getting.
+
+145
+00:17:15,148 --> 00:17:25,401
+So in conclusion, what we did here was that we had the model effectively learn the environment's generative process, mapping the observations to the hidden states.
+
+146
+00:17:26,183 --> 00:17:32,511
+We were able to simulate human-like exploratory behavior with active searching and testing multiple possibilities.
+
+147
+00:17:32,491 --> 00:17:46,882
+And then the main thing is that we were able to enhance the capability of LLMs as well as enhance the capability of Active Inference because we gave LLMs a formalized structure that they didn't have before to execute learning through.
+
+148
+00:17:47,423 --> 00:17:52,795
+And we gave Active Inference the ability to operate in high dimensional spaces by integrating LLMs
+
+149
+00:17:53,264 --> 00:18:04,759
+If we had to try to encode this functionality directly into the active inference agent, it would have been much more harder and much more complex than just having the LLM outsource everything to the LLM and have it do a lot of the work.
+
+150
+00:18:05,180 --> 00:18:08,745
+So we kind of had improvements on both ends through the system.
+
+151
+00:18:11,248 --> 00:18:12,910
+Now I just want to talk about some
+
+152
+00:18:15,033 --> 00:18:16,919
+some future directions for this.
+
+153
+00:18:17,542 --> 00:18:23,783
+So obviously the one big thing that this model doesn't have is encoding actual knowledge from the environment.
+
+154
+00:18:23,883 --> 00:18:27,034
+So as we perform search actions,
+
+155
+00:18:27,419 --> 00:18:29,161
+we're getting information about prompts, right?
+
+156
+00:18:29,181 --> 00:18:35,426
+So we're saying, so if we look up, what are the best ways to prompt for ChatGPT?
+
+157
+00:18:35,747 --> 00:18:39,190
+It'll say like tree of thought, chain of thought, blah, blah, blah, et cetera, et cetera.
+
+158
+00:18:39,590 --> 00:18:43,794
+But none of this information is actually getting encoded into the agent.
+
+159
+00:18:44,815 --> 00:18:48,038
+All that's happening is that there's an info state, right?
+
+160
+00:18:48,098 --> 00:18:51,160
+And it's using that info state to determine its future actions.
+
+161
+00:18:51,841 --> 00:18:56,245
+But it would be much more useful if the active inference agent actually knew
+
+162
+00:18:56,225 --> 00:19:06,361
+why certain prompts or certain prompt combinations were good based on the search actions, and then use that information directly to influence those actions.
+
+163
+00:19:06,942 --> 00:19:13,693
+So that would require some sort of hierarchical model, and making that would be a good feature direction for this.
+
+164
+00:19:14,078 --> 00:19:22,217
+Another thing is giving the agent the ability to dynamically expand its state space to not be constrained to a fixed set of prompts.
+
+165
+00:19:22,818 --> 00:19:28,031
+So here, what we did was we just had a fixed set of prompts for each part of the agent.
+
+166
+00:19:28,833 --> 00:19:30,737
+And obviously,
+
+167
+00:19:30,717 --> 00:19:58,328
+there's much more the space of possible prompts infinite space and there's there's a lot more we could explore if we weren't constrained by a fixed state space so expanding on that would be very useful and also the third thing would be to equip the agent with the ability to modify other complex parameters such as instead of just prompts maybe also be able to modify the architecture of the agent or the tools it's using and stuff like that
+
+168
+00:19:59,135 --> 00:20:11,530
+The eventual goal is to make a general kind of agent brain that has the capability to be plugged into any LLM agent and exhibit human levels of learning, modification, structure learning, and stuff like that.
+
+169
+00:20:14,914 --> 00:20:17,737
+So yeah, I think that's it.
+
+170
+00:20:20,300 --> 00:20:20,681
+Awesome.
+
+171
+00:20:20,981 --> 00:20:22,763
+Thank you for the presentation.
+
+172
+00:20:23,772 --> 00:20:30,279
+For those watching live, they can write questions while I'm just cropping and getting everything back.
+
+173
+00:20:30,959 --> 00:20:32,741
+Maybe share a little bit.
+
+174
+00:20:32,961 --> 00:20:35,103
+How did you come to this project?
+
+175
+00:20:35,384 --> 00:20:39,047
+Where are you at in your education and research and all of this?
+
+176
+00:20:41,170 --> 00:20:42,651
+Yeah, sure.
+
+177
+00:20:42,811 --> 00:20:48,357
+Well, I only found out about Active Inference maybe a year ago.
+
+178
+00:20:48,397 --> 00:20:52,581
+And kind of how I happened upon it is that
+
+179
+00:20:53,236 --> 00:20:57,040
+I wanted to kind of do this general idea that I just said, like the agent brain.
+
+180
+00:20:57,600 --> 00:21:11,475
+So, because I noticed that LLMs were pretty static and, or like LLM agents were pretty static and then humans had to directly go in and like, oh, let me fix this prompt or let me change the order of these two nodes and stuff like that.
+
+181
+00:21:12,115 --> 00:21:22,686
+And the same kind of, you know, LLMs themselves can do a lot of that improvement work, but it seemed like there was a big hole there that we could just fill by having some sort of self-organizing behavior.
+
+182
+00:21:22,666 --> 00:21:27,634
+And that's kind of how it happened upon Active Inference because it was this model-based.
+
+183
+00:21:27,774 --> 00:21:38,312
+So we were responsible for figuring out how to actually structure the generative model and the generative process that the agent was going to work with.
+
+184
+00:21:39,018 --> 00:21:46,990
+And it was very sample efficient, which I really liked because generally you don't get that many samples in a typical workload.
+
+185
+00:21:47,070 --> 00:21:58,087
+So for example, if we're using an agent in production, we wouldn't really be getting, unless it was being used at massive scale, we wouldn't be getting too many examples that we could work with to improve certain functions.
+
+186
+00:21:58,748 --> 00:22:03,996
+And the sample efficiency of Active Inference really kind of helps with that issue.
+
+187
+00:22:03,976 --> 00:22:09,584
+And then the other thing was the reinforcement learning, obviously, just having some aspect of being able to learn over time.
+
+188
+00:22:10,346 --> 00:22:11,708
+With LLMs, you can't really do that.
+
+189
+00:22:11,728 --> 00:22:12,669
+It's all in context.
+
+190
+00:22:13,510 --> 00:22:23,646
+And I'm suspicious that in context learning is, or just having information in context is enough to replicate the abilities that a reinforcement learning scheme can provide.
+
+191
+00:22:24,347 --> 00:22:27,071
+So that's kind of how I happened upon this and started looking into it.
+
+192
+00:22:27,251 --> 00:22:32,599
+I actually read the Thomas Parr Carl Friston textbook.
+
+193
+00:22:32,579 --> 00:22:40,665
+um on this and that's kind of how i got into it started doing some work and yeah kind of came to this
+
+194
+00:22:42,181 --> 00:22:42,581
+Cool.
+
+195
+00:22:43,262 --> 00:22:53,011
+Okay, I'm gonna read some questions from Arun Naranjan, a colleague at the Institute, and then any other questions in live chat, we'll see.
+
+196
+00:22:53,731 --> 00:22:56,874
+Okay, so thanks, Arun, for the awesome submitted questions.
+
+197
+00:22:58,175 --> 00:22:58,375
+All right.
+
+198
+00:22:58,395 --> 00:23:02,459
+What does it mean to ask an LLM for a numerical score of something?
+
+199
+00:23:02,919 --> 00:23:10,686
+Can we really convert the sampling of the next token's probability distribution of an LLM into a meaningful quantitative observation?
+
+200
+00:23:12,286 --> 00:23:13,248
+Hmm.
+
+201
+00:23:13,268 --> 00:23:27,392
+So it's, it's kind of a, um, the LLM observation is kind of a, uh, a prox maybe approximation or like, uh, kind of a,
+
+202
+00:23:28,587 --> 00:23:30,810
+maybe an easy way to do this basically.
+
+203
+00:23:30,830 --> 00:23:42,307
+So all we're doing is we're saying like, because the best text readers at this time in AI or text understanding machines kind of are LLMs.
+
+204
+00:23:42,808 --> 00:23:47,895
+Because the way this is working is that the LLMs are getting
+
+205
+00:23:48,348 --> 00:24:03,787
+just a bunch of text because the research agent is outputting a bunch of text, and the active inference agent directly can't really do much with this because language is a hard space to understand, and active inference would need a lot more improvements to be able to understand that space.
+
+206
+00:24:04,368 --> 00:24:14,440
+So basically, all we're doing is that we're kind of simplifying the complex state space of just the English language, and we're simplifying it into something the active inference agent can understand.
+
+207
+00:24:14,420 --> 00:24:19,570
+So what we're doing is that the LLM can understand language, and it can generate certain scores.
+
+208
+00:24:20,031 --> 00:24:26,864
+Obviously, the LLM scores aren't as useful or nuanced as a human scoring certain text would be.
+
+209
+00:24:27,385 --> 00:24:36,462
+So for example, if there's an essay competition, an LLM would probably be a much worse scorer for those essays in a consistent manner than a human would be.
+
+210
+00:24:36,442 --> 00:24:58,821
+because it's kind of hard to determine what the standards are but for something like this where the text is relatively simple um it's pretty easy for the lm to just say this is the score i'm giving to the text we give it certain like guidelines to follow when assigning scores so it just gives a certain score and that score is kind of a
+
+211
+00:24:59,510 --> 00:25:07,962
+basically a simplification of the state space of all possible languages to just three values that we can use to kind of help the active inference agent learn.
+
+212
+00:25:08,383 --> 00:25:18,478
+Now, ideally, it would just be the active inference agent directly digesting the language, but this is kind of an easy way to overcome that massive gap in complexity.
+
+213
+00:25:19,379 --> 00:25:20,221
+Yeah, great response.
+
+214
+00:25:20,281 --> 00:25:22,564
+I'll add a few comments.
+
+215
+00:25:23,084 --> 00:25:33,943
+you pointed right there that a longer term research agenda is like an active inference linguistics model using some kind of syntax and semantics on the natural language itself.
+
+216
+00:25:34,004 --> 00:25:37,470
+And so some kind of mega hierarchical model or something cool like that.
+
+217
+00:25:37,850 --> 00:25:40,435
+But in the meanwhile,
+
+218
+00:25:40,415 --> 00:25:59,048
+For specific purposes, we can take natural language expressions, use LLMs, especially with the JSON or structured output, and project them onto numerical lower dimensional state spaces, like how many bird species are mentioned in this paragraph.
+
+219
+00:25:59,703 --> 00:26:21,728
+only respond with a specific number three and then you have an a matrix that takes in as an observation the number of bird species observed and then maps to some other variable for the ecosystem or how many facts in this paragraph correspond to this circumstance and so then the active inference generative model can pick up
+
+220
+00:26:22,282 --> 00:26:50,466
+at the interface of the output of the structured llm return so it's it's a design pattern i think that's very rapidly emerging and it's exciting to see that that you're working on it because it really does bring together this mega parametric you know millions to billions of parameters high dimensional state spaces more generic architectures for llm and such
+
+221
+00:26:50,446 --> 00:27:13,905
+and then take the output sometimes crystallized down to just like a single scalar value or to a vector of numerical values pick up there with the more interpretable smaller and sample efficiency and direct belief updating and then just one more piece i'll say there's you can get an llm to give
+
+222
+00:27:13,885 --> 00:27:36,568
+uh quantitative or natural linguistic representation of its own uncertainty but then there's this kind of head-scratching moment where it's like well even if it says that it's 55 confident that is the most likely chain of tokens for it to say it's not a true introspection of its actual uncertainty
+
+223
+00:27:36,548 --> 00:27:44,943
+And so again, further down the road, that's a promising avenue for active inference models that can introspect and accurately have their own uncertainties.
+
+224
+00:27:45,504 --> 00:27:51,616
+However, in the meanwhile, this is one way that we can make the best of what exists today and what we can build tomorrow.
+
+225
+00:27:52,978 --> 00:27:53,439
+Exactly.
+
+226
+00:27:53,719 --> 00:27:59,029
+And one other thing I'll add is that what I'm trying to do as well is
+
+227
+00:28:00,207 --> 00:28:19,988
+LLMs can already do a lot, so kind of have LLMs do as much as possible, but also try to kind of like what I was saying before, like having the active infrastructure be able to encode the information itself from the environment, like add things to the active infrastructure over time and then offset some of the responsibility of the LLM so that
+
+228
+00:28:20,322 --> 00:28:27,340
+we're getting the actual interpretability of proper uncertainty estimation and all that stuff within the active inference agent without having to rely on the LLM.
+
+229
+00:28:28,042 --> 00:28:33,657
+But we can basically, if active inference is here and the LLM is doing all this, we can just
+
+230
+00:28:33,974 --> 00:28:39,081
+you know, move that gap over time as we develop more, but we're still getting the performance to start with.
+
+231
+00:28:39,802 --> 00:28:40,523
+That's kind of funny.
+
+232
+00:28:40,543 --> 00:28:57,788
+It makes me think of like a grass is always greener or some kind of compliment where for the LLMs, we might gain interpretability by projecting down to smaller states based models that have real quantitative variance estimators.
+
+233
+00:28:57,768 --> 00:29:04,840
+Whereas for active inference models, we can gain interpretability and accessibility by translating them out to natural language.
+
+234
+00:29:05,601 --> 00:29:08,766
+So, you know, yeah, yeah, that's a great way to put it.
+
+235
+00:29:08,786 --> 00:29:09,868
+Yeah, more tools better.
+
+236
+00:29:09,968 --> 00:29:11,851
+Okay, Arun asks the next question.
+
+237
+00:29:13,314 --> 00:29:17,621
+Over what timescales did your active inference plus LLM agent execute?
+
+238
+00:29:18,021 --> 00:29:21,447
+How did that change with the complexity of the questions asked?
+
+239
+00:29:27,113 --> 00:29:32,316
+What was the runtime dynamics?
+
+240
+00:29:32,657 --> 00:29:34,947
+How long does one full loop take?
+
+241
+00:29:36,209 --> 00:29:39,034
+Yeah, I mean, it's pretty short.
+
+242
+00:29:39,254 --> 00:29:44,583
+So it was 20, it was, it was about like 80, 80 time steps.
+
+243
+00:29:45,164 --> 00:29:48,830
+So kind of just 80, like 20 trials, four time steps for trial.
+
+244
+00:29:49,972 --> 00:29:59,989
+The time steps only were relevant to the info state, the info state, or information state, because the other two didn't really have any trends, transition dynamics.
+
+245
+00:29:59,969 --> 00:30:04,996
+But effectively, yeah, what it would just be is that for each time step, there would be some sort of action.
+
+246
+00:30:05,677 --> 00:30:08,682
+The LLM would run through all the stuff it had to run through for the agent.
+
+247
+00:30:09,143 --> 00:30:15,212
+So the research agent would run that we're trying to optimize, and then the evaluation on that result would run.
+
+248
+00:30:15,752 --> 00:30:18,957
+And then we would have that observation, and we'd put it back into the active inference model.
+
+249
+00:30:19,157 --> 00:30:20,579
+So that would be one full time step.
+
+250
+00:30:21,020 --> 00:30:26,348
+So that maybe took, in terms of actual time, to run the research agent, run the evaluation,
+
+251
+00:30:26,328 --> 00:30:32,038
+And then the active inference model itself, maybe each time step took like 10 seconds.
+
+252
+00:30:33,741 --> 00:30:39,812
+It was relatively quick, especially because we're using like 4.0 mini, which is like faster than something like 4.0 maybe.
+
+253
+00:30:39,853 --> 00:30:44,160
+And the active inference agent was like the state space was pretty small.
+
+254
+00:30:44,240 --> 00:30:46,945
+So it didn't take much time for the active inference agent to run as well.
+
+255
+00:30:47,086 --> 00:30:47,847
+So yeah.
+
+256
+00:30:48,923 --> 00:30:49,244
+Cool.
+
+257
+00:30:49,344 --> 00:31:01,863
+Yeah, I could see the latency of the LLM being a major determinant, whether you use kind of a smaller or a faster call, or whether you do something that that takes a bit to get chugging.
+
+258
+00:31:02,564 --> 00:31:03,706
+Okay, cool.
+
+259
+00:31:03,907 --> 00:31:04,167
+All right.
+
+260
+00:31:04,588 --> 00:31:05,309
+Arun's next question.
+
+261
+00:31:05,930 --> 00:31:09,295
+Did you actually get good answers to research questions you asked?
+
+262
+00:31:13,223 --> 00:31:18,818
+Well, the LM itself already worked.
+
+263
+00:31:19,640 --> 00:31:21,585
+Or the research engine itself already worked.
+
+264
+00:31:21,605 --> 00:31:27,220
+So it had certain prompts, and it would output something.
+
+265
+00:31:27,260 --> 00:31:29,005
+So for example, if I asked...
+
+266
+00:31:29,930 --> 00:31:56,359
+what give me give me like a report on coffee or something it'll go through the entire you know it was basically five aspects to the research agent it was um planning reviewing uh actually like or getting information from the internet answering the question and if there's like uh any issues with the answer then it would route back to the initial planning stage and then kind of go back from there
+
+267
+00:31:56,339 --> 00:32:05,185
+So the agent itself was already relatively good at getting answers, getting good answers or getting good reports on whatever question you asked.
+
+268
+00:32:05,333 --> 00:32:15,044
+Maybe the point of this was just to show that, because if you think about it in time, the prompts will become worse and worse every time, because prompting techniques get better.
+
+269
+00:32:15,405 --> 00:32:20,891
+Well, they'll get worse and worse in the sense that our knowledge of how to prompt increases, for example.
+
+270
+00:32:21,472 --> 00:32:25,376
+We initially used to only think about step-by-step prompting.
+
+271
+00:32:25,437 --> 00:32:28,100
+That was the max of what prompting could be.
+
+272
+00:32:28,580 --> 00:32:31,003
+Now we have so many different techniques.
+
+273
+00:32:30,983 --> 00:32:34,268
+We have a tree of thought, chain of thought, a react framework, blah, blah, blah.
+
+274
+00:32:34,288 --> 00:32:35,550
+There's like so many different techniques.
+
+275
+00:32:36,011 --> 00:32:50,494
+And if we had started in like 2023 with just the step by step prompting and we as a human didn't go back in there and fix it ourselves, then we would just be stuck with those bad prompts compared to where the literature is at right now.
+
+276
+00:32:50,812 --> 00:32:59,450
+So the idea was that, well, for this was a fixed state space with just like, it was like five prompts for agent that we had to work with.
+
+277
+00:32:59,530 --> 00:33:04,500
+And then those would be formulated into combinations of prompts that the active inference agent could select.
+
+278
+00:33:05,362 --> 00:33:06,745
+So it's just kind of a...
+
+279
+00:33:07,433 --> 00:33:22,126
+a simple way to show that the active inference agent could pick these prompts, pick the best one, research from the environment, and then do this whole process to try to learn which is the best prompt in that very small state space over time.
+
+280
+00:33:23,427 --> 00:33:35,618
+It's not going to change the effectiveness of the research agent too much because the state space of the prompts is so small, but it was already good to begin with and it was good to end with.
+
+281
+00:33:36,408 --> 00:33:38,001
+Yeah, thanks.
+
+282
+00:33:38,465 --> 00:33:40,562
+A few comments on that.
+
+283
+00:33:40,812 --> 00:33:46,699
+We're seeing at this moment just such an exponential increase in the capacity.
+
+284
+00:33:46,739 --> 00:33:51,184
+So as you point out, even six months or a year can be very different.
+
+285
+00:33:51,645 --> 00:33:57,351
+And it's an exciting time for understanding research and cognitive science agents overall.
+
+286
+00:33:57,451 --> 00:34:08,524
+Like I think about the graph structured knowledge bases like Buehler's graph preflexor type models where
+
+287
+00:34:08,504 --> 00:34:15,235
+you know, limitations of in-context learning that you pointed to can be addressed with some operations on knowledge graphs.
+
+288
+00:34:15,816 --> 00:34:35,068
+And it's like, we're kind of exploring motifs and initial pattern designs and proofs of concepts for how these kinds of synthetic intelligence systems and augmented systems with human and non-human entities can be collaborating in information spaces
+
+289
+00:34:35,048 --> 00:35:02,980
+epistemically and like everything from the user interface and and the the accessibility and the human computer side on through what are we really yielding are we synthesizing new molecules are these revealing errors in previous derivations and papers are these you know shorter algorithms like so it's just like wow happy 2025 huh
+
+290
+00:35:02,960 --> 00:35:32,055
+um how arun asked how did this compare to purely llm driven agents for example llm plus while loop plus tool calling yeah so using llms um we can definitely use like lms directly to improve the agent so kind of just say like so we have this research agent we just have the llm going and say um
+
+291
+00:35:32,592 --> 00:35:44,374
+like if every time like every like let's say like every day do research on like all these topics around prompting um synthesize that research
+
+292
+00:35:44,776 --> 00:35:50,048
+put it in your context, and then use that context to, like, look at all these five prompts, make them better.
+
+293
+00:35:50,068 --> 00:36:03,139
+Now, if we just said that, the LLM is going to do way better than the active inference model right now, because obviously LLM can explore an infinite state space of language, and we only have, like, five prompts we're looking at, and we can't really, like...
+
+294
+00:36:03,119 --> 00:36:12,673
+Right now, there's no actual thing where doing the search is actually changing the prompts or changing the prompt selection mechanism or anything like that.
+
+295
+00:36:13,253 --> 00:36:17,660
+So yeah, LLM by itself would perform way better than the model currently.
+
+296
+00:36:17,700 --> 00:36:29,937
+But the issue is that at the end of the day, it's all in context learning with LLMs, and there's no way to maintain a real understanding of the environment over time.
+
+297
+00:36:30,794 --> 00:36:34,339
+actually encoded within belief updates and these matrices.
+
+298
+00:36:34,459 --> 00:36:36,382
+And that's what the active inference is bringing.
+
+299
+00:36:36,422 --> 00:36:41,990
+And this is more kind of like a proof of concept to show that we could do that at some point.
+
+300
+00:36:42,010 --> 00:36:50,583
+Because just thinking about it theoretically, an easier way to improve this is just to say, kind of like how I said the LLM can just take in context, blah, blah, blah.
+
+301
+00:36:51,043 --> 00:36:54,388
+Now we could just do something simpler where we could say,
+
+302
+00:36:54,368 --> 00:36:59,121
+Now the LLM, go do this research every day, take in that, put it in your context.
+
+303
+00:36:59,422 --> 00:37:05,178
+Now turn that into states that we can, or state factors that we can put with an active inference agent.
+
+304
+00:37:05,619 --> 00:37:10,352
+Now the active inference agent has a whole new set of state factors and states within those factors.
+
+305
+00:37:10,332 --> 00:37:15,402
+And now I can use that directly to learn about new prompting techniques.
+
+306
+00:37:15,442 --> 00:37:21,133
+And it has new, like, it's dynamic, state space is dynamically going to change because that element is adding new prompts all the time.
+
+307
+00:37:21,193 --> 00:37:28,527
+And this way, like, it's a much better way of having the active information station actually learn these prompts.
+
+308
+00:37:28,810 --> 00:37:36,442
+And it's probably, I mean, we don't know yet, but most likely it's going to perform better than the LLM just doing it in context by itself.
+
+309
+00:37:36,943 --> 00:37:40,869
+But it's like a pretty simple way because of just like having the LLM do a lot of the work.
+
+310
+00:37:41,490 --> 00:37:50,464
+Because without that, the active inference agent, like the same kind of process I described, just purely with an active inference would take a really long time to figure out.
+
+311
+00:37:51,794 --> 00:38:10,984
+Yeah, that reminds me of how many ways we're seeing pop up that computer science and AI is sort of rediscovering or reinventing cognitive science, like knowing that versus knowing how, knowing where to look,
+
+312
+00:38:11,065 --> 00:38:12,227
+to get more information.
+
+313
+00:38:12,447 --> 00:38:19,918
+And then it's like, okay, well, let's just say we are going to have our grad student, I mean, research agent, and they're going to be doing some daily task.
+
+314
+00:38:20,339 --> 00:38:25,226
+We say, well, I want the report to be balancing accuracy and complexity.
+
+315
+00:38:25,326 --> 00:38:26,889
+Well, that's variational free energy.
+
+316
+00:38:27,590 --> 00:38:31,656
+Or in terms of prospective experimental design,
+
+317
+00:38:32,125 --> 00:39:02,132
+what should be the criterion well the reinforcement strategy is with some sort of large or curated or labeled database train an auxiliary reward function and then just go ahead and try to hill climb on that reward function well what if we're into the unknown we're on the frontier we don't necessarily have a training data set um or maybe we we wouldn't even want one even if we could so then what criteria should we use that's directly based on the model
+
+318
+00:39:02,112 --> 00:39:18,957
+that yields pragmatic and epistemic value in the expected free energy this explicit explore exploit trade-off and and the ability to modulate between returning expected results with the high expected utility to learning
+
+319
+00:39:19,038 --> 00:39:41,063
+then it's like just like you gave that kind of daily duty cycle with like every day go and research something and then that could be encoded kind of during sleep into beliefs like what is the the zero to one and a variance on what is the likelihood that this is going to happen or what's the efficacy of this treatment over that treatment
+
+320
+00:39:41,043 --> 00:39:59,878
+and then that gives an actual information gain term so that it doesn't just continue to do the same internet searches again and again rather those searches are tuned for epistemic value so it's like and then even to the chain of thought and tree of thought
+
+321
+00:39:59,858 --> 00:40:28,532
+well this is where we get into questions like rumination where you could have at a hyperparametric level you could think too little and leave good thoughts kind of unthought on the table so to speak or you could ruminate and you could think too long and be past the point of diminishing return well where is the pareto optimal point for how long you should be thinking that's a metacognition question that's a cognitive security question and so it's like
+
+322
+00:40:28,512 --> 00:40:56,106
+it's really interesting to see even though they've been coming from the horizon with these mega parametric models they're actually converging to some of the formalisms and the trade-offs that cognitive science has been working with for a long time related to everything from like epistemic foraging and memory and skill to metacognition so i mean so cool how it's all coming together
+
+323
+00:40:56,086 --> 00:40:56,527
+Right.
+
+324
+00:40:57,267 --> 00:41:02,454
+I think like Google even recently was focusing one of their models on surprise.
+
+325
+00:41:02,474 --> 00:41:06,759
+So they were using surprise as the reward function to kind of improve their models.
+
+326
+00:41:07,020 --> 00:41:10,524
+And it's kind of like that's I mean, that's active inference right there.
+
+327
+00:41:10,584 --> 00:41:21,638
+So it's kind of it is kind of cool that we're seeing these concepts and active inference kind of extend out to just like LLMs and diffusion models and stuff like that.
+
+328
+00:41:21,618 --> 00:41:44,888
+Yeah, and although minimizing surprise is maximizing model evidence, there isn't a tractable heuristic to bound success or evidence, whereas there is one to bound surprise, again, even though they're kind of dual, so there's an interesting relationship there.
+
+329
+00:41:45,670 --> 00:41:47,592
+Okay, next Arun question.
+
+330
+00:41:49,748 --> 00:41:53,393
+Why does the A matrix need a specific action dependence?
+
+331
+00:41:53,754 --> 00:42:01,165
+I believe PyMDP should create a B control state for every action anyway, so you should be able to set those out of the box as it were.
+
+332
+00:42:02,888 --> 00:42:07,134
+Well, the A matrix doesn't have any action dependence.
+
+333
+00:42:07,254 --> 00:42:09,057
+It's just the...
+
+334
+00:42:09,712 --> 00:42:13,960
+the actions are able to provide observations that the A matrix can use to update itself.
+
+335
+00:42:14,461 --> 00:42:17,627
+But the A matrix itself doesn't have any action dependence.
+
+336
+00:42:17,647 --> 00:42:20,071
+It is all through the B matrix.
+
+337
+00:42:20,272 --> 00:42:31,452
+So the one thing is that the prompt and search states are controllable, but they don't have any legitimate transition dynamics.
+
+338
+00:42:31,472 --> 00:42:32,935
+So just because
+
+339
+00:42:33,607 --> 00:42:43,478
+if we commit some sort of action, it's not actually causing the prompt combination at one state to transition to the prompt combination at another state.
+
+340
+00:42:44,359 --> 00:42:54,270
+It's more that we are picking those prompt combinations independently, or independently in the sense that it's basically just going to be deriving from expected free energy.
+
+341
+00:42:54,330 --> 00:42:57,433
+So whichever is the lowest expected free energy is the one we're picking.
+
+342
+00:42:58,154 --> 00:43:02,719
+But the action isn't directly causing the transition from...
+
+343
+00:43:02,817 --> 00:43:26,614
+prompt combination one to prompt combination two the only thing where that's actually happening is the info state so like i think in the code or in the code there's um like b matrix learning as well but it really only happens for the um info state the other the b matrices for the prompt states and the search states are completely the same over time kind of showing that like
+
+344
+00:43:27,252 --> 00:43:41,211
+they really don't have any direct this action causes this state to this state kind of you know dynamics there cool um thanks for clarifying and this is sort of a classic design
+
+345
+00:43:42,473 --> 00:43:59,267
+degree of freedom or openness for those who have explored these cognitive models which is what exactly should the agent know about the consequences of its action because if it doesn't know the consequences of action it's just going to be flailing wildly
+
+346
+00:43:59,247 --> 00:44:08,282
+Whereas if it's given too much information about the consequences of action, it's kind of like putting the cat in the hat because it's going to know exactly what it's going to do.
+
+347
+00:44:08,802 --> 00:44:23,466
+So that's where having the B matrix learning and having these learning methods is really cool and really helpful because then you can see, okay, with what learning rate and what kind of variability in action and in the generative process in the niche,
+
+348
+00:44:23,446 --> 00:44:35,953
+what dynamics yield over what time scales the convergence to veridical learning of the consequences of action
+
+349
+00:44:36,507 --> 00:44:42,573
+So maybe it needs to spin 10,000 prompts out before it understands the consequences of certain kinds of prompting.
+
+350
+00:44:43,014 --> 00:44:46,998
+Maybe it only needs to throw out a few, depending on what it is.
+
+351
+00:44:47,058 --> 00:44:49,321
+So, okay.
+
+352
+00:44:49,341 --> 00:44:55,727
+And then one more question from Arun, and then if anyone in the live chat has questions, they can write it.
+
+353
+00:44:55,747 --> 00:45:01,634
+He wrote, similar question to our Bellamy, another Discord colleague.
+
+354
+00:45:01,654 --> 00:45:03,976
+How did you find using LandGraph?
+
+355
+00:45:03,996 --> 00:45:04,877
+LandGraph.
+
+356
+00:45:05,093 --> 00:45:11,820
+It seems like quite a polarizing framework, but still probably easier to use than PyMDP, sweating emoji.
+
+357
+00:45:13,281 --> 00:45:16,365
+Yeah, definitely easier to use than PyMDP.
+
+358
+00:45:16,925 --> 00:45:25,954
+I had to do a lot of going into PyMDP and changing a lot of those source code to make all of this work, which was useful for me.
+
+359
+00:45:25,975 --> 00:45:31,320
+But yeah, Landgraf, actually, I...
+
+360
+00:45:32,144 --> 00:45:39,371
+I run a company where we build AI agents for other clients and companies like that, and we typically use LandGraph for everything.
+
+361
+00:45:39,511 --> 00:45:43,976
+So it wasn't too hard because I have a lot of experience in that.
+
+362
+00:45:44,036 --> 00:45:49,181
+But the PyMDP was definitely harder, that's for sure.
+
+363
+00:45:49,442 --> 00:45:53,766
+What functionality does the LandGraph provide?
+
+364
+00:45:54,146 --> 00:45:57,730
+And how does it interface or pass to PyMDP?
+
+365
+00:45:59,802 --> 00:46:06,953
+Yeah, so the LandGraph is basically just a framework to create nodes and edges.
+
+366
+00:46:07,754 --> 00:46:12,461
+And the main other thing is that it can save state between agent runs.
+
+367
+00:46:13,122 --> 00:46:15,045
+So you can define nodes.
+
+368
+00:46:15,105 --> 00:46:21,895
+And for each node for this LandGraph agent, for example, each node was a LLM that executed a certain action.
+
+369
+00:46:21,875 --> 00:46:27,721
+So it would be like either it was answering the question or it was doing research or it was planning or something like that.
+
+370
+00:46:28,041 --> 00:46:29,663
+And each node would do certain things.
+
+371
+00:46:30,704 --> 00:46:35,609
+LandGraph allows you to kind of simply define controlled edges between those nodes.
+
+372
+00:46:36,089 --> 00:46:38,392
+So you can say this node directly leads to this node.
+
+373
+00:46:39,513 --> 00:46:41,955
+But if this happens, then it should lead to this node.
+
+374
+00:46:41,975 --> 00:46:43,117
+It's kind of conditional edges.
+
+375
+00:46:44,058 --> 00:46:45,859
+And it also allows you to save state.
+
+376
+00:46:46,040 --> 00:46:50,464
+So as the agent is running, you can kind of save state
+
+377
+00:46:50,697 --> 00:46:53,961
+just save the results at each stage.
+
+378
+00:46:54,602 --> 00:46:57,346
+So if this node ran, it's saved in the list.
+
+379
+00:46:57,426 --> 00:46:59,148
+If this node ran, it's saved in the list.
+
+380
+00:46:59,168 --> 00:47:08,641
+And that allows you to call back to use this information from this past node to inform your answer for this specific node.
+
+381
+00:47:08,661 --> 00:47:16,131
+And it's just a simple framework to allow you to just build agents effectively.
+
+382
+00:47:16,752 --> 00:47:22,762
+I don't really Yeah, I think I think it is hard if you don't have like a good framework to go off of.
+
+383
+00:47:23,283 --> 00:47:25,267
+But we've kind of like built a framework over time.
+
+384
+00:47:25,427 --> 00:47:33,701
+And actually, the agent that's used in the the the code I put out is, is using that framework.
+
+385
+00:47:33,761 --> 00:47:37,748
+So if you might find that helpful, if you want to build some line graph agents.
+
+386
+00:47:39,128 --> 00:47:56,985
+yeah where do you see it all sort of going with different agentic AI and where where would it look more like a fusion agents or or collaborative swarms or mesh like what do you think we might see
+
+387
+00:47:58,062 --> 00:48:08,595
+Yeah, I think I'm a big proponent of the idea that we're going to have like billions of AI agents just kind of all talking to each other, like basically just like a whole AI population, like we have a human population.
+
+388
+00:48:08,635 --> 00:48:26,398
+I think that's probably very likely to happen because at the end of the day, like there's probably going to, I'm skeptical that one model is going to be able to vastly overpower humans to the extent that like,
+
+389
+00:48:27,222 --> 00:48:28,844
+a bunch of models will be able to.
+
+390
+00:48:28,964 --> 00:48:40,199
+So as you can see in the typical LLM literature, if you combine, for example, if you're in your reasoning cycles, combine Claude, Chachapiti, Llama.
+
+391
+00:48:40,860 --> 00:48:50,273
+And if you combine those together in your reasoning, it typically performs better than if you just use only Chachapiti in loops or only Claude in loops.
+
+392
+00:48:50,293 --> 00:48:55,440
+So having different models trained in slightly different ways is probably going to help
+
+393
+00:48:55,876 --> 00:48:57,982
+increased performance by a significant amount.
+
+394
+00:48:58,584 --> 00:49:09,598
+So I think we're going to probably have a lot like billions of agents just communicating with each other, maybe at the speed of light, because it's all just information and they don't have to communicate in language like we do as humans.
+
+395
+00:49:09,967 --> 00:49:12,750
+But yeah, I kind of see that going there.
+
+396
+00:49:12,830 --> 00:49:16,754
+And then at least in the near future, I think we're kind of what we were saying.
+
+397
+00:49:17,175 --> 00:49:23,561
+We're probably going to see a big rise in using these kind of formalized frameworks to improve agents.
+
+398
+00:49:23,621 --> 00:49:29,267
+So like active inference or there's other Bayesian reinforcement learning schemes.
+
+399
+00:49:29,307 --> 00:49:31,249
+There's typical reinforcement learning schemes.
+
+400
+00:49:32,631 --> 00:49:37,476
+Those stuff are already being used, but I think there's probably going to be a big rise in that as the...
+
+401
+00:49:37,675 --> 00:49:42,742
+as the kind of benefits from just purely using like LLM reasoning kind of taper off.
+
+402
+00:49:42,862 --> 00:49:44,765
+I think we're gonna see a big rise in that as well.
+
+403
+00:49:47,369 --> 00:49:49,652
+That's very interesting.
+
+404
+00:49:49,872 --> 00:50:07,497
+Like going back to the sort of grass greener, we could see a situation where smaller interpretable active inference type models are using high dimensional interfaces like natural language sharing information.
+
+405
+00:50:08,422 --> 00:50:37,770
+and the opposite setting where large sort of opaque models are communicating through well-structured narrow channels that are active inference like state spaces and just sending each other that json kind of like as a semantically encrypted communication you know right it just says three one two and it's just like oh no
+
+406
+00:50:39,843 --> 00:50:42,106
+That's definitely a really insightful point, yeah.
+
+407
+00:50:42,246 --> 00:50:48,213
+It might just be that all these LLMs are communicating through, yeah, these narrow... It's kind of like how we communicate too.
+
+408
+00:50:48,233 --> 00:50:52,357
+It's not like I can't just directly pass my thoughts to you, you know?
+
+409
+00:50:52,398 --> 00:50:58,384
+Like, ideally, if I could, like, you would get a lot more information about what I'm thinking, like, what I'm feeling, stuff like that.
+
+410
+00:50:59,065 --> 00:51:03,811
+We have to communicate through words, which is kind of a narrow representation of what our thoughts actually are.
+
+411
+00:51:04,491 --> 00:51:06,694
+So maybe LLMs have, like, a similar, you know...
+
+412
+00:51:08,885 --> 00:51:32,023
+lot to say about that but that again comes to the cognitive science topics of of communication semantics theory of minds you know how cool right exactly um yeah what are your next moves with your education and everything and then if there's anything else you want to add you can go for it
+
+413
+00:51:34,045 --> 00:51:39,374
+I'll just continue to do this research, try to expand.
+
+414
+00:51:40,235 --> 00:51:52,295
+Right now, actually, what I'm working on is the thing I said about actually encoding knowledge within the agents instead of just using some unknown kind of info state modality.
+
+415
+00:51:52,335 --> 00:51:57,083
+I'm working on that right now, kind of using a hierarchical model.
+
+416
+00:51:57,400 --> 00:51:59,765
+So I think that's up in your future.
+
+417
+00:51:59,825 --> 00:52:11,730
+Yeah, I just want to continue working on this whole idea of combining active inference and LLMs to do as much interesting things as possible and improve LLMs and active inference at the same time.
+
+418
+00:52:12,031 --> 00:52:21,454
+One other thing I thought was really interesting was I was reading the paper on renormalizing generative models from Carl Friston and all of them.
+
+419
+00:52:22,195 --> 00:52:29,533
+But I think that seems really interesting because obviously one of the big problems with active inference is just scale.
+
+420
+00:52:30,104 --> 00:52:34,314
+it's kind of hard to just keep making more and more and more complex models over and over again.
+
+421
+00:52:34,414 --> 00:52:43,135
+Like LLMs and like typical reinforcement learning have it easy because they just put a policy on it and they just like put a bunch of data in there and then they're good to go, you know.
+
+422
+00:52:43,796 --> 00:52:45,480
+But we actually have to like
+
+423
+00:52:45,747 --> 00:52:48,189
+painstakingly build all these generative models.
+
+424
+00:52:49,170 --> 00:52:51,393
+And it kind of slows our progress down a lot.
+
+425
+00:52:52,013 --> 00:53:03,324
+So using these renormalizing generative models to kind of just take away that whole scale problem, it can just kind of run these group transformations on any space of any scale.
+
+426
+00:53:04,926 --> 00:53:05,727
+Would be pretty useful.
+
+427
+00:53:05,747 --> 00:53:08,209
+I'm trying to explore, see how I can use that as well.
+
+428
+00:53:08,770 --> 00:53:11,232
+I think one interesting thing with that is
+
+429
+00:53:11,363 --> 00:53:15,772
+doing the RGM transformation in more abstract state spaces.
+
+430
+00:53:15,832 --> 00:53:23,507
+So in the paper, they use stuff like pixels and stuff like that, like physical spatial spaces, right?
+
+431
+00:53:24,248 --> 00:53:32,224
+But maybe doing it on something like language might be a little harder because how exactly do you... There's no...
+
+432
+00:53:32,373 --> 00:53:35,558
+exactly pixel equivalent of language.
+
+433
+00:53:36,300 --> 00:53:37,321
+Because pixels are simple.
+
+434
+00:53:37,402 --> 00:53:39,505
+You could just say, this is a discrete quantity.
+
+435
+00:53:39,806 --> 00:53:45,014
+The only way you can differentiate these discrete quantities is by RGB values, and you're good to go.
+
+436
+00:53:45,075 --> 00:53:48,340
+But with language, it's kind of like you have
+
+437
+00:53:49,282 --> 00:53:52,407
+it's not like each letter really means anything.
+
+438
+00:53:52,927 --> 00:53:58,235
+And putting letters together has different meaning, and putting words together has different meaning.
+
+439
+00:53:58,816 --> 00:54:08,691
+So it's kind of a hard, it's a much harder problem to solve to use the renormalizing generative models on these language spaces versus just spatial spaces.
+
+440
+00:54:09,492 --> 00:54:11,415
+So I think that's also an interesting problem.
+
+441
+00:54:11,435 --> 00:54:16,142
+But yeah, I'm just trying to think about these things, see what contributions I can make.
+
+442
+00:54:16,843 --> 00:54:16,943
+Yeah.
+
+443
+00:54:17,243 --> 00:54:17,603
+Cool.
+
+444
+00:54:17,683 --> 00:54:18,164
+Yeah, great.
+
+445
+00:54:18,244 --> 00:54:24,790
+Comments from earlier Par and Friston et al work on reading as multi-scale active inference.
+
+446
+00:54:25,290 --> 00:54:26,431
+There's the eye saccade.
+
+447
+00:54:26,711 --> 00:54:28,473
+It's reducing uncertainty on the letter.
+
+448
+00:54:28,993 --> 00:54:38,862
+Then letter to letter to reduce uncertainty on the word, and then they go up to the third level with a narrative, you know, cat ate bird, or was it the bird ate the cat?
+
+449
+00:54:39,242 --> 00:54:40,123
+So those kinds of things.
+
+450
+00:54:40,143 --> 00:54:44,747
+You get priors over letters, transition matrices, all these kinds of things.
+
+451
+00:54:45,528 --> 00:54:46,609
+And then
+
+452
+00:54:46,724 --> 00:54:49,653
+But that was, as you put it, painstakingly crafted.
+
+453
+00:54:49,673 --> 00:54:55,249
+And where could we abstract and have generalized templates
+
+454
+00:54:55,533 --> 00:55:18,283
+so that perhaps an adapter module is crafted to connect a given domain or system of interest to some known interoperable scheme and then something like an rgm can take over from there um okay i'm gonna ask one more question from the chat and then that will be great okay but
+
+455
+00:55:19,495 --> 00:55:48,878
+um are you using meta learning aspects in the system to enable self-guided research and are direction opinions guided simply by active or what was that last part or direction opinions guided simply by active okay um yeah there's really no meta learning
+
+456
+00:55:49,145 --> 00:56:07,373
+the learning rate is stable throughout the entire thing um yeah the direction opinions are are like in which like which search action should be taking or should it should a search actually be taking it should a prompt actually be taking that's all purely guided by active inference yeah
+
+457
+00:56:07,960 --> 00:56:17,217
+So that was kind of the main point was that the active inference has this formalized structure that can allow for like optimality in terms of like exploration exploitation.
+
+458
+00:56:17,257 --> 00:56:23,088
+So the active inference agent is purely responsible for picking the actions and determining where to go next.
+
+459
+00:56:23,289 --> 00:56:24,912
+Epic.
+
+460
+00:56:25,072 --> 00:56:27,957
+Well, thank you very much for joining.
+
+461
+00:56:28,158 --> 00:56:28,939
+I hope you
+
+462
+00:56:30,370 --> 00:56:42,459
+engage and find collaborators and replicators who are interested in this hot topic of active inference and LLMs and come back when you're ready for 95.2.
+
+463
+00:56:42,560 --> 00:56:43,201
+All right.
+
+464
+00:56:43,321 --> 00:56:43,442
+Cool.
+
+465
+00:56:45,166 --> 00:56:45,627
+Okay.
+
+466
+00:56:46,549 --> 00:56:47,091
+Thank you.
+
+467
+00:56:47,351 --> 00:56:47,692
+Thank you.
+
+468
+00:56:47,792 --> 00:56:48,093
+Peace.
+
+469
+00:56:48,113 --> 00:56:48,514
+Bye.

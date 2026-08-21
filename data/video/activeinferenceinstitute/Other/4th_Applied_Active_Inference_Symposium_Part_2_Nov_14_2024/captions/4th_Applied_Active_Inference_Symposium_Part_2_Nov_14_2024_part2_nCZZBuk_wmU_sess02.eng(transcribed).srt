@@ -1,0 +1,1843 @@
+1
+00:00:38,337 --> 00:00:45,848
+Hello, we're back and with Dmitry Begayev and the RxInfer developers and community.
+
+2
+00:00:45,948 --> 00:00:51,295
+So thank you for letting us peek and join into your meeting.
+
+3
+00:00:51,936 --> 00:00:59,687
+Really appreciative for all the collaboration and learning that we've had with RxInfer this year and looking forward to your updates.
+
+4
+00:01:01,962 --> 00:01:03,665
+Thanks for having us.
+
+5
+00:01:03,685 --> 00:01:28,122
+Yes, so yeah, usually we have update meetings about the development for Ericsson FIR, but since we have now active entrance symposium and we also have new PhD students in our lab, I decided to make it a bit special and today we... So I will briefly introduce Ericsson FIR again for people who are not familiar maybe a bit and then we will discuss actual recent developments.
+
+6
+00:01:28,591 --> 00:01:32,356
+And it's just basically an open discussion, right?
+
+7
+00:01:32,656 --> 00:01:35,901
+You can stop me at any moment with some questions.
+
+8
+00:01:35,981 --> 00:01:38,424
+I unfortunately don't see YouTube.
+
+9
+00:01:38,444 --> 00:01:43,791
+So if there are some questions on YouTube, just stop me and we'll discuss.
+
+10
+00:01:46,274 --> 00:01:46,995
+So, okay.
+
+11
+00:01:47,956 --> 00:01:55,286
+So RxInfer is a library for scalable probabilistic programming, right?
+
+12
+00:01:55,526 --> 00:01:58,530
+But what is probabilistic programming by itself?
+
+13
+00:01:59,422 --> 00:02:03,887
+And let's mention we want to build an agent like a drone, right?
+
+14
+00:02:04,048 --> 00:02:08,533
+And we want to build a program for it and write some code.
+
+15
+00:02:08,854 --> 00:02:16,683
+And usually what we do is we take some data and we feed it into our algorithm and we get the result.
+
+16
+00:02:16,703 --> 00:02:19,306
+For example, we find the path, right?
+
+17
+00:02:19,326 --> 00:02:27,977
+But in reality, it's much more complicated because we don't really have precise data, precise measurements of our sensors.
+
+18
+00:02:28,345 --> 00:02:35,633
+Or maybe we have some wind outside, so our formula is not really correct in these conditions.
+
+19
+00:02:35,834 --> 00:02:42,301
+And basically, we don't have exact values, but we have some uncertainty around our parameters.
+
+20
+00:02:42,581 --> 00:02:47,847
+And how do we actually compute the result given the uncertainty around the parameters?
+
+21
+00:02:47,867 --> 00:02:48,969
+That's the first question.
+
+22
+00:02:50,370 --> 00:02:55,336
+But more interesting question is actually the backwards question.
+
+23
+00:02:55,376 --> 00:02:57,238
+So given the observations,
+
+24
+00:02:57,792 --> 00:03:04,940
+of our path for our agent, what were the conditions under which it has been operating.
+
+25
+00:03:05,040 --> 00:03:08,724
+And usually it's also circling around certainties.
+
+26
+00:03:10,025 --> 00:03:15,511
+And in the context of active inference, we can go even further.
+
+27
+00:03:16,012 --> 00:03:26,263
+So we can say, okay, given the desired observations, like given what we want to see, what actions we actually should take.
+
+28
+00:03:27,104 --> 00:03:31,670
+given that we don't also know the conditions under which we operate.
+
+29
+00:03:32,872 --> 00:03:36,858
+So this is what essentially probabilistic programming is about.
+
+30
+00:03:38,280 --> 00:03:43,507
+And it's very challenging, but good news is that we have the solution for it.
+
+31
+00:03:43,887 --> 00:03:44,909
+We already have it.
+
+32
+00:03:45,049 --> 00:03:46,711
+We know how to solve it.
+
+33
+00:03:47,593 --> 00:03:52,179
+And this is the formula that solves everything essentially.
+
+34
+00:03:52,379 --> 00:03:53,601
+And this is the Bayes rule.
+
+35
+00:03:54,847 --> 00:03:58,011
+And it looks pretty simple, right?
+
+36
+00:03:58,031 --> 00:04:04,879
+It's just like one multiplication, not a big deal.
+
+37
+00:04:05,500 --> 00:04:11,647
+But it turns out that this formula is really, really challenging.
+
+38
+00:04:11,747 --> 00:04:16,052
+It's extremely challenging to apply in a real situation.
+
+39
+00:04:16,072 --> 00:04:17,313
+And why is that?
+
+40
+00:04:18,755 --> 00:04:23,841
+Well, okay, I can demonstrate why.
+
+41
+00:04:24,108 --> 00:04:32,236
+If we have a simple program with not a lot of parameters, this formula indeed is quite simple.
+
+42
+00:04:32,256 --> 00:04:39,183
+So you can actually solve it on a piece of paper and you will get the exact result and it's all fine.
+
+43
+00:04:39,864 --> 00:04:48,693
+But in real situations, we actually have much more parameters and this formula, it explodes pretty quickly.
+
+44
+00:04:49,634 --> 00:04:53,878
+And as soon as you add more parameters to your model,
+
+45
+00:04:54,567 --> 00:04:59,254
+you realize that it's no longer feasible to solve it on a piece of paper.
+
+46
+00:05:00,375 --> 00:05:06,544
+Actually, you need to write like an entire article about how to solve it for like some specific case.
+
+47
+00:05:08,106 --> 00:05:10,450
+But we want even more, right?
+
+48
+00:05:10,490 --> 00:05:16,458
+So we want to not just have parameters, but we want to have some constraints in our system.
+
+49
+00:05:17,440 --> 00:05:22,667
+Like, for example, physical constraints, like maybe we have an engine power constraint and like,
+
+50
+00:05:22,968 --> 00:05:25,811
+We have some trees around in the environment.
+
+51
+00:05:25,931 --> 00:05:35,722
+So when we deal with such a complex system, the math behind is just, you cannot even comprehend it at this point.
+
+52
+00:05:36,242 --> 00:05:52,620
+And actually, in my opinion, this is a very big problem in the Active Influence community in general, is that math is pretty difficult to read and to double check and to implement.
+
+53
+00:05:53,039 --> 00:06:04,374
+Usually in articles, we have a lot of formulas and they work in theory, but as soon as we start implementing it, we make mistakes.
+
+54
+00:06:05,035 --> 00:06:11,043
+Our programs, they have bugs and then it just takes a lot of time to iterate through that.
+
+55
+00:06:12,985 --> 00:06:17,992
+But ideally, we don't even want to think about it, right?
+
+56
+00:06:18,012 --> 00:06:20,515
+We want to design an agent and all of this map
+
+57
+00:06:21,338 --> 00:06:26,924
+under the hood is known, so the space.
+
+58
+00:06:26,984 --> 00:06:30,588
+And what we want to do is we want to have as many components as we want.
+
+59
+00:06:30,708 --> 00:06:37,936
+We want to press a button and we want to compile this map, we want to test the port and just deploy it.
+
+60
+00:06:38,878 --> 00:06:47,087
+And it should result in a robust system that makes reasonable actions under uncertainty in unpredictable environments.
+
+61
+00:06:48,508 --> 00:06:50,991
+And if you think that's too much to ask,
+
+62
+00:06:51,292 --> 00:06:57,281
+I would actually draw an analogy with just the regular programming.
+
+63
+00:06:57,721 --> 00:07:07,195
+So we now talking about probabilistic programming, but regular programming also started or has the same path.
+
+64
+00:07:07,215 --> 00:07:17,029
+So in the beginning, like a bunch of high level professionals, PhDs, they were designing the very, very first algorithms.
+
+65
+00:07:17,414 --> 00:07:19,797
+And it was error prone.
+
+66
+00:07:19,857 --> 00:07:25,563
+They spent months designing a very simple program, spent months designing a computer.
+
+67
+00:07:26,524 --> 00:07:34,133
+But nowadays, every student or even in schools, you can just download Python and write simple programs.
+
+68
+00:07:34,913 --> 00:07:37,556
+You don't need to think about how computers work.
+
+69
+00:07:39,218 --> 00:07:45,345
+You just express your ideas in some sort of a high-level programming language.
+
+70
+00:07:45,460 --> 00:07:48,803
+and compiler does the heavy lifting for you.
+
+71
+00:07:49,744 --> 00:07:59,674
+So essentially what we want to achieve here is to have a language for solving probabilistic programming, right?
+
+72
+00:07:59,694 --> 00:08:01,496
+And you don't have to think about math.
+
+73
+00:08:01,516 --> 00:08:03,698
+You only want to think about your application.
+
+74
+00:08:04,279 --> 00:08:10,045
+You want to design your drone or maybe it's a vacuum cleaner or maybe something even more complex.
+
+75
+00:08:12,247 --> 00:08:15,130
+Any questions so far?
+
+76
+00:08:18,788 --> 00:08:19,809
+Maybe from YouTube?
+
+77
+00:08:21,610 --> 00:08:21,951
+Not yet.
+
+78
+00:08:21,971 --> 00:08:24,013
+Thank you, though.
+
+79
+00:08:24,033 --> 00:08:24,273
+Okay.
+
+80
+00:08:25,073 --> 00:08:31,399
+So this is kind of the... But how do we approach it?
+
+81
+00:08:31,479 --> 00:08:32,600
+How can we approach it?
+
+82
+00:08:34,121 --> 00:08:47,513
+And in a sense, there are a lot of similar projects in various programming languages as well, and they try to solve the same problem in slightly different ways.
+
+83
+00:08:47,982 --> 00:09:16,318
+and given that even in this slide there are eight solutions but in reality there are more why do we need a new one why did we decide to write a recent firm where there are so many solutions already developing well the idea here is that for autonomous agents we have a pretty unique set of requirements so if we want to operate in real world
+
+84
+00:09:16,990 --> 00:09:27,179
+We want to have a very big program because a program of a real world is quite complicated, has a lot of parameters, so it should scale.
+
+85
+00:09:29,441 --> 00:09:41,712
+It also should be low power because our autonomous agents, they usually operate on battery and you don't really want to have an empty battery soon.
+
+86
+00:09:41,772 --> 00:09:45,495
+So it should preserve energy in the most efficient way.
+
+87
+00:09:46,015 --> 00:09:52,123
+It should be able to adapt to changes in the environment, because the real environment is chaotic.
+
+88
+00:09:53,304 --> 00:10:00,033
+It may change, maybe you didn't account for something in your model, so you should be able to change the model on the fly.
+
+89
+00:10:00,734 --> 00:10:09,925
+It should work in real time, should be as efficient as possible in terms of performance, and it also must be robust.
+
+90
+00:10:10,266 --> 00:10:15,212
+So we basically are not allowed to stop our computation,
+
+91
+00:10:15,850 --> 00:10:19,694
+it should run and should react to the circumstances.
+
+92
+00:10:22,438 --> 00:10:26,662
+And this is what ARIS Infer is essentially about and what it tries to achieve.
+
+93
+00:10:27,844 --> 00:10:40,919
+And in order to achieve this, it combines these three main ideas, also in the literature, factor graphs, variational inference, and reactive message passing.
+
+94
+00:10:40,939 --> 00:10:44,423
+So these are the three key elements
+
+95
+00:10:45,162 --> 00:10:57,500
+to then we basically try to understand here if we combine them, can we have these properties that I mentioned?
+
+96
+00:10:57,520 --> 00:11:01,887
+And so to talk a little bit about each of them.
+
+97
+00:11:02,027 --> 00:11:07,575
+So a factor graph is essentially a graph representation of a probabilistic model.
+
+98
+00:11:08,382 --> 00:11:15,091
+And a good thing about factor graphs is that they are explainable and they're not a black box.
+
+99
+00:11:16,613 --> 00:11:26,165
+So we can clearly see the structure of the model and dependencies in different parameters or hidden states and also observations.
+
+100
+00:11:27,928 --> 00:11:35,858
+And it's also modular, local, we can reuse certain pieces and we can write specialized computations for certain pieces.
+
+101
+00:11:38,183 --> 00:11:44,271
+So in RxInfer, we have a special language to write such programs.
+
+102
+00:11:44,872 --> 00:11:57,068
+So I've got this atModel macro that takes the textual description of a probabilistic model and basically creates a factor graph under it.
+
+103
+00:11:57,088 --> 00:12:02,676
+So a user should not create those graphs by hand and it doesn't automate.
+
+104
+00:12:04,018 --> 00:12:08,123
+And we can also create submodules, submodules
+
+105
+00:12:08,947 --> 00:12:11,270
+and we can reuse them in a bigger context.
+
+106
+00:12:13,934 --> 00:12:24,509
+And as I mentioned, we can, for example, do some local optimizations in our model because we clearly know the structure of it.
+
+107
+00:12:24,769 --> 00:12:38,008
+So variation inference, I assume that most of you may be familiar, but for most of you who are not, that's basically an optimization procedure that approximates basically
+
+108
+00:12:39,305 --> 00:12:44,230
+So Bayes' rule in many situations is very challenging to solve directly.
+
+109
+00:12:45,571 --> 00:12:56,160
+So variational inference is a very clever technique to trade off accuracy and maybe solve the task a bit easier at the cost of accuracy.
+
+110
+00:12:56,180 --> 00:13:02,046
+And also it's faster because you don't have to solve the original problem exactly.
+
+111
+00:13:04,728 --> 00:13:08,772
+So the formula actually looks a bit more complex than
+
+112
+00:13:09,359 --> 00:13:10,260
+base rule itself.
+
+113
+00:13:12,163 --> 00:13:14,106
+But yeah, the math is sometimes strange.
+
+114
+00:13:14,166 --> 00:13:18,432
+And in practice, it's actually easier to solve this problem than the original math.
+
+115
+00:13:20,274 --> 00:13:30,949
+So instead of solving the base rule directly, we approximate the result with a simpler set of distributions from exponential family results, for example, which makes it simple.
+
+116
+00:13:31,490 --> 00:13:37,999
+And we have also language for constraints for the variation
+
+117
+00:13:38,131 --> 00:13:47,280
+So sometimes we want to make a mean field over our hidden states, and maybe for some specific states want to be a Gaussian.
+
+118
+00:13:47,980 --> 00:13:52,945
+So a user also can specify different constraints for different procedure.
+
+119
+00:13:55,388 --> 00:14:05,337
+And the last thing in our recipe is reactive message passing, which is a central part of the project.
+
+120
+00:14:05,840 --> 00:14:13,869
+Each message carries a small piece of information required to solve this very complex math behind the inference procedure.
+
+121
+00:14:15,771 --> 00:14:25,142
+And essentially, in traditional message passing algorithms, they require a fixed global schedule, which has a lot of downsides.
+
+122
+00:14:25,843 --> 00:14:29,607
+And in a recent ,, we allow messages to flow asynchronously.
+
+123
+00:14:29,728 --> 00:14:33,552
+And each node in the graph simply reacts on changes
+
+124
+00:14:33,717 --> 00:14:37,501
+anything in the neighborhood can recompense the result locally.
+
+125
+00:14:39,443 --> 00:14:44,388
+And it's more robust because if part of the system doesn't work, we simply stop reacting.
+
+126
+00:14:45,409 --> 00:14:51,055
+But also it, in principle, supports variable update rates for different variables.
+
+127
+00:14:51,095 --> 00:14:58,023
+For example, audio signals, they may update at a higher rate than videos.
+
+128
+00:15:00,425 --> 00:15:02,307
+Do we have any questions so far?
+
+129
+00:15:04,480 --> 00:15:09,266
+Yeah, I can ask one now and you could go for it or address it later.
+
+130
+00:15:09,467 --> 00:15:16,416
+Arun asked, what has been the biggest challenge building Rx and Fur so far?
+
+131
+00:15:19,821 --> 00:15:21,463
+Oh, that's a very good question.
+
+132
+00:15:21,583 --> 00:15:32,698
+So the biggest challenge, I may say that, as I mentioned, the math behind all of it is quite complex.
+
+133
+00:15:33,640 --> 00:15:36,462
+But the implementation side is also complex.
+
+134
+00:15:36,482 --> 00:15:40,246
+So in order to build such a system, you need an expertise in both.
+
+135
+00:15:41,467 --> 00:15:46,811
+You need to understand both math and high-level programming to make it efficient.
+
+136
+00:15:47,792 --> 00:15:55,339
+So the combination of both of these elements is, I would say, unique.
+
+137
+00:15:56,640 --> 00:16:02,905
+And without understanding one or another, it's basically impossible to build such a system.
+
+138
+00:16:07,542 --> 00:16:08,803
+Any other questions?
+
+139
+00:16:11,026 --> 00:16:15,090
+Okay.
+
+140
+00:16:15,110 --> 00:16:15,410
+Okay.
+
+141
+00:16:15,870 --> 00:16:24,399
+So basically to write the probabilistic program, we need to specify our model or a program, if you would like.
+
+142
+00:16:25,180 --> 00:16:31,887
+We need to specify our variational distribution and we also need to specify how do we compute posteriors.
+
+143
+00:16:33,789 --> 00:16:37,212
+So we can define models in our package.
+
+144
+00:16:37,782 --> 00:16:40,304
+we can define variational distributions.
+
+145
+00:16:40,325 --> 00:16:43,247
+And for the minimization, we use free energy minimization.
+
+146
+00:16:43,367 --> 00:16:52,256
+Variational free energy minimization is just a single call to information that combines both model and constraints and runs the algorithm.
+
+147
+00:16:54,158 --> 00:17:06,270
+And it supports both static data sets, but as I mentioned, the whole idea about recent various reactivity, and it also accepts reactive streams of data sets from external sources.
+
+148
+00:17:08,596 --> 00:17:22,034
+And this is basically, we believe that these three key elements, they do have properties, which I mentioned earlier, and they do allow us to implement all of those.
+
+149
+00:17:22,054 --> 00:17:24,978
+And RxInfer is free.
+
+150
+00:17:25,399 --> 00:17:26,700
+It's available on GitHub.
+
+151
+00:17:26,740 --> 00:17:28,883
+We have a website, we have a documentation.
+
+152
+00:17:30,185 --> 00:17:33,890
+We also presented various conferences and also on YouTube.
+
+153
+00:17:35,612 --> 00:17:36,814
+So yeah, you are
+
+154
+00:17:37,486 --> 00:18:02,717
+we invite you to check it out essentially and see yeah what it can do for you uh yeah so if you have any other questions right now we can uh no because we just had their questions but again yeah free free to um stop me at any moment so uh okay but the question is uh does it actually work
+
+155
+00:18:03,625 --> 00:18:07,729
+So I had this example of the drone.
+
+156
+00:18:08,890 --> 00:18:20,801
+And basically, if we want to implement the drone in ARIS Infer, we define the dynamics of the drone, how, for example, different parameters should influence its position and velocity and speed.
+
+157
+00:18:21,202 --> 00:18:24,345
+And then we define a model in ARIS Infer.
+
+158
+00:18:25,226 --> 00:18:32,873
+And then basically we create an environment for it and see how the drone would infer the action
+
+159
+00:18:33,055 --> 00:18:36,400
+given its current state and the goal, right?
+
+160
+00:18:36,420 --> 00:18:48,478
+So in this experiment, our drone is instructed to fly to the red dot and it actively tries to infer its current position and the trajectory that it needs to take to reach the goal.
+
+161
+00:18:49,560 --> 00:18:58,433
+And also on the bottom side of the screen, you see that we change the parameters of the world and also the parameters of the drone reactively.
+
+162
+00:18:58,553 --> 00:19:01,257
+And yeah, the system still operates.
+
+163
+00:19:03,430 --> 00:19:10,697
+And actually, to be honest, it was much more difficult to create the environment for this drone than the drone itself.
+
+164
+00:19:11,578 --> 00:19:16,322
+So Arikson first simplified this task, but the environment was still a challenge.
+
+165
+00:19:16,983 --> 00:19:29,235
+But for that, we also work on a solution, which is called Arikson Environments, which essentially would also hide all of this complexity of building environments for different engines.
+
+166
+00:19:31,426 --> 00:19:39,978
+And we also, we have a set of other examples, both for static data sets or proactive data sets.
+
+167
+00:19:39,998 --> 00:19:43,443
+Yeah, just feel free to check out our documentation.
+
+168
+00:19:45,846 --> 00:19:52,656
+And yeah, we have reproduced many interesting Bayesian inference tasks with a good performance and scalability.
+
+169
+00:19:52,676 --> 00:20:01,028
+So we are obviously not solving all problems in this world, but the set of possibilities is really,
+
+170
+00:20:03,337 --> 00:20:06,663
+Other questions?
+
+171
+00:20:06,683 --> 00:20:10,029
+Yeah, I'll ask a few from the chat.
+
+172
+00:20:10,129 --> 00:20:25,817
+So Discovery Block wrote for the drone, would RxInfer be able to manage actual image input to infer the position or velocity of the drone instead of assuming the observation corresponds to real values with random error?
+
+173
+00:20:28,430 --> 00:20:30,153
+Okay, it's a good question.
+
+174
+00:20:30,393 --> 00:20:31,274
+Not out of the box.
+
+175
+00:20:31,755 --> 00:20:33,598
+It depends on your model.
+
+176
+00:20:33,618 --> 00:20:39,507
+So in principle, it's possible to design a model that would process images, but we didn't try that.
+
+177
+00:20:40,448 --> 00:20:46,418
+So Bataris Infer by itself is indifferent on the input.
+
+178
+00:20:47,579 --> 00:20:53,188
+So the problem with images as input is that they're pretty high dimensional.
+
+179
+00:20:54,637 --> 00:21:01,587
+And since RxInfer works on distributions, this image must be processed as a distribution.
+
+180
+00:21:01,647 --> 00:21:04,258
+So this might be quite challenging in practice.
+
+181
+00:21:06,449 --> 00:21:10,833
+But that's a direction to go with the composition of these systems.
+
+182
+00:21:11,233 --> 00:21:19,842
+So the drone kernel could be designed with an app model taking in beliefs about position or about other features.
+
+183
+00:21:20,202 --> 00:21:29,030
+And then hypothetically, like in RxInfer or alternative approach to image processing could be brought in and concatenated and used.
+
+184
+00:21:29,811 --> 00:21:34,195
+And then the kernel belief would remain the same.
+
+185
+00:21:35,947 --> 00:21:38,991
+Exactly, yes, you are correct.
+
+186
+00:21:40,814 --> 00:21:43,257
+Okay, and one more question from Frasier.
+
+187
+00:21:44,239 --> 00:21:51,589
+What is the largest remaining theoretical difficulty with this approach, real-time inference, universal inference?
+
+188
+00:21:54,453 --> 00:21:55,394
+Okay, it's a good question.
+
+189
+00:21:55,655 --> 00:22:05,869
+So the limitations, we will talk actually a little bit about it in the current developments, but I can already in that indeed universal inference is quite difficult.
+
+190
+00:22:06,271 --> 00:22:11,200
+Because in order to execute the inference procedure, we need to compute messages.
+
+191
+00:22:13,123 --> 00:22:22,279
+And we can compute them in many situations, but in many situations, it is still way too challenging.
+
+192
+00:22:23,381 --> 00:22:24,743
+And we are actively working on that.
+
+193
+00:22:25,885 --> 00:22:31,114
+But yeah, message computation is one of the main challenging components still.
+
+194
+00:22:32,765 --> 00:22:33,186
+Awesome.
+
+195
+00:22:33,246 --> 00:22:34,508
+And one last question.
+
+196
+00:22:35,069 --> 00:22:47,088
+Bert and Arun both asked, have you considered hierarchical or nested models or any of the renormalization type models we've been exploring?
+
+197
+00:22:50,293 --> 00:22:50,894
+Great question.
+
+198
+00:22:50,954 --> 00:22:51,775
+Yes, we did.
+
+199
+00:22:51,795 --> 00:23:00,088
+And actually, last year, we implemented completely the language that we use for models to support hierarchical models.
+
+200
+00:23:00,440 --> 00:23:13,775
+And this is one of the directions that we are approaching currently in VICE Lab as well to support more complex hierarchical models and also recent developments in Artif and Print literature.
+
+201
+00:23:13,895 --> 00:23:14,195
+Yes.
+
+202
+00:23:22,044 --> 00:23:22,404
+Questions?
+
+203
+00:23:23,285 --> 00:23:24,727
+No, no, no.
+
+204
+00:23:24,787 --> 00:23:29,552
+Yeah, these are really good questions, but we can continue.
+
+205
+00:23:30,781 --> 00:23:34,206
+So what about our current development?
+
+206
+00:23:35,288 --> 00:23:40,596
+I will talk about two and then I will give a stage to Walter.
+
+207
+00:23:41,738 --> 00:23:55,220
+So we have an external collaboration with Active Inference Institute about graph visualization that takes the textual description of the model and actually displays the graph.
+
+208
+00:23:55,240 --> 00:23:56,181
+So we have
+
+209
+00:23:56,768 --> 00:24:03,437
+data structure for the graph, but we don't have a function that would create a nice PNG out of it, like a feature.
+
+210
+00:24:04,599 --> 00:24:14,592
+And we have an ongoing project to the universal inference, essentially, to support more models.
+
+211
+00:24:15,794 --> 00:24:23,164
+So for graph visualization, as I mentioned, it's an external collaboration and it goes really well.
+
+212
+00:24:23,284 --> 00:24:25,527
+So we have an open pull request.
+
+213
+00:24:26,536 --> 00:24:37,573
+And for example, for this simple model, for a simple point model, I can generate this nice graph that will show the dependencies between variables in this model.
+
+214
+00:24:38,535 --> 00:24:48,610
+And I can also generate more complex models or graphs for more complex structures.
+
+215
+00:24:48,871 --> 00:24:54,940
+And we have also Fraser and Chris joined.
+
+216
+00:24:55,274 --> 00:25:18,160
+meeting so if you fraser or chris you want to talk uh something uh here you can yeah you can do that yeah i'll just can anyone can everyone hear me is that uh is this coming yes yes uh yeah just really quickly so i'm i'm fraser i'm the guy in the top right bubble there
+
+217
+00:25:18,815 --> 00:25:41,397
+So along with Chris and Kobus Esterhuisen, we have a project effectively at the Active Inference Institute, as Dimitri said, in collaboration with the BIOS Lab to visualize these models, to be able to get some handle on what they look like, and ultimately to be able to even debug where certain messages are and where issues are with respect to actual message computations.
+
+218
+00:25:41,950 --> 00:25:56,306
+There's a page essentially at the, I could show where this is, but there's a very publicly available page where you can kind of see our progress, track what's happening, and even reach out to join us and collaborate where you will.
+
+219
+00:25:56,806 --> 00:26:01,131
+So it's very much open for collaborators and participation.
+
+220
+00:26:01,872 --> 00:26:02,272
+Absolutely.
+
+221
+00:26:03,434 --> 00:26:04,555
+Chris, is there anything you'd like to say?
+
+222
+00:26:04,575 --> 00:26:08,820
+Nope, I think you covered it all.
+
+223
+00:26:08,840 --> 00:26:09,240
+Thank you.
+
+224
+00:26:13,034 --> 00:26:13,375
+Excellent.
+
+225
+00:26:13,395 --> 00:26:17,862
+Back to you, Dimitri.
+
+226
+00:26:17,962 --> 00:26:19,724
+Thank you, Chris.
+
+227
+00:26:20,165 --> 00:26:23,811
+If you don't want to add anything, we can just continue.
+
+228
+00:26:26,595 --> 00:26:27,356
+Please continue.
+
+229
+00:26:28,097 --> 00:26:29,239
+OK, that's great.
+
+230
+00:26:29,399 --> 00:26:29,760
+Thanks.
+
+231
+00:26:31,483 --> 00:26:33,205
+And thanks for your effort, by the way.
+
+232
+00:26:33,225 --> 00:26:34,467
+This is a really cool stuff.
+
+233
+00:26:34,487 --> 00:26:38,113
+So I was playing with to prepare for the presentation.
+
+234
+00:26:38,532 --> 00:26:40,835
+And it essentially just works.
+
+235
+00:26:40,855 --> 00:26:44,079
+So there are some, yeah, I suggested some improvement.
+
+236
+00:26:45,702 --> 00:26:49,086
+But yeah, I think it's all good, even in the current stage.
+
+237
+00:26:49,567 --> 00:27:03,606
+And also, for example, other probabilistic programming libraries in Python, for example, they do similar approach in their modeling and also how they display models.
+
+238
+00:27:07,491 --> 00:27:08,252
+Okay.
+
+239
+00:27:15,134 --> 00:27:22,885
+So the next thing that I want to talk about is universal inference essentially and we already had a question about it.
+
+240
+00:27:24,427 --> 00:27:43,673
+So suppose we have this model that essentially tells us that we have observations y that are coming from a Gaussian and the mean of this Gaussian is modeled as a beta distribution and y beta is because the variable that is modeled as
+
+241
+00:27:46,505 --> 00:27:53,632
+So basically, I say here that my observations are constrained from zero to one.
+
+242
+00:27:54,793 --> 00:28:02,561
+And I also say that the precision of my observations is an exponent of r and r is also from zero to one.
+
+243
+00:28:03,222 --> 00:28:07,947
+So essentially, it's a pretty simple model at a glance.
+
+244
+00:28:07,967 --> 00:28:13,913
+But the reality is that this is an extremely challenging model for message passing.
+
+245
+00:28:15,277 --> 00:28:24,834
+because the messages that we need to compute are not easy to compute.
+
+246
+00:28:24,974 --> 00:28:33,909
+And the problem is that the result of those computations is essentially a bad distribution.
+
+247
+00:28:35,612 --> 00:28:38,297
+So it has a very strange form.
+
+248
+00:28:38,699 --> 00:28:43,565
+that is not parametric or cannot be easily described as a parametric distribution.
+
+249
+00:28:43,585 --> 00:28:57,561
+So we can also always describe those distributions as a set of samples, but drawing a set of samples is costly and is essentially very difficult to make it real time.
+
+250
+00:28:58,963 --> 00:29:07,052
+So the idea here is that, okay, we want a nice distribution and you play a parametric and it's usually from exponential family.
+
+251
+00:29:09,125 --> 00:29:15,252
+And the question is here, OK, how to find this best approximation?
+
+252
+00:29:16,374 --> 00:29:27,207
+And essentially, Ericsson-Ferrer supports algorithms or approximations that will allow you to specify how you would like to find those approximations.
+
+253
+00:29:27,708 --> 00:29:32,854
+And one of the recent algorithms is projections.
+
+254
+00:29:34,133 --> 00:30:03,904
+is a very very new feature so what we can do is we can specify or instruct that it's inferred to use the projection algorithm to beta or to other distributions from exponential memory and it also works around deterministic nodes or just for individual variables and if we combine these specifications so it's a little bit more complex than the original example but even this specification we can solve
+
+255
+00:30:04,188 --> 00:30:05,870
+inference in this model.
+
+256
+00:30:10,617 --> 00:30:13,201
+And the result is pretty good.
+
+257
+00:30:13,261 --> 00:30:21,092
+So here I just display, yeah, generated some data set and I tried to infer the parameters back.
+
+258
+00:30:21,212 --> 00:30:29,905
+So as I mentioned in the very, very beginning, we have a set of observations and I want to know the parameters with which those observations were generated.
+
+259
+00:30:31,187 --> 00:30:33,570
+And you can see that
+
+260
+00:30:33,922 --> 00:30:41,790
+The inferred or projected distributions, they're extremely close to the ones that I used to actually generate the dataset.
+
+261
+00:30:43,332 --> 00:30:48,277
+And it scales pretty well comparing to other probabilistic programming libraries.
+
+262
+00:30:50,480 --> 00:30:58,949
+So here on the left side, bottom left side, that's which uses a sampling and takes up to three times more.
+
+263
+00:31:01,512 --> 00:31:01,752
+Yeah.
+
+264
+00:31:02,086 --> 00:31:04,188
+real execution time to do this task.
+
+265
+00:31:04,368 --> 00:31:11,175
+And on the bottom part, we have automatic differentiation variational inference algorithm, which is busted.
+
+266
+00:31:12,896 --> 00:31:21,885
+But we basically, because it's a new feature, we still try to improve the performance and the performance is not ideal at the moment.
+
+267
+00:31:22,585 --> 00:31:25,108
+And we already know how to improve it.
+
+268
+00:31:25,128 --> 00:31:30,793
+Essentially, we have a PhD student that works on this program and it goes really well and
+
+269
+00:31:31,651 --> 00:31:45,464
+like around a week ago, we had yet a better performance, which is not reflected on this slide, but since it's like just last week, we didn't have to really time to investigate properly.
+
+270
+00:31:47,946 --> 00:31:49,488
+Any questions so far?
+
+271
+00:31:54,573 --> 00:32:00,358
+Well, it's, I mean, a nurse stands for nurse photo system.
+
+272
+00:32:01,064 --> 00:32:03,967
+not say it's something like no U-turn sampler.
+
+273
+00:32:05,368 --> 00:32:11,894
+And U-turn is a term that they use to describe their algorithm.
+
+274
+00:32:14,036 --> 00:32:17,400
+But yeah, it stands for no U-turn sampler.
+
+275
+00:32:19,542 --> 00:32:28,270
+It's practically, as far as I understand, one of the best samplers right now to draw from a non-normalized distribution.
+
+276
+00:32:31,439 --> 00:32:43,452
+And those timings, by the way, so we implement the recent pair in Julia, and those timings are from a different library, also written in Julia.
+
+277
+00:32:43,472 --> 00:32:48,337
+So these timings are from tubing.
+
+278
+00:32:48,957 --> 00:32:55,905
+Okay, so we have also, we had already a question about generalizing influx in bit models.
+
+279
+00:32:55,925 --> 00:32:59,168
+And here I will give a stage to Walter, now.
+
+280
+00:33:00,042 --> 00:33:01,163
+Hello, everyone.
+
+281
+00:33:01,263 --> 00:33:01,864
+My name is Arthur.
+
+282
+00:33:01,884 --> 00:33:11,072
+I'm also a PhD student in BIAS lab, and I'm going to have a short discussion about generalized inference in discrete models.
+
+283
+00:33:11,873 --> 00:33:18,639
+So in active inference, we really like to work with POMDPs, partially observable Markov decision processes.
+
+284
+00:33:19,640 --> 00:33:24,044
+And the simple POMDP or the vanilla POMDP, you can see on the slide.
+
+285
+00:33:24,064 --> 00:33:27,687
+So we have a joint distribution over states observation and transition matrices.
+
+286
+00:33:28,595 --> 00:33:40,171
+And we see that we have transition distributions both for the observation model and the state transition distribution.
+
+287
+00:33:41,453 --> 00:33:50,926
+So both this observation distribution and this transition distribution, they're both categorical transition distributions, but they're slightly different, right?
+
+288
+00:33:50,966 --> 00:33:57,235
+Because the observation model just depends on one categorical distribution or categorical variable, only the state.
+
+289
+00:33:57,704 --> 00:34:02,289
+whereas the transition model depends on both the state and the control.
+
+290
+00:34:05,733 --> 00:34:15,845
+So if we draw the factor graph representation of both these nodes, you can see that they're extremely similar, but they're slightly different.
+
+291
+00:34:16,746 --> 00:34:21,652
+Now, if we want to go towards this generalized inference, there are two things we can do.
+
+292
+00:34:21,672 --> 00:34:22,513
+The first is
+
+293
+00:34:23,084 --> 00:34:31,876
+We just implement this new node, this two categoricals in, one categorical out, and we can just be done with it.
+
+294
+00:34:32,397 --> 00:34:38,525
+And we could do control in discrete environments, but it wouldn't be very general.
+
+295
+00:34:38,545 --> 00:34:46,436
+And since these transition distributions are very similar, their functional forms are very similar, the inference rules are also very similar.
+
+296
+00:34:46,616 --> 00:34:51,943
+So what I'm investigating right now is how we can generalize this inference
+
+297
+00:34:52,328 --> 00:35:01,558
+in these discrete models such that we can have an arbitrary number of categoricals coming in and transition to a categorical variable coming out.
+
+298
+00:35:01,839 --> 00:35:11,970
+So this would give us a general contingency tables or general discrete categorical transition distributions in RxInfer.
+
+299
+00:35:14,453 --> 00:35:19,298
+There are some problems with this because this B matrix,
+
+300
+00:35:19,632 --> 00:35:23,037
+has a rank which is proportional to the amount of categorical interfaces.
+
+301
+00:35:23,677 --> 00:35:27,963
+So for the observation model, we just have a transition matrix.
+
+302
+00:35:28,704 --> 00:35:36,454
+But if we want to do discrete control, then we already have a transition tensor, which maps states and controls to new states.
+
+303
+00:35:37,236 --> 00:35:42,122
+Currently in ARX and FER, we only support these rank one or rank two Dirichlet distributions.
+
+304
+00:35:42,663 --> 00:35:48,070
+So this is something that we're working on right now to generalize this inference.
+
+305
+00:35:50,463 --> 00:36:05,165
+So what we are currently doing is together with Rafael, we are working to replace the rank one, rank two, matrix Dirichlet implementation in RxInferred with a general arbitrary rank tensor implementation.
+
+306
+00:36:06,607 --> 00:36:09,191
+The working name for now is a multi-Dirichlet.
+
+307
+00:36:09,271 --> 00:36:10,754
+We're very much open to suggestions.
+
+308
+00:36:12,797 --> 00:36:17,584
+I am currently deriving rules for this general transition node,
+
+309
+00:36:18,020 --> 00:36:30,278
+So Thais already in his dissertation has the rules for the rank one and rank two, ten factors and matrices, and I generalize them to arbitrary rank tensors.
+
+310
+00:36:30,819 --> 00:36:35,125
+And then I will make this new transition node, which takes an arbitrary number of interfaces.
+
+311
+00:36:36,267 --> 00:36:37,809
+So what can we do with this?
+
+312
+00:36:38,611 --> 00:36:41,034
+With this, we can do control in discrete models.
+
+313
+00:36:41,275 --> 00:36:46,963
+So you can see on this slide that we have an agent which is navigating a base.
+
+314
+00:36:47,433 --> 00:37:02,035
+And this is the type of stuff that will be possible with the generalized inference in discrete models, because we will have categorical states coming in with categorical controls coming in and a categorical state coming out of this.
+
+315
+00:37:02,275 --> 00:37:10,127
+So we would be able to go towards building agents in discrete environments with discrete controls.
+
+316
+00:37:10,808 --> 00:37:15,195
+So we can go ahead and solve public peace as soon as we're done with this.
+
+317
+00:37:16,812 --> 00:37:17,833
+Thanks, Valter.
+
+318
+00:37:19,315 --> 00:37:20,936
+And here it is.
+
+319
+00:37:21,277 --> 00:37:31,887
+Here's the entire presentation that gives an idea of what our extender project is about and what we are currently trying to develop.
+
+320
+00:37:33,369 --> 00:37:41,217
+And yeah, maybe we were a bit too fast, but we have plenty of time for discussions.
+
+321
+00:37:50,562 --> 00:37:52,564
+Do I have more questions online, or?
+
+322
+00:37:55,268 --> 00:37:58,031
+Razor, if you want to ask your question directly.
+
+323
+00:37:59,533 --> 00:38:01,555
+He has one, but he's also in the comments.
+
+324
+00:38:03,577 --> 00:38:15,051
+Yeah, just, I was interested, I'm relative, I'm very, very interested, I did mathematics and computer science for my actual degree, very interested in the mathematics of the generalized inference and node constraints and all of that.
+
+325
+00:38:15,470 --> 00:38:27,489
+To what extent does message passing per se, the process of message passing, to what extent does that influence issues around non-conjugate inference?
+
+326
+00:38:27,509 --> 00:38:31,435
+Is it effectively kind of only dependent on the content of the messages?
+
+327
+00:38:32,376 --> 00:38:40,088
+Or does the actual process of message passing have some kind of non-trivial effect on the resulting inference?
+
+328
+00:38:40,409 --> 00:38:41,190
+I'm just curious about that.
+
+329
+00:38:42,537 --> 00:38:54,073
+So the problem with non-conjugate inference in message passing lies in the fact that in order to compute a message, we need to compute an integral.
+
+330
+00:38:55,935 --> 00:39:01,343
+And in general, computing an integral is not possible on a computer.
+
+331
+00:39:01,763 --> 00:39:05,528
+I'm talking about indefinite integrals that have no boundaries.
+
+332
+00:39:06,270 --> 00:39:09,574
+So for an integral that has a boundary from A to B,
+
+333
+00:39:09,959 --> 00:39:19,147
+say you multiply integral from A to B, you can decompose it into regions and then solve this integral numerically.
+
+334
+00:39:20,508 --> 00:39:28,616
+But for unbounded integrals that take from minus infinity to infinity, basically it is impossible, right?
+
+335
+00:39:28,636 --> 00:39:36,262
+Because we have a finite memory of computers and you can always create a counter example where it doesn't work.
+
+336
+00:39:37,183 --> 00:39:39,325
+And it's even worse in
+
+337
+00:39:39,811 --> 00:39:45,096
+in multidimensional spaces, so-called cursive dimensionality.
+
+338
+00:39:46,277 --> 00:39:54,525
+And this is why people are coming with many clever methods to take those integrals via sampling.
+
+339
+00:39:55,445 --> 00:39:59,609
+So sampling is essentially an algorithm to take an integral.
+
+340
+00:39:59,629 --> 00:40:06,075
+So with non-conjugate inference... So let me phrase it the other way around.
+
+341
+00:40:06,095 --> 00:40:07,877
+So with conjugate inference,
+
+342
+00:40:08,161 --> 00:40:14,049
+Those integrals, they can actually be simplified to an exact formula.
+
+343
+00:40:15,351 --> 00:40:18,916
+So you don't really need to solve the original integral.
+
+344
+00:40:18,956 --> 00:40:28,309
+You solve a much simpler problem because you can rearrange some terms and something just cancels out and you get the exact answer.
+
+345
+00:40:28,329 --> 00:40:32,255
+If it's not conjugate inference, you cannot do that in general.
+
+346
+00:40:33,256 --> 00:40:36,160
+So you need to actually solve this integral.
+
+347
+00:40:36,680 --> 00:40:56,189
+And here is why you need those approximation methods like sampling or projection, which essentially try to solve this problem, but at the cost of accuracy, because we cannot afford infinite memory in our computer.
+
+348
+00:40:56,209 --> 00:40:56,469
+Awesome.
+
+349
+00:40:56,489 --> 00:40:56,810
+I see.
+
+350
+00:40:56,890 --> 00:41:04,701
+So if I just try and... So it effectively boils down to clever ways to compute integrals in ways that it's not going to take too long.
+
+351
+00:41:05,102 --> 00:41:05,202
+Okay.
+
+352
+00:41:05,620 --> 00:41:31,307
+exactly exactly and you you also have to remember about dimensionality of your problems so for example as i mentioned one of the recent developments that we just uh included in our extent firm would allow you to project a high dimensional gaussian distributions uh
+
+353
+00:41:31,557 --> 00:41:38,845
+Because before, so a Gaussian distribution can be described with its mean and its covariance matrix.
+
+354
+00:41:40,707 --> 00:41:49,076
+So, which means that for high dimensional Gaussian distribution, the covariance matrix is quite large, so it grows.
+
+355
+00:41:49,437 --> 00:42:01,530
+And we recently added a simplified version of a Gaussian that doesn't store the entire covariance matrix, but only the diagonal of it and only
+
+356
+00:42:02,084 --> 00:42:05,088
+the same elements on the entire diagonal.
+
+357
+00:42:06,430 --> 00:42:16,946
+So the number of parameters is essentially linear to the dimensionality and it scales much, much better and it allows you to yet again solve bigger problems.
+
+358
+00:42:19,469 --> 00:42:21,813
+Yeah.
+
+359
+00:42:21,953 --> 00:42:25,979
+In general, this is a quite difficult problem.
+
+360
+00:42:28,322 --> 00:42:31,467
+I'll ask a couple questions from live chat, if that's okay.
+
+361
+00:42:33,016 --> 00:42:33,436
+Okay.
+
+362
+00:42:34,417 --> 00:42:34,678
+Okay.
+
+363
+00:42:35,398 --> 00:42:39,883
+Arun asked, is RxInfer being used in production right now?
+
+364
+00:42:43,306 --> 00:42:46,169
+Well, we actually have been contacted in the past.
+
+365
+00:42:46,569 --> 00:42:46,870
+Yes.
+
+366
+00:42:47,991 --> 00:42:53,556
+I'm not, I'm not aware of any company actively using it.
+
+367
+00:42:53,616 --> 00:43:02,365
+We actually, we have a spin out from a technical university of mind that we, yeah, we founded the startup.
+
+368
+00:43:03,053 --> 00:43:14,749
+from BIOSLAB group, which is called Lazy Dynamics, which the entire idea is to commercialize Ericsson-Ferrer to make it a professional toolbox with really good support.
+
+369
+00:43:15,209 --> 00:43:32,132
+I mean, it's always going to be free for research, but Lazy Dynamics will create nice tools around Ericsson-Ferrer to make the process of creating models easier,
+
+370
+00:43:32,332 --> 00:43:45,244
+making process of deploying those models easier, debugging models easier, but essentially RxInfer is free and perhaps someone is already using it in production, but we may not know it.
+
+371
+00:43:47,300 --> 00:43:48,301
+Cool, great.
+
+372
+00:43:48,601 --> 00:43:51,024
+Okay, next question from Dean tickles.
+
+373
+00:43:51,324 --> 00:43:54,828
+He wrote, Do your rules self organize?
+
+374
+00:43:55,169 --> 00:43:56,831
+Or do they remain constant?
+
+375
+00:43:57,431 --> 00:44:02,597
+Does the rule recognize its own limits of applicability and adjust accordingly?
+
+376
+00:44:03,278 --> 00:44:06,942
+I'm just wondering if these rules can morph into heuristics.
+
+377
+00:44:11,086 --> 00:44:13,249
+Sorry, you were glitching a bit.
+
+378
+00:44:13,309 --> 00:44:14,370
+Can you repeat the question?
+
+379
+00:44:14,941 --> 00:44:15,983
+Yeah.
+
+380
+00:44:16,003 --> 00:44:19,289
+Do your rules self-organize or do they remain constant?
+
+381
+00:44:19,830 --> 00:44:24,900
+Does the rule recognize its own limits of applicability and adjust accordingly?
+
+382
+00:44:25,381 --> 00:44:29,148
+I'm just wondering if these rules can morph into heuristics.
+
+383
+00:44:31,512 --> 00:44:37,624
+No, like message passing, if the question is about message passing update rules, they work independently.
+
+384
+00:44:38,549 --> 00:44:48,923
+And this is also one of the main ideas of this approach is to not have any sort of global variables.
+
+385
+00:44:48,943 --> 00:45:03,223
+And yeah, the graph is essentially each message is unaware of any other message or computations such that we can run them asynchronously and do not have any sort of shuttling mechanism
+
+386
+00:45:07,793 --> 00:45:35,758
+they should cooperate awesome okay next question from bert he wrote is it possible to add a deep learning encoder and train it using messages yeah we actually have i think we have an example in documentation where we use a neural network and we also use the normalizing flows inside ericsson fair so yeah that's definitely
+
+387
+00:45:36,346 --> 00:45:43,475
+We also have an example where we use differential equations to infer parameters of differential equations.
+
+388
+00:45:52,868 --> 00:45:56,092
+Maybe questions from UP students about the approach?
+
+389
+00:45:57,514 --> 00:45:57,714
+No?
+
+390
+00:46:01,119 --> 00:46:02,961
+Okay, that's good.
+
+391
+00:46:03,818 --> 00:46:06,763
+What do you all usually do in the meetings?
+
+392
+00:46:06,983 --> 00:46:11,310
+How does it go and how are you going to be taking things in the coming months?
+
+393
+00:46:13,674 --> 00:46:20,024
+Well, we already discussed the recent developments and already showed that.
+
+394
+00:46:20,324 --> 00:46:21,326
+We do exactly that.
+
+395
+00:46:21,386 --> 00:46:27,115
+We go through the current developments and we try to see what we can do next.
+
+396
+00:46:28,016 --> 00:46:31,682
+So maybe here, if someone in the chat
+
+397
+00:46:32,506 --> 00:46:35,991
+I would just post what, for example, they want to do, right?
+
+398
+00:46:36,031 --> 00:46:47,067
+Like what kind of applications they try to solve with Active Inference that would help us also to change our agenda.
+
+399
+00:46:47,087 --> 00:46:54,357
+Because we have some certain things in our agenda, so we want to continue with graph visualizations.
+
+400
+00:46:57,361 --> 00:46:58,783
+For example, in the current version,
+
+401
+00:46:59,422 --> 00:47:09,174
+We don't have constraints visualization, but constraints are pretty important for the inference.
+
+402
+00:47:09,635 --> 00:47:14,701
+So this is the next step in our agenda to also implement constraints visualization.
+
+403
+00:47:16,023 --> 00:47:23,072
+We also have non-conjugate posterior computation in our agenda, generalized inference in our agenda.
+
+404
+00:47:23,532 --> 00:47:27,117
+But for example, people can also comment on their uses.
+
+405
+00:47:27,805 --> 00:47:35,656
+Or they can also, for example, open a recent GitHub repository and open discussions, right?
+
+406
+00:47:35,696 --> 00:47:37,058
+So maybe not right now.
+
+407
+00:47:37,979 --> 00:47:50,657
+Maybe if someone watches this recording, or maybe someone who is online but still don't have a concrete example, you can always go to GitHub.
+
+408
+00:47:51,363 --> 00:48:01,515
+open discussions and just drop your ideas there and we can discuss and maybe we adjust our goals of the project together.
+
+409
+00:48:01,535 --> 00:48:05,239
+And we are also looking for collaborators.
+
+410
+00:48:05,820 --> 00:48:08,303
+Again, Fraser and Chris were super helpful.
+
+411
+00:48:08,403 --> 00:48:08,663
+Thanks.
+
+412
+00:48:09,565 --> 00:48:13,489
+But if more people want to collaborate, it's an open project.
+
+413
+00:48:13,790 --> 00:48:20,998
+You can always just join the organization on GitHub and drop your ideas and collaborate.
+
+414
+00:48:22,835 --> 00:48:23,296
+Awesome.
+
+415
+00:48:23,436 --> 00:48:32,891
+Also, I wanted to highlight Kobus's examples at Learnable Loop and also the documentation that you all maintain.
+
+416
+00:48:32,931 --> 00:48:42,767
+And just looking back at our meeting notes from the beginning of the year and looking at the version history of RxInfer.
+
+417
+00:48:42,747 --> 00:48:44,411
+It's something really new.
+
+418
+00:48:44,471 --> 00:48:50,386
+It's really been one of the highlights of the year and seeing how it's all developing and a coin tossed.
+
+419
+00:48:50,406 --> 00:48:59,389
+I mean, never has such a simple, seemingly simple statistical situation been such an amazing learning experience.
+
+420
+00:48:59,993 --> 00:49:16,230
+opening and it's just exciting to see how the examples start to flow in and then those are useful for learning and they're also useful for training code models and the
+
+421
+00:49:16,210 --> 00:49:36,463
+the the paradigm difference with rx infer which i think you very quickly move through with the app model declaration and reactive message passing is is really distinct from the script-like flow of essentially all other active implementations
+
+422
+00:49:36,443 --> 00:49:38,045
+So it's just really exciting to see.
+
+423
+00:49:38,245 --> 00:49:42,872
+And also that this isn't just about action perception modeling.
+
+424
+00:49:43,132 --> 00:49:47,298
+We also see in the examples more conventional statistical models.
+
+425
+00:49:47,998 --> 00:49:57,972
+So that helps bring continuity between the joint distributional modeling of active inference and all of these more standard statistical problems.
+
+426
+00:50:03,079 --> 00:50:04,881
+I also noticed that
+
+427
+00:50:05,249 --> 00:50:13,617
+because I stopped presenting, I had the chat on YouTube and I see a question, what's the best way to get started with the hiring sector?
+
+428
+00:50:14,958 --> 00:50:23,005
+And I think the best way to get started is to go to the documentation that is in the page that is called Getting Started.
+
+429
+00:50:24,186 --> 00:50:34,716
+But yeah, so basically to start with the documentation that goes through the process of installing the library, writing your first models,
+
+430
+00:50:35,287 --> 00:50:39,734
+And then we have also a big collection of examples.
+
+431
+00:50:41,055 --> 00:50:46,884
+As I already mentioned, maybe some of the applications you can already find here.
+
+432
+00:50:46,904 --> 00:50:52,492
+We have also examples about active inference, but not only.
+
+433
+00:50:52,532 --> 00:50:59,743
+So this global parameters utilization uses neural network under the hood.
+
+434
+00:51:00,584 --> 00:51:03,268
+So with LSTM-driven dynamics,
+
+435
+00:51:04,396 --> 00:51:06,319
+Something is broken.
+
+436
+00:51:06,399 --> 00:51:12,267
+We need to open the issue back.
+
+437
+00:51:13,068 --> 00:51:20,478
+But basically, this example uses Bayesian neural network to train parameters and then later on use it.
+
+438
+00:51:20,538 --> 00:51:23,502
+And we have also external examples from Cobus.
+
+439
+00:51:24,964 --> 00:51:34,217
+We have also a series of tutorials on RxInfer on YouTube from toko.jl.
+
+440
+00:51:34,838 --> 00:52:03,580
+uh from theory point of view i really like the book that is called uh model-based machine learning which only by john win so this is a also a very good starting point it also explains the concept of uh yeah factor graphs stochastic nodes deterministic nodes the run inference but also it it explains the concept of running
+
+441
+00:52:03,982 --> 00:52:05,323
+inference, essentially.
+
+442
+00:52:09,328 --> 00:52:11,150
+I have a question, actually.
+
+443
+00:52:11,170 --> 00:52:19,939
+So the project of no conjugate posterior computation, I mean, it sounds similar to the variational inference.
+
+444
+00:52:20,259 --> 00:52:21,280
+How is that graded?
+
+445
+00:52:21,921 --> 00:52:26,726
+So variational inference is a very, very good question.
+
+446
+00:52:26,746 --> 00:52:32,993
+So variational inference indeed reframes the original problem.
+
+447
+00:52:33,530 --> 00:52:39,238
+as an optimization problem and you can solve it as a black box indeed.
+
+448
+00:52:39,258 --> 00:52:46,888
+So you parameterize your distribution, you take gradients and you do a simple optimization problem.
+
+449
+00:52:46,988 --> 00:52:51,114
+And actually it does already solve many problems.
+
+450
+00:52:51,955 --> 00:52:58,103
+But in our recent case, we actually do not treat models as black boxes.
+
+451
+00:52:58,924 --> 00:53:03,030
+We decompose those computations in a series of smaller computations
+
+452
+00:53:04,529 --> 00:53:10,694
+which in a sense helps us because we don't need to run this big global optimization procedure.
+
+453
+00:53:11,535 --> 00:53:20,463
+But in the result of this decomposition, this individual computations messages, they still may be difficult.
+
+454
+00:53:21,844 --> 00:53:30,512
+And this projection algorithm is indeed sort of a variational inference, but at a smaller scale.
+
+455
+00:53:31,432 --> 00:53:33,674
+Okay.
+
+456
+00:53:34,295 --> 00:53:34,435
+Yeah.
+
+457
+00:53:34,769 --> 00:53:50,007
+But what you maybe referred to, I can also refer to this ATDI algorithm that they also showed in my slides, automatic differentiation variational inference, which takes the entire model as a black box that just differentiates through it.
+
+458
+00:53:50,447 --> 00:53:53,210
+And yeah, it doesn't care about contribution.
+
+459
+00:53:56,875 --> 00:53:57,756
+Thank you for this.
+
+460
+00:53:58,036 --> 00:54:03,122
+Any last short comments from any of the RxInferred team?
+
+461
+00:54:09,515 --> 00:54:31,658
+okay thank you again for for letting us kind of wander into your lab meeting and really looking forward to the collaborations that will continue okay yeah thank you thank you again for inviting us uh and yeah we are looking forward all right until next time bye
