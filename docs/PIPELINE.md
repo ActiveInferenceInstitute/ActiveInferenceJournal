@@ -1,7 +1,7 @@
 # Pipeline & provenance
 
 This repository is **generated and maintained** by the
-[Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal-Utilities) engine.
+[Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities) engine.
 The journal holds the *content*; Journal-Utilities holds the *code* that produces it.
 
 ## End to end

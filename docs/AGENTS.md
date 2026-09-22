@@ -6,7 +6,7 @@ Technical documentation for ActiveInferenceJournal. Start at [`README.md`](READM
 
 - This folder is **hand-written technical docs**, not generated. Edit prose freely; keep
   it accurate to the actual layout and the
-  [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal-Utilities)
+  [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities)
   generators.
 - The **schema of record** is [`SCHEMA.md`](SCHEMA.md). If the per-item structure changes,
   update it here and mirror it in Journal-Utilities `docs/JOURNAL_SCHEMA.md`.
