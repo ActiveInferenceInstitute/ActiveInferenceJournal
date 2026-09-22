@@ -19,7 +19,7 @@ but the repository has a hard rule about credentials — see the security note i
 ## Reporting
 
 This repository is generated and validated by the
-[Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal-Utilities)
+[Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities)
 pipeline. If you discover a credential, a leaked internal path, or any other
 security issue:
 

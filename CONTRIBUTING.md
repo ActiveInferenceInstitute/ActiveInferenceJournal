@@ -10,7 +10,7 @@ before contributing.
 ## What lives here vs. in Journal-Utilities
 
 This repo holds the *content*. The *code* that generates and validates it lives in the
-separate [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal-Utilities)
+separate [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities)
 repository.
 
 - **Hand-editable here:** `docs/` (schema, organization, pipeline), root and structural
