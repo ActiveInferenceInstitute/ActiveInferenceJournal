@@ -33,3 +33,10 @@ materials from the Active Inference Institute video library.
 
 - `main` — content without audio (lightweight).
 - `audio` — `main` + `<item>/audio/<name>.64k.m4a` (64 kbps media), same layout.
+
+See also: [`m4-site-spec.md`](m4-site-spec.md) — spec for the M4 static
+per-item pages + sitemap/robots (for the Journal_Utilities builder agent) —
+and [`misfiling-findings.md`](misfiling-findings.md) — captions/translations
+misfiling dispositions (Textbook Cohort 2 Meeting 20 SRT; 2021 Symposium
+`Translations/` robotics duplicates).
+
