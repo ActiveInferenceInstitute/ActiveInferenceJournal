@@ -3623,1559 +3623,1280 @@ stored in a single-part interval item; duplicate copies (`(2)` suffixes); files 
 | `Active Inference ~ Twitter Spaces #002 ~ Web3 survive without cognitive modeling.zh-Hans.srt` | `zh-Hans` | `translations/Sb8A0jNzWPE.zh-Hans.srt` | yes (title exact) |  |
 | `Active Inference ~ Twitter Spaces #002 ~ Web3 survive without cognitive modeling.zh-Hant.srt` | `zh-Hant` | `translations/Sb8A0jNzWPE.zh-Hant.srt` | yes (title exact) |  |
 
-## REMAINING (not migrated in part 2)
+## Conflict-resolution pass (2026-09-23, pass 2b)
 
-1340 files remain in their original `Translations/` paths, untouched,
-pending per-file resolution (conflict reasons below). Per-series follow-up PRs
-must resolve each row before it can be normalized.
+The 917 collapse-conflict rows of part 1 were resolved as follows:
+
+| Outcome | Files |
+|---|---|
+| Migrated — unique verified video_id, plain target | 122 |
+| Migrated — talkslug target `<vid>.<lang>.<talkslug>.srt` (per-talk files in single-part interval items) | 182 |
+| Migrated — cross-item rescue (INDEX title matched exactly one part of a *different* item) | 13 |
+| Quarantined to `translations/conflicts/<series>/` | 600 |
+
+Verification used: normalized-stem == part-title (INDEX cross-check), unique
+`#<n>.<m>` episode tokens, YouTube-dump provenance (plain `.<lang>.srt` names
+preferred over derivative regenerations), and byte-level dedupe. Files with
+multiple genuinely-different versions for one target cannot be machine-resolved
+and are quarantined with their original names (md5-prefixed) under
+`translations/conflicts/<series>/`; their collisions are listed in the CONFLICTS
+appendix below. `previous_paths` was written for migrated/rescued files only.
+
+
+## CONFLICTS appendix (quarantined this pass)
+
+Each row: quarantined file (md5-prefixed under `translations/conflicts/<series>/`)
+<- original `Translations/` path, with reason.
+
+### `data/video/activeinferenceinstitute/Applied Active Inference Symposium/2023 Ecosystem Symposium/First_Interval` — 51 quarantined
+
+- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).de.srt` — superseded-by-dump
+- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).es.srt` — superseded-by-dump
+- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).fr.srt` — superseded-by-dump
+- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).it.srt` — superseded-by-dump
+- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).ja.srt` — superseded-by-dump
+- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).ko.srt` — superseded-by-dump
+- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).nl.srt` — superseded-by-dump
+- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).pt.srt` — superseded-by-dump
+- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).ru.srt` — superseded-by-dump
+- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).zh-Hans.srt` — superseded-by-dump
+- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).zh-Hant.srt` — superseded-by-dump
+- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).de.srt` — superseded-by-dump
+- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).es.srt` — superseded-by-dump
+- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).fr.srt` — superseded-by-dump
+- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).it.srt` — superseded-by-dump
+- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).ja.srt` — superseded-by-dump
+- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).ko.srt` — superseded-by-dump
+- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).nl.srt` — superseded-by-dump
+- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).pt.srt` — superseded-by-dump
+- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).ru.srt` — superseded-by-dump
+- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).zh-Hans.srt` — superseded-by-dump
+- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).zh-Hant.srt` — superseded-by-dump
+- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).de.srt` — superseded-by-dump
+- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).es.srt` — superseded-by-dump
+- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).fr.srt` — superseded-by-dump
+- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).it.srt` — superseded-by-dump
+- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).ja.srt` — superseded-by-dump
+- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).ko.srt` — superseded-by-dump
+- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).nl.srt` — superseded-by-dump
+- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).pt.srt` — superseded-by-dump
+- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).ru.srt` — superseded-by-dump
+- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).zh-Hans.srt` — superseded-by-dump
+- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).zh-Hant.srt` — superseded-by-dump
+- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).de.srt` — superseded-by-dump
+- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).es.srt` — superseded-by-dump
+- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).fr.srt` — superseded-by-dump
+- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).it.srt` — superseded-by-dump
+- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).ja.srt` — superseded-by-dump
+- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).ko.srt` — superseded-by-dump
+- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).nl.srt` — superseded-by-dump
+- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).pt.srt` — superseded-by-dump
+- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).ru.srt` — superseded-by-dump
+- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).zh-Hans.srt` — superseded-by-dump
+- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).zh-Hant.srt` — superseded-by-dump
+- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).de.srt` — superseded-by-dump
+- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).es.srt` — superseded-by-dump
+- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).fr.srt` — superseded-by-dump
+- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).it.srt` — superseded-by-dump
+- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).nl.srt` — superseded-by-dump
+- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).pt.srt` — superseded-by-dump
+- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).ru.srt` — superseded-by-dump
+
+### `data/video/activeinferenceinstitute/Courses/ActiveInferenceForTheSocialSciences/ActInf_Basics_Lecture` — 11 quarantined
+
+- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.de.srt` — dump-variant
+- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.es.srt` — dump-variant
+- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.fr.srt` — dump-variant
+- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.it.srt` — dump-variant
+- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.ja.srt` — dump-variant
+- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.ko.srt` — dump-variant
+- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.nl.srt` — dump-variant
+- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.pt.srt` — dump-variant
+- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.ru.srt` — dump-variant
+- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.zh-Hans.srt` — dump-variant
+- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.zh-Hant.srt` — dump-variant
+
+### `data/video/activeinferenceinstitute/Courses/ActiveInferenceForTheSocialSciences/CollectiveBehavior_Discussion` — 16 quarantined
+
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.de.srt` — dump-variant
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.es.srt` — dump-variant
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.fr.srt` — dump-variant
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.it.srt` — dump-variant
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.ja.srt` — dump-variant
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.ko.srt` — dump-variant
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.m4a.sentences.csv_transcript.de.srt` — superseded-by-dump
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.m4a.sentences.csv_transcript.es.srt` — superseded-by-dump
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.m4a.sentences.csv_transcript.fr.srt` — superseded-by-dump
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.m4a.sentences.csv_transcript.it.srt` — superseded-by-dump
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.m4a.sentences.csv_transcript.pt.srt` — superseded-by-dump
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.nl.srt` — dump-variant
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.pt.srt` — dump-variant
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.ru.srt` — dump-variant
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.zh-Hans.srt` — dump-variant
+- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.zh-Hant.srt` — dump-variant
+
+### `data/video/activeinferenceinstitute/GuestStream/GuestStream_013` — 2 quarantined
+
+- `ActInfLab GuestStream #013.1 ~ Adam Safron.chi(translated) (2).chi(translated).srt` — rescue-version-conflict:episode-token
+- `ActInfLab GuestStream #013.1 ~ Adam Safron.chi(translated).chi(translated).srt` — rescue-version-conflict:episode-token
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_001` — 17 quarantined
+
+- `Active Inference Podcast #001 “Narrative as active inference.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference Podcast #001 “Narrative as active inference.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference Podcast #001 “Narrative as active inference.dut(translated).dut(translated).srt` — multiple-versions-no-dump
+- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).de.srt` — superseded-by-dump
+- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).es.srt` — superseded-by-dump
+- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).fr.srt` — superseded-by-dump
+- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).it.srt` — superseded-by-dump
+- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).ja.srt` — multiple-versions-no-dump
+- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).ko.srt` — multiple-versions-no-dump
+- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).nl.srt` — multiple-versions-no-dump
+- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).pt.srt` — multiple-versions-no-dump
+- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).ru.srt` — multiple-versions-no-dump
+- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).zh-Hans.srt` — multiple-versions-no-dump
+- `Active Inference Podcast #001 “Narrative as active inference.jpn(translated).jpn(translated).srt` — multiple-versions-no-dump
+- `Active Inference Podcast #001 “Narrative as active inference.kor(translated).kor(translated).srt` — multiple-versions-no-dump
+- `Active Inference Podcast #001 “Narrative as active inference.por(translated).por(translated).srt` — multiple-versions-no-dump
+- `Active Inference Podcast #001 “Narrative as active inference.rus(translated).rus(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_002` — 11 quarantined
+
+- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).de.srt` — superseded-by-dump
+- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).es.srt` — superseded-by-dump
+- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).fr.srt` — superseded-by-dump
+- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).it.srt` — superseded-by-dump
+- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).ja.srt` — superseded-by-dump
+- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).ko.srt` — superseded-by-dump
+- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).nl.srt` — superseded-by-dump
+- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).pt.srt` — superseded-by-dump
+- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).ru.srt` — superseded-by-dump
+- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).zh-Hans.srt` — superseded-by-dump
+- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).zh-Hant.srt` — superseded-by-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_003` — 6 quarantined
+
+- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.eng(transcribed).eng(transcribed).de.srt` — superseded-by-dump
+- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.eng(transcribed).eng(transcribed).es.srt` — superseded-by-dump
+- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.eng(transcribed).eng(transcribed).fr.srt` — superseded-by-dump
+- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.eng(transcribed).eng(transcribed).it.srt` — superseded-by-dump
+- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.eng(transcribed).eng(transcribed).nl.srt` — superseded-by-dump
+- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.ger(translated).ger(translated).srt` — superseded-by-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_004` — 18 quarantined
+
+- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).de.srt` — superseded-by-dump
+- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).es.srt` — superseded-by-dump
+- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).fr.srt` — superseded-by-dump
+- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).it.srt` — superseded-by-dump
+- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).ja.srt` — superseded-by-dump
+- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).nl.srt` — superseded-by-dump
+- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).pt.srt` — superseded-by-dump
+- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).ru.srt` — superseded-by-dump
+- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).de.srt` — superseded-by-dump
+- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).es.srt` — superseded-by-dump
+- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).fr.srt` — superseded-by-dump
+- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).it.srt` — superseded-by-dump
+- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).ja.srt` — superseded-by-dump
+- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).ko.srt` — superseded-by-dump
+- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).nl.srt` — superseded-by-dump
+- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).pt.srt` — superseded-by-dump
+- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).ru.srt` — superseded-by-dump
+- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).zh-Hans.srt` — superseded-by-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_005` — 63 quarantined
+
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).dut(translated).dut(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).de.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).es.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).fr.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).it.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ja.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ko.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).nl.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).pt.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ru.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).fre(translated).fre(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).ger(translated).ger(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).ita(translated).ita(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).jpn(translated).jpn(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).kor(translated).kor(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).por(translated).por(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).rus(translated).rus(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).spa(translated).spa(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).dut(translated).dut(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).de.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).es.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).fr.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).it.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ja.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ko.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).nl.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).pt.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ru.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).fre(translated).fre(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).ger(translated).ger(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).ita(translated).ita(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).jpn(translated).jpn(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).kor(translated).kor(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).por(translated).por(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).rus(translated).rus(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).spa(translated).spa(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).dut(translated).dut(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).de.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).es.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).fr.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).it.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ja.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ko.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).nl.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).pt.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ru.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).fre(translated).fre(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).ger(translated).ger(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).ita(translated).ita(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).jpn(translated).jpn(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).kor(translated).kor(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).por(translated).por(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).rus(translated).rus(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).spa(translated).spa(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_006` — 21 quarantined
+
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.dut(translated).dut(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).de.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).es.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).fr.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).it.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).ja.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).ko.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).nl.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).pt.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).ru.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).zh-Hans.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.fre(translated).fre(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.ger(translated).ger(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.ita(translated).ita(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.jpn(translated).jpn(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.kor(translated).kor(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.por(translated).por(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.rus(translated).rus(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.spa(translated).spa(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_007` — 62 quarantined
+
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).dut(translated).dut(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).de.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).es.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).fr.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).it.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ja.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ko.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).nl.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).pt.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ru.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).fre(translated).fre(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).ger(translated).ger(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).ita(translated).ita(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).jpn(translated).jpn(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).kor(translated).kor(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).por(translated).por(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).rus(translated).rus(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).spa(translated).spa(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).dut(translated).dut(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).de.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).es.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).fr.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).it.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ja.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ko.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).nl.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).pt.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ru.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).fre(translated).fre(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).ger(translated).ger(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).ita(translated).ita(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).jpn(translated).jpn(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).kor(translated).kor(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).por(translated).por(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).rus(translated).rus(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).spa(translated).spa(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).chi(translated) (2).chi(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).chi(translated).chi(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).de.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).dut(translated).dut(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).de.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).es.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).fr.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).it.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ja.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ko.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).nl.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).pt.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ru.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).fr.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).ita(translated).ita(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).jpn(translated).jpn(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).kor(translated).kor(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).por(translated).por(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).rus(translated).rus(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).spa(translated).spa(translated).srt` — rescue-version-conflict:episode-token
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_008` — 63 quarantined
+
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).dut(translated).dut(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).de.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).es.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).fr.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).it.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ja.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ko.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).nl.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).pt.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ru.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).fre(translated).fre(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).ger(translated).ger(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).ita(translated).ita(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).jpn(translated).jpn(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).kor(translated).kor(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).por(translated).por(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).rus(translated).rus(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.0 “Scaling active inference  (2019).spa(translated).spa(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).dut(translated).dut(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).de.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).es.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).fr.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).it.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ja.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ko.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).nl.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).pt.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ru.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).fre(translated).fre(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).ger(translated).ger(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).ita(translated).ita(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).jpn(translated).jpn(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).kor(translated).kor(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).por(translated).por(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).rus(translated).rus(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.1 “Scaling active inference  (2019).spa(translated).spa(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).chi(translated) (2).chi(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).chi(translated).chi(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).dut(translated).dut(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).de.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).es.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).fr.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).it.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ja.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ko.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).nl.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).pt.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ru.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).fre(translated).fre(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).ger(translated).ger(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).ita(translated).ita(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).jpn(translated).jpn(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).kor(translated).kor(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).por(translated).por(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).rus(translated).rus(translated).srt` — rescue-version-conflict:episode-token
+- `Active Inference podcast #008.2 “Scaling active inference  (2019).spa(translated).spa(translated).srt` — rescue-version-conflict:episode-token
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_009` — 21 quarantined
+
+- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).de.srt` — multiple-versions-no-dump
+- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).es.srt` — multiple-versions-no-dump
+- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).fr.srt` — multiple-versions-no-dump
+- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).it.srt` — multiple-versions-no-dump
+- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).ja.srt` — multiple-versions-no-dump
+- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).ko.srt` — multiple-versions-no-dump
+- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).nl.srt` — multiple-versions-no-dump
+- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).pt.srt` — multiple-versions-no-dump
+- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).ru.srt` — multiple-versions-no-dump
+- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).zh-Hans.srt` — multiple-versions-no-dump
+- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).dut(translated).dut(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).fre(translated).fre(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).ger(translated).ger(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).ita(translated).ita(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).jpn(translated).jpn(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).kor(translated).kor(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).por(translated).por(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).rus(translated).rus(translated).srt` — multiple-versions-no-dump
+- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).spa(translated).spa(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_010` — 42 quarantined
+
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).dut(translated).dut(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).de.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).es.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).fr.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).it.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).ja.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).ko.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).nl.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).pt.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).ru.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).zh-Hans.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).fre(translated).fre(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).ger(translated).ger(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).ita(translated).ita(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).jpn(translated).jpn(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).kor(translated).kor(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).por(translated).por(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).rus(translated).rus(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).spa(translated).spa(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).dut(translated).dut(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).de.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).es.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).fr.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).it.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).ja.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).ko.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).nl.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).pt.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).ru.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).zh-Hans.srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).fre(translated).fre(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).ger(translated).ger(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).ita(translated).ita(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).jpn(translated).jpn(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).kor(translated).kor(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).por(translated).por(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).rus(translated).rus(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).spa(translated).spa(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_011` — 2 quarantined
+
+- `ActInfLab Livestream #011.1  Sophisticated Affective Inference Simulating Anticipatory  (2020).chi(translated) (2).chi(translated).srt` — rescue-version-conflict:episode-token
+- `ActInfLab Livestream #011.1  Sophisticated Affective Inference Simulating Anticipatory  (2020).chi(translated).chi(translated).srt` — rescue-version-conflict:episode-token
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_013` — 6 quarantined
+
+- `ActInfLab Livestream #013.0  Cybernetic Big Five Theory with the Free Energy Principle.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #013.0  Cybernetic Big Five Theory with the Free Energy Principle.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #013.1  Cybernetic Big Five Theory with the Free Energy Principle....chi(translated) (2).chi(translated).srt` — rescue-version-conflict:episode-token
+- `ActInfLab Livestream #013.1  Cybernetic Big Five Theory with the Free Energy Principle....chi(translated).chi(translated).srt` — rescue-version-conflict:episode-token
+- `ActInfLab Livestream #013.2  Cybernetic Big Five Theory with the Free Energy Principle.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #013.2  Cybernetic Big Five Theory with the Free Energy Principle.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_014` — 6 quarantined
+
+- `ActInfLab Livestream #014.0 ~ The Math is not the Territory Navigating the Free Energy Principle.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #014.0 ~ The Math is not the Territory Navigating the Free Energy Principle.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #014.1 ~ The Math is not the Territory Navigating the Free Energy Principle.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #014.1 ~ The Math is not the Territory Navigating the Free Energy Principle.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #014.2 ~ The Math is not the Territory Navigating the Free Energy Principle.chi(translated) (2).chi(translated).srt` — rescue-version-conflict:episode-token
+- `ActInfLab Livestream #014.2 ~ The Math is not the Territory Navigating the Free Energy Principle.chi(translated).chi(translated).srt` — rescue-version-conflict:episode-token
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_015` — 6 quarantined
+
+- `ActInfLab Livestream #015.0 ~ “Free-Energy Principle, Computationalism and Realism a Tragedy.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #015.0 ~ “Free-Energy Principle, Computationalism and Realism a Tragedy.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #015.1 ~ “Free-Energy Principle, Computationalism and Realism a Tragedy.chi(translated) (2).chi(translated).srt` — rescue-dest-occupied
+- `ActInfLab Livestream #015.1 ~ “Free-Energy Principle, Computationalism and Realism a Tragedy.chi(translated).chi(translated).srt` — rescue-dest-occupied
+- `ActInfLab Livestream #015.2 ~ “Free-Energy Principle, Computationalism and Realism a Tragedy.chi(translated) (2).chi(translated).srt` — rescue-dest-occupied
+- `ActInfLab Livestream #015.2 ~ “Free-Energy Principle, Computationalism and Realism a Tragedy.chi(translated).chi(translated).srt` — rescue-dest-occupied
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_016` — 4 quarantined
+
+- `ActInfLab Livestream #016.0 “Neural correlates of consciousness under the FEP.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #016.0 “Neural correlates of consciousness under the FEP.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #016.1 “Neural correlates of consciousness under the FEP.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #016.1 “Neural correlates of consciousness under the FEP.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_017` — 4 quarantined
+
+- `ActInfLab Livestream #017.0 ~ Information flow in context-dependent hierarchical Bayesian inference.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #017.0 ~ Information flow in context-dependent hierarchical Bayesian inference.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #017.1 ~ Information flow in context-dependent hierarchical Bayesian inference.chi(translated) (2).chi(translated).srt` — rescue-version-conflict:episode-token
+- `ActInfLab Livestream #017.1 ~ Information flow in context-dependent hierarchical Bayesian inference.chi(translated).chi(translated).srt` — rescue-version-conflict:episode-token
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_018` — 6 quarantined
+
+- `ActInfLab Livestream #018.0 ~ The predictive global neuronal workspace A formal act inf model.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #018.0 ~ The predictive global neuronal workspace A formal act inf model.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #018.1 ~ The predictive global neuronal workspace A formal act inf model.chi(translated) (2).chi(translated).srt` — rescue-version-conflict:episode-token
+- `ActInfLab Livestream #018.1 ~ The predictive global neuronal workspace A formal act inf model.chi(translated).chi(translated).srt` — rescue-version-conflict:episode-token
+- `ActInfLab Livestream #018.2 ~ The predictive global neuronal workspace A formal act inf model.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #018.2 ~ The predictive global neuronal workspace A formal act inf model.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_019` — 6 quarantined
+
+- `ActInfLab Livestream #019.0 ~ Deeply Felt Affect The Emergence of Valence in Deep Active Inference.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #019.0 ~ Deeply Felt Affect The Emergence of Valence in Deep Active Inference.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #019.1 ~ Deeply Felt Affect The Emergence of Valence in Deep Active Inference.chi(translated) (2).chi(translated).srt` — rescue-version-conflict:episode-token
+- `ActInfLab Livestream #019.1 ~ Deeply Felt Affect The Emergence of Valence in Deep Active Inference.chi(translated).chi(translated).srt` — rescue-version-conflict:episode-token
+- `ActInfLab Livestream #019.2 ~ Deeply Felt Affect The Emergence of Valence in Deep Active Inference.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #019.2 ~ Deeply Felt Affect The Emergence of Valence in Deep Active Inference.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_020` — 6 quarantined
+
+- `ActInfLab Livestream #020.0 ~ The Emperor’s New Markov Blankets.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #020.0 ~ The Emperor’s New Markov Blankets.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #020.1 ~ The Emperor’s New Markov Blankets (full upload).chi(translated) (2).chi(translated).srt` — rescue-version-conflict:episode-token
+- `ActInfLab Livestream #020.1 ~ The Emperor’s New Markov Blankets (full upload).chi(translated).chi(translated).srt` — rescue-version-conflict:episode-token
+- `ActInfLab Livestream #020.2 ~ The Emperor’s New Markov Blankets.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #020.2 ~ The Emperor’s New Markov Blankets.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_021` — 4 quarantined
+
+- `ActInfLab Livestream #021.04 ~ John Boik.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #021.04 ~ John Boik.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #021.2 ~ John Boik.ger(translated) (2).ger(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #021.2 ~ John Boik.ger(translated).ger(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_023` — 2 quarantined
+
+- `ActInfLab Livestream #023.2 ~   Embodied skillful performance where the action is.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #023.2 ~   Embodied skillful performance where the action is.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_024` — 6 quarantined
+
+- `ActInfLab Livestream #024.0 ~  An empirical evaluation of active inference in multi-armed bandits.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #024.0 ~  An empirical evaluation of active inference in multi-armed bandits.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #024.1 ~  An empirical evaluation of active inference in multi-armed bandits.chi(translated) (2).chi(translated).srt` — rescue-dest-occupied
+- `ActInfLab Livestream #024.1 ~  An empirical evaluation of active inference in multi-armed bandits.chi(translated).chi(translated).srt` — rescue-dest-occupied
+- `ActInfLab Livestream #024.2 ~  An empirical evaluation of active inference in multi-armed bandits.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInfLab Livestream #024.2 ~  An empirical evaluation of active inference in multi-armed bandits.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_025` — 2 quarantined
+
+- `ActInfLab Livestream #025.1 ~  The Computational Boundary of a Self.chi(translated) (2).chi(translated).srt` — rescue-dest-occupied
+- `ActInfLab Livestream #025.1 ~  The Computational Boundary of a Self.chi(translated).chi(translated).srt` — rescue-dest-occupied
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_026` — 2 quarantined
+
+- `ActInfLab Livestream #026.1 ~ “Bayesian Mechanics for Stationary Processes”.chi(translated) (2).chi(translated).srt` — rescue-version-conflict:episode-token
+- `ActInfLab Livestream #026.1 ~ “Bayesian Mechanics for Stationary Processes”.chi(translated).chi(translated).srt` — rescue-version-conflict:episode-token
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_029` — 6 quarantined
+
+- `ActInf Livestream #029.0 ~ “Active Inferants An Active Inference Framework for Ant Colony Behavior”.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Livestream #029.0 ~ “Active Inferants An Active Inference Framework for Ant Colony Behavior”.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Livestream #029.1 ~ “Active Inferants An Active Inference Framework for Ant Colony Behavior”.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Livestream #029.1 ~ “Active Inferants An Active Inference Framework for Ant Colony Behavior”.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Livestream #029.2 ~ “Active Inferants An Active Inference Framework for Ant Colony Behavior”.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Livestream #029.2 ~ “Active Inferants An Active Inference Framework for Ant Colony Behavior”.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_030` — 6 quarantined
+
+- `ActInf Livestream #030.0 ~ “How to count biological minds symbiosis, the free energy principle....chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Livestream #030.0 ~ “How to count biological minds symbiosis, the free energy principle....chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Livestream #030.1 ~ “How to count biological minds symbiosis, the free energy principle....chi(translated) (2).chi(translated).srt` — rescue-dest-occupied
+- `ActInf Livestream #030.1 ~ “How to count biological minds symbiosis, the free energy principle....chi(translated).chi(translated).srt` — rescue-dest-occupied
+- `ActInf Livestream #030.2 ~ “How to count biological minds symbiosis, the free energy principle....chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Livestream #030.2 ~ “How to count biological minds symbiosis, the free energy principle....chi(translated).chi(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_040` — 2 quarantined
+
+- `ActInf Livestream #040.2 ~  A free energy principle for generic quantum systems.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Livestream #040.2 ~  A free energy principle for generic quantum systems.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_045` — 2 quarantined
+
+- `ActInf Livestream #045.0 ~  The free energy principle made simpler but not too simple.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Livestream #045.0 ~  The free energy principle made simpler but not too simple.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_046` — 4 quarantined
+
+- `ActInf Livestream #046.0 ~  Active inference models do not contradict folk psychology.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Livestream #046.0 ~  Active inference models do not contradict folk psychology.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Livestream #046.2 ~  Active inference models do not contradict folk psychology.chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Livestream #046.2 ~  Active inference models do not contradict folk psychology.chi(translated).chi(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/MathStream/MathStream_001` — 19 quarantined
+
+- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.chi(translated-Simp).chi(translated).srt` — superseded-by-dump
+- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.chi(translated-Trad) (2).chi(translated).srt` — superseded-by-dump
+- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.dut(translated).dut(translated).srt` — superseded-by-dump
+- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.fre(translated).fre(translated).srt` — superseded-by-dump
+- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.ger(translated).ger(translated).srt` — superseded-by-dump
+- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.ita(translated).ita(translated).srt` — superseded-by-dump
+- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.jpn(translated).jpn(translated).srt` — superseded-by-dump
+- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.kor(translated).kor(translated).srt` — superseded-by-dump
+- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.por(translated).por(translated).srt` — superseded-by-dump
+- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.rus(translated).rus(translated).srt` — superseded-by-dump
+- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.spa(translated).spa(translated).srt` — superseded-by-dump
+- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).de.srt` — superseded-by-dump
+- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).es.srt` — superseded-by-dump
+- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).fr.srt` — superseded-by-dump
+- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).it.srt` — superseded-by-dump
+- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).ja.srt` — superseded-by-dump
+- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).nl.srt` — superseded-by-dump
+- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).pt.srt` — superseded-by-dump
+- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).ru.srt` — superseded-by-dump
+
+### `data/video/activeinferenceinstitute/ModelStream/ModelStream_002` — 22 quarantined
+
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.chi(translated) (2).chi(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.chi(translated).chi(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.dut(translated).dut(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.fre(translated).fre(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.ger(translated).ger(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.ita(translated).ita(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.jpn(translated).jpn(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.kor(translated).kor(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.por(translated).por(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.rus(translated).rus(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.spa(translated).spa(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).de.srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).es.srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).fr.srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).it.srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).ja.srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).ko.srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).nl.srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).pt.srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).ru.srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).zh-Hans.srt` — superseded-by-dump
+- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).zh-Hant.srt` — superseded-by-dump
+
+### `data/video/activeinferenceinstitute/ModelStream/ModelStream_003` — 22 quarantined
+
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.chi(translated) (2).chi(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.chi(translated).chi(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.de.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.es.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.fr.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.it.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.ja.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.kor(translated).kor(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.nl.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.pt.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.ru.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).ko.srt` — superseded-by-dump
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).zh-Hans.srt` — superseded-by-dump
+- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).zh-Hant.srt` — superseded-by-dump
+- `ActInfLab ModelStream #003.1.de.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1.es.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1.fr.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1.it.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1.ja.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1.nl.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1.pt.srt` — multiple-dump-versions
+- `ActInfLab ModelStream #003.1.ru.srt` — multiple-dump-versions
+
+### `data/video/activeinferenceinstitute/ModelStream/ModelStream_004` — 22 quarantined
+
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.chi(translated) (2).chi(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.chi(translated).chi(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.dut(translated).dut(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).de.srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).es.srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).fr.srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).it.srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).ja.srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).ko.srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).nl.srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).pt.srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).ru.srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).zh-Hans.srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).zh-Hant.srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.fre(translated).fre(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.ger(translated).ger(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.ita(translated).ita(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.jpn(translated).jpn(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.kor(translated).kor(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.por(translated).por(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.rus(translated).rus(translated).srt` — superseded-by-dump
+- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.spa(translated).spa(translated).srt` — superseded-by-dump
+
+### `data/video/activeinferenceinstitute/ModelStream/ModelStream_007` — 1 quarantined
+
+- `Active Inference ModelStream #007.1 ~ Conor Heins & Daphne Demekas ~ pymdp.es (1).srt` — superseded-by-dump
+
+### `data/video/activeinferenceinstitute/MorphStream/MorphStream_001` — 22 quarantined
+
+- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.de.srt` — superseded-by-dump
+- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.es.srt` — superseded-by-dump
+- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.fr.srt` — superseded-by-dump
+- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.it.srt` — superseded-by-dump
+- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.ja.srt` — superseded-by-dump
+- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.ko.srt` — superseded-by-dump
+- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.nl.srt` — superseded-by-dump
+- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.pt.srt` — superseded-by-dump
+- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.ru.srt` — superseded-by-dump
+- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.zh-Hans.srt` — superseded-by-dump
+- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.zh-Hant.srt` — superseded-by-dump
+- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.de.srt` — superseded-by-dump
+- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.es.srt` — superseded-by-dump
+- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.fr.srt` — superseded-by-dump
+- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.it.srt` — superseded-by-dump
+- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.ja.srt` — superseded-by-dump
+- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.ko.srt` — superseded-by-dump
+- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.nl.srt` — superseded-by-dump
+- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.pt.srt` — superseded-by-dump
+- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.ru.srt` — superseded-by-dump
+- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.zh-Hans.srt` — superseded-by-dump
+- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.zh-Hant.srt` — superseded-by-dump
+
+### `data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_003` — 2 quarantined
+
+- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 3 (Appendix A + Appendix B + 2nd hour discussion).chi(translated) (2).chi(translated).srt` — multiple-versions-no-dump
+- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 3 (Appendix A + Appendix B + 2nd hour discussion).chi(translated).chi(translated).srt` — multiple-versions-no-dump
+
+### `data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_004` — 1 quarantined
+
+- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 4 (Chapter 2 pt. 1).chi(translated).chi(translated).srt` — byte-identical-extra
+
+### `data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_005` — 1 quarantined
+
+- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 5 (Chapter 2 pt. 2).chi(translated).chi(translated).srt` — byte-identical-extra
+
+### `data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_006` — 1 quarantined
+
+- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 6 (Chapter 3 pt. 1).chi(translated).chi(translated).srt` — byte-identical-extra
+
+### `data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_007` — 1 quarantined
+
+- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 7 (Chapter 3 pt. 2).chi(translated).chi(translated).srt` — byte-identical-extra
+
+
+## REMAINING (still not migrated)
+
+423 files remain untouched at their original `Translations/` paths
+(machine-unresolvable: no verified video_id/language, unverified single-part, or
+ambiguous match). Volunteer good-first-issue material (I16).
 
 ### `data/video/activeinferenceinstitute/Applied Active Inference Symposium/2021 Symposium with Karl Friston` — 44 remaining
 
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).de.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).es.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).it.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).de.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).es.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).it.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-
-### `data/video/activeinferenceinstitute/Applied Active Inference Symposium/2023 Ecosystem Symposium/First_Interval` — 139 remaining
-
-- `3Symp1 01 Andre Bastos.de.srt` — conflict: 13 files collapse to one target
-- `3Symp1 01 Andre Bastos.es.srt` — conflict: 13 files collapse to one target
-- `3Symp1 01 Andre Bastos.fr.srt` — conflict: 13 files collapse to one target
-- `3Symp1 01 Andre Bastos.it.srt` — conflict: 13 files collapse to one target
-- `3Symp1 01 Andre Bastos.ja.srt` — conflict: 12 files collapse to one target
-- `3Symp1 01 Andre Bastos.ko.srt` — conflict: 12 files collapse to one target
-- `3Symp1 01 Andre Bastos.nl.srt` — conflict: 13 files collapse to one target
-- `3Symp1 01 Andre Bastos.pt.srt` — conflict: 13 files collapse to one target
-- `3Symp1 01 Andre Bastos.ru.srt` — conflict: 13 files collapse to one target
-- `3Symp1 01 Andre Bastos.zh-Hans.srt` — conflict: 12 files collapse to one target
-- `3Symp1 01 Andre Bastos.zh-Hant.srt` — conflict: 12 files collapse to one target
-- `3Symp1 02 Keith Duggar.de.srt` — conflict: 13 files collapse to one target
-- `3Symp1 02 Keith Duggar.es.srt` — conflict: 13 files collapse to one target
-- `3Symp1 02 Keith Duggar.fr.srt` — conflict: 13 files collapse to one target
-- `3Symp1 02 Keith Duggar.it.srt` — conflict: 13 files collapse to one target
-- `3Symp1 02 Keith Duggar.ja.srt` — conflict: 12 files collapse to one target
-- `3Symp1 02 Keith Duggar.ko.srt` — conflict: 12 files collapse to one target
-- `3Symp1 02 Keith Duggar.nl.srt` — conflict: 13 files collapse to one target
-- `3Symp1 02 Keith Duggar.pt.srt` — conflict: 13 files collapse to one target
-- `3Symp1 02 Keith Duggar.ru.srt` — conflict: 13 files collapse to one target
-- `3Symp1 02 Keith Duggar.zh-Hans.srt` — conflict: 12 files collapse to one target
-- `3Symp1 02 Keith Duggar.zh-Hant.srt` — conflict: 12 files collapse to one target
-- `3Symp1 03 Sanjeev Namjoshi.de.srt` — conflict: 13 files collapse to one target
-- `3Symp1 03 Sanjeev Namjoshi.es.srt` — conflict: 13 files collapse to one target
-- `3Symp1 03 Sanjeev Namjoshi.fr.srt` — conflict: 13 files collapse to one target
-- `3Symp1 03 Sanjeev Namjoshi.it.srt` — conflict: 13 files collapse to one target
-- `3Symp1 03 Sanjeev Namjoshi.ja.srt` — conflict: 12 files collapse to one target
-- `3Symp1 03 Sanjeev Namjoshi.ko.srt` — conflict: 12 files collapse to one target
-- `3Symp1 03 Sanjeev Namjoshi.nl.srt` — conflict: 13 files collapse to one target
-- `3Symp1 03 Sanjeev Namjoshi.pt.srt` — conflict: 13 files collapse to one target
-- `3Symp1 03 Sanjeev Namjoshi.ru.srt` — conflict: 13 files collapse to one target
-- `3Symp1 03 Sanjeev Namjoshi.zh-Hans.srt` — conflict: 12 files collapse to one target
-- `3Symp1 03 Sanjeev Namjoshi.zh-Hant.srt` — conflict: 12 files collapse to one target
-- `3Symp1 04 Inês Hipólito.de.srt` — conflict: 13 files collapse to one target
-- `3Symp1 04 Inês Hipólito.es.srt` — conflict: 13 files collapse to one target
-- `3Symp1 04 Inês Hipólito.fr.srt` — conflict: 13 files collapse to one target
-- `3Symp1 04 Inês Hipólito.it.srt` — conflict: 13 files collapse to one target
-- `3Symp1 04 Inês Hipólito.ja.srt` — conflict: 12 files collapse to one target
-- `3Symp1 04 Inês Hipólito.ko.srt` — conflict: 12 files collapse to one target
-- `3Symp1 04 Inês Hipólito.nl.srt` — conflict: 13 files collapse to one target
-- `3Symp1 04 Inês Hipólito.pt.srt` — conflict: 13 files collapse to one target
-- `3Symp1 04 Inês Hipólito.ru.srt` — conflict: 13 files collapse to one target
-- `3Symp1 04 Inês Hipólito.zh-Hans.srt` — conflict: 12 files collapse to one target
-- `3Symp1 04 Inês Hipólito.zh-Hant.srt` — conflict: 12 files collapse to one target
-- `3Symp1 05 Aswin Paul.de.srt` — conflict: 13 files collapse to one target
-- `3Symp1 05 Aswin Paul.es.srt` — conflict: 13 files collapse to one target
-- `3Symp1 05 Aswin Paul.fr.srt` — conflict: 13 files collapse to one target
-- `3Symp1 05 Aswin Paul.it.srt` — conflict: 13 files collapse to one target
-- `3Symp1 05 Aswin Paul.ja.srt` — conflict: 12 files collapse to one target
-- `3Symp1 05 Aswin Paul.ko.srt` — conflict: 12 files collapse to one target
-- `3Symp1 05 Aswin Paul.nl.srt` — conflict: 13 files collapse to one target
-- `3Symp1 05 Aswin Paul.pt.srt` — conflict: 13 files collapse to one target
-- `3Symp1 05 Aswin Paul.ru.srt` — conflict: 13 files collapse to one target
-- `3Symp1 05 Aswin Paul.zh-Hans.srt` — conflict: 12 files collapse to one target
-- `3Symp1 05 Aswin Paul.zh-Hant.srt` — conflict: 12 files collapse to one target
-- `3Symp1 06 Takuya Isomura.de.srt` — conflict: 13 files collapse to one target
-- `3Symp1 06 Takuya Isomura.es.srt` — conflict: 13 files collapse to one target
-- `3Symp1 06 Takuya Isomura.fr.srt` — conflict: 13 files collapse to one target
-- `3Symp1 06 Takuya Isomura.it.srt` — conflict: 13 files collapse to one target
-- `3Symp1 06 Takuya Isomura.ja.srt` — conflict: 12 files collapse to one target
-- `3Symp1 06 Takuya Isomura.ko.srt` — conflict: 12 files collapse to one target
-- `3Symp1 06 Takuya Isomura.nl.srt` — conflict: 13 files collapse to one target
-- `3Symp1 06 Takuya Isomura.pt.srt` — conflict: 13 files collapse to one target
-- `3Symp1 06 Takuya Isomura.ru.srt` — conflict: 13 files collapse to one target
-- `3Symp1 06 Takuya Isomura.zh-Hans.srt` — conflict: 12 files collapse to one target
-- `3Symp1 06 Takuya Isomura.zh-Hant.srt` — conflict: 12 files collapse to one target
-- `3Symp1 07 Shanna Dobson.de.srt` — conflict: 13 files collapse to one target
-- `3Symp1 07 Shanna Dobson.es.srt` — conflict: 13 files collapse to one target
-- `3Symp1 07 Shanna Dobson.fr.srt` — conflict: 13 files collapse to one target
-- `3Symp1 07 Shanna Dobson.it.srt` — conflict: 13 files collapse to one target
-- `3Symp1 07 Shanna Dobson.ja.srt` — conflict: 12 files collapse to one target
-- `3Symp1 07 Shanna Dobson.ko.srt` — conflict: 12 files collapse to one target
-- `3Symp1 07 Shanna Dobson.nl.srt` — conflict: 13 files collapse to one target
-- `3Symp1 07 Shanna Dobson.pt.srt` — conflict: 13 files collapse to one target
-- `3Symp1 07 Shanna Dobson.ru.srt` — conflict: 13 files collapse to one target
-- `3Symp1 07 Shanna Dobson.zh-Hans.srt` — conflict: 12 files collapse to one target
-- `3Symp1 07 Shanna Dobson.zh-Hant.srt` — conflict: 12 files collapse to one target
-- `3Symp1 08 Nynke Boiten.de.srt` — conflict: 13 files collapse to one target
-- `3Symp1 08 Nynke Boiten.es.srt` — conflict: 13 files collapse to one target
-- `3Symp1 08 Nynke Boiten.fr.srt` — conflict: 13 files collapse to one target
-- `3Symp1 08 Nynke Boiten.it.srt` — conflict: 13 files collapse to one target
-- `3Symp1 08 Nynke Boiten.ja.srt` — conflict: 12 files collapse to one target
-- `3Symp1 08 Nynke Boiten.ko.srt` — conflict: 12 files collapse to one target
-- `3Symp1 08 Nynke Boiten.nl.srt` — conflict: 13 files collapse to one target
-- `3Symp1 08 Nynke Boiten.pt.srt` — conflict: 13 files collapse to one target
-- `3Symp1 08 Nynke Boiten.ru.srt` — conflict: 13 files collapse to one target
-- `3Symp1 08 Nynke Boiten.zh-Hans.srt` — conflict: 12 files collapse to one target
-- `3Symp1 08 Nynke Boiten.zh-Hant.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).de.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).es.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).fr.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).it.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).ja.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).ko.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).nl.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).pt.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).ru.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).zh-Hans.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_01_Int1-Sess01-AndreBastos.wav.en(ca).zh-Hant.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).de.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).es.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).fr.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).it.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).ja.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).ko.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).nl.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).pt.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).ru.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).zh-Hans.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_02_Int1-Sess02-KeithDuggar.wav.en(ca).zh-Hant.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).de.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).es.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).fr.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).it.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).ja.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).ko.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).nl.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).pt.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).ru.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).zh-Hans.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_03_Int1-Sess03-SanjeevNamjoshi.wav.en(ca).zh-Hant.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).de.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).es.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).fr.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).it.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).ja.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).ko.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).nl.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).pt.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).ru.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).zh-Hans.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_04_Int1-Sess04-InesHipolito.wav.en(ca).zh-Hant.srt` — conflict: 12 files collapse to one target
-- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).de.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).es.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).fr.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).it.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).nl.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).pt.srt` — conflict: 13 files collapse to one target
-- `3Symp_1_05_Int1-Sess05-Aswin Paul.wav.en(ca).ru.srt` — conflict: 13 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Applied Active Inference Symposium/2023 Ecosystem Symposium/Second_Interval` — 94 remaining
-
-- `3Sym2 09 - 2nd Interval, Session 9, Roundtable.de.srt` — conflict: 9 files collapse to one target
-- `3Sym2 09 - 2nd Interval, Session 9, Roundtable.es.srt` — conflict: 9 files collapse to one target
-- `3Sym2 09 - 2nd Interval, Session 9, Roundtable.fr.srt` — conflict: 9 files collapse to one target
-- `3Sym2 09 - 2nd Interval, Session 9, Roundtable.it.srt` — conflict: 9 files collapse to one target
-- `3Sym2 09 - 2nd Interval, Session 9, Roundtable.ja.srt` — conflict: 9 files collapse to one target
-- `3Sym2 09 - 2nd Interval, Session 9, Roundtable.ko.srt` — conflict: 9 files collapse to one target
-- `3Sym2 09 - 2nd Interval, Session 9, Roundtable.nl.srt` — conflict: 8 files collapse to one target
-- `3Sym2 09 - 2nd Interval, Session 9, Roundtable.pt.srt` — conflict: 8 files collapse to one target
-- `3Sym2 09 - 2nd Interval, Session 9, Roundtable.ru.srt` — conflict: 8 files collapse to one target
-- `3Sym2 09 - 2nd Interval, Session 9, Roundtable.zh-Hans.srt` — conflict: 8 files collapse to one target
-- `3Sym2 09 - 2nd Interval, Session 9, Roundtable.zh-Hant.srt` — conflict: 8 files collapse to one target
-- `3Symp2 02 Conor Heins.de.srt` — conflict: 9 files collapse to one target
-- `3Symp2 02 Conor Heins.es.srt` — conflict: 9 files collapse to one target
-- `3Symp2 02 Conor Heins.fr.srt` — conflict: 9 files collapse to one target
-- `3Symp2 02 Conor Heins.it.srt` — conflict: 9 files collapse to one target
-- `3Symp2 02 Conor Heins.ja.srt` — conflict: 9 files collapse to one target
-- `3Symp2 02 Conor Heins.ko.srt` — conflict: 9 files collapse to one target
-- `3Symp2 02 Conor Heins.nl.srt` — conflict: 8 files collapse to one target
-- `3Symp2 02 Conor Heins.pt.srt` — conflict: 8 files collapse to one target
-- `3Symp2 02 Conor Heins.ru.srt` — conflict: 8 files collapse to one target
-- `3Symp2 02 Conor Heins.zh-Hans.srt` — conflict: 8 files collapse to one target
-- `3Symp2 02 Conor Heins.zh-Hant.srt` — conflict: 8 files collapse to one target
-- `3Symp2 03.de.srt` — conflict: 9 files collapse to one target
-- `3Symp2 03.es.srt` — conflict: 9 files collapse to one target
-- `3Symp2 03.fr.srt` — conflict: 9 files collapse to one target
-- `3Symp2 03.it.srt` — conflict: 9 files collapse to one target
-- `3Symp2 03.ja.srt` — conflict: 9 files collapse to one target
-- `3Symp2 03.ko.srt` — conflict: 9 files collapse to one target
-- `3Symp2 03.nl.srt` — conflict: 8 files collapse to one target
-- `3Symp2 03.pt.srt` — conflict: 8 files collapse to one target
-- `3Symp2 03.ru.srt` — conflict: 8 files collapse to one target
-- `3Symp2 03.zh-Hans.srt` — conflict: 8 files collapse to one target
-- `3Symp2 03.zh-Hant.srt` — conflict: 8 files collapse to one target
-- `3Symp2 04 In the Active Inference Ecosystem.de.srt` — conflict: 9 files collapse to one target
-- `3Symp2 04 In the Active Inference Ecosystem.es.srt` — conflict: 9 files collapse to one target
-- `3Symp2 04 In the Active Inference Ecosystem.fr.srt` — conflict: 9 files collapse to one target
-- `3Symp2 04 In the Active Inference Ecosystem.it.srt` — conflict: 9 files collapse to one target
-- `3Symp2 04 In the Active Inference Ecosystem.ja.srt` — conflict: 9 files collapse to one target
-- `3Symp2 04 In the Active Inference Ecosystem.ko.srt` — conflict: 9 files collapse to one target
-- `3Symp2 04 In the Active Inference Ecosystem.nl.srt` — conflict: 8 files collapse to one target
-- `3Symp2 04 In the Active Inference Ecosystem.pt.srt` — conflict: 8 files collapse to one target
-- `3Symp2 04 In the Active Inference Ecosystem.ru.srt` — conflict: 8 files collapse to one target
-- `3Symp2 04 In the Active Inference Ecosystem.zh-Hans.srt` — conflict: 8 files collapse to one target
-- `3Symp2 04 In the Active Inference Ecosystem.zh-Hant.srt` — conflict: 8 files collapse to one target
-- `3Symp2 05 Rafael Kaufmann.de.srt` — conflict: 9 files collapse to one target
-- `3Symp2 05 Rafael Kaufmann.es.srt` — conflict: 9 files collapse to one target
-- `3Symp2 05 Rafael Kaufmann.fr.srt` — conflict: 9 files collapse to one target
-- `3Symp2 05 Rafael Kaufmann.it.srt` — conflict: 9 files collapse to one target
-- `3Symp2 05 Rafael Kaufmann.ja.srt` — conflict: 9 files collapse to one target
-- `3Symp2 05 Rafael Kaufmann.ko.srt` — conflict: 9 files collapse to one target
-- `3Symp2 05 Rafael Kaufmann.nl.srt` — conflict: 8 files collapse to one target
-- `3Symp2 05 Rafael Kaufmann.pt.srt` — conflict: 8 files collapse to one target
-- `3Symp2 05 Rafael Kaufmann.ru.srt` — conflict: 8 files collapse to one target
-- `3Symp2 05 Rafael Kaufmann.zh-Hans.srt` — conflict: 8 files collapse to one target
-- `3Symp2 05 Rafael Kaufmann.zh-Hant.srt` — conflict: 8 files collapse to one target
-- `3Symp2 06 Avel Guénin-Carlut.de.srt` — conflict: 9 files collapse to one target
-- `3Symp2 06 Avel Guénin-Carlut.es.srt` — conflict: 9 files collapse to one target
-- `3Symp2 06 Avel Guénin-Carlut.fr.srt` — conflict: 9 files collapse to one target
-- `3Symp2 06 Avel Guénin-Carlut.it.srt` — conflict: 9 files collapse to one target
-- `3Symp2 06 Avel Guénin-Carlut.ja.srt` — conflict: 9 files collapse to one target
-- `3Symp2 06 Avel Guénin-Carlut.ko.srt` — conflict: 9 files collapse to one target
-- `3Symp2 06 Avel Guénin-Carlut.nl.srt` — conflict: 8 files collapse to one target
-- `3Symp2 06 Avel Guénin-Carlut.pt.srt` — conflict: 8 files collapse to one target
-- `3Symp2 06 Avel Guénin-Carlut.ru.srt` — conflict: 8 files collapse to one target
-- `3Symp2 06 Avel Guénin-Carlut.zh-Hans.srt` — conflict: 8 files collapse to one target
-- `3Symp2 06 Avel Guénin-Carlut.zh-Hant.srt` — conflict: 8 files collapse to one target
-- `3Symp2 07 Pablo Fernandez-Maquieira.de.srt` — conflict: 9 files collapse to one target
-- `3Symp2 07 Pablo Fernandez-Maquieira.es.srt` — conflict: 9 files collapse to one target
-- `3Symp2 07 Pablo Fernandez-Maquieira.fr.srt` — conflict: 9 files collapse to one target
-- `3Symp2 07 Pablo Fernandez-Maquieira.it.srt` — conflict: 9 files collapse to one target
-- `3Symp2 07 Pablo Fernandez-Maquieira.ja.srt` — conflict: 9 files collapse to one target
-- `3Symp2 07 Pablo Fernandez-Maquieira.ko.srt` — conflict: 9 files collapse to one target
-- `3Symp2 08.de.srt` — conflict: 9 files collapse to one target
-- `3Symp2 08.es.srt` — conflict: 9 files collapse to one target
-- `3Symp2 08.fr.srt` — conflict: 9 files collapse to one target
-- `3Symp2 08.it.srt` — conflict: 9 files collapse to one target
-- `3Symp2 08.ja.srt` — conflict: 9 files collapse to one target
-- `3Symp2 08.ko.srt` — conflict: 9 files collapse to one target
-- `3Symp2 08.nl.srt` — conflict: 8 files collapse to one target
-- `3Symp2 08.pt.srt` — conflict: 8 files collapse to one target
-- `3Symp2 08.ru.srt` — conflict: 8 files collapse to one target
-- `3Symp2 08.zh-Hans.srt` — conflict: 8 files collapse to one target
-- `3Symp2 08.zh-Hant.srt` — conflict: 8 files collapse to one target
-- `3Symp_2_01 Interval 2 Session 01 Jean-François Cloutier.de.srt` — conflict: 9 files collapse to one target
-- `3Symp_2_01 Interval 2 Session 01 Jean-François Cloutier.es.srt` — conflict: 9 files collapse to one target
-- `3Symp_2_01 Interval 2 Session 01 Jean-François Cloutier.fr.srt` — conflict: 9 files collapse to one target
-- `3Symp_2_01 Interval 2 Session 01 Jean-François Cloutier.it.srt` — conflict: 9 files collapse to one target
-- `3Symp_2_01 Interval 2 Session 01 Jean-François Cloutier.ja.srt` — conflict: 9 files collapse to one target
-- `3Symp_2_01 Interval 2 Session 01 Jean-François Cloutier.ko.srt` — conflict: 9 files collapse to one target
-- `3Symp_2_01 Interval 2 Session 01 Jean-François Cloutier.nl.srt` — conflict: 8 files collapse to one target
-- `3Symp_2_01 Interval 2 Session 01 Jean-François Cloutier.pt.srt` — conflict: 8 files collapse to one target
-- `3Symp_2_01 Interval 2 Session 01 Jean-François Cloutier.ru.srt` — conflict: 8 files collapse to one target
-- `3Symp_2_01 Interval 2 Session 01 Jean-François Cloutier.zh-Hans.srt` — conflict: 8 files collapse to one target
-- `3Symp_2_01 Interval 2 Session 01 Jean-François Cloutier.zh-Hant.srt` — conflict: 8 files collapse to one target
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 1st session.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `2nd Applied Active Inference Symposium on  Robotics  ~ 2nd session.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 1 (Education).zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Prof. Karl Friston ~ Applied Active Inference Symposium pt. 3 (Tools).zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/BookStream/BookStream_001` — 46 remaining
 
-- `Active Inference BookStream 001.010 ~  Governing Continuous Transformation_transcript.srt` — no verified video_id/language (no language suffix)
-- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.08 ~  Governing Continuous Transformation_transcript.srt` — no verified video_id/language (no language suffix)
-- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
+- `Active Inference BookStream 001.010 ~  Governing Continuous Transformation_transcript.srt` — no verified video_id/language (no language suffix) — good-first-issue material (I16)
+- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.012 ~  Governing Continuous Transformation.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.02 ~  Governing Continuous Transformation.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.06 ~  Governing Continuous Transformation.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.08 ~  Governing Continuous Transformation_transcript.srt` — no verified video_id/language (no language suffix) — good-first-issue material (I16)
+- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 001.1 ~  Governing Continuous Transformation.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/BookStream/BookStream_002` — 19 remaining
 
-- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-
-### `data/video/activeinferenceinstitute/Courses/ActiveInferenceForTheSocialSciences/ActInf_Basics_Lecture` — 22 remaining
-
-- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.de.srt` — conflict: 2 files collapse to one target
-- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.es.srt` — conflict: 2 files collapse to one target
-- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.fr.srt` — conflict: 2 files collapse to one target
-- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.it.srt` — conflict: 2 files collapse to one target
-- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.ja.srt` — conflict: 2 files collapse to one target
-- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.ko.srt` — conflict: 2 files collapse to one target
-- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.nl.srt` — conflict: 2 files collapse to one target
-- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.pt.srt` — conflict: 2 files collapse to one target
-- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.ru.srt` — conflict: 2 files collapse to one target
-- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.zh-Hans.srt` — conflict: 2 files collapse to one target
-- `AIFSS-02L_cPxLuwUDTSWYpG6-Z4rflqbxigh9K9-DDzkVzu5J1pA.zh-Hant.srt` — conflict: 2 files collapse to one target
-- `Basics of Active Inference (Lecture) ~ Ben White ~ Active Inference for the Social Sciences 2023.de.srt` — conflict: 2 files collapse to one target
-- `Basics of Active Inference (Lecture) ~ Ben White ~ Active Inference for the Social Sciences 2023.es.srt` — conflict: 2 files collapse to one target
-- `Basics of Active Inference (Lecture) ~ Ben White ~ Active Inference for the Social Sciences 2023.fr.srt` — conflict: 2 files collapse to one target
-- `Basics of Active Inference (Lecture) ~ Ben White ~ Active Inference for the Social Sciences 2023.it.srt` — conflict: 2 files collapse to one target
-- `Basics of Active Inference (Lecture) ~ Ben White ~ Active Inference for the Social Sciences 2023.ja.srt` — conflict: 2 files collapse to one target
-- `Basics of Active Inference (Lecture) ~ Ben White ~ Active Inference for the Social Sciences 2023.ko.srt` — conflict: 2 files collapse to one target
-- `Basics of Active Inference (Lecture) ~ Ben White ~ Active Inference for the Social Sciences 2023.nl.srt` — conflict: 2 files collapse to one target
-- `Basics of Active Inference (Lecture) ~ Ben White ~ Active Inference for the Social Sciences 2023.pt.srt` — conflict: 2 files collapse to one target
-- `Basics of Active Inference (Lecture) ~ Ben White ~ Active Inference for the Social Sciences 2023.ru.srt` — conflict: 2 files collapse to one target
-- `Basics of Active Inference (Lecture) ~ Ben White ~ Active Inference for the Social Sciences 2023.zh-Hans.srt` — conflict: 2 files collapse to one target
-- `Basics of Active Inference (Lecture) ~ Ben White ~ Active Inference for the Social Sciences 2023.zh-Hant.srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Courses/ActiveInferenceForTheSocialSciences/CollectiveBehavior_Discussion` — 27 remaining
-
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.de.srt` — conflict: 3 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.es.srt` — conflict: 3 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.fr.srt` — conflict: 3 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.it.srt` — conflict: 3 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.ja.srt` — conflict: 2 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.ko.srt` — conflict: 2 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.m4a.sentences.csv_transcript.de.srt` — conflict: 3 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.m4a.sentences.csv_transcript.es.srt` — conflict: 3 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.m4a.sentences.csv_transcript.fr.srt` — conflict: 3 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.m4a.sentences.csv_transcript.it.srt` — conflict: 3 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.m4a.sentences.csv_transcript.pt.srt` — conflict: 3 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.nl.srt` — conflict: 2 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.pt.srt` — conflict: 3 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.ru.srt` — conflict: 2 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.zh-Hans.srt` — conflict: 2 files collapse to one target
-- `Basics2023-05_Collective Behavior Discussion ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.zh-Hant.srt` — conflict: 2 files collapse to one target
-- `Collective Behavior (Discussion) ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.de.srt` — conflict: 3 files collapse to one target
-- `Collective Behavior (Discussion) ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.es.srt` — conflict: 3 files collapse to one target
-- `Collective Behavior (Discussion) ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.fr.srt` — conflict: 3 files collapse to one target
-- `Collective Behavior (Discussion) ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.it.srt` — conflict: 3 files collapse to one target
-- `Collective Behavior (Discussion) ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.ja.srt` — conflict: 2 files collapse to one target
-- `Collective Behavior (Discussion) ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.ko.srt` — conflict: 2 files collapse to one target
-- `Collective Behavior (Discussion) ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.nl.srt` — conflict: 2 files collapse to one target
-- `Collective Behavior (Discussion) ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.pt.srt` — conflict: 3 files collapse to one target
-- `Collective Behavior (Discussion) ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.ru.srt` — conflict: 2 files collapse to one target
-- `Collective Behavior (Discussion) ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.zh-Hans.srt` — conflict: 2 files collapse to one target
-- `Collective Behavior (Discussion) ~ Daniel Friedman ~ Active Inference for the Social Sciences 2023.zh-Hant.srt` — conflict: 2 files collapse to one target
+- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.0 ~ Parr, Pezzulo, Friston ~ Chapters 1, 2, 3, 6.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference BookStream 002.02 ~ Parr, Pezzulo, Friston ~ Chapters 4, 5, 7, 8.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/Courses/ActiveInferenceForTheSocialSciences/SemioticsSemantics_Discussion` — 11 remaining
 
-- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.de.srt` — stem unrelated to sole part title (unverified single-part)
-- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.es.srt` — stem unrelated to sole part title (unverified single-part)
-- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.fr.srt` — stem unrelated to sole part title (unverified single-part)
-- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.it.srt` — stem unrelated to sole part title (unverified single-part)
-- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.ja.srt` — stem unrelated to sole part title (unverified single-part)
-- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.ko.srt` — stem unrelated to sole part title (unverified single-part)
-- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.nl.srt` — stem unrelated to sole part title (unverified single-part)
-- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.pt.srt` — stem unrelated to sole part title (unverified single-part)
-- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.ru.srt` — stem unrelated to sole part title (unverified single-part)
-- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part)
-- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part)
+- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.de.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.es.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.fr.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.it.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.ja.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.ko.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.nl.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.pt.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.ru.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `Semiotics and Semantics Discussion ~ Lorena Sganzerla ~ Active Inference for Social Sciences 9 12.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/Courses/ActiveInferenceForTheSocialSciences/SemioticsSemantics_Lecture` — 11 remaining
 
-- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.de.srt` — stem unrelated to sole part title (unverified single-part)
-- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.es.srt` — stem unrelated to sole part title (unverified single-part)
-- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.fr.srt` — stem unrelated to sole part title (unverified single-part)
-- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.it.srt` — stem unrelated to sole part title (unverified single-part)
-- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.ja.srt` — stem unrelated to sole part title (unverified single-part)
-- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.ko.srt` — stem unrelated to sole part title (unverified single-part)
-- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.nl.srt` — stem unrelated to sole part title (unverified single-part)
-- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.pt.srt` — stem unrelated to sole part title (unverified single-part)
-- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.ru.srt` — stem unrelated to sole part title (unverified single-part)
-- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part)
-- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part)
-
-### `data/video/activeinferenceinstitute/GuestStream/GuestStream_013` — 2 remaining
-
-- `ActInfLab GuestStream #013.1 ~ Adam Safron.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab GuestStream #013.1 ~ Adam Safron.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
+- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.de.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.es.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.fr.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.it.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.ja.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.ko.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.nl.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.pt.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.ru.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `CCL2023.06 Semiotics and Semantics Lecture ~ Lorena Sganzerla, 2023-08-30.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/GuestStream/GuestStream_015` — 12 remaining
 
-- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.en(ie).srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
+- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.en(ie).srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf GuestStream 015.3 ~ Bobby Azarian, The Teleological Stance, 6 1 2023.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/GuestStream/GuestStream_016` — 11 remaining
 
-- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
+- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab GuestStream #0161.2 ~ Mark Solms  Consciousness as Precision Optimization AutoCaption.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/GuestStream/GuestStream_029` — 11 remaining
 
-- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.de.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.es.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.fr.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.it.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.ja.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.ko.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.nl.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.pt.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.ru.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part)
+- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.de.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.es.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.fr.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.it.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.ja.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.ko.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.nl.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.pt.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.ru.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream #029.1 Making Up Our Minds Imaginative Deconstruction in MathArt, 1920 – Present.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/GuestStream/GuestStream_032` — 11 remaining
 
-- `ActInf GuestStream 032-1 ~ Adam Pease (audio).de.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 032-1 ~ Adam Pease (audio).es.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 032-1 ~ Adam Pease (audio).fr.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 032-1 ~ Adam Pease (audio).it.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 032-1 ~ Adam Pease (audio).ja.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 032-1 ~ Adam Pease (audio).ko.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 032-1 ~ Adam Pease (audio).nl.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 032-1 ~ Adam Pease (audio).pt.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 032-1 ~ Adam Pease (audio).ru.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 032-1 ~ Adam Pease (audio).zh-Hans.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 032-1 ~ Adam Pease (audio).zh-Hant.srt` — stem unrelated to sole part title (unverified single-part)
+- `ActInf GuestStream 032-1 ~ Adam Pease (audio).de.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 032-1 ~ Adam Pease (audio).es.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 032-1 ~ Adam Pease (audio).fr.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 032-1 ~ Adam Pease (audio).it.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 032-1 ~ Adam Pease (audio).ja.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 032-1 ~ Adam Pease (audio).ko.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 032-1 ~ Adam Pease (audio).nl.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 032-1 ~ Adam Pease (audio).pt.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 032-1 ~ Adam Pease (audio).ru.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 032-1 ~ Adam Pease (audio).zh-Hans.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 032-1 ~ Adam Pease (audio).zh-Hant.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/GuestStream/GuestStream_044` — 11 remaining
 
-- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.de.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.es.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.fr.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.it.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.ja.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.ko.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.nl.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.pt.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.ru.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part)
+- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.de.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.es.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.fr.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.it.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.ja.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.ko.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.nl.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.pt.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.ru.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 044.1 ~ Tsuchiya & Saigo, Category TheoryNew video.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/GuestStream/GuestStream_046` — 12 remaining
 
-- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.de.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.en(ie).srt` — stem unrelated to sole part title (unverified single-part)
-- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.es.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.fr.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.it.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.ja.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.ko.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.nl.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.pt.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.ru.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part)
+- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.de.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.en(ie).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.es.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.fr.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.it.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.ja.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.ko.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.nl.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.pt.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.ru.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs046.1 ~ Denise Holt, Active Inference AI & the Spatial Web.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/GuestStream/GuestStream_047` — 11 remaining
 
-- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.de.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.es.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.fr.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.it.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.ja.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.ko.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.nl.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.pt.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.ru.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part)
+- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.de.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.es.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.fr.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.it.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.ja.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.ko.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.nl.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.pt.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.ru.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 047.1 Predicting, Reflecting Framework for Dual Process Theory, S. Bellini-Leite.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/GuestStream/GuestStream_053` — 11 remaining
 
-- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.de.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.es.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.fr.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.it.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.ja.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.ko.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.nl.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.pt.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.ru.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part)
+- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.de.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.es.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.fr.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.it.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.ja.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.ko.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.nl.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.pt.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.ru.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf GuestStream 053.1 ~ Tolchinsky et al  2023 A case for chaos theory.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/GuestStream/GuestStream_055` — 11 remaining
 
-- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.de.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.es.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.fr.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.it.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.ja.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.ko.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.nl.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.pt.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.ru.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part)
+- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.de.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.es.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.fr.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.it.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.ja.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.ko.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.nl.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.pt.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.ru.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs055 1 ~ James Pang, Alex Fornito Geometric constraints.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/GuestStream/GuestStream_058` — 11 remaining
 
-- `gs058-1 Working with Gerald Edelman.de.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs058-1 Working with Gerald Edelman.es.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs058-1 Working with Gerald Edelman.fr.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs058-1 Working with Gerald Edelman.it.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs058-1 Working with Gerald Edelman.ja.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs058-1 Working with Gerald Edelman.ko.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs058-1 Working with Gerald Edelman.nl.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs058-1 Working with Gerald Edelman.pt.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs058-1 Working with Gerald Edelman.ru.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs058-1 Working with Gerald Edelman.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part)
-- `gs058-1 Working with Gerald Edelman.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part)
+- `gs058-1 Working with Gerald Edelman.de.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs058-1 Working with Gerald Edelman.es.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs058-1 Working with Gerald Edelman.fr.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs058-1 Working with Gerald Edelman.it.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs058-1 Working with Gerald Edelman.ja.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs058-1 Working with Gerald Edelman.ko.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs058-1 Working with Gerald Edelman.nl.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs058-1 Working with Gerald Edelman.pt.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs058-1 Working with Gerald Edelman.ru.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs058-1 Working with Gerald Edelman.zh-Hans.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `gs058-1 Working with Gerald Edelman.zh-Hant.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_001` — 22 remaining
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_001` — 1 remaining
 
-- `Active Inference Podcast #001 “Narrative as active inference.chi(translated) (2).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.chi(translated).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.de.srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 3 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).zh-Hant.srt` — stem unrelated to sole part title (unverified single-part)
-- `Active Inference Podcast #001 “Narrative as active inference.es.srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.it.srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference Podcast #001 “Narrative as active inference.rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
+- `Active Inference Podcast #001 “Narrative as active inference.eng(transcribed).eng(transcribed).zh-Hant.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_002` — 22 remaining
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_006` — 1 remaining
 
-- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #002.1  Is the free-energy principle a formal theory of semantics.eng(transcribed).eng(transcribed).zh-Hant.srt` — conflict: 2 files collapse to one target
-- `Active Inference Livestream #002.1  Is the free-energy principle a formal theory of semantics.de.srt` — conflict: 2 files collapse to one target
-- `Active Inference Livestream #002.1  Is the free-energy principle a formal theory of semantics.es.srt` — conflict: 2 files collapse to one target
-- `Active Inference Livestream #002.1  Is the free-energy principle a formal theory of semantics.fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference Livestream #002.1  Is the free-energy principle a formal theory of semantics.it.srt` — conflict: 2 files collapse to one target
-- `Active Inference Livestream #002.1  Is the free-energy principle a formal theory of semantics.ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference Livestream #002.1  Is the free-energy principle a formal theory of semantics.ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference Livestream #002.1  Is the free-energy principle a formal theory of semantics.nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference Livestream #002.1  Is the free-energy principle a formal theory of semantics.pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference Livestream #002.1  Is the free-energy principle a formal theory of semantics.ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference Livestream #002.1  Is the free-energy principle a formal theory of semantics.zh-Hans.srt` — conflict: 2 files collapse to one target
-- `Active Inference Livestream #002.1  Is the free-energy principle a formal theory of semantics.zh-Hant.srt` — conflict: 2 files collapse to one target
+- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).zh-Hant.srt` — ambiguous match — needs human review
 
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_003` — 11 remaining
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_016` — 11 remaining
 
-- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.de.srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.eng(transcribed).eng(transcribed).de.srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.es.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.fr.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.ger(translated).ger(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.it.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #003.2   A World Unto Itself Human Communication as Active Inference.nl.srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_004` — 36 remaining
-
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.es.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.it.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.1 “Cultural Affordances Scaffolding Local Worlds.ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.es.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.it.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #004.2  “Cultural Affordances Scaffolding Local Worlds.zh-Hans.srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_005` — 63 remaining
-
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).chi(translated) (2).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).chi(translated).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).fre(translated).fre(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).ger(translated).ger(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).ita(translated).ita(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.0 Context for  Multiscale integration beyond internalism...  (2019).spa(translated).spa(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).chi(translated) (2).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).chi(translated).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).fre(translated).fre(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).ger(translated).ger(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).ita(translated).ita(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.1  Multiscale integration beyond internalism...  (2019).spa(translated).spa(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).chi(translated) (2).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).chi(translated).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).fre(translated).fre(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).ger(translated).ger(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).ita(translated).ita(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #005.2  Multiscale integration beyond internalism...  (2019).spa(translated).spa(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_006` — 22 remaining
-
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.chi(translated) (2).chi(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.chi(translated).chi(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.eng(transcribed).eng(transcribed).zh-Hant.srt` — ambiguous match
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.fre(translated).fre(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.ger(translated).ger(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.ita(translated).ita(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #006.2  A tale of two densities  (2020) REUPLOAD.spa(translated).spa(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_007` — 62 remaining
-
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).chi(translated) (2).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).chi(translated).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).fre(translated).fre(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).ger(translated).ger(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).ita(translated).ita(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.0  Variational ecology and the physics of sentient systems  (2019).spa(translated).spa(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).fre(translated).fre(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).ger(translated).ger(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).ita(translated).ita(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.1  Variational ecology and the physics of sentient systems  (2019).spa(translated).spa(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).chi(translated) (2).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).chi(translated).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).ita(translated).ita(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #007.2  Variational ecology and the physics of sentient systems  (2019).spa(translated).spa(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_008` — 63 remaining
-
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).chi(translated) (2).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).chi(translated).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).fre(translated).fre(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).ger(translated).ger(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).ita(translated).ita(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.0 “Scaling active inference  (2019).spa(translated).spa(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).chi(translated) (2).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).chi(translated).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).fre(translated).fre(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).ger(translated).ger(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).ita(translated).ita(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.1 “Scaling active inference  (2019).spa(translated).spa(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).chi(translated) (2).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).chi(translated).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).fre(translated).fre(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).ger(translated).ger(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).ita(translated).ita(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #008.2 “Scaling active inference  (2019).spa(translated).spa(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_009` — 21 remaining
-
-- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `Active Inference Stream #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).chi(translated) (2).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).chi(translated).chi(translated).srt` — conflict: 3 files collapse to one target
-- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).fre(translated).fre(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).ger(translated).ger(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).ita(translated).ita(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
-- `Active Inference podcast #009.0 “The Projective Consciousness Model and Phenomenal Selfhood  (2018).spa(translated).spa(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_010` — 42 remaining
-
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).chi(translated) (2).chi(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).chi(translated).chi(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).fre(translated).fre(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).ger(translated).ger(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).ita(translated).ita(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.0  A variational approach to scripts  (2020).spa(translated).spa(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).chi(translated) (2).chi(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).chi(translated).chi(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).dut(translated).dut(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).de.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).es.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).fr.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).it.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).ja.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).ko.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).nl.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).pt.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).ru.srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).fre(translated).fre(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).ger(translated).ger(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).ita(translated).ita(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).jpn(translated).jpn(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).por(translated).por(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).rus(translated).rus(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #010.2  A variational approach to scripts  (2020).spa(translated).spa(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_011` — 2 remaining
-
-- `ActInfLab Livestream #011.1  Sophisticated Affective Inference Simulating Anticipatory  (2020).chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #011.1  Sophisticated Affective Inference Simulating Anticipatory  (2020).chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_013` — 6 remaining
-
-- `ActInfLab Livestream #013.0  Cybernetic Big Five Theory with the Free Energy Principle.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #013.0  Cybernetic Big Five Theory with the Free Energy Principle.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #013.1  Cybernetic Big Five Theory with the Free Energy Principle....chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #013.1  Cybernetic Big Five Theory with the Free Energy Principle....chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #013.2  Cybernetic Big Five Theory with the Free Energy Principle.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #013.2  Cybernetic Big Five Theory with the Free Energy Principle.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_014` — 6 remaining
-
-- `ActInfLab Livestream #014.0 ~ The Math is not the Territory Navigating the Free Energy Principle.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #014.0 ~ The Math is not the Territory Navigating the Free Energy Principle.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #014.1 ~ The Math is not the Territory Navigating the Free Energy Principle.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #014.1 ~ The Math is not the Territory Navigating the Free Energy Principle.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #014.2 ~ The Math is not the Territory Navigating the Free Energy Principle.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #014.2 ~ The Math is not the Territory Navigating the Free Energy Principle.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_015` — 6 remaining
-
-- `ActInfLab Livestream #015.0 ~ “Free-Energy Principle, Computationalism and Realism a Tragedy.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #015.0 ~ “Free-Energy Principle, Computationalism and Realism a Tragedy.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #015.1 ~ “Free-Energy Principle, Computationalism and Realism a Tragedy.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #015.1 ~ “Free-Energy Principle, Computationalism and Realism a Tragedy.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #015.2 ~ “Free-Energy Principle, Computationalism and Realism a Tragedy.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #015.2 ~ “Free-Energy Principle, Computationalism and Realism a Tragedy.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_016` — 15 remaining
-
-- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInfLab Livestream #016.0 “Neural correlates of consciousness under the FEP.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #016.0 “Neural correlates of consciousness under the FEP.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #016.1 “Neural correlates of consciousness under the FEP.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #016.1 “Neural correlates of consciousness under the FEP.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_017` — 4 remaining
-
-- `ActInfLab Livestream #017.0 ~ Information flow in context-dependent hierarchical Bayesian inference.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #017.0 ~ Information flow in context-dependent hierarchical Bayesian inference.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #017.1 ~ Information flow in context-dependent hierarchical Bayesian inference.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #017.1 ~ Information flow in context-dependent hierarchical Bayesian inference.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_018` — 6 remaining
-
-- `ActInfLab Livestream #018.0 ~ The predictive global neuronal workspace A formal act inf model.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #018.0 ~ The predictive global neuronal workspace A formal act inf model.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #018.1 ~ The predictive global neuronal workspace A formal act inf model.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #018.1 ~ The predictive global neuronal workspace A formal act inf model.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #018.2 ~ The predictive global neuronal workspace A formal act inf model.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #018.2 ~ The predictive global neuronal workspace A formal act inf model.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_019` — 6 remaining
-
-- `ActInfLab Livestream #019.0 ~ Deeply Felt Affect The Emergence of Valence in Deep Active Inference.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #019.0 ~ Deeply Felt Affect The Emergence of Valence in Deep Active Inference.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #019.1 ~ Deeply Felt Affect The Emergence of Valence in Deep Active Inference.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #019.1 ~ Deeply Felt Affect The Emergence of Valence in Deep Active Inference.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #019.2 ~ Deeply Felt Affect The Emergence of Valence in Deep Active Inference.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #019.2 ~ Deeply Felt Affect The Emergence of Valence in Deep Active Inference.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_020` — 6 remaining
-
-- `ActInfLab Livestream #020.0 ~ The Emperor’s New Markov Blankets.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #020.0 ~ The Emperor’s New Markov Blankets.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #020.1 ~ The Emperor’s New Markov Blankets (full upload).chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #020.1 ~ The Emperor’s New Markov Blankets (full upload).chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #020.2 ~ The Emperor’s New Markov Blankets.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #020.2 ~ The Emperor’s New Markov Blankets.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_021` — 4 remaining
-
-- `ActInfLab Livestream #021.04 ~ John Boik.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #021.04 ~ John Boik.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #021.2 ~ John Boik.ger(translated) (2).ger(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #021.2 ~ John Boik.ger(translated).ger(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_023` — 2 remaining
-
-- `ActInfLab Livestream #023.2 ~   Embodied skillful performance where the action is.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #023.2 ~   Embodied skillful performance where the action is.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_024` — 6 remaining
-
-- `ActInfLab Livestream #024.0 ~  An empirical evaluation of active inference in multi-armed bandits.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #024.0 ~  An empirical evaluation of active inference in multi-armed bandits.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #024.1 ~  An empirical evaluation of active inference in multi-armed bandits.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #024.1 ~  An empirical evaluation of active inference in multi-armed bandits.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #024.2 ~  An empirical evaluation of active inference in multi-armed bandits.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #024.2 ~  An empirical evaluation of active inference in multi-armed bandits.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_025` — 2 remaining
-
-- `ActInfLab Livestream #025.1 ~  The Computational Boundary of a Self.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #025.1 ~  The Computational Boundary of a Self.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_026` — 2 remaining
-
-- `ActInfLab Livestream #026.1 ~ “Bayesian Mechanics for Stationary Processes”.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream #026.1 ~ “Bayesian Mechanics for Stationary Processes”.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_029` — 6 remaining
-
-- `ActInf Livestream #029.0 ~ “Active Inferants An Active Inference Framework for Ant Colony Behavior”.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #029.0 ~ “Active Inferants An Active Inference Framework for Ant Colony Behavior”.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #029.1 ~ “Active Inferants An Active Inference Framework for Ant Colony Behavior”.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #029.1 ~ “Active Inferants An Active Inference Framework for Ant Colony Behavior”.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #029.2 ~ “Active Inferants An Active Inference Framework for Ant Colony Behavior”.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #029.2 ~ “Active Inferants An Active Inference Framework for Ant Colony Behavior”.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_030` — 6 remaining
-
-- `ActInf Livestream #030.0 ~ “How to count biological minds symbiosis, the free energy principle....chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #030.0 ~ “How to count biological minds symbiosis, the free energy principle....chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #030.1 ~ “How to count biological minds symbiosis, the free energy principle....chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #030.1 ~ “How to count biological minds symbiosis, the free energy principle....chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #030.2 ~ “How to count biological minds symbiosis, the free energy principle....chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #030.2 ~ “How to count biological minds symbiosis, the free energy principle....chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
+- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInfLab Livestream #016-2 “Neural correlates of consciousness under the FEP.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/Livestream/LiveStream_032` — 11 remaining
 
-- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
+- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 032.0 ~  Stochastic Chaos and Markov Blankets.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_040` — 2 remaining
+### `data/video/activeinferenceinstitute/Livestream/LiveStream_045` — 1 remaining
 
-- `ActInf Livestream #040.2 ~  A free energy principle for generic quantum systems.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #040.2 ~  A free energy principle for generic quantum systems.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_045` — 3 remaining
-
-- `ActInf Livestream #045.0 ~  The free energy principle made simpler but not too simple.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #045.0 ~  The free energy principle made simpler but not too simple.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #045.2 ~ The free energy principle made simpler but not too simple.che(translated).srt` — no verified video_id/language (unknown language code)
-
-### `data/video/activeinferenceinstitute/Livestream/LiveStream_046` — 4 remaining
-
-- `ActInf Livestream #046.0 ~  Active inference models do not contradict folk psychology.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #046.0 ~  Active inference models do not contradict folk psychology.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #046.2 ~  Active inference models do not contradict folk psychology.chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Livestream #046.2 ~  Active inference models do not contradict folk psychology.chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
+- `ActInf Livestream #045.2 ~ The free energy principle made simpler but not too simple.che(translated).srt` — no verified video_id/language (unknown language code) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/Livestream/LiveStream_047` — 11 remaining
 
-- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
+- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream _047.2 ~ Enactive-Dynamic Social Cognition_ Active Inference and Abduction.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/Livestream/LiveStream_052` — 11 remaining
 
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/Livestream/LiveStream_053` — 22 remaining
 
-- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
+- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053 0 'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf Livestream 053.1 ~  'Snakes and Ladders in Paleoanthropology' & 'To copy or not to copy'.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/Livestream/LiveStream_054` — 34 remaining
 
-- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).de.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).es.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).it.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-- `ls054 1 Compositional Account of the Bayesian Brain Smithe.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `ls054 1 Compositional Account of the Bayesian Brain Smithe.en(ie).srt` — no verified video_id/language (stem unmatched to any part)
-- `ls054 1 Compositional Account of the Bayesian Brain Smithe.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `ls054 1 Compositional Account of the Bayesian Brain Smithe.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `ls054 1 Compositional Account of the Bayesian Brain Smithe.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `ls054 1 Compositional Account of the Bayesian Brain Smithe.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `ls054 1 Compositional Account of the Bayesian Brain Smithe.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `ls054 1 Compositional Account of the Bayesian Brain Smithe.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `ls054 1 Compositional Account of the Bayesian Brain Smithe.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `ls054 1 Compositional Account of the Bayesian Brain Smithe.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `ls054 1 Compositional Account of the Bayesian Brain Smithe.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `ls054 1 Compositional Account of the Bayesian Brain Smithe.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-
-### `data/video/activeinferenceinstitute/MathStream/MathStream_001` — 30 remaining
-
-- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.chi(translated-Simp).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.chi(translated-Trad) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.dut(translated).dut(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.fre(translated).fre(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.ger(translated).ger(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.ita(translated).ita(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.jpn(translated).jpn(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.kor(translated).kor(translated).srt` — conflict: 2 files collapse to one target
-- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.por(translated).por(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.rus(translated).rus(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab Livestream MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.spa(translated).spa(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson Emergent Time and Chromatic Types.de.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson Emergent Time and Chromatic Types.es.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson Emergent Time and Chromatic Types.fr.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson Emergent Time and Chromatic Types.it.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson Emergent Time and Chromatic Types.ja.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson Emergent Time and Chromatic Types.ko.srt` — conflict: 2 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson Emergent Time and Chromatic Types.nl.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson Emergent Time and Chromatic Types.pt.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson Emergent Time and Chromatic Types.ru.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson Emergent Time and Chromatic Types.zh-Hans.srt` — conflict: 2 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson Emergent Time and Chromatic Types.zh-Hant.srt` — conflict: 2 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).de.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).es.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).fr.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).it.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).ja.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).nl.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).pt.srt` — conflict: 3 files collapse to one target
-- `ActInfLab MathStream #001.1 ~ Shanna Dobson ~  Emergent Time and Chromatic Types.eng(transcribed).eng(transcribed).ru.srt` — conflict: 3 files collapse to one target
+- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.0 ~ Compositional Account of the Bayesian Brain - Smithe.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `Active Inference LiveStream 054.2 ~ “...Compositional Account of the Bayesian Brain” (Smithe).zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ls054 1 Compositional Account of the Bayesian Brain Smithe.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ls054 1 Compositional Account of the Bayesian Brain Smithe.en(ie).srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ls054 1 Compositional Account of the Bayesian Brain Smithe.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ls054 1 Compositional Account of the Bayesian Brain Smithe.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ls054 1 Compositional Account of the Bayesian Brain Smithe.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ls054 1 Compositional Account of the Bayesian Brain Smithe.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ls054 1 Compositional Account of the Bayesian Brain Smithe.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ls054 1 Compositional Account of the Bayesian Brain Smithe.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ls054 1 Compositional Account of the Bayesian Brain Smithe.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ls054 1 Compositional Account of the Bayesian Brain Smithe.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ls054 1 Compositional Account of the Bayesian Brain Smithe.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ls054 1 Compositional Account of the Bayesian Brain Smithe.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/MathStream/MathStream_002` — 3 remaining
 
-- `ActInfLab MathStream #002.1 ~ Shanna Dobson.chi(translated-Simp).chi(translated).srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInfLab MathStream #002.1 ~ Shanna Dobson.chi(translated-Trad) (2).chi(translated).srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInfLab MathStream #002.1 ~ Shanna Dobson.ger(translated).ger(translated).srt` — stem unrelated to sole part title (unverified single-part)
+- `ActInfLab MathStream #002.1 ~ Shanna Dobson.chi(translated-Simp).chi(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInfLab MathStream #002.1 ~ Shanna Dobson.chi(translated-Trad) (2).chi(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInfLab MathStream #002.1 ~ Shanna Dobson.ger(translated).ger(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/MathStream/MathStream_003` — 11 remaining
 
-- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.chi(translated-Simp).chi(translated).srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.chi(translated-Trad) (2).chi(translated).srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.dut(translated).dut(translated).srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.fre(translated).fre(translated).srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.ger(translated).ger(translated).srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.ita(translated).ita(translated).srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.jpn(translated).jpn(translated).srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.kor(translated).kor(translated).srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.por(translated).por(translated).srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.rus(translated).rus(translated).srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.spa(translated).spa(translated).srt` — stem unrelated to sole part title (unverified single-part)
+- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.chi(translated-Simp).chi(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.chi(translated-Trad) (2).chi(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.dut(translated).dut(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.fre(translated).fre(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.ger(translated).ger(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.ita(translated).ita(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.jpn(translated).jpn(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.kor(translated).kor(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.por(translated).por(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.rus(translated).rus(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInfLab MathStream #003.1 ~ Shanna Dobson et al.spa(translated).spa(translated).srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
-### `data/video/activeinferenceinstitute/ModelStream/ModelStream_002` — 33 remaining
+### `data/video/activeinferenceinstitute/ModelStream/ModelStream_007` — 11 remaining
 
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.chi(translated) (2).chi(translated).srt` — conflict: 4 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.chi(translated).chi(translated).srt` — conflict: 4 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.dut(translated).dut(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.fre(translated).fre(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.ger(translated).ger(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.ita(translated).ita(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.jpn(translated).jpn(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.kor(translated).kor(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.por(translated).por(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.rus(translated).rus(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid & Philip Ball.spa(translated).spa(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).de.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).es.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).fr.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).it.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).ja.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).ko.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).nl.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).pt.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).ru.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 4 files collapse to one target
-- `ActInfLab ModelStream #002.1 ~ Noor Sajid _ Philip Ball.eng(transcribed).eng(transcribed).zh-Hant.srt` — conflict: 2 files collapse to one target
-- `ActInfLab ModelStream #002.1.de.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1.es.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1.fr.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1.it.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1.ja.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1.ko.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1.nl.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1.pt.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1.ru.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #002.1.zh-Hans.srt` — conflict: 4 files collapse to one target
-- `ActInfLab ModelStream #002.1.zh-Hant.srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/ModelStream/ModelStream_003` — 33 remaining
-
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.chi(translated) (2).chi(translated).srt` — conflict: 4 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.chi(translated).chi(translated).srt` — conflict: 4 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.de.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.es.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.fr.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.it.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.ja.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.kor(translated).kor(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.nl.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.pt.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal & Tim Verbelen.ru.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).de.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).es.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).fr.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).it.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).ja.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).ko.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).nl.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).pt.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).ru.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 4 files collapse to one target
-- `ActInfLab ModelStream #003.1 ~ Ozan Catal _ Tim Verbelen.eng(transcribed).eng(transcribed).zh-Hant.srt` — conflict: 2 files collapse to one target
-- `ActInfLab ModelStream #003.1.de.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1.es.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1.fr.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1.it.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1.ja.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1.ko.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1.nl.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1.pt.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1.ru.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #003.1.zh-Hans.srt` — conflict: 4 files collapse to one target
-- `ActInfLab ModelStream #003.1.zh-Hant.srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/ModelStream/ModelStream_004` — 33 remaining
-
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.chi(translated) (2).chi(translated).srt` — conflict: 4 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.chi(translated).chi(translated).srt` — conflict: 4 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.dut(translated).dut(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).de.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).es.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).fr.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).it.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).ja.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).ko.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).nl.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).pt.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).ru.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).zh-Hans.srt` — conflict: 4 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.eng(transcribed).eng(transcribed).zh-Hant.srt` — conflict: 2 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.fre(translated).fre(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.ger(translated).ger(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.ita(translated).ita(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.jpn(translated).jpn(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.kor(translated).kor(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.por(translated).por(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.rus(translated).rus(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1 ~  Implementing Active Inference by Message Passing in a Factor Graph.spa(translated).spa(translated).srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1.de.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1.es.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1.fr.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1.it.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1.ja.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1.ko.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1.nl.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1.pt.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1.ru.srt` — conflict: 3 files collapse to one target
-- `ActInfLab ModelStream #004.1.zh-Hans.srt` — conflict: 4 files collapse to one target
-- `ActInfLab ModelStream #004.1.zh-Hant.srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/ModelStream/ModelStream_007` — 13 remaining
-
-- `Active Inference ModelStream #007.1 ~ Conor Heins & Daphne Demekas ~ pymdp.es (1).srt` — conflict: 2 files collapse to one target
-- `Active Inference ModelStream #007.1 ~ Conor Heins & Daphne Demekas ~ pymdp.es.srt` — conflict: 2 files collapse to one target
-- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
+- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo007-2_Active Inference ModelStream 007.2 ~ Conor Heins, pymdp.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/ModelStream/ModelStream_008` — 22 remaining
 
-- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.de.srt` — ambiguous match
-- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.es.srt` — ambiguous match
-- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.fr.srt` — ambiguous match
-- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.it.srt` — ambiguous match
-- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.ja.srt` — ambiguous match
-- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.ko.srt` — ambiguous match
-- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.nl.srt` — ambiguous match
-- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.pt.srt` — ambiguous match
-- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.ru.srt` — ambiguous match
-- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.zh-Hans.srt` — ambiguous match
-- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.zh-Hant.srt` — ambiguous match
-- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
+- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.de.srt` — ambiguous match — needs human review
+- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.es.srt` — ambiguous match — needs human review
+- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.fr.srt` — ambiguous match — needs human review
+- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.it.srt` — ambiguous match — needs human review
+- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.ja.srt` — ambiguous match — needs human review
+- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.ko.srt` — ambiguous match — needs human review
+- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.nl.srt` — ambiguous match — needs human review
+- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.pt.srt` — ambiguous match — needs human review
+- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.ru.srt` — ambiguous match — needs human review
+- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.zh-Hans.srt` — ambiguous match — needs human review
+- `ActInf ModelStream #008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.zh-Hant.srt` — ambiguous match — needs human review
+- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo008-1_ActInf ModelStream 008.1 ~ Tom Ringstrom ~ Reward is Not Necessary.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
 ### `data/video/activeinferenceinstitute/ModelStream/ModelStream_009` — 22 remaining
 
-- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.de.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.es.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.fr.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.it.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.ja.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.ko.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.nl.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.pt.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.ru.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part)
-- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part)
+- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.de.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.es.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.fr.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.it.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.ja.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.ko.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.nl.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.pt.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.ru.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.zh-Hans.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
+- `mo009-1_ActInf ModelStream 009.1 ~ Aswin Paul  On efficient computation in active inference.zh-Hant.srt` — no verified video_id/language (stem unmatched to any part) — good-first-issue material (I16)
 
-### `data/video/activeinferenceinstitute/MorphStream/MorphStream_001` — 44 remaining
+### `data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_001` — 8 remaining
 
-- `ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.de.srt` — conflict: 4 files collapse to one target
-- `ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.es.srt` — conflict: 4 files collapse to one target
-- `ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.fr.srt` — conflict: 4 files collapse to one target
-- `ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.it.srt` — conflict: 4 files collapse to one target
-- `ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.ja.srt` — conflict: 4 files collapse to one target
-- `ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.ko.srt` — conflict: 4 files collapse to one target
-- `ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.nl.srt` — conflict: 4 files collapse to one target
-- `ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.pt.srt` — conflict: 4 files collapse to one target
-- `ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.ru.srt` — conflict: 4 files collapse to one target
-- `ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.zh-Hans.srt` — conflict: 4 files collapse to one target
-- `ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.zh-Hant.srt` — conflict: 4 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 2 ~ Meeting 20 (Chapter 9, part 1).de.srt` — conflict: 4 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 2 ~ Meeting 20 (Chapter 9, part 1).es.srt` — conflict: 4 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 2 ~ Meeting 20 (Chapter 9, part 1).fr.srt` — conflict: 4 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 2 ~ Meeting 20 (Chapter 9, part 1).it.srt` — conflict: 4 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 2 ~ Meeting 20 (Chapter 9, part 1).ja.srt` — conflict: 4 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 2 ~ Meeting 20 (Chapter 9, part 1).ko.srt` — conflict: 4 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 2 ~ Meeting 20 (Chapter 9, part 1).nl.srt` — conflict: 4 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 2 ~ Meeting 20 (Chapter 9, part 1).pt.srt` — conflict: 4 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 2 ~ Meeting 20 (Chapter 9, part 1).ru.srt` — conflict: 4 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 2 ~ Meeting 20 (Chapter 9, part 1).zh-Hans.srt` — conflict: 4 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 2 ~ Meeting 20 (Chapter 9, part 1).zh-Hant.srt` — conflict: 4 files collapse to one target
-- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.de.srt` — conflict: 4 files collapse to one target
-- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.es.srt` — conflict: 4 files collapse to one target
-- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.fr.srt` — conflict: 4 files collapse to one target
-- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.it.srt` — conflict: 4 files collapse to one target
-- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.ja.srt` — conflict: 4 files collapse to one target
-- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.ko.srt` — conflict: 4 files collapse to one target
-- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.nl.srt` — conflict: 4 files collapse to one target
-- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.pt.srt` — conflict: 4 files collapse to one target
-- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.ru.srt` — conflict: 4 files collapse to one target
-- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.zh-Hans.srt` — conflict: 4 files collapse to one target
-- `Transcripts_Captions__mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.zh-Hant.srt` — conflict: 4 files collapse to one target
-- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.de.srt` — conflict: 4 files collapse to one target
-- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.es.srt` — conflict: 4 files collapse to one target
-- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.fr.srt` — conflict: 4 files collapse to one target
-- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.it.srt` — conflict: 4 files collapse to one target
-- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.ja.srt` — conflict: 4 files collapse to one target
-- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.ko.srt` — conflict: 4 files collapse to one target
-- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.nl.srt` — conflict: 4 files collapse to one target
-- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.pt.srt` — conflict: 4 files collapse to one target
-- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.ru.srt` — conflict: 4 files collapse to one target
-- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.zh-Hans.srt` — conflict: 4 files collapse to one target
-- `mph001-1_ActInf MorphStream 001.1 ~ David Kappel and Sarah Hamburg.m4a.zh-Hant.srt` — conflict: 4 files collapse to one target
-
-### `data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_001` — 12 remaining
-
-- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 1 (Onboarding).ja.srt` — conflict: 2 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 1 (Onboarding).ko.srt` — conflict: 2 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).es.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).fr.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).it.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).ja.srt` — conflict: 2 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).ko.srt` — conflict: 2 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).nl.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).pt.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).ru.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).zh-Hans.srt` — stem unrelated to sole part title (unverified single-part)
-- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).zh-Hant.srt` — stem unrelated to sole part title (unverified single-part)
-
-### `data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_003` — 2 remaining
-
-- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 3 (Appendix A + Appendix B + 2nd hour discussion).chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 3 (Appendix A + Appendix B + 2nd hour discussion).chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_004` — 2 remaining
-
-- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 4 (Chapter 2 pt. 1).chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 4 (Chapter 2 pt. 1).chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_005` — 2 remaining
-
-- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 5 (Chapter 2 pt. 2).chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 5 (Chapter 2 pt. 2).chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_006` — 2 remaining
-
-- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 6 (Chapter 3 pt. 1).chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 6 (Chapter 3 pt. 1).chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
-
-### `data/video/activeinferenceinstitute/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_007` — 2 remaining
-
-- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 7 (Chapter 3 pt. 2).chi(translated) (2).chi(translated).srt` — conflict: 2 files collapse to one target
-- `ActInf Textbook Group ~ Cohort 1 ~ Meeting 7 (Chapter 3 pt. 2).chi(translated).chi(translated).srt` — conflict: 2 files collapse to one target
+- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).es.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).fr.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).it.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).nl.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).pt.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).ru.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).zh-Hans.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
+- `ActInf Textbook Group ~ Cohort 3 ~ Meeting 1 (Welcome and Onboarding).zh-Hant.srt` — stem unrelated to sole part title (unverified single-part) — good-first-issue material (I16)
 
