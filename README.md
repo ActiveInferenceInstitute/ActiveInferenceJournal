@@ -9,7 +9,7 @@ video library.
 
 Learn more: https://activeinference.institute/learning/ ·
 Site: https://activeinferenceinstitute.github.io/ActiveInferenceJournal/ ·
-Tooling: https://github.com/ActiveInferenceInstitute/Journal-Utilities
+Tooling: https://github.com/ActiveInferenceInstitute/Journal_Utilities
 
 ## Layout
 
@@ -52,7 +52,7 @@ is represented (uncategorized videos live under `Other/`).
 
 Transcripts and metadata are pulled completely and idempotently from the Institute
 YouTube channel by
-[Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal-Utilities).
+[Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities).
 Most transcripts are WhisperX-diarized: `transcript.json` holds the immutable raw
 segments (`SPEAKER_NN`), human speaker identifications are recorded in
 `metadata.json` `parts[].speakers`, and `transcript.txt` is regenerated from the

@@ -15,7 +15,7 @@ curated materials from the Active Inference Institute video library. Read
 ## Rules for agents
 
 - This repo is **generated** by
-  [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal-Utilities)
+  [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities)
   (`scripts/refactor_journal.py`, `scripts/download_channel.py`). Prefer changing the
   generator over hand-editing derived files (`metadata.json`, `transcript.txt`,
   `INDEX.*`); hand edits are overwritten on the next run.
