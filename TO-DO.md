@@ -85,6 +85,17 @@ overhaul, cross-cutting refactors.
   verified), 23 refs to absent images replaced with italic alt-text
   placeholders, line endings preserved. Verified 0 broken refs remain.
   (`dc1ba164`)
+- ✓ **M2 translations migration (J2/Y15)** — 2,880 legacy `Translations/` files
+  across 131 items migrated non-destructively: 1,857 now normalized as
+  `translations/<video_id>.<bcp47>.srt` (talkslug suffix for per-talk files in
+  single-part interval items; 13 cross-item misfiles rescued via INDEX
+  title-verification), 600 multi-version conflicts quarantined under
+  `translations/conflicts/<series>/` with reasons in
+  [`docs/translation-migration-map.md`](docs/translation-migration-map.md)
+  (CONFLICTS appendix), 423 machine-unresolvable files left in place for
+  volunteer triage (I16). Original paths recorded in each item's
+  `metadata.json` `previous_paths` (1,857 entries). Verified with
+  `validate_journal.py` (PASS) after every pass. (`74aab8f4`..`e38ae28f`)
 
 ## Verification (this pass)
 

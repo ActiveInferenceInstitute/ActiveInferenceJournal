@@ -2,10 +2,13 @@
 
 Generated: 2026-09-23, against worktree branch `feat/m2-translations` (HEAD `d88cb2ae`).
 
-**This map only documents the planned moves. No files are moved in this change.** The
-actual `git mv` (two-step rename `Translations/` → `translations_tmp/` → `translations/`,
-with `previous_paths` recorded in each item's `metadata.json`, per-series PRs) is a
-reviewable follow-up executed strictly from the approved rows of this map.
+**Status: migration executed.** Part 2 (2026-09-23) moved the 1,540 verified rows;
+pass 2b (2026-09-24) resolved the 917 collapse-conflict rows (317 migrated, 600
+quarantined to `translations/conflicts/<series>/`). See "Conflict-resolution pass"
+and "CONFLICTS appendix" below. 423 files remain untouched in `Translations/`
+("REMAINING") as I16 volunteer material. Every moved file's original path is
+recorded in its item's `metadata.json` `previous_paths` (two-step
+`git mv Translations/ → translations_tmp/ → translations/`, per-series commits).
 
 ## Verified counts
 
@@ -16,6 +19,28 @@ reviewable follow-up executed strictly from the approved rows of this map.
 | Rows auto-movable in part 2 (verified, unique targets) | 1540 |
 | Rows requiring review before any move | 1340 |
 | Distinct targets for auto-movable rows | 1540 |
+
+Post-execution state (after part 2 + pass 2b, 2026-09-24):
+
+| Metric | Value |
+|---|---|
+| Files migrated to `translations/` (normalized names) | 1857 (1540 + 317) |
+| — of which talkslug-suffixed per-talk targets | 182 |
+| — of which cross-item rescues (INDEX title-verified) | 13 |
+| Files quarantined to `translations/conflicts/<series>/` | 600 |
+| Files still untouched in `Translations/` (REMAINING) | 423 (30 items) |
+| `previous_paths` entries written | 1857 |
+
+Known integration issue (builder-side, Journal-Utilities): the Pages builder
+derives the language label as the second-to-last dot segment of the filename
+(`site/builder.py`, `lang = parts_name[-2]`). Plain `<video_id>.<lang>.srt`
+targets parse correctly, but talkslug names
+(`<video_id>.<lang>.<talkslug>.srt`) make the builder report the talkslug as a
+pseudo-language (verified in the 2026-09-24 local build: First_Interval shows
+`01-andre-bastos` etc.). Fix belongs in the builder (M3/I4): detect the BCP-47
+segment rather than the positional last-but-one. Pre-existing lowercase files
+with legacy tokens (`chi(translated)`, `en(ie)`) already exhibited the same
+naive parse before this migration.
 
 Handoff claim "~2,880 files / ~131 items" is **verified exactly: 2,880 files in 131 folders**.
 
