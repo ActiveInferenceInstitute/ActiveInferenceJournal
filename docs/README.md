@@ -10,8 +10,8 @@ materials from the Active Inference Institute video library.
 | --- | --- |
 | [`SCHEMA.md`](SCHEMA.md) | Canonical per-item schema (`metadata.json`, `transcript.*`, `captions/`, `translations/`, `assets/`) and the `INDEX.json` contract. |
 | [`ORGANIZATION.md`](ORGANIZATION.md) | The top-level namespace (`data/video/<source>/`, `data/<type>/<source>/`), how series and items are organized, and how to add other channels / non-video sources. |
-| [`PIPELINE.md`](PIPELINE.md) | How content is produced and kept complete + idempotent — the collaboration with the [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities) engine. |
-| [`AGENTS.md`](AGENTS.md) | Conventions for AI agents and programs operating on this repo. |
+| [`PIPELINE.md`](PIPELINE.md) | How content is produced and kept complete + idempotent — the collaboration with the [Journal_Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities) engine. |
+| [`translation-migration-map.md`](translation-migration-map.md) | Item-by-item map of the legacy `Translations/` → `translations/<video_id>.<bcp47>.srt` migration (M2 part 1: documentation only, moves happen in a reviewed follow-up). || [`AGENTS.md`](AGENTS.md) | Conventions for AI agents and programs operating on this repo. |
 
 ## Quick orientation
 

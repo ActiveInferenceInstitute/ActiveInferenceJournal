@@ -4,10 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'data/**'
+      - 'INDEX.json'
+      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
 permissions:
-  contents: write
   pages: write
   id-token: write
 
@@ -16,51 +19,68 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  integrity:
+    uses: ./.github/workflows/journal-integrity.yml
+    permissions:
+      contents: read
+
   build-and-deploy:
+    needs: integrity
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Check out ActiveInferenceJournal
-        uses: actions/checkout@v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           path: journal
-          fetch-depth: 0
+          fetch-depth: 1
 
-      - name: Check out Journal-Utilities
-        uses: actions/checkout@v4
+      # Pinned to the verified HEAD of Journal-Utilities main. The v0.1.0 tag
+      # peels to an older commit (bd875b20...); branch refs drift silently, so
+      # a SHA pin is the only stable choice until a newer release tag exists.
+      # Bump via Dependabot/Renovate or a reviewed PR (handoff E5/J7).
+      - name: Check out Journal-Utilities (pinned)
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           repository: ActiveInferenceInstitute/Journal_Utilities
-          path: utilities
+          ref: ea873718a5de5317d3ae8d80cf2118f7792b179d          path: utilities
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts/build_pages_site.py
+            src/journal_utilities
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
-          enable-cache: true
+          python-version: "3.12"
 
-      - name: Build Static Site Bundle
+      # Plain stdlib python: build_pages_site.py imports only
+      # journal_utilities.site.builder (json/logging/re/shutil/pathlib).
+      # No uv sync, no torch/CUDA (handoff E5/J7).
+      - name: Build static site bundle
         run: |
-          cd utilities
-          uv run python scripts/build_pages_site.py --journal ../journal --output ../_site
-          # Add .nojekyll to prevent Jekyll processing on GitHub Pages
-          touch ../_site/.nojekyll
+          python3 utilities/scripts/build_pages_site.py --journal journal --output _site
+          touch _site/.nojekyll
 
-      # 1. Deploy via GitHub Actions Pages artifact (when Pages source is GitHub Actions)
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
           path: _site
 
-      - name: Deploy to GitHub Pages (Actions mode)
+      - name: Deploy to GitHub Pages
         id: deployment
-        continue-on-error: true
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
 
-      # 2. Deploy to gh-pages branch (when Pages source is "Deploy from a branch")
-      - name: Deploy to gh-pages branch (Branch mode)
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
-          publish_branch: gh-pages
-          force_orphan: true
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+      - name: Post-deploy smoke test
+        run: |
+          BASE="${{ steps.deployment.outputs.page_url }}"
+          status=0
+          for f in index.html manifest.json .nojekyll; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE$f")
+            echo "$f -> HTTP $code"
+            [ "$code" = "200" ] || status=1
+          done
+          exit $status

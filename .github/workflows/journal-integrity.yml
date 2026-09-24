@@ -3,6 +3,7 @@ name: Validate journal integrity
 on:
   push:
   pull_request:
+  workflow_call:
 
 permissions:
   contents: read
@@ -13,17 +14,18 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out journal
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
+      # Pinned SHA (verified main HEAD 2026-09-23; v0.1.0 tag is older).
       - name: Check out Journal-Utilities
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           repository: ActiveInferenceInstitute/Journal_Utilities
-          path: .journal-utilities
+          ref: ea873718a5de5317d3ae8d80cf2118f7792b179d          path: .journal-utilities
           fetch-depth: 1
 
       - name: Install Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
 
@@ -40,3 +42,47 @@ jobs:
           python .journal-utilities/scripts/validate_journal.py
           --journal .
           --manifest .journal-utilities/data/output/channel_videos.json
+
+      - name: Manifest staleness and reconciliation (E13)
+        run: |
+          python3 - <<'PY'
+          import collections
+          import datetime
+          import json
+
+          manifest = json.load(open(".journal-utilities/data/output/channel_videos.json"))
+          enumerated = datetime.datetime.fromisoformat(manifest["enumerated_at"])
+          age = (datetime.datetime.now(datetime.timezone.utc) - enumerated).days
+          listed = [v["id"] for v in manifest["videos"]]
+          mset = set(listed)
+          dupes = sorted(v for v, c in collections.Counter(listed).items() if c > 1)
+
+          index = json.load(open("INDEX.json"))
+          index_vids = set()
+          for it in index.get("items", []):
+              for p in it.get("parts", []):
+                  index_vids.add(p if isinstance(p, str) else p.get("video_id"))
+
+          missing = sorted(mset - index_vids)
+          extra = sorted(index_vids - mset)
+          print(f"manifest: enumerated_at={manifest['enumerated_at']} age_days={age} "
+                f"declared={manifest.get('total_videos')} listed={len(listed)} "
+                f"unique={len(mset)} duplicate_ids={len(dupes)}")
+          print(f"INDEX: count={index.get('count')} unique_videos={index.get('unique_videos')} "
+                f"part_ids={len(index_vids)}")
+          print(f"reconciliation: manifest-not-in-INDEX={len(missing)} INDEX-not-in-manifest={len(extra)}")
+          for v in missing[:20]:
+              print(f"  manifest-only: {v}")
+          for v in extra[:20]:
+              print(f"  index-only: {v}")
+
+          # Annotate (not fail): the scheduled manifest refresh (M5) does not
+          # exist yet, so failing here would block every PR on a known-stale
+          # manifest. Flip to failure once M5 lands.
+          if age > 7:
+              print(f"::warning::channel_videos.json is {age} days old "
+                    f"(enumerated_at {manifest['enumerated_at']}) — exceeds the 7-day "
+                    f"freshness budget (E13); refresh via the scheduled enumeration")
+          if dupes:
+              print(f"::warning::manifest contains {len(dupes)} duplicate video ids: {dupes[:5]}")
+          PY
