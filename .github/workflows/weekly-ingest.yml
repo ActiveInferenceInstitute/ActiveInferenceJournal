@@ -1,0 +1,71 @@
+name: Weekly ingest
+
+# M3: weekly channel enumeration + scaffold preview (read-only to YouTube).
+# Writes happen only when an approved run passes --no-dry-run on step 3.
+# See docs/m3-ingest.md (Journal_Utilities) for the full contract.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weekly-ingest
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout journal
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Checkout Journal_Utilities (pinned)
+        uses: actions/checkout@v4
+        with:
+          repository: ActiveInferenceInstitute/Journal_Utilities
+          ref: d6b77a0 # orchestrator-pinned; Renovate bumps this
+          path: .journal-utilities
+          fetch-depth: 1
+          sparse-checkout: |
+            src
+            pyproject.toml
+            uv.lock
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Enumerate channel (Data API, ~32 quota units)
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: |
+          uv run --project .journal-utilities python -m journal_utilities.ingest.enumerate \
+            --journal . --output data/output/ingest-worklist.json --no-dry-run
+
+      - name: Scaffold preview (dry-run)
+        run: |
+          uv run --project .journal-utilities python -m journal_utilities.ingest.scaffold \
+            --journal . --worklist data/output/ingest-worklist.json
+
+      - name: Reconciliation gate (channel vs manifest vs INDEX)
+        run: |
+          uv run --project .journal-utilities python -m journal_utilities.ingest.diff \
+            --journal . --channel-manifest data/output/ingest-worklist.json \
+            --output data/output/reconciliation-report.json
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ingest-reports
+          path: |
+            data/output/ingest-worklist.json
+            data/output/reconciliation-report.json
