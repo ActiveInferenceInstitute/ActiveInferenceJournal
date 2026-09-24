@@ -107,3 +107,30 @@ overhaul, cross-cutting refactors.
 - **Curated assets elsewhere** — after the image-repair pass, no `.md` under
   `assets/` has broken relative refs and no machine paths remain anywhere in
   the repo (verified by grep).
+
+## M4-pages wave (feat/m4-pages, 2026-09-23)
+
+- ✓ **I4 verified on the real tree** — builder reads only lowercase
+  `translations/` (Journal-Utilities `src/journal_utilities/site/builder.py:121`);
+  tree holds 13 items with lowercase `translations/` (~336 SRTs) vs 131 items
+  with capital-T `Translations/` (~2,880 SRTs); live `manifest.json` shows
+  languages for 13/573 items (129 language entries). Fix + spec in
+  [`docs/m4-site-spec.md`](docs/m4-site-spec.md) §0; permanent fix = M2
+  translation migration.
+- ✓ **Textbook Cohort 2 Meeting 20 SRT misfiled in
+  `ModelStream_011/captions/`** — `git mv` to canonical
+  `TextbookGroup/ParrPezzuloFriston2022/Cohort_2/Meeting_020/captions/`
+  (video `QjGcN1l6NXg` via INDEX.json). 57 further byte-identical copies
+  remain scattered (GuestStream/MathStream/ModelStream/MorphStream/Courses/
+  symposium/Cohort_4) — owned by the J3/I10 captions-naming validator, see
+  [`docs/misfiling-findings.md`](docs/misfiling-findings.md).
+- ✓ **2022 Robotics translations inside 2021 Symposium `Translations/`** —
+  verified near-duplicate second copy (22 files, diffs are re-translated
+  lines); documented rather than moved (a move would clobber or double-count);
+  to be resolved during the M2 per-series migration —
+  [`docs/misfiling-findings.md`](docs/misfiling-findings.md) §2.
+- ✓ **README.md** — Pages site link added.
+- ✓ **`docs/m4-site-spec.md`** — M4 builder spec (static
+  `/item/<series>/<item>/index.html`, schema.org VideoObject JSON-LD,
+  canonical/og, sitemap.xml + robots.txt), prepared for the Journal_Utilities
+  builder agent; not yet implemented.
