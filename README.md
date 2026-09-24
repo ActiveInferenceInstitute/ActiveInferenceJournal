@@ -8,6 +8,7 @@ video library.
 [![Journal integrity](https://github.com/ActiveInferenceInstitute/ActiveInferenceJournal/actions/workflows/journal-integrity.yml/badge.svg)](https://github.com/ActiveInferenceInstitute/ActiveInferenceJournal/actions/workflows/journal-integrity.yml)
 
 Learn more: https://activeinference.institute/learning/ ·
+Site: https://activeinferenceinstitute.github.io/ActiveInferenceJournal/ ·
 Tooling: https://github.com/ActiveInferenceInstitute/Journal_Utilities
 
 ## Layout
