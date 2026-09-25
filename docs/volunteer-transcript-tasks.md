@@ -2,6 +2,14 @@
 
 Generated 2026-09-24 against branch `feat/m2-translations` (HEAD `21c58548`), from the
 [M2 translation migration map](translation-migration-map.md) (part 1 + pass 2b appendices).
+**Tree re-verification (2026-09-24, HEAD `fbc1ab8e`).** All counts below were re-derived from the git
+index and match the rows exactly: REMAINING 423 files across 30 items (412 rows in Part A + the 11
+files with no verified home deferred to Part C), CONFLICTS 600 files across 44 items with the reason
+tally 301 `multiple-versions-no-dump` / 187 `superseded-by-dump` / 60 `rescue-version-conflict:episode-token`
+/ 22 `dump-variant` / 16 `multiple-dump-versions` / 10 `rescue-dest-occupied` / 4 `byte-identical-extra`.
+Note for volunteers: legacy `Translations/` folders and migrated `translations/` folders collide on
+case-insensitive checkouts (both are tracked in git) — derive counts and paths from `git ls-files`,
+never from a filesystem walk.
 
 **Context.** M2 moved 1,857 legacy translation files into per-item `translations/<video_id>.<bcp47>.srt`
 (1,540 verified rows in part 2, 317 rescued in pass 2b, plus conflict handling). What remains: **423 files**
