@@ -38,15 +38,17 @@ jobs:
           path: journal
           fetch-depth: 1
 
-      # Pinned to the verified HEAD of Journal-Utilities main. The v0.1.0 tag
-      # peels to an older commit (bd875b20...); branch refs drift silently, so
-      # a SHA pin is the only stable choice until a newer release tag exists.
-      # Bump via Dependabot/Renovate or a reviewed PR (handoff E5/J7).
+      # Pinned to a verified commit of Journal-Utilities main — the M4
+      # path-keyed builder (pages keyed by the item's INDEX path, payloads and
+      # manifest ids matching, a duplicate key fails the build). The v0.1.0 tag
+      # peels to an older commit (bd875b20...) without M4, and branch refs drift
+      # silently, so a SHA pin is the only stable choice until a newer release
+      # tag exists. Bump via Dependabot/Renovate or a reviewed PR (handoff E5/J7).
       - name: Check out Journal-Utilities (pinned)
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           repository: ActiveInferenceInstitute/Journal_Utilities
-          ref: ea873718a5de5317d3ae8d80cf2118f7792b179d
+          ref: 3b9700ad52e29fa508f5a45ac835dcba00103f9e
           path: utilities
           fetch-depth: 1
           sparse-checkout: |
@@ -61,9 +63,14 @@ jobs:
       # Plain stdlib python: build_pages_site.py imports only
       # journal_utilities.site.builder (json/logging/re/shutil/pathlib).
       # No uv sync, no torch/CUDA (handoff E5/J7).
+      #
+      # --apply is REQUIRED: the builder is dry-run by default and writes
+      # nothing without it, which would publish an empty site (the smoke test
+      # below would catch it, but only after the empty Pages artifact is
+      # already live).
       - name: Build static site bundle
         run: |
-          python3 utilities/scripts/build_pages_site.py --journal journal --output _site
+          python3 utilities/scripts/build_pages_site.py --journal journal --output _site --apply
           touch _site/.nojekyll
 
       - name: Upload Pages artifact
@@ -79,9 +86,23 @@ jobs:
         run: |
           BASE="${{ steps.deployment.outputs.page_url }}"
           status=0
-          for f in index.html manifest.json .nojekyll; do
-            code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE$f")
+          for f in index.html manifest.json .nojekyll sitemap.xml robots.txt \
+                   "item/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_007/" \
+                   "data/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_007.json"; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "${BASE}${f}")
             echo "$f -> HTTP $code"
             [ "$code" = "200" ] || status=1
           done
-          exit $status
+
+          # The M4 item page must be server-rendered: the canonical link is in
+          # the HTML without running JS. The URL above is a TextbookGroup
+          # cohort item — one level below its series directory — so it only
+          # resolves once the path-keyed builder is deployed.
+          item_page="${BASE}item/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_007/"
+          if curl -sf "${item_page}" | grep -q 'rel="canonical"'; then
+            echo "canonical link on item page -> present"
+          else
+            echo "canonical link on item page -> MISSING"
+            status=1
+          fi
+          exit "$status"

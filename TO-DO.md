@@ -142,6 +142,29 @@ overhaul, cross-cutting refactors.
   [`docs/misfiling-findings.md`](docs/misfiling-findings.md) §2.
 - ✓ **README.md** — Pages site link added.
 - ✓ **`docs/m4-site-spec.md`** — M4 builder spec (static
-  `/item/<series>/<item>/index.html`, schema.org VideoObject JSON-LD,
-  canonical/og, sitemap.xml + robots.txt), prepared for the Journal_Utilities
-  builder agent; not yet implemented.
+  `/item/<slug>/index.html`, schema.org VideoObject JSON-LD, canonical/og,
+  sitemap.xml + robots.txt), implemented by Journal-Utilities.
+
+## M4 shipped (2026-11-02)
+
+- ✓ **Builder implements the spec** — Journal-Utilities emits one
+  `/item/<slug>/index.html` per `INDEX.json` item plus `sitemap.xml` and
+  `robots.txt`, where `<slug>` is the item's INDEX path below its source
+  directory. The flat `(series, item)` key was **not** unique: 573 records
+  collapsed onto 444 keys, so 129 records silently overwrote another item's
+  page, payload and manifest entry (one `TextbookGroup/Meeting_007` key covered
+  8 cohort records; the check could not see it because it counted write
+  operations, not files). Pages went 444 → 573, distinct manifest ids 444 → 573,
+  sitemap unique `<loc>` 445 → 574; 369 published URLs kept their exact
+  address, 204 pages are new, 75 flat shortcuts now resolve one level deeper
+  under the item's own directory.
+- ✓ **Deploy workflow pinned to the path-keyed builder, build now passes
+  `--apply`** — the builder is dry-run by default, so a pin bump without the
+  flag would publish an empty site. The post-deploy smoke test now covers
+  `sitemap.xml`, `robots.txt`, one deep TextbookGroup item page and its payload,
+  and asserts the item page's canonical link is server-rendered.
+- ✓ **Translations prerequisite (I4)** — the pinned builder reads both
+  `translations/` and `Translations/` (lowercase preferred), so the deploy sees
+  every item's SRT files; the M2 migration has moved 2,193 `.srt` files across
+  128 items to lowercase, with 423 files across 30 items still to migrate.
+

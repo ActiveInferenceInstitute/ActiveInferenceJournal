@@ -1,39 +1,23 @@
 # M4 site spec — static per-item pages, sitemap, robots.txt
 
-Status: **specification for implementation, not yet implemented.** The current
-deployed site (hash-routed SPA fed by `manifest.json` + `data/*.json`, built by
-Journal-Utilities `src/journal_utilities/site/builder.py` via
-`scripts/build_pages_site.py`, deployed by
-[`.github/workflows/deploy-pages.yml`](../.github/workflows/deploy-pages.yml))
-exposes exactly one crawlable URL. This file states what the M4 wave must emit
-so the Journal_Utilities builder agent (or a later wave) can implement it.
-Handoff context: `/tmp/aii_journal_handoff.md` milestone M4.
+Status: **implemented and deployed.** The builder is Journal-Utilities
+`src/journal_utilities/site/pages_site.py` (+ `sitemap.py`), driven by
+`scripts/build_pages_site.py`; the deploy is
+[`.github/workflows/deploy-pages.yml`](../.github/workflows/deploy-pages.yml),
+which builds with `--apply` (the builder is dry-run by default — without that
+flag the page publishes an empty site) and smoke-tests the SPA entry points,
+one path-keyed item page, its payload, `sitemap.xml` and `robots.txt`. The SPA
+stays at `/` as the interactive view; the static pages are additive.
 
 ## 0. Prerequisite fix bundled with M4 (handoff I4)
 
-`builder.py` reads only lowercase `translations/` (`tr_dir = item_dir /
-"translations"`, builder.py:121) while the journal tree holds **131 items with
-capital-T `Translations/`** (~2,880 SRTs) vs **13 items with lowercase
-`translations/`** (~336 SRTs). Verified 2026-09-23 on this tree and against the
-live deployed `manifest.json` (13/573 items with `languages`, 129 language
-entries; the site ships 3,552 fewer translation files than the journal holds:
-6,432 total SRTs vs 3,552 readable).
-
-Fix (permanent fix remains the M2 `Translations/ → translations/` migration):
-
-```python
-tr_dir = next(
-    (d for d in (item_dir / "translations", item_dir / "Translations") if d.is_dir()),
-    None,
-)
-```
-
-Also strip legacy ISO-639-2 parenthesized tags when deriving `lang`
-(builder.py:124 derives it from `name.split(".")[-2]`, so
-`...chi(translated)` yields `chi(translated)` today). Map `chi→zh-Hans`
-or `zh-Hant`, `dut→nl`, `fre→fr`, `ger→de`, `jpn→ja`, `kor→ko`, `rus→ru`,
-`por→pt`, `spa→es`, `ita→it` per the M2 table; `translate_subtitles_openrouter.py:381`
-must not re-translate files that already exist under the normalized name.
+The builder reads **both** `translations/` and `Translations/` spellings
+(lowercase preferred), so a site build sees the union of the item's SRT files
+regardless of directory case, and derives the language from the `.srt` name
+with the legacy ISO-639-2 annotations normalized. The M2 migration moved the
+bulk of the files to the lowercase spelling; the remainder is tracked in
+[`../TO-DO.md`](../TO-DO.md), and a deployed build reads both spellings, so an
+unmigrated directory no longer hides an item's languages.
 
 ## 1. URL scheme
 
@@ -41,21 +25,28 @@ Base URL (canonical, used everywhere below):
 `https://activeinferenceinstitute.github.io/ActiveInferenceJournal/`
 
 - SPA stays at `/` (hash routing preserved for backward compatibility).
-- New per-item page per INDEX item:
-  `/item/<series>/<item>/index.html` → canonical URL
-  `.../item/<series>/<item>/` (trailing slash, no `index.html` in canonicals).
-- `<series>` and `<item>` are the exact on-disk directory names from
-  `INDEX.json items[].path` (`data/video/activeinferenceinstitute/<series>/<item>`) —
-  including spaces (e.g. `Applied Active Inference Symposium`) — percent-encoded
-  in emitted URLs. Directory names ARE the slugs; M4 must not invent new slugs
-  (folder slugification is DAF decision §6/J11, out of scope).
-- `data/<series>_<item>.json` payload files keep their existing location; item
-  pages reference them for the interactive transcript view.
+- One static page per INDEX item:
+  `output/item/<slug>/index.html` → canonical URL `.../item/<slug>/`
+  (trailing slash, no `index.html` in canonicals).
+- `<slug>` is the item's `INDEX.json items[].path` **below its source
+  directory**: `data/video/<source>/<series>/…/<item>` → `<series>/…/<item>`.
+  The path components are the exact on-disk directory names — including spaces
+  (e.g. `Applied Active Inference Symposium`) — percent-encoded in emitted URLs.
+  Directory names ARE the slugs; M4 must not invent new slugs (folder
+  slugification is the DAF decision §6/J11, out of scope).
+- The slug, not the flat `(series, item)` pair, is the item's identity: flat
+  pairs are not unique in this tree (one `TextbookGroup/Meeting_007` pair once
+  covered 8 cohort records), so pages, payloads, manifest ids and sitemap
+  entries all key on the slug. A duplicate slug fails the build before any
+  payload is written.
+- Payload files are `data/<slug>.json` (this supersedes the earlier
+  `data/<series>_<item>.json` — the flat name is what collided), and each
+  manifest item carries both `id` (the slug) and `path` (`items[].path`).
 
 ## 2. Per-item page contract
 
-Emit `output/item/<series>/<item>/index.html` for **every** item in
-`INDEX.json items[]` (573 items at the time of writing). Requirements:
+Emit `output/item/<slug>/index.html` for **every** item in
+`INDEX.json items[]`. Requirements:
 
 1. **Server-rendered (baked) content** — no JS required to read the core
    metadata: title, series, date (`parts[].upload_date`, ISO 8601), guests,
@@ -75,13 +66,15 @@ Emit `output/item/<series>/<item>/index.html` for **every** item in
    `endOffsetTime`, `url` with `?t=` fragment). Top level: an `Dataset` node
    for the item (name, `license` = CC-BY-4.0, `isPartOf` → the journal Dataset,
    `citation` → Zenodo DOI `10.5281/zenodo.7299755`).
-4. **Head tags** — `<link rel="canonical" href="<base>item/<series>/<item>/">`,
+4. **Head tags** — `<link rel="canonical" href="<base>item/<slug>/">`,
    Open Graph (`og:type=video`, `og:title`, `og:description`, `og:url`,
    `og:image` = thumbnail), Twitter `summary_large_image`.
-5. **Language list** — translations actually present for the item (post-I4-fix
-   set), linking to the interactive view; do not fabricate languages.
+5. **Language list** — translations actually present for the item (union of
+   both `translations/` spellings), linking to the interactive view; do not
+   fabricate languages.
 6. **Navigation** — breadcrumb (journal → series → item), links to
-   prev/next item in series, link back to the SPA for the interactive player.
+   prev/next item in the same directory series, link back to the SPA
+   (`#/item/<slug>`) for the interactive player.
 7. **Non-goals**: no search, no client-side filtering, no new JS frameworks;
    static HTML + the existing CSS.
 
@@ -90,7 +83,7 @@ Emit `output/item/<series>/<item>/index.html` for **every** item in
 Emit at `<base>/sitemap.xml`:
 
 - `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` with **one
-  `<url>` per item** (573): `<loc>` = canonical item URL,
+  `<url>` per item**: `<loc>` = canonical `item/<slug>/` URL,
   `<lastmod>` = max `parts[].upload_date` for the item (ISO 8601, omit if
   unknown — never fabricate), **no** `changefreq`/`priority` (noise).
 - Plus the root `<loc>` = `<base>/`.
@@ -109,27 +102,35 @@ Allow: /
 Sitemap: https://activeinferenceinstitute.github.io/ActiveInferenceJournal/sitemap.xml
 ```
 
-Both files are generated by the builder (not committed by hand) and must be
-included in the Pages artifact alongside the existing `.nojekyll`.
+Both files are generated by the builder (not committed by hand) and are
+included in the Pages artifact alongside `.nojekyll`.
 
-## 5. Deployment notes (ties to handoff E5/J7, owned by the workflow wave)
+## 5. Deployment notes (handoff E5/J7)
 
-- Builder changes land in Journal-Utilities; pin the workflow's utilities
-  checkout to a tag/SHA, sparse-checkout, plain `python` (no torch/CUDA), and
-  keep a single Pages deployment (drop the dual actions+gh-pages deploy or
-  make branch-mode the fallback behind a flag).
-- Post-deploy smoke test (CI): fetch `<base>/sitemap.xml`, assert URL count
-  equals `manifest.json` `total_items`, spot-check Rich Results Test on one
-  sample item page, assert `<base>/robots.txt` returns 200.
+- The workflow checks out Journal-Utilities at a reviewed **SHA pin**, with a
+  sparse checkout of `scripts/build_pages_site.py` + `src/journal_utilities`,
+  and builds with plain `python3` (stdlib only: `json/logging/re/shutil/
+  pathlib`) — no `uv sync`, no torch/CUDA. There is a single Pages deployment
+  (`upload-pages-artifact` → `deploy-pages`).
+- The build step must pass **`--apply`**: the builder is dry-run by default, so
+  a pin bump without it publishes an empty site.
+- Post-deploy smoke test: SPA entry points (`index.html`, `manifest.json`,
+  `.nojekyll`), `sitemap.xml`, `robots.txt`, plus one **deep** item page
+  (`item/TextbookGroup/ParrPezzuloFriston2022/Cohort_1/Meeting_007/`, i.e. one
+  level below its series directory, which only resolves with path keying) and
+  its `data/<slug>.json` payload; the item page must contain its canonical link
+  without running JS.
+- Rich Results Test on a sampled item page remains a manual check.
 
 ## 6. Acceptance criteria
 
 - Every INDEX item has a static URL returning 200 with server-rendered title,
   guests, date, summary, chapters, transcript, and a valid VideoObject
   JSON-LD block per part.
-- `sitemap.xml` lists the root + all item URLs; `robots.txt` references it.
+- `sitemap.xml` lists the root + all item URLs — one unique `<loc>` per item
+  (no duplicates from colliding keys); `robots.txt` references it.
 - Rich Results Test validates a sampled item page (no VideoObject errors).
-- Site language counts reflect the union of both `translations/` spellings
-  (post-fix: 144 items with ≥1 translation at current tree state).
-- Canonical URLs resolve against `INDEX.json` `items[].path` (series/item
-  exactly); a test asserts emitted `<loc>` ↔ item-path bijection.
+- Site language counts reflect the union of both `translations/` spellings.
+- Canonical URLs resolve against `INDEX.json` `items[].path` (the path below
+  the source directory); a test asserts the emitted `<loc>` ↔ item-path
+  bijection and that a duplicate path aborts the build.
