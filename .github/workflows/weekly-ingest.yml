@@ -1,22 +1,29 @@
 name: Weekly ingest
 
-# M3: channel enumeration + scaffold preview + reconciliation gate
+# M3: channel enumeration + new-video delta + scaffold preview + reconciliation report
 # (read-only to YouTube; nothing is written to the channel).
 #
-# Status: DISPATCH-ONLY draft. The enumeration step needs the repository secret
-# YOUTUBE_API_KEY (owner item). Landing a scheduled workflow that cannot run is
-# not acceptable before that decision, so `schedule:` is intentionally absent;
-# a manual dispatch without the secret fails at the guard step below with an
-# explicit message instead of a confusing mid-run API error.
+# Status: DISPATCH-ONLY. Secret-free by design: enumeration and status resolution
+# run on yt-dlp, so no YOUTUBE_API_KEY exists to configure and a future scheduled
+# run needs no owner secret. `schedule:` stays absent until the owner promotes
+# this draft to a scheduled job; the guard step below fails loudly if the
+# workflow is ever triggered by anything but a manual dispatch.
 #
-# A secret-free (yt-dlp) variant would replace the enumeration step with
-# `python scripts/download_channel.py --enumerate-only`, which writes
-# data/output/channel_videos.json. The schemas differ (yt-dlp writes
-# videos[].id/upload_date; ingest consumes video_id/published_at) and flat
-# enumeration cannot report privacy/broadcast status, so upcoming premieres
-# would be mislabeled `status: published` — that adapter is a separate decision.
-#
-# See Journal_Utilities `docs/m3-ingest.md` for the full contract.
+# How it works (Journal_Utilities docs/m3-ingest.md is the contract):
+#   1. `ingest.ytdlp` makes one flat yt-dlp pass over /videos + /streams +
+#      /shorts, diffs it against INDEX.json, and resolves only the new videos
+#      with one full per-video extraction each (--max-new caps the delta, newest
+#      first). Fields the extractor cannot determine are recorded as "unknown";
+#      no status is upgraded without evidence, so a flat entry alone can never
+#      come out "published" and an unresolved video stays "unknown".
+#   2. `ingest.scaffold` prints the metadata.json previews (dry-run only).
+#   3. `ingest.diff` reports channel vs INDEX vs per-video manifests. The
+#      per-video download manifests live in the Journal_Utilities download store
+#      (tracked, ~1.5 GB) and are not checked out here, so this report covers the
+#      channel and INDEX dimensions — the ones that matter for coverage. It exits
+#      nonzero unless all three sets agree, which a fresh delta cannot satisfy
+#      before it is ingested, so the step is diagnostic (continue-on-error) and
+#      the report is uploaded as an artifact.
 
 on:
   workflow_dispatch:
@@ -31,18 +38,18 @@ concurrency:
 jobs:
   ingest:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - name: Checkout journal
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 1
 
-      - name: Checkout Journal_Utilities (pinned)
+      - name: Checkout Journal_Utilities (pinned, secret-free ingest)
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           repository: ActiveInferenceInstitute/Journal_Utilities
-          ref: b690625cfe02c007b12fd18085868cdefbe10688
+          ref: cc9048c64d2bf131b225b69715ceb5310b0525e0
           path: .journal-utilities
           fetch-depth: 1
           sparse-checkout: |
@@ -56,32 +63,36 @@ jobs:
       - name: Set up Python
         run: uv python install 3.12
 
-      - name: Require the Data-API secret (owner item)
-        env:
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+      - name: Dispatch-only guard (draft)
+        if: github.event_name != 'workflow_dispatch'
         run: |
-          if [ -z "${YOUTUBE_API_KEY}" ]; then
-            echo "::error::YOUTUBE_API_KEY is not configured for this repository."
-            echo "This workflow stays dispatch-only until that secret exists."
-            exit 1
-          fi
+          echo "::error::This workflow is dispatch-only while it is a draft."
+          echo "It must not run from a schedule or another event yet: review"
+          echo "Journal_Utilities docs/m3-ingest.md and remove this guard before"
+          echo "adding a schedule."
+          exit 1
 
-      - name: Enumerate channel (Data API, ~32 quota units)
-        env:
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+      - name: Enumerate channel and resolve the new-video delta (yt-dlp, no key)
         run: |
-          uv run --frozen --project .journal-utilities python -m journal_utilities.ingest.enumerate \
-            --journal . --output data/output/ingest-worklist.json --no-dry-run
+          uv run --frozen --project .journal-utilities python -m journal_utilities.ingest.ytdlp \
+            --journal . \
+            --output data/output/ingest-worklist.json \
+            --channel-output data/output/channel_videos.json \
+            --max-new 50 --no-dry-run
 
       - name: Scaffold preview (dry-run)
         run: |
           uv run --frozen --project .journal-utilities python -m journal_utilities.ingest.scaffold \
             --journal . --worklist data/output/ingest-worklist.json
 
-      - name: Reconciliation gate (channel vs manifest vs INDEX)
+      - name: Reconciliation report (channel vs INDEX; diagnostic)
+        continue-on-error: true
         run: |
+          echo "::notice::ingest.diff exits nonzero unless channel, per-video"
+          echo "manifests and INDEX fully agree; a fresh delta cannot agree until it"
+          echo "is ingested, so this report is diagnostic and is uploaded below."
           uv run --frozen --project .journal-utilities python -m journal_utilities.ingest.diff \
-            --journal . --channel-manifest data/output/ingest-worklist.json \
+            --journal . --channel-manifest data/output/channel_videos.json \
             --output data/output/reconciliation-report.json
 
       - name: Upload artifacts
@@ -90,4 +101,5 @@ jobs:
           name: ingest-reports
           path: |
             data/output/ingest-worklist.json
+            data/output/channel_videos.json
             data/output/reconciliation-report.json
