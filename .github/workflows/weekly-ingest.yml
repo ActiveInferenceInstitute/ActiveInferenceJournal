@@ -1,0 +1,93 @@
+name: Weekly ingest
+
+# M3: channel enumeration + scaffold preview + reconciliation gate
+# (read-only to YouTube; nothing is written to the channel).
+#
+# Status: DISPATCH-ONLY draft. The enumeration step needs the repository secret
+# YOUTUBE_API_KEY (owner item). Landing a scheduled workflow that cannot run is
+# not acceptable before that decision, so `schedule:` is intentionally absent;
+# a manual dispatch without the secret fails at the guard step below with an
+# explicit message instead of a confusing mid-run API error.
+#
+# A secret-free (yt-dlp) variant would replace the enumeration step with
+# `python scripts/download_channel.py --enumerate-only`, which writes
+# data/output/channel_videos.json. The schemas differ (yt-dlp writes
+# videos[].id/upload_date; ingest consumes video_id/published_at) and flat
+# enumeration cannot report privacy/broadcast status, so upcoming premieres
+# would be mislabeled `status: published` — that adapter is a separate decision.
+#
+# See Journal_Utilities `docs/m3-ingest.md` for the full contract.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weekly-ingest
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout journal
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 1
+
+      - name: Checkout Journal_Utilities (pinned)
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          repository: ActiveInferenceInstitute/Journal_Utilities
+          ref: b690625cfe02c007b12fd18085868cdefbe10688
+          path: .journal-utilities
+          fetch-depth: 1
+          sparse-checkout: |
+            src
+            pyproject.toml
+            uv.lock
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Require the Data-API secret (owner item)
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: |
+          if [ -z "${YOUTUBE_API_KEY}" ]; then
+            echo "::error::YOUTUBE_API_KEY is not configured for this repository."
+            echo "This workflow stays dispatch-only until that secret exists."
+            exit 1
+          fi
+
+      - name: Enumerate channel (Data API, ~32 quota units)
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: |
+          uv run --frozen --project .journal-utilities python -m journal_utilities.ingest.enumerate \
+            --journal . --output data/output/ingest-worklist.json --no-dry-run
+
+      - name: Scaffold preview (dry-run)
+        run: |
+          uv run --frozen --project .journal-utilities python -m journal_utilities.ingest.scaffold \
+            --journal . --worklist data/output/ingest-worklist.json
+
+      - name: Reconciliation gate (channel vs manifest vs INDEX)
+        run: |
+          uv run --frozen --project .journal-utilities python -m journal_utilities.ingest.diff \
+            --journal . --channel-manifest data/output/ingest-worklist.json \
+            --output data/output/reconciliation-report.json
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ingest-reports
+          path: |
+            data/output/ingest-worklist.json
+            data/output/reconciliation-report.json
