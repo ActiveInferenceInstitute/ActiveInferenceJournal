@@ -47,6 +47,9 @@ request and is the release gate:
 3. `validate_journal.py --journal . --manifest …/channel_videos.json` — read-only
    integrity gate (metadata/path consistency, transcript shape, manifest coverage,
    no audio or credentials on `main`).
+4. `gnn conformance (pinned)` — verifies the GNN parser pin (`.github/gnn-pin.json`,
+   see `.github/GNN.md`); this repository has no `.gnn.md` model file, so the job
+   validates the pinned upstream exemplar.
 
 To validate locally, run from a Journal-Utilities checkout:
 
