@@ -1,11 +1,34 @@
 # TO-DO — ActiveInferenceJournal docs pass
 
 Last reviewed: 2026-08-02 (docs-deep review + implementation; see
-[`REVIEW_LOG_2026-08-02.md`](REVIEW_LOG_2026-08-02.md)).
+[`REVIEW_LOG_2026-08-02.md`](REVIEW_LOG_2026-08-02.md)); refreshed 2026-11-11
+(docs completion pass 3, below).
 
 Sections: **Minor** = typo, broken link, formatting; **Medium** = stale section
 rewrite, doc restructure, added missing guide; **Major** = large doc system
 overhaul, cross-cutting refactors.
+
+## Docs completion pass 3 (2026-11-11)
+
+- ✓ **`docs/OPERATIONS.md` — new.** Documents the three CI workflows
+  (`journal-integrity`, `deploy-pages`, `weekly-ingest`), the pinned
+  Journal-Utilities and GNN revisions, Dependabot, the local validation
+  commands, and the branch model.
+- ✓ **`docs/README.md`** — index now links every document in `docs/`
+  (previously omitted `OPERATIONS.md`, `m4-site-spec.md`,
+  `misfiling-findings.md`, `volunteer-transcript-tasks.md`,
+  `good-first-issues-draft.md` from the table).
+- ✓ **`README.md`** — added a table of contents, a status statement (what works
+  offline, what needs the sibling Journal-Utilities checkout or network), and an
+  install/usage/validation section; the Pages site is described as a static
+  bundle built by Journal-Utilities, not a Jekyll build.
+- ✓ **`AGENTS.md`** — added the real test/lint command (`journal-check` and the
+  CI gate) and pointed at `docs/OPERATIONS.md`.
+- ✓ **`.github/README.md` — new.** Folder guide for the workflows, GNN pin and
+  Dependabot config.
+- ✓ **`.aii/`** — `config.yaml` `artifacts[]` now lists the `INDEX.json`/`INDEX.md`
+  entry points; rendered `README.md`/`docs/INTEGRATION.md` hand-synced (the
+  `aii_platform.aii_sidecar docs` renderer was unavailable offline).
 
 ## Minor
 

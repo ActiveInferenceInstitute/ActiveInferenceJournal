@@ -11,7 +11,12 @@ materials from the Active Inference Institute video library.
 | [`SCHEMA.md`](SCHEMA.md) | Canonical per-item schema (`metadata.json`, `transcript.*`, `captions/`, `translations/`, `assets/`) and the `INDEX.json` contract. |
 | [`ORGANIZATION.md`](ORGANIZATION.md) | The top-level namespace (`data/video/<source>/`, `data/<type>/<source>/`), how series and items are organized, and how to add other channels / non-video sources. |
 | [`PIPELINE.md`](PIPELINE.md) | How content is produced and kept complete + idempotent — the collaboration with the [Journal_Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities) engine. |
+| [`OPERATIONS.md`](OPERATIONS.md) | CI workflows (integrity gate, Pages deploy, weekly ingest, GNN pin), dependency updates, local validation commands, and the branch model. |
+| [`m4-site-spec.md`](m4-site-spec.md) | Spec for the M4 static per-item pages + `sitemap.xml`/`robots.txt`, implemented by the Journal-Utilities builder. |
 | [`translation-migration-map.md`](translation-migration-map.md) | Item-by-item map of the legacy `Translations/` → `translations/<video_id>.<bcp47>.srt` migration; status: executed (part 2 + pass 2b), 423 files remain in `Translations/`. |
+| [`volunteer-transcript-tasks.md`](volunteer-transcript-tasks.md) | Volunteer triage list (I16): the 423 remaining translation files and the 600-file conflicts backlog, by item. |
+| [`good-first-issues-draft.md`](good-first-issues-draft.md) | Ready-to-file `good-first-issue` drafts for the highest-value volunteer batches. |
+| [`misfiling-findings.md`](misfiling-findings.md) | Captions/translations misfiling dispositions (Textbook Cohort 2 Meeting 20 SRT; 2021 Symposium `Translations/` robotics duplicates). |
 | [`AGENTS.md`](AGENTS.md) | Conventions for AI agents and programs operating on this repo. |
 
 ## Quick orientation
@@ -35,9 +40,10 @@ materials from the Active Inference Institute video library.
 - `main` — content without audio (lightweight).
 - `audio` — `main` + `<item>/audio/<name>.64k.m4a` (64 kbps media), same layout.
 
-See also: [`m4-site-spec.md`](m4-site-spec.md) — spec for the M4 static
-per-item pages + sitemap/robots (for the Journal_Utilities builder agent) —
-and [`misfiling-findings.md`](misfiling-findings.md) — captions/translations
-misfiling dispositions (Textbook Cohort 2 Meeting 20 SRT; 2021 Symposium
-`Translations/` robotics duplicates).
+See also: [`OPERATIONS.md`](OPERATIONS.md) — CI workflows and local validation;
+[`m4-site-spec.md`](m4-site-spec.md) — spec for the M4 static per-item pages +
+sitemap/robots (for the Journal_Utilities builder agent); and
+[`misfiling-findings.md`](misfiling-findings.md) — captions/translations misfiling
+dispositions (Textbook Cohort 2 Meeting 20 SRT; 2021 Symposium `Translations/`
+robotics duplicates).
 

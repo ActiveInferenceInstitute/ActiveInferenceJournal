@@ -9,8 +9,8 @@ curated materials from the Active Inference Institute video library. Read
 - **Machine:** [`INDEX.json`](INDEX.json) — every item, its videos, and paths. Start here.
 - **Human:** [`INDEX.md`](INDEX.md), [`README.md`](README.md).
 - **Content:** [`data/video/activeinferenceinstitute/`](data/video/activeinferenceinstitute/).
-- **Schema/docs:** [`docs/`](docs/README.md) (`SCHEMA.md`, `ORGANIZATION.md`, `PIPELINE.md`).
-- **Open work:** [`TO-DO.md`](TO-DO.md) — scoped improvement list (docs pass 2026-08-02).
+- **Schema/docs:** [`docs/`](docs/README.md) (`SCHEMA.md`, `ORGANIZATION.md`, `PIPELINE.md`, `OPERATIONS.md`).
+- **Open work:** [`TO-DO.md`](TO-DO.md) — scoped improvement list (docs pass 2026-08-02, refreshed pass 3 2026-11-11).
 
 ## Rules for agents
 
@@ -33,6 +33,20 @@ curated materials from the Active Inference Institute video library. Read
   regenerates `INDEX.json` and `INDEX.md`; `Journal-Utilities/scripts/repair_split_transcripts.py`
   repairs merged session transcript identities when split sources are available;
   `Journal-Utilities/scripts/validate_journal.py` is the final read-only integrity gate.
+
+## Test / lint
+
+There is no in-repo test suite or linter. The release gate is the
+[`journal-integrity.yml`](.github/workflows/journal-integrity.yml) workflow; reproduce it
+locally from a Journal-Utilities checkout:
+
+```bash
+uv run python scripts/generate_journal_indexes.py --journal ../ActiveInferenceJournal --check
+uv run python scripts/repair_split_transcripts.py --journal ../ActiveInferenceJournal --utilities .
+uv run python run.py journal-check   # read-only; add --strict-manifest after a fresh enumeration
+```
+
+See [`docs/OPERATIONS.md`](docs/OPERATIONS.md) for every workflow and command.
 
 ## Layout
 

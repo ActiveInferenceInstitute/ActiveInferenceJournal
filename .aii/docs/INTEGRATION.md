@@ -39,6 +39,8 @@
 | --- | --- | --- |
 | `README.md` | `doc` | Repository overview. |
 | `AGENTS.md` | `doc` | Agent guidance. |
+| `INDEX.json` | `data` | Machine entry point — every item, its videos, and paths. |
+| `INDEX.md` | `doc` | Human index, grouped by series. |
 | `LICENSE` | `doc` | License. |
 | `CITATION.cff` | `citation` | Machine-readable citation metadata. |
 | `docs` | `doc` | Documentation tree. |

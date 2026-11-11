@@ -17,7 +17,8 @@ Technical documentation for ActiveInferenceJournal. Start at [`README.md`](READM
 
 - Content lives under `../data/`; never put generated content in `docs/`.
 - Cross-link with relative paths. Signpost the tooling repo by full GitHub URL.
-- Keep each doc single-purpose: SCHEMA (shape), ORGANIZATION (layout), PIPELINE (provenance).
+- Keep each doc single-purpose: SCHEMA (shape), ORGANIZATION (layout), PIPELINE (provenance),
+  OPERATIONS (CI/validation/deploy).
 
 ## Parent
 
