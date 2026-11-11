@@ -60,3 +60,11 @@ two (`Journal-Utilities/scripts/apply_speaker_names.py`). Items without diarizat
 YouTube-caption text; original captions always remain under `captions/`.
 Private/unlisted videos are not transcribed. See [`docs/SCHEMA.md`](docs/SCHEMA.md)
 ("Transcripts — raw vs derived").
+
+## InstituteOS sidecar
+
+This repository carries a committed [`.aii/`](.aii/README.md) sidecar with curated
+InstituteOS metadata (`aii-sidecar/v1`): category, maturity, ecosystem relations,
+key artifacts, provenance, and portable tasks. It is read by
+[InstituteOS](https://github.com/ActiveInferenceInstitute/InstituteOS) tooling and
+does not affect the project's build or runtime.
