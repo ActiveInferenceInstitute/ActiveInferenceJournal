@@ -18,6 +18,8 @@ only by memory. Generated facts live in [`_generated/`](_generated/README.md).
 | [`good-first-issues-draft.md`](good-first-issues-draft.md) | Ready-to-file `good-first-issue` drafts for volunteer batches. | hand-written |
 | [`misfiling-findings.md`](misfiling-findings.md) | Captions/translations misfiling dispositions. | hand-written |
 | [`AGENTS.md`](AGENTS.md) | Conventions for agents and programs operating on this repository. | hand-written |
+| [`workflows/publishing.md`](workflows/publishing.md) | Publishing group contract: members and their gate commands, the record identity schema and its canonical home, shared concerns and their owners, the member migration step. | hand-written |
+| [`workflows/record-identity.schema.json`](workflows/record-identity.schema.json) | The canonical identity grammar (`record-identity/v1`) for `metadata.json` and the cross-repository join keys; enforced by `./run.sh identity`. | hand-written |
 
 ## Generated facts (`docs/_generated/`)
 

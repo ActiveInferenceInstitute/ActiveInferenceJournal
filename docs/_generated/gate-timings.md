@@ -9,11 +9,12 @@ exist before the gate was introduced have no `before` value.
 
 | before (s) | after (s) | arm |
 | --- | --- | --- |
-| new arm | 0.09s | `lint` |
-| new arm | 2.54s | `docs` |
-| 0.60s | 0.87s | `fast` |
-| 30.19s | 28.91s | `full` |
-| 186.68s | 11.88s | `gnn` |
+| new arm | 0.07s | `lint` |
+| new arm | 0.86s | `docs` |
+| new arm | 0.13s | `identity` |
+| 0.60s | 0.27s | `fast` |
+| 30.19s | 11.74s | `full` |
+| 186.68s | 6.37s | `gnn` |
 
 `gnn` is measured **cold**: `./run.sh bench --cold` discards the cached parser
 environment first, because a warm cache hides the install that dominated the old
@@ -31,6 +32,7 @@ noise, not as a regression. `gnn` is the only arm whose cost is network-bound.
 | --- | --- |
 | `lint` | `./run.sh lint` - action pins, pin-file schema, shipped JSON (new arm) |
 | `docs` | `./run.sh docs` - relative links, anchors, docs index, documented pins (new arm) |
+| `identity` | `./run.sh identity` - publishing contract: record identity grammar and the schema digest |
 | `fast` | `./run.sh fast` - `generate_journal_indexes.py --journal . --check` |
 | `full` | `./run.sh full` - split transcripts, `validate_journal.py`, manifest reconciliation |
 | `gnn` | `./run.sh gnn` - install the pinned parser, parse/type-check the pinned exemplar |
@@ -48,4 +50,4 @@ reused by `fast` and `full`; in CI the checkout step already provides it, so
 that row is a local-only cost, paid inside the first local `fast`/`full` run and
 reused afterwards; CI does not pay it. The remaining rows are paid by `gnn`.
 
-Measured 2026-11-12T13:07:48Z with Python 3.15.2 on Darwin arm64.
+Measured 2026-11-12T13:32:54Z with Python 3.15.2 on Darwin arm64.

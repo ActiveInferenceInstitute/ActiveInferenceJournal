@@ -41,10 +41,11 @@ One entry point, and every arm is the exact command CI runs:
 ```bash
 ./run.sh lint    # action pins, pin-file schemas, shipped JSON
 ./run.sh docs    # relative links, anchors, docs index, documented pins
+./run.sh identity # publishing contract: record ids and the schema digest
 ./run.sh fast    # derived-index check against the pinned Journal-Utilities
 ./run.sh full    # split transcripts, integrity gate, manifest reconciliation
 ./run.sh gnn     # pinned GNN conformance (network on a cold cache)
-./run.sh all     # the release gate: lint, docs, full, gnn
+./run.sh all     # the release gate: lint, docs, identity, full, gnn
 ```
 
 `lint` and `docs` are offline and take seconds. `fast` and `full` materialize the

@@ -18,12 +18,13 @@ materials from the Active Inference Institute video library.
 | [`good-first-issues-draft.md`](good-first-issues-draft.md) | Ready-to-file `good-first-issue` drafts for the highest-value volunteer batches. |
 | [`misfiling-findings.md`](misfiling-findings.md) | Captions/translations misfiling dispositions (Textbook Cohort 2 Meeting 20 SRT; 2021 Symposium `Translations/` robotics duplicates). |
 | [`AGENTS.md`](AGENTS.md) | Conventions for AI agents and programs operating on this repo. |
+| [`workflows/publishing.md`](workflows/publishing.md) | Publishing group contract: the nine member repositories and their gates, the record identity schema, each shared concern's canonical home, and the migration step. |
 | [`documentation-index.md`](documentation-index.md) | Flat index of every long-lived document here and at the repo root. |
 | [`_generated/`](_generated/README.md) | Generated facts: gate arm timings and their producers. Never hand-edited. |
 
 ## Quick orientation
 
-- **Gate:** `./run.sh` — `lint`, `docs`, `fast`, `full`, `gnn`; every arm is also
+- **Gate:** `./run.sh` — `lint`, `docs`, `identity`, `fast`, `full`, `gnn`; every arm is also
   the command CI runs. See [`OPERATIONS.md`](OPERATIONS.md#gate-arms).
 - **Machine entry point:** [`../INDEX.json`](../INDEX.json) — every item, its videos, and paths.
 - **Human entry point:** [`../INDEX.md`](../INDEX.md) and the repo [`../README.md`](../README.md).

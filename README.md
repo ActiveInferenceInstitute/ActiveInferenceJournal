@@ -91,7 +91,7 @@ revision by itself), or run the Journal-Utilities scripts directly from that che
 when you are changing the generator (enrichment is dry-run unless `--apply` is passed):
 
 ```bash
-./run.sh all                     # lint, docs, full, gnn — the same commands CI runs
+./run.sh all                     # lint, docs, identity, full, gnn — the same commands CI runs
 ```
 
 ```bash
