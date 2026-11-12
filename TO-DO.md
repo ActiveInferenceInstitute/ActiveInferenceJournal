@@ -1,12 +1,36 @@
 # TO-DO — ActiveInferenceJournal docs pass
 
-Last reviewed: 2026-08-02 (docs-deep review + implementation; see
-[`REVIEW_LOG_2026-08-02.md`](REVIEW_LOG_2026-08-02.md)); refreshed 2026-11-11
-(docs completion pass 3, below).
+Last reviewed: 2026-11-12 (gate and documentation pass 4, below); previously
+2026-08-02 (docs-deep review + implementation; see
+[`REVIEW_LOG_2026-08-02.md`](REVIEW_LOG_2026-08-02.md)) and 2026-11-11
+(docs completion pass 3).
 
 Sections: **Minor** = typo, broken link, formatting; **Medium** = stale section
 rewrite, doc restructure, added missing guide; **Major** = large doc system
 overhaul, cross-cutting refactors.
+
+## Gate and documentation pass 4 (2026-11-12)
+
+- ✓ **`./run.sh` — new gate entry point** with separately runnable arms (`lint`,
+  `docs`, `fast`, `full`, `gnn`, `all`, `bench`). Every arm is the command CI
+  runs; the two Python heredocs that lived inline in `journal-integrity.yml`
+  (manifest reconciliation, GNN install + verification) moved into
+  `scripts/gate/` so they are one file, not two copies.
+- ✓ **One Journal-Utilities pin** — `.github/journal-utilities-pin.json`
+  (`journal-utilities-pin/v1`): a `gate` revision and an `ingest` role (needed
+  because `journal_utilities.ingest.ytdlp` does not exist at the gate revision).
+  Both workflows take their `ref` from `scripts/gate/pin.py`, and `./run.sh lint`
+  fails if a literal SHA reappears in a workflow.
+- ✓ **GNN conformance split into its own workflow** (`gnn-conformance.yml`, job
+  `gnn-conformance`, display name `gnn conformance (pinned)`), so
+  `deploy-pages.yml` no longer waits on a pip install through `workflow_call`.
+- ✓ **`docs/documentation-index.md` — new** flat index; `./run.sh docs` fails
+  when a document under `docs/` is unreachable from it.
+- ✓ **`docs/_generated/` — new** generated-facts directory: `gate-timings.md` is
+  written by `./run.sh bench`, and `gate-baseline.json` is the recorded
+  pre-change receipt that table renders. No timing is typed by hand.
+- ✓ **Documented pins** — `.github/GNN.md` now records the conformance job key
+  and display name, the pin schema and revision, and exactly what it parses.
 
 ## Docs completion pass 3 (2026-11-11)
 

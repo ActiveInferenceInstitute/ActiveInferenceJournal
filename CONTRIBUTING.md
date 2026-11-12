@@ -38,27 +38,23 @@ repository.
 
 ## Validation
 
-The CI workflow (`.github/workflows/journal-integrity.yml`) runs on every push and pull
-request and is the release gate:
-
-1. `generate_journal_indexes.py --journal . --check` — derived indexes must not be stale.
-2. `repair_split_transcripts.py --journal . --utilities .journal-utilities --check` —
-   merged session transcript artifacts must not be stale.
-3. `validate_journal.py --journal . --manifest …/channel_videos.json` — read-only
-   integrity gate (metadata/path consistency, transcript shape, manifest coverage,
-   no audio or credentials on `main`).
-4. `gnn conformance (pinned)` — verifies the GNN parser pin (`.github/gnn-pin.json`,
-   see `.github/GNN.md`); this repository has no `.gnn.md` model file, so the job
-   validates the pinned upstream exemplar.
-
-To validate locally, run from a Journal-Utilities checkout:
+Run the gate from the repository root. Each arm is what CI runs; the workflows
+call `./run.sh`, they do not carry a second copy of any command.
 
 ```bash
-uv run python scripts/generate_journal_indexes.py --journal ../ActiveInferenceJournal --check
-uv run python scripts/repair_split_transcripts.py \
-  --journal ../ActiveInferenceJournal --utilities .
-uv run python run.py journal-check
+./run.sh lint    # workflow action pins, pin-file schemas, shipped JSON
+./run.sh docs    # relative links, anchors, docs index coverage, documented pins
+./run.sh fast    # derived indexes are not stale (pinned Journal-Utilities)
+./run.sh full    # split transcripts, integrity gate, manifest reconciliation
+./run.sh gnn     # pinned GNN conformance
+./run.sh all     # everything a pull request must pass
 ```
+
+`lint` and `docs` run offline in seconds; `fast`/`full` use the Journal-Utilities
+revision pinned in `.github/journal-utilities-pin.json` (an explicit
+`--utilities PATH` is accepted only when it sits on that pin). What each arm
+actually proves, plus the current job layout, is in
+[`docs/OPERATIONS.md`](docs/OPERATIONS.md).
 
 ## Citation
 

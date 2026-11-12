@@ -10,7 +10,7 @@ curated materials from the Active Inference Institute video library. Read
 - **Human:** [`INDEX.md`](INDEX.md), [`README.md`](README.md).
 - **Content:** [`data/video/activeinferenceinstitute/`](data/video/activeinferenceinstitute/).
 - **Schema/docs:** [`docs/`](docs/README.md) (`SCHEMA.md`, `ORGANIZATION.md`, `PIPELINE.md`, `OPERATIONS.md`).
-- **Open work:** [`TO-DO.md`](TO-DO.md) — scoped improvement list (docs pass 2026-08-02, refreshed pass 3 2026-11-11).
+- **Open work:** [`TO-DO.md`](TO-DO.md) — scoped improvement list (docs pass 2026-08-02, refreshed pass 4 2026-11-12).
 
 ## Rules for agents
 
@@ -34,19 +34,28 @@ curated materials from the Active Inference Institute video library. Read
   repairs merged session transcript identities when split sources are available;
   `Journal-Utilities/scripts/validate_journal.py` is the final read-only integrity gate.
 
-## Test / lint
+## Gate
 
-There is no in-repo test suite or linter. The release gate is the
-[`journal-integrity.yml`](.github/workflows/journal-integrity.yml) workflow; reproduce it
-locally from a Journal-Utilities checkout:
+One entry point, and every arm is the exact command CI runs:
 
 ```bash
-uv run python scripts/generate_journal_indexes.py --journal ../ActiveInferenceJournal --check
-uv run python scripts/repair_split_transcripts.py --journal ../ActiveInferenceJournal --utilities .
-uv run python run.py journal-check   # read-only; add --strict-manifest after a fresh enumeration
+./run.sh lint    # action pins, pin-file schemas, shipped JSON
+./run.sh docs    # relative links, anchors, docs index, documented pins
+./run.sh fast    # derived-index check against the pinned Journal-Utilities
+./run.sh full    # split transcripts, integrity gate, manifest reconciliation
+./run.sh gnn     # pinned GNN conformance (network on a cold cache)
+./run.sh all     # the release gate: lint, docs, full, gnn
 ```
 
-See [`docs/OPERATIONS.md`](docs/OPERATIONS.md) for every workflow and command.
+`lint` and `docs` are offline and take seconds. `fast` and `full` materialize the
+pinned Journal-Utilities revision from
+[`.github/journal-utilities-pin.json`](.github/journal-utilities-pin.json); pass
+`--utilities PATH` to reuse an existing tree, which is refused unless it sits on
+the pin. There is no `types` arm: this repository ships no typed source. Never
+add a command to a workflow without adding the same command to
+[`scripts/gate/cli.py`](scripts/gate/cli.py).
+
+See [`docs/OPERATIONS.md`](docs/OPERATIONS.md) for every workflow, pin and arm.
 
 ## Layout
 
