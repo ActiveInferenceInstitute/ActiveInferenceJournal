@@ -26,7 +26,7 @@ is duplicated in YAML.
 | `identity` | ~0.1 s | The publishing group contract: [`workflows/record-identity.schema.json`](workflows/record-identity.schema.json) parses and declares `record-identity/v1`, the digest recorded in [`workflows/publishing.md`](workflows/publishing.md) matches the file (the same `--verify-copy` path a member runs), every `item` names its own directory, every `series` names a directory above it, and every `parts[].video_id` is an 11-character id. |
 | `fast` | ~1 s | `generate_journal_indexes.py --journal . --check` against the pinned Journal-Utilities: `INDEX.json`/`INDEX.md` are not stale. |
 | `full` | ~30 s | The split-transcript check, the read-only `validate_journal.py` gate, and the manifest staleness/reconciliation report (E13). |
-| `gnn` | minutes, network | The pinned GNN parser installs at the pinned revision, reports the pinned version, and parses/type-checks every `*.gnn.md` sketch (or the pinned upstream exemplar when the repository has none). |
+| `gnn` | minutes, network | The pinned GNN parser installs at the pinned revision, reports the pinned version, and parses/type-checks every `*.gnn.md` sketch (or the pinned upstream exemplar when the repository has none). The arm accepts only a literal `True` from the type checker's three-valued sentinel (`True`/`2`/`False`) and runs its own verdict selftest so a truthiness test cannot regress. |
 
 There is no `types` arm: this repository ships no typed source. Arms are
 stdlib-only Python, so there is no environment to install for `lint`, `docs`,
