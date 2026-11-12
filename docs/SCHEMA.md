@@ -5,6 +5,13 @@ machine-readable item folders with a canonical `metadata.json`, no placeholder c
 audio kept off `main`, and top-level indexes. The repository was migrated to this shape
 non-destructively by the Journal-Utilities refactor (see ["Layout history"](#layout-history)).
 
+The machine-readable identity grammar behind this page is
+[`workflows/record-identity.schema.json`](workflows/record-identity.schema.json)
+(schema_version `record-identity/v1`), enforced by `./run.sh identity`. This page explains
+the folder and the transcript layers; that schema, plus
+[`workflows/publishing.md`](workflows/publishing.md), is what other repositories pin. If the
+two disagree, the schema is right and this page is stale.
+
 ## Per-item folder
 
 ```

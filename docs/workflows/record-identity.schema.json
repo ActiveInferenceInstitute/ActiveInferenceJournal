@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ActiveInferenceInstitute/ActiveInferenceJournal/blob/main/docs/workflows/record-identity.schema.json",
+  "title": "Publishing record identity",
+  "schema_version": "record-identity/v1",
+  "description": "Canonical identity of one publishing record in the Active Inference Institute estate. The journal's metadata.json is the record; item, video_id and session ids are the join keys every other repository uses. Machine-readable rules are under x-identity, which scripts/gate/identity.py enforces, so this file is the only copy of the grammar.",
+  "type": "object",
+  "required": [
+    "series",
+    "item",
+    "source",
+    "channel",
+    "category",
+    "episode",
+    "parts"
+  ],
+  "properties": {
+    "series": {
+      "type": "string",
+      "description": "Name of a directory above the item directory inside the corpus.",
+      "pattern": "^(?!\\.)[^/]{0,119}[^/\\s]$"
+    },
+    "item": {
+      "type": "string",
+      "description": "Item directory name; the record's item id.",
+      "pattern": "^(?!\\.)[^/]{0,119}[^/\\s]$"
+    },
+    "source": {
+      "type": "string",
+      "description": "Producer family of the content, e.g. youtube."
+    },
+    "channel": {
+      "type": "string",
+      "description": "Channel or collection the source belongs to."
+    },
+    "category": {
+      "type": "string",
+      "description": "Top-level category used by the human index."
+    },
+    "episode": {
+      "type": "string",
+      "description": "Episode ordinal within the series, as text."
+    },
+    "duplicate_of": {
+      "type": "string",
+      "description": "Record path of the canonical item this one duplicates, with the leading data/<type>/<source>/ removed.",
+      "pattern": "^[^/]+(/[^/]+)+$"
+    },
+    "doi": {
+      "type": "string",
+      "description": "Paper DOI when the record is tied to a publication."
+    },
+    "parts": {
+      "type": "array",
+      "description": "Video parts of the record; each part is one video id.",
+      "items": {
+        "type": "object",
+        "required": ["video_id", "url", "title"],
+        "properties": {
+          "video_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{11}$"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "x-identity": {
+    "record_path": "data/<type>/<source>/<series>/<item>",
+    "derived_prefix_components": 3,
+    "leaf_key": "item",
+    "ancestor_key": "series",
+    "duplicate_key": "duplicate_of",
+    "index_file": "INDEX.json",
+    "index_record_keys": ["path", "series", "item", "parts", "has_transcript", "duplicate_of"],
+    "transcript_flag": {
+      "key": "has_transcript",
+      "artifact": "transcript.txt"
+    },
+    "patterns": {
+      "video_id": "^[A-Za-z0-9_-]{11}$",
+      "session_id": "^(?P<video_id>[A-Za-z0-9_-]{11})_sess[0-9]{2}$",
+      "paper_id": "^(?:doi|arxiv|s2|openalex|title):.+$"
+    },
+    "namespaces": {
+      "item": {
+        "owner": "ActiveInferenceInstitute/ActiveInferenceJournal",
+        "home": "docs/workflows/record-identity.schema.json#/x-identity/leaf_key",
+        "carried_by": "metadata.json item + INDEX.json path",
+        "pattern": "item"
+      },
+      "video": {
+        "owner": "ActiveInferenceInstitute/ActiveInferenceJournal",
+        "home": "docs/workflows/record-identity.schema.json#/properties/parts/items/properties/video_id",
+        "carried_by": "metadata.json parts[].video_id; INDEX.json parts[]",
+        "pattern": "video_id"
+      },
+      "session": {
+        "owner": "ActiveInferenceInstitute/ActiveInferenceJournal",
+        "home": "docs/workflows/record-identity.schema.json#/x-identity/patterns/session_id",
+        "carried_by": "metadata.json sessions[].session_name; transcript.json blocks",
+        "pattern": "session_id"
+      },
+      "paper": {
+        "owner": "ActiveInferenceInstitute/act_inf_metaanalysis",
+        "home": "src/literature/models.py Paper.canonical_id",
+        "carried_by": "corpus.jsonl paper_id; journal metadata.json doi",
+        "pattern": "paper_id"
+      },
+      "doc": {
+        "owner": "ActiveInferenceInstitute/ISSS",
+        "home": "metadata_archiver.py document_name",
+        "carried_by": "archived_documents/metadata.json document_name",
+        "pattern": null
+      },
+      "pub": {
+        "owner": "ActiveInferenceInstitute/act_inf_metaanalysis",
+        "home": "manuscript/config.yaml doi + version",
+        "carried_by": "manuscript/config.yaml; output/reports/zenodo_deposit_metadata.json",
+        "pattern": null
+      }
+    },
+    "identity_free_artifacts": {
+      "captions/": "Filenames are verbatim source names (measured 2026-11-12: 421 of 624 begin youtube_captions, the rest are human titles). Never derive a record id from them.",
+      "translations/": "Filenames carry an id prefix for most files but not all (measured: 249 distinct prefixes, several are titles). Resolve the record through metadata.json first.",
+      "assets/": "Curated content, organised by type. Carries no identity."
+    },
+    "join_rule": "Consumers join on video (video_id), documents on paper (doi), publications on pub (doi + version). An item id is only meaningful inside this corpus and must be paired with its path."
+  }
+}

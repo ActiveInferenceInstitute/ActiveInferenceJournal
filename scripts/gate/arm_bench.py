@@ -16,9 +16,10 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from cli import ARMS
 from common import ROOT, log
 
-MEASURED = ["lint", "docs", "fast", "full", "gnn"]
+MEASURED = ["lint", "docs", "identity", "fast", "full", "gnn"]
 GENERATED = ROOT / "docs" / "_generated"
 DOC = GENERATED / "gate-timings.md"
 BASELINE = GENERATED / "gate-baseline.json"
@@ -83,8 +84,9 @@ def render(measured: dict[str, float], baseline: dict) -> str:
         "| arm | command |",
         "| --- | --- |",
     ]
+    commands = baseline.get("commands", {})
     for arm in MEASURED:
-        command = baseline.get("commands", {}).get(arm, "")
+        command = commands.get(arm) or f"`./run.sh {arm}` - {ARMS[arm]}"
         lines.append(f"| `{arm}` | {command} |")
 
     lines += [
@@ -124,18 +126,16 @@ def run(argv: list[str]) -> int:
         return 0 if reported == set(MEASURED) else 1
 
     baseline = load_baseline()
+    GENERATED.mkdir(parents=True, exist_ok=True)
+    # The docs arm validates this table. Render the current arm list first, with
+    # every "after" pending, so measuring `docs` cannot fail against a table that
+    # still describes the previous arms — an added arm would otherwise be unable
+    # to produce the document that admits it.
+    DOC.write_text(render({}, baseline), encoding="utf-8")
+
     measured: dict[str, float] = {}
     for arm in MEASURED:
-        # The docs arm validates the table this arm writes, so on a checkout that
-        # has never run bench it is measured after the first render.
-        if arm == "docs" and not DOC.exists():
-            continue
         measured[arm] = measure(arm, ["--cold"] if (arm == "gnn" and cold) else [])
-
-    GENERATED.mkdir(parents=True, exist_ok=True)
-    if "docs" not in measured:
-        DOC.write_text(render(measured, baseline), encoding="utf-8")
-        measured["docs"] = measure("docs", [])
 
     DOC.write_text(render(measured, baseline), encoding="utf-8")
     log(f"bench: wrote {DOC.relative_to(ROOT)}")

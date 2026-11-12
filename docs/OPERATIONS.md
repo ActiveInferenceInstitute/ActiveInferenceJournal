@@ -11,10 +11,11 @@ is duplicated in YAML.
 ./run.sh            # list the arms
 ./run.sh lint       # workflow action pins, pin-file schemas, shipped JSON
 ./run.sh docs       # relative links, anchors, docs index coverage, documented pins
+./run.sh identity   # publishing contract: record ids plus the schema digest
 ./run.sh fast       # pinned Journal-Utilities derived-index check
 ./run.sh full       # split transcripts, integrity gate, manifest reconciliation
 ./run.sh gnn        # pinned Generalized Notation Notation conformance
-./run.sh all        # lint, docs, full, gnn (fast is a subset of full)
+./run.sh all        # lint, docs, identity, full, gnn (fast is a subset of full)
 ./run.sh bench --cold   # measure every arm, refresh docs/_generated/gate-timings.md
 ```
 
@@ -22,6 +23,7 @@ is duplicated in YAML.
 | --- | --- | --- |
 | `lint` | seconds | Every `uses:` is pinned to a 40-hex commit, every workflow declares `name`/`on`/`permissions`, the Journal-Utilities checkout takes its ref from the pin file rather than a literal SHA, both pin files match their schema, and shipped JSON parses. |
 | `docs` | seconds | Every relative link in every tracked Markdown file resolves with the exact case GitHub serves, in-page anchors exist, each doc under `docs/` is reachable from [`documentation-index.md`](documentation-index.md), the timings table covers exactly the arms, and every documented pin prefix matches a pin file. |
+| `identity` | ~0.1 s | The publishing group contract: [`workflows/record-identity.schema.json`](workflows/record-identity.schema.json) parses and declares `record-identity/v1`, the digest recorded in [`workflows/publishing.md`](workflows/publishing.md) matches the file (the same `--verify-copy` path a member runs), every `item` names its own directory, every `series` names a directory above it, and every `parts[].video_id` is an 11-character id. |
 | `fast` | ~1 s | `generate_journal_indexes.py --journal . --check` against the pinned Journal-Utilities: `INDEX.json`/`INDEX.md` are not stale. |
 | `full` | ~30 s | The split-transcript check, the read-only `validate_journal.py` gate, and the manifest staleness/reconciliation report (E13). |
 | `gnn` | minutes, network | The pinned GNN parser installs at the pinned revision, reports the pinned version, and parses/type-checks every `*.gnn.md` sketch (or the pinned upstream exemplar when the repository has none). |

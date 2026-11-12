@@ -44,6 +44,7 @@ call `./run.sh`, they do not carry a second copy of any command.
 ```bash
 ./run.sh lint    # workflow action pins, pin-file schemas, shipped JSON
 ./run.sh docs    # relative links, anchors, docs index coverage, documented pins
+./run.sh identity # record identity grammar and the publishing contract digest
 ./run.sh fast    # derived indexes are not stale (pinned Journal-Utilities)
 ./run.sh full    # split transcripts, integrity gate, manifest reconciliation
 ./run.sh gnn     # pinned GNN conformance
