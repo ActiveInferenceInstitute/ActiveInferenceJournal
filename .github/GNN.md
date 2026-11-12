@@ -1,12 +1,46 @@
 # GNN conformance
 
-`gnn conformance (pinned)` is defined in `.github/workflows/journal-integrity.yml` and reads
-`.github/gnn-pin.json`, which pins
-`ActiveInferenceInstitute/Generalized_Notation_Notation` at `v5.0.3`
-(`8f293d9ba810e6eda5c09842d9c7ed9ffa5f92c1`).
+The conformance job is `gnn-conformance`, display name `gnn conformance (pinned)`.
+It lives in [`.github/workflows/gnn-conformance.yml`](workflows/gnn-conformance.yml)
+and runs one gate arm, `./run.sh gnn`, which is what CI runs too.
 
-The job verifies the pin and installed parser, parses every `*.gnn.md` sketch
-in the repository, and type-checks them. When the repository has no sketch yet,
-it parses the pinned upstream `input/gnn_files/basics/static_perception.md`
-exemplar; this is a pipeline and pin conformance baseline, not a claim that the
-repository already contains a model.
+## Pin
+
+It reads [`gnn-pin.json`](gnn-pin.json), schema `gnn-importer-pin/v1`:
+
+| Field | Value |
+| --- | --- |
+| `repository` | `ActiveInferenceInstitute/Generalized_Notation_Notation` |
+| `tag` | `v5.0.3` |
+| `revision` | `8f293d9ba810e6eda5c09842d9c7ed9ffa5f92c1` |
+
+The arm asserts the pin's fields, installs the package from that exact revision
+into an isolated environment, and fails unless the imported `gnn.__version__`
+equals the tag without its leading `v`. The pinned package declares
+`requires-python >=3.11,<3.15`.
+
+## What it parses
+
+| Situation | What is checked |
+| --- | --- |
+| The repository has `*.gnn.md` sketches | Every sketch is parsed, syntax-validated, then type-checked together. |
+| The repository has none (current state) | The pinned upstream `input/gnn_files/basics/static_perception.md` at the pin is downloaded, parsed, syntax-validated and type-checked. |
+
+The exemplar branch is a pipeline and pin conformance baseline: it does **not**
+claim that this repository contains a model. The arm prints a JSON receipt with
+`gnn-version`, `pin-revision`, `models`, `source` (`repository` or
+`pinned-exemplar`) and `result`.
+
+## Why it is not in the integrity workflow
+
+The job installs a package from git, which is minutes on a cold runner. It used
+to share a workflow file with the integrity gate, so `deploy-pages.yml` - which
+calls that workflow - waited for it on every content deploy. The job key and
+display name are unchanged; only the file moved.
+
+## Running it
+
+```bash
+./run.sh gnn           # reuse the cached environment
+./run.sh gnn --cold    # discard it and reinstall
+```

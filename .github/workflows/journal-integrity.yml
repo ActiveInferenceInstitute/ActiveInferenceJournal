@@ -1,5 +1,10 @@
 name: Validate journal integrity
 
+# The release gate. Every step runs the same command a developer runs locally:
+#   ./run.sh <arm>
+# See docs/OPERATIONS.md ("Gate arms"). GNN conformance is its own workflow
+# (gnn-conformance.yml) so the Pages deploy never waits on a pip install.
+
 on:
   push:
   pull_request:
@@ -20,182 +25,33 @@ jobs:
       - name: Check out journal
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      # Pinned SHA — kept identical to the deploy workflow's pin so the repo
-      # depends on one Journal-Utilities revision. The three scripts this gate
-      # runs and the channel manifest it reads are byte-identical across this
-      # bump (verified on ea873718..3b9700ad), so the gate's result is unchanged.
-      - name: Check out Journal-Utilities
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: ActiveInferenceInstitute/Journal_Utilities
-          ref: 3b9700ad52e29fa508f5a45ac835dcba00103f9e
-          path: .journal-utilities
-          fetch-depth: 1
-
-      - name: Install Python
-        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version: "3.12"
-
-      - name: Check derived indexes
-        run: python .journal-utilities/scripts/generate_journal_indexes.py --journal . --check
-
-      - name: Check split transcript artifacts
-        run: >-
-          python .journal-utilities/scripts/repair_split_transcripts.py
-          --journal . --utilities .journal-utilities --check
-
-      - name: Run journal integrity gate
-        run: >-
-          python .journal-utilities/scripts/validate_journal.py
-          --journal .
-          --manifest .journal-utilities/data/output/channel_videos.json
-
-      - name: Manifest staleness and reconciliation (E13)
-        run: |
-          python3 - <<'PY'
-          import collections
-          import datetime
-          import json
-
-          manifest = json.load(open(".journal-utilities/data/output/channel_videos.json"))
-          enumerated = datetime.datetime.fromisoformat(manifest["enumerated_at"])
-          age = (datetime.datetime.now(datetime.timezone.utc) - enumerated).days
-          listed = [v["id"] for v in manifest["videos"]]
-          mset = set(listed)
-          dupes = sorted(v for v, c in collections.Counter(listed).items() if c > 1)
-
-          index = json.load(open("INDEX.json"))
-          index_vids = set()
-          for it in index.get("items", []):
-              for p in it.get("parts", []):
-                  index_vids.add(p if isinstance(p, str) else p.get("video_id"))
-
-          missing = sorted(mset - index_vids)
-          extra = sorted(index_vids - mset)
-          print(f"manifest: enumerated_at={manifest['enumerated_at']} age_days={age} "
-                f"declared={manifest.get('total_videos')} listed={len(listed)} "
-                f"unique={len(mset)} duplicate_ids={len(dupes)}")
-          print(f"INDEX: count={index.get('count')} unique_videos={index.get('unique_videos')} "
-                f"part_ids={len(index_vids)}")
-          print(f"reconciliation: manifest-not-in-INDEX={len(missing)} INDEX-not-in-manifest={len(extra)}")
-          for v in missing[:20]:
-              print(f"  manifest-only: {v}")
-          for v in extra[:20]:
-              print(f"  index-only: {v}")
-
-          # Annotate (not fail): the scheduled manifest refresh (M5) does not
-          # exist yet, so failing here would block every PR on a known-stale
-          # manifest. Flip to failure once M5 lands.
-          if age > 7:
-              print(f"::warning::channel_videos.json is {age} days old "
-                    f"(enumerated_at {manifest['enumerated_at']}) — exceeds the 7-day "
-                    f"freshness budget (E13); refresh via the scheduled enumeration")
-          if dupes:
-              print(f"::warning::manifest contains {len(dupes)} duplicate video ids: {dupes[:5]}")
-          PY
-
-  # GNN pin: .github/gnn-pin.json (v5.0.3, 8f293d9ba810e6eda5c09842d9c7ed9ffa5f92c1)
-  gnn-conformance:
-    name: gnn conformance (pinned)
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Set up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
-      - name: Install pinned GNN parser
-        run: |
-          python -m pip install --disable-pip-version-check defusedxml psutil pyyaml
-          python - <<'PY'
-          import json
-          import subprocess
-          import sys
-          from pathlib import Path
 
-          pin = json.loads(Path(".github/gnn-pin.json").read_text(encoding="utf-8"))
-          assert pin["repository"] == "ActiveInferenceInstitute/Generalized_Notation_Notation"
-          assert pin["tag"] == "v5.0.3"
-          assert pin["revision"] == "8f293d9ba810e6eda5c09842d9c7ed9ffa5f92c1"
-          spec = (
-              "generalized-notation-notation @ "
-              f"git+https://github.com/{pin['repository']}.git@{pin['revision']}"
-          )
-          subprocess.check_call(
-              [sys.executable, "-m", "pip", "install", "--disable-pip-version-check", "--no-deps", spec]
-          )
-          PY
-      - name: Verify pinned parser and repository sketches
-        run: |
-          python - <<'PY'
-          import json
-          import shutil
-          import tempfile
-          import urllib.request
-          from pathlib import Path
+      # One pin, one file. The ref below is read from .github/journal-utilities-pin.json
+      # so the gate, this workflow and the deploy workflow cannot drift apart.
+      - name: Read the Journal-Utilities pin
+        id: pin
+        run: echo "revision=$(python3 scripts/gate/pin.py --revision)" >> "$GITHUB_OUTPUT"
 
-          from gnn import __version__
-          from gnn.parsers.basic import parse_gnn_formal, validate_gnn_syntax
-          from gnn.type_checker import GNNTypeChecker
+      - name: Check out Journal-Utilities (pinned)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ActiveInferenceInstitute/Journal_Utilities
+          ref: ${{ steps.pin.outputs.revision }}
+          path: .journal-utilities
+          fetch-depth: 1
 
-          pin = json.loads(Path(".github/gnn-pin.json").read_text(encoding="utf-8"))
-          expected_version = pin["tag"].removeprefix("v")
-          if __version__ != expected_version:
-              raise SystemExit(f"installed GNN {__version__!r} does not match {pin['tag']!r}")
+      - name: Gate lint
+        run: ./run.sh lint
 
-          sketches = sorted(Path(".").rglob("*.gnn.md"))
-          if sketches:
-              for sketch in sketches:
-                  parsed = parse_gnn_formal(sketch)
-                  if parsed is None or getattr(parsed, "parse_errors", None):
-                      raise SystemExit(f"{sketch} did not parse cleanly")
-                  valid, errors = validate_gnn_syntax(sketch.read_text(encoding="utf-8"))
-                  if not valid:
-                      raise SystemExit(f"{sketch} syntax errors: {errors!r}")
-              with tempfile.TemporaryDirectory(prefix="repo-gnn-") as output_dir:
-                  model_dir = Path(output_dir) / "models"
-                  model_dir.mkdir()
-                  for index, sketch in enumerate(sketches):
-                      shutil.copy2(sketch, model_dir / f"{index:03d}_{sketch.name}")
-                  if not GNNTypeChecker().validate_gnn_files(model_dir, Path(output_dir)):
-                      raise SystemExit("GNN type checker rejected the repository sketches")
-              checked = len(sketches)
-              source = "repository"
-          else:
-              exemplar_url = (
-                  "https://raw.githubusercontent.com/ActiveInferenceInstitute/"
-                  "Generalized_Notation_Notation/"
-                  f"{pin['revision']}/input/gnn_files/basics/static_perception.md"
-              )
-              with tempfile.TemporaryDirectory(prefix="pinned-exemplar-") as output_dir:
-                  exemplar = Path(output_dir) / "static_perception.md"
-                  urllib.request.urlretrieve(exemplar_url, exemplar)
-                  parsed = parse_gnn_formal(exemplar)
-                  if parsed is None or getattr(parsed, "parse_errors", None):
-                      raise SystemExit("pinned exemplar did not parse cleanly")
-                  valid, errors = validate_gnn_syntax(exemplar.read_text(encoding="utf-8"))
-                  if not valid:
-                      raise SystemExit(f"pinned exemplar syntax errors: {errors!r}")
-                  model_dir = Path(output_dir) / "models"
-                  model_dir.mkdir()
-                  shutil.copy2(exemplar, model_dir / exemplar.name)
-                  if not GNNTypeChecker().validate_gnn_files(model_dir, Path(output_dir)):
-                      raise SystemExit("GNN type checker rejected the pinned exemplar")
-              checked = 1
-              source = "pinned-exemplar"
+      - name: Gate docs
+        run: ./run.sh docs
 
-          print(
-              json.dumps(
-                  {
-                      "gnn-version": __version__,
-                      "pin-revision": pin["revision"],
-                      "models": checked,
-                      "source": source,
-                      "result": "verified",
-                  },
-                  sort_keys=True,
-              )
-          )
-          PY
+      - name: Gate fast (derived indexes)
+        run: ./run.sh fast --utilities .journal-utilities
+
+      - name: Gate full (transcripts, integrity, reconciliation)
+        run: ./run.sh full --utilities .journal-utilities

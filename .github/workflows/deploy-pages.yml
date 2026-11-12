@@ -39,27 +39,30 @@ jobs:
           path: journal
           fetch-depth: 1
 
-      # Pinned to a verified commit of Journal-Utilities main — the M4
-      # path-keyed builder (pages keyed by the item's INDEX path, payloads and
-      # manifest ids matching, a duplicate key fails the build). The v0.1.0 tag
-      # peels to an older commit (bd875b20...) without M4, and branch refs drift
-      # silently, so a SHA pin is the only stable choice until a newer release
-      # tag exists. Bump via Dependabot/Renovate or a reviewed PR (handoff E5/J7).
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      # One pin, one file: this ref comes from .github/journal-utilities-pin.json,
+      # the same revision the integrity gate and local `./run.sh` use. The M4
+      # path-keyed builder lives in that revision (the v0.1.0 tag peels to an
+      # older commit without it, and branch refs drift silently); the sparse
+      # checkout keeps the deploy down to the builder and its package.
+      - name: Read the Journal-Utilities pin
+        id: pin
+        run: echo "revision=$(python3 journal/scripts/gate/pin.py --revision)" >> "$GITHUB_OUTPUT"
+
       - name: Check out Journal-Utilities (pinned)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: ActiveInferenceInstitute/Journal_Utilities
-          ref: 3b9700ad52e29fa508f5a45ac835dcba00103f9e
+          ref: ${{ steps.pin.outputs.revision }}
           path: utilities
           fetch-depth: 1
           sparse-checkout: |
             scripts/build_pages_site.py
             src/journal_utilities
-
-      - name: Set up Python
-        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version: "3.12"
 
       # Plain stdlib python: build_pages_site.py imports only
       # journal_utilities.site.builder (json/logging/re/shutil/pathlib).
