@@ -51,6 +51,7 @@
 | --- | --- | --- | --- |
 | `docs` | `ls docs` | `.` | List documentation. |
 | `inventory` | `git ls-files` | `.` | List tracked files. |
+| `identity` | `./run.sh identity` | `.` | Check the publishing contract record ids and the schema digest. |
 
 ## Validation
 
