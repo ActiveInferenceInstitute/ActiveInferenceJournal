@@ -29,9 +29,10 @@ gate passes in CI. The repository is **generated**: the per-item `metadata.json`
 keys, `transcript.*`, `captions/`, `translations/`, `INDEX.json`/`INDEX.md` and the
 item/series `README.md` files are produced by
 [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities) and
-hand edits to them are overwritten on the next run. There is **no build step and no test
-suite in this repository** — validation, the static-site build and the channel ingest all
-run from a Journal-Utilities checkout (see [Operations](docs/OPERATIONS.md)).
+hand edits to them are overwritten on the next run. There is **no build step**: the
+gate is [`./run.sh`](run.sh) (the arms CI runs), and the static-site build and the
+channel ingest run from a Journal-Utilities checkout (see
+[Operations](docs/OPERATIONS.md)).
 
 - **Works offline:** cloning, browsing, grepping and editing the hand-editable files
   (see [`CONTRIBUTING.md`](CONTRIBUTING.md)).
@@ -85,9 +86,13 @@ or [`INDEX.md`](INDEX.md) (human), then read each item's `metadata.json` and
 https://activeinferenceinstitute.github.io/ActiveInferenceJournal/.
 
 There is nothing to install or build here. To **regenerate or validate** the repository,
-clone [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities)
-alongside it and run its scripts from that checkout (enrichment is dry-run unless
-`--apply` is passed):
+run the gate from this checkout (`./run.sh` brings up the pinned Journal-Utilities
+revision by itself), or run the Journal-Utilities scripts directly from that checkout
+when you are changing the generator (enrichment is dry-run unless `--apply` is passed):
+
+```bash
+./run.sh all                     # lint, docs, full, gnn — the same commands CI runs
+```
 
 ```bash
 cd ../Journal-Utilities
@@ -96,13 +101,13 @@ uv run python scripts/generate_journal_indexes.py --journal ../ActiveInferenceJo
 uv run python run.py journal-check   # read-only integrity gate
 ```
 
-`journal-check` reproduces the CI gate; see [Operations](docs/OPERATIONS.md) for every
-workflow and the exact commands.
+See [Operations](docs/OPERATIONS.md) for every arm, workflow and pin.
 
 ## Documentation
 
 - Technical docs index (schema, organization, pipeline, operations): [`docs/`](docs/README.md).
-- Operations — CI workflows, validation and deployment: [`docs/OPERATIONS.md`](docs/OPERATIONS.md).
+- Flat index of every long-lived doc: [`docs/documentation-index.md`](docs/documentation-index.md).
+- Gate arms and measured timings: [`docs/OPERATIONS.md`](docs/OPERATIONS.md) and [`docs/_generated/gate-timings.md`](docs/_generated/gate-timings.md).
 - Contribution guide (what to edit vs. generated): [`CONTRIBUTING.md`](CONTRIBUTING.md).
 - Security rules (credentials, audio): [`SECURITY.md`](SECURITY.md).
 - Scoped improvement list and open items: [`TO-DO.md`](TO-DO.md).

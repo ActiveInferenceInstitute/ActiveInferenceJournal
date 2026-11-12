@@ -45,11 +45,18 @@ jobs:
         with:
           fetch-depth: 1
 
+      # Ingest is a separate role in the same lock file: this workflow needs
+      # journal_utilities.ingest.ytdlp, which does not exist at the gate
+      # revision. See .github/journal-utilities-pin.json.
+      - name: Read the Journal-Utilities pin
+        id: pin
+        run: echo "revision=$(python3 scripts/gate/pin.py --revision --role ingest)" >> "$GITHUB_OUTPUT"
+
       - name: Checkout Journal_Utilities (pinned, secret-free ingest)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: ActiveInferenceInstitute/Journal_Utilities
-          ref: ebdd09147422f330b12ef22f3d6b0c069d950359
+          ref: ${{ steps.pin.outputs.revision }}
           path: .journal-utilities
           fetch-depth: 1
           sparse-checkout: |
