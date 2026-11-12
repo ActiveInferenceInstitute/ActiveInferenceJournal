@@ -58,48 +58,85 @@ def interpreter() -> str:
     )
 
 
-def installed_version(python: str) -> str:
-    completed = subprocess.run(
-        [python, "-c", "import gnn; print(gnn.__version__)"],
-        capture_output=True,
-        text=True,
+def provenance(python: str) -> dict:
+    """What the installed distribution says it was built from (PEP 610)."""
+    code = (
+        "import json\n"
+        "from importlib.metadata import PackageNotFoundError, distribution\n"
+        "try:\n"
+        "    dist = distribution('generalized-notation-notation')\n"
+        "except PackageNotFoundError:\n"
+        "    print(json.dumps({}))\n"
+        "else:\n"
+        "    url = json.loads(dist.read_text('direct_url.json') or '{}')\n"
+        "    print(json.dumps({'version': dist.version, 'url': url.get('url'),\n"
+        "                      'commit': (url.get('vcs_info') or {}).get('commit_id')}))\n"
     )
-    return completed.stdout.strip() if completed.returncode == 0 else ""
+    completed = subprocess.run([python, "-c", code], capture_output=True, text=True)
+    if completed.returncode != 0:
+        return {}
+    try:
+        return json.loads(completed.stdout or "{}")
+    except json.JSONDecodeError:
+        return {}
+
+
+def environment_matches(python: str, pin: dict) -> bool:
+    """True only when the environment holds the parser built from the pinned commit.
+
+    The version alone is not enough: bumping the revision while the tag stays
+    v5.0.3 leaves ``gnn.__version__`` unchanged, so reuse keyed on the version
+    would verify the old parser and report the new pin. The version is checked
+    separately by ``verify()``, which reports it against the pin's tag.
+    """
+    return provenance(python).get("commit") == pin["revision"]
 
 
 def ensure_environment(pin: dict, cold: bool) -> str:
-    tag = pin["tag"]
+    revision = pin["revision"]
+    slug = pin["repository"].replace("/", "-")
     interpreter_path = interpreter()
-    root = cache_dir() / f"gnn-{tag}-py{version(interpreter_path)[0]}.{version(interpreter_path)[1]}"
+    major, minor = version(interpreter_path)
+    # The cache key carries repository, revision and interpreter, so changing
+    # any of them builds a different environment instead of reusing a wrong one.
+    root = cache_dir() / f"gnn-{slug}-{revision}-py{major}.{minor}"
     if cold and root.exists():
         shutil.rmtree(root)
     python = root / "bin" / "python"
     if not python.exists():
         log(f"gnn: creating isolated environment at {root} with {interpreter_path}")
         subprocess.run([interpreter_path, "-m", "venv", str(root)], check=True)
-    expected = tag.removeprefix("v")
-    if installed_version(str(python)) != expected:
-        log(f"gnn: installing pinned {pin['repository']}@{tag}")
-        subprocess.run(
-            [str(python), "-m", "pip", "install", "--quiet", "--disable-pip-version-check", *RUNTIME_DEPS],
-            check=True,
+
+    if environment_matches(str(python), pin):
+        log(f"gnn: reusing parser {pin['tag']} at {revision[:12]}")
+        return str(python)
+
+    if provenance(str(python)):
+        log(f"gnn: cached environment holds a different build; reinstalling {revision[:12]}")
+    log(f"gnn: installing pinned {pin['repository']}@{pin['tag']} ({revision[:12]})")
+    subprocess.run(
+        [str(python), "-m", "pip", "install", "--quiet", "--disable-pip-version-check", *RUNTIME_DEPS],
+        check=True,
+    )
+    spec = f"git+https://github.com/{pin['repository']}.git@{revision}"
+    subprocess.run(
+        [
+            str(python),
+            "-m",
+            "pip",
+            "install",
+            "--quiet",
+            "--disable-pip-version-check",
+            "--no-deps",
+            f"generalized-notation-notation @ {spec}",
+        ],
+        check=True,
+    )
+    landed = provenance(str(python)).get("commit")
+    if landed != revision:
+        raise SystemExit(
+            f"gnn: install did not land on {revision[:12]}; provenance reports {landed}"
         )
-        spec = f"git+https://github.com/{pin['repository']}.git@{pin['revision']}"
-        subprocess.run(
-            [
-                str(python),
-                "-m",
-                "pip",
-                "install",
-                "--quiet",
-                "--disable-pip-version-check",
-                "--no-deps",
-                f"generalized-notation-notation @ {spec}",
-            ],
-            check=True,
-        )
-    else:
-        log(f"gnn: reusing installed parser {expected} at {root}")
     return str(python)
 
 
@@ -112,6 +149,25 @@ def verify() -> int:
     expected = pin["tag"].removeprefix("v")
     if __version__ != expected:
         raise SystemExit(f"gnn: installed {__version__!r} does not match pin {pin['tag']!r}")
+
+    # The version is shared across revisions of a tag, so bind the parser to the
+    # pinned commit as well: this is the check that a same-tag revision bump
+    # cannot pass on a stale environment.
+    from importlib.metadata import PackageNotFoundError, distribution
+
+    try:
+        raw = distribution("generalized-notation-notation").read_text("direct_url.json")
+    except PackageNotFoundError:
+        raise SystemExit("gnn: the pinned parser is not installed in this environment") from None
+    if not raw:
+        raise SystemExit("gnn: installed parser has no direct_url.json; cannot bind it to the pin")
+    direct = json.loads(raw)
+    commit = (direct.get("vcs_info") or {}).get("commit_id")
+    if commit != pin["revision"]:
+        raise SystemExit(
+            f"gnn: installed parser is from {commit or 'a non-VCS source'}, "
+            f"but the pin is {pin['revision']}"
+        )
 
     sketches = sorted(ROOT.rglob("*.gnn.md"))
     if sketches:

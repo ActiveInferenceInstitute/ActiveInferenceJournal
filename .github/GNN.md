@@ -16,7 +16,11 @@ It reads [`gnn-pin.json`](gnn-pin.json), schema `gnn-importer-pin/v1`:
 
 The arm asserts the pin's fields, installs the package from that exact revision
 into an isolated environment, and fails unless the imported `gnn.__version__`
-equals the tag without its leading `v`. The pinned package declares
+equals the tag without its leading `v` **and** the installed distribution's
+`direct_url.json` records that same revision as its commit. The environment is
+cached per repository, revision and interpreter, so a revision bump rebuilds it;
+a version-only check would have passed a stale build, because the version string
+does not change when only the revision does. The pinned package declares
 `requires-python >=3.11,<3.15`.
 
 ## What it parses

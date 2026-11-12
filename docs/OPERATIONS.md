@@ -32,6 +32,14 @@ stdlib-only Python, so there is no environment to install for `lint`, `docs`,
 package declares `requires-python >=3.11,<3.15`; on a host without such an
 interpreter, set `GATE_PYTHON` or run `uv python install 3.12`.
 
+That environment is keyed by repository, **revision** and interpreter, and the
+installed parser is bound to the pin by the commit id pip records in
+`direct_url.json`. A version string is not enough: bumping the revision while
+the tag stays `v5.0.3` leaves `gnn.__version__` unchanged, so a version-keyed
+cache would verify the old parser and print the new pin. Changing the pin
+rebuilds the environment, and `verify` refuses a parser built from any other
+commit.
+
 Pinned revisions live in two files and nowhere else:
 
 | Pin | File | Schema |
