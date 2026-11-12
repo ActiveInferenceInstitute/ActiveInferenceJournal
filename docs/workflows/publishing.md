@@ -130,17 +130,20 @@ when the digest and the file disagree.
 
 ## The drift test
 
-The contract records the schema's sha256 next to its name. `./run.sh identity` recomputes
-it, so an edited schema with a stale digest fails this repository's gate:
+The contract records each pinned artifact's sha256 next to its name, one `name  sha256`
+line per copy. `./run.sh identity` recomputes every one, so an edited artifact with a stale
+digest fails this repository's gate:
 
 ```text
 record-identity.schema.json  84f6c4df6efc3f15f0d8a9a05c8aabd0cbdc08b0f4feac5fcc8ae860a81e306b
+identity.py  847328ff163fa90c869495164869caf4e83313748e8a444dbab8d4e459b11074
 ```
 
 A member verifies its own copy with the same module and the same rule:
 
 ```bash
 python3 scripts/gate/identity.py --verify-copy docs/workflows/record-identity.schema.json
+python3 scripts/gate/identity.py --verify-copy scripts/gate/identity.py
 ```
 
 That reads the digest recorded in the local `docs/workflows/publishing.md`-equivalent and
@@ -163,10 +166,14 @@ private copy of a shared concern; point at the canonical one and pin it by diges
    repository's own sidecar had the same `docs/INTEGRATION.md` entry and lost it when this
    page landed.
 2. For the concerns you keep locally (all five at present), copy the canonical file and
-   add the digest check:
+   add the digest check. The block above is a list of `name  sha256` lines and takes any
+   artifact kind the contract pins — `.json`, `.py`, `.mjs`, `.sh` — so pin the Python
+   modules too, not just the schema:
    - `scripts/gate/identity.py` takes no configuration; it reads the schema.
-   - add `<file>  <sha256>` to your copy of this page's digest block, and run
+   - add `<file>  <sha256>` for every copy you keep to your contract copy, and run
      `python3 scripts/gate/identity.py --verify-copy <your copy>` from your gate.
+     `identity` itself runs a selftest of that check, so a passing run means both
+     directions were exercised: a matching `.py` copy passes, a diverged one fails.
 3. Replace a prose mirror with a pointer. Journal_Utilities' `docs/JOURNAL_SCHEMA.md` and
    this repository's [`../SCHEMA.md`](../SCHEMA.md) must not both define the schema; the
    mirror keeps its "How the pipeline writes this" chapters and links here for identity.
@@ -193,8 +200,9 @@ that is an extra check, not the contract.
 ## Keeping this page honest
 
 `./run.sh identity` fails when the schema does not parse, when its `schema_version` is not
-`record-identity/v1`, when its `x-identity` block is incomplete, when the recorded digest
-above does not match the file, when a record's `item` does not name its own directory, when
+`record-identity/v1`, when its `x-identity` block is incomplete, when any recorded digest
+above does not match its file or names no single artifact, when the check's own selftest
+does not prove both directions, when a record's `item` does not name its own directory, when
 its `series` names no directory above it, or when a part's `video_id` is not an
 11-character id. `./run.sh docs` fails when a link on this page does not resolve with the
 exact case GitHub serves.

@@ -21,6 +21,7 @@ from __future__ import annotations
 import sys
 
 import identity
+import identity_selftest
 from common import ROOT, log
 
 SCHEMA = ROOT / "docs" / "workflows" / "record-identity.schema.json"
@@ -39,6 +40,9 @@ def run(argv: list[str]) -> int:
     problem = identity.verify_copy(SCHEMA, CONTRACT)
     if problem:
         failures.append(problem)
+
+    # The members pin Python copies too, so prove that path on every run.
+    failures += identity_selftest.run()
 
     if failures:
         for message in failures:
