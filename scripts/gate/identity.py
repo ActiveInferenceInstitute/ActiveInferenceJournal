@@ -26,7 +26,16 @@ from dataclasses import dataclass
 from pathlib import Path
 
 SCHEMA_VERSION = "record-identity/v1"
-DIGEST_LINE = re.compile(r"^\s*([\w.-]+\.json)\s{2,}([0-9a-f]{64})\s*$")
+# A pinned copy is any artifact kind a member can carry, not just a schema: the
+# contract pins the Python modules too, and a `.json`-only parser would make
+# those entries unverifiable.
+ARTIFACT_SUFFIXES = ("json", "py", "mjs", "sh", "md", "ts")
+DIGEST_LINE = re.compile(
+    r"^\s*([\w.+@-]+\.(?:" + "|".join(ARTIFACT_SUFFIXES) + r"))\s{2,}([0-9a-f]{64})\s*$"
+)
+# Where a recorded name may live, relative to the repository root. A fixed list
+# keeps resolution deterministic: no directory walk, no ambiguity by accident.
+ARTIFACT_LOCATIONS = ("scripts/gate", "docs/workflows", ".github", "")
 
 
 class IdentityError(Exception):
@@ -133,8 +142,26 @@ def recorded_digests(contract: Path) -> dict[str, str]:
     return recorded
 
 
+def repository_root(contract: Path) -> Path:
+    """The checkout a contract belongs to: nearest ancestor holding `.git`."""
+    for parent in contract.resolve().parents:
+        if (parent / ".git").exists():
+            return parent
+    return contract.resolve().parents[2]
+
+
+def resolve_artifact(root: Path, name: str) -> Path | None:
+    """Find the file a recorded digest names, or None when it is not unique."""
+    matches: list[Path] = []
+    for location in ARTIFACT_LOCATIONS:
+        candidate = root / location / name if location else root / name
+        if candidate.is_file():
+            matches.append(candidate)
+    return matches[0] if len(matches) == 1 else None
+
+
 def check_contract(contract: Path, schema: Spec) -> list[str]:
-    """The contract must record this schema's name and digest, and no stale entry."""
+    """Every recorded digest must match its file; the schema must be recorded."""
     failures: list[str] = []
     recorded = recorded_digests(contract)
     if not recorded:
@@ -142,20 +169,28 @@ def check_contract(contract: Path, schema: Spec) -> list[str]:
             f"{contract.name}: no `name  sha256` digest block; members cannot verify a copy"
         )
         return failures
-    name = schema.path.name
-    expected = schema.digest()
-    if name not in recorded:
-        failures.append(f"{contract.name}: records no digest for {name}")
-    elif recorded[name] != expected:
-        failures.append(
-            f"{contract.name}: records {name} as {recorded[name][:12]}, "
-            f"but the file is {expected[:12]}; update the digest with the schema"
-        )
+    root = repository_root(contract)
+    for name, expected in sorted(recorded.items()):
+        path = schema.path if name == schema.path.name else resolve_artifact(root, name)
+        if path is None:
+            failures.append(
+                f"{contract.name}: records {name}, which is not one file under "
+                f"{root} at {', '.join(location or '.' for location in ARTIFACT_LOCATIONS)}"
+            )
+            continue
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        if digest != expected:
+            failures.append(
+                f"{contract.name}: records {name} as {expected[:12]}, "
+                f"but the file is {digest[:12]}; update the digest with the edit"
+            )
+    if schema.path.name not in recorded:
+        failures.append(f"{contract.name}: records no digest for {schema.path.name}")
     return failures
 
 
 def verify_copy(copy: Path, contract: Path) -> str | None:
-    """Return a failure message when a member's schema copy diverges."""
+    """Return a failure message when a member's artifact copy diverges."""
     try:
         digest = hashlib.sha256(copy.read_bytes()).hexdigest()
     except FileNotFoundError:
@@ -167,7 +202,7 @@ def verify_copy(copy: Path, contract: Path) -> str | None:
     if expected != digest:
         return (
             f"{copy}: copy is {digest[:12]}, contract records {expected[:12]}; "
-            "the copy drifted from the canonical schema"
+            "the copy drifted from the canonical artifact"
         )
     return None
 
