@@ -183,8 +183,12 @@ def verify() -> int:
             model_dir.mkdir()
             for index, sketch in enumerate(sketches):
                 shutil.copy2(sketch, model_dir / f"{index:03d}_{sketch.name}")
-            if not GNNTypeChecker().validate_gnn_files(model_dir, Path(output_dir)):
-                raise SystemExit("gnn: type checker rejected the repository sketches")
+            verdict = GNNTypeChecker().validate_gnn_files(model_dir, Path(output_dir))
+            if verdict is not True:
+                raise SystemExit(
+                    "gnn: type checker rejected the repository sketches "
+                    f"(validate_gnn_files returned {verdict!r})"
+                )
         checked, source = len(sketches), "repository"
     else:
         url = (
@@ -204,8 +208,12 @@ def verify() -> int:
             model_dir = Path(output_dir) / "models"
             model_dir.mkdir()
             shutil.copy2(exemplar, model_dir / exemplar.name)
-            if not GNNTypeChecker().validate_gnn_files(model_dir, Path(output_dir)):
-                raise SystemExit("gnn: type checker rejected the pinned exemplar")
+            verdict = GNNTypeChecker().validate_gnn_files(model_dir, Path(output_dir))
+            if verdict is not True:
+                raise SystemExit(
+                    "gnn: type checker rejected the pinned exemplar "
+                    f"(validate_gnn_files returned {verdict!r})"
+                )
         checked, source = 1, "pinned-exemplar"
 
     print(
@@ -233,7 +241,12 @@ def run(argv: list[str]) -> int:
         raise SystemExit(f"gnn: unknown arguments {unknown}")
     python = ensure_environment(pin, cold)
     completed = subprocess.run([python, str(Path(__file__).resolve()), "--verify-only"], cwd=str(ROOT))
-    return completed.returncode
+    if completed.returncode != 0:
+        return completed.returncode
+    # The verdict selftest runs in the same isolated environment as verify, so
+    # the arm's acceptance rule cannot regress without turning the gate red.
+    selftest = Path(__file__).resolve().parent / "gnn_selftest.py"
+    return subprocess.run([python, str(selftest)], cwd=str(ROOT)).returncode
 
 
 if __name__ == "__main__":
