@@ -1,13 +1,48 @@
 # TO-DO — ActiveInferenceJournal docs pass
 
-Last reviewed: 2026-11-12 (gate and documentation pass 4, below); previously
-2026-08-02 (docs-deep review + implementation; see
+Last reviewed: 2026-11-12 (gate and documentation pass 5, below); previously
+2026-11-12 (pass 4), 2026-08-02 (docs-deep review + implementation; see
 [`REVIEW_LOG_2026-08-02.md`](REVIEW_LOG_2026-08-02.md)) and 2026-11-11
 (docs completion pass 3).
 
 Sections: **Minor** = typo, broken link, formatting; **Medium** = stale section
 rewrite, doc restructure, added missing guide; **Major** = large doc system
 overhaul, cross-cutting refactors.
+
+## Gate and documentation pass 5 (2026-11-12)
+
+- ✓ **`./run.sh identity` — new arm, and the publishing contract it enforces.**
+  `docs/workflows/record-identity.schema.json` (`record-identity/v1`) is the one
+  grammar for `metadata.json` record ids and the cross-repository join keys;
+  `docs/workflows/publishing.md` is the group contract that pins it;
+  `journal-integrity.yml` runs the arm directly after `docs`, and the sidecar
+  gained an `identity` task. (`c7c555cb`, #43)
+- ✓ **The contract's drift test now works for every artifact kind.** The digest
+  block accepted only `.json` names, so a member that pinned `identity.py` — the
+  copy its own migration step tells it to make — was told "records no digest"
+  forever. The parser accepts `.json`, `.py`, `.mjs`, `.sh`, `.md` and `.ts`, and
+  every recorded entry is resolved and re-hashed, so a stale or unlocatable pin
+  fails instead of being ignored. `scripts/gate/identity_selftest.py` builds a
+  fake checkout and asserts both directions (matching copy passes, diverged copy
+  reports the drift); the arm runs it on every invocation. (`d8ec888a`, #44)
+- ✓ **The GNN parser is bound to the pinned revision, not to the tag.**
+  `arm_gnn.py` keys its environment cache by repository, revision and
+  interpreter, and refuses a parser whose `direct_url.json` records another
+  commit — a revision bump under the unchanged tag `v5.0.3` can no longer verify
+  the old parser and print the new pin. (`1976ca15`, #42)
+- ✓ **Sidecar publishing docs resolve from the repository root.**
+  `.aii/config.yaml` points at `../docs/workflows/publishing.md` and carries the
+  `docs/INTEGRATION.md` entry again, matching `.aii/docs/INTEGRATION.md` and
+  `.aii/README.md`. (`a7c80580`, #45)
+- ✓ **Checked, not changed: there is no `pymdp` / `inferactively-pymdp`
+  dependency here.** The only non-`data/` mentions are item titles and legacy
+  translation filenames in `docs/volunteer-transcript-tasks.md`,
+  `docs/good-first-issues-draft.md` and `docs/translation-migration-map.md`;
+  there is no 1.0.5 pin to adopt.
+- Verification (this pass): `./run.sh docs` → `gate: docs: ok (765 Markdown
+  files)` on `a7c80580`. Hosted Actions cannot corroborate anything — every run
+  starts and is rejected with "The job was not started because your account is
+  locked due to a billing issue" (run `43252922624`; see Open below).
 
 ## Gate and documentation pass 4 (2026-11-12)
 
@@ -155,16 +190,46 @@ overhaul, cross-cutting refactors.
 
 ## Open / deferred
 
-- **`INDEX.md` header line wraps at 140 chars** — produced by
-  `generate_journal_indexes.py`; the `--check` gate compares the file
-  byte-for-byte against generator output, so it cannot be hand-edited;
-  generator-owned.
+- **Hosted GitHub Actions is locked, org-wide.** Every run dies before its first
+  step with "The job was not started because your account is locked due to a
+  billing issue" (run `43252922624` for `estate/sidecar-defaults`; the CodeQL
+  default-setup run `43264122709` fails the same way, 2026-11-12). No pull
+  request can show a green check until the organisation's billing is restored, so
+  `./run.sh all` locally is the only evidence a PR can carry. Owner: Institute
+  GitHub organisation admin; the fix is outside this repository.
+- **Legacy translation triage (I16).** 423 `.srt` files remain in capital-T
+  `Translations/` across 30 items, and 600 quarantined files sit under
+  `translations/conflicts/` across 44 items (counts re-derived from
+  `git ls-files`, 2026-11-12; both are listed row by row in
+  [`docs/volunteer-transcript-tasks.md`](docs/volunteer-transcript-tasks.md)).
+  Each remaining file needs a human to confirm its `video_id` and language
+  before the two-step `git mv` — no script can settle a guess, which is why the
+  M2 pass stopped here. Owner: volunteers, coordinated from that page.
+- **Weekly ingest is still a dispatch-only draft, and M5 does not exist.**
+  `weekly-ingest.yml` has no `schedule:` and its guard fails any non-dispatch
+  run; correspondingly `arm_manifest.py --strict` (manifest age and duplicate
+  ids as failures) is documented as landing "when that lands"
+  ([`docs/OPERATIONS.md`](docs/OPERATIONS.md), "Weekly ingest (draft)").
+  Owner: maintainers; blocked on reviewing Journal-Utilities `docs/m3-ingest.md`
+  and removing the guard, which is outside this repository.
+- **GNN pin is `v5.0.3` (`8f293d9b`), one minor behind the org-wide `v5.1.0`
+  (`75c834bd`).** Nothing here consumes the newer parser — the arm validates
+  whatever revision `.github/gnn-pin.json` names — so this is a reviewed
+  one-file bump (`./run.sh gnn --cold`) rather than a defect. Owner:
+  maintainers.
+- **`estate/sidecar-defaults` is unmerged with no PR.** One commit ahead of
+  `main` (`a93f103c`), changing only `.aii/config.yaml` (drops
+  `relation: references` from the Active_Inference_Ontology relation). Land it
+  through the sidecar generator or delete the branch. Owner: whoever ran the
+  estate sidecar pass; nothing in this repository blocks it except the hosted
+  gate being unavailable.
+- **`INDEX.md` line width** — generator output: the summary line is 143
+  characters, item lines exactly 140. `generate_journal_indexes.py --check`
+  compares the file byte-for-byte with generator output, so it cannot be
+  hand-edited; generator-owned (Journal-Utilities).
 - **Item README long lines** — inherent to `refactor_journal.py`'s format
   (URL-bearing title lines, `Contents:` line); regenerated in that format,
   not a defect to fix here.
-- **Curated assets elsewhere** — after the image-repair pass, no `.md` under
-  `assets/` has broken relative refs and no machine paths remain anywhere in
-  the repo (verified by grep).
 
 ## M4-pages wave (feat/m4-pages, 2026-09-23)
 
