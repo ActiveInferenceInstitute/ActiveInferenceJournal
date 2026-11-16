@@ -212,11 +212,11 @@ overhaul, cross-cutting refactors.
   ([`docs/OPERATIONS.md`](docs/OPERATIONS.md), "Weekly ingest (draft)").
   Owner: maintainers; blocked on reviewing Journal-Utilities `docs/m3-ingest.md`
   and removing the guard, which is outside this repository.
-- **GNN pin is `v5.0.3` (`8f293d9b`), one minor behind the org-wide `v5.1.0`
-  (`75c834bd`).** Nothing here consumes the newer parser — the arm validates
-  whatever revision `.github/gnn-pin.json` names — so this is a reviewed
-  one-file bump (`./run.sh gnn --cold`) rather than a defect. Owner:
-  maintainers.
+- **Coordinate member adoption of the Journal's GNN pin.** The lead pin advances
+  to `v5.1.0` (`75c834bd`). Each of the eight member copies moves with its
+  own conformance evidence after the lead revision is accepted. Follow the
+  [Publishing contract](docs/workflows/publishing.md#the-drift-test) for the
+  canonical bytes and digest. Owner: the Publishing group maintainers.
 - **`estate/sidecar-defaults` is unmerged with no PR.** One commit ahead of
   `main` (`a93f103c`), changing only `.aii/config.yaml` (drops
   `relation: references` from the Active_Inference_Ontology relation). Land it
