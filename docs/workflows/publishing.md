@@ -6,11 +6,12 @@ implementations of everything else. This page is the contract between them: whic
 repository owns which concern, what a record's identity is, and the one step each
 member takes to stop carrying its own copy of a solved problem.
 
-The contract is enforceable, not aspirational. Every rule below is checked by
-`./run.sh identity` in this repository against
-[`record-identity.schema.json`](record-identity.schema.json), and a member can run the
-same check against its own copy with
+`./run.sh identity` checks the schema-declared record relationships and local
+artifact agreement described below, using
+[`record-identity.schema.json`](record-identity.schema.json) and
 [`scripts/gate/identity.py`](../../scripts/gate/identity.py).
+It is not a general JSON Schema validator, channel-freshness check, hosted-CI
+receipt, scientific qualification or authenticated upstream release.
 
 ## Evidence rule
 
@@ -71,6 +72,7 @@ schema, not a second definition of it.
 | `item` | item id | this repository | `metadata.json` `item`; `INDEX.json` `path` | equals the item directory name |
 | `video` | 11-character YouTube id | this repository records; YouTube assigns | `metadata.json` `parts[].video_id`; `INDEX.json` `parts[]` | `^[A-Za-z0-9_-]{11}$` |
 | `session` | `<video_id>_sessNN` | this repository | `metadata.json` `sessions[].session_name`; `transcript.json` blocks | the leading 11 characters are a part's `video_id`, `NN` is two digits |
+| `session upload` | optional standalone video id | this repository | `metadata.json` `sessions[].video_id` | a separate upload link, not required to equal a part ID |
 | `paper` | `doi:`/`arxiv:`/`s2:`/`openalex:`/`title:` id | act_inf_metaanalysis | `output/data/corpus.jsonl` `paper_id`; this repository's `metadata.json` `doi` | prefix decides the scheme |
 | `doc` | `document_name` | ISSS | `archived_documents/metadata.json` `document_name` | the basename of the source URL |
 | `pub` | DOI + version | act_inf_metaanalysis | `manuscript/config.yaml` `doi` + `version` | one deposited publication |
@@ -96,6 +98,9 @@ the first three path components (`data/<type>/<source>/`) are dropped from the r
 path. The value is therefore **not** an `INDEX.json` path and **not** a bare item id.
 A consumer that concatenates `duplicate_of` onto an `INDEX.json` path gets a path that
 does not exist; a consumer that matches it as a suffix gets the right record.
+When `duplicate_of` is present in INDEX, its optional projection must agree
+with metadata and resolve to an admitted indexed record under the same source
+prefix. Identity checking adds no cycle, self-reference or video-equality policy.
 
 ### What carries no identity
 
@@ -139,7 +144,10 @@ digest fails this repository's gate:
 
 ```text
 record-identity.schema.json  84f6c4df6efc3f15f0d8a9a05c8aabd0cbdc08b0f4feac5fcc8ae860a81e306b
-identity.py  847328ff163fa90c869495164869caf4e83313748e8a444dbab8d4e459b11074
+identity.py  a7258f6a92e95437091332de222066f4bdf89f78df16dc82867f29d751654100
+identity_selftest.py  5037aeaddc5dfebf7d625b006ab2f97be6b71c8bd7f0ff91eead1cfc5dc9c5ba
+arm_docs.py  fdab3423cc0ef72f38f7f1e3037d7f71a74aa81f25a10b1adf006c73c3b816b2
+docs_selftest.py  2d5c7b24f22ad78dbd0d3d799d790909b5e519968a820f7e02756f5ad396f5d8
 gnn-pin.json  397e5f2803fadb6dfde336dbacf50ed195090effff1fdd13f54d0a8813cc1fa9
 ```
 
@@ -155,6 +163,21 @@ compares it to the file. A copy that has drifted, or a digest that was updated w
 the file, fails. The lead repository runs exactly this command as part of `./run.sh
 identity`, so the path members use is exercised by the lead's gate rather than assumed to
 work.
+These digests bind source artifacts, not their Git provenance. An adopting
+owner must select an actual immutable producer revision and update selected
+copies and their digest contract together; a dirty base revision cannot
+identify new working-tree bytes. `--verify-copy`
+checks exactly the caller-selected file against its local contract: it does not
+fetch or authenticate a producer, establish freshness, or validate a member's
+research corpus.
+
+Knowledge-Engineering's archive consumer verifies copies, not a fabricated local
+Journal corpus. Garden-of-Iris retains its own Markdown inventory, adapter and
+generated-facts check. Its direct `check_links()`/`check_docs_index()` path needs
+the selected `arm_docs.py` and existing dependencies; adopting/exposing the
+native docs arm also requires `docs_selftest.py`. Adopting the new identity
+arm/selftests requires the coherent identity module, selftest and unchanged
+schema. No member copies or pins are changed by lead source qualification.
 
 ## Migration step for every member
 
@@ -176,8 +199,9 @@ private copy of a shared concern; point at the canonical one and pin it by diges
    - `scripts/gate/identity.py` takes no configuration; it reads the schema.
    - add `<file>  <sha256>` for every copy you keep to your contract copy, and run
      `python3 scripts/gate/identity.py --verify-copy <your copy>` from your gate.
-     `identity` itself runs a selftest of that check, so a passing run means both
-     directions were exercised: a matching `.py` copy passes, a diverged one fails.
+     Identity real-file selftests exercise matching and independently diverged
+     copies plus corpus/schema/path relationships; docs selftests exercise actual
+     Markdown anchors, masked links and index reachability.
 3. Replace a prose mirror with a pointer. Journal_Utilities' `docs/JOURNAL_SCHEMA.md` and
    this repository's [`../SCHEMA.md`](../SCHEMA.md) must not both define the schema; the
    mirror keeps its "How the pipeline writes this" chapters and links here for identity.
@@ -186,10 +210,16 @@ private copy of a shared concern; point at the canonical one and pin it by diges
    enforces the `x-identity` block directly.
 
 Where a member's own gate already proves something this contract mentions, keep that and
-do not duplicate it. `validate_journal.py` in the pinned Journal-Utilities revision is the
-authority for the raw transcript layer (blank session ids, part URL agreement,
-`duplicate_of` resolution, manifest reconciliation); this repository's `identity` arm
-deliberately does not re-check it.
+do not duplicate it. This identity arm admits corpus-derived paths inside the
+selected root before content reads; INDEX series/item/ordered part IDs and the
+optional duplicate marker agree with metadata, the Boolean transcript flag
+matches its regular artifact, and each schema-parsed session name belongs to a
+part. Series ancestry stops at the corpus boundary. Contained symlinks and an
+explicit symlinked root remain supported; this is not descriptor-level defense
+against an adversarial concurrent writer. The pinned Journal-Utilities
+`validate_journal.py` remains responsible for raw transcript blocks, URL
+agreement, canonical-video uniqueness and manifest reconciliation. Caption and
+translation filenames carry no inferred identity.
 
 ## Tools this host does not have
 
@@ -203,10 +233,15 @@ that is an extra check, not the contract.
 
 ## Keeping this page honest
 
-`./run.sh identity` fails when the schema does not parse, when its `schema_version` is not
-`record-identity/v1`, when its `x-identity` block is incomplete, when any recorded digest
-above does not match its file or names no single artifact, when the check's own selftest
-does not prove both directions, when a record's `item` does not name its own directory, when
-its `series` names no directory above it, or when a part's `video_id` is not an
-11-character id. `./run.sh docs` fails when a link on this page does not resolve with the
-exact case GitHub serves.
+`./run.sh identity` fails for an invalid/incomplete schema contract, missing or
+ambiguous artifacts, escaping discovered artifact paths, stale digests, or
+real-file selftest failures. Corpus admission rejects unsafe/escaping INDEX,
+record, metadata and transcript paths before content reads. It reconciles
+metadata/path identity, the complete required INDEX projection and ordered
+parts, strict Boolean transcript presence, optional session membership and
+optional source-relative duplicate targets. The schema version remains
+`record-identity/v1`; legitimate null category/episode values and empty parts
+without sessions/transcripts remain supported. `./run.sh docs` checks links,
+anchors, index coverage and isolated real-Markdown regressions. Neither arm
+establishes immutable delivery or substitutes for the remaining producer/GNN
+and member-owned acceptance.

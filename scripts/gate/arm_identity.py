@@ -1,13 +1,10 @@
 """Arm: identity - the publishing group's record-identity contract.
 
-Three things, and nothing that another arm already proves:
-
-1. the canonical schema is complete and parses, and the contract's recorded
-   digest of it is current (``--verify-copy`` exercises the exact code path a
-   member repository runs against its own copy);
-2. every record's item id names its own directory and its series names a
-   directory above it, so a path built from ``metadata.json`` resolves;
-3. every part's ``video_id`` matches the 11-character pattern consumers join on.
+The schema declares contained corpus paths, the INDEX/metadata identity
+projection, transcript presence and session-to-part membership. The arm checks
+those relationships, local artifact digests and real-file regressions.
+Series ancestry stops at the selected corpus boundary. This is not a general
+JSON Schema validator, live freshness check or authenticated upstream release.
 
 The raw transcript layer is deliberately out of scope: the pinned
 ``validate_journal.py`` in the ``full`` arm already refuses a split record with
@@ -41,7 +38,7 @@ def run(argv: list[str]) -> int:
     if problem:
         failures.append(problem)
 
-    # The members pin Python copies too, so prove that path on every run.
+    # Real-file corpus admission and matching/diverged artifact-copy regressions.
     failures += identity_selftest.run()
 
     if failures:

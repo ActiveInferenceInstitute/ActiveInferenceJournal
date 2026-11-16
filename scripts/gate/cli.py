@@ -2,11 +2,13 @@
 
 ``./run.sh <arm>`` execs this module, so the arm a developer runs and the arm CI
 runs are the same command line. Arms are independent: each one runs alone, and
-``all`` runs them in a fixed order.
+``all`` validates its options before running them in a fixed order, stopping at
+the first failure and returning that arm's status.
 """
 
 from __future__ import annotations
 
+import argparse
 import importlib
 import sys
 from pathlib import Path
@@ -36,7 +38,8 @@ def usage() -> None:
     for name, description in ARMS.items():
         print(f"  {name:<{width}}  {description}")
     print(
-        "\noptions: --utilities PATH  use an existing Journal-Utilities tree"
+        "\noptions: --utilities PATH  fast/full/all: snapshot a local Git object source"
+        "\n         --cold            gnn/bench/all: rebuild the GNN environment"
         "\n         --write | --check  bench only: refresh or verify the timings doc"
     )
 
@@ -52,12 +55,33 @@ def main(argv: list[str]) -> int:
         raise GateError(f"unknown arm {arm!r}")
 
     if arm == "all":
+        parser = argparse.ArgumentParser(
+            prog="./run.sh all",
+            description="Run lint, docs, identity, full and gnn; stop at the first failure.",
+            allow_abbrev=False,
+        )
+        parser.add_argument("--utilities", help="Journal-Utilities Git object source")
+        parser.add_argument("--cold", action="store_true", help="rebuild the GNN environment")
+        args = parser.parse_args(rest)
+        if args.utilities is not None and not args.utilities.strip():
+            parser.error("--utilities requires a nonempty path")
         for name in ORDER:
-            importlib.import_module(f"arm_{name}").run([])
+            options: list[str] = []
+            if name == "full" and args.utilities is not None:
+                options = ["--utilities", args.utilities]
+            elif name == "gnn" and args.cold:
+                options = ["--cold"]
+            result = importlib.import_module(f"arm_{name}").run(options)
+            if result != 0:
+                return result
         return 0
 
     return importlib.import_module(f"arm_{arm}").run(rest)
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    try:
+        sys.exit(main(sys.argv[1:]))
+    except GateError as exc:
+        print(str(exc), file=sys.stderr)
+        sys.exit(exc.code)

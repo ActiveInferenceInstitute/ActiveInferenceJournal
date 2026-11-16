@@ -190,13 +190,13 @@ overhaul, cross-cutting refactors.
 
 ## Open / deferred
 
-- **Hosted GitHub Actions is locked, org-wide.** Every run dies before its first
-  step with "The job was not started because your account is locked due to a
-  billing issue" (run `43252922624` for `estate/sidecar-defaults`; the CodeQL
-  default-setup run `43264122709` fails the same way, 2026-11-12). No pull
-  request can show a green check until the organisation's billing is restored, so
-  `./run.sh all` locally is the only evidence a PR can carry. Owner: Institute
-  GitHub organisation admin; the fix is outside this repository.
+- **Hosted billing-lock failures were recorded on 2026-11-12.** Run
+  `43252922624` for `estate/sidecar-defaults` and CodeQL default-setup run
+  `43264122709` failed before their first step with "The job was not started
+  because your account is locked due to a billing issue". These are dated
+  receipts, not a fresh observation of hosted availability. Local gate evidence
+  is separate and cannot establish hosted success. Owner: Institute GitHub
+  organisation admin; billing administration is outside this repository.
 - **Legacy translation triage (I16).** 423 `.srt` files remain in capital-T
   `Translations/` across 30 items, and 600 quarantined files sit under
   `translations/conflicts/` across 44 items (counts re-derived from
@@ -205,24 +205,22 @@ overhaul, cross-cutting refactors.
   Each remaining file needs a human to confirm its `video_id` and language
   before the two-step `git mv` — no script can settle a guess, which is why the
   M2 pass stopped here. Owner: volunteers, coordinated from that page.
-- **Weekly ingest is still a dispatch-only draft, and M5 does not exist.**
-  `weekly-ingest.yml` has no `schedule:` and its guard fails any non-dispatch
-  run; correspondingly `arm_manifest.py --strict` (manifest age and duplicate
-  ids as failures) is documented as landing "when that lands"
-  ([`docs/OPERATIONS.md`](docs/OPERATIONS.md), "Weekly ingest (draft)").
-  Owner: maintainers; blocked on reviewing Journal-Utilities `docs/m3-ingest.md`
-  and removing the guard, which is outside this repository.
+- **Weekly ingest remains a dispatch-only draft; scheduling/policy is pending.**
+  `weekly-ingest.yml` has no `schedule:` and rejects non-dispatch runs.
+  `arm_manifest.py --strict` already exists and fails age/duplicate-ID warnings;
+  `full` does not select it. Owner: maintainers, after reviewing the producer's
+  `docs/m3-ingest.md` and deliberately deciding scheduling and strictness.
 - **Coordinate member adoption of the Journal's GNN pin.** The lead pin advances
   to `v5.1.0` (`75c834bd`). Each of the eight member copies moves with its
   own conformance evidence after the lead revision is accepted. Follow the
   [Publishing contract](docs/workflows/publishing.md#the-drift-test) for the
   canonical bytes and digest. Owner: the Publishing group maintainers.
-- **`estate/sidecar-defaults` is unmerged with no PR.** One commit ahead of
-  `main` (`a93f103c`), changing only `.aii/config.yaml` (drops
-  `relation: references` from the Active_Inference_Ontology relation). Land it
-  through the sidecar generator or delete the branch. Owner: whoever ran the
-  estate sidecar pass; nothing in this repository blocks it except the hosted
-  gate being unavailable.
+- **Sidecar branch disposition remains owner-held.** The 2026-11-12 observation
+  recorded `estate/sidecar-defaults` as one commit ahead (`a93f103c`), unmerged
+  with no PR, changing `.aii/config.yaml`'s ontology `references` relation.
+  That is historical branch/PR evidence, not a fresh inquiry or deletion
+  authorization. Owner: the estate sidecar curator; use canonical generated
+  projections for any approved adoption.
 - **`INDEX.md` line width** — generator output: the summary line is 143
   characters, item lines exactly 140. `generate_journal_indexes.py --check`
   compares the file byte-for-byte with generator output, so it cannot be

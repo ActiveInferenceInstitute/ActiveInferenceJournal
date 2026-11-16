@@ -23,9 +23,12 @@ Tooling: https://github.com/ActiveInferenceInstitute/Journal_Utilities
 
 ## Status
 
-The content on `main` is **complete and current** against the Institute channel: every
-non-duplicate channel video is a part in exactly one item, and the read-only integrity
-gate passes in CI. The repository is **generated**: the per-item `metadata.json` core
+The coverage target is that every non-duplicate video in the supplied channel
+manifest belongs to exactly one canonical item. Validation uses the pinned
+Journal-Utilities manifest; it does not enumerate the live channel or establish
+current hosted CI status. Billing-lock failures were recorded on 2026-11-12
+(see [`TO-DO.md`](TO-DO.md)); those dated receipts do not establish today's hosted
+availability or results. The repository is **generated**: the per-item `metadata.json` core
 keys, `transcript.*`, `captions/`, `translations/`, `INDEX.json`/`INDEX.md` and the
 item/series `README.md` files are produced by
 [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities) and
@@ -36,8 +39,9 @@ channel ingest run from a Journal-Utilities checkout (see
 
 - **Works offline:** cloning, browsing, grepping and editing the hand-editable files
   (see [`CONTRIBUTING.md`](CONTRIBUTING.md)).
-- **Needs the sibling Journal-Utilities checkout:** index/transcript validation and the
-  static-site build.
+- **Uses pinned Journal-Utilities:** index/transcript validation executes a fresh
+  exact-commit snapshot. A sibling working tree is not required as executable
+  source; the static-site workflow uses its separately pinned producer checkout.
 - **Needs network:** the weekly ingest workflow (YouTube enumeration via `yt-dlp`).
 - **Not on `main`:** audio — check out the `audio` branch for the 64 kbps media.
 
@@ -62,8 +66,9 @@ INDEX.md            # human index, grouped by series
 
 Current item and video totals are generated in [`INDEX.json`](INDEX.json).
 Deliberate duplicate records are marked with `duplicate_of`; the index reports
-both indexed video records and unique video IDs. Every Institute channel video
-is represented (uncategorized videos live under `Other/`).
+both indexed video records and unique video IDs. Coverage is assessed against the
+supplied manifest, not guaranteed against the live channel. Indexed videos without
+a more specific series live under `Other/`.
 
 ## Branches
 
@@ -85,13 +90,13 @@ or [`INDEX.md`](INDEX.md) (human), then read each item's `metadata.json` and
 `transcript.txt`. The static reader site is published at
 https://activeinferenceinstitute.github.io/ActiveInferenceJournal/.
 
-There is nothing to install or build here. To **regenerate or validate** the repository,
-run the gate from this checkout (`./run.sh` brings up the pinned Journal-Utilities
-revision by itself), or run the Journal-Utilities scripts directly from that checkout
-when you are changing the generator (enrichment is dry-run unless `--apply` is passed):
+Browsing requires nothing to install or build. Validation runs from this checkout;
+cold Journal-Utilities acquisition and GNN provisioning can require network and
+an appropriate runtime. Run Journal-Utilities directly when changing the generator
+(enrichment is dry-run unless `--apply` is passed):
 
 ```bash
-./run.sh all                     # lint, docs, identity, full, gnn — the same commands CI runs
+./run.sh all                     # lint, docs, identity, full, gnn; stop at first failure
 ```
 
 ```bash
@@ -116,8 +121,7 @@ See [Operations](docs/OPERATIONS.md) for every arm, workflow and pin.
 
 ## Provenance
 
-Transcripts and metadata are pulled completely and idempotently from the Institute
-YouTube channel by
+Transcripts and metadata are produced from Institute YouTube content by
 [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities).
 Most transcripts are WhisperX-diarized: `transcript.json` holds the immutable raw
 segments (`SPEAKER_NN`), human speaker identifications are recorded in

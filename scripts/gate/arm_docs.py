@@ -19,8 +19,9 @@ from common import GNN_PIN, JU_PIN, ROOT, log, read_pin, tracked_markdown
 
 FENCE = re.compile(r"^ {0,3}(?:```|~~~)")
 COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
-INLINE_CODE = re.compile(r"`[^`\n]*`")
+INLINE_CODE = re.compile(r"(?<!`)(`+)(?!`)([^\n]*?)(?<!`)\1(?!`)")
 LINK = re.compile(r"!?\[[^\]]*\]\(\s*(<[^>]*>|[^)\s]+)(?:\s+[\"'][^\"']*[\"'])?\s*\)")
+HEADING_TEXT = re.compile(INLINE_CODE.pattern + r"|!?\[([^\]]*)\]\([^)]*\)")
 REFDEF = re.compile(r"^ {0,3}\[[^\]]+\]:\s*(\S+)", re.MULTILINE)
 SCHEME = re.compile(r"^[a-zA-Z][a-zA-Z0-9+.-]*:")
 HEADING = re.compile(r"^ {0,3}(#{1,6})\s+(.*?)\s*#*\s*$")
@@ -46,8 +47,8 @@ def fail(message: str) -> None:
     failures.append(message)
 
 
-def strip_noise(text: str) -> str:
-    """Drop HTML comments, fenced blocks and inline code, keeping line numbers."""
+def strip_noise(text: str, *, keep_inline_code: bool = False) -> str:
+    """Suppress comments/fences; retain code words only for heading extraction."""
     text = COMMENT.sub(lambda m: "\n" * m.group(0).count("\n"), text)
     kept: list[str] = []
     fenced = False
@@ -56,22 +57,22 @@ def strip_noise(text: str) -> str:
             fenced = not fenced
             kept.append("")
             continue
-        kept.append("" if fenced else INLINE_CODE.sub("``", line))
+        kept.append("" if fenced else line if keep_inline_code else INLINE_CODE.sub("``", line))
     return "\n".join(kept)
 
 
 def slugify(title: str) -> str:
-    title = re.sub(r"!?\[([^\]]*)\]\([^)]*\)", r"\1", title)
+    title = HEADING_TEXT.sub(lambda match: match.group(2) if match.group(1) else match.group(3), title)
     title = title.replace("`", "").strip().lower()
     title = re.sub(r"[^\w\s-]", "", title, flags=re.UNICODE)
-    return re.sub(r"\s+", "-", title)
+    return re.sub(r"\s", "-", title)
 
 
 def anchors(path: Path) -> set[str]:
     if path not in _anchors:
         found: set[str] = set()
         seen: dict[str, int] = {}
-        for line in strip_noise(path.read_text(encoding="utf-8")).splitlines():
+        for line in strip_noise(path.read_text(encoding="utf-8"), keep_inline_code=True).splitlines():
             match = HEADING.match(line)
             if not match:
                 continue
@@ -105,8 +106,8 @@ def links_in(text: str) -> list[tuple[int, str]]:
     return found
 
 
-def check_links() -> None:
-    for path in tracked_markdown():
+def check_links(paths: list[Path] | None = None) -> None:
+    for path in tracked_markdown() if paths is None else paths:
         if not path.exists():
             continue
         rel = path.relative_to(ROOT)
@@ -192,6 +193,9 @@ def run(argv: list[str]) -> int:
     check_docs_index()
     check_timings()
     check_documented_pins()
+    import docs_selftest
+
+    failures.extend(docs_selftest.run())
     if failures:
         for message in failures:
             print(f"docs: FAIL {message}", file=sys.stderr)

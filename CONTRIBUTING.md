@@ -51,11 +51,18 @@ call `./run.sh`, they do not carry a second copy of any command.
 ./run.sh all     # everything a pull request must pass
 ```
 
-`lint` and `docs` run offline in seconds; `fast`/`full` use the Journal-Utilities
-revision pinned in `.github/journal-utilities-pin.json` (an explicit
-`--utilities PATH` is accepted only when it sits on that pin). What each arm
-actually proves, plus the current job layout, is in
-[`docs/OPERATIONS.md`](docs/OPERATIONS.md).
+`lint`, `docs` and `identity` run offline. `fast`/`full` execute a fresh,
+context-managed snapshot of the Journal-Utilities revision pinned in
+`.github/journal-utilities-pin.json`. `--utilities PATH` supplies Git objects
+containing that commit; HEAD and dirty working-tree bytes are not executable
+authority. A `.gate-pin` stamp alone is insufficient. Caller content is preserved
+and the snapshot is removed on exit. Invalid explicit sources fail without
+acquisition; default cold acquisition can require network.
+
+`all` validates its complete option list before running lint, docs, identity,
+full and gnn, stopping at the first nonzero result. Its `--utilities PATH` goes
+only to `full`, and `--cold` only to `gnn`. See
+[`docs/OPERATIONS.md`](docs/OPERATIONS.md) for each arm's limits and CI layout.
 
 ## Citation
 

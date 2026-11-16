@@ -22,17 +22,18 @@ is duplicated in YAML.
 | Arm | Cost | What it proves |
 | --- | --- | --- |
 | `lint` | seconds | Every `uses:` is pinned to a 40-hex commit, every workflow declares `name`/`on`/`permissions`, the Journal-Utilities checkout takes its ref from the pin file rather than a literal SHA, both pin files match their schema, and shipped JSON parses. |
-| `docs` | seconds | Every relative link in every tracked Markdown file resolves with the exact case GitHub serves, in-page anchors exist, each doc under `docs/` is reachable from [`documentation-index.md`](documentation-index.md), the timings table covers exactly the arms, and every documented pin prefix matches a pin file. |
-| `identity` | ~0.1 s | The publishing group contract: [`workflows/record-identity.schema.json`](workflows/record-identity.schema.json) parses and declares `record-identity/v1`, the digest recorded in [`workflows/publishing.md`](workflows/publishing.md) matches the file (the same `--verify-copy` path a member runs), every `item` names its own directory, every `series` names a directory above it, and every `parts[].video_id` is an 11-character id. |
+| `docs` | seconds | Relative Markdown links, exact-case paths, anchors, docs-index reachability, timing-table coverage and documented pins; isolated real-file regressions preserve inline-code heading words and duplicate suffixes while ignoring code links, comments and fences. |
+| `identity` | unmeasured for this source cohort | Contained corpus paths; schema-declared INDEX/metadata series, item, ordered parts and duplicate projection; Boolean transcript presence; session-to-part membership; local artifact digests and real-file selftests. This is not a general JSON Schema validator or live-channel check. |
 | `fast` | ~1 s | `generate_journal_indexes.py --journal . --check` against the pinned Journal-Utilities: `INDEX.json`/`INDEX.md` are not stale. |
 | `full` | ~30 s | The split-transcript check, the read-only `validate_journal.py` gate, and the manifest staleness/reconciliation report (E13). |
 | `gnn` | minutes, network | The pinned GNN parser installs at the pinned revision, reports the pinned version, and parses/type-checks every `*.gnn.md` sketch (or the pinned upstream exemplar when the repository has none). The arm accepts only a literal `True` from the type checker's three-valued sentinel (`True`/`2`/`False`) and runs its own verdict selftest so a truthiness test cannot regress. |
 
 There is no `types` arm: this repository ships no typed source. Arms are
-stdlib-only Python, so there is no environment to install for `lint`, `docs`,
-`fast` or `full`. `gnn` builds its own isolated environment because the pinned
-package declares `requires-python >=3.11,<3.15`; on a host without such an
-interpreter, set `GATE_PYTHON` or run `uv python install 3.12`.
+stdlib-only Python for the offline `lint`, `docs` and `identity` arms. `fast` and
+`full` also need the pinned Journal-Utilities objects and their admitted runtime.
+`gnn` builds an isolated environment because its pinned package declares
+`requires-python >=3.11,<3.15`; provisioning requires separate authority and an
+appropriate interpreter.
 
 That environment is keyed by repository, **revision** and interpreter, and the
 installed parser is bound to the pin by the commit id pip records in
@@ -58,12 +59,15 @@ one-file, reviewable change.
 
 Measured wall time per arm on this host, before and after the gate existed, is
 generated in [`_generated/gate-timings.md`](_generated/gate-timings.md).
+Those are historical measurements, not timings for the newly qualified identity
+and docs implementations. Generated timing artifacts remain unchanged until a
+separately admitted real measurement refresh.
 
 ## Workflows
 
 | Workflow | File | Trigger | Purpose |
 | --- | --- | --- | --- |
-| Validate journal integrity | [`journal-integrity.yml`](../.github/workflows/journal-integrity.yml) | `push`, `pull_request`, `workflow_call` | Release gate: `lint`, `docs`, `fast`, `full` against the pinned Journal-Utilities. |
+| Validate journal integrity | [`journal-integrity.yml`](../.github/workflows/journal-integrity.yml) | `push`, `pull_request`, `workflow_call` | `lint`, `docs`, `identity`, `fast`, `full` against the pinned Journal-Utilities; GNN is separate. |
 | GNN conformance | [`gnn-conformance.yml`](../.github/workflows/gnn-conformance.yml) | `push`, `pull_request` | The `gnn-conformance` job, display name `gnn conformance (pinned)`: `./run.sh gnn`. |
 | Deploy GitHub Pages | [`deploy-pages.yml`](../.github/workflows/deploy-pages.yml) | `push` to `main` touching `data/**` or `INDEX.json`; `workflow_dispatch` | Runs the integrity gate, then builds and deploys the static site bundle. |
 | Weekly ingest | [`weekly-ingest.yml`](../.github/workflows/weekly-ingest.yml) | `workflow_dispatch` only (draft) | Secret-free channel enumeration, new-video delta, scaffold preview, reconciliation report. |
@@ -80,15 +84,18 @@ name (`gnn conformance (pinned)`) are unchanged; only its workflow file moved.
 ### Validate journal integrity
 
 The `validate` job checks out the journal and the pinned Journal-Utilities
-revision, then runs the four gate arms. The steps that used to be inline Python
+revision, then runs lint, docs, identity, fast and full. The steps formerly inline
 heredocs in the workflow are now `scripts/gate/arm_manifest.py` and the
 `fast`/`full` arms, so the locally reproduced command and the CI command are
 literally the same file.
 
-The reconciliation step reports manifest age and any channel/manifest/INDEX
-disagreement; a manifest older than 7 days and duplicate ids are warnings, not
-failures, until the scheduled refresh (M5) exists. `arm_manifest.py --strict`
-turns them into failures when that lands.
+The reconciliation script reports manifest age, duplicate IDs and differences
+between manifest and INDEX part IDs. In the current `full` invocation, whole-day
+`age_days > 7` and duplicate IDs warn without failing this reporting step.
+The existing `arm_manifest.py --strict` makes either warning return 1; `full`
+does not pass it. Set differences remain printed diagnostics even in strict
+mode; producer integrity validation is a separate check. Strict-policy adoption
+and scheduled refresh remain maintainer decisions.
 
 ### Deploy GitHub Pages
 
@@ -125,14 +132,21 @@ reviewed changes to the pin files rather than automatic updates.
 `./run.sh all` is the release gate, and it is what a pull request should be
 screened with. Two notes about running it here:
 
-- `fast` and `full` need the pinned Journal-Utilities tree. With no arguments the
-  gate exports it from a local clone (`$GATE_JU_CLONE`, else `../Journal_Utilities`)
-  into `$GATE_CACHE` (default: the system temp directory) and reuses it; if the
-  clone lacks the pinned commit it fetches it. Pass `--utilities PATH` to use an
-  existing tree - it is refused unless it is at the pin.
+- `fast` and `full` execute fresh context-managed snapshots of pinned Git objects.
+  Warm objects can be reused, but executable snapshots are never reused, including
+  in CI. `--utilities PATH` or `$GATE_JU_CLONE` is an explicit object source:
+  it must already contain the exact commit, regardless of HEAD; invalid explicit
+  sources fail without fetching. Without an explicit source, local/cache objects
+  are preferred and cold acquisition uses a new owned bare store. A `.gate-pin`
+  stamp alone is insufficient. Caller working-tree bytes are preserved.
 - `gnn` needs network on a cold cache and a Python in the pinned package's range.
+- `all` validates every option before effects, then runs lint, docs, identity,
+  full and gnn, stopping at the first nonzero result. Its `--utilities PATH`
+  goes only to full and `--cold` only to gnn. Direct fast/full `--utilities`,
+  direct gnn `--cold` and bench `--cold` remain available.
 
-Offline, `lint` and `docs` are the whole gate, and both are seconds.
+`lint`, `docs` and `identity` are offline subsets, not release, scientific,
+hosted-CI or live-channel acceptance.
 
 ## Branch model
 
