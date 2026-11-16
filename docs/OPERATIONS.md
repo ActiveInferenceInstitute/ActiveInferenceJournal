@@ -37,7 +37,7 @@ interpreter, set `GATE_PYTHON` or run `uv python install 3.12`.
 That environment is keyed by repository, **revision** and interpreter, and the
 installed parser is bound to the pin by the commit id pip records in
 `direct_url.json`. A version string is not enough: bumping the revision while
-the tag stays `v5.0.3` leaves `gnn.__version__` unchanged, so a version-keyed
+the tag stays the same leaves `gnn.__version__` unchanged, so a version-keyed
 cache would verify the old parser and print the new pin. Changing the pin
 rebuilds the environment, and `verify` refuses a parser built from any other
 commit.

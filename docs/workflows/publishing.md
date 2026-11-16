@@ -1,7 +1,7 @@
 # Publishing — the group contract
 
 Nine repositories produce, describe, publish and analyse the Institute's video and
-document record. They already share one pin byte-for-byte and nine different
+document record. They coordinate one GNN pin and carry nine different
 implementations of everything else. This page is the contract between them: which
 repository owns which concern, what a record's identity is, and the one step each
 member takes to stop carrying its own copy of a solved problem.
@@ -32,23 +32,26 @@ member's checks; a command that is not an arm of that entry point is not part of
 | Repository | Gate entry point | Arms | Docs index | Manuscript command | GNN pin |
 | --- | --- | --- | --- | --- | --- |
 | ActiveInferenceJournal (lead) | `./run.sh <arm>` | `lint docs identity fast full gnn all bench` | `docs/documentation-index.md` | none | `.github/gnn-pin.json` |
-| Journal_Utilities | `uv run python run.py gate <arm>` | `lint format types test test-full docs gnn` | `docs/documentation-index.md` | none | same pin |
-| institute_website | `./run.sh <arm>` | `lint fast full docs gnn build browser` | `docs/documentation-index.md` | none | same pin |
-| ISSS | `./run.sh <arm>` | `lint test test-cov docs gnn ci timings` | `docs/documentation-index.md` | none | same pin |
-| Knowledge-Engineering | `python .github/scripts/gate.py <arm>` | `links python notebooks checkpoints archive tests gnn fast full timings` | `docs/documentation-index.md` | none | same pin |
-| Research-Discovery-Engine | `./run.sh <arm>` | `fast build website docs gnn lint types metrics all strict` | `Docs/documentation-index.md` | none | same pin |
-| act_inf_metaanalysis | `./run.sh <arm>` | `lint types test-fast test-full docs gnn render all bench` | `docs/documentation-index.md` | `./run.sh render` → `uv run python scripts/15_render_publication.py --output-root .render-check` | same pin |
-| ATLAS | `./gate <arm>` | `setup lint docs fast test gnn measure` | `docs/documentation-index.md` | none | same pin |
-| Garden-of-Iris | `python scripts/gate.py <arm>` | `syntax docs fast tests models gnn` | `docs/documentation-index.md` | none | same pin |
+| Journal_Utilities | `uv run python run.py gate <arm>` | `lint format types test test-full docs gnn` | `docs/documentation-index.md` | none | member copy |
+| institute_website | `./run.sh <arm>` | `lint fast full docs gnn build browser` | `docs/documentation-index.md` | none | member copy |
+| ISSS | `./run.sh <arm>` | `lint test test-cov docs gnn ci timings` | `docs/documentation-index.md` | none | member copy |
+| Knowledge-Engineering | `python .github/scripts/gate.py <arm>` | `links python notebooks checkpoints archive tests gnn fast full timings` | `docs/documentation-index.md` | none | member copy |
+| Research-Discovery-Engine | `./run.sh <arm>` | `fast build website docs gnn lint types metrics all strict` | `Docs/documentation-index.md` | none | member copy |
+| act_inf_metaanalysis | `./run.sh <arm>` | `lint types test-fast test-full docs gnn render all bench` | `docs/documentation-index.md` | `./run.sh render` → `uv run python scripts/15_render_publication.py --output-root .render-check` | member copy |
+| ATLAS | `./gate <arm>` | `setup lint docs fast test gnn measure` | `docs/documentation-index.md` | none | member copy |
+| Garden-of-Iris | `python scripts/gate.py <arm>` | `syntax docs fast tests models gnn` | `docs/documentation-index.md` | none | member copy |
 
 Two of those arms are admitted red and must stay named as such: Research-Discovery-Engine
 `lint` and `types` are excluded from its blocking `all`, and are documented in its
 `Docs/RUN_GUIDE.md`. A red arm that is quietly dropped is worse than a documented one.
 
-The pin is byte-identical in all nine repositories as of 2026-11-12:
-`8f293d9ba810e6eda5c09842d9c7ed9ffa5f92c1` (`v5.0.3`), sha256
-`eb83f7f1b73eb31e116bd05b1f457dd07e6874a2a4ba0e9e95e5bc91f094cd55`. Its *consumers*
-are nine independently written wrappers; see "Shared concerns" below.
+On 2026-11-12 all nine repositories carried the same `v5.0.3` pin at
+`8f293d9ba810e6eda5c09842d9c7ed9ffa5f92c1`. The lead pin now names
+`v5.1.0` at `75c834bd8519dc7b5adc4d24f16bf393cfd1ecdf`. The digest
+below identifies its exact bytes. Each member advances in its own change
+by taking those bytes and the associated digest from the accepted lead
+revision, then running its local source and GNN conformance gates.
+The lead's move does not advance the eight member copies.
 
 ## The record and its identity
 
@@ -120,7 +123,7 @@ what a broken link is.
 | Relative-link and anchor checker | 9 | `scripts/gate/arm_docs.py:110-150`; `scripts/check_docs_links.py` (JU); `scripts/check_docs.py:81-93` (ISSS); `package.json:17` (website); `.github/scripts/archive_checks.py:59-83` (KE); `scripts/check_docs_links.py` (RDE); `scripts/docs_qa.py:44-63` (ATLAS); `scripts/check_docs.py:81-93` (act_inf); `scripts/check_markdown_links.py:81-100` (Garden) | this repository: [`../../scripts/gate/arm_docs.py`](../../scripts/gate/arm_docs.py) |
 | Docs-index coverage rule | 4 | `arm_docs.py:153-172`; `check_docs_links.py:86-96` (JU); `check_docs.py:97-111` (act_inf); `scripts/measure_gates.py:59-66` (website). ISSS, KE, RDE, ATLAS, Garden check no coverage at all. | this repository: [`../../scripts/gate/arm_docs.py`](../../scripts/gate/arm_docs.py) |
 | Arm measurement → generated Markdown | 9 | `arm_bench.py`; `run.py:809-912` (JU); `scripts/gate_report.py:176-185` (ISSS); `scripts/gate.py:159-203` (act_inf); `scripts/gate_metrics.py:215-216` (RDE); `scripts/gate_metrics.py:277,290` (ATLAS); `.github/scripts/gate.py:208-232` (KE); `scripts/gate.py:373-418` (Garden); `scripts/measure_gates.py:110-111` (website) | this repository: [`../../scripts/gate/arm_bench.py`](../../scripts/gate/arm_bench.py) |
-| GNN pin | 9 files, 9 wrappers | identical sha256 in all nine (above); wrappers: `arm_gnn.py`, `scripts/gnn_conformance.py` (JU, ISSS, ATLAS), `scripts/check_gnn_conformance.py` (website, Garden), `scripts/gnn_conformance.py` (RDE), `scripts/gnn_conformance.py` (act_inf) | this repository: [`../../.github/GNN.md`](../../.github/GNN.md) + [`../../.github/gnn-pin.json`](../../.github/gnn-pin.json) |
+| GNN pin | 9 files, 9 wrappers | published lead pin and dated member observations (above); wrappers: `arm_gnn.py`, `scripts/gnn_conformance.py` (JU, ISSS, ATLAS), `scripts/check_gnn_conformance.py` (website, Garden), `scripts/gnn_conformance.py` (RDE), `scripts/gnn_conformance.py` (act_inf) | this repository: [`../../.github/GNN.md`](../../.github/GNN.md) + [`../../.github/gnn-pin.json`](../../.github/gnn-pin.json) |
 | Record identity grammar | 1 schema, 0 members | this page and [`record-identity.schema.json`](record-identity.schema.json) | this repository |
 | Journal schema prose, mirrored by hand | 2 | [`../SCHEMA.md`](../SCHEMA.md) and Journal_Utilities `docs/JOURNAL_SCHEMA.md`, declared mirrored and measured 2026-11-12 at 183 differing lines | this repository: [`../SCHEMA.md`](../SCHEMA.md) |
 
@@ -137,6 +140,7 @@ digest fails this repository's gate:
 ```text
 record-identity.schema.json  84f6c4df6efc3f15f0d8a9a05c8aabd0cbdc08b0f4feac5fcc8ae860a81e306b
 identity.py  847328ff163fa90c869495164869caf4e83313748e8a444dbab8d4e459b11074
+gnn-pin.json  397e5f2803fadb6dfde336dbacf50ed195090effff1fdd13f54d0a8813cc1fa9
 ```
 
 A member verifies its own copy with the same module and the same rule:

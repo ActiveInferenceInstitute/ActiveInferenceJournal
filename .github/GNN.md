@@ -6,13 +6,13 @@ and runs one gate arm, `./run.sh gnn`, which is what CI runs too.
 
 ## Pin
 
-It reads [`gnn-pin.json`](gnn-pin.json), schema `gnn-importer-pin/v1`:
+It reads [`.github/gnn-pin.json`](gnn-pin.json), schema `gnn-importer-pin/v1`:
 
 | Field | Value |
 | --- | --- |
 | `repository` | `ActiveInferenceInstitute/Generalized_Notation_Notation` |
-| `tag` | `v5.0.3` |
-| `revision` | `8f293d9ba810e6eda5c09842d9c7ed9ffa5f92c1` |
+| `tag` | `v5.1.0` |
+| `revision` | `75c834bd8519dc7b5adc4d24f16bf393cfd1ecdf` |
 
 The arm asserts the pin's fields, installs the package from that exact revision
 into an isolated environment, and fails unless the imported `gnn.__version__`
