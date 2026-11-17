@@ -71,7 +71,7 @@ schema, not a second definition of it.
 | --- | --- | --- | --- | --- |
 | `item` | item id | this repository | `metadata.json` `item`; `INDEX.json` `path` | equals the item directory name |
 | `video` | 11-character YouTube id | this repository records; YouTube assigns | `metadata.json` `parts[].video_id`; `INDEX.json` `parts[]` | `^[A-Za-z0-9_-]{11}$` |
-| `session` | `<video_id>_sessNN` | this repository | `metadata.json` `sessions[].session_name`; `transcript.json` blocks | the leading 11 characters are a part's `video_id`, `NN` is two digits |
+| `session` | `<video_id>_sessNN` | this repository | `metadata.json` `sessions[].session_name`; `transcript.json` blocks | the leading 11 characters are a part's `video_id`, `NN` is a positive ordinal zero-padded to at least two digits (`01`–`99`, `100+`) |
 | `session upload` | optional standalone video id | this repository | `metadata.json` `sessions[].video_id` | a separate upload link, not required to equal a part ID |
 | `paper` | `doi:`/`arxiv:`/`s2:`/`openalex:`/`title:` id | act_inf_metaanalysis | `output/data/corpus.jsonl` `paper_id`; this repository's `metadata.json` `doi` | prefix decides the scheme |
 | `doc` | `document_name` | ISSS | `archived_documents/metadata.json` `document_name` | the basename of the source URL |
@@ -143,9 +143,9 @@ line per copy. `./run.sh identity` recomputes every one, so an edited artifact w
 digest fails this repository's gate:
 
 ```text
-record-identity.schema.json  84f6c4df6efc3f15f0d8a9a05c8aabd0cbdc08b0f4feac5fcc8ae860a81e306b
+record-identity.schema.json  e1e51b19fc3e6e90f478a0138ceef5ce53a57489573412aaf5128c933c509147
 identity.py  a7258f6a92e95437091332de222066f4bdf89f78df16dc82867f29d751654100
-identity_selftest.py  5037aeaddc5dfebf7d625b006ab2f97be6b71c8bd7f0ff91eead1cfc5dc9c5ba
+identity_selftest.py  8021a807d62ece306e4076ca5b418f6c11356967f553f749f80eb0be3f1577cf
 arm_docs.py  fdab3423cc0ef72f38f7f1e3037d7f71a74aa81f25a10b1adf006c73c3b816b2
 docs_selftest.py  2d5c7b24f22ad78dbd0d3d799d790909b5e519968a820f7e02756f5ad396f5d8
 gnn-pin.json  397e5f2803fadb6dfde336dbacf50ed195090effff1fdd13f54d0a8813cc1fa9

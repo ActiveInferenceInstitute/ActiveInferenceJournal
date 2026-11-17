@@ -50,6 +50,7 @@ class CorpusIdentityTests(unittest.TestCase):
             "sessions": [
                 {"session_name": "abcdefghijk_sess01", "video_id": "wxyz0123456"},
                 {"session_name": "lmnopqrstuv_sess02"},
+                {"session_name": "lmnopqrstuv_sess100"},
             ],
         }
         self.record = {
@@ -238,6 +239,7 @@ class CorpusIdentityTests(unittest.TestCase):
 
     def test_session_names_bind_part_ids_not_standalone_upload(self) -> None:
         for value, fragment in (
+            ("abcdefghijk_sess00", "does not match session_id"),
             ("abcdefghijk_sess1", "does not match session_id"),
             ("abcdefghijk_sess001", "does not match session_id"),
             ("abcdefghijk_sess01\n", "does not match session_id"),
