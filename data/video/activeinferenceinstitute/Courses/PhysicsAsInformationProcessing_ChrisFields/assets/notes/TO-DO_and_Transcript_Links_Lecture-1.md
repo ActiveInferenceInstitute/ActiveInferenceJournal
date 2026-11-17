@@ -6,13 +6,13 @@
 
 Editorial status: (unknown)
 
-[Prose link](https://github.com/ActiveInferenceInstitute/ActiveInferenceJournal/tree/main/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1/Transcripts/Prose)
+[Prose link](../prose/cFPIP-01L.md)
 
-[Session files](https://github.com/ActiveInferenceInstitute/ActiveInferenceJournal/tree/main/Courses/PhysicsAsInformationProcessing_ChrisFields/Lecture_1)
+[Session files](../../)
 
 ## Course-level information
 [Coda TO-DO Links](https://coda.io/d/AIJ-Physics-course_d4OKzETEXqj/TO-DO_suEjI#_luD5m)
 
 [Coda Prose and Slides Links](https://coda.io/d/ActInf-Journal_dwYsKMwppRN/Chris-Fields-Physics-Livestreams-Status_su7Pa#_lu6bc)
 
-[All Github Sessions](https://github.com/ActiveInferenceInstitute/ActiveInferenceJournal/blob/main/Courses/PhysicsAsInformationProcessing_ChrisFields)
+[All Github Sessions](../../)

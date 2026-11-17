@@ -130,6 +130,10 @@ corresponding display fields without losing the source text:
   to its standalone per-talk upload when one exists; that upload's own item
   carries `duplicate_of` back to the full recording. `title` may be a segment label
   ("Roundtable") when the talk has no distinct title.
+  `session_name` captures a `video_id` belonging to this record's `parts`;
+  optional `sessions[].video_id` is a separate standalone-upload link and need
+  not equal a part ID. Identity checking does not add timestamp, title or
+  session-numbering policy beyond the schema grammar.
   **Ownership: this repo.** The enrichment script *seeds* `sessions[]` —
   from YouTube chapter lists (timestamped video descriptions, cached by
   `fetch_chapters.py`) or curated data — only when an item has none, and
@@ -149,6 +153,11 @@ corresponding display fields without losing the source text:
   home is the full-recording item). The duplicate intentionally repeats the
   canonical video's ID; coverage reconciliation excludes the secondary record and
   `INDEX.json` exposes both record and unique video counts.
+  Its value is the canonical path with `data/<type>/<source>/` removed, not a
+  full INDEX path. If projected into INDEX, the optional marker must agree with
+  metadata and resolve to a contained indexed record. Raw transcript blocks,
+  URL agreement, canonical-video uniqueness and manifest reconciliation remain
+  the pinned Journal-Utilities validator's responsibility.
 - **`data/video/activeinferenceinstitute/private_videos.json`** documents
   private/unlisted channel videos known to the Institute (from the legacy
   session database) that are deliberately absent from this public corpus.

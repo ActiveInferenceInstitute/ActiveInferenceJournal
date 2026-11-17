@@ -48,11 +48,17 @@ One entry point, and every arm is the exact command CI runs:
 ./run.sh all     # the release gate: lint, docs, identity, full, gnn
 ```
 
-`lint` and `docs` are offline and take seconds. `fast` and `full` materialize the
-pinned Journal-Utilities revision from
-[`.github/journal-utilities-pin.json`](.github/journal-utilities-pin.json); pass
-`--utilities PATH` to reuse an existing tree, which is refused unless it sits on
-the pin. There is no `types` arm: this repository ships no typed source. Never
+`lint`, `docs` and `identity` are offline. `fast` and `full` execute a fresh,
+context-managed snapshot of the Journal-Utilities commit in
+[`.github/journal-utilities-pin.json`](.github/journal-utilities-pin.json).
+`--utilities PATH` supplies Git objects, never executable working-tree bytes:
+HEAD may differ, but the exact commit must exist. A `.gate-pin` stamp alone is
+insufficient; caller bytes are preserved and the snapshot is removed on exit.
+An invalid explicit source fails without acquisition; default cold acquisition
+can need network. `all` validates every option before running arms, then stops
+at the first nonzero result in lint/docs/identity/full/gnn order. Its `--utilities`
+option goes only to `full`, and `--cold` only to `gnn`.
+There is no `types` arm: this repository ships no typed source. Never
 add a command to a workflow without adding the same command to
 [`scripts/gate/cli.py`](scripts/gate/cli.py).
 

@@ -21,9 +21,10 @@ import argparse
 import hashlib
 import json
 import re
+import stat
 import sys
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 SCHEMA_VERSION = "record-identity/v1"
 # A pinned copy is any artifact kind a member can carry, not just a schema: the
@@ -55,6 +56,7 @@ class Spec:
     index_file: str
     derived_prefix_components: int
     transcript_flag: dict
+    index_record_keys: tuple[str, ...]
 
     def digest(self) -> str:
         return hashlib.sha256(self.path.read_bytes()).hexdigest()
@@ -71,6 +73,36 @@ def _require(mapping: dict, key: str, where: str) -> object:
         raise IdentityError(f"{where} lacks `{key}`")
     return mapping[key]
 
+
+def _relative_path(value: object, where: str) -> Path:
+    """Admit one unambiguous, corpus-relative POSIX path before filesystem access."""
+    if (
+        not isinstance(value, str)
+        or not value
+        or "\0" in value
+        or "\\" in value
+        or PureWindowsPath(value).drive
+        or any(part in {"", ".", ".."} for part in value.split("/"))
+    ):
+        raise IdentityError(f"{where}: expected a relative path without traversal")
+    return Path(value)
+
+
+def _contained_path(root: Path, value: object, where: str) -> Path:
+    relative = _relative_path(value, where)
+    try:
+        resolved = (root / relative).resolve()
+    except (OSError, RuntimeError, ValueError) as exc:
+        raise IdentityError(f"{where}: cannot resolve path: {exc}") from None
+    if not resolved.is_relative_to(root):
+        raise IdentityError(f"{where}: path escapes the corpus")
+    return resolved
+
+
+def _read_json(path: Path) -> object:
+    if not stat.S_ISREG(path.stat().st_mode):
+        raise IdentityError("expected a regular JSON file")
+    return json.loads(path.read_text(encoding="utf-8"))
 
 def load_schema(path: Path) -> Spec:
     """Parse and compile the canonical schema, refusing an incomplete contract."""
@@ -106,25 +138,55 @@ def load_schema(path: Path) -> Spec:
     for required in ("video_id", "session_id"):
         if required not in patterns:
             raise IdentityError(f"{path}: x-identity.patterns lacks `{required}`")
+    if "video_id" not in patterns["session_id"].groupindex:
+        raise IdentityError(f"{path}: session_id pattern must capture `video_id`")
 
     flag = _require(block, "transcript_flag", f"{path}: x-identity")
     if not isinstance(flag, dict):
         raise IdentityError(f"{path}: x-identity.transcript_flag must be an object")
+    for key in ("key", "artifact"):
+        value = _require(flag, key, f"{path}: x-identity.transcript_flag")
+        if not isinstance(value, str) or not value:
+            raise IdentityError(f"{path}: transcript_flag.{key} must be a nonempty string")
+    _relative_path(flag["artifact"], f"{path}: transcript_flag.artifact")
+
+    keys: dict[str, str] = {}
+    for key in ("leaf_key", "ancestor_key", "duplicate_key", "index_file"):
+        value = _require(block, key, f"{path}: x-identity")
+        if not isinstance(value, str) or not value:
+            raise IdentityError(f"{path}: x-identity.{key} must be a nonempty string")
+        keys[key] = value
+    _relative_path(keys["index_file"], f"{path}: x-identity.index_file")
+    index_keys = _require(block, "index_record_keys", f"{path}: x-identity")
+    expected_keys = {
+        "path", keys["leaf_key"], keys["ancestor_key"], "parts",
+        flag["key"], keys["duplicate_key"],
+    }
+    if (
+        not isinstance(index_keys, list)
+        or not all(isinstance(key, str) for key in index_keys)
+        or len(index_keys) != len(expected_keys)
+        or set(index_keys) != expected_keys
+    ):
+        raise IdentityError(
+            f"{path}: index_record_keys must name {', '.join(sorted(expected_keys))}"
+        )
 
     components = _require(block, "derived_prefix_components", f"{path}: x-identity")
-    if not isinstance(components, int) or components < 1:
+    if type(components) is not int or components < 1:
         raise IdentityError(f"{path}: derived_prefix_components must be a positive integer")
 
     return Spec(
         path=path,
         document=document,
         patterns=patterns,
-        leaf_key=str(_require(block, "leaf_key", f"{path}: x-identity")),
-        ancestor_key=str(_require(block, "ancestor_key", f"{path}: x-identity")),
-        duplicate_key=str(_require(block, "duplicate_key", f"{path}: x-identity")),
-        index_file=str(_require(block, "index_file", f"{path}: x-identity")),
+        leaf_key=keys["leaf_key"],
+        ancestor_key=keys["ancestor_key"],
+        duplicate_key=keys["duplicate_key"],
+        index_file=keys["index_file"],
         derived_prefix_components=components,
         transcript_flag=flag,
+        index_record_keys=tuple(index_keys),
     )
 
 
@@ -154,7 +216,9 @@ def resolve_artifact(root: Path, name: str) -> Path | None:
     """Find the file a recorded digest names, or None when it is not unique."""
     matches: list[Path] = []
     for location in ARTIFACT_LOCATIONS:
-        candidate = root / location / name if location else root / name
+        relative = f"{location}/{name}" if location else name
+        _contained_path(root.resolve(), relative, f"artifact {name}")
+        candidate = root / relative
         if candidate.is_file():
             matches.append(candidate)
     return matches[0] if len(matches) == 1 else None
@@ -171,14 +235,24 @@ def check_contract(contract: Path, schema: Spec) -> list[str]:
         return failures
     root = repository_root(contract)
     for name, expected in sorted(recorded.items()):
-        path = schema.path if name == schema.path.name else resolve_artifact(root, name)
-        if path is None:
-            failures.append(
-                f"{contract.name}: records {name}, which is not one file under "
-                f"{root} at {', '.join(location or '.' for location in ARTIFACT_LOCATIONS)}"
-            )
+        try:
+            if name == schema.path.name:
+                relative = schema.path.absolute().relative_to(root).as_posix()
+                path = _contained_path(root, relative, f"artifact {name}")
+            else:
+                path = resolve_artifact(root, name)
+            if path is None:
+                failures.append(
+                    f"{contract.name}: records {name}, which is not one file under "
+                    f"{root} at {', '.join(location or '.' for location in ARTIFACT_LOCATIONS)}"
+                )
+                continue
+            if not stat.S_ISREG(path.stat().st_mode):
+                raise IdentityError(f"artifact {name}: expected a regular file")
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        except (IdentityError, OSError, ValueError) as exc:
+            failures.append(f"{contract.name}: cannot read artifact {name}: {exc}")
             continue
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()
         if digest != expected:
             failures.append(
                 f"{contract.name}: records {name} as {expected[:12]}, "
@@ -192,9 +266,13 @@ def check_contract(contract: Path, schema: Spec) -> list[str]:
 def verify_copy(copy: Path, contract: Path) -> str | None:
     """Return a failure message when a member's artifact copy diverges."""
     try:
+        if not stat.S_ISREG(copy.stat().st_mode):
+            return f"{copy}: expected a regular file"
         digest = hashlib.sha256(copy.read_bytes()).hexdigest()
     except FileNotFoundError:
         return f"{copy}: no such file"
+    except OSError as exc:
+        return f"{copy}: cannot read artifact: {exc}"
     recorded = recorded_digests(contract)
     expected = recorded.get(copy.name)
     if expected is None:
@@ -208,95 +286,161 @@ def verify_copy(copy: Path, contract: Path) -> str | None:
 
 
 def check_corpus(root: Path, spec: Spec) -> tuple[list[str], dict[str, int]]:
-    """Enforce the identity grammar over one corpus; return failures and counts."""
+    """Check contained record identities, not the producer's raw transcript layer."""
     failures: list[str] = []
     counts = {"records": 0, "parts": 0, "duplicates": 0}
-    index_path = root / spec.index_file
     try:
-        index = json.loads(index_path.read_text(encoding="utf-8"))
-    except FileNotFoundError:
-        return [f"missing {spec.index_file} under {root}"], counts
-    except json.JSONDecodeError as exc:
-        return [f"{spec.index_file} is not valid JSON: {exc}"], counts
+        root = root.resolve(strict=True)
+        if not root.is_dir():
+            raise IdentityError("corpus root must be a directory")
+        index_path = _contained_path(root, spec.index_file, "index_file")
+        index = _read_json(index_path)
+    except (IdentityError, OSError, RuntimeError, ValueError) as exc:
+        return [f"{spec.index_file}: {exc}"], counts
 
     records = index.get("items") if isinstance(index, dict) else None
     if not isinstance(records, list):
         return [f"{spec.index_file}: `items` must be a list"], counts
 
-    known_paths = {
-        str(item.get("path", "")) for item in records if isinstance(item, dict)
-    }
-    seen: set[str] = set()
+    # Admit every record path before any metadata read or duplicate resolution.
+    admitted: list[tuple[dict, str]] = []
+    known_paths: set[str] = set()
     for position, record in enumerate(records):
+        where = f"{spec.index_file}: items[{position}]"
         if not isinstance(record, dict):
-            failures.append(f"{spec.index_file}: items[{position}] is not an object")
+            failures.append(f"{where} is not an object")
             continue
-        relative = str(record.get("path", ""))
-        if not relative:
-            failures.append(f"{spec.index_file}: items[{position}] has no path")
+        relative = record.get("path")
+        try:
+            record_dir = _contained_path(root, relative, f"{where}.path")
+            if not record_dir.is_dir():
+                raise IdentityError(f"{where}: record path is not a directory")
+        except (IdentityError, OSError) as exc:
+            failures.append(str(exc))
             continue
-        if relative in seen:
+        if relative in known_paths:
             failures.append(f"{spec.index_file}: duplicate record path {relative}")
             continue
-        seen.add(relative)
-        record_dir = root / relative
-        metadata_path = record_dir / "metadata.json"
+        known_paths.add(relative)
+        admitted.append((record, relative))
+
+    for record, relative in admitted:
         try:
-            metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
-        except FileNotFoundError:
-            failures.append(f"{relative}: no metadata.json")
-            continue
-        except json.JSONDecodeError as exc:
-            failures.append(f"{relative}: metadata.json is not valid JSON: {exc}")
+            metadata_path = _contained_path(
+                root, f"{relative}/metadata.json", f"{relative}: metadata.json"
+            )
+            metadata = _read_json(metadata_path)
+        except (IdentityError, OSError, ValueError) as exc:
+            failures.append(f"{relative}: metadata.json: {exc}")
             continue
         if not isinstance(metadata, dict):
             failures.append(f"{relative}: metadata.json must hold an object")
             continue
 
         counts["records"] += 1
+        for key in spec.index_record_keys:
+            if key != spec.duplicate_key and key not in record:
+                failures.append(f"{relative}: INDEX record lacks `{key}`")
+
+        # Use the admitted logical path, never parents of the host's corpus root.
+        path = Path(relative)
         leaf = metadata.get(spec.leaf_key)
-        if leaf != record_dir.name:
+        if leaf != path.name:
             failures.append(
                 f"{relative}: {spec.leaf_key} is {leaf!r}, but the directory is "
-                f"{record_dir.name!r}; the item id must name its own directory"
+                f"{path.name!r}; the item id must name its own directory"
             )
-        ancestors = {parent.name for parent in record_dir.parents if parent.name}
         series = metadata.get(spec.ancestor_key)
-        if series not in ancestors:
+        if not isinstance(series, str) or series not in path.parts[:-1]:
             failures.append(
                 f"{relative}: {spec.ancestor_key} is {series!r}, which names no "
-                "directory above the item"
+                "directory above the item inside the corpus"
             )
+        for key in (spec.leaf_key, spec.ancestor_key):
+            if record.get(key) != metadata.get(key):
+                failures.append(f"{relative}: INDEX `{key}` disagrees with metadata.json")
 
         parts = metadata.get("parts")
+        video_ids: list[object] = []
+        valid_video_ids: set[str] = set()
         if not isinstance(parts, list):
             failures.append(f"{relative}: `parts` must be a list")
-            continue
-        for position, part in enumerate(parts):
-            if not isinstance(part, dict):
-                failures.append(f"{relative}: parts[{position}] is not an object")
-                continue
-            video_id = part.get("video_id")
-            counts["parts"] += 1
-            if not isinstance(video_id, str) or not spec.patterns["video_id"].match(video_id):
-                failures.append(
-                    f"{relative}: parts[{position}].video_id is {video_id!r}, which is "
-                    "not an 11-character YouTube id"
-                )
+        else:
+            for position, part in enumerate(parts):
+                if not isinstance(part, dict):
+                    failures.append(f"{relative}: parts[{position}] is not an object")
+                    continue
+                video_id = part.get("video_id")
+                video_ids.append(video_id)
+                counts["parts"] += 1
+                if (
+                    not isinstance(video_id, str)
+                    or not spec.patterns["video_id"].fullmatch(video_id)
+                ):
+                    failures.append(
+                        f"{relative}: parts[{position}].video_id is {video_id!r}, which is "
+                        "not an 11-character YouTube id"
+                    )
+                else:
+                    valid_video_ids.add(video_id)
+        if not isinstance(record.get("parts"), list) or record["parts"] != video_ids:
+            failures.append(f"{relative}: INDEX `parts` disagrees with metadata video IDs")
 
-        duplicate = metadata.get(spec.duplicate_key)
-        if duplicate is not None:
-            counts["duplicates"] += 1
-            if not isinstance(duplicate, str):
-                failures.append(f"{relative}: {spec.duplicate_key} must be a string")
+        flag_key = spec.transcript_flag["key"]
+        artifact = spec.transcript_flag["artifact"]
+        try:
+            transcript = _contained_path(root, f"{relative}/{artifact}", f"{relative}: {artifact}")
+            try:
+                mode = transcript.stat().st_mode
+            except FileNotFoundError:
+                has_transcript = False
             else:
-                prefix = "/".join(relative.split("/")[: spec.derived_prefix_components])
-                target = f"{prefix}/{duplicate}"
+                if not stat.S_ISREG(mode):
+                    raise IdentityError(f"{artifact} must be a regular file")
+                has_transcript = True
+            if type(record.get(flag_key)) is not bool or record[flag_key] != has_transcript:
+                failures.append(
+                    f"{relative}: INDEX `{flag_key}` must be {has_transcript} "
+                    f"to match {artifact}"
+                )
+        except (IdentityError, OSError) as exc:
+            failures.append(f"{relative}: {artifact}: {exc}")
+
+        sessions = metadata.get("sessions", [])
+        if not isinstance(sessions, list):
+            failures.append(f"{relative}: `sessions` must be a list")
+        else:
+            for position, session in enumerate(sessions):
+                where = f"{relative}: sessions[{position}].session_name"
+                name = session.get("session_name") if isinstance(session, dict) else None
+                match = spec.patterns["session_id"].fullmatch(name) if isinstance(name, str) else None
+                if match is None:
+                    failures.append(f"{where} is {name!r}, which does not match session_id")
+                elif match.group("video_id") not in valid_video_ids:
+                    failures.append(f"{where} {name!r} does not belong to a record part")
+                # sessions[].video_id can name a separate per-talk upload, not this part.
+
+        duplicate_key = spec.duplicate_key
+        if (
+            (duplicate_key in record) != (duplicate_key in metadata)
+            or record.get(duplicate_key) != metadata.get(duplicate_key)
+        ):
+            failures.append(f"{relative}: INDEX `{duplicate_key}` disagrees with metadata.json")
+        if duplicate_key in metadata:
+            counts["duplicates"] += 1
+            duplicate = metadata[duplicate_key]
+            try:
+                suffix = _relative_path(duplicate, f"{relative}: {duplicate_key}")
+                prefix = Path(*path.parts[: spec.derived_prefix_components])
+                target = (prefix / suffix).as_posix()
+                _contained_path(root, target, f"{relative}: {duplicate_key}")
                 if target not in known_paths:
                     failures.append(
-                        f"{relative}: {spec.duplicate_key} {duplicate!r} resolves to "
+                        f"{relative}: {duplicate_key} {duplicate!r} resolves to "
                         f"{target}, which is not a record path"
                     )
+            except IdentityError as exc:
+                failures.append(str(exc))
     return failures, counts
 
 

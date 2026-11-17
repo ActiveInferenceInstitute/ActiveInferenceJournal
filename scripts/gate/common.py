@@ -10,14 +10,16 @@ from __future__ import annotations
 import io
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
-import tarfile
 import tempfile
 import time
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -89,8 +91,37 @@ def git(args: list[str], cwd: Path | None = None) -> subprocess.CompletedProcess
     )
 
 
+def _object_git(
+    args: list[str], source: Path, *, input: bytes | None = None, network: bool = False
+) -> subprocess.CompletedProcess:
+    """Read literal objects without replacement refs, lazy fetches or caller Git env."""
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update(
+        GIT_CONFIG_GLOBAL=os.devnull,
+        GIT_CONFIG_NOSYSTEM="1",
+        GIT_TERMINAL_PROMPT="0",
+        GIT_NO_REPLACE_OBJECTS="1",
+        GIT_NO_LAZY_FETCH="1",
+        GIT_OPTIONAL_LOCKS="0",
+        GIT_ALLOW_PROTOCOL="https" if network else "",
+    )
+    return subprocess.run(
+        ["git", "-c", "core.fsmonitor=false", "-c", f"core.hooksPath={os.devnull}", *args],
+        cwd=source,
+        env=env,
+        input=input,
+        capture_output=True,
+    )
+
+
 def _hash_object(clone: Path, revision: str) -> bool:
-    return git(["cat-file", "-e", f"{revision}^{{commit}}"], cwd=clone).returncode == 0
+    # Do not inherit an enclosing repository when passed an exported subdirectory.
+    if not (clone / ".git").exists() and not (
+        (clone / "HEAD").is_file() and (clone / "objects").is_dir()
+    ):
+        return False
+    result = _object_git(["cat-file", "-t", revision], clone)
+    return result.returncode == 0 and result.stdout.strip() == b"commit"
 
 
 def _local_clone() -> Path | None:
@@ -103,88 +134,140 @@ def _local_clone() -> Path | None:
     return None
 
 
-def _extract_archive(clone: Path, revision: str, destination: Path) -> None:
-    archive = subprocess.run(
-        ["git", "-C", str(clone), "archive", revision],
-        capture_output=True,
-        check=True,
+def _extract_tree(source: Path, revision: str, destination: Path) -> None:
+    """Materialize every committed blob, not archive/checkout-transformed bytes."""
+    listed = _object_git(["ls-tree", "-rz", "--full-tree", revision], source)
+    if listed.returncode:
+        raise GateError(f"cannot read the committed tree {revision} from {source}")
+    entries: list[tuple[bytes, bytes, Path]] = []
+    for record in listed.stdout.split(b"\0"):
+        if not record:
+            continue
+        metadata, name = record.split(b"\t", 1)
+        mode, kind, oid = metadata.split()
+        relative = PurePosixPath(os.fsdecode(name))
+        if (
+            relative.is_absolute()
+            or any(part in {"", ".", ".."} or part.lower() == ".git" for part in os.fsdecode(name).split("/"))
+            or kind != b"blob"
+            or mode not in {b"100644", b"100755", b"120000"}
+        ):
+            raise GateError(f"cannot bind committed entry {os.fsdecode(name)!r} ({mode.decode()})")
+        entries.append((mode, oid, destination / relative))
+
+    objects = _object_git(
+        ["cat-file", "--batch"], source,
+        input=b"".join(oid + b"\n" for _, oid, _ in entries),
     )
-    destination.mkdir(parents=True, exist_ok=True)
-    with tarfile.open(fileobj=io.BytesIO(archive.stdout)) as tar:
-        tar.extractall(destination, filter="data")
+    if objects.returncode:
+        raise GateError(f"cannot read all blobs for {revision} from {source}")
+    stream = io.BytesIO(objects.stdout)
+    links: list[tuple[Path, str]] = []
+    for mode, oid, target in entries:
+        header = stream.readline().split()
+        if len(header) != 3 or header[:2] != [oid, b"blob"]:
+            raise GateError(f"missing exact blob {oid.decode()} for {target.relative_to(destination)}")
+        size = int(header[2])
+        body = stream.read(size)
+        if len(body) != size or stream.read(1) != b"\n":
+            raise GateError(f"incomplete blob {oid.decode()}")
+        parent = destination
+        for part in target.relative_to(destination).parts[:-1]:
+            child = parent / part
+            if child.exists() and part not in os.listdir(parent):
+                raise GateError(f"committed directory names collide at {child.relative_to(destination)}")
+            child.mkdir(exist_ok=True)
+            parent = child
+        if target.exists() or target.is_symlink():
+            raise GateError(f"committed paths collide at {target.relative_to(destination)}")
+        if mode == b"120000":
+            links.append((target, os.fsdecode(body)))
+        else:
+            target.write_bytes(body)
+            target.chmod(0o755 if mode == b"100755" else 0o644)
+    for target, link in links:
+        if os.path.isabs(link):
+            raise GateError(f"committed symlink escapes the snapshot: {target.relative_to(destination)}")
+        target.symlink_to(link)
+    for target, _ in links:
+        try:
+            target.resolve().relative_to(destination.resolve())
+        except (ValueError, RuntimeError):
+            raise GateError(f"committed symlink escapes or cycles: {target.relative_to(destination)}") from None
 
 
 def _clone_at_pin(repository: str, revision: str, destination: Path) -> None:
-    destination.mkdir(parents=True, exist_ok=True)
-    env = os.environ.copy()
-    env.setdefault("GIT_TERMINAL_PROMPT", "0")
+    """Fetch into a newly owned bare object store; never check out or reset a caller."""
     for args in (
-        ["init", "--quiet"],
-        ["remote", "add", "origin", f"https://github.com/{repository}.git"],
-        ["fetch", "--quiet", "--depth", "1", "origin", revision],
-        ["checkout", "--quiet", "--detach", "FETCH_HEAD"],
+        ["init", "--bare", "--quiet"],
+        ["fetch", "--quiet", "--depth", "1", "--no-tags", f"https://github.com/{repository}.git", revision],
     ):
-        completed = subprocess.run(["git", *args], cwd=str(destination), env=env)
+        completed = _object_git(args, destination, network=True)
         if completed.returncode != 0:
+            raise GateError(f"cannot acquire {repository}@{revision} into {destination}")
+    if not _hash_object(destination, revision):
+        raise GateError(f"acquisition did not provide exact commit {revision}")
+
+
+def _producer_source(repository: str, revision: str, override: str | None) -> Path:
+    if override is not None:
+        source = Path(override).expanduser().resolve()
+        if not override.strip() or not _hash_object(source, revision):
             raise GateError(
-                f"cannot materialize {repository}@{revision[:12]} into {destination}"
+                f"{source} does not provide exact Git commit {revision}; "
+                "a mutable .gate-pin export is not an object source"
             )
+        return source
+
+    local = _local_clone()
+    if local is not None:
+        if _hash_object(local, revision):
+            return local
+        if os.environ.get("GATE_JU_CLONE"):
+            raise GateError(f"GATE_JU_CLONE {local} does not provide exact Git commit {revision}")
+
+    cache = cache_dir()
+    # Old caches may supply objects, but neither their stamp nor their worktree is trusted.
+    candidates = [cache / f"ju-{revision[:12]}", *sorted(cache.glob(f"ju-objects-{revision}-*"))]
+    for candidate in candidates:
+        if _hash_object(candidate, revision):
+            return candidate
+
+    source = Path(tempfile.mkdtemp(prefix=f"ju-objects-{revision}-", dir=cache))
+    try:
+        log(f"journal-utilities: fetching {repository}@{revision}")
+        _clone_at_pin(repository, revision, source)
+    except BaseException:
+        shutil.rmtree(source)
+        raise
+    return source
 
 
-def journal_utilities(override: str | None = None) -> Path:
-    """Return a Journal-Utilities tree at the pinned revision.
+@contextmanager
+def journal_utilities(override: str | None = None) -> Iterator[Path]:
+    """Yield an owned exact-commit snapshot, valid only inside the ``with`` block.
 
-    An explicit ``--utilities`` path is trusted but checked: a Git tree must sit
-    at the pinned commit, and an exported tree must carry the materialization
-    stamp written below. Anything else is refused, because running the gate
-    against an unpinned engine silently changes what the result means.
+    Explicit sources must already contain the pinned commit; their HEAD, index,
+    dirty files and stamps are irrelevant and untouched. Without an explicit
+    source, local objects or object caches are preferred before a cold fetch.
+    Snapshots are never reused and are removed on success or failure.
     """
     pin = read_pin(JU_PIN)
-    repository = pin.get("repository", "")
-    revision = pin.get("revision", "")
-    if not repository or not revision:
-        raise GateError(f"{JU_PIN.relative_to(ROOT)} lacks repository/revision")
-
-    if override:
-        path = Path(override).expanduser().resolve()
-        if not (path / "scripts" / "validate_journal.py").exists():
-            raise GateError(f"{path} is not a Journal-Utilities checkout")
-        if (path / ".git").exists():
-            head = git(["rev-parse", "HEAD"], cwd=path).stdout.strip()
-            if head != revision:
-                raise GateError(
-                    f"{path} is at {head[:12]}, but {JU_PIN.relative_to(ROOT)} pins "
-                    f"{revision[:12]}; check out the pin or update the pin file"
-                )
-        else:
-            stamp = path / ".gate-pin"
-            if not stamp.exists() or stamp.read_text(encoding="utf-8").strip() != revision:
-                raise GateError(
-                    f"{path} carries no .gate-pin stamp for {revision[:12]}; "
-                    "run the gate without --utilities to materialize the pin"
-                )
-        log(f"journal-utilities: {path} @ {revision[:12]}")
-        return path
-
-    destination = cache_dir() / f"ju-{revision[:12]}"
-    stamp = destination / ".gate-pin"
-    if stamp.exists() and stamp.read_text(encoding="utf-8").strip() == revision:
-        log(f"journal-utilities: cached {destination}")
-        return destination
-
-    if destination.exists():
-        shutil.rmtree(destination)
-
-    clone = _local_clone()
-    if clone is not None and _hash_object(clone, revision):
-        log(f"journal-utilities: exporting {revision[:12]} from {clone}")
-        _extract_archive(clone, revision, destination)
-    else:
-        log(f"journal-utilities: fetching {repository}@{revision[:12]}")
-        _clone_at_pin(repository, revision, destination)
-
-    stamp.write_text(revision + "\n", encoding="utf-8")
-    return destination
+    repository = pin.get("repository")
+    revision = pin.get("revision")
+    if repository != "ActiveInferenceInstitute/Journal_Utilities" or not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}", revision):
+        raise GateError(f"{JU_PIN.relative_to(ROOT)} needs the Journal-Utilities repository and a full commit id")
+    source = _producer_source(repository, revision, override)
+    with tempfile.TemporaryDirectory(prefix=f"ju-snapshot-{revision[:12]}-", dir=cache_dir()) as tmp:
+        tree = Path(tmp)
+        try:
+            _extract_tree(source, revision, tree)
+        except (OSError, ValueError) as exc:
+            raise GateError(f"cannot materialize exact producer snapshot: {exc}") from None
+        if not (tree / "scripts" / "validate_journal.py").is_file():
+            raise GateError(f"{revision} has no Journal-Utilities validator")
+        log(f"journal-utilities: snapshot {tree} @ {revision} from {source}")
+        yield tree
 
 
 def find_python(candidates: list[str]) -> str:

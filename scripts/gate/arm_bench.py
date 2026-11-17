@@ -69,15 +69,14 @@ def render(measured: dict[str, float], baseline: dict) -> str:
 
     lines += [
         "",
-        "`gnn` is measured **cold**: `./run.sh bench --cold` discards the cached parser",
-        "environment first, because a warm cache hides the install that dominated the old",
-        "inline CI step (pip's own wheel cache is *not* cleared, so a first-ever network",
-        "install is slower than the number here). `fast` is a subset of `full`, and `all`",
-        "runs `lint`, `docs`, `full` and `gnn`, so nothing is checked twice.",
+        "`gnn` is measured cold only when `./run.sh bench --cold` requests it;",
+        "that option discards the parser environment, not pip's wheel cache.",
+        "`fast` is a subset of `full`. `all` runs `lint`, `docs`, `identity`,",
+        "`full` and `gnn` in order and stops at the first nonzero result.",
         "",
         "`full` is dominated by `validate_journal.py`, which varies by tens of percent",
         "between runs on the same host; treat a single-run difference of that size as",
-        "noise, not as a regression. `gnn` is the only arm whose cost is network-bound.",
+        "noise, not as a regression. Cold Journal-Utilities acquisition and GNN setup can require network.",
         "",
         "## What each arm runs",
         "",
@@ -100,10 +99,10 @@ def render(measured: dict[str, float], baseline: dict) -> str:
         lines.append(f"| {step} | {seconds:.2f}s |")
     lines += [
         "",
-        "Journal-Utilities is materialized once from the pin into the gate cache and",
-        "reused by `fast` and `full`; in CI the checkout step already provides it, so",
-        "that row is a local-only cost, paid inside the first local `fast`/`full` run and",
-        "reused afterwards; CI does not pay it. The remaining rows are paid by `gnn`.",
+        "Warm Journal-Utilities Git objects can be reused, but every `fast`/`full`",
+        "invocation executes a fresh context-managed exact-commit snapshot.",
+        "A CI checkout supplies objects, not executable working-tree authority;",
+        "snapshot materialization still occurs in CI. The remaining setup rows are paid by `gnn`.",
         "",
         f"Measured {datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')} with "
         f"Python {platform.python_version()} on {platform.system()} {platform.machine()}.",
