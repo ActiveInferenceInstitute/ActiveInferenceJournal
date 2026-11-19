@@ -83,7 +83,7 @@ overhaul, cross-cutting refactors.
   bundle built by Journal-Utilities, not a Jekyll build.
 - ✓ **`AGENTS.md`** — added the real test/lint command (`journal-check` and the
   CI gate) and pointed at `docs/OPERATIONS.md`.
-- ✓ **`.github/README.md` — new.** Folder guide for the workflows, GNN pin and
+- ✓ **`.github/WORKFLOWS.md` — new.** Folder guide for the workflows, GNN pin and
   Dependabot config.
 - ✓ **`.aii/`** — `config.yaml` `artifacts[]` now lists the `INDEX.json`/`INDEX.md`
   entry points; rendered `README.md`/`docs/INTEGRATION.md` hand-synced (the

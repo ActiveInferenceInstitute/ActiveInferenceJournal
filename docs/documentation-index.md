@@ -39,7 +39,7 @@ only by memory. Generated facts live in [`_generated/`](_generated/README.md).
 | [`SECURITY.md`](../SECURITY.md) | Credentials, audio off `main`, private reporting. |
 | [`CITATION.cff`](../CITATION.cff) | Dataset citation. |
 | [`INDEX.json`](../INDEX.json) / [`INDEX.md`](../INDEX.md) | Machine and human entry points to the content (generated). |
-| [`.github/README.md`](../.github/README.md) | Workflows, pins and Dependabot settings. |
+| [`.github/WORKFLOWS.md`](../.github/WORKFLOWS.md) | Workflows, pins and Dependabot settings. |
 | [`.aii/README.md`](../.aii/README.md) | InstituteOS sidecar. |
 
 ## Keeping this index honest
