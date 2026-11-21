@@ -36,10 +36,13 @@ uv run --project "$utilities" --frozen python -m journal_utilities.ingest.scaffo
   --journal "$journal" --worklist "$reports/reviewed-worklist.json"
 ```
 
-The audit saves a backlog after complete API reads. The Journal review requires
-explicit public, processed, completed status for every row, refuses repeated
-video IDs, and removes IDs already covered by the current Journal index. Its
-output contains the public metadata needed by the dry-run scaffolder.
+The audit combines the channel's uploads with videos in its public playlists,
+deduplicates video IDs, and verifies channel ownership and completion before
+saving the public backlog. The Journal review requires explicit public,
+processed, completed status for every row, refuses repeated IDs, and removes
+IDs already covered by the current Journal index. It preserves public playlist
+titles as labels for human review. The dry-run scaffolder derives item paths
+from the video title and its series classifier.
 
 Prioritize the 2026 Applied Active Inference Symposium, Fundamentals Cohort 1,
 and Parr Cohorts 8 and 9. Then review GuestStream, ModelStream, and GEO-INFER.

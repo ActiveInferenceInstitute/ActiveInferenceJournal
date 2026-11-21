@@ -73,7 +73,7 @@ def public_entry(entry: object, position: int) -> dict:
     published_at = entry.get("published_at", "")
     if published_at != "":
         published_at = timestamp(published_at, f"{label} published_at")
-    return {
+    reviewed = {
         "video_id": video_id,
         "title": title,
         "published_at": published_at,
@@ -84,6 +84,14 @@ def public_entry(entry: object, position: int) -> dict:
         "is_scheduled": False,
         "url": f"https://www.youtube.com/watch?v={video_id}",
     }
+    if "playlist_titles" in entry:
+        playlist_titles = entry["playlist_titles"]
+        if not isinstance(playlist_titles, list) or any(
+            not isinstance(title, str) or not title.strip() for title in playlist_titles
+        ):
+            raise ValueError(f"{label} playlist_titles must be a list of nonempty strings")
+        reviewed["playlist_titles"] = playlist_titles.copy()
+    return reviewed
 
 
 def review_worklist(worklist: object, indexed: set[str]) -> dict:
