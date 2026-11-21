@@ -120,6 +120,9 @@ and uploads an ingest worklist, a channel manifest and a reconciliation report a
 artifacts. Add a `schedule:` only after reviewing Journal-Utilities
 `docs/m3-ingest.md` and removing the guard.
 
+For the self-hosted Data API inventory and public backlog review, use the
+[YouTube handoff](youtube/HANDOFF.md#review-the-public-ingest-backlog).
+
 ## Dependency updates
 
 [`.github/dependabot.yml`](../.github/dependabot.yml) opens grouped, weekly pull

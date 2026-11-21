@@ -12,6 +12,7 @@ materials from the Active Inference Institute video library.
 | [`ORGANIZATION.md`](ORGANIZATION.md) | The top-level namespace (`data/video/<source>/`, `data/<type>/<source>/`), how series and items are organized, and how to add other channels / non-video sources. |
 | [`PIPELINE.md`](PIPELINE.md) | How content is produced and kept complete + idempotent — the collaboration with the [Journal_Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities) engine. |
 | [`OPERATIONS.md`](OPERATIONS.md) | The gate (`./run.sh` arms), the CI workflows (integrity, GNN conformance, Pages deploy, weekly ingest), pins, dependency updates, local validation, and the branch model. |
+| [`youtube/HANDOFF.md`](youtube/HANDOFF.md) | Channel handoff, public backlog review, captions, and editorial follow-through. |
 | [`m4-site-spec.md`](m4-site-spec.md) | Spec for the M4 static per-item pages + `sitemap.xml`/`robots.txt`, implemented by the Journal-Utilities builder. |
 | [`translation-migration-map.md`](translation-migration-map.md) | Item-by-item map of the legacy `Translations/` → `translations/<video_id>.<bcp47>.srt` migration; status: executed (part 2 + pass 2b), 423 files remain in `Translations/`. |
 | [`volunteer-transcript-tasks.md`](volunteer-transcript-tasks.md) | Volunteer triage list (I16): the 423 remaining translation files and the 600-file conflicts backlog, by item. |

@@ -205,11 +205,11 @@ overhaul, cross-cutting refactors.
   Each remaining file needs a human to confirm its `video_id` and language
   before the two-step `git mv` — no script can settle a guess, which is why the
   M2 pass stopped here. Owner: volunteers, coordinated from that page.
-- **Weekly ingest remains a dispatch-only draft; scheduling/policy is pending.**
-  `weekly-ingest.yml` has no `schedule:` and rejects non-dispatch runs.
-  `arm_manifest.py --strict` already exists and fails age/duplicate-ID warnings;
-  `full` does not select it. Owner: maintainers, after reviewing the producer's
-  `docs/m3-ingest.md` and deliberately deciding scheduling and strictness.
+- **Weekly public ingest.** The [YouTube handoff](docs/youtube/HANDOFF.md#review-the-public-ingest-backlog)
+  documents Data API capture, public backlog review, and dry-run scaffolding on
+  an approved self-hosted machine. Maintainers own credential setup, runner
+  validation, weekly scheduling, and review of the first measured backlog.
+  The GitHub ingest workflow remains dispatch-only.
 - **Coordinate member adoption of the Journal's GNN pin.** The lead pin advances
   to `v5.1.0` (`75c834bd`). Each of the eight member copies moves with its
   own conformance evidence after the lead revision is accepted. Follow the
