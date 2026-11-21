@@ -12,6 +12,7 @@ only by memory. Generated facts live in [`_generated/`](_generated/README.md).
 | [`ORGANIZATION.md`](ORGANIZATION.md) | Top-level namespace (`data/video/<source>/`, `data/<type>/<source>/`), series and item layout, adding other channels or non-video sources. | hand-written |
 | [`PIPELINE.md`](PIPELINE.md) | How content is produced and kept complete and idempotent, and the Journal-Utilities boundary. | hand-written |
 | [`OPERATIONS.md`](OPERATIONS.md) | CI workflows, the gate arms (`./run.sh`), pins, dependency updates, local validation, branch model. | hand-written |
+| [`youtube/HANDOFF.md`](youtube/HANDOFF.md) | Channel handoff, public backlog review, and channel editorial workflows. | hand-written |
 | [`m4-site-spec.md`](m4-site-spec.md) | Spec for the static per-item pages plus `sitemap.xml`/`robots.txt`, implemented by the Journal-Utilities builder. | hand-written |
 | [`translation-migration-map.md`](translation-migration-map.md) | Item-by-item map of the legacy `Translations/` migration and the quarantined conflicts. | hand-written |
 | [`volunteer-transcript-tasks.md`](volunteer-transcript-tasks.md) | Volunteer triage list of remaining translation files and conflict backlog. | hand-written |

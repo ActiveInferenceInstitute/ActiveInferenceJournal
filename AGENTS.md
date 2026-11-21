@@ -10,6 +10,7 @@ curated materials from the Active Inference Institute video library. Read
 - **Human:** [`INDEX.md`](INDEX.md), [`README.md`](README.md).
 - **Content:** [`data/video/activeinferenceinstitute/`](data/video/activeinferenceinstitute/).
 - **Schema/docs:** [`docs/`](docs/README.md) (`SCHEMA.md`, `ORGANIZATION.md`, `PIPELINE.md`, `OPERATIONS.md`).
+- **YouTube:** [channel handoff and public ingest review](docs/youtube/HANDOFF.md).
 - **Open work:** [`TO-DO.md`](TO-DO.md) — scoped improvement list (docs pass 2026-08-02, refreshed pass 4 2026-11-12).
 
 ## Rules for agents
