@@ -62,6 +62,11 @@ is dispatch-only. The local job can run on the approved host's weekly schedule
 once its credential and storage bindings have been validated. For the weekly
 QA run, add `--fail-on-findings` to the audit and retain its report for review.
 
+An approved video can enter the Journal as a catalog record with its published
+title, video ID, and YouTube link. Add captions and transcripts when an approved
+source asset can be tied to that exact video ID. The Journal index and public
+pages report transcript availability from the files in the repository.
+
 After ingest, regenerate the Journal indexes using Journal-Utilities and run
 `./run.sh full`. Add a `RESOURCES & TRANSCRIPT` backlink using the published
 item URL once the Journal item is live. Add cohort and Symposium playlist
