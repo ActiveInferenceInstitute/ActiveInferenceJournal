@@ -28,7 +28,7 @@ journal="$(pwd -P)"
 utilities="/path/to/Journal_Utilities"
 reports="/path/to/private/report-directory"
 
-uv run --project "$utilities" --frozen python "$utilities/scripts/youtube_channel_audit.py" audit \
+uv run --project "$utilities" --frozen --extra youtube python "$utilities/scripts/youtube_channel_audit.py" audit \
   --journal "$journal" --worklist "$reports/public-backlog.json" &&
 python3 scripts/review_youtube_ingest.py \
   --worklist "$reports/public-backlog.json" --output "$reports/reviewed-worklist.json" &&
