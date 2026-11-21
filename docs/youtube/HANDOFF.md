@@ -17,8 +17,9 @@ Use a fresh audit to find remaining gaps before proposing additional edits.
 
 ## Review the public ingest backlog
 
-Run the read-only Data API audit from a reviewed Journal-Utilities checkout
-with the restricted `YOUTUBE_API_KEY` supplied by its local credential store.
+Run the read-only Data API audit from a Journal-Utilities checkout at the
+reviewed [ingest pin](../../.github/journal-utilities-pin.json). Supply the
+restricted `YOUTUBE_API_KEY` from the local credential store.
 Keep report paths in a run directory on the approved private storage volume.
 From the Journal root, use absolute paths for the utilities checkout and the
 existing report directory.
@@ -41,8 +42,10 @@ deduplicates video IDs, and verifies channel ownership and completion before
 saving the public backlog. The Journal review requires explicit public,
 processed, completed status for every row, refuses repeated IDs, and removes
 IDs already covered by the current Journal index. It preserves public playlist
-titles as labels for human review. The dry-run scaffolder derives item paths
-from the video title and its series classifier.
+titles as labels for human review. The dry-run scaffolder gives established
+video title patterns precedence and uses approved public playlist mappings
+to route selected series. The classifier supplies the directory names and
+derives item names from video metadata.
 
 Prioritize the 2026 Applied Active Inference Symposium, Fundamentals Cohort 1,
 and Parr Cohorts 8 and 9. Then review GuestStream, ModelStream, and GEO-INFER.
