@@ -50,12 +50,10 @@ Pinned revisions live in two files and nowhere else:
 | Journal-Utilities | [`.github/journal-utilities-pin.json`](../.github/journal-utilities-pin.json) | `journal-utilities-pin/v1` |
 | GNN | [`.github/gnn-pin.json`](../.github/gnn-pin.json) | `gnn-importer-pin/v1` |
 
-The Journal-Utilities pin carries two roles. `gate` (the top-level `revision`)
-is what the integrity gate, the Pages builder and `./run.sh` use. `ingest` is
-the newer revision `weekly-ingest.yml` needs: `journal_utilities.ingest.ytdlp`
-does not exist at the gate revision. Workflows read the revision through
-`python3 scripts/gate/pin.py --revision [--role ingest]`, so a bump is a
-one-file, reviewable change.
+The Journal-Utilities pin carries two roles. The integrity gate, Pages
+builder and `./run.sh` use `gate`, the top-level `revision`. The weekly ingest
+workflow uses `ingest` for its enumeration and scaffold preview. Workflows
+read each revision through `python3 scripts/gate/pin.py --revision [--role ingest]`.
 
 Measured wall time per arm on this host, before and after the gate existed, is
 generated in [`_generated/gate-timings.md`](_generated/gate-timings.md).
