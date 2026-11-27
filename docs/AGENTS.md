@@ -9,7 +9,7 @@ Technical documentation for ActiveInferenceJournal. Start at [`README.md`](READM
   [Journal-Utilities](https://github.com/ActiveInferenceInstitute/Journal_Utilities)
   generators.
 - The **schema of record** is [`SCHEMA.md`](SCHEMA.md). If the per-item structure changes,
-  update it here and mirror it in Journal-Utilities `docs/JOURNAL_SCHEMA.md`.
+  update it here and mirror it in Journal-Utilities `docs/reference/JOURNAL_SCHEMA.md`.
 - Do **not** restate counts (item/video totals) here — they drift. `INDEX.json` is the
   live source of truth.
 

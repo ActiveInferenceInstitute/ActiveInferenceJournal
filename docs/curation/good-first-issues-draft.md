@@ -10,7 +10,7 @@ the triage doc Parts B and C.
 Common body for every issue (append below the issue-specific scope):
 
 ```markdown
-**Read first:** [docs/volunteer-transcript-tasks.md](../docs/volunteer-transcript-tasks.md) —
+**Read first:** [docs/curation/volunteer-transcript-tasks.md](volunteer-transcript-tasks.md) —
 sections "The 30-minute task (per file)" and "Exact command pattern".
 
 **Steps, per file:**

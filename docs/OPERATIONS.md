@@ -106,7 +106,7 @@ deploying, a smoke test asserts HTTP 200 for `index.html`, `manifest.json`,
 `.nojekyll`, `sitemap.xml`, `robots.txt`, one path-keyed item page and its
 payload, and that the item page's `rel="canonical"` link is server-rendered.
 
-The static per-item pages are specified in [`m4-site-spec.md`](m4-site-spec.md).
+The static per-item pages are specified in [`m4-site-spec.md`](site/m4-site-spec.md).
 
 ### Weekly ingest (draft)
 

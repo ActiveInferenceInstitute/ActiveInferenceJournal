@@ -49,5 +49,5 @@ against the real tree. Generator-owned rewrites should consult this file.
   keeping the 2021 item's directory for the 33 genuine Friston files only.
 - Interim state: left untouched on `feat/m4-pages`; case-sensitivity already
   hides the capital-T directory from the site builder (see
-  [`m4-site-spec.md`](m4-site-spec.md) and handoff item I4), so the duplicates
+  [`m4-site-spec.md`](../site/m4-site-spec.md) and handoff item I4), so the duplicates
   are not user-visible on the site.

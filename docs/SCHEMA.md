@@ -169,7 +169,7 @@ corresponding display fields without losing the source text:
   distinct video IDs.
 - `INDEX.md` — human index grouped by series.
 - `SCHEMA.md` — this spec; mirror structural changes into Journal-Utilities
-  `docs/JOURNAL_SCHEMA.md`.
+  `docs/reference/JOURNAL_SCHEMA.md`.
 
 ## Layout history
 
@@ -182,7 +182,7 @@ placeholders were dropped, `Metadata/<item>.json` became `metadata.json` parts,
 moved under `assets/` by type, and `Audio/*.m4a` moved to the `audio` branch as
 `audio/<video_id>.64k.m4a`. The converter's `--dry-run` reported every unmapped
 source file before any in-place apply. See
-[Journal-Utilities `docs/REFACTOR_READINESS.md`](https://github.com/ActiveInferenceInstitute/Journal-Utilities/blob/main/docs/REFACTOR_READINESS.md).
+[Journal-Utilities `docs/operations/REFACTOR_READINESS.md`](https://github.com/ActiveInferenceInstitute/Journal_Utilities/blob/main/docs/operations/REFACTOR_READINESS.md).
 
 - **Coverage invariant (still in force):** every non-duplicate channel video is a
   part in exactly one canonical item. Records with `duplicate_of` are deliberate
