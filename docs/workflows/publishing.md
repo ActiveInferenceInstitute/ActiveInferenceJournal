@@ -130,7 +130,7 @@ what a broken link is.
 | Arm measurement → generated Markdown | 9 | `arm_bench.py`; `run.py:809-912` (JU); `scripts/gate_report.py:176-185` (ISSS); `scripts/gate.py:159-203` (act_inf); `scripts/gate_metrics.py:215-216` (RDE); `scripts/gate_metrics.py:277,290` (ATLAS); `.github/scripts/gate.py:208-232` (KE); `scripts/gate.py:373-418` (Garden); `scripts/measure_gates.py:110-111` (website) | this repository: [`../../scripts/gate/arm_bench.py`](../../scripts/gate/arm_bench.py) |
 | GNN pin | 9 files, 9 wrappers | published lead pin and dated member observations (above); wrappers: `arm_gnn.py`, `scripts/gnn_conformance.py` (JU, ISSS, ATLAS), `scripts/check_gnn_conformance.py` (website, Garden), `scripts/gnn_conformance.py` (RDE), `scripts/gnn_conformance.py` (act_inf) | this repository: [`../../.github/GNN.md`](../../.github/GNN.md) + [`../../.github/gnn-pin.json`](../../.github/gnn-pin.json) |
 | Record identity grammar | 1 schema, 0 members | this page and [`record-identity.schema.json`](record-identity.schema.json) | this repository |
-| Journal schema prose, mirrored by hand | 2 | [`../SCHEMA.md`](../SCHEMA.md) and Journal_Utilities `docs/JOURNAL_SCHEMA.md`, declared mirrored and measured 2026-11-12 at 183 differing lines | this repository: [`../SCHEMA.md`](../SCHEMA.md) |
+| Journal schema prose, mirrored by hand | 2 | [`../SCHEMA.md`](../SCHEMA.md) and Journal_Utilities `docs/reference/JOURNAL_SCHEMA.md`, declared mirrored and measured 2026-11-12 at 183 differing lines | this repository: [`../SCHEMA.md`](../SCHEMA.md) |
 
 The last row is the reason this contract exists. A declared mirror with no drift test
 drifted. The replacement is a schema with a recorded digest, and a check that fails
@@ -202,7 +202,7 @@ private copy of a shared concern; point at the canonical one and pin it by diges
      Identity real-file selftests exercise matching and independently diverged
      copies plus corpus/schema/path relationships; docs selftests exercise actual
      Markdown anchors, masked links and index reachability.
-3. Replace a prose mirror with a pointer. Journal_Utilities' `docs/JOURNAL_SCHEMA.md` and
+3. Replace a prose mirror with a pointer. Journal_Utilities' `docs/reference/JOURNAL_SCHEMA.md` and
    this repository's [`../SCHEMA.md`](../SCHEMA.md) must not both define the schema; the
    mirror keeps its "How the pipeline writes this" chapters and links here for identity.
 4. Do not adopt an arm you cannot run offline. `identity` is stdlib-only by design; a

@@ -34,7 +34,7 @@ Within `data/video/activeinferenceinstitute/`:
 - An **item** folder (`GuestStream_082`, `Roundtable_2026.2`, …) is one event. An item
   may bundle several **video parts** (e.g. a multi-session stream); every part is a
   `video_id` in the item's `metadata.json`.
-- Each item follows the per-item schema in [`SCHEMA.md`](SCHEMA.md).
+- Each item follows the per-item schema in [`SCHEMA.md`](../SCHEMA.md).
 
 Every video on the Institute channel is represented as a part in exactly one item; videos
 whose titles don't match a known series pattern live under `Other/<video_id>/`.
@@ -46,4 +46,4 @@ whose titles don't match a known series pattern live under `Other/<video_id>/`.
    `source` + `channel`).
 3. Regenerate `INDEX.json` / `INDEX.md` (Journal-Utilities `scripts/generate_journal_indexes.py`).
 
-See [`PIPELINE.md`](PIPELINE.md) for how the Institute channel is pulled and kept complete.
+See [`PIPELINE.md`](../PIPELINE.md) for how the Institute channel is pulled and kept complete.

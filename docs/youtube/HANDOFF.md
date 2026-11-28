@@ -90,7 +90,7 @@ backlinks after their Journal collections are published.
   at least three entries separated by ten seconds or more. Keep automatic
   chapters available where no reviewed manual list exists.
 
-The [Journal-Utilities YouTube guide](https://github.com/ActiveInferenceInstitute/Journal_Utilities/blob/main/docs/youtube.md)
+The [Journal-Utilities YouTube guide](https://github.com/ActiveInferenceInstitute/Journal_Utilities/blob/main/docs/pipeline/youtube.md)
 describes the tooling boundary. Record approval and verification for channel
 mutations in the private operator record. Channel visibility decisions, caption
 conflicts, and auto-dubbing remain with the channel owner.

@@ -36,8 +36,8 @@ overhaul, cross-cutting refactors.
   `.aii/README.md`. (`a7c80580`, #45)
 - ✓ **Checked, not changed: there is no `pymdp` / `inferactively-pymdp`
   dependency here.** The only non-`data/` mentions are item titles and legacy
-  translation filenames in `docs/volunteer-transcript-tasks.md`,
-  `docs/good-first-issues-draft.md` and `docs/translation-migration-map.md`;
+  translation filenames in `docs/curation/volunteer-transcript-tasks.md`,
+  `docs/curation/good-first-issues-draft.md` and `docs/curation/translation-migration-map.md`;
   there is no 1.0.5 pin to adopt.
 - Verification (this pass): `./run.sh docs` → `gate: docs: ok (765 Markdown
   files)` on `a7c80580`. Hosted Actions cannot corroborate anything — every run
@@ -112,7 +112,7 @@ overhaul, cross-cutting refactors.
 - ✓ `docs/AGENTS.md`, `docs/README.md` — wrap long lines. (`4e208d58`)
 - ✓ 19 series `AGENTS.md` guides — wrap 285–314-char template lines to ≤100
   chars. (`4e208d58`)
-- ✓ `docs/ORGANIZATION.md` — fix wrong generator script in "Adding another
+- ✓ `docs/reference/ORGANIZATION.md` — fix wrong generator script in "Adding another
   source": `refactor_journal.py` → `generate_journal_indexes.py` (the
   refactor is a migration tool; only the indexes script writes `INDEX.*`).
   (`9b9990c5`)
@@ -173,7 +173,7 @@ overhaul, cross-cutting refactors.
   single-part interval items; 13 cross-item misfiles rescued via INDEX
   title-verification), 600 multi-version conflicts quarantined under
   `translations/conflicts/<series>/` with reasons in
-  [`docs/translation-migration-map.md`](docs/translation-migration-map.md)
+  [`docs/curation/translation-migration-map.md`](docs/curation/translation-migration-map.md)
   (CONFLICTS appendix), 423 machine-unresolvable files left in place for
   volunteer triage (I16). Original paths recorded in each item's
   `metadata.json` `previous_paths` (1,857 entries). Verified with
@@ -201,7 +201,7 @@ overhaul, cross-cutting refactors.
   `Translations/` across 30 items, and 600 quarantined files sit under
   `translations/conflicts/` across 44 items (counts re-derived from
   `git ls-files`, 2026-11-12; both are listed row by row in
-  [`docs/volunteer-transcript-tasks.md`](docs/volunteer-transcript-tasks.md)).
+  [`docs/curation/volunteer-transcript-tasks.md`](docs/curation/volunteer-transcript-tasks.md)).
   Each remaining file needs a human to confirm its `video_id` and language
   before the two-step `git mv` — no script can settle a guess, which is why the
   M2 pass stopped here. Owner: volunteers, coordinated from that page.
@@ -236,7 +236,7 @@ overhaul, cross-cutting refactors.
   tree holds 13 items with lowercase `translations/` (~336 SRTs) vs 131 items
   with capital-T `Translations/` (~2,880 SRTs); live `manifest.json` shows
   languages for 13/573 items (129 language entries). Fix + spec in
-  [`docs/m4-site-spec.md`](docs/m4-site-spec.md) §0; permanent fix = M2
+  [`docs/site/m4-site-spec.md`](docs/site/m4-site-spec.md) §0; permanent fix = M2
   translation migration.
 - ✓ **Textbook Cohort 2 Meeting 20 SRT misfiled in
   `ModelStream_011/captions/`** — `git mv` to canonical
@@ -244,14 +244,14 @@ overhaul, cross-cutting refactors.
   (video `QjGcN1l6NXg` via INDEX.json). 57 further byte-identical copies
   remain scattered (GuestStream/MathStream/ModelStream/MorphStream/Courses/
   symposium/Cohort_4) — owned by the J3/I10 captions-naming validator, see
-  [`docs/misfiling-findings.md`](docs/misfiling-findings.md).
+  [`docs/curation/misfiling-findings.md`](docs/curation/misfiling-findings.md).
 - ✓ **2022 Robotics translations inside 2021 Symposium `Translations/`** —
   verified near-duplicate second copy (22 files, diffs are re-translated
   lines); documented rather than moved (a move would clobber or double-count);
   to be resolved during the M2 per-series migration —
-  [`docs/misfiling-findings.md`](docs/misfiling-findings.md) §2.
+  [`docs/curation/misfiling-findings.md`](docs/curation/misfiling-findings.md) §2.
 - ✓ **README.md** — Pages site link added.
-- ✓ **`docs/m4-site-spec.md`** — M4 builder spec (static
+- ✓ **`docs/site/m4-site-spec.md`** — M4 builder spec (static
   `/item/<slug>/index.html`, schema.org VideoObject JSON-LD, canonical/og,
   sitemap.xml + robots.txt), implemented by Journal-Utilities.
 

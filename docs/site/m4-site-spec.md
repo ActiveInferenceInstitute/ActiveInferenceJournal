@@ -3,7 +3,7 @@
 Status: **implemented and deployed.** The builder is Journal-Utilities
 `src/journal_utilities/site/pages_site.py` (+ `sitemap.py`), driven by
 `scripts/build_pages_site.py`; the deploy is
-[`.github/workflows/deploy-pages.yml`](../.github/workflows/deploy-pages.yml),
+[`.github/workflows/deploy-pages.yml`](../../.github/workflows/deploy-pages.yml),
 which builds with `--apply` (the builder is dry-run by default — without that
 flag the page publishes an empty site) and smoke-tests the SPA entry points,
 one path-keyed item page, its payload, `sitemap.xml` and `robots.txt`. The SPA
@@ -16,7 +16,7 @@ The builder reads **both** `translations/` and `Translations/` spellings
 regardless of directory case, and derives the language from the `.srt` name
 with the legacy ISO-639-2 annotations normalized. The M2 migration moved the
 bulk of the files to the lowercase spelling; the remainder is tracked in
-[`../TO-DO.md`](../TO-DO.md), and a deployed build reads both spellings, so an
+[`../TO-DO.md`](../../TO-DO.md), and a deployed build reads both spellings, so an
 unmigrated directory no longer hides an item's languages.
 
 ## 1. URL scheme

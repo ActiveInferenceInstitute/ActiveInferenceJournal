@@ -68,4 +68,4 @@ See [`docs/OPERATIONS.md`](docs/OPERATIONS.md) for every workflow, pin and arm.
 ## Layout
 
 `data/<type>/<source>/<Series>/<item>/` + `docs/` + top-level `INDEX.*`. See
-[`docs/ORGANIZATION.md`](docs/ORGANIZATION.md).
+[`docs/reference/ORGANIZATION.md`](docs/reference/ORGANIZATION.md).
